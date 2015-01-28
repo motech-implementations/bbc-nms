@@ -14,7 +14,7 @@ import java.util.List;
 public class Taluka extends LocationUnitMetaData {
 
     @Field
-    private long talukaId;
+    private String tCode;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
@@ -26,17 +26,11 @@ public class Taluka extends LocationUnitMetaData {
     @Column(name="village_id")
     private List<Village> village;
 
-    public Taluka(String name, long talukaId) {
+    public Taluka(String name, String tCode, List<HealthBlock> healthBlock, List<Village> village) {
         super(name);
-        this.talukaId = talukaId;
-    }
-
-    public long getTalukaId() {
-        return talukaId;
-    }
-
-    public void setTalukaId(long talukaId) {
-        this.talukaId = talukaId;
+        this.tCode = tCode;
+        this.healthBlock = healthBlock;
+        this.village = village;
     }
 
     public List<HealthBlock> getHealthBlock() {
@@ -54,5 +48,13 @@ public class Taluka extends LocationUnitMetaData {
 
     public void setVillage(List<Village> village) {
         this.village = village;
+    }
+
+    public String gettCode() {
+        return tCode;
+    }
+
+    public void settCode(String tCode) {
+        this.tCode = tCode;
     }
 }
