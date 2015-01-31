@@ -70,23 +70,11 @@ public class TalukaCsvUploadHandler {
                 talukaCsvRecord = talukaCsvRecordsDataService.findById(id);
 
                 if (talukaCsvRecord != null) {
-
                     Taluka newRecord = mapTalukaCsv(talukaCsvRecord);
-
-                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
                     District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
-
-                    if (stateRecord != null && districtRecord != null) {
-                        insertTalukaData(districtRecord,newRecord);
-                        result.incrementSuccessCount();
-                        talukaCsvRecordsDataService.delete(talukaCsvRecord);
-                    } else {
-                        result.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not in database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    }
+                    insertTalukaData(districtRecord, newRecord);
+                    result.incrementSuccessCount();
+                    talukaCsvRecordsDataService.delete(talukaCsvRecord);
                 } else {
                     result.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
@@ -123,6 +111,16 @@ public class TalukaCsvUploadHandler {
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
         String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
 
+        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("State", null);
+        }
+
+        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException("District", null);
+        }
+
         newRecord.setName(talukaName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
@@ -133,7 +131,7 @@ public class TalukaCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertTalukaData(District districtData,Taluka talukaData) {
+    private void insertTalukaData(District districtData, Taluka talukaData) {
 
         Taluka existTalukaData = talukaRecordsDataService.findTalukaByParentCode(
                 talukaData.getStateCode(),

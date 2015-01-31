@@ -63,22 +63,13 @@ public class DistrictCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 districtCsvRecord = districtCsvRecordsDataService.findById(id);
+                District newRecord = mapDistrictCsv(districtCsvRecord);
 
                 if (districtCsvRecord != null) {
-                    District newRecord = mapDistrictCsv(districtCsvRecord);
                     State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-
-                    if (stateRecord != null) {
-                        insertDistrictData(stateRecord,newRecord);
-                        result.incrementSuccessCount();
-                        districtCsvRecordsDataService.delete(districtCsvRecord);
-                    } else {
-                        result.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not in database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    }
+                    insertDistrictData(stateRecord, newRecord);
+                    result.incrementSuccessCount();
+                    districtCsvRecordsDataService.delete(districtCsvRecord);
                 } else {
                     result.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
@@ -108,10 +99,16 @@ public class DistrictCsvUploadHandler {
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
 
-        District newRecord =new District();
         String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
+
+        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("State", null);
+        }
+
+        District newRecord = new District();
 
         newRecord.setName(districtName);
         newRecord.setStateCode(stateCode);
@@ -122,7 +119,7 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertDistrictData(State stateData,District districtData) {
+    private void insertDistrictData(State stateData, District districtData) {
 
         District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 

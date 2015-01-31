@@ -69,24 +69,11 @@ public class VillageCsvUploadHandler {
                 villageCsvRecord = villageCsvRecordsDataService.findById(id);
 
                 if (villageCsvRecord != null) {
-
                     Village newRecord = mapVillageCsv(villageCsvRecord);
-
-                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-                    District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
                     Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-
-                    if (stateRecord != null && districtRecord != null && talukaRecord != null) {
-                        insertVillageData(talukaRecord,newRecord);
-                        result.incrementSuccessCount();
-                        villageCsvRecordsDataService.delete(villageCsvRecord);
-                    } else {
-                        result.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not in database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    }
+                    insertVillageData(talukaRecord, newRecord);
+                    result.incrementSuccessCount();
+                    villageCsvRecordsDataService.delete(villageCsvRecord);
                 } else {
                     result.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
@@ -124,6 +111,22 @@ public class VillageCsvUploadHandler {
         String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
 
+        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("State", null);
+        }
+
+        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException("District", null);
+        }
+
+        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+
+        if (taluka == null) {
+            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+        }
+
         newRecord.setName(villageName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
@@ -135,7 +138,7 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertVillageData(Taluka talukaData,Village villageData) {
+    private void insertVillageData(Taluka talukaData, Village villageData) {
 
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
                 villageData.getStateCode(),
