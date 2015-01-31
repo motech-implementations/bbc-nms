@@ -15,17 +15,13 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Collections;
 import java.util.Enumeration;
 
 /**
  * Simple implementation of the {@link BulkUploadStatusService} interface.
- *
+ * <p/>
  * This class provides the api to log erroneous csv upload records in a log file.
  * Log file name is taken as input in this method and is kept at a known path
  * at local node.
@@ -43,7 +39,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
     /**
      * This method is used to write logs for erroneous records
      * found during csv/bulk upload.
-     *
+     * <p/>
      * Error logs are written to a separate log file
      * Error Logs contain the following information:
      * 1. Timestamp
@@ -51,22 +47,23 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
      * 3. Error Code
      * 4. Error Description
      *
-     * @param    logFileName  String containing the name of log file including path
-     * @param    bulkUploadErrRecordDetails  String describing another coding guideline
+     * @param logFileName     String containing the name of log file including path
+     * @param bulkUploadError String describing another coding guideline
      */
     @Override
-    public void writeBulkUploadErrLog(String logFileName, BulkUploadError bulkUploadErrRecordDetails) {
+    public void writeBulkUploadErrLog(String logFileName, BulkUploadError bulkUploadError) {
 
         Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
 
+        //Generating log in the required format
         StringBuffer errLog = new StringBuffer();
         errLog.append(Constants.ERROR_LOG_TITLE);
         errLog.append(Constants.NEXT_LINE);
-        errLog.append(bulkUploadErrRecordDetails.getRecordDetails());
+        errLog.append(bulkUploadError.getRecordDetails());
         errLog.append(Constants.DELIMITER);
-        errLog.append(bulkUploadErrRecordDetails.getErrorCategory());
+        errLog.append(bulkUploadError.getErrorCategory());
         errLog.append(Constants.DELIMITER);
-        errLog.append(bulkUploadErrRecordDetails.getErrorDescription());
+        errLog.append(bulkUploadError.getErrorDescription());
         errLog.append(Constants.NEXT_LINE);
 
         try {
@@ -79,14 +76,14 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
     /**
      * This method is used to write summary of all the records after bulk upload is complete
-     *
+     * <p/>
      * The bulk upload summary is written to the file after bulk upload is complete
      * The bulk upload summary contains:
      * 1. Number of Records Successfully uploaded
      * 2. Number of records failed to upload
      *
-     * @param    logFileName  String containing name of log file including file path
-     * @param    csvProcessingSummary  Number of records successfully uploaded during bulk upload
+     * @param logFileName          String containing name of log file including file path
+     * @param csvProcessingSummary Number of records successfully uploaded during bulk upload
      */
     @Override
     public void writeBulkUploadProcessingSummary(String userName, String bulkUploadFileName, String logFileName, CsvProcessingSummary csvProcessingSummary) {
@@ -141,7 +138,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
     /**
      * This method is used to identify local host ip address
-     *
+     * <p/>
      * It uses the NetworkInterface and InetAddress to identify
      * the hostname.
      *
@@ -154,7 +151,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
             netInterfaces = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e) {
             logger.error("Socket Exception while retrieving host name. Error : " + e.getMessage());
-            return null;
+            return Constants.EMPTY_STRING;
         }
 
         for (NetworkInterface netInterface : Collections.list(netInterfaces)) {
@@ -167,6 +164,6 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
                 }
             }
         }
-        return null;
+        return Constants.EMPTY_STRING;
     }
 }

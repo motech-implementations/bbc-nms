@@ -15,6 +15,7 @@ public final class Constants {
     public static final String USER_NAME_TITLE = "Uploaded by : ";
     public static final String SUCCESSFUL_RECORDS_TITLE = "Number Of Records Successful : ";
     public static final String FAILED_RECORDS_TITLE = "Number Of Records Failed : ";
+    public static final String EMPTY_STRING = "";
 
     private Constants() {
 
