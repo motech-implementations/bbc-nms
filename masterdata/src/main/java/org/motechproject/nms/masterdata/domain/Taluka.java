@@ -26,13 +26,7 @@ public class Taluka extends LocationUnitMetaData {
     @Field
     private Long stateCode;
 
-    public Taluka(String name, String talukaCode, Set<HealthBlock> healthBlock, Set<Village> village, Long districtCode, Long stateCode) {
-        super(name);
-        this.talukaCode = talukaCode;
-        this.healthBlock = healthBlock;
-        this.village = village;
-        this.districtCode = districtCode;
-        this.stateCode = stateCode;
+    public Taluka() {
     }
 
     public Set<HealthBlock> getHealthBlock() {

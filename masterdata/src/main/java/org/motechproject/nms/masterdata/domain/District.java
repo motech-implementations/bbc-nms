@@ -21,11 +21,8 @@ public class District extends LocationUnitMetaData {
     private Long stateCode;
 
 
-    public District(String name, Long districtCode, Set<Taluka> taluka, Long stateCode) {
-        super(name);
-        this.districtCode = districtCode;
-        this.taluka = taluka;
-        this.stateCode = stateCode;
+    public District() {
+        super();
     }
 
     public Long getDistrictCode() {

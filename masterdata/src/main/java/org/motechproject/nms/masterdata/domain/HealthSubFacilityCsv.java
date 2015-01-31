@@ -11,77 +11,90 @@ import org.motechproject.mds.annotations.Field;
 public class HealthSubFacilityCsv extends LocationUnitMetaDataCsv{
 
     @Field
-    private String sId;
+    private String healthFacilityCode;
 
     @Field
-    private String tCode;
+    private String healthSubFacilityCode;
 
     @Field
-    private String phcId;
+    private String stateCode;
 
     @Field
-    private String stateId;
+    private String districtCode;
 
     @Field
-    private String districtId;
+    private String talukaCode;
 
-    public HealthSubFacilityCsv(String operation, String name, String sId, String tCode, String stateId, String districtId, String phcId) {
+    @Field
+    private String healthBlockCode;
+
+    public HealthSubFacilityCsv(String operation, String name, String healthFacilityCode, String healthSubFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode) {
         super(operation, name);
-        this.sId = sId;
-        this.tCode = tCode;
-        this.stateId = stateId;
-        this.districtId = districtId;
-        this.phcId = phcId;
+        this.healthFacilityCode = healthFacilityCode;
+        this.healthSubFacilityCode = healthSubFacilityCode;
+        this.stateCode = stateCode;
+        this.districtCode = districtCode;
+        this.talukaCode = talukaCode;
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getsId() {
-        return sId;
+    public String getHealthFacilityCode() {
+        return healthFacilityCode;
     }
 
-    public void setsId(String sId) {
-        this.sId = sId;
+    public void setHealthFacilityCode(String healthFacilityCode) {
+        this.healthFacilityCode = healthFacilityCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getHealthSubFacilityCode() {
+        return healthSubFacilityCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setHealthSubFacilityCode(String healthSubFacilityCode) {
+        this.healthSubFacilityCode = healthSubFacilityCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getPhcId() {
-        return phcId;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void setPhcId(String phcId) {
-        this.phcId = phcId;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
+    }
+
+    public String getHealthBlockCode() {
+        return healthBlockCode;
+    }
+
+    public void setHealthBlockCode(String healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
     @Override
     public String toString() {
         return "HealthSubFacilityCsv{" +
-                "sId=" + sId +
-                ", tCode=" + tCode +
-                ", phcId=" + phcId +
-                ", stateId=" + stateId +
-                ", districtId=" + districtId +
+                "healthFacilityCode='" + healthFacilityCode + '\'' +
+                ", healthSubFacilityCode='" + healthSubFacilityCode + '\'' +
+                ", stateCode='" + stateCode + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", healthBlockCode='" + healthBlockCode + '\'' +
                 '}';
     }
 }

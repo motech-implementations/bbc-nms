@@ -10,16 +10,14 @@ import org.motechproject.mds.annotations.Field;
 @Entity(recordHistory = true)
 public class HealthSubFacility extends LocationUnitMetaData {
 
-
     @Field
-    private long sId;
-
-
-    @Field
-    private Long phcId;
+    private Long healthFacilityCode;
 
     @Field
     private String talukaCode;
+
+    @Field
+    private Long healthBlockCode;
 
     @Field
     private Long districtCode;
@@ -27,17 +25,54 @@ public class HealthSubFacility extends LocationUnitMetaData {
     @Field
     private Long stateCode;
 
+    @Field
+    private Long healthSubFacilityCode;
 
-    public HealthSubFacility(String name, long sId) {
-        super(name);
-        this.sId = sId;
+    public Long getHealthFacilityCode() {
+        return healthFacilityCode;
     }
 
-    public long getsId() {
-        return sId;
+    public void setHealthFacilityCode(Long healthFacilityCode) {
+        this.healthFacilityCode = healthFacilityCode;
     }
 
-    public void setsId(long sId) {
-        this.sId = sId;
+    public Long getHealthSubFacilityCode() {
+        return healthSubFacilityCode;
+    }
+
+    public void setHealthSubFacilityCode(Long healthSubFacilityCode) {
+        this.healthSubFacilityCode = healthSubFacilityCode;
+    }
+
+    public String getTalukaCode() {
+        return talukaCode;
+    }
+
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
+    }
+
+    public Long getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(Long districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
+    }
+
+    public Long getHealthBlockCode() {
+        return healthBlockCode;
+    }
+
+    public void setHealthBlockCode(Long healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 }

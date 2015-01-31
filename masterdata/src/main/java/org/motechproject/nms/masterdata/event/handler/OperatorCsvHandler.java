@@ -37,22 +37,45 @@ public class OperatorCsvHandler {
         String csvImportFileName = (String)params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
         processOperatorCsvRecords(params, errorFileName);
+        String errFileName = "OperatorCsv_" + new Date().toString();
+        try {
+            Map<String, Object> params = motechEvent.getParameters();
+            processOperatorCsvRecords(params, errorFileName);
+//            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+        }catch (Exception ex) {
+        }
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
 
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        List<Long> updatedIds = (ArrayList<Long>) params.get("csv-import.updated_ids");
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
+            try{
+            operatorCsvService.delete(operatorCsvService.findById(id));
+            operatorCsvService.deleteAll();
+            summary.setFailureCount(createdIds.size() + updatedIds.size());
+            summary.setSuccessCount(0);
+//            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+        }catch(Exception ex){
+        }
+    }
+        for (Long id : updatedIds) {
+
             operatorCsvService.delete(operatorCsvService.findById(id));
         }
+    }
 
-        for(Long id : updatedIds) {
-            operatorCsvService.delete(operatorCsvService.findById(id));
-        }
+    private void logErrorRecord(String errorFileName, String recordStr) {
+        errorDetail.setErrorDescription("");
+        errorDetail.setErrorCategory("");
+        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
+//        errorDetail.setUserName("");
+        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+
     }
 
     private void processOperatorCsvRecords(Map<String, Object> params, String errorFileName) {

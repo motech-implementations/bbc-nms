@@ -1,12 +1,7 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.event.CrudEventType;
-
-import java.lang.Override;
-import java.lang.String;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -14,71 +9,69 @@ import java.lang.String;
 @Entity(
         recordHistory = true
 )
-@CrudEvents(
-        CrudEventType.CREATE
-)
+
 public class HealthBlockCsv extends LocationUnitMetaDataCsv {
 
     @Field
-    private String healthBlockId;
+    private String healthBlockCode;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String dCode;
+    private String districtCode;
 
     @Field
-    private String tCode;
+    private String talukaCode;
 
 
-    public HealthBlockCsv(String operation, String name,String healthBlockId,String stateId,String dCode,String tCode) {
+    public HealthBlockCsv(String operation, String name, String healthBlockId, String stateCode, String districtCode, String talukaCode) {
         super(operation, name);
-        this.healthBlockId = healthBlockId;
-        this.stateId = stateId;
-        this.dCode = dCode;
-        this.tCode = tCode;
+        this.healthBlockCode = healthBlockId;
+        this.stateCode = stateCode;
+        this.districtCode = districtCode;
+        this.talukaCode = talukaCode;
     }
 
-    public String getHealthBlockId() {
-        return healthBlockId;
+    public String getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(String healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(String healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getdCode() {
-        return dCode;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setdCode(String dCode) {
-        this.dCode = dCode;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
     }
 
     @Override
     public String toString() {
         return "HealthBlockCsv{" +
-                "healthBlockId=" + healthBlockId +
-                ", stateId=" + stateId +
-                ", dCode=" + dCode +
-                ", tCode=" + tCode +
+                "healthBlockCode=" + healthBlockCode +
+                ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode=" + talukaCode +
                 '}';
     }
 }

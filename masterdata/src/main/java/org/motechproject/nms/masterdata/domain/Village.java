@@ -21,7 +21,39 @@ public class Village extends LocationUnitMetaData {
     @Field
     private Long stateCode;
 
-    public Village(String name) {
-        super(name);
+    public Village() {
+
+    }
+
+    public Long getVillageCode() {
+        return villageCode;
+    }
+
+    public void setVillageCode(Long villageCode) {
+        this.villageCode = villageCode;
+    }
+
+    public String getTalukaCode() {
+        return talukaCode;
+    }
+
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
+    }
+
+    public Long getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(Long districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
     }
 }

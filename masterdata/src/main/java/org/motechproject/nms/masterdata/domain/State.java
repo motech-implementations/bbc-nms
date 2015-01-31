@@ -17,11 +17,10 @@ public class State extends LocationUnitMetaData{
     @Field
     private Set<District> district;
 
-    public State(String name, Long stateCode, Set<District> district) {
-        super(name);
-        this.stateCode = stateCode;
-        this.district = district;
+    public State() {
     }
+
+
 
     public Long getStateCode() {
         return stateCode;

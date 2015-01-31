@@ -20,64 +20,64 @@ import java.lang.String;
 public class VillageCsv extends LocationUnitMetaDataCsv{
 
     @Field
-    private String villageId;
+    private String villageCode;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String tCode;
+    private String talukaCode;
 
-    public VillageCsv(String operation, String name,String villageId,String stateId,String districtId,String tCode) {
+    public VillageCsv(String operation, String name, String villageCode, String stateCode, String districtCode, String talukaCode) {
         super(operation, name);
-        this.villageId = villageId;
-        this.stateId = stateId;
-        this.districtId =districtId;
-        this.tCode = tCode;
+        this.villageCode = villageCode;
+        this.stateCode = stateCode;
+        this.districtCode = districtCode;
+        this.talukaCode = talukaCode;
     }
 
-    public String getVillageId() {
-        return villageId;
+    public String getVillageCode() {
+        return villageCode;
     }
 
-    public void setVillageId(String villageId) {
-        this.villageId = villageId;
+    public void setVillageCode(String villageCode) {
+        this.villageCode = villageCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
     }
 
     @Override
     public String toString() {
         return "VillageCsv{" +
-                "villageId=" + villageId +
-                ", stateId=" + stateId +
-                ", districtId=" + districtId +
-                ", tCode=" + tCode +
+                "villageCode=" + villageCode +
+                ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode=" + talukaCode +
                 '}';
     }
 }

@@ -8,13 +8,19 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by abhishek on 29/1/15.
@@ -32,90 +38,108 @@ public class DistrictCsvUploadHandler {
     @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
+    @Autowired
+    private BulkUploadErrLogService bulkUploadErrLogService;
+
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
-
     @MotechListener(subjects = {"mds.crud.masterdata.DistrictCsv.csv-import.success"})
-    public void districtCsvSuccess(MotechEvent event) {
+    public void districtCsvSuccess(MotechEvent motechEvent) {
 
-        List<DistrictCsv> districtCsvList = districtCsvRecordsDataService.retrieveAll();
+        int failedRecordCount = 0;
+        int successRecordCount = 0;
 
-        for (Iterator<DistrictCsv> itr = districtCsvList.iterator(); itr.hasNext(); ) {
+        Map<String, Object> params = motechEvent.getParameters();
 
-            DistrictCsv districtCsvData = itr.next();
+        String csvFileName = (String)params.get("csv-import.filename");
+        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
+        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
+        BulkUploadError errorDetails = new BulkUploadError();
 
-            if (districtCsvData.getStateCode() != null) {
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        DistrictCsv districtCsvRecord = null;
 
-                Long stateCode = getLongId(districtCsvData.getStateCode());
+        for (Long id : createdIds) {
+            try {
+                districtCsvRecord = districtCsvRecordsDataService.findById(id);
 
-                if (null == stateCode) {
+                if (districtCsvRecord != null) {
+                    District newRecord = mapDistrictCsv(districtCsvRecord);
 
-                    logger.error("StateId is invalid " + districtCsvData.getStateCode());
 
-                } else {
 
-                    State stateData = stateRecordsDataService.findRecordByStateCode(stateCode);
-
-                    if (stateData != null) {
-
-                        Long districtCode = getLongId(districtCsvData.getDistrictCode());
-
-                        if (null != districtCode) {
-
-                            setDistrictList(districtCsvData);
-                        }
+                    if(stateRecord != null) {
+                    insertDistrictData(newRecord);
+                    result.incrementSuccessCount();
+                    districtCsvRecordsDataService.delete(districtCsvRecord);
+                    } else {
+                    result.incrementFailureCount();
+                    errorDetails.setRecordDetails(id.toString());
+                    errorDetails.setErrorCategory("Record_Not_Found");
+                    errorDetails.setErrorDescription("Record not in database");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
                     }
+                } else {
+                    result.incrementFailureCount();
+                    errorDetails.setRecordDetails(id.toString());
+                    errorDetails.setErrorCategory("Record_Not_Found");
+                    errorDetails.setErrorDescription("Record not in database");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
                 }
+            } catch (DataValidationException dataValidationException) {
+                errorDetails.setRecordDetails(districtCsvRecord.toString());
+                errorDetails.setErrorCategory(dataValidationException.getErrorCode());
+                errorDetails.setErrorDescription(dataValidationException.getErroneousField());
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                districtCsvRecordsDataService.delete(districtCsvRecord);
+            } catch (Exception e) {
+                failedRecordCount++;
             }
         }
-
-        districtCsvRecordsDataService.deleteAll();
-
-        logger.info("District successfully deleted from temporary tables");
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
     @MotechListener(subjects = {"mds.crud.masterdata.DistrictCsv.csv-import.failed"})
     public void districtCsvFailed(){
 
         districtCsvRecordsDataService.deleteAll();
-
         logger.info("District successfully deleted from temporary tables");
     }
 
-    private void setDistrictList(DistrictCsv districtCsvData){
+    private District mapDistrictCsv(DistrictCsv record)  throws DataValidationException{
 
-        District dist = districtRecordsDataService.findRecordByDistrictCodeAndStateCode(
-                Long.parseLong(districtCsvData.getDistrictCode()),
-                Long.parseLong(districtCsvData.getStateCode()));
+        District newRecord = new District();
+        String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(),true);
+        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(),true);
+
+        newRecord.setName(districtName);
+        newRecord.setStateCode(stateCode);
+        newRecord.setDistrictCode(districtCode);
+
+        return newRecord;
+    }
+
+    private void insertDistrictData(District districtData){
+
+        District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 
         if(dist != null) {
-
-            dist.setName(districtCsvData.getName());
-
-            districtRecordsDataService.update(dist);
-
+            districtRecordsDataService.update(districtData);
+            logger.info("District permanent data is successfully updated.");
         }else {
-            District updateDist = getDistrictData(districtCsvData);
-
-            districtRecordsDataService.create(updateDist);
+            districtRecordsDataService.create(districtData);
+            logger.info("District permanent data is successfully inserted.");
         }
     }
 
-    private District getDistrictData(DistrictCsv districtCsvData)
-    {
-        District data= new District(districtCsvData.getName(),getLongId(districtCsvData.getDistrictCode()), null,getLongId(districtCsvData.getStateCode()));
+    private State isStateExist(Long stateCode){
 
-        return data;
-    }
-
-    private Long getLongId(String id){
-        try {
-
-            Long longId = Long.parseLong(id.trim());
-
-            return longId;
-        } catch (NumberFormatException ex) {
-            return null;
+        State stateRecord = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if(stateRecord != null){
+            return stateRecord;
         }
+
     }
+
 }

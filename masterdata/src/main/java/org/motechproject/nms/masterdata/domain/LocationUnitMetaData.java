@@ -10,13 +10,6 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class LocationUnitMetaData extends MdsEntity {
 
-    @Field(name = "name")
-    private String name;
-
-    public LocationUnitMetaData(String name) {
-        this.name = name;
-    }
-
     public String getName() {
         return name;
     }
@@ -24,4 +17,12 @@ public class LocationUnitMetaData extends MdsEntity {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Field(name = "name")
+    private String name;
+
+    public LocationUnitMetaData() {
+
+    }
+
 }

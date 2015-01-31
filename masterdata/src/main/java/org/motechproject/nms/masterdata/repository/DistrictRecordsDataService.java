@@ -8,8 +8,5 @@ import org.motechproject.nms.masterdata.domain.District;
 public interface DistrictRecordsDataService extends MotechDataService<District> {
 
     @Lookup
-    District findRecordByDistrictCode(@LookupField(name = "districtCode") Long districtCode);
-
-    @Lookup
-    District findRecordByDistrictCodeAndStateCode(@LookupField(name = "districtCode") Long districtCode,@LookupField(name = "stateCode") Long stateCode);
+    District findDistrictByParentCode(@LookupField(name = "districtCode") Long districtCode,@LookupField(name = "stateCode") Long stateCode);
 }

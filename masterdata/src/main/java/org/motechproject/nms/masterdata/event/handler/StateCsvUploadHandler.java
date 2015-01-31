@@ -6,13 +6,19 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by abhishek on 29/1/15.
@@ -27,80 +33,92 @@ public class StateCsvUploadHandler {
     @Autowired
     private StateCsvRecordsDataService stateCsvRecordsDataService;
 
+    @Autowired
+    private BulkUploadErrLogService bulkUploadErrLogService;
+
+
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
     @MotechListener(subjects = {"mds.crud.masterdata.StateCsv.csv-import.success"})
-    public void stateCsvSuccess(MotechEvent event) {
+    public void stateCsvSuccess(MotechEvent motechEvent) {
 
-        List<StateCsv> stateCsvList = stateCsvRecordsDataService.retrieveAll();
+        int failedRecordCount = 0;
+        int successRecordCount = 0;
 
-        for (Iterator<StateCsv> itr = stateCsvList.iterator(); itr.hasNext(); ) {
+        Map<String, Object> params = motechEvent.getParameters();
 
-            StateCsv csvRecord = itr.next();
+        String csvFileName = (String)params.get("csv-import.filename");
 
-            if (csvRecord.getStateCode() != null) {
+        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
-                Long stateId = getLongId(csvRecord.getStateCode());
+        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
+        BulkUploadError errorDetails = new BulkUploadError();
 
-                if (null == stateId) {
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        StateCsv stateCsvRecord = null;
 
-                    logger.error("stateId is invalid " + csvRecord.getStateCode());
+        for (Long id : createdIds) {
+            try {
+                stateCsvRecord = stateCsvRecordsDataService.findById(id);
 
+                if (stateCsvRecord != null) {
+                    State newRecord = mapStateCsv(stateCsvRecord);
+                    insertStateData(newRecord);
+                    result.incrementSuccessCount();
+                    stateCsvRecordsDataService.delete(stateCsvRecord);
                 } else {
-
-                    State stateExistData = stateRecordsDataService.findRecordByStateCode(Long.parseLong(csvRecord.getStateCode()));
-
-                    if (null != stateExistData) {
-
-                        setStateName(stateExistData, csvRecord);
-
-                        stateRecordsDataService.update(stateExistData);
-
-                    } else {
-
-                        State stateNewData = getStateData(csvRecord);
-
-                        stateRecordsDataService.create(stateNewData);
-                    }
+                    result.incrementFailureCount();
+                    errorDetails.setRecordDetails(id.toString());
+                    errorDetails.setErrorCategory("Record_Not_Found");
+                    errorDetails.setErrorDescription("Record not in database");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
                 }
+            } catch (DataValidationException dataValidationException) {
+                errorDetails.setRecordDetails(stateCsvRecord.toString());
+                errorDetails.setErrorCategory(dataValidationException.getErrorCode());
+                errorDetails.setErrorDescription(dataValidationException.getErroneousField());
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                stateCsvRecordsDataService.delete(stateCsvRecord);
+            } catch (Exception e) {
+                failedRecordCount++;
             }
         }
 
-        logger.info("State permanent data is successfully inserted.");
-
-        stateCsvRecordsDataService.deleteAll();
-
-        logger.info("State successfully deleted");
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
     @MotechListener(subjects = {"mds.crud.masterdata.StateCsv.csv-import.failed"})
     public void stateCsvFailed(MotechEvent event) {
 
         stateCsvRecordsDataService.deleteAll();
-
-        logger.info("State successfully deleted");
+        logger.info("State successfully deleted from Temporary table");
     }
 
-    private Long getLongId(String id){
-        try {
+    private State mapStateCsv(StateCsv record)  throws DataValidationException{
+        State newRecord = new State();
 
-            Long longId = Long.parseLong(id.trim());
+        String stateName = ParseDataHelper.parseString("StateName",record.getName(),true);
 
-            return longId;
-        } catch (NumberFormatException ex) {
-            return null;
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(),true);
+
+        newRecord.setName(stateName);
+        newRecord.setStateCode(stateCode);
+
+        return newRecord;
+    }
+
+    private void insertStateData(State stateData){
+
+        State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
+
+        if (null != stateExistData) {
+            stateExistData.setName(stateData.getName());
+            stateRecordsDataService.update(stateExistData);
+            logger.info("State permanent data is successfully updated.");
+            } else {
+            stateRecordsDataService.create(stateData);
+            logger.info("State permanent data is successfully inserted.");
+            }
         }
-    }
 
-    private void setStateName(State data,StateCsv csvData){
-
-        data.setName(csvData.getName());
-    }
-
-    private State getStateData(StateCsv csvData)
-    {
-        State data= new State(csvData.getName(),Long.parseLong(csvData.getStateCode()),null);
-
-        return data;
-    }
 }

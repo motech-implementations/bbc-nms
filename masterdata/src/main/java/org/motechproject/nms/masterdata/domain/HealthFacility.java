@@ -11,18 +11,14 @@ import java.util.Set;
 @Entity(recordHistory = true)
 public class HealthFacility extends LocationUnitMetaData{
 
-
     @Field
-    private Long phcId;
-
-    @Field
-    private Integer facilityType;
+    private Long healthFacilityCode;
 
     @Field
     private Set<HealthSubFacility> healthSubFacility;
 
     @Field
-    private Long healthBlockId;
+    private Long healthBlockCode;
 
     @Field
     private String talukaCode;
@@ -33,31 +29,12 @@ public class HealthFacility extends LocationUnitMetaData{
     @Field
     private Long stateCode;
 
-    public HealthFacility(String name, Long phcId, Integer facilityType, Set<HealthSubFacility> healthSubFacility, Long healthBlockId, String talukaCode, Long districtCode, Long stateCode) {
-        super(name);
-        this.phcId = phcId;
-        this.facilityType = facilityType;
-        this.healthSubFacility = healthSubFacility;
-        this.healthBlockId = healthBlockId;
-        this.talukaCode = talukaCode;
-        this.districtCode = districtCode;
-        this.stateCode = stateCode;
+    public Long getHealthFacilityCode() {
+        return healthFacilityCode;
     }
 
-    public Long getPhcId() {
-        return phcId;
-    }
-
-    public void setPhcId(Long phcId) {
-        this.phcId = phcId;
-    }
-
-    public Integer getFacilityType() {
-        return facilityType;
-    }
-
-    public void setFacilityType(Integer facilityType) {
-        this.facilityType = facilityType;
+    public void setHealthFacilityCode(Long healthFacilityCode) {
+        this.healthFacilityCode = healthFacilityCode;
     }
 
     public Set<HealthSubFacility> getHealthSubFacility() {
@@ -68,12 +45,12 @@ public class HealthFacility extends LocationUnitMetaData{
         this.healthSubFacility = healthSubFacility;
     }
 
-    public Long getHealthBlockId() {
-        return healthBlockId;
+    public Long getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(Long healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(Long healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
     public String getTalukaCode() {

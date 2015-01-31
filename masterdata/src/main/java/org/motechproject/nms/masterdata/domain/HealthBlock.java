@@ -12,7 +12,7 @@ import java.util.Set;
 public class HealthBlock extends LocationUnitMetaData {
 
     @Field
-    private Long healthBlockId;
+    private Long healthBlockCode;
 
     @Field
     private Set<HealthFacility> healthBlock;
@@ -26,21 +26,16 @@ public class HealthBlock extends LocationUnitMetaData {
     @Field
     private Long stateCode;
 
-    public HealthBlock(String name, Long healthBlockId, Set<HealthFacility> healthBlock, String talukaCode, Long districtCode, Long stateCode) {
-        super(name);
-        this.healthBlockId = healthBlockId;
-        this.healthBlock = healthBlock;
-        this.talukaCode = talukaCode;
-        this.districtCode = districtCode;
-        this.stateCode = stateCode;
+    public HealthBlock() {
+
     }
 
-    public Long getHealthBlockId() {
-        return healthBlockId;
+    public Long getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(Long healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(Long healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
     public Set<HealthFacility> getHealthBlock() {

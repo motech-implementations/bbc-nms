@@ -1,12 +1,7 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.event.CrudEventType;
-
-import java.lang.Override;
-import java.lang.String;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -15,96 +10,83 @@ import java.lang.String;
 @Entity(
         recordHistory = true
 )
-@CrudEvents(
-        CrudEventType.CREATE
-)
-public class HealthFacilityCsv extends LocationUnitMetaDataCsv{
+public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
 
     @Field
-    private String phcId;
+    private String healthFacilityCode;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String tCode;
+    private String talukaCode;
 
     @Field
-    private String healthBlockId;
+    private String healthBlockCode;
 
-    @Field
-    private String facilityType;
 
-    public HealthFacilityCsv(String operation, String name, String phcId,String stateId,String districtId,String tCode,String healthBlockId,String facilityType) {
+    public HealthFacilityCsv(String operation, String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode) {
         super(operation, name);
-        this.phcId = phcId;
-        this.stateId = stateId;
-        this.districtId = districtId;
-        this.tCode = tCode;
-        this.healthBlockId = healthBlockId;
-        this.facilityType = facilityType;
+        this.healthFacilityCode = healthFacilityCode;
+        this.stateCode = stateCode;
+        this.districtCode = districtCode;
+        this.talukaCode = talukaCode;
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getPhcId() {
-        return phcId;
+    public String getHealthFacilityCode() {
+        return healthFacilityCode;
     }
 
-    public void setPhcId(String phcId) {
-        this.phcId = phcId;
+    public void setHealthFacilityCode(String healthFacilityCode) {
+        this.healthFacilityCode = healthFacilityCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
     }
 
-    public String getHealthBlockId() {
-        return healthBlockId;
+    public String getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(String healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(String healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getFacilityType() {
-        return facilityType;
-    }
-
-    public void setFacilityType(String facilityType) {
-        this.facilityType = facilityType;
-    }
 
     @Override
     public String toString() {
         return "HealthFacilityCsv{" +
-                "phcId=" + phcId +
-                ", stateId=" + stateId +
-                ", districtId=" + districtId +
-                ", tCode=" + tCode +
-                ", healthBlockId=" + healthBlockId +
-                ", facilityType=" + facilityType +
+
+                ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode=" + talukaCode +
+                ", healthBlockCode=" + healthBlockCode +
+                ", facilityCode=" + healthFacilityCode +
                 '}';
     }
 }
