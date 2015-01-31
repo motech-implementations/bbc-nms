@@ -182,4 +182,27 @@ public class LocationServiceImpl implements LocationService {
         }
         return null;
     }
+
+    /**
+     * get Village record for given Village Census (or MCTS ) Code
+     *
+     * @param stateCode State Census (or MCTS ) Code
+     * @return Integer object corresponding to the Census (or MCTS )code
+     */
+    @Override
+    public Integer getMaCappingByCode(Long stateCode) {
+        return getStateByCode(stateCode).getMaCapping();
+    }
+
+    /**
+     * get Village record for given Village Census (or MCTS ) Code
+     *
+     * @param stateCode State Census (or MCTS ) Code
+     * @return Integer object corresponding to the Census (or MCTS )code
+     */
+    @Override
+    public Integer getMkCappingByCode(Long stateCode) {
+
+        return getStateByCode(stateCode).getMkCapping();
+    }
 }

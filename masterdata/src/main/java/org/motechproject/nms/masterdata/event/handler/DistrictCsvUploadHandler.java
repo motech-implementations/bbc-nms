@@ -69,7 +69,7 @@ public class DistrictCsvUploadHandler {
                     State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
 
                     if (stateRecord != null) {
-                        insertDistrictData(newRecord);
+                        insertDistrictData(stateRecord,newRecord);
                         result.incrementSuccessCount();
                         districtCsvRecordsDataService.delete(districtCsvRecord);
                     } else {
@@ -120,7 +120,7 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertDistrictData(District districtData) {
+    private void insertDistrictData(State stateData,District districtData) {
 
         District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 
@@ -128,7 +128,8 @@ public class DistrictCsvUploadHandler {
             districtRecordsDataService.update(districtData);
             logger.info("District permanent data is successfully updated.");
         } else {
-            districtRecordsDataService.create(districtData);
+            stateData.getDistrict().add(districtData);
+            stateRecordsDataService.update(stateData);
             logger.info("District permanent data is successfully inserted.");
         }
     }

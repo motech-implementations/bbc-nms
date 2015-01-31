@@ -68,4 +68,20 @@ public interface LocationService {
      * @return Village object corresponding to the Census (or MCTS )code
      */
     Village getVillageByCode(Long talukaId, Long villageCode);
+
+    /**
+     * get Village record for given Village Census (or MCTS ) Code
+     *
+     * @param stateCode State Census (or MCTS ) Code
+     * @return Integer object corresponding to the Census (or MCTS )code
+     */
+    Integer getMaCappingByCode(Long stateCode);
+
+    /**
+     * get Village record for given Village Census (or MCTS ) Code
+     *
+     * @param stateCode State Census (or MCTS ) Code
+     * @return Integer object corresponding to the Census (or MCTS )code
+     */
+    Integer getMkCappingByCode(Long stateCode);
 }
