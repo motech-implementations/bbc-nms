@@ -73,7 +73,7 @@ public class TalukaCsvUploadHandler {
                         Taluka newRecord = mapTalukaCsv(talukaCsvRecord);
 
                         State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-                        District districtRecord = districtRecordsDataService.findRecordByDistrictCodeAndStateCode(newRecord.getDistrictCode(), newRecord.getStateCode());
+                        District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
 
                         if(stateRecord != null && districtRecord !=null) {
                             insertTalukaData(newRecord);

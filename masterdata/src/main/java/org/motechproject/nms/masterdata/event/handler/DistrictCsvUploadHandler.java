@@ -65,8 +65,7 @@ public class DistrictCsvUploadHandler {
 
                 if (districtCsvRecord != null) {
                     District newRecord = mapDistrictCsv(districtCsvRecord);
-
-
+                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
 
                     if(stateRecord != null) {
                     insertDistrictData(newRecord);
@@ -139,7 +138,7 @@ public class DistrictCsvUploadHandler {
         if(stateRecord != null){
             return stateRecord;
         }
-
+        return null;
     }
 
 }
