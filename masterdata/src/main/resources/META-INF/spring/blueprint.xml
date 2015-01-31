@@ -23,6 +23,9 @@
     <osgi:service ref="operatorService"
                   interface="org.motechproject.nms.masterdata.service.OperatorService" />
 
+    <osgi:service ref="locationService"
+                  interface="org.motechproject.nms.masterdata.service.LocationService" />
+
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService" />
 

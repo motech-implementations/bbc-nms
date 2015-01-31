@@ -68,4 +68,15 @@ public class Taluka extends LocationUnitMetaData {
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
     }
+
+    @Override
+    public String toString() {
+        return "Taluka{" +
+                "talukaCode='" + talukaCode + '\'' +
+                ", healthBlock=" + healthBlock +
+                ", village=" + village +
+                ", districtCode=" + districtCode +
+                ", stateCode=" + stateCode +
+                '}';
+    }
 }

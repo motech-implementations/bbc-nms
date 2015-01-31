@@ -10,6 +10,7 @@ import org.motechproject.nms.masterdata.domain.Village;
  */
 public interface VillageRecordsDataService extends MotechDataService<Village> {
 
+
     @Lookup
     Village findVillageByParentCode(@LookupField(name = "stateCode") Long stateCode,@LookupField(name = "districtCode") Long districtCode,
                                                        @LookupField(name = "talukaCode") String talukaCode,@LookupField(name = "villageCode") Long villageCode);

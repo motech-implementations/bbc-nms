@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by abhishek on 24/1/15.
  */
 @Entity(recordHistory = true)
-public class State extends LocationUnitMetaData{
+public class State extends LocationUnitMetaData {
 
     @Field
     private Long stateCode;
@@ -19,8 +19,6 @@ public class State extends LocationUnitMetaData{
 
     public State() {
     }
-
-
 
     public Long getStateCode() {
         return stateCode;
@@ -39,20 +37,10 @@ public class State extends LocationUnitMetaData{
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof State)) return false;
-
-        State state = (State) o;
-
-        if (!state.getStateCode().equals(state.getStateCode())) return false;
-
-        return true;
+    public String toString() {
+        return "State{" +
+                "stateCode=" + stateCode +
+                ", district=" + district +
+                '}';
     }
-
-    @Override
-    public int hashCode() {
-        return stateCode.hashCode();
-    }
-
 }

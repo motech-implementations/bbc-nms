@@ -49,4 +49,12 @@ public class District extends LocationUnitMetaData {
         this.stateCode = stateCode;
     }
 
+    @Override
+    public String toString() {
+        return "District{" +
+                "districtCode=" + districtCode +
+                ", taluka=" + taluka +
+                ", stateCode=" + stateCode +
+                '}';
+    }
 }
