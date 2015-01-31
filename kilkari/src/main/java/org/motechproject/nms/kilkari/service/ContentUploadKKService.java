@@ -8,5 +8,6 @@ public interface ContentUploadKKService {
 
     void update(ContentUploadKK record);
 
+    ContentUploadKK getRecordByContentId(Long contentId);
 
 }

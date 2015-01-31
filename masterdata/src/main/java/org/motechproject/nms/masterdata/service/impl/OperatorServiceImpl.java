@@ -21,4 +21,10 @@ public class OperatorServiceImpl implements OperatorService {
     public void update(Operator record) {
         operatorDataService.update(record);
     }
+
+    @Override
+    public Operator getRecordByCode(String code) {
+        return operatorDataService.findByCode(code);
+
+    }
 }

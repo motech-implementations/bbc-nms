@@ -21,4 +21,9 @@ public class ContentUploadKKServiceImpl implements ContentUploadKKService {
     public void update(ContentUploadKK record) {
         contentUploadKKCsvDataService.update(record);
     }
+
+    @Override
+    public ContentUploadKK getRecordByContentId(Long contentId) {
+        return contentUploadKKCsvDataService.findByContentId(contentId);
+    }
 }

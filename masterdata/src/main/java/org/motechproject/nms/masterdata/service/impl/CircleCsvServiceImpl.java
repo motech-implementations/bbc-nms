@@ -14,7 +14,7 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     private CircleCsvDataService circleCsvDataService;
 
     @Override
-    public CircleCsv findById(Long id) {
+    public CircleCsv getRecord(Long id) {
         return circleCsvDataService.findById(id);
     }
 
@@ -23,8 +23,4 @@ public class CircleCsvServiceImpl implements CircleCsvService {
         circleCsvDataService.delete(record);
     }
 
-    @Override
-    public void deleteAll() {
-        circleCsvDataService.deleteAll();
-    }
 }

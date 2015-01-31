@@ -9,7 +9,7 @@ import javax.jdo.annotations.Unique;
 public class CircleCsv extends MdsEntity{
 
     @Field
-    private String operation = "ADD";
+    private String operation;
 
     @Field
     private String name;

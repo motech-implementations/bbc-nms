@@ -5,9 +5,8 @@ import org.motechproject.nms.masterdata.domain.CircleCsv;
 
 public interface CircleCsvService {
 
-    CircleCsv findById(Long id);
+    CircleCsv getRecord(Long id);
 
     void delete(CircleCsv record);
 
-    void deleteAll();
 }

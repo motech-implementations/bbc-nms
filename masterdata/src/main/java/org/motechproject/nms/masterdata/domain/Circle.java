@@ -4,7 +4,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-@Entity
+
+@Entity(recordHistory = true)
 public class Circle  extends MdsEntity{
 
     @Field(required = true)

@@ -10,7 +10,7 @@ import javax.jdo.annotations.Unique;
 public class ContentUploadKKCsv extends MdsEntity{
 
     @Field
-    private String operation = "ADD";
+    private String operation;
 
     @Field
     private String contentId;

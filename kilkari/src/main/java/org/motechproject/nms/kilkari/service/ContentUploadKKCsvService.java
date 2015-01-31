@@ -4,9 +4,8 @@ import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
 
 public interface ContentUploadKKCsvService {
 
-    ContentUploadKKCsv findById(Long id);
+    ContentUploadKKCsv getRecord(Long id);
 
     void delete(ContentUploadKKCsv record);
 
-    void deleteAll();
 }

@@ -23,8 +23,8 @@ public class CircleServiceImpl implements CircleService {
     }
 
     @Override
-    public Circle getCircleByCode(String circleCode) {
-        return circleDataService.getCircleByCode(circleCode);
+    public Circle getRecordByCode(String circleCode) {
+        return circleDataService.findByCode(circleCode);
 
     }
 }

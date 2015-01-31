@@ -13,7 +13,7 @@ public class OperatorCsvServiceImpl implements OperatorCsvService {
     private OperatorCsvDataService operatorCsvDataService;
 
     @Override
-    public OperatorCsv findById(Long id) {
+    public OperatorCsv getRecord(Long id) {
         return operatorCsvDataService.findById(id);
     }
 
@@ -22,8 +22,4 @@ public class OperatorCsvServiceImpl implements OperatorCsvService {
         operatorCsvDataService.delete(record);
     }
 
-    @Override
-    public void deleteAll() {
-        operatorCsvDataService.deleteAll();
-    }
 }
