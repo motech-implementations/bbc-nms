@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -71,11 +70,7 @@ public class ChildMctsCsvHandler {
     private ConfigurationService configurationService;
 
     @MotechListener(subjects = "mds.crud.kilkarimodule.ChildMctsCsv.csv-import.success")
-    public void motherMctsCsvSuccess(MotechEvent uploadEvent){
-
-        System.out.println(uploadEvent.getSubject());
-        System.out.println("success");
-        System.out.println(childMctsCsvService.getClass().getName());
+    public void motherMctsCsvSuccess(MotechEvent uploadEvent) {
 
         Map<String, Object> parameters = uploadEvent.getParameters();
         List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
@@ -90,12 +85,11 @@ public class ChildMctsCsvHandler {
 
             try {
                 childMctsCsv = childMctsCsvService.findRecordById(id);
-                if(childMctsCsv!=null ){
+                if (childMctsCsv != null) {
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
                     insertSubscriptionSubccriber(subscriber);
                     summary.incrementSuccessCount();
-                }
-                else {
+                } else {
                     summary.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
@@ -118,7 +112,7 @@ public class ChildMctsCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("username", csvFileName, logFile, summary);
     }
 
-    private Subscriber childMctsToSubscriberMapper(ChildMctsCsv childMctsCsv) throws DataValidationException  {
+    private Subscriber childMctsToSubscriberMapper(ChildMctsCsv childMctsCsv) throws DataValidationException {
 
         Subscriber childSubscriber = new Subscriber();
 
@@ -174,42 +168,42 @@ public class ChildMctsCsvHandler {
     public void childMctsCsvFailure(MotechEvent uploadEvent) {
 
         Map<String, Object> params = uploadEvent.getParameters();
-        List<Long> createdIds = (List<Long>)params.get("csv-import.created_ids");
-        List<Long> updatedIds = (List<Long>)params.get("csv-import.updated_ids");
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
+        List<Long> updatedIds = (List<Long>) params.get("csv-import.updated_ids");
 
-        for(Long id : createdIds) {
-            ChildMctsCsv childMctsCsv= childMctsCsvService.findById(id);
+        for (Long id : createdIds) {
+            ChildMctsCsv childMctsCsv = childMctsCsvService.findById(id);
             childMctsCsvService.delete(childMctsCsv);
         }
 
-        for(Long id : updatedIds) {
-            ChildMctsCsv childMctsCsv= childMctsCsvService.findById(id);
+        for (Long id : updatedIds) {
+            ChildMctsCsv childMctsCsv = childMctsCsvService.findById(id);
             childMctsCsvService.delete(childMctsCsv);
         }
 
     }
 
-    public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException{
+    public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
         Subscription dbSubscription = subscriptionService.getSubscriptionByMsisdnPackStatus(subscriber.getMsisdn(), PACK_48, Status.Active);
-        if (dbSubscription == null ){
+        if (dbSubscription == null) {
             dbSubscription = subscriptionService.getPackSubscriptionByMctsIdPackStatus(subscriber.getChildMctsId(), PACK_48, Status.Active);
-            if (dbSubscription == null){
+            if (dbSubscription == null) {
                 dbSubscription = subscriptionService.getPackSubscriptionByMctsIdPackStatus(subscriber.getMotherMctsId(), PACK_72, Status.Active);
-                if(dbSubscription==null){
+                if (dbSubscription == null) {
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
                     
-                    if(activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
-                        Subscriber dbSubscriber = subscriberService.create(subscriber);//CREATE
+                    if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                        Subscriber dbSubscriber = subscriberService.create(subscriber); //CREATE
                         createSubscription(subscriber, null, dbSubscriber);
-                    } else{
-                        //logging
+                    } else {
+                        return; //Reached maximum beneficery count
                     }
                     
                 } else {
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
                     updateSubscription(subscriber, dbSubscription, true);
-                    if(!subscriber.getChildDeath()){
+                    if (!subscriber.getChildDeath()) {
                         createSubscription(subscriber, dbSubscription, dbSubscriber);
                     }
                     updateDbSubscriber(subscriber, dbSubscriber);
@@ -219,8 +213,8 @@ public class ChildMctsCsvHandler {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
-        }else{
-            if(dbSubscription.getMctsId() == null || dbSubscription.getMctsId()==subscriber.getChildMctsId()) {
+        } else {
+            if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getChildMctsId()) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             } else {
@@ -231,14 +225,14 @@ public class ChildMctsCsvHandler {
     
     private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
         
-        if(subscriber.getChildDeath()) {
+        if (subscriber.getChildDeath()) {
             updateSubscription(subscriber, dbSubscription, true);
             
-        }else{
-            if(!dbSubscriber.getDob().equals(subscriber.getDob())){
+        } else {
+            if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
                 updateSubscription(subscriber, dbSubscription, true);
                 createSubscription(subscriber, dbSubscription, dbSubscriber);
-            }  else{
+            } else {
                 updateSubscription(subscriber, dbSubscription, false);
             }
         }
@@ -247,7 +241,7 @@ public class ChildMctsCsvHandler {
     }
     
     private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
-        if(statusFlag){
+        if (statusFlag) {
             dbSubscription.setStatus(Status.Deactivated);
         }
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
@@ -280,9 +274,9 @@ public class ChildMctsCsvHandler {
         subscriptionService.create(newSubscription);
     }
 
-    private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber){
+    private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
 
-        if(!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())){
+        if (!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())) {
             dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
         }  
 

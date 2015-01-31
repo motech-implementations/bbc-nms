@@ -27,5 +27,9 @@ public final class ConfigurationConstants {
     public static final String DEFAULT_RETRY_DAY2_OBD_PRIORITY = "1";
 
     public static final String DEFAULT_RETRY_DAY3_OBD_PRIORITY = "1";
+    
+    private ConfigurationConstants() {
+        
+    }
 
 }

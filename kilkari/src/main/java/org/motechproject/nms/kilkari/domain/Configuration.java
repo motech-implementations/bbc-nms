@@ -12,44 +12,44 @@ import javax.validation.constraints.NotNull;
 public class Configuration {
 
     @Unique
-    @Field(required=true, defaultValue = "1")
+    @Field(required = true, defaultValue = "1")
     @Min(1)
     @Max(1)
     @NotNull
     private Long index;
     
-    @Field(required=true)
-	private Integer nmsKk72WeeksPackMsgsPerWeek;
-	
-	@Field(required=true)
-	private Integer nmsKk48WeeksPackMsgsPerWeek;
-	
-	@Field(required=true)
-	private Integer nmsKkMaxAllowedActiveBeneficiaryCount;
-	
-	@Field(required=true)
-	private String nmsKkFreshObdServiceId;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay1ObdServiceId;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay2ObdServiceId;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay3ObdServiceId;
-	
-	@Field(required=true)
-	private String nmsKkFreshObdPriority;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay1ObdPriority;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay2ObdPriority;
-	
-	@Field(required=true)
-	private String nmsKkRetryDay3ObdPriority;
+    @Field(required = true)
+    private Integer nmsKk72WeeksPackMsgsPerWeek;
+    
+    @Field(required = true)
+    private Integer nmsKk48WeeksPackMsgsPerWeek;
+    
+    @Field(required = true)
+    private Integer nmsKkMaxAllowedActiveBeneficiaryCount;
+    
+    @Field(required = true)
+    private String nmsKkFreshObdServiceId;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay1ObdServiceId;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay2ObdServiceId;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay3ObdServiceId;
+    
+    @Field(required = true)
+    private String nmsKkFreshObdPriority;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay1ObdPriority;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay2ObdPriority;
+    
+    @Field(required = true)
+    private String nmsKkRetryDay3ObdPriority;
 
     public Long getIndex() {
         return index;
