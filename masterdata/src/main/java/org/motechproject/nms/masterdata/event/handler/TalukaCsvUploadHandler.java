@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
@@ -48,7 +49,7 @@ public class TalukaCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
-    @MotechListener(subjects = {"mds.crud.masterdata.TalukaCsv.csv-import.success"})
+    @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_SUCCESS})
     public void talukaCsvSuccess(MotechEvent motechEvent) {
 
         int failedRecordCount = 0;
@@ -106,7 +107,7 @@ public class TalukaCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.TalukaCsv.csv-import.failed"})
+    @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_FAILED})
     public void talukaCsvFailed(MotechEvent event) {
 
         talukaCsvRecordsDataService.deleteAll();

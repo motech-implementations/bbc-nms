@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
@@ -43,7 +44,7 @@ public class DistrictCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
-    @MotechListener(subjects = {"mds.crud.masterdata.DistrictCsv.csv-import.success"})
+    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
     public void districtCsvSuccess(MotechEvent motechEvent) {
 
         int failedRecordCount = 0;
@@ -98,7 +99,7 @@ public class DistrictCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.DistrictCsv.csv-import.failed"})
+    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_FAILED})
     public void districtCsvFailed() {
 
         districtCsvRecordsDataService.deleteAll();

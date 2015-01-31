@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.util.BulkUploadError;
@@ -44,7 +45,7 @@ public class HealthBlockCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
-    @MotechListener(subjects = {"mds.crud.masterdata.HealthBlockCsv.csv-import.success"})
+    @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS})
     public void healthBlockCsvSuccess(MotechEvent motechEvent) {
 
         int failedRecordCount = 0;
@@ -103,7 +104,7 @@ public class HealthBlockCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.HealthBlockCsv.csv-import.failed"})
+    @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_FAILED})
     public void healthBlockCsvFailed(MotechEvent event) {
 
         healthBlockCsvRecordsDataService.deleteAll();

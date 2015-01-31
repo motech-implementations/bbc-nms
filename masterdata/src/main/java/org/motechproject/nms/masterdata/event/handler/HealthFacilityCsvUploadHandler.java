@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.util.BulkUploadError;
@@ -53,7 +54,7 @@ public class HealthFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
 
-    @MotechListener(subjects = {"mds.crud.masterdata.HealthFacilityCsv.csv-import.success"})
+    @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS})
     public void healthFacilityCsvSuccess(MotechEvent motechEvent) {
 
         int failedRecordCount = 0;
@@ -115,7 +116,7 @@ public class HealthFacilityCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.HealthFacilityCsv.csv-import.failed"})
+    @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_FAILED})
     public void healthFacilityCsvFailed(MotechEvent event) {
 
         healthFacilityCsvRecordsDataService.deleteAll();

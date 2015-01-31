@@ -14,6 +14,12 @@ public class State extends LocationUnitMetaData {
     @Field
     private Set<District> district;
 
+    @Field
+    private Integer mkCapping;
+
+    @Field
+    private Integer maCapping;
+
     public State() {
     }
 
@@ -33,29 +39,29 @@ public class State extends LocationUnitMetaData {
         this.district = district;
     }
 
+    public Integer getMkCapping() {
+        return mkCapping;
+    }
+
+    public void setMkCapping(Integer mkCapping) {
+        this.mkCapping = mkCapping;
+    }
+
+    public Integer getMaCapping() {
+        return maCapping;
+    }
+
+    public void setMaCapping(Integer maCapping) {
+        this.maCapping = maCapping;
+    }
+
     @Override
     public String toString() {
         return "State{" +
                 "stateCode=" + stateCode +
                 ", district=" + district +
+                ", mkCapping=" + mkCapping +
+                ", maCapping=" + maCapping +
                 '}';
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof State)) {
-            return false;
-        }
-
-        State state = (State) o;
-
-        if (!state.getStateCode().equals(state.getStateCode())) {
-            return false;
-        }
-
-        return true;
-
     }
 }
