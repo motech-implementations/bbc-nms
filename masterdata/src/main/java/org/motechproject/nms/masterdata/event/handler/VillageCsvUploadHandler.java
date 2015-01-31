@@ -77,7 +77,7 @@ public class VillageCsvUploadHandler {
                     Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
 
                     if (stateRecord != null && districtRecord != null && talukaRecord != null) {
-                        insertVillageData(newRecord);
+                        insertVillageData(talukaRecord,newRecord);
                         result.incrementSuccessCount();
                         villageCsvRecordsDataService.delete(villageCsvRecord);
                     } else {
@@ -133,7 +133,7 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertVillageData(Village villageData) {
+    private void insertVillageData(Taluka talukaData,Village villageData) {
 
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
                 villageData.getStateCode(),
@@ -146,7 +146,8 @@ public class VillageCsvUploadHandler {
             villageRecordsDataService.update(villageData);
             logger.info("Village permanent data is successfully updated.");
         } else {
-            villageRecordsDataService.create(villageData);
+            talukaData.getVillage().add(villageData);
+            talukaRecordsDataService.create(talukaData);
             logger.info("Village permanent data is successfully updated.");
         }
     }
