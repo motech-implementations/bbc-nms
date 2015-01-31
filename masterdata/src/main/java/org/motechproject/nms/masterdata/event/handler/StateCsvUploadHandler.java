@@ -104,7 +104,9 @@ public class StateCsvUploadHandler {
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);
-        
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
+
         return newRecord;
     }
 

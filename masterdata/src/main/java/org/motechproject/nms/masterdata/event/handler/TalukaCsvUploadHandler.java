@@ -127,6 +127,8 @@ public class TalukaCsvUploadHandler {
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
         newRecord.setTalukaCode(talukaCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

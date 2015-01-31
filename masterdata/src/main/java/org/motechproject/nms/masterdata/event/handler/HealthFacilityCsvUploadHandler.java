@@ -141,6 +141,8 @@ public class HealthFacilityCsvUploadHandler {
         newRecord.setTalukaCode(talukaCode);
         newRecord.setHealthBlockCode(healthBlockCode);
         newRecord.setHealthFacilityCode(facilityCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

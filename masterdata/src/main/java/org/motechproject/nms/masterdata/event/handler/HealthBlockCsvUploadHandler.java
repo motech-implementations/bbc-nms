@@ -126,6 +126,8 @@ public class HealthBlockCsvUploadHandler {
         newRecord.setDistrictCode(districtCode);
         newRecord.setTalukaCode(talukaCode);
         newRecord.setHealthBlockCode(healthBlockCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

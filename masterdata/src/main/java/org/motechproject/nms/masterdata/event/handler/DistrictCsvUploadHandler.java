@@ -116,6 +116,8 @@ public class DistrictCsvUploadHandler {
         newRecord.setName(districtName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

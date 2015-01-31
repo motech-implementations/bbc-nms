@@ -129,6 +129,8 @@ public class VillageCsvUploadHandler {
         newRecord.setDistrictCode(districtCode);
         newRecord.setTalukaCode(talukaCode);
         newRecord.setVillageCode(villageCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

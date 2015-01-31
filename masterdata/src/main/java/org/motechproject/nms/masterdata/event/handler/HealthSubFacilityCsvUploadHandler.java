@@ -155,6 +155,8 @@ public class HealthSubFacilityCsvUploadHandler {
         newRecord.setHealthBlockCode(healthBlockCode);
         newRecord.setHealthFacilityCode(healthfacilityCode);
         newRecord.setHealthSubFacilityCode(healthSubFacilityCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }
