@@ -10,5 +10,5 @@ import org.motechproject.nms.masterdata.domain.State;
  */
 public interface StateRecordsDataService extends MotechDataService<State> {
     @Lookup
-    State findRecordById(@LookupField(name = "stateId") Long id);
+    State findRecordByStateCode(@LookupField(name = "stateCode") Long code);
 }

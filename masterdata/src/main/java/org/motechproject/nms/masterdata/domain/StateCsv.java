@@ -15,26 +15,27 @@ import java.lang.String;
 )
 public class StateCsv extends LocationUnitMetaDataCsv {
 
-    @Field(name = "stateid")
-    private String stateId;
+    @Field(name = "stateCode")
+    private String stateCode;
 
-    public StateCsv(String operation, String name, String stateid) {
+    public StateCsv(String operation, String name, String stateCode) {
+
         super(operation, name);
-        this.setStateId(getStateId());
+        this.stateCode = stateCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
     @Override
     public String toString() {
         return "StateCsv{" +
-                "stateId=" + stateId +
+                "stateCode=" + stateCode +
                 '}';
     }
 }

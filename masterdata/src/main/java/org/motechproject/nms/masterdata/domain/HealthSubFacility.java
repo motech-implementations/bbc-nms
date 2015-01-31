@@ -14,6 +14,20 @@ public class HealthSubFacility extends LocationUnitMetaData {
     @Field
     private long sId;
 
+
+    @Field
+    private Long phcId;
+
+    @Field
+    private String talukaCode;
+
+    @Field
+    private Long districtCode;
+
+    @Field
+    private Long stateCode;
+
+
     public HealthSubFacility(String name, long sId) {
         super(name);
         this.sId = sId;

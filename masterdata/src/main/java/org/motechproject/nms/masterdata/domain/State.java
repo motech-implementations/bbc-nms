@@ -3,9 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Persistent;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -14,35 +12,48 @@ import java.util.List;
 public class State extends LocationUnitMetaData{
 
     @Field
-    private Long stateId;
+    private Long stateCode;
 
     @Field
-    @Column(name ="state_id")
-    @Persistent(defaultFetchGroup = "true",mappedBy = "state_id")
-    private List<District> district;
+    private Set<District> district;
 
-
-    public State(String name, long stateId, List<District> district) {
+    public State(String name, Long stateCode, Set<District> district) {
         super(name);
-        this.setStateId(stateId);
+        this.stateCode = stateCode;
         this.district = district;
     }
 
-    public List<District> getDistrict() {
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
+    }
+
+    public Set<District> getDistrict() {
         return district;
     }
 
-    public void setDistrict(List<District> district) {
+    public void setDistrict(Set<District> district) {
         this.district = district;
     }
 
-    public Long getStateId() {
-        return stateId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof State)) return false;
+
+        State state = (State) o;
+
+        if (!state.getStateCode().equals(state.getStateCode())) return false;
+
+        return true;
     }
 
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
+    @Override
+    public int hashCode() {
+        return stateCode.hashCode();
     }
-
 
 }

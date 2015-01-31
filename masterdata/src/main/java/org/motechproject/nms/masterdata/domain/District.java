@@ -3,9 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Persistent;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -14,44 +12,44 @@ import java.util.List;
 public class District extends LocationUnitMetaData {
 
     @Field
-    private Long districtId;
+    private Long districtCode;
 
     @Field
-    @Persistent(defaultFetchGroup = "true")
-    @Column(name="district_id")
-    private List<Taluka> taluka;
-
-    public State getState_id() {
-        return state_id;
-    }
-
-    public void setState_id(State state_id) {
-        this.state_id = state_id;
-    }
+    private Set<Taluka> taluka;
 
     @Field
-    private State state_id;
+    private Long stateCode;
 
-    public District(String name, Long districtId, List<Taluka> taluka, State state_id) {
+
+    public District(String name, Long districtCode, Set<Taluka> taluka, Long stateCode) {
         super(name);
-        this.districtId = districtId;
+        this.districtCode = districtCode;
         this.taluka = taluka;
-        this.state_id = state_id;
+        this.stateCode = stateCode;
     }
 
-    public Long getDistrictId() {
-        return districtId;
+    public Long getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(Long districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(Long districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public List<Taluka> getTaluka() {
+    public Set<Taluka> getTaluka() {
         return taluka;
     }
 
-    public void setTaluka(List<Taluka> taluka) {
+    public void setTaluka(Set<Taluka> taluka) {
         this.taluka = taluka;
     }
+
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
+    }
+
 }

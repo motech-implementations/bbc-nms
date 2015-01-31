@@ -19,39 +19,39 @@ import java.lang.String;
 )
 public class DistrictCsv extends LocationUnitMetaDataCsv {
 
-    @Field(name = "districtId")
-    private String districtId;
+    @Field(name = "districtCode")
+    private String districtCode;
 
     @Field(name = "stateId")
-    private String stateId;
+    private String stateCode;
 
-    public DistrictCsv(String operation, String name,String districtId,String stateId) {
+    public DistrictCsv(String operation, String name,String districtCode,String stateCode) {
         super(operation, name);
-        this.districtId = districtId;
-        this.stateId = stateId;
+        this.districtCode = districtCode;
+        this.stateCode = stateCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
     @Override
     public String toString() {
         return "DistrictCsv{" +
-                "districtId=" + districtId +
-                ", stateId=" + stateId +
+                "districtCode=" + districtCode +
+                ", stateCode=" + stateCode +
                 '}';
     }
 }

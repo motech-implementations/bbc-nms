@@ -20,51 +20,52 @@ import java.lang.String;
 public class TalukaCsv extends LocationUnitMetaDataCsv {
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String tCode;
+    private String talukaCode;
 
-    public TalukaCsv(String operation, String name, String districtId,String stateId,String tCode) {
+    public TalukaCsv(String operation, String name, String districtCode, String stateCode, String talukaCode) {
         super(operation, name);
-        this.districtId = districtId;
-        this.stateId = stateId;
-        this.tCode = tCode;
+        this.districtCode = districtCode;
+        this.stateCode = stateCode;
+        this.talukaCode = talukaCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setTalukaCode(String tCode) {
+        this.talukaCode = tCode;
     }
 
     @Override
     public String toString() {
         return "TalukaCsv{" +
-                ", districtId=" + districtId +
-                ", stateId=" + stateId +
-                ", tCode=" + tCode +
+                ", districtId=" + districtCode +
+                ", stateId=" + stateCode +
+                ", talukaCode=" + talukaCode +
                 '}';
     }
+
 }

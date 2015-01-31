@@ -3,9 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Persistent;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -14,31 +12,66 @@ import java.util.List;
 public class HealthBlock extends LocationUnitMetaData {
 
     @Field
-    private long healthBlockId;
+    private Long healthBlockId;
 
     @Field
-    @Persistent(defaultFetchGroup = "true")
-    @Column(name="healthBlock_id")
-    private List<HealthFacility> healthBlock;
+    private Set<HealthFacility> healthBlock;
 
-    public HealthBlock(String name, long healthBlockId) {
+    @Field
+    private String talukaCode;
+
+    @Field
+    private Long districtCode;
+
+    @Field
+    private Long stateCode;
+
+    public HealthBlock(String name, Long healthBlockId, Set<HealthFacility> healthBlock, String talukaCode, Long districtCode, Long stateCode) {
         super(name);
         this.healthBlockId = healthBlockId;
+        this.healthBlock = healthBlock;
+        this.talukaCode = talukaCode;
+        this.districtCode = districtCode;
+        this.stateCode = stateCode;
     }
 
-    public long getHealthBlockId() {
+    public Long getHealthBlockId() {
         return healthBlockId;
     }
 
-    public void setHealthBlockId(long healthBlockId) {
+    public void setHealthBlockId(Long healthBlockId) {
         this.healthBlockId = healthBlockId;
     }
 
-    public List<HealthFacility> getHealthBlock() {
+    public Set<HealthFacility> getHealthBlock() {
         return healthBlock;
     }
 
-    public void setHealthBlock(List<HealthFacility> healthBlock) {
+    public void setHealthBlock(Set<HealthFacility> healthBlock) {
         this.healthBlock = healthBlock;
+    }
+
+    public String getTalukaCode() {
+        return talukaCode;
+    }
+
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
+    }
+
+    public Long getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(Long districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
     }
 }

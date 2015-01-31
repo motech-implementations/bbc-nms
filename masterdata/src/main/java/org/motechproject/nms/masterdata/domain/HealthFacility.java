@@ -3,9 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Persistent;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Created by abhishek on 24/1/15.
@@ -13,32 +11,92 @@ import java.util.List;
 @Entity(recordHistory = true)
 public class HealthFacility extends LocationUnitMetaData{
 
-    @Field
-    private int facilityType;
 
     @Field
-    @Persistent(defaultFetchGroup = "true")
-    @Column(name="phc_id")
-    private List<HealthSubFacility> healthSubFacility;
+    private Long phcId;
 
-    public HealthFacility(String name, int facilityType) {
+    @Field
+    private Integer facilityType;
+
+    @Field
+    private Set<HealthSubFacility> healthSubFacility;
+
+    @Field
+    private Long healthBlockId;
+
+    @Field
+    private String talukaCode;
+
+    @Field
+    private Long districtCode;
+
+    @Field
+    private Long stateCode;
+
+    public HealthFacility(String name, Long phcId, Integer facilityType, Set<HealthSubFacility> healthSubFacility, Long healthBlockId, String talukaCode, Long districtCode, Long stateCode) {
         super(name);
+        this.phcId = phcId;
         this.facilityType = facilityType;
+        this.healthSubFacility = healthSubFacility;
+        this.healthBlockId = healthBlockId;
+        this.talukaCode = talukaCode;
+        this.districtCode = districtCode;
+        this.stateCode = stateCode;
     }
 
-    public int getFacilityType() {
+    public Long getPhcId() {
+        return phcId;
+    }
+
+    public void setPhcId(Long phcId) {
+        this.phcId = phcId;
+    }
+
+    public Integer getFacilityType() {
         return facilityType;
     }
 
-    public void setFacilityType(int facilityType) {
+    public void setFacilityType(Integer facilityType) {
         this.facilityType = facilityType;
     }
 
-    public List<HealthSubFacility> getHealthSubFacility() {
+    public Set<HealthSubFacility> getHealthSubFacility() {
         return healthSubFacility;
     }
 
-    public void setHealthSubFacility(List<HealthSubFacility> healthSubFacility) {
+    public void setHealthSubFacility(Set<HealthSubFacility> healthSubFacility) {
         this.healthSubFacility = healthSubFacility;
+    }
+
+    public Long getHealthBlockId() {
+        return healthBlockId;
+    }
+
+    public void setHealthBlockId(Long healthBlockId) {
+        this.healthBlockId = healthBlockId;
+    }
+
+    public String getTalukaCode() {
+        return talukaCode;
+    }
+
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
+    }
+
+    public Long getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(Long districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
     }
 }
