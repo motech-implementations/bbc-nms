@@ -43,7 +43,7 @@ public class HealthBlockCsvUploadHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS})
     public void healthBlockCsvSuccess(MotechEvent motechEvent) {
