@@ -99,25 +99,30 @@ public class MotherMctsCsvHandler {
                     } else {
                         insertSubscriptionSubccriber(subscriber);
                     }
-                    motherMctsCsvService.delete(motherMctsCsv);
                     summary.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetails.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                    summary.incrementFailureCount();
                     logger.error("Record not found for uploaded id [{}]", id);
+                    summary.incrementFailureCount();
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
+                logger.error("DataValidationException ::::", dve);
                 summary.incrementFailureCount();
 
             } catch (Exception e) {
+                logger.error("Genric Exception ::::", e);
                 summary.incrementFailureCount();
+            }  finally {
+                if (motherMctsCsv != null) {
+                    motherMctsCsvService.delete(motherMctsCsv);
+                }
             }
         }
         

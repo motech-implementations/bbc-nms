@@ -11,7 +11,7 @@
 
 
     <osgi:reference id="serviceConfiguration"
-                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConfigurationRecordDataService"/>
+                    interface="org.motechproject.nms.mobilekunji.repository.ConfigurationDataService"/>
 
     <osgi:reference id="contentUpload"
                     interface="org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService"/>

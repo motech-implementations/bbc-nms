@@ -25,6 +25,8 @@ import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -111,17 +113,16 @@ public class ChildMctsCsvHandler {
                     } else {
                         insertSubscriptionSubccriber(subscriber);
                     }
-                    
-                    childMctsCsvService.delete(childMctsCsv);
                     summary.incrementSuccessCount();
                 } else {
-                    summary.incrementFailureCount();
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
+                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetails.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                     logger.error("Record not found for uploaded id [{}]", id);
+                    summary.incrementFailureCount();
                 }
+                logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
@@ -130,7 +131,12 @@ public class ChildMctsCsvHandler {
                 summary.incrementFailureCount();
 
             } catch (Exception e) {
+                logger.error("Genric Exception ::::", e);
                 summary.incrementFailureCount();
+            } finally {
+                if (childMctsCsv != null) {
+                    childMctsCsvService.delete(childMctsCsv);
+                }
             }
         }
 
@@ -184,7 +190,7 @@ public class ChildMctsCsvHandler {
         }
         childSubscriber.setMsisdn(msisdn);
         childSubscriber.setChildMctsId(ParseDataHelper.parseString(childMctsCsv.getIdNo(), "idNo", true));
-        childSubscriber.setMotherMctsId(ParseDataHelper.parseString(childMctsCsv.getMotherId(), "idNo", false));
+        childSubscriber.setMotherMctsId(ParseDataHelper.parseString(childMctsCsv.getMotherId(), "Mother Id", false));
         childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(childMctsCsv.getEntryType(), "Entry Type", true)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         childSubscriber.setName(ParseDataHelper.parseString(childMctsCsv.getMotherName(), "Mother Name", false));

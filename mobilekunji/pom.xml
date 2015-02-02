@@ -13,7 +13,7 @@
     <artifactId>mobilekunji</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>Kunji module</name>
+    <name>mobilekunji</name>
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
@@ -32,6 +32,11 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>masterdata</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
         <!-- OSGi IT -->
         <dependency>
             <groupId>org.motechproject</groupId>
