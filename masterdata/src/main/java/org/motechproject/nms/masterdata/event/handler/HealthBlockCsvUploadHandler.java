@@ -92,11 +92,18 @@ public class HealthBlockCsvUploadHandler {
     }
 
     @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_FAILED})
-    public void healthBlockCsvFailed(MotechEvent event) {
+    public void healthBlockCsvFailed(MotechEvent motechEvent) {
 
-        healthBlockCsvRecordsDataService.deleteAll();
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing HealthBlockCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
-        logger.info("HealthBlock successfully deleted from temporary tables");
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from HealthBlockCsv table for id %s", id.toString()));
+            HealthBlockCsv healthBlockCsv = healthBlockCsvRecordsDataService.findById(id);
+            healthBlockCsvRecordsDataService.delete(healthBlockCsv);
+        }
+        logger.info("Failure method finished for HealthBlockCsv");
     }
 
     private HealthBlock mapHealthBlockCsv(HealthBlockCsv record) throws DataValidationException {

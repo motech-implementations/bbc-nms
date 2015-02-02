@@ -96,11 +96,18 @@ public class TalukaCsvUploadHandler {
     }
 
     @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_FAILED})
-    public void talukaCsvFailed(MotechEvent event) {
+    public void talukaCsvFailed(MotechEvent motechEvent) {
 
-        talukaCsvRecordsDataService.deleteAll();
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing TalukaCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
-        logger.info("Taluka successfully deleted from temporary tables");
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from TalukaCsv table for id %s", id.toString()));
+            TalukaCsv talukaCsv = talukaCsvRecordsDataService.findById(id);
+            talukaCsvRecordsDataService.delete(talukaCsv);
+        }
+        logger.info("Failure method finished for TalukaCsv");
     }
 
     private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
