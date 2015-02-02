@@ -121,25 +121,20 @@ public class DistrictCsvUploadHandler {
 
     private void insertDistrictData(State stateData, District districtData) {
 
-        District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
+        District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 
-        if (dist != null) {
-            districtRecordsDataService.update(dist);
-            logger.info("District permanent data is successfully updated.");
+        if (existDistrictData != null) {
+            updateDistrict(existDistrictData,districtData);
+            logger.info("District data is successfully updated.");
         } else {
             stateData.getDistrict().add(districtData);
             stateRecordsDataService.update(stateData);
-            logger.info("District permanent data is successfully inserted.");
+            logger.info("District data is successfully inserted.");
         }
     }
 
-    private State isStateExist(Long stateCode) {
-
-        State stateRecord = stateRecordsDataService.findRecordByStateCode(stateCode);
-        if (stateRecord != null) {
-            return stateRecord;
-        }
-        return null;
+    private void updateDistrict(District existDistrictData, District districtData) {
+        existDistrictData.setName(districtData.getName());
+        districtRecordsDataService.update(existDistrictData);
     }
-
 }
