@@ -13,6 +13,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
@@ -101,22 +102,30 @@ public class FlwUploadHandler {
                     temporaryFrontLineWorker = validateFrontLineWorker(record);
                     frontLineWorker = mapFrontLineWorkerFrom(record, temporaryFrontLineWorker);
 
-                        FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(),
-                                frontLineWorker.getStateCode());
+                    FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(),
+                            frontLineWorker.getStateCode());
+                    if (dbRecord == null) {
+                        dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
                         if (dbRecord == null) {
-                            dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
-                            if (dbRecord == null) {
-                                flwRecordDataService.create(frontLineWorker);
-                                flwCsvRecordsDataService.delete(record);
-                                summary.incrementSuccessCount();
-                                logger.info("Successful creation of new front line worker");
+                            flwRecordDataService.create(frontLineWorker);
+                            flwCsvRecordsDataService.delete(record);
+                            summary.incrementSuccessCount();
+                            logger.info("Successful creation of new front line worker");
+                        } else {
+                            boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
+                            if (dbRecord.getStatus() == Status.INVALID && valid) {
+                                summary.incrementFailureCount();
+                                setErrorDetails(record.toString(), "status changed from invalid to valid", "status changed from invalid to valid");
+                                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                logger.warn("Status change try from invalid to valid for id : {}", id);
                             } else {
-                                boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
-                                if (dbRecord.getStatus() == Status.INVALID && valid) {
-                                    summary.incrementFailureCount();
-                                    setErrorDetails(record.toString(), "status changed from invalid to valid", "status changed from invalid to valid");
-                                    bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                                    logger.warn("Status change try from invalid to valid for id : {}", id);
+                                if (OperationType.DEL.toString().equals(record.getOperation())) {
+
+                                    if (OperationType.DEL.toString().equals(record.getOperation())) {
+                                        flwRecordDataService.delete(dbRecord);
+                                        logger.info("Record deleted successfully for FrontLineWorker");
+                                    }
+
                                 } else {
                                     flwRecordDataService.update(frontLineWorker);
                                     flwCsvRecordsDataService.delete(record);
@@ -125,12 +134,13 @@ public class FlwUploadHandler {
                                 }
 
                             }
-                        } else {
-                            flwRecordDataService.update(frontLineWorker);
-                            flwCsvRecordsDataService.delete(record);
-                            summary.incrementSuccessCount();
-                            logger.info("Record updated successfully for Flw. Searched By: Flw ID and State ID");
                         }
+                    } else {
+                        flwRecordDataService.update(frontLineWorker);
+                        flwCsvRecordsDataService.delete(record);
+                        summary.incrementSuccessCount();
+                        logger.info("Record updated successfully for Flw. Searched By: Flw ID and State ID");
+                    }
 
 
                 }
@@ -226,7 +236,7 @@ public class FlwUploadHandler {
         designation = ParseDataHelper.parseString("Type", record.getType(), true);
 
         if (Designation.of(designation) != Designation.ANM || Designation.of(designation) != Designation.AWW ||
-                Designation.of(designation) != Designation.ASHA ||Designation.of(designation) != Designation.USHA) {
+                Designation.of(designation) != Designation.ASHA || Designation.of(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
         return temporaryFrontLineWorker;
