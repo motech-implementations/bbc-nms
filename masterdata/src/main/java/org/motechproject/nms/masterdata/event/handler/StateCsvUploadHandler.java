@@ -39,6 +39,12 @@ public class StateCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in State table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.STATE_CSV_SUCCESS})
     public void stateCsvSuccess(MotechEvent motechEvent) {
 
@@ -54,6 +60,7 @@ public class StateCsvUploadHandler {
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
+        String userName = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         StateCsv stateCsvRecord = null;
@@ -65,7 +72,7 @@ public class StateCsvUploadHandler {
                 stateCsvRecord = stateCsvRecordsDataService.findById(id);
 
                 if (stateCsvRecord != null) {
-
+                    userName = stateCsvRecord.getOwner();
                     logger.info("Id exist in State Temporary Entity");
                     State newRecord = mapStateCsv(stateCsvRecord);
                     insertStateData(newRecord,stateCsvRecord.getOperation());
@@ -99,9 +106,15 @@ public class StateCsvUploadHandler {
             }
         }
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.STATE_CSV_FAILED})
     public void stateCsvFailed(MotechEvent motechEvent) {
 

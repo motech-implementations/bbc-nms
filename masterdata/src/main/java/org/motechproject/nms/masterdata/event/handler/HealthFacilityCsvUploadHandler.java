@@ -53,7 +53,12 @@ public class HealthFacilityCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
-
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in HealthFacility table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS})
     public void healthFacilityCsvSuccess(MotechEvent motechEvent) {
 
@@ -69,6 +74,7 @@ public class HealthFacilityCsvUploadHandler {
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
+        String userName = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         HealthFacilityCsv healthFacilityCsvRecord = null;
@@ -80,6 +86,7 @@ public class HealthFacilityCsvUploadHandler {
 
                 if (null != healthFacilityCsvRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
+                    userName = healthFacilityCsvRecord.getOwner();
                     HealthFacility record = mapHealthFacilityCsv(healthFacilityCsvRecord);
                     insertHealthFacilityData(record, healthFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
@@ -108,9 +115,15 @@ public class HealthFacilityCsvUploadHandler {
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_FAILED})
     public void healthFacilityCsvFailed(MotechEvent motechEvent) {
 

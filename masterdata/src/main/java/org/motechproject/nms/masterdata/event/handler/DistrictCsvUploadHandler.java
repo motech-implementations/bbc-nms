@@ -44,6 +44,12 @@ public class DistrictCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in District table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
     public void districtCsvSuccess(MotechEvent motechEvent) {
 
@@ -54,6 +60,7 @@ public class DistrictCsvUploadHandler {
 
         Map<String, Object> params = motechEvent.getParameters();
 
+        String userName = null;
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
@@ -70,6 +77,7 @@ public class DistrictCsvUploadHandler {
                 District record = mapDistrictCsv(districtCsvRecord);
 
                 if (districtCsvRecord != null) {
+                    userName = districtCsvRecord.getOwner();
                     logger.info("Id exist in District Temporary Entity");
                     insertDistrictData(record,districtCsvRecord.getOperation());
                     result.incrementSuccessCount();
@@ -98,9 +106,15 @@ public class DistrictCsvUploadHandler {
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_FAILED})
     public void districtCsvFailed(MotechEvent motechEvent) {
 

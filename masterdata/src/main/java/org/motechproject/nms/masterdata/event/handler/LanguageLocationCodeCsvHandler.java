@@ -65,8 +65,7 @@ public class LanguageLocationCodeCsvHandler {
         String userName = null;
 
         BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary summary = new CsvProcessingSummary();
-
+        CsvProcessingSummary result = new CsvProcessingSummary();
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvImportFileName = (String) params.get("csv-import.filename");
@@ -98,25 +97,33 @@ public class LanguageLocationCodeCsvHandler {
                         logger.info("Record created successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
                     }
                     languageLocationCodeServiceCsv.delete(record);
-                    summary.incrementSuccessCount();
+                    result.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the LanguageLocationCodeCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                    summary.incrementFailureCount();
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                summary.incrementFailureCount();
+                result.incrementFailureCount();
+            } catch (Exception e) {
+                logger.error("LANGUAGE_LOCATION_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+            finally{
+                if(null != record){
+                    languageLocationCodeServiceCsv.delete(record);
+                }
             }
         }
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, result);
         logger.info("Finished processing LanguageLocationCodeCsv-import success");
     }
 

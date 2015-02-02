@@ -49,6 +49,12 @@ public class TalukaCsvUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in Taluka table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_SUCCESS})
     public void talukaCsvSuccess(MotechEvent motechEvent) {
 
@@ -64,7 +70,7 @@ public class TalukaCsvUploadHandler {
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
-
+        String userName = null;
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         TalukaCsv talukaCsvRecord = null;
 
@@ -75,6 +81,7 @@ public class TalukaCsvUploadHandler {
 
                 if (talukaCsvRecord != null) {
                     logger.info("Id exist in Taluka Temporary Entity");
+                    userName = talukaCsvRecord.getOwner();
                     Taluka record = mapTalukaCsv(talukaCsvRecord);
                     insertTalukaData(record, talukaCsvRecord.getOperation());
                     result.incrementSuccessCount();
@@ -103,9 +110,15 @@ public class TalukaCsvUploadHandler {
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_FAILED})
     public void talukaCsvFailed(MotechEvent motechEvent) {
 
