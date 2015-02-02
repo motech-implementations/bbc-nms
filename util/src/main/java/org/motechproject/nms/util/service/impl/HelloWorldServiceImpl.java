@@ -1,6 +1,6 @@
-package org.motechproject.nms.flw.service.impl;
+package org.motechproject.nms.util.service.impl;
 
-import org.motechproject.nms.flw.service.HelloWorldService;
+import org.motechproject.nms.util.service.HelloWorldService;
 import org.springframework.stereotype.Service;
 
 /**

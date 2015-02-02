@@ -1,8 +1,8 @@
-package org.motechproject.nms.flw.service;
+package org.motechproject.nms.util.service;
 
 import java.util.List;
 
-import org.motechproject.nms.flw.domain.HelloWorldRecord;
+import org.motechproject.nms.util.domain.HelloWorldRecord;
 
 /**
  * Service interface for CRUD on simple repository records.

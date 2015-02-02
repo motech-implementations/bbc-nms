@@ -1,4 +1,4 @@
-package org.motechproject.nms.flw.service;
+package org.motechproject.nms.util.service;
 
 /**
  * Simple example of a service interface.

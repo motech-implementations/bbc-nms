@@ -1,12 +1,13 @@
-package org.motechproject.nms.flw.service.impl;
+package org.motechproject.nms.util.service.impl;
 
-import org.motechproject.nms.flw.service.HelloWorldRecordService;
-import org.motechproject.nms.flw.repository.HelloWorldRecordsDataService;
-import org.motechproject.nms.flw.domain.HelloWorldRecord;
+import org.motechproject.nms.util.service.HelloWorldRecordService;
+import org.motechproject.nms.util.repository.HelloWorldRecordsDataService;
+import org.motechproject.nms.util.domain.HelloWorldRecord;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

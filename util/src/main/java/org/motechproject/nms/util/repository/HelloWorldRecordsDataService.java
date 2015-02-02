@@ -1,10 +1,12 @@
-package org.motechproject.nms.flw.repository;
+package org.motechproject.nms.util.repository;
 
-import org.motechproject.nms.flw.domain.HelloWorldRecord;
+import org.motechproject.nms.util.domain.HelloWorldRecord;
 
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+
+import java.util.List;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.

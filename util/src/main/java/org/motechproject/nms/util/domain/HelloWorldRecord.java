@@ -1,8 +1,9 @@
-package org.motechproject.nms.flw.domain;
+package org.motechproject.nms.util.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -58,7 +59,6 @@ public class HelloWorldRecord {
         }
 
         final HelloWorldRecord other = (HelloWorldRecord) obj;
-        final HelloWorldRecord other1234 = (HelloWorldRecord) obj;
 
         return Objects.equals(this.name, other.name) && Objects.equals(this.message, other.message);
     }
