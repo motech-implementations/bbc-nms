@@ -71,9 +71,8 @@ public class HealthBlockCsvUploadHandler {
 
                 if (healthBlockCsvRecord != null) {
                     logger.info("Id exist in HealthBlock Temporary Entity");
-                    HealthBlock newRecord = mapHealthBlockCsv(healthBlockCsvRecord);
-                    Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-                    insertHealthBlockData(talukaRecord, newRecord, healthBlockCsvRecord.getOperation());
+                    HealthBlock record = mapHealthBlockCsv(healthBlockCsvRecord);
+                    insertHealthBlockData(record, healthBlockCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in HealthBlock Temporary Entity");
@@ -129,18 +128,18 @@ public class HealthBlockCsvUploadHandler {
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", null);
+            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
         District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", null);
+            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
         Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
         newRecord.setName(healthBlockName);
         newRecord.setStateCode(stateCode);
@@ -149,11 +148,12 @@ public class HealthBlockCsvUploadHandler {
         newRecord.setHealthBlockCode(healthBlockCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }
 
-    private void insertHealthBlockData(Taluka talukaData, HealthBlock healthBlockData, String operation) {
+    private void insertHealthBlockData(HealthBlock healthBlockData, String operation) {
 
         logger.debug("Health Block data contains Health Block code : {}",healthBlockData.getHealthBlockCode());
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
@@ -171,8 +171,10 @@ public class HealthBlockCsvUploadHandler {
                 logger.info("HealthBlock data is successfully updated.");
             }
         } else {
-            talukaData.getHealthBlock().add(healthBlockData);
-            talukaRecordsDataService.create(talukaData);
+
+            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
+            talukaRecord.getHealthBlock().add(healthBlockData);
+            talukaRecordsDataService.update(talukaRecord);
             logger.info("HealthBlock data is successfully inserted.");
         }
     }

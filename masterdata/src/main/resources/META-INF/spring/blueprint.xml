@@ -69,9 +69,6 @@
     <osgi:reference id="villageRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.VillageRecordsDataService"/>
 
-    <osgi:reference id="mdsLookupService"
-                    interface="org.motechproject.mds.service.MDSLookupService"/>
-
     <osgi:reference id="circleCsvDataService"
                     interface="org.motechproject.nms.masterdata.repository.CircleCsvDataService"/>
 

@@ -1,27 +1,13 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.util.List;
-import java.util.Map;
-
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
@@ -34,6 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to handle to success 
@@ -176,6 +165,8 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setPhcId(healthFacility);
         motherSubscriber.setSubCentreId(healthSubFacility);
         motherSubscriber.setVillageId(village);
+        motherSubscriber.setCreator(motherMctsCsv.getCreator());
+        motherSubscriber.setOwner(motherMctsCsv.getOwner());
         
         motherSubscriber.setMsisdn(ParseDataHelper.parseString(motherMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true));
         motherSubscriber.setMotherMctsId(ParseDataHelper.parseString(motherMctsCsv.getIdNo(), "idNo", true));
@@ -193,6 +184,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
+        motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
 
         logger.info("Validation and map to entity process finished");
         return motherSubscriber;
@@ -335,7 +327,6 @@ public class MotherMctsCsvHandler {
      *  This method is used to deactivate subscription based on csv operation
      * 
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
      */
     private void deleteSubscription(Subscriber subscriber) throws DataValidationException{
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(), subscriber.getState().getId());

@@ -135,6 +135,10 @@ public class OperatorCsvHandler {
         Operator newRecord = new Operator();
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
+
         return newRecord;
     }
 }

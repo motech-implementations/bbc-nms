@@ -124,7 +124,7 @@ public class DistrictCsvUploadHandler {
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", null);
+            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
         District newRecord = new District();
@@ -134,6 +134,7 @@ public class DistrictCsvUploadHandler {
         newRecord.setDistrictCode(districtCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }

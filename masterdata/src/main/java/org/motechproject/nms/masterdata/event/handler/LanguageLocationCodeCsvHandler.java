@@ -189,6 +189,7 @@ public class LanguageLocationCodeCsvHandler {
         newRecord.setDistrict(district);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         newRecord.setLanguageLocationCodeKK(ParseDataHelper.parseInt("LanguageLocationCodeKK", record.getLanguageLocationCodeKK(), true));
         newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));

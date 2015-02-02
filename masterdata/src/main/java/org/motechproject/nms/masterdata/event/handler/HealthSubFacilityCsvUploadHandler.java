@@ -87,15 +87,9 @@ public class HealthSubFacilityCsvUploadHandler {
 
                 if (healthSubFacilityCsvRecord != null) {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
-                    HealthSubFacility newRecord = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
-                    HealthFacility healthFacilityRecord = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
-                            newRecord.getStateCode(), newRecord.getDistrictCode(),
-                            newRecord.getTalukaCode(), newRecord.getHealthBlockCode(),
-                            newRecord.getHealthFacilityCode());
-
-                    insertHealthSubFacilityData(healthFacilityRecord, newRecord,healthSubFacilityCsvRecord.getOperation());
+                    HealthSubFacility record = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
+                    insertHealthSubFacilityData(record,healthSubFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
-
                 } else {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
@@ -152,29 +146,29 @@ public class HealthSubFacilityCsvUploadHandler {
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", null);
+            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
         District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", null);
+            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
         Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
 
         HealthBlock healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 stateCode, districtCode, talukaCode, healthBlockCode);
         if (healthBlock == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthBlock", null);
+            ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
         }
 
         HealthFacility healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
         if (healthFacility == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthFacility", null);
+            ParseDataHelper.raiseInvalidDataException("HealthFacility", "HealthFacilityCode");
         }
         newRecord.setName(healthSubFacilityName);
         newRecord.setStateCode(stateCode);
@@ -185,11 +179,12 @@ public class HealthSubFacilityCsvUploadHandler {
         newRecord.setHealthSubFacilityCode(healthSubFacilityCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }
 
-    private void insertHealthSubFacilityData(HealthFacility healthFacilityData, HealthSubFacility healthSubFacilityData, String operation) {
+    private void insertHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}",healthSubFacilityData.getHealthSubFacilityCode());
 
@@ -211,9 +206,14 @@ public class HealthSubFacilityCsvUploadHandler {
                 logger.info("HealthSubFacility Permanent data is successfully updated.");
             }
         } else {
+            HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
+                    healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
+                    healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
+                    healthSubFacilityData.getHealthFacilityCode());
+
             healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
-            healthFacilityRecordsDataService.create(healthFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully updated.");
+            healthFacilityRecordsDataService.update(healthFacilityData);
+            logger.info("HealthSubFacility Permanent data is successfully inserted.");
         }
     }
 

@@ -128,6 +128,7 @@ public class StateCsvUploadHandler {
         newRecord.setStateCode(stateCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }

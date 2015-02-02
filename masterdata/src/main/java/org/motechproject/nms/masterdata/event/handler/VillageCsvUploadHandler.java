@@ -75,9 +75,8 @@ public class VillageCsvUploadHandler {
 
                 if (villageCsvRecord != null) {
                     logger.info("Id exist in Village Temporary Entity");
-                    Village newRecord = mapVillageCsv(villageCsvRecord);
-                    Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-                    insertVillageData(talukaRecord, newRecord,villageCsvRecord.getOperation());
+                    Village record = mapVillageCsv(villageCsvRecord);
+                    insertVillageData(record, villageCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Village Temporary Entity");
@@ -134,18 +133,18 @@ public class VillageCsvUploadHandler {
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", null);
+            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
         District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", null);
+            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
         Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
 
         newRecord.setName(villageName);
@@ -155,11 +154,12 @@ public class VillageCsvUploadHandler {
         newRecord.setVillageCode(villageCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }
 
-    private void insertVillageData(Taluka talukaData, Village villageData, String operation) {
+    private void insertVillageData(Village villageData, String operation) {
 
         logger.debug("Village data contains village code : {}",villageData.getVillageCode());
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
@@ -177,8 +177,9 @@ public class VillageCsvUploadHandler {
                 logger.info("Village data is successfully updated.");
             }
         } else {
-            talukaData.getVillage().add(villageData);
-            talukaRecordsDataService.create(talukaData);
+            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(), villageData.getDistrictCode(), villageData.getTalukaCode());
+            talukaRecord.getVillage().add(villageData);
+            talukaRecordsDataService.update(talukaRecord);
             logger.info("Village data is successfully inserted.");
         }
     }

@@ -75,9 +75,8 @@ public class TalukaCsvUploadHandler {
 
                 if (talukaCsvRecord != null) {
                     logger.info("Id exist in Taluka Temporary Entity");
-                    Taluka newRecord = mapTalukaCsv(talukaCsvRecord);
-                    District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
-                    insertTalukaData(districtRecord, newRecord, talukaCsvRecord.getOperation());
+                    Taluka record = mapTalukaCsv(talukaCsvRecord);
+                    insertTalukaData(record, talukaCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Taluka Temporary Entity");
@@ -132,12 +131,12 @@ public class TalukaCsvUploadHandler {
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", null);
+            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
         District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", null);
+            ParseDataHelper.raiseInvalidDataException("District", "districtCode");
         }
 
         newRecord.setName(talukaName);
@@ -146,11 +145,12 @@ public class TalukaCsvUploadHandler {
         newRecord.setTalukaCode(talukaCode);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }
 
-    private void insertTalukaData(District districtData, Taluka talukaData, String operation) {
+    private void insertTalukaData(Taluka talukaData, String operation) {
 
         Taluka existTalukaData = talukaRecordsDataService.findTalukaByParentCode(
                 talukaData.getStateCode(),
@@ -166,6 +166,7 @@ public class TalukaCsvUploadHandler {
                 logger.info("Taluka data is successfully updated.");
             }
         } else {
+            District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
             districtData.getTaluka().add(talukaData);
             districtRecordsDataService.update(districtData);
             logger.info("Taluka data is successfully inserted.");

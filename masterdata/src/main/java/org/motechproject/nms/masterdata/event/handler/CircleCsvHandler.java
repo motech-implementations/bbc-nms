@@ -143,6 +143,7 @@ public class CircleCsvHandler {
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
+        newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
     }
