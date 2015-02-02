@@ -148,7 +148,7 @@ public class VillageCsvUploadHandler {
 
         if (existVillageData != null) {
 
-            villageRecordsDataService.update(villageData);
+            villageRecordsDataService.update(existVillageData);
             logger.info("Village permanent data is successfully updated.");
         } else {
             talukaData.getVillage().add(villageData);

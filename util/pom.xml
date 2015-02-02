@@ -13,7 +13,7 @@
     <artifactId>util</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>Utility module</name>
+    <name>util</name>
 
     <properties>
         <modules.root.dir>${basedir}/..</modules.root.dir>
@@ -72,9 +72,11 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>util/resources</Resource-Path>
                         <Context-Path>util</Context-Path>
-                        <Export-Package>org.motechproject.nms.util.service;version=${project.version},
+                        <Export-Package>org.motechproject.nms.util;version=${project.version},
+                            org.motechproject.nms.util.service;version=${project.version},
                             org.motechproject.nms.util.repository;version=${project.version},
                             org.motechproject.nms.util.domain;version=${project.version},
+                            org.motechproject.nms.util.helper;version=${project.version}
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

@@ -124,7 +124,7 @@ public class DistrictCsvUploadHandler {
         District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 
         if (dist != null) {
-            districtRecordsDataService.update(districtData);
+            districtRecordsDataService.update(dist);
             logger.info("District permanent data is successfully updated.");
         } else {
             stateData.getDistrict().add(districtData);

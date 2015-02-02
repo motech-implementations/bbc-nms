@@ -22,6 +22,7 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
 /**
  * This class handles the csv upload for success and failure events for LanguageLocationCodeCsv.
  */
+@Component
 public class LanguageLocationCodeCsvHandler {
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;

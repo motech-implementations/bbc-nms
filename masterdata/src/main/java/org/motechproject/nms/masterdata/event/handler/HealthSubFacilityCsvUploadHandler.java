@@ -184,7 +184,7 @@ public class HealthSubFacilityCsvUploadHandler {
 
         if (existHealthFacilityData != null) {
 
-            healthSubFacilityRecordsDataService.update(healthSubFacilityData);
+            healthSubFacilityRecordsDataService.update(existHealthFacilityData);
             logger.info("HealthSubFacility Permanent data is successfully updated.");
         } else {
             healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);

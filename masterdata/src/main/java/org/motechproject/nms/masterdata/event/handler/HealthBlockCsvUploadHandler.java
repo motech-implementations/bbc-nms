@@ -144,7 +144,7 @@ public class HealthBlockCsvUploadHandler {
 
         if (existHealthBlockData != null) {
 
-            healthBlockRecordsDataService.update(healthBlockData);
+            healthBlockRecordsDataService.update(existHealthBlockData);
             logger.info("HealthBlock permanent data is successfully updated.");
         } else {
             talukaData.getHealthBlock().add(healthBlockData);
