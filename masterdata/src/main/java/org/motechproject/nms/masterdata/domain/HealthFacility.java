@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -15,6 +16,7 @@ public class HealthFacility extends LocationUnitMetaData {
     private Long healthFacilityCode;
 
     @Field
+    @Cascade(delete = true)
     private Set<HealthSubFacility> healthSubFacility;
 
     @Field

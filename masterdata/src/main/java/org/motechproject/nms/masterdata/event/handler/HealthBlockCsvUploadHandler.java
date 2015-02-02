@@ -68,7 +68,7 @@ public class HealthBlockCsvUploadHandler {
                 if (healthBlockCsvRecord != null) {
                         HealthBlock newRecord = mapHealthBlockCsv(healthBlockCsvRecord);
                         Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-                        insertHealthBlockData(talukaRecord,newRecord);
+                        insertHealthBlockData(talukaRecord,newRecord,healthBlockCsvRecord.getOperation());
                         result.incrementSuccessCount();
                         healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
                 } else {
@@ -141,7 +141,7 @@ public class HealthBlockCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthBlockData(Taluka talukaData,HealthBlock healthBlockData) {
+    private void insertHealthBlockData(Taluka talukaData, HealthBlock healthBlockData, String operation) {
 
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 healthBlockData.getStateCode(),
@@ -150,8 +150,13 @@ public class HealthBlockCsvUploadHandler {
                 healthBlockData.getHealthBlockCode());
 
         if (existHealthBlockData != null) {
-            updateHealthBlock(existHealthBlockData,healthBlockData);
-            logger.info("HealthBlock data is successfully updated.");
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
+                healthBlockRecordsDataService.delete(existHealthBlockData);
+                logger.info("HealthBlock data is successfully deleted.");
+            } else {
+                updateHealthBlock(existHealthBlockData, healthBlockData);
+                logger.info("HealthBlock data is successfully updated.");
+            }
         } else {
             talukaData.getHealthBlock().add(healthBlockData);
             talukaRecordsDataService.create(talukaData);

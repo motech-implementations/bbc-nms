@@ -32,4 +32,6 @@ public final class MasterDataConstants {
     public static final String HEALTH_SUB_FACILITY_CSV_SUCCESS = "mds.crud.masterdata.HealthSubFacilityCsv.csv-import.success";
 
     public static final String HEALTH_SUB_FACILITY_CSV_FAILED = "mds.crud.masterdata.HealthSubFacilityCsv.csv-import.failed";
+
+    public static final String DELETE_OPERATION = "DEL";
 }

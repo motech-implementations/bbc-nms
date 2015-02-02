@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -15,9 +16,11 @@ public class Taluka extends LocationUnitMetaData {
     private String talukaCode;
 
     @Field
+    @Cascade(delete = true)
     private Set<HealthBlock> healthBlock;
 
     @Field
+    @Cascade(delete = true)
     private Set<Village> village;
 
     @Field

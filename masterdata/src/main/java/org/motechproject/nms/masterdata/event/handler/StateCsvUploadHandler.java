@@ -61,7 +61,7 @@ public class StateCsvUploadHandler {
 
                 if (stateCsvRecord != null) {
                     State newRecord = mapStateCsv(stateCsvRecord);
-                    insertStateData(newRecord);
+                    insertStateData(newRecord,stateCsvRecord.getOperation());
                     result.incrementSuccessCount();
                     stateCsvRecordsDataService.delete(stateCsvRecord);
                 } else {
@@ -115,13 +115,19 @@ public class StateCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertStateData(State stateData) {
+    private void insertStateData(State stateData, String operation) {
 
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
 
         if (null != stateExistData) {
-            updateState(stateExistData,stateData);
-            logger.info("State data is successfully updated.");
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
+                stateRecordsDataService.delete(stateExistData);
+                logger.info("State data is successfully deleted.");
+            } else {
+                updateState(stateExistData, stateData);
+                logger.info("State data is successfully updated.");
+            }
         } else {
             stateRecordsDataService.create(stateData);
             logger.info("State data is successfully inserted.");

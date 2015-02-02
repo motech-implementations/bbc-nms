@@ -89,7 +89,7 @@ public class HealthSubFacilityCsvUploadHandler {
                             newRecord.getTalukaCode(), newRecord.getHealthBlockCode(),
                             newRecord.getHealthFacilityCode());
 
-                    insertHealthSubFacilityData(healthFacilityRecord, newRecord);
+                    insertHealthSubFacilityData(healthFacilityRecord, newRecord,healthSubFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
                     healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
 
@@ -178,9 +178,9 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthSubFacilityData(HealthFacility healthFacilityData, HealthSubFacility healthSubFacilityData) {
+    private void insertHealthSubFacilityData(HealthFacility healthFacilityData, HealthSubFacility healthSubFacilityData, String operation) {
 
-        HealthSubFacility existHealthFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
+        HealthSubFacility existHealthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),
                 healthSubFacilityData.getDistrictCode(),
                 healthSubFacilityData.getTalukaCode(),
@@ -189,10 +189,14 @@ public class HealthSubFacilityCsvUploadHandler {
                 healthSubFacilityData.getHealthSubFacilityCode()
         );
 
-        if (existHealthFacilityData != null) {
-
-            updateHealthSubFacilityDAta(existHealthFacilityData, healthSubFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully updated.");
+        if (existHealthSubFacilityData != null) {
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
+                healthSubFacilityRecordsDataService.delete(existHealthSubFacilityData);
+                logger.info("HealthSubFacility data is successfully deleted.");
+            } else {
+                updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
+                logger.info("HealthSubFacility Permanent data is successfully updated.");
+            }
         } else {
             healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
             healthFacilityRecordsDataService.create(healthFacilityData);

@@ -78,7 +78,7 @@ public class HealthFacilityCsvUploadHandler {
                     HealthFacility newRecord = mapHealthFacilityCsv(healthFacilityCsvRecord);
                     HealthBlock healthBlockRecord = healthBlockRecordsDataService.findHealthBlockByParentCode(
                             newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode(), newRecord.getHealthBlockCode());
-                    insertHealthFacilityData(healthBlockRecord, newRecord);
+                    insertHealthFacilityData(healthBlockRecord, newRecord,healthFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
                     healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
                 } else {
@@ -159,7 +159,7 @@ public class HealthFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthFacilityData(HealthBlock healthBlockData, HealthFacility healthFacilityData) {
+    private void insertHealthFacilityData(HealthBlock healthBlockData, HealthFacility healthFacilityData, String operation) {
 
         HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                 healthFacilityData.getStateCode(),
@@ -169,9 +169,13 @@ public class HealthFacilityCsvUploadHandler {
                 healthFacilityData.getHealthFacilityCode());
 
         if (existHealthFacilityData != null) {
-
-            updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
-            logger.info("HealthFacility data is successfully updated.");
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
+                healthFacilityRecordsDataService.delete(existHealthFacilityData);
+                logger.info("HealthFacility data is successfully deleted.");
+            } else {
+                updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
+                logger.info("HealthFacility data is successfully updated.");
+            }
         } else {
             healthBlockData.getHealthBlock().add(healthFacilityData);
             healthBlockRecordsDataService.update(healthBlockData);
