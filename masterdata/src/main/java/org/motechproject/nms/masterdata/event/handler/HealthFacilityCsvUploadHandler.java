@@ -60,9 +60,12 @@ public class HealthFacilityCsvUploadHandler {
         int failedRecordCount = 0;
         int successRecordCount = 0;
 
+        logger.info("HEALTH_FACILITY_CSV_SUCCESS event received");
+
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -72,30 +75,39 @@ public class HealthFacilityCsvUploadHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.debug("HEALTH_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
                 healthFacilityCsvRecord = healthFacilityCsvRecordsDataService.findById(id);
 
-                if (healthFacilityCsvRecord != null) {
+                if (null != healthFacilityCsvRecord) {
+                    logger.info("Id exist in HealthFacility Temporary Entity");
                     HealthFacility newRecord = mapHealthFacilityCsv(healthFacilityCsvRecord);
                     HealthBlock healthBlockRecord = healthBlockRecordsDataService.findHealthBlockByParentCode(
                             newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode(), newRecord.getHealthBlockCode());
-                    insertHealthFacilityData(healthBlockRecord, newRecord,healthFacilityCsvRecord.getOperation());
+                    insertHealthFacilityData(healthBlockRecord, newRecord, healthFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
-                    healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
                 } else {
-                    result.incrementFailureCount();
+                    logger.info("Id do not exist in HealthFacility Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
+                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(healthFacilityCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
+                result.incrementFailureCount();
             } catch (Exception e) {
-                failedRecordCount++;
+                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+            finally {
+                if(null != healthFacilityCsvRecord){
+                    healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
+                }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
@@ -105,15 +117,15 @@ public class HealthFacilityCsvUploadHandler {
     public void healthFacilityCsvFailed(MotechEvent motechEvent) {
 
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing HealthFacilityCsv-import failure for upload %s", params.toString()));
+        logger.info("HEALTH_FACILITY_CSV_FAILED event received");
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Record deleted successfully from HealthFacilityCsv table for id %s", id.toString()));
+            logger.debug("HEALTH_FACILITY_CSV_FAILED event processing start for ID: {}", id);
             HealthFacilityCsv healthFacilityCsv = healthFacilityCsvRecordsDataService.findById(id);
             healthFacilityCsvRecordsDataService.delete(healthFacilityCsv);
         }
-        logger.info("Failure method finished for HealthFacilityCsv");
+        logger.info("HEALTH_FACILITY_CSV_FAILED event processing finished");
     }
 
     private HealthFacility mapHealthFacilityCsv(HealthFacilityCsv record) throws DataValidationException {
@@ -161,6 +173,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private void insertHealthFacilityData(HealthBlock healthBlockData, HealthFacility healthFacilityData, String operation) {
 
+        logger.debug("Health Facility data contains facility code : {}",healthFacilityData.getHealthFacilityCode());
         HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                 healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(),

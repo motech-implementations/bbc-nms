@@ -50,9 +50,12 @@ public class DistrictCsvUploadHandler {
         int failedRecordCount = 0;
         int successRecordCount = 0;
 
+        logger.info("DISTRICT_CSV_SUCCESS event received");
+
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -62,29 +65,37 @@ public class DistrictCsvUploadHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
                 districtCsvRecord = districtCsvRecordsDataService.findById(id);
-                District newRecord = mapDistrictCsv(districtCsvRecord);
+                District record = mapDistrictCsv(districtCsvRecord);
 
                 if (districtCsvRecord != null) {
-                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-                    insertDistrictData(stateRecord, newRecord,districtCsvRecord.getOperation());
+                    logger.info("Id exist in District Temporary Entity");
+                    insertDistrictData(record,districtCsvRecord.getOperation());
                     result.incrementSuccessCount();
-                    districtCsvRecordsDataService.delete(districtCsvRecord);
                 } else {
-                    result.incrementFailureCount();
+                    logger.info("Id do not exist in District Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
+                logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(districtCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                districtCsvRecordsDataService.delete(districtCsvRecord);
+                result.incrementFailureCount();
             } catch (Exception e) {
-                failedRecordCount++;
+                logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+            finally {
+                if(null != districtCsvRecord){
+                    districtCsvRecordsDataService.delete(districtCsvRecord);
+                }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
@@ -94,15 +105,15 @@ public class DistrictCsvUploadHandler {
     public void districtCsvFailed(MotechEvent motechEvent) {
 
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing DistrictCsv-import failure for upload %s", params.toString()));
+        logger.info("DISTRICT_CSV_FAILED event received");
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Record deleted successfully from DistrictCsv table for id %s", id.toString()));
+            logger.debug("DISTRICT_CSV_FAILED event processing start for ID: {}", id);
             DistrictCsv districtCsv = districtCsvRecordsDataService.findById(id);
             districtCsvRecordsDataService.delete(districtCsv);
         }
-        logger.info("Failure method finished for DistrictCsv");
+        logger.info("DISTRICT_CSV_FAILED event processing finished");
     }
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
@@ -127,8 +138,9 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertDistrictData(State stateData, District districtData, String operation) {
+    private void insertDistrictData(District districtData, String operation) {
 
+        logger.debug("District data contains district code : {}",districtData.getDistrictCode());
         District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
@@ -139,6 +151,7 @@ public class DistrictCsvUploadHandler {
                 logger.info("District data is successfully updated.");
             }
         } else {
+            State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
             stateRecordsDataService.update(stateData);
             logger.info("District data is successfully inserted.");

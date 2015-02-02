@@ -55,9 +55,12 @@ public class VillageCsvUploadHandler {
         int failedRecordCount = 0;
         int successRecordCount = 0;
 
+        logger.info("VILLAGE_CSV_SUCCESS event received");
+
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -67,29 +70,38 @@ public class VillageCsvUploadHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.debug("VILLAGE_CSV_SUCCESS event processing start for ID: {}", id);
                 villageCsvRecord = villageCsvRecordsDataService.findById(id);
 
                 if (villageCsvRecord != null) {
+                    logger.info("Id exist in Village Temporary Entity");
                     Village newRecord = mapVillageCsv(villageCsvRecord);
                     Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
                     insertVillageData(talukaRecord, newRecord,villageCsvRecord.getOperation());
                     result.incrementSuccessCount();
-                    villageCsvRecordsDataService.delete(villageCsvRecord);
                 } else {
-                    result.incrementFailureCount();
+                    logger.info("Id do not exist in Village Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
+                logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(villageCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                villageCsvRecordsDataService.delete(villageCsvRecord);
+                result.incrementFailureCount();
             } catch (Exception e) {
-                failedRecordCount++;
+                logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+            finally {
+                if(null != villageCsvRecord){
+                    villageCsvRecordsDataService.delete(villageCsvRecord);
+                }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
@@ -99,15 +111,16 @@ public class VillageCsvUploadHandler {
     public void villageCsvFailed(MotechEvent motechEvent) {
 
         Map<String, Object> params = motechEvent.getParameters();
+        logger.info("VILLAGE_CSV_FAILED event received");
         logger.info(String.format("Start processing VillageCsv-import failure for upload %s", params.toString()));
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Record deleted successfully from VillageCsv table for id %s", id.toString()));
+            logger.debug("VILLAGE_CSV_FAILED event processing start for ID: {}", id);
             VillageCsv villageCsv = villageCsvRecordsDataService.findById(id);
             villageCsvRecordsDataService.delete(villageCsv);
         }
-        logger.info("Failure method finished for VillageCsv");
+        logger.info("VILLAGE_CSV_FAILED event processing finished");
     }
 
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
@@ -148,6 +161,7 @@ public class VillageCsvUploadHandler {
 
     private void insertVillageData(Taluka talukaData, Village villageData, String operation) {
 
+        logger.debug("Village data contains village code : {}",villageData.getVillageCode());
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
                 villageData.getStateCode(),
                 villageData.getDistrictCode(),

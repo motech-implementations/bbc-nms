@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -56,7 +57,7 @@ public class LanguageLocationCodeCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
+    @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing LanguageLocationCodeCsv-import success for upload {}", params.toString());
@@ -125,7 +126,7 @@ public class LanguageLocationCodeCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
+    @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_FAILED)
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing LanguageLocationCodeCsv-import failure for upload {}", params.toString());

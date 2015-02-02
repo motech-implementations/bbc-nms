@@ -55,9 +55,12 @@ public class TalukaCsvUploadHandler {
         int failedRecordCount = 0;
         int successRecordCount = 0;
 
+        logger.info("TALUKA_CSV_SUCCESS event received");
+
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -67,29 +70,38 @@ public class TalukaCsvUploadHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.debug("TALUKA_CSV_SUCCESS event processing start for ID: {}", id);
                 talukaCsvRecord = talukaCsvRecordsDataService.findById(id);
 
                 if (talukaCsvRecord != null) {
+                    logger.info("Id exist in Taluka Temporary Entity");
                     Taluka newRecord = mapTalukaCsv(talukaCsvRecord);
                     District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
-                    insertTalukaData(districtRecord, newRecord,talukaCsvRecord.getOperation());
+                    insertTalukaData(districtRecord, newRecord, talukaCsvRecord.getOperation());
                     result.incrementSuccessCount();
-                    talukaCsvRecordsDataService.delete(talukaCsvRecord);
                 } else {
-                    result.incrementFailureCount();
+                    logger.info("Id do not exist in Taluka Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
+                logger.error("TALUKA_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(talukaCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                talukaCsvRecordsDataService.delete(talukaCsvRecord);
+                result.incrementFailureCount();
             } catch (Exception e) {
-                failedRecordCount++;
+                logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+            finally {
+                if(null != talukaCsvRecord){
+                    talukaCsvRecordsDataService.delete(talukaCsvRecord);
+                }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
@@ -99,15 +111,15 @@ public class TalukaCsvUploadHandler {
     public void talukaCsvFailed(MotechEvent motechEvent) {
 
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing TalukaCsv-import failure for upload %s", params.toString()));
+        logger.info("TALUKA_CSV_FAILED event received");
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Record deleted successfully from TalukaCsv table for id %s", id.toString()));
+            logger.debug("TALUKA_CSV_FAILED event processing start for ID: {}", id);
             TalukaCsv talukaCsv = talukaCsvRecordsDataService.findById(id);
             talukaCsvRecordsDataService.delete(talukaCsv);
         }
-        logger.info("Failure method finished for TalukaCsv");
+        logger.info("TALUKA_CSV_FAILED event processing finished");
     }
 
     private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
