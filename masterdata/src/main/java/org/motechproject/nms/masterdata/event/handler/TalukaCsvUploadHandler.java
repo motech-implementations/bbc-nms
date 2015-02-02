@@ -139,14 +139,17 @@ public class TalukaCsvUploadHandler {
                 talukaData.getTalukaCode());
 
         if (existTalukaData != null) {
-
-            talukaRecordsDataService.update(existTalukaData);
-            logger.info("Taluka permanent data is successfully updated.");
+            updateTaluka(existTalukaData,talukaData);
+            logger.info("Taluka data is successfully updated.");
         } else {
             districtData.getTaluka().add(talukaData);
             districtRecordsDataService.update(districtData);
-            logger.info("Taluka permanent data is successfully updated.");
+            logger.info("Taluka data is successfully inserted.");
         }
     }
 
+    private void updateTaluka(Taluka existTalukaData, Taluka talukaData) {
+        existTalukaData.setName(talukaData.getName());
+        talukaRecordsDataService.update(existTalukaData);
+    }
 }
