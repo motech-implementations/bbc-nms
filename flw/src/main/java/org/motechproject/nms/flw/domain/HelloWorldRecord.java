@@ -58,7 +58,7 @@ public class HelloWorldRecord {
         }
 
         final HelloWorldRecord other = (HelloWorldRecord) obj;
-        final HelloWorldRecord other12 = (HelloWorldRecord) obj;
+        final HelloWorldRecord other1234 = (HelloWorldRecord) obj;
 
         return Objects.equals(this.name, other.name) && Objects.equals(this.message, other.message);
     }
