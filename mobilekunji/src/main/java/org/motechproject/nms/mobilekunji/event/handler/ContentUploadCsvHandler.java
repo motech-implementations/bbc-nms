@@ -80,7 +80,7 @@ public class ContentUploadCsvHandler {
                 logger.debug("Processing uploaded id : {}", id);
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
-                    logger.info("Record found in Csv database")
+                    logger.info("Record found in Csv database");
                     ContentUpload newRecord = mapContentUploadFrom(record);
 
                     ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
