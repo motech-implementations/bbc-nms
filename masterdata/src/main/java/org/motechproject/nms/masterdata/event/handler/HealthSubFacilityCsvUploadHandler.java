@@ -1,7 +1,7 @@
 package org.motechproject.nms.masterdata.event.handler;
 
 /**
- * Created by abhishek on 31/1/15.
+ * This class handles the csv upload for success and failure events for HealthSubFacilityCsv.
  */
 
 import org.motechproject.event.MotechEvent;
