@@ -103,11 +103,11 @@ public class OperatorCsvHandler {
                 errorDetail.setErrorDescription(ex.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
             }
-            finally{
+            finally {
                 if(null != record){
                     operatorCsvService.delete(record);
                 }

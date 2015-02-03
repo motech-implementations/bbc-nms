@@ -156,7 +156,6 @@ public class VillageCsvUploadHandler {
         }
 
         Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
-
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
