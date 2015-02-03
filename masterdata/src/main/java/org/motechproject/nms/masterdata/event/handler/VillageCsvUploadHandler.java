@@ -40,7 +40,6 @@ public class VillageCsvUploadHandler {
     @Autowired
     private VillageRecordsDataService villageRecordsDataService;
 
-
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 

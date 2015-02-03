@@ -47,13 +47,11 @@ public class HealthSubFacilityCsvUploadHandler {
     @Autowired
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
-
     @Autowired
     private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
 
     @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
-
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;

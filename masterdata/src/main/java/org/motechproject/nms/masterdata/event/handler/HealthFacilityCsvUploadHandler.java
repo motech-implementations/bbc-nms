@@ -47,7 +47,6 @@ public class HealthFacilityCsvUploadHandler {
     @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
-
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 

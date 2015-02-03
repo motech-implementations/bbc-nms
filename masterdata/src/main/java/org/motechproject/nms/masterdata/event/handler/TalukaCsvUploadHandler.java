@@ -34,7 +34,6 @@ public class TalukaCsvUploadHandler {
     @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-
     @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
