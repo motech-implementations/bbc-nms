@@ -92,7 +92,7 @@ public class HealthSubFacilityCsvUploadHandler {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
                     userName = healthSubFacilityCsvRecord.getOwner();
                     HealthSubFacility record = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
-                    insertHealthSubFacilityData(record,healthSubFacilityCsvRecord.getOperation());
+                    processHealthSubFacilityData(record,healthSubFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
@@ -194,7 +194,7 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) {
+    private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}",healthSubFacilityData.getHealthSubFacilityCode());
 
