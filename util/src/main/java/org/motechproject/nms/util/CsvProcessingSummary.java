@@ -31,4 +31,13 @@ public class CsvProcessingSummary {
     public void setFailureCount(Integer failureCount) {
         this.failureCount = failureCount;
     }
+
+    public void incrementSuccessCount() {
+
+        successCount = successCount + 1;
+    }
+    public void incrementFailureCount() {
+
+        failureCount = failureCount + 1;
+    }
 }

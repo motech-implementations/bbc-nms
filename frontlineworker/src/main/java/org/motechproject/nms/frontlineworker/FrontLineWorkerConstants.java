@@ -9,9 +9,9 @@ public final class FrontLineWorkerConstants {
 
     public static final int FLW_NAME_LENGTH = 250;
 
-    public static final int FLW_TYPE_LENGTH = 50;
+    public static final int FLW_DESIGNATION_LENGTH = 50;
 
-    public static final int TALUKA_ID_LENGTH = 50;
+    public static final int TALUKA_CODE_LENGTH = 50;
 
     public static final int FLW_ASHA_NUMBER_LENGTH = 10;
 
