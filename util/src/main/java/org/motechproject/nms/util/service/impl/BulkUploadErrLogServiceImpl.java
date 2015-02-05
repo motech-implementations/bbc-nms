@@ -2,6 +2,7 @@ package org.motechproject.nms.util.service.impl;
 
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.Constants;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.nms.util.service.BulkUploadStatusService;
@@ -14,11 +15,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.file.*;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import static org.motechproject.nms.util.constants.Constants.*;
 /**
  * Simple implementation of the {@link BulkUploadStatusService} interface.
  *
@@ -56,14 +60,14 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
 
         StringBuffer errLog = new StringBuffer();
-        errLog.append(ERROR_LOG_TITLE);
-        errLog.append(NEXT_LINE);
+        errLog.append(Constants.ERROR_LOG_TITLE);
+        errLog.append(Constants.NEXT_LINE);
         errLog.append(bulkUploadErrRecordDetails.getRecordDetails());
-        errLog.append(DELIMITER);
+        errLog.append(Constants.DELIMITER);
         errLog.append(bulkUploadErrRecordDetails.getErrorCategory());
-        errLog.append(DELIMITER);
+        errLog.append(Constants.DELIMITER);
         errLog.append(bulkUploadErrRecordDetails.getErrorDescription());
-        errLog.append(NEXT_LINE);
+        errLog.append(Constants.NEXT_LINE);
 
         try {
             Files.write(logFilePath, errLog.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -89,25 +93,25 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
         //Formatting the content of bulk upload processing summary
         StringBuffer uploadProcessingSummary = new StringBuffer();
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(UNDERLINE);
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(BULK_UPLOAD_SUMMARY_TITLE);
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(UNDERLINE);
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(TAB);
-        uploadProcessingSummary.append(USER_NAME_TITLE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.UNDERLINE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.BULK_UPLOAD_SUMMARY_TITLE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.UNDERLINE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.TAB);
+        uploadProcessingSummary.append(Constants.USER_NAME_TITLE);
         uploadProcessingSummary.append(userName);
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(TAB);
-        uploadProcessingSummary.append(SUCCESSFUL_RECORDS_TITLE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.TAB);
+        uploadProcessingSummary.append(Constants.SUCCESSFUL_RECORDS_TITLE);
         uploadProcessingSummary.append(csvProcessingSummary.getSuccessCount().toString());
-        uploadProcessingSummary.append(NEXT_LINE);
-        uploadProcessingSummary.append(TAB);
-        uploadProcessingSummary.append(FAILED_RECORDS_TITLE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
+        uploadProcessingSummary.append(Constants.TAB);
+        uploadProcessingSummary.append(Constants.FAILED_RECORDS_TITLE);
         uploadProcessingSummary.append(csvProcessingSummary.getFailureCount().toString());
-        uploadProcessingSummary.append(NEXT_LINE);
+        uploadProcessingSummary.append(Constants.NEXT_LINE);
 
         Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
 
@@ -158,7 +162,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
             Enumeration<InetAddress> inetAddresses = netInterface.getInetAddresses();
 
             for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                if(!(inetAddress.isLoopbackAddress() || inetAddress.isLinkLocalAddress())) {
+                if (!(inetAddress.isLoopbackAddress() || inetAddress.isLinkLocalAddress())) {
                     return inetAddress.getHostName();
                 }
             }
