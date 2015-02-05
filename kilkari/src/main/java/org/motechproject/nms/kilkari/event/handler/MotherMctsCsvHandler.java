@@ -1,13 +1,29 @@
 package org.motechproject.nms.kilkari.event.handler;
 
+import java.util.List;
+import java.util.Map;
+
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.kilkari.service.impl.LocationValidatorServiceImpl;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
@@ -20,9 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class is used to handle to success 
@@ -43,29 +56,50 @@ public class MotherMctsCsvHandler {
     public static final String PACK_48 = "48WEEK";
     public static final String PACK_72 = "72WEEK";
 
-    @Autowired
+    //@Autowired
     private MotherMctsCsvService motherMctsCsvService;
 
-    @Autowired
+    //@Autowired
     private SubscriptionService subscriptionService;
-    
-    @Autowired
+
+    //@Autowired
     private SubscriberService subscriberService;
 
-    @Autowired
-    private LocationValidator locationValidator;
-    
-    @Autowired
+    //@Autowired
+    private LocationValidatorService locationValidator;
+
+    //@Autowired
     private LanguageLocationCodeService languageLocationCodeService;
 
-    @Autowired
+    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
-    
-    @Autowired
+
+    //@Autowired
     private ConfigurationService configurationService;
 
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
-    
+
+    /*public MotherMctsCsvHandler(){
+
+    }*/
+    @Autowired
+    public MotherMctsCsvHandler(MotherMctsCsvService motherMctsCsvService, 
+            SubscriptionService subscriptionService,
+            SubscriberService subscriberService,
+            LocationValidatorService locationValidator,
+            LanguageLocationCodeService languageLocationCodeService,
+            BulkUploadErrLogService bulkUploadErrLogService,
+            ConfigurationService configurationService){
+        this.motherMctsCsvService = motherMctsCsvService;
+        this.subscriptionService = subscriptionService;
+        this.locationValidator = locationValidator;
+        this.subscriberService = subscriberService;
+        this.languageLocationCodeService = languageLocationCodeService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.configurationService = configurationService;
+
+    }
+
     /**
      * This method is used to process record when csv upload successfully.
      * 
@@ -77,15 +111,15 @@ public class MotherMctsCsvHandler {
         Map<String, Object> parameters = motechEvent.getParameters();
         List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
         String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
-        
+
         logger.info("Processing Csv file[{}]", csvFileName);
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary summary = new CsvProcessingSummary();
         BulkUploadError errorDetails = new BulkUploadError();
-        
+
         MotherMctsCsv motherMctsCsv = null;
         String userName = null;
-        
+
         for (Long id : uploadedIDs) {
             try {
                 logger.info("Processing record id[{}]", id);
@@ -133,7 +167,7 @@ public class MotherMctsCsvHandler {
                 }
             }
         }
-        
+
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFile, summary);
         logger.info("Success[motherMctsCsvSuccess] method finished for MotherMctsCsv");
     }
@@ -147,7 +181,7 @@ public class MotherMctsCsvHandler {
     private Subscriber motherMctsToSubscriberMapper(MotherMctsCsv motherMctsCsv) throws DataValidationException {
 
         Subscriber motherSubscriber = new Subscriber();
-        
+
         logger.info("Validation and map to entity process start");
         Long stateCode = ParseDataHelper.parseLong("State Code", motherMctsCsv.getStateCode(),  true);
         State state = locationValidator.stateConsistencyCheck(stateCode);
@@ -180,7 +214,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setVillage(village);
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
-        
+
         motherSubscriber.setMsisdn(ParseDataHelper.parseString(motherMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true));
         motherSubscriber.setMotherMctsId(ParseDataHelper.parseString(motherMctsCsv.getIdNo(), "idNo", true));
         motherSubscriber.setAge(ParseDataHelper.parseInt(motherMctsCsv.getAge(), "Age", false));
@@ -193,7 +227,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         motherSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeKKByLocationCode(stateCode, districtCode));
-        
+
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
@@ -213,16 +247,16 @@ public class MotherMctsCsvHandler {
         logger.info("Failure[motherMctsCsvFailure] method start for MotherMctsCsv");
         Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-        
+
         for (Long id : createdIds) {
             MotherMctsCsv motherMctsCsv = motherMctsCsvService.findById(id);
             motherMctsCsvService.delete(motherMctsCsv);
         }
-        
+
         logger.info("Failure[motherMctsCsvFailure] method finished for MotherMctsCsv");
-        
+
     }
-    
+
     /**
      *  This method is used to insert/update subscription and subscriber
      * 
@@ -257,7 +291,7 @@ public class MotherMctsCsvHandler {
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
-                
+
             } else {
                 throw new DataValidationException("RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "");
             }
@@ -273,7 +307,7 @@ public class MotherMctsCsvHandler {
      */
     private void updateSubscriberSubscription(Subscriber subscriber,
             Subscription dbSubscription, Subscriber dbSubscriber) {
-        
+
         if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()) {
             updateSubscription(subscriber, dbSubscription, true);
         } else {
@@ -284,11 +318,11 @@ public class MotherMctsCsvHandler {
                 updateSubscription(subscriber, dbSubscription, false);
             }
         }
-        
+
         updateDbSubscriber(subscriber, dbSubscriber);
-                
+
     }
-    
+
     /**
      *  This method is used to update Subscription info in database
      * 
@@ -300,7 +334,7 @@ public class MotherMctsCsvHandler {
         dbSubscription.setMctsId(subscriber.getMotherMctsId());
         subscriptionService.update(dbSubscription);
     }
-    
+
     /**
      *  This method is used to create Subscription in database
      * 
@@ -309,14 +343,14 @@ public class MotherMctsCsvHandler {
      *  @param dbSubscriber database subscriber
      */
     private void createSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
-        
+
         Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscription, dbSubscriber);
         newSubscription.setMctsId(subscriber.getMotherMctsId());
         newSubscription.setPackName(PACK_72);
-        
+
         subscriptionService.create(newSubscription);
     }
-    
+
     /**
      *  This method is used to update Subscriber info in database
      * 
@@ -324,17 +358,17 @@ public class MotherMctsCsvHandler {
      *  @param dbSubscriber database Subscriber
      */
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
-        
+
         MctsCsvHelper.polpulateDbSubscriber(subscriber, dbSubscriber);
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setAbortion(subscriber.getAbortion());
         dbSubscriber.setStillBirth(subscriber.getStillBirth());
         dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
         dbSubscriber.setLmp(subscriber.getLmp());
-        
+
         subscriberService.update(dbSubscriber);
     }
-    
+
     /**
      *  This method is used to deactivate subscription based on csv operation
      * 
@@ -349,5 +383,5 @@ public class MotherMctsCsvHandler {
             throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");
         }
     }
-    
+
 }

@@ -44,6 +44,22 @@ public class ContentUploadCsv extends MdsEntity {
     @Field
     private String contentDuration;
 
+
+    public ContentUploadCsv(Long index, String operation, String contentId, String circleCode,
+                            String languageLocationCode, String contentName, String contentType, String contentFile,
+                            String cardNumber, String contentDuration) {
+        this.index = index;
+        this.operation = operation;
+        this.contentId = contentId;
+        this.circleCode = circleCode;
+        this.languageLocationCode = languageLocationCode;
+        this.contentName = contentName;
+        this.contentType = contentType;
+        this.contentFile = contentFile;
+        this.cardNumber = cardNumber;
+        this.contentDuration = contentDuration;
+    }
+
     public String getOperation() {
         return operation;
     }

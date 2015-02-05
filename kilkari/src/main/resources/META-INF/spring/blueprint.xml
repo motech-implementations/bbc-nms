@@ -5,6 +5,21 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 	
+	<osgi:service ref="motherMctsCsvService"
+                  interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />
+                  
+	<osgi:service ref="subscriptionService"
+                  interface="org.motechproject.nms.kilkari.service.SubscriptionService" />
+                  
+	<osgi:service ref="subscriberService"
+                  interface="org.motechproject.nms.kilkari.service.SubscriberService" />
+                  
+	<osgi:service ref="locationValidatorService"
+                  interface="org.motechproject.nms.kilkari.service.LocationValidatorService" />  
+                  
+	<osgi:service ref="configurationService"
+                  interface="org.motechproject.nms.kilkari.service.ConfigurationService" />                                                                                                          
+                                    
 	<osgi:reference id="motherMctsCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService" />
                     
