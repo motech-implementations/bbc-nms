@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Persistent;
 import java.util.Set;
 /**
  * This class Models data for State location records
@@ -16,6 +17,7 @@ public class State extends LocationUnitMetaData {
 
     @Field
     @Cascade(delete = true)
+    @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
     @Field

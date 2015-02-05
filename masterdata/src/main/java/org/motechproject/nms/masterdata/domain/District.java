@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -17,6 +18,7 @@ public class District extends LocationUnitMetaData {
 
     @Field
     @Cascade(delete = true)
+    @Persistent(defaultFetchGroup = "true")
     private Set<Taluka> taluka;
 
     @Field

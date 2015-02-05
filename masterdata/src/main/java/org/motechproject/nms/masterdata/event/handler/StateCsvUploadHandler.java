@@ -130,10 +130,10 @@ public class StateCsvUploadHandler {
     }
 
     private State mapStateCsv(StateCsv record) throws DataValidationException {
+
         State newRecord = new State();
 
         String stateName = ParseDataHelper.parseString("StateName", record.getName(), true);
-
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
 
         newRecord.setName(stateName);
