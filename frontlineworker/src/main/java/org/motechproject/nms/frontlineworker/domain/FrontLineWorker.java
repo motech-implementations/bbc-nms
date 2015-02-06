@@ -15,10 +15,7 @@ public class FrontLineWorker extends MdsEntity {
 
 
     @Field
-    private long flwId;
-
-    @Field(required = true)
-    private State state;
+    private Long flwId;
 
     @Field(required = true)
     @Unique
@@ -30,26 +27,32 @@ public class FrontLineWorker extends MdsEntity {
     @Field(required = true)
     private String designation;
 
+    @Field
+    private Long operatorId;
+
     @Field(required = true)
-    private long operatorId;
+    private Long stateCode;
 
-    @Field(required = true)
-    private District district;
+    @Field(required = true, name = "state_Id")
+    private State stateId;
 
-    @Field
-    private Taluka taluka;
+    @Field(required = true, name = "district_Id")
+    private District districtId;
 
-    @Field
-    private HealthBlock healthBlock;
+    @Field(name = "taluka_Id")
+    private Taluka talukaId;
 
-    @Field
-     private HealthFacility healthFacility;
+    @Field(name = "healthBlock_Id")
+    private HealthBlock healthBlockId;
 
-    @Field
-    private HealthSubFacility healthSubFacility;
+    @Field(name = "healthFacility_Id")
+     private HealthFacility healthFacilityId;
 
-    @Field
-    private Village villageCode;
+    @Field(name = "healthSubFacility_Id")
+    private HealthSubFacility healthSubFacilityId;
+
+    @Field(name = "village_Id")
+    private Village villageId;
 
     @Field
     private String ashaNumber;
@@ -61,28 +64,20 @@ public class FrontLineWorker extends MdsEntity {
     private boolean isValid;
 
     @Field
-    private Long adhaarNumber;
+    private String adhaarNumber;
 
     @Field(required = true)
     private String status;
 
-    @Field(required = true)
-    private LanguageLocationCode languageLocationCode;
+    @Field
+    private Long languageLocationCodeId;
 
-    public long getFlwId() {
+    public Long getFlwId() {
         return flwId;
     }
 
-    public void setFlwId(long flwId) {
+    public void setFlwId(Long flwId) {
         this.flwId = flwId;
-    }
-
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
     }
 
     public String getContactNo() {
@@ -109,60 +104,76 @@ public class FrontLineWorker extends MdsEntity {
         this.designation = designation;
     }
 
-    public long getOperatorId() {
+    public Long getOperatorId() {
         return operatorId;
     }
 
-    public void setOperatorId(long operatorId) {
+    public void setOperatorId(Long operatorId) {
         this.operatorId = operatorId;
     }
 
-    public District getDistrict() {
-        return district;
+    public Long getStateCode() {
+        return stateCode;
     }
 
-    public void setDistrict(District district) {
-        this.district = district;
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public Taluka getTaluka() {
-        return taluka;
+    public State getStateId() {
+        return stateId;
     }
 
-    public void setTaluka(Taluka taluka) {
-        this.taluka = taluka;
+    public void setStateId(State stateId) {
+        this.stateId = stateId;
     }
 
-    public HealthBlock getHealthBlock() {
-        return healthBlock;
+    public District getDistrictId() {
+        return districtId;
     }
 
-    public void setHealthBlock(HealthBlock healthBlock) {
-        this.healthBlock = healthBlock;
+    public void setDistrictId(District districtId) {
+        this.districtId = districtId;
     }
 
-    public HealthFacility getHealthFacility() {
-        return healthFacility;
+    public Taluka getTalukaId() {
+        return talukaId;
     }
 
-    public void setHealthFacility(HealthFacility healthFacility) {
-        this.healthFacility = healthFacility;
+    public void setTalukaId(Taluka talukaId) {
+        this.talukaId = talukaId;
     }
 
-    public HealthSubFacility getHealthSubFacility() {
-        return healthSubFacility;
+    public HealthBlock getHealthBlockId() {
+        return healthBlockId;
     }
 
-    public void setHealthSubFacility(HealthSubFacility healthSubFacility) {
-        this.healthSubFacility = healthSubFacility;
+    public void setHealthBlockId(HealthBlock healthBlockId) {
+        this.healthBlockId = healthBlockId;
     }
 
-    public Village getVillageCode() {
-        return villageCode;
+    public HealthFacility getHealthFacilityId() {
+        return healthFacilityId;
     }
 
-    public void setVillageCode(Village villageCode) {
-        this.villageCode = villageCode;
+    public void setHealthFacilityId(HealthFacility healthFacilityId) {
+        this.healthFacilityId = healthFacilityId;
+    }
+
+    public HealthSubFacility getHealthSubFacilityId() {
+        return healthSubFacilityId;
+    }
+
+    public void setHealthSubFacilityId(HealthSubFacility healthSubFacilityId) {
+        this.healthSubFacilityId = healthSubFacilityId;
+    }
+
+    public Village getVillageId() {
+        return villageId;
+    }
+
+    public void setVillageId(Village villageId) {
+        this.villageId = villageId;
     }
 
     public String getAshaNumber() {
@@ -189,11 +200,11 @@ public class FrontLineWorker extends MdsEntity {
         this.isValid = isValid;
     }
 
-    public Long getAdhaarNumber() {
+    public String getAdhaarNumber() {
         return adhaarNumber;
     }
 
-    public void setAdhaarNumber(Long adhaarNumber) {
+    public void setAdhaarNumber(String adhaarNumber) {
         this.adhaarNumber = adhaarNumber;
     }
 
@@ -205,11 +216,11 @@ public class FrontLineWorker extends MdsEntity {
         this.status = status;
     }
 
-    public LanguageLocationCode getLanguageLocationCode() {
-        return languageLocationCode;
+    public Long getLanguageLocationCodeId() {
+        return languageLocationCodeId;
     }
 
-    public void setLanguageLocationCode(LanguageLocationCode languageLocationCode) {
-        this.languageLocationCode = languageLocationCode;
+    public void setLanguageLocationCodeId(Long languageLocationCodeId) {
+        this.languageLocationCodeId = languageLocationCodeId;
     }
 }

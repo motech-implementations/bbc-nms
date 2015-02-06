@@ -18,7 +18,7 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String flwId;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
     private String contactNo;
@@ -70,12 +70,12 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.flwId = flwId;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
     public String getContactNo() {
