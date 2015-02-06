@@ -12,6 +12,10 @@ public class OperatorCsvServiceImpl implements OperatorCsvService {
     @Autowired
     private OperatorCsvDataService operatorCsvDataService;
 
+    public OperatorCsvServiceImpl(OperatorCsvDataService operatorCsvDataService) {
+        this.operatorCsvDataService = operatorCsvDataService;
+    }
+
     @Override
     public OperatorCsv getRecord(Long id) {
         return operatorCsvDataService.findById(id);

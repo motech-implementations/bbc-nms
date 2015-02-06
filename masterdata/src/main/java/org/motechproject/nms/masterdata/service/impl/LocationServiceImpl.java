@@ -195,7 +195,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * get Village record for given Village Census (or MCTS ) Code
+     * get Integer for given State Census (or MCTS ) Code
      *
      * @param stateCode State Census (or MCTS ) Code
      * @return Integer object corresponding to the Census (or MCTS )code
@@ -206,7 +206,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     /**
-     * get Village record for given Village Census (or MCTS ) Code
+     * get Integer value for given State Census (or MCTS ) Code
      *
      * @param stateCode State Census (or MCTS ) Code
      * @return Integer object corresponding to the Census (or MCTS )code

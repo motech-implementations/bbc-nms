@@ -12,6 +12,10 @@ public class OperatorServiceImpl implements OperatorService {
     @Autowired
     private OperatorDataService operatorDataService;
 
+    public OperatorServiceImpl(OperatorDataService operatorDataService) {
+        this.operatorDataService = operatorDataService;
+    }
+
     /**
      * creates Operator from database
      *

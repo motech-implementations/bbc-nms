@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.ut;
+package org.motechproject.nms.masterdata.service.impl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.masterdata.service.impl.LocationServiceImpl;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -48,6 +47,21 @@ public class LocationServiceUnitTest {
     public void setUp(){
         initMocks(this);
         locationService = new LocationServiceImpl(stateRecordsDataService,districtRecordsDataService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+    }
+
+    @Test
+    public void testValidationSuccess() {
+
+        State stateData = getStateData();
+
+        District districtData = getDistrictData();
+
+        when(stateRecordsDataService.findById(stateData.getId())).thenReturn(stateData);
+        when(districtRecordsDataService.findById(districtData.getId())).thenReturn(districtData);
+        when(districtRecordsDataService.findDistrictByParentCode(districtData.getStateCode(), districtData.getDistrictCode())).thenReturn(districtData);
+
+        assertNotNull(locationService.validateLocation(1L, 1L));
+        assertTrue(locationService.validateLocation(1L, 1L));
     }
 
     @Test
@@ -195,16 +209,39 @@ public class LocationServiceUnitTest {
         assertTrue(321L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthFacilityCode());
     }
 
+    @Test
+    public void testMaCapping() {
+
+        State stateData = getStateData();
+
+        when(stateRecordsDataService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getMaCappingByCode(stateData.getStateCode()));
+        assertTrue(100 == locationService.getMaCappingByCode(stateData.getStateCode()).intValue());
+    }
+
+    @Test
+    public void testMKCapping() {
+
+        State stateData = getStateData();
+
+        when(stateRecordsDataService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getMkCappingByCode(stateData.getStateCode()));
+        assertTrue(200 == locationService.getMkCappingByCode(stateData.getStateCode()).intValue());
+    }
+
     private State getStateData(){
 
         State stateData = new State();
         stateData.setId(1L);
         stateData.setStateCode(123L);
+        stateData.setMaCapping(100);
+        stateData.setMkCapping(200);
         return stateData;
     }
 
     private District getDistrictData(){
         District districtData = new District();
+        districtData.setId(1L);
         districtData.setStateCode(123L);
         districtData.setDistrictCode(456L);
         return districtData;
