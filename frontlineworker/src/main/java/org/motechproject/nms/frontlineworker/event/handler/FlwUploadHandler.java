@@ -2,8 +2,10 @@ package org.motechproject.nms.frontlineworker.event.handler;
 
 /**
  * Created by abhishek on 2/2/15.
+ * This class provides Motech Listeners for Front Line Worker upload for both success and failure scenarios.
+ * This class also provides methods used to validate csv data and save the data in Motech database in case of success
+ * and raise exceptions in case of failure
  */
-
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -55,6 +57,11 @@ public class FlwUploadHandler {
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
 
+
+    /**
+     * This method provides a listerner to the Front Line Worker upload success scenario.
+     * @param motechEvent   name of the event raised during upload
+     */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandler(MotechEvent motechEvent) {
         logger.error("entered frontLineWorkerSuccess");
@@ -68,6 +75,7 @@ public class FlwUploadHandler {
                     for (Long id : createdIds) {
                         FrontLineWorkerCsv record = flwCsvRecordsDataService.findById(id);
                         if (record != null) {
+                            frontLineWorker = null;
                             frontLineWorker = flwCsvtoFlwMapper(record);
                             if (frontLineWorker != null) {
                                 FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(),
@@ -76,17 +84,21 @@ public class FlwUploadHandler {
                                     dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
                                     {
                                         if (dbRecord == null) {
-
+                                            frontLineWorker.setStatus("Inactive");
                                             flwRecordDataService.create(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
                                             result.incrementSuccessCount();
                                         } else {
+
+                                            frontLineWorker.setStatus("Active");
                                             flwRecordDataService.update(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
                                             result.incrementSuccessCount();
                                         }
                                     }
                                 } else {
+
+                                    frontLineWorker.setStatus("Active");
                                     flwRecordDataService.update(frontLineWorker);
                                     flwCsvRecordsDataService.delete(record);
                                     result.incrementSuccessCount();
@@ -109,6 +121,12 @@ public class FlwUploadHandler {
             }
 
 
+
+    /**
+     * This method provides a listerner to the Front Line Worker upload failure scenario.
+     *
+     * @param motechEvent   name of the event raised during upload
+     */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_FAILED})
     public void frontLineWorkerFailure(MotechEvent motechEvent) {
         logger.error("entered frontLineWorkerFailed");
@@ -123,6 +141,14 @@ public class FlwUploadHandler {
     }
 
 
+
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param params
+     * @return the summary of the failure operation i.e the number of failed records.
+     */
     private CsvProcessingSummary processCsvRecordsFailure(Map<String, Object> params) {
         CsvProcessingSummary result = new CsvProcessingSummary(successCount,failCount);
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
@@ -135,12 +161,22 @@ public class FlwUploadHandler {
         return result;
     }
 
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param record the Front Line Worker record fron Csv that is to be validated
+     * @return the Front Line Worker generated after applying validations.
+     * @throws DataValidationException
+     */
     private FrontLineWorker flwCsvtoFlwMapper(FrontLineWorkerCsv record)  throws DataValidationException{
         BulkUploadError errorRecord = new BulkUploadError();
 
         Long stateCode;
         Long districtCode;
-
+        String contactNo;
+        String finalContactNo;
+        int contactNoLength;
         State state;
         District district;
         Taluka taluka;
@@ -168,7 +204,11 @@ public class FlwUploadHandler {
         healthFacility = healthFacilityConsistencyCheck(healthBlock.getId(), record.getPhcCode());
         healthSubFacility = healthSubFacilityConsistencyCheck(healthFacility.getId(), record.getSubCentreCode());
 
-        frontLineWorker.setContactNo(ParseDataHelper.parseString("Contact Number", record.getContactNo(), true));
+        contactNo = ParseDataHelper.parseString("Contact Number", record.getContactNo(), true);
+        contactNoLength = contactNo.length();
+        finalContactNo = (contactNoLength > 10 ? contactNo.substring(contactNoLength -10) : contactNo);
+        frontLineWorker.setContactNo(finalContactNo);
+
         frontLineWorker.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         frontLineWorker.setDesignation(ParseDataHelper.parseString("Type",record.getType(), true));
 
@@ -190,6 +230,18 @@ public class FlwUploadHandler {
         return frontLineWorker;
     }
 
+
+
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param districtId Id of parent district
+     * @param record  value of taluka code
+     * @return null if optional Taluka is not provided and its value is null/empty, else Taluka which is generated
+     * from the parameters
+     * @throws DataValidationException
+     */
     private Taluka talukaConsistencyCheck(Long districtId, String record) throws DataValidationException {
         String talukaCode;
         Taluka taluka = null;
@@ -204,6 +256,17 @@ public class FlwUploadHandler {
         return taluka;
     }
 
+
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param talukaId Id of parent taluka
+     * @param record  value of Village code
+     * @return null if optional Village is not provided and its value is null/empty, else Village which is generated
+     * from the parameters
+     * @throws DataValidationException
+     */
     private Village villageConsistencyCheck(Long talukaId, String record) throws DataValidationException {
 
         Long villageCode;
@@ -226,7 +289,16 @@ public class FlwUploadHandler {
         return village;
     }
 
-
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param talukaId Id of parent taluka
+     * @param record  value of HealthBlock code
+     * @return null if optional HealthBlock is not provided and its value is null/empty, else HealthBlock which is
+     * generated from the parameters
+     * @throws DataValidationException
+     */
     private HealthBlock healthBlockConsistencyCheck(Long talukaId, String record) throws DataValidationException {
 
         Long healthclockCode;
@@ -251,7 +323,16 @@ public class FlwUploadHandler {
         return healthBlock;
     }
 
-
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param healthBlockId Id of parent HelathBlock
+     * @param record  value of HealthFacility code
+     * @return null if optional HealthFacility is not provided and its value is null/empty, else HealthFacility which is
+     * generated from the parameters
+     * @throws DataValidationException
+     */
     private HealthFacility healthFacilityConsistencyCheck(Long healthBlockId, String record) throws DataValidationException {
 
         Long healthFacilityCode;
@@ -276,7 +357,16 @@ public class FlwUploadHandler {
         return healthFacility;
     }
 
-
+    /**
+     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * mandatory field is empty/null or is invalid date format
+     *
+     * @param healthFacilityId Id of parent HelathBlock
+     * @param record  value of HealthSubFacility code
+     * @return null if optional HealthSubFacility is not provided and its value is null/empty, else HealthSubFacility
+     * which is generated from the parameters
+     * @throws DataValidationException
+     */
     private HealthSubFacility healthSubFacilityConsistencyCheck(Long healthFacilityId, String record) throws DataValidationException {
         Long healthSubFacilityCode;
         HealthSubFacility healthSubFacility = null;

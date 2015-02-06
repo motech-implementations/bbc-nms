@@ -8,6 +8,7 @@ import org.motechproject.mds.event.CrudEventType;
 
 /**
  * Created by abhishek on 26/1/15.
+ * This class Models data records provided in the Front Line Worker Csv Upload
  */
 
 @Entity(recordHistory = true)

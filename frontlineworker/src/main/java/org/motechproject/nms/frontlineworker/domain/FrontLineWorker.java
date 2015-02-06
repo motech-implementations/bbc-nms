@@ -8,6 +8,7 @@ import org.motechproject.nms.masterdata.domain.*;
 import javax.jdo.annotations.Unique;
 /**
  * Created by abhishek on 26/1/15.
+ * This class Models data for Front Line Worker records
  */
 
 @Entity(recordHistory = true)
