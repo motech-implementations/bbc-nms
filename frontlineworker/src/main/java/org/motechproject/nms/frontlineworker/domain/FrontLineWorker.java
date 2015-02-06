@@ -48,7 +48,7 @@ public class FrontLineWorker extends MdsEntity {
     private HealthBlock healthBlockId;
 
     @Field(name = "healthFacility_Id")
-     private HealthFacility healthFacilityId;
+    private HealthFacility healthFacilityId;
 
     @Field(name = "healthSubFacility_Id")
     private HealthSubFacility healthSubFacilityId;

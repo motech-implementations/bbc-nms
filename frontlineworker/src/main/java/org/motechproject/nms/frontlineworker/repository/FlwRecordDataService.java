@@ -17,9 +17,9 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 public interface FlwRecordDataService extends MotechDataService<FrontLineWorker> {
 
     @Lookup
-    FrontLineWorker getFlwByFlwIdAndStateId(@LookupField(name = "flwId") Long flwId,@LookupField(name = "stateCode") Long stateCode);
+    FrontLineWorker getFlwByFlwIdAndStateId(@LookupField(name = "flwId") Long flwId, @LookupField(name = "stateCode") Long stateCode);
 
     @Lookup
     FrontLineWorker getFlwByContactNo(@LookupField(name = "ContactNo") String contactNo);
 
-    }
+}

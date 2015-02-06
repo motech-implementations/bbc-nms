@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -60,12 +59,12 @@ public class ContentUploadCsvHandler {
     @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success" })
     public void mobileKunjiContentUploadCsvSuccess(MotechEvent motechEvent) {
 
-        String errorFileName = "ContentUploadCsv" + new Date().toString();
         String userName = null;
         ContentUploadCsv record = null;
 
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
+
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
 
@@ -91,7 +90,7 @@ public class ContentUploadCsvHandler {
                         }
                     } else {
                         summary.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
+                        errorDetails.setRecordDetails(record.toString());
                         errorDetails.setErrorCategory("Record_Not_Found");
                         errorDetails.setErrorDescription("Record not found in Csv database");
                         bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
@@ -143,6 +142,7 @@ public class ContentUploadCsvHandler {
         contentDuration = ParseDataHelper.parseInt("Content Duration", record.getContentDuration(), true);
         contentTemp = contentType.toString();
         content = ParseDataHelper.parseString("Content Type", contentTemp, true);
+        ContentType.valueOf()
         ContentUpload newRecord = new ContentUpload();
 
         newRecord.setContentId(contentId);
@@ -166,8 +166,6 @@ public class ContentUploadCsvHandler {
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
 
         logger.error("entered frontLineWorkerFailed");
-
-        String errorFileName = "FrontLineWorkerCsv_" + new Date().toString();
 
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
