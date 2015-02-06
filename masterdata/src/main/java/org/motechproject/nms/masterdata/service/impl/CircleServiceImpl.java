@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service("circleService")
 public class CircleServiceImpl implements CircleService {
 
-    @Autowired
     private CircleDataService circleDataService;
 
+    @Autowired
     public CircleServiceImpl(CircleDataService circleDataService) {
         this.circleDataService = circleDataService;
     }

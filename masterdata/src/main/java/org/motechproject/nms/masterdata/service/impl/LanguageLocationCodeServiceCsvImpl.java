@@ -9,8 +9,12 @@ import org.springframework.stereotype.Service;
 @Service("languageLocationCodeServiceCsv")
 public class LanguageLocationCodeServiceCsvImpl implements LanguageLocationCodeServiceCsv {
 
-    @Autowired
     private LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService;
+
+    @Autowired
+    public LanguageLocationCodeServiceCsvImpl(LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService) {
+        this.languageLocationCodeCsvDataService = languageLocationCodeCsvDataService;
+    }
 
     /**
      * gets LanguageLocationCodeCsv from database by id

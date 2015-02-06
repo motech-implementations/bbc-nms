@@ -1,6 +1,5 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.datanucleus.query.evaluator.memory.IntervalGetEndMethodEvaluator;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -17,12 +16,15 @@ import java.util.List;
 @Service("languageLocationCodeService")
 public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {
 
-
-    @Autowired
     private LanguageLocationCodeDataService languageLocationCodeDataService;
 
-    @Autowired
     private CircleService circleService;
+
+    @Autowired
+    public LanguageLocationCodeServiceImpl(LanguageLocationCodeDataService languageLocationCodeDataService, CircleService circleService) {
+        this.languageLocationCodeDataService = languageLocationCodeDataService;
+        this.circleService = circleService;
+    }
 
     /**
      * This class represents the query to find list of service specific languageLocationCode for a circleCode
