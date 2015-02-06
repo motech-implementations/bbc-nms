@@ -33,6 +33,9 @@ import java.util.Map;
 
 @Component
 public class FlwUploadHandler {
+    private static final String CSV_IMPORT_PREFIX = "csv-import.";
+    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
+    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
     public static Integer successCount = 0;
     public static Integer failCount = 0;
@@ -65,15 +68,19 @@ public class FlwUploadHandler {
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandler(MotechEvent motechEvent) {
         logger.error("entered frontLineWorkerSuccess");
-            try {
+
             Map<String, Object> params = motechEvent.getParameters();
-                String logFile = BulkUploadError.createBulkUploadErrLogFileName((String) params.get(""));
+            String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
-                CsvProcessingSummary result = new CsvProcessingSummary(successCount, failCount);
-                List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+             String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
-                    for (Long id : createdIds) {
-                        FrontLineWorkerCsv record = flwCsvRecordsDataService.findById(id);
+                CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
+                List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
+
+                FrontLineWorkerCsv record = null;
+        try {
+                for (Long id : createdIds) {
+                        record = flwCsvRecordsDataService.findById(id);
                         if (record != null) {
                             frontLineWorker = null;
                             frontLineWorker = flwCsvtoFlwMapper(record);
@@ -87,13 +94,13 @@ public class FlwUploadHandler {
                                             frontLineWorker.setStatus("Inactive");
                                             flwRecordDataService.create(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
-                                            result.incrementSuccessCount();
+                                            summary.incrementSuccessCount();
                                         } else {
 
                                             frontLineWorker.setStatus("Active");
                                             flwRecordDataService.update(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
-                                            result.incrementSuccessCount();
+                                            summary.incrementSuccessCount();
                                         }
                                     }
                                 } else {
@@ -101,11 +108,11 @@ public class FlwUploadHandler {
                                     frontLineWorker.setStatus("Active");
                                     flwRecordDataService.update(frontLineWorker);
                                     flwCsvRecordsDataService.delete(record);
-                                    result.incrementSuccessCount();
+                                    summary.incrementSuccessCount();
                                 }
 
                             } else {
-                                result.incrementFailureCount();
+                                summary.incrementFailureCount();
                                 errorDetails.setRecordDetails(id.toString());
                                 errorDetails.setErrorCategory("Record_Not_Found");
                                 errorDetails.setErrorDescription("Record not found in Csv database");
@@ -113,11 +120,15 @@ public class FlwUploadHandler {
                             }
                         }
                     }
-                }catch (DataValidationException dve) {
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                }catch (Exception ex) {
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                }
+                }catch(DataValidationException dve) {
+                errorDetails.setRecordDetails(record.toString());
+                errorDetails.setErrorCategory(dve.getErrorCode());
+                errorDetails.setErrorDescription(dve.getErrorDesc());
+                summary.incrementFailureCount();
+
+            }catch(Exception e){
+                summary.incrementFailureCount();
+            }
             }
 
 
