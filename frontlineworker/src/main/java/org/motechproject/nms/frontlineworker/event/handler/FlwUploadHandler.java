@@ -16,6 +16,7 @@ import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService
 import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -56,6 +57,9 @@ public class FlwUploadHandler {
     LocationService locationService;
 
     @Autowired
+    LanguageLocationCodeService languageLocationCodeService;
+
+    @Autowired
     BulkUploadError errorDetails;
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
@@ -91,13 +95,11 @@ public class FlwUploadHandler {
                                     dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
                                     {
                                         if (dbRecord == null) {
-                                            frontLineWorker.setStatus("Inactive");
                                             flwRecordDataService.create(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
                                             summary.incrementSuccessCount();
                                         } else {
 
-                                            frontLineWorker.setStatus("Active");
                                             flwRecordDataService.update(frontLineWorker);
                                             flwCsvRecordsDataService.delete(record);
                                             summary.incrementSuccessCount();
@@ -105,7 +107,6 @@ public class FlwUploadHandler {
                                     }
                                 } else {
 
-                                    frontLineWorker.setStatus("Active");
                                     flwRecordDataService.update(frontLineWorker);
                                     flwCsvRecordsDataService.delete(record);
                                     summary.incrementSuccessCount();
@@ -237,6 +238,11 @@ public class FlwUploadHandler {
         frontLineWorker.setValid(ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false));
         frontLineWorker.setValidated(ParseDataHelper.parseBoolean("IsValidated", record.getIsValidated(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.parseString("Adhaar Number", record.getAdhaarNo(), false));
+
+        frontLineWorker.setLanguageLocationCodeId(languageLocationCodeService.getRecordByLocationCode(stateCode,
+                        districtCode).getId());
+        frontLineWorker.setStatus("Inactive");
+        frontLineWorker.setOperatorId(null);
 
         return frontLineWorker;
     }
