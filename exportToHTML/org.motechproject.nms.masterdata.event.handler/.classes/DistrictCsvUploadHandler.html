@@ -1,0 +1,263 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: DistrictCsvUploadHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.event.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: DistrictCsvUploadHandler (org.motechproject.nms.masterdata.event.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DistrictCsvUploadHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 83)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.event.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.event.MotechEvent;
+<i>4</i>&nbsp;import org.motechproject.event.listener.annotations.MotechListener;
+<i>5</i>&nbsp;import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+<i>6</i>&nbsp;import org.motechproject.nms.masterdata.domain.District;
+<i>7</i>&nbsp;import org.motechproject.nms.masterdata.domain.DistrictCsv;
+<i>8</i>&nbsp;import org.motechproject.nms.masterdata.domain.State;
+<i>9</i>&nbsp;import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
+<i>10</i>&nbsp;import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+<i>11</i>&nbsp;import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+<i>12</i>&nbsp;import org.motechproject.nms.util.BulkUploadError;
+<i>13</i>&nbsp;import org.motechproject.nms.util.CsvProcessingSummary;
+<i>14</i>&nbsp;import org.motechproject.nms.util.helper.DataValidationException;
+<i>15</i>&nbsp;import org.motechproject.nms.util.helper.ParseDataHelper;
+<i>16</i>&nbsp;import org.motechproject.nms.util.service.BulkUploadErrLogService;
+<i>17</i>&nbsp;import org.slf4j.Logger;
+<i>18</i>&nbsp;import org.slf4j.LoggerFactory;
+<i>19</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>20</i>&nbsp;import org.springframework.stereotype.Component;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;import java.util.*;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;/**
+<i>25</i>&nbsp; * This class handles the csv upload for success and failure events for DistrictCsv.
+<i>26</i>&nbsp; */
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;@Component
+<b class="nc"><i>29</i>&nbsp;public class DistrictCsvUploadHandler {</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    @Autowired
+<i>32</i>&nbsp;    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    @Autowired
+<i>35</i>&nbsp;    private DistrictRecordsDataService districtRecordsDataService;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    @Autowired
+<i>38</i>&nbsp;    private StateRecordsDataService stateRecordsDataService;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    @Autowired
+<i>41</i>&nbsp;    private BulkUploadErrLogService bulkUploadErrLogService;
+<i>42</i>&nbsp;
+<b class="nc"><i>43</i>&nbsp;    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * This method handle the event which is raised after csv is uploaded successfully.
+<i>47</i>&nbsp;     * this method also populates the records in District table after checking its validity.
+<i>48</i>&nbsp;     *
+<i>49</i>&nbsp;     * @param motechEvent This is the object from which required parameters are fetched.
+<i>50</i>&nbsp;     */
+<i>51</i>&nbsp;    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
+<i>52</i>&nbsp;    public void districtCsvSuccess(MotechEvent motechEvent) {
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;        int failedRecordCount = 0;</b>
+<b class="nc"><i>55</i>&nbsp;        int successRecordCount = 0;</b>
+<i>56</i>&nbsp;
+<b class="nc"><i>57</i>&nbsp;        logger.info(&quot;DISTRICT_CSV_SUCCESS event received&quot;);</b>
+<i>58</i>&nbsp;
+<b class="nc"><i>59</i>&nbsp;        Map&lt;String, Object&gt; params = motechEvent.getParameters();</b>
+<i>60</i>&nbsp;
+<b class="nc"><i>61</i>&nbsp;        String userName = null;</b>
+<b class="nc"><i>62</i>&nbsp;        String csvFileName = (String) params.get(&quot;csv-import.filename&quot;);</b>
+<b class="nc"><i>63</i>&nbsp;        logger.debug(&quot;Csv file name received in event : {}&quot;, csvFileName);</b>
+<b class="nc"><i>64</i>&nbsp;        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);</b>
+<b class="nc"><i>65</i>&nbsp;        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);</b>
+<b class="nc"><i>66</i>&nbsp;        BulkUploadError errorDetails = new BulkUploadError();</b>
+<i>67</i>&nbsp;
+<b class="nc"><i>68</i>&nbsp;        List&lt;Long&gt; createdIds = (ArrayList&lt;Long&gt;) params.get(&quot;csv-import.created_ids&quot;);</b>
+<b class="nc"><i>69</i>&nbsp;        DistrictCsv districtCsvRecord = null;</b>
+<i>70</i>&nbsp;
+<b class="nc"><i>71</i>&nbsp;        for (Long id : createdIds) {</b>
+<i>72</i>&nbsp;            try {
+<b class="nc"><i>73</i>&nbsp;                logger.debug(&quot;DISTRICT_CSV_SUCCESS event processing start for ID: {}&quot;, id);</b>
+<b class="nc"><i>74</i>&nbsp;                districtCsvRecord = districtCsvRecordsDataService.findById(id);</b>
+<b class="nc"><i>75</i>&nbsp;                District record = mapDistrictCsv(districtCsvRecord);</b>
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;                if (districtCsvRecord != null) {</b>
+<b class="nc"><i>78</i>&nbsp;                    userName = districtCsvRecord.getOwner();</b>
+<b class="nc"><i>79</i>&nbsp;                    logger.info(&quot;Id exist in District Temporary Entity&quot;);</b>
+<b class="nc"><i>80</i>&nbsp;                    processDistrictData(record,districtCsvRecord.getOperation());</b>
+<b class="nc"><i>81</i>&nbsp;                    result.incrementSuccessCount();</b>
+<i>82</i>&nbsp;                } else {
+<b class="nc"><i>83</i>&nbsp;                    logger.info(&quot;Id do not exist in District Temporary Entity&quot;);</b>
+<b class="nc"><i>84</i>&nbsp;                    errorDetails.setRecordDetails(id.toString());</b>
+<b class="nc"><i>85</i>&nbsp;                    errorDetails.setErrorCategory(&quot;Record_Not_Found&quot;);</b>
+<b class="nc"><i>86</i>&nbsp;                    errorDetails.setErrorDescription(&quot;Record not in database&quot;);</b>
+<b class="nc"><i>87</i>&nbsp;                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);</b>
+<b class="nc"><i>88</i>&nbsp;                    result.incrementFailureCount();</b>
+<i>89</i>&nbsp;                }
+<b class="nc"><i>90</i>&nbsp;            } catch (DataValidationException dataValidationException) {</b>
+<b class="nc"><i>91</i>&nbsp;                logger.error(&quot;DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}&quot;, dataValidationException.getErroneousField());</b>
+<b class="nc"><i>92</i>&nbsp;                errorDetails.setRecordDetails(districtCsvRecord.toString());</b>
+<b class="nc"><i>93</i>&nbsp;                errorDetails.setErrorCategory(dataValidationException.getErrorCode());</b>
+<b class="nc"><i>94</i>&nbsp;                errorDetails.setErrorDescription(dataValidationException.getErroneousField());</b>
+<b class="nc"><i>95</i>&nbsp;                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);</b>
+<b class="nc"><i>96</i>&nbsp;                result.incrementFailureCount();</b>
+<b class="nc"><i>97</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>98</i>&nbsp;                logger.error(&quot;DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}&quot;, e);</b>
+<b class="nc"><i>99</i>&nbsp;                result.incrementFailureCount();</b>
+<i>100</i>&nbsp;            }
+<i>101</i>&nbsp;            finally {
+<b class="nc"><i>102</i>&nbsp;                if(null != districtCsvRecord){</b>
+<b class="nc"><i>103</i>&nbsp;                    districtCsvRecordsDataService.delete(districtCsvRecord);</b>
+<i>104</i>&nbsp;                }
+<i>105</i>&nbsp;            }
+<b class="nc"><i>106</i>&nbsp;        }</b>
+<b class="nc"><i>107</i>&nbsp;        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);</b>
+<i>108</i>&nbsp;    }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;    /**
+<i>111</i>&nbsp;     * This method handle the event which is raised after csv upload is failed.
+<i>112</i>&nbsp;     * This method also deletes all the csv records which get inserted in this upload..
+<i>113</i>&nbsp;     *
+<i>114</i>&nbsp;     * @param motechEvent This is the object from which required parameters are fetched.
+<i>115</i>&nbsp;     */
+<i>116</i>&nbsp;    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_FAILED})
+<i>117</i>&nbsp;    public void districtCsvFailed(MotechEvent motechEvent) {
+<i>118</i>&nbsp;
+<b class="nc"><i>119</i>&nbsp;        Map&lt;String, Object&gt; params = motechEvent.getParameters();</b>
+<b class="nc"><i>120</i>&nbsp;        logger.info(&quot;DISTRICT_CSV_FAILED event received&quot;);</b>
+<b class="nc"><i>121</i>&nbsp;        List&lt;Long&gt; createdIds = (List&lt;Long&gt;) params.get(&quot;csv-import.created_ids&quot;);</b>
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;        for (Long id : createdIds) {</b>
+<b class="nc"><i>124</i>&nbsp;            logger.debug(&quot;DISTRICT_CSV_FAILED event processing start for ID: {}&quot;, id);</b>
+<b class="nc"><i>125</i>&nbsp;            DistrictCsv districtCsv = districtCsvRecordsDataService.findById(id);</b>
+<b class="nc"><i>126</i>&nbsp;            districtCsvRecordsDataService.delete(districtCsv);</b>
+<b class="nc"><i>127</i>&nbsp;        }</b>
+<b class="nc"><i>128</i>&nbsp;        logger.info(&quot;DISTRICT_CSV_FAILED event processing finished&quot;);</b>
+<i>129</i>&nbsp;    }
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
+<i>132</i>&nbsp;
+<b class="nc"><i>133</i>&nbsp;        String districtName = ParseDataHelper.parseString(&quot;District Name&quot;, record.getName(), true);</b>
+<b class="nc"><i>134</i>&nbsp;        Long stateCode = ParseDataHelper.parseLong(&quot;StateCode&quot;, record.getStateCode(), true);</b>
+<b class="nc"><i>135</i>&nbsp;        Long districtCode = ParseDataHelper.parseLong(&quot;DistrictCode&quot;, record.getDistrictCode(), true);</b>
+<i>136</i>&nbsp;
+<b class="nc"><i>137</i>&nbsp;        State state = stateRecordsDataService.findRecordByStateCode(stateCode);</b>
+<b class="nc"><i>138</i>&nbsp;        if (state == null) {</b>
+<b class="nc"><i>139</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;State&quot;, &quot;StateCode&quot;);</b>
+<i>140</i>&nbsp;        }
+<i>141</i>&nbsp;
+<b class="nc"><i>142</i>&nbsp;        District newRecord = new District();</b>
+<i>143</i>&nbsp;
+<b class="nc"><i>144</i>&nbsp;        newRecord.setName(districtName);</b>
+<b class="nc"><i>145</i>&nbsp;        newRecord.setStateCode(stateCode);</b>
+<b class="nc"><i>146</i>&nbsp;        newRecord.setDistrictCode(districtCode);</b>
+<b class="nc"><i>147</i>&nbsp;        newRecord.setCreator(record.getCreator());</b>
+<b class="nc"><i>148</i>&nbsp;        newRecord.setOwner(record.getOwner());</b>
+<b class="nc"><i>149</i>&nbsp;        newRecord.setModifiedBy(record.getModifiedBy());</b>
+<i>150</i>&nbsp;
+<b class="nc"><i>151</i>&nbsp;        return newRecord;</b>
+<i>152</i>&nbsp;    }
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;    private void processDistrictData(District districtData, String operation) {
+<i>155</i>&nbsp;
+<b class="nc"><i>156</i>&nbsp;        logger.debug(&quot;District data contains district code : {}&quot;,districtData.getDistrictCode());</b>
+<b class="nc"><i>157</i>&nbsp;        District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());</b>
+<b class="nc"><i>158</i>&nbsp;        if (null != existDistrictData) {</b>
+<b class="nc"><i>159</i>&nbsp;            if (null != operation &amp;&amp; operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {</b>
+<b class="nc"><i>160</i>&nbsp;                State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());</b>
+<b class="nc"><i>161</i>&nbsp;                boolean b = stateData.getDistrict().remove(existDistrictData);</b>
+<b class="nc"><i>162</i>&nbsp;                stateRecordsDataService.update(stateData);</b>
+<b class="nc"><i>163</i>&nbsp;                logger.info(&quot;District data is successfully deleted.&quot;);</b>
+<b class="nc"><i>164</i>&nbsp;            } else {</b>
+<b class="nc"><i>165</i>&nbsp;                updateDistrict(existDistrictData, districtData);</b>
+<b class="nc"><i>166</i>&nbsp;                logger.info(&quot;District data is successfully updated.&quot;);</b>
+<i>167</i>&nbsp;            }
+<i>168</i>&nbsp;        } else {
+<b class="nc"><i>169</i>&nbsp;            State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());</b>
+<b class="nc"><i>170</i>&nbsp;            stateData.getDistrict().add(districtData);</b>
+<b class="nc"><i>171</i>&nbsp;            stateRecordsDataService.update(stateData);</b>
+<b class="nc"><i>172</i>&nbsp;            logger.info(&quot;District data is successfully inserted.&quot;);</b>
+<i>173</i>&nbsp;        }
+<i>174</i>&nbsp;    }
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;    private void updateDistrict(District existDistrictData, District districtData) {
+<b class="nc"><i>177</i>&nbsp;        existDistrictData.setName(districtData.getName());</b>
+<b class="nc"><i>178</i>&nbsp;        districtRecordsDataService.update(existDistrictData);</b>
+<i>179</i>&nbsp;    }
+<i>180</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

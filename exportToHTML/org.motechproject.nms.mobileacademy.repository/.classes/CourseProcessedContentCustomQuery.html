@@ -1,0 +1,188 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: CourseProcessedContentCustomQuery</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.mobileacademy.repository</a> ]
+</div>
+
+<h1>Coverage Summary for Class: CourseProcessedContentCustomQuery (org.motechproject.nms.mobileacademy.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CourseProcessedContentCustomQuery</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">CourseProcessedContentCustomQuery$DeleteProcessedContentQueryExecutionImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">CourseProcessedContentCustomQuery$LlcListQueryExecutionImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.mobileacademy.repository;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.List;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import javax.jdo.Query;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import org.motechproject.mds.query.QueryExecution;
+<i>8</i>&nbsp;import org.motechproject.mds.util.InstanceSecurityRestriction;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * Class contains custom query related to course processed content.
+<i>12</i>&nbsp; *
+<i>13</i>&nbsp; */
+<b class="nc"><i>14</i>&nbsp;public class CourseProcessedContentCustomQuery {</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * LlcListQueryExecutionImpl class prepares a custom MDS query. The query
+<i>18</i>&nbsp;     * should return list of distinct LLC.
+<i>19</i>&nbsp;     *
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     */
+<b class="nc"><i>22</i>&nbsp;    public class LlcListQueryExecutionImpl implements</b>
+<i>23</i>&nbsp;            QueryExecution&lt;List&lt;Integer&gt;&gt; {
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;        @Override
+<i>26</i>&nbsp;        public List&lt;Integer&gt; execute(Query query,
+<i>27</i>&nbsp;                InstanceSecurityRestriction restriction) {
+<b class="nc"><i>28</i>&nbsp;            query.setResult(&quot;DISTINCT languageLocationCode&quot;);</b>
+<b class="nc"><i>29</i>&nbsp;            return (List&lt;Integer&gt;) query.execute();</b>
+<i>30</i>&nbsp;        }
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    /**
+<i>34</i>&nbsp;     * DeleteProcessedContentQueryExecutionImpl class prepares a custom MDS
+<i>35</i>&nbsp;     * query. The query delete records on the basis of LLC.
+<i>36</i>&nbsp;     *
+<i>37</i>&nbsp;     *
+<i>38</i>&nbsp;     */
+<i>39</i>&nbsp;    public class DeleteProcessedContentQueryExecutionImpl implements
+<i>40</i>&nbsp;            QueryExecution&lt;Long&gt; {
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;        private int languageLocationCode;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;        /**
+<i>45</i>&nbsp;         * constructor with all arguments.
+<i>46</i>&nbsp;         * 
+<i>47</i>&nbsp;         * @param languageLocationCode LLC identifier
+<i>48</i>&nbsp;         */
+<b class="nc"><i>49</i>&nbsp;        public DeleteProcessedContentQueryExecutionImpl(int languageLocationCode) {</b>
+<b class="nc"><i>50</i>&nbsp;            this.languageLocationCode = languageLocationCode;</b>
+<i>51</i>&nbsp;        }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;        @Override
+<i>54</i>&nbsp;        public Long execute(Query query, InstanceSecurityRestriction restriction) {
+<b class="nc"><i>55</i>&nbsp;            query.setFilter(&quot;languageLocationCode ==&quot; + languageLocationCode);</b>
+<b class="nc"><i>56</i>&nbsp;            return query.deletePersistentAll();</b>
+<i>57</i>&nbsp;        }
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

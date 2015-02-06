@@ -1,0 +1,66 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: TalukaRecordsDataService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.repository</a> ]
+</div>
+
+<h1>Coverage Summary for Class: TalukaRecordsDataService (org.motechproject.nms.masterdata.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">TalukaRecordsDataService$$EnhancerByMockitoWithCGLIB$$28eda47b</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.repository;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mds.annotations.Lookup;
+<i>4</i>&nbsp;import org.motechproject.mds.annotations.LookupField;
+<i>5</i>&nbsp;import org.motechproject.mds.service.MotechDataService;
+<i>6</i>&nbsp;import org.motechproject.nms.masterdata.domain.Taluka;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * Created by abhishek on 29/1/15.
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;public interface TalukaRecordsDataService extends MotechDataService&lt;Taluka&gt; {
+<i>12</i>&nbsp;    @Lookup
+<i>13</i>&nbsp;    Taluka findTalukaByParentCode(@LookupField(name = &quot;stateCode&quot;) Long stateCode,
+<i>14</i>&nbsp;                                  @LookupField(name = &quot;districtCode&quot;) Long districtCode,
+<i>15</i>&nbsp;                                  @LookupField(name = &quot;talukaCode&quot;) String talukaCode);
+<i>16</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 13:48</div>
+</div>
+</body>
+</html>

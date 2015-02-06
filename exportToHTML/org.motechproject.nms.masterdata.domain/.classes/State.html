@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: State</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.domain</a> ]
+</div>
+
+<h1>Coverage Summary for Class: State (org.motechproject.nms.masterdata.domain)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">State</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    70%
+  </span>
+  <span class="absValue">
+    (7/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.3%
+  </span>
+  <span class="absValue">
+    (11/ 15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.domain;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mds.annotations.Cascade;
+<i>4</i>&nbsp;import org.motechproject.mds.annotations.Entity;
+<i>5</i>&nbsp;import org.motechproject.mds.annotations.Field;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import javax.jdo.annotations.Persistent;
+<i>8</i>&nbsp;import java.util.Set;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class Models data for State location records
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;@Entity(recordHistory = true)
+<i>13</i>&nbsp;public class State extends LocationUnitMetaData {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Field
+<i>16</i>&nbsp;    private Long stateCode;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    @Field
+<i>19</i>&nbsp;    @Cascade(delete = true)
+<i>20</i>&nbsp;    @Persistent(defaultFetchGroup = &quot;true&quot;)
+<i>21</i>&nbsp;    private Set&lt;District&gt; district;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    @Field
+<i>24</i>&nbsp;    private Integer mkCapping;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Field
+<i>27</i>&nbsp;    private Integer maCapping;
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;    public State() {</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    public Long getStateCode() {
+<b class="fc"><i>33</i>&nbsp;        return stateCode;</b>
+<i>34</i>&nbsp;    }
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    public void setStateCode(Long stateCode) {
+<b class="fc"><i>37</i>&nbsp;        this.stateCode = stateCode;</b>
+<b class="fc"><i>38</i>&nbsp;    }</b>
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;    public Set&lt;District&gt; getDistrict() {
+<b class="nc"><i>41</i>&nbsp;        return district;</b>
+<i>42</i>&nbsp;    }
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    public void setDistrict(Set&lt;District&gt; district) {
+<b class="nc"><i>45</i>&nbsp;        this.district = district;</b>
+<b class="nc"><i>46</i>&nbsp;    }</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public Integer getMkCapping() {
+<b class="fc"><i>49</i>&nbsp;        return mkCapping;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    public void setMkCapping(Integer mkCapping) {
+<b class="fc"><i>53</i>&nbsp;        this.mkCapping = mkCapping;</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    public Integer getMaCapping() {
+<b class="fc"><i>57</i>&nbsp;        return maCapping;</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    public void setMaCapping(Integer maCapping) {
+<b class="fc"><i>61</i>&nbsp;        this.maCapping = maCapping;</b>
+<b class="fc"><i>62</i>&nbsp;    }</b>
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;    @Override
+<i>65</i>&nbsp;    public String toString() {
+<b class="nc"><i>66</i>&nbsp;        return &quot;State{&quot; +</b>
+<i>67</i>&nbsp;                &quot;stateCode=&quot; + stateCode +
+<i>68</i>&nbsp;                &quot;, district=&quot; + district +
+<i>69</i>&nbsp;                &quot;, mkCapping=&quot; + mkCapping +
+<i>70</i>&nbsp;                &quot;, maCapping=&quot; + maCapping +
+<i>71</i>&nbsp;                &#39;}&#39;;
+<i>72</i>&nbsp;    }
+<i>73</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 13:48</div>
+</div>
+</body>
+</html>

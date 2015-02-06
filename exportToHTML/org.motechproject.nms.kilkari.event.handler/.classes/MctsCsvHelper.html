@@ -1,0 +1,134 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MctsCsvHelper</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.kilkari.event.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MctsCsvHelper (org.motechproject.nms.kilkari.event.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MctsCsvHelper</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 29)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.kilkari.event.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.nms.kilkari.domain.Channel;
+<i>4</i>&nbsp;import org.motechproject.nms.kilkari.domain.Status;
+<i>5</i>&nbsp;import org.motechproject.nms.kilkari.domain.Subscriber;
+<i>6</i>&nbsp;import org.motechproject.nms.kilkari.domain.Subscription;
+<i>7</i>&nbsp;
+<b class="nc"><i>8</i>&nbsp;public final class MctsCsvHelper {</b>
+<i>9</i>&nbsp;    
+<i>10</i>&nbsp;    static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
+<i>11</i>&nbsp;        
+<b class="nc"><i>12</i>&nbsp;        dbSubscriber.setMsisdn(subscriber.getMsisdn());</b>
+<b class="nc"><i>13</i>&nbsp;        dbSubscriber.setName(subscriber.getName());</b>
+<b class="nc"><i>14</i>&nbsp;        dbSubscriber.setAge(subscriber.getAge());</b>
+<b class="nc"><i>15</i>&nbsp;        dbSubscriber.setState(subscriber.getState());</b>
+<b class="nc"><i>16</i>&nbsp;        dbSubscriber.setDistrict(subscriber.getDistrict());</b>
+<b class="nc"><i>17</i>&nbsp;        dbSubscriber.setTaluka(subscriber.getTaluka());</b>
+<b class="nc"><i>18</i>&nbsp;        dbSubscriber.setHealthBlockCode(subscriber.getHealthBlock());</b>
+<b class="nc"><i>19</i>&nbsp;        dbSubscriber.setPhc(subscriber.getPhc());</b>
+<b class="nc"><i>20</i>&nbsp;        dbSubscriber.setSubCentre(subscriber.getSubCentre());</b>
+<b class="nc"><i>21</i>&nbsp;        dbSubscriber.setVillage(subscriber.getVillage());</b>
+<b class="nc"><i>22</i>&nbsp;        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;    
+<i>25</i>&nbsp;    static Subscription populateNewSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+<i>26</i>&nbsp;        
+<i>27</i>&nbsp;        Subscription newSubscription;
+<b class="nc"><i>28</i>&nbsp;        newSubscription = new Subscription();</b>
+<b class="nc"><i>29</i>&nbsp;        if (dbSubscription != null) {</b>
+<b class="nc"><i>30</i>&nbsp;            newSubscription.setOldSubscritptionId(dbSubscription);</b>
+<i>31</i>&nbsp;        }
+<b class="nc"><i>32</i>&nbsp;        newSubscription.setStatus(Status.PendingActivation);</b>
+<b class="nc"><i>33</i>&nbsp;        newSubscription.setChannel(Channel.MCTS);</b>
+<b class="nc"><i>34</i>&nbsp;        newSubscription.setMsisdn(subscriber.getMsisdn());</b>
+<b class="nc"><i>35</i>&nbsp;        newSubscription.setModifiedBy(subscriber.getModifiedBy());</b>
+<b class="nc"><i>36</i>&nbsp;        newSubscription.setCreator(subscriber.getCreator());</b>
+<b class="nc"><i>37</i>&nbsp;        newSubscription.setOwner(subscriber.getOwner());</b>
+<b class="nc"><i>38</i>&nbsp;        newSubscription.setSubscriber(dbSubscriber);</b>
+<b class="nc"><i>39</i>&nbsp;        return newSubscription;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;    
+<i>42</i>&nbsp;    static void populateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+<b class="nc"><i>43</i>&nbsp;        if (statusFlag) {</b>
+<b class="nc"><i>44</i>&nbsp;            dbSubscription.setStatus(Status.Deactivated);</b>
+<i>45</i>&nbsp;        }
+<b class="nc"><i>46</i>&nbsp;        dbSubscription.setStateCode(subscriber.getState().getStateCode());</b>
+<b class="nc"><i>47</i>&nbsp;        dbSubscription.setChannel(Channel.MCTS);</b>
+<b class="nc"><i>48</i>&nbsp;        dbSubscription.setMsisdn(subscriber.getMsisdn());</b>
+<b class="nc"><i>49</i>&nbsp;        dbSubscription.setModifiedBy(subscriber.getModifiedBy());</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

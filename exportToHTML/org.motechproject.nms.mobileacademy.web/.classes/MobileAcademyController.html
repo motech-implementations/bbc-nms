@@ -1,0 +1,154 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MobileAcademyController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.mobileacademy.web</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MobileAcademyController (org.motechproject.nms.mobileacademy.web)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MobileAcademyController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.mobileacademy.web;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mtraining.domain.CourseUnitState;
+<i>4</i>&nbsp;import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
+<i>5</i>&nbsp;import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+<i>6</i>&nbsp;import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+<i>7</i>&nbsp;import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+<i>8</i>&nbsp;import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
+<i>9</i>&nbsp;import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
+<i>10</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>11</i>&nbsp;import org.springframework.stereotype.Controller;
+<i>12</i>&nbsp;import org.springframework.web.bind.annotation.RequestMapping;
+<i>13</i>&nbsp;import org.springframework.web.bind.annotation.ResponseBody;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * Controller for MobileAcademy Module, currently using it for testing services.
+<i>17</i>&nbsp; * Will be removed later.
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;@Controller
+<b class="nc"><i>20</i>&nbsp;public class MobileAcademyController {</b>
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;	@Autowired
+<i>23</i>&nbsp;	private CourseRawContentService courseRawContentService;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;	@Autowired
+<i>26</i>&nbsp;	private CourseProcessedContentService courseProcessedContentService;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;	@Autowired
+<i>29</i>&nbsp;	private CoursePopulateService coursePopulateService;
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;	@Autowired
+<i>32</i>&nbsp;	private CSVRecordProcessService csvRecordProcessService;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;	@Autowired
+<i>35</i>&nbsp;	private CourseRawContentDataService courseRawContentDataService;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;	@Autowired
+<i>38</i>&nbsp;	private ChapterContentDataService chapterContentDataService;
+<i>39</i>&nbsp;
+<i>40</i>&nbsp;	private static final String OK = &quot;OK&quot;;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;	@RequestMapping(&quot;/web-api/status&quot;)
+<i>43</i>&nbsp;	@ResponseBody
+<i>44</i>&nbsp;	public String status() {
+<b class="nc"><i>45</i>&nbsp;		return OK;</b>
+<i>46</i>&nbsp;	}
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;	@RequestMapping(value = &quot;/processData&quot;)
+<i>49</i>&nbsp;	@ResponseBody
+<i>50</i>&nbsp;	public String processData() {
+<b class="nc"><i>51</i>&nbsp;		return csvRecordProcessService.processRawRecords(</b>
+<i>52</i>&nbsp;				courseRawContentDataService.retrieveAll(), &quot;ccontroller-csv&quot;);
+<i>53</i>&nbsp;	}
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;	@RequestMapping(value = &quot;/deleteData&quot;)
+<i>56</i>&nbsp;	@ResponseBody
+<i>57</i>&nbsp;	public String deleteData() {
+<b class="nc"><i>58</i>&nbsp;		courseRawContentService.deleteAll();</b>
+<b class="nc"><i>59</i>&nbsp;		courseProcessedContentService.deleteAll();</b>
+<b class="nc"><i>60</i>&nbsp;		chapterContentDataService.deleteAll();</b>
+<b class="nc"><i>61</i>&nbsp;		return &quot;Data Deleted&quot;;</b>
+<i>62</i>&nbsp;	}
+<i>63</i>&nbsp;
+<i>64</i>&nbsp;	@RequestMapping(value = &quot;/resetState&quot;)
+<i>65</i>&nbsp;	@ResponseBody
+<i>66</i>&nbsp;	public String resetState() {
+<b class="nc"><i>67</i>&nbsp;		coursePopulateService.updateCourseState(CourseUnitState.Inactive);</b>
+<b class="nc"><i>68</i>&nbsp;		return &quot;Course Unit State is reset&quot;;</b>
+<i>69</i>&nbsp;	}
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

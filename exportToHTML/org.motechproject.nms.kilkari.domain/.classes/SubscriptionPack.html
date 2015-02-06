@@ -1,0 +1,141 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SubscriptionPack</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.kilkari.domain</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SubscriptionPack (org.motechproject.nms.kilkari.domain)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SubscriptionPack</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 9)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.kilkari.domain;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javax.jdo.annotations.Unique;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import org.motechproject.mds.annotations.Entity;
+<i>6</i>&nbsp;import org.motechproject.mds.annotations.Field;
+<i>7</i>&nbsp;import org.motechproject.mds.domain.MdsEntity;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;@Entity(recordHistory=true)
+<b class="nc"><i>10</i>&nbsp;public class SubscriptionPack extends MdsEntity  {</b>
+<i>11</i>&nbsp;    
+<i>12</i>&nbsp;    @Unique
+<i>13</i>&nbsp;    @Field(required = true)
+<i>14</i>&nbsp;    private String name;
+<i>15</i>&nbsp;    
+<i>16</i>&nbsp;    @Unique
+<i>17</i>&nbsp;    private Integer startWeekNumber;
+<i>18</i>&nbsp;    
+<i>19</i>&nbsp;    @Field(required = true)
+<i>20</i>&nbsp;    private Integer durationInWeeks;
+<i>21</i>&nbsp;    
+<i>22</i>&nbsp;    @Field(required = true)
+<i>23</i>&nbsp;    private Integer numMsgPerWeek;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public String getName() {
+<b class="nc"><i>27</i>&nbsp;        return name;</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public void setName(String name) {
+<b class="nc"><i>31</i>&nbsp;        this.name = name;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public Integer getStartWeekNumber() {
+<b class="nc"><i>35</i>&nbsp;        return startWeekNumber;</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public void setStartWeekNumber(Integer startWeekNumber) {
+<b class="nc"><i>39</i>&nbsp;        this.startWeekNumber = startWeekNumber;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    public Integer getDurationInWeeks() {
+<b class="nc"><i>43</i>&nbsp;        return durationInWeeks;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    public void setDurationInWeeks(Integer durationInWeeks) {
+<b class="nc"><i>47</i>&nbsp;        this.durationInWeeks = durationInWeeks;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    public Integer getNumMsgPerWeek() {
+<b class="nc"><i>51</i>&nbsp;        return numMsgPerWeek;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    public void setNumMsgPerWeek(Integer numMsgPerWeek) {
+<b class="nc"><i>55</i>&nbsp;        this.numMsgPerWeek = numMsgPerWeek;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;    
+<i>58</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

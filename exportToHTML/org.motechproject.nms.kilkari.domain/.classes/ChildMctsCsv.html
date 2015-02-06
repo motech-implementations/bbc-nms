@@ -1,0 +1,133 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ChildMctsCsv</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.kilkari.domain</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ChildMctsCsv (org.motechproject.nms.kilkari.domain)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ChildMctsCsv</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.kilkari.domain;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mds.annotations.Entity;
+<i>4</i>&nbsp;import org.motechproject.mds.annotations.Field;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * This entity represents the child mcts record.
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;@Entity
+<b class="nc"><i>10</i>&nbsp;public class ChildMctsCsv extends MctsCsv {</b>
+<i>11</i>&nbsp;    
+<i>12</i>&nbsp;    @Field
+<i>13</i>&nbsp;    private String motherName;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Field
+<i>16</i>&nbsp;    private String motherId;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    @Field
+<i>19</i>&nbsp;    private String birthdate;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    public String getMotherName() {
+<b class="nc"><i>22</i>&nbsp;        return motherName;</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    public void setMotherName(String motherName) {
+<b class="nc"><i>26</i>&nbsp;        this.motherName = motherName;</b>
+<i>27</i>&nbsp;    }
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    public String getMotherId() {
+<b class="nc"><i>30</i>&nbsp;        return motherId;</b>
+<i>31</i>&nbsp;    }
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    public void setMotherId(String motherId) {
+<b class="nc"><i>34</i>&nbsp;        this.motherId = motherId;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    public String getBirthdate() {
+<b class="nc"><i>38</i>&nbsp;        return birthdate;</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    public void setBirthdate(String birthdate) {
+<b class="nc"><i>42</i>&nbsp;        this.birthdate = birthdate;</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    @Override
+<i>46</i>&nbsp;    public String toString() {
+<b class="nc"><i>47</i>&nbsp;        return &quot;Mcts Id[&quot;+this.getId()+&quot;] stateCode[&quot;+this.getStateCode()+&quot;]&quot;;</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

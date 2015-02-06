@@ -1,0 +1,134 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LocationService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LocationService (org.motechproject.nms.masterdata.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">LocationService</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.nms.masterdata.domain.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;public interface LocationService {
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;    boolean validateLocation(Long stateId, Long districtId);
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;    /**
+<i>11</i>&nbsp;     * get State record for given State Census code
+<i>12</i>&nbsp;     *
+<i>13</i>&nbsp;     * @param stateCode State Census Code
+<i>14</i>&nbsp;     * @return State object corresponding to the census code
+<i>15</i>&nbsp;     */
+<i>16</i>&nbsp;    State getStateByCode(Long stateCode);
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * get District record for given District Census code
+<i>20</i>&nbsp;     *
+<i>21</i>&nbsp;     * @param stateId      MDS Generated id of the state record in which to look up for district
+<i>22</i>&nbsp;     * @param districtCode District Census Code
+<i>23</i>&nbsp;     * @return District object corresponding to the Census code
+<i>24</i>&nbsp;     */
+<i>25</i>&nbsp;    District getDistrictByCode(Long stateId, Long districtCode);
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * get Taluka record for given Taluka Census (or Proposed Census) Code
+<i>29</i>&nbsp;     *
+<i>30</i>&nbsp;     * @param districtId MDS Generated id of the District record, in which to look up for Taluka
+<i>31</i>&nbsp;     * @param talukaCode Taluka Census (or Proposed Census) Code
+<i>32</i>&nbsp;     * @return Taluka object corresponding to the Census (or Proposed Census)code
+<i>33</i>&nbsp;     */
+<i>34</i>&nbsp;    Taluka getTalukaByCode(Long districtId, String talukaCode);
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     * get HealthBlock record for given HealthBlock Census (or Proposed Census) Code
+<i>38</i>&nbsp;     *
+<i>39</i>&nbsp;     * @param talukaId        MDS Generated id of the Taluka record, in which to look up for HealthBlock
+<i>40</i>&nbsp;     * @param healthBlockCode HealthBlock Census (or Proposed Census) Code
+<i>41</i>&nbsp;     * @return HealthBlock object corresponding to the Census (or Proposed Census)code
+<i>42</i>&nbsp;     */
+<i>43</i>&nbsp;    HealthBlock getHealthBlockByCode(Long talukaId, Long healthBlockCode);
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * get HealthFacility record for given HealthFacility Census (or Proposed Census) Code
+<i>47</i>&nbsp;     *
+<i>48</i>&nbsp;     * @param healthBlockId      MDS Generated id of the HealthBlock record, in which to look up for HealthFacility
+<i>49</i>&nbsp;     * @param healthFacilityCode HealthFacility Census (or Proposed Census) Code
+<i>50</i>&nbsp;     * @return HealthFacility object corresponding to the Census (or Proposed Census)code
+<i>51</i>&nbsp;     */
+<i>52</i>&nbsp;    HealthFacility getHealthFacilityByCode(Long healthBlockId, Long healthFacilityCode);
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * get HealthSubFacility record for given HealthSubFacility Census (or Proposed Census) Code
+<i>56</i>&nbsp;     *
+<i>57</i>&nbsp;     * @param healthFacilityId      MDS Generated id of the HealthFacility record, in which to look up for HealthSubFacility
+<i>58</i>&nbsp;     * @param healthSubFacilityCode HealthSubFacility Census (or Proposed Census) Code
+<i>59</i>&nbsp;     * @return HealthSubFacility object corresponding to the Census (or Proposed Census)code
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    HealthSubFacility getHealthSubFacilityByCode(Long healthFacilityId, Long healthSubFacilityCode);
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    /**
+<i>64</i>&nbsp;     * get Village record for given Village Census (or MCTS ) Code
+<i>65</i>&nbsp;     *
+<i>66</i>&nbsp;     * @param talukaId    MDS Generated id of the Taluka record, in which to look up for Village
+<i>67</i>&nbsp;     * @param villageCode Village Census (or MCTS ) Code
+<i>68</i>&nbsp;     * @return Village object corresponding to the Census (or MCTS )code
+<i>69</i>&nbsp;     */
+<i>70</i>&nbsp;    Village getVillageByCode(Long talukaId, Long villageCode);
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * get Village record for given Village Census (or MCTS ) Code
+<i>74</i>&nbsp;     *
+<i>75</i>&nbsp;     * @param stateCode State Census (or MCTS ) Code
+<i>76</i>&nbsp;     * @return Integer object corresponding to the Census (or MCTS )code
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    Integer getMaCappingByCode(Long stateCode);
+<i>79</i>&nbsp;
+<i>80</i>&nbsp;    /**
+<i>81</i>&nbsp;     * get Village record for given Village Census (or MCTS ) Code
+<i>82</i>&nbsp;     *
+<i>83</i>&nbsp;     * @param stateCode State Census (or MCTS ) Code
+<i>84</i>&nbsp;     * @return Integer object corresponding to the Census (or MCTS )code
+<i>85</i>&nbsp;     */
+<i>86</i>&nbsp;    Integer getMkCappingByCode(Long stateCode);
+<i>87</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 13:48</div>
+</div>
+</body>
+</html>

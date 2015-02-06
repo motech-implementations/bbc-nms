@@ -1,0 +1,338 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LanguageLocationCodeServiceImpl</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.service.impl</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LanguageLocationCodeServiceImpl (org.motechproject.nms.masterdata.service.impl)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LanguageLocationCodeServiceImpl</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 21)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">LanguageLocationCodeServiceImpl$LanguageLocationCodeQuery</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 27)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.service.impl;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mds.query.QueryExecution;
+<i>4</i>&nbsp;import org.motechproject.mds.util.InstanceSecurityRestriction;
+<i>5</i>&nbsp;import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+<i>6</i>&nbsp;import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
+<i>7</i>&nbsp;import org.motechproject.nms.masterdata.service.CircleService;
+<i>8</i>&nbsp;import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+<i>9</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>10</i>&nbsp;import org.springframework.stereotype.Service;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import javax.jdo.Query;
+<i>13</i>&nbsp;import java.util.List;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;@Service(&quot;languageLocationCodeService&quot;)
+<b class="nc"><i>16</i>&nbsp;public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @Autowired
+<i>20</i>&nbsp;    private LanguageLocationCodeDataService languageLocationCodeDataService;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    @Autowired
+<i>23</i>&nbsp;    private CircleService circleService;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    /**
+<i>26</i>&nbsp;     * This class represents the query to find list of service specific languageLocationCode for a circleCode
+<i>27</i>&nbsp;     */
+<i>28</i>&nbsp;    private class LanguageLocationCodeQuery implements
+<i>29</i>&nbsp;            QueryExecution&lt;List&lt;Integer&gt;&gt; {
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;        private String circleCode;
+<i>32</i>&nbsp;        private String resultParamName;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;        /**
+<i>35</i>&nbsp;         * All param Constructor
+<i>36</i>&nbsp;         *
+<i>37</i>&nbsp;         * @param circleCode
+<i>38</i>&nbsp;         * @param resultParamName &quot;languageLocationCodeXX&quot;
+<i>39</i>&nbsp;         */
+<b class="nc"><i>40</i>&nbsp;        public LanguageLocationCodeQuery(String circleCode, String resultParamName) {</b>
+<b class="nc"><i>41</i>&nbsp;            this.circleCode = circleCode;</b>
+<b class="nc"><i>42</i>&nbsp;            this.resultParamName = resultParamName;</b>
+<i>43</i>&nbsp;        }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;        @Override
+<i>46</i>&nbsp;        public List&lt;Integer&gt; execute(Query query,
+<i>47</i>&nbsp;                                     InstanceSecurityRestriction restriction) {
+<b class="nc"><i>48</i>&nbsp;            query.setFilter(&quot;circleCode == &#39;&quot; + circleCode + &quot;&#39;&quot;);</b>
+<b class="nc"><i>49</i>&nbsp;            query.setResult(&quot;DISTINCT &quot; + resultParamName + &quot;&quot;);</b>
+<b class="nc"><i>50</i>&nbsp;            return (List&lt;Integer&gt;) query.execute();</b>
+<i>51</i>&nbsp;        }
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * This method executes the LanguagelocationQuery and returns the unique language location code
+<i>56</i>&nbsp;     *
+<i>57</i>&nbsp;     * @param query LanguageLocationCode Query
+<i>58</i>&nbsp;     * @return unique languageLocationCode else null
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    private Integer executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query) {
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;        /* get the list of distinct MA languageLocationCodes for the circle */
+<b class="nc"><i>63</i>&nbsp;        List&lt;Integer&gt; llcList = languageLocationCodeDataService.executeQuery(query);</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;        /* If a unique languageLocationCode is found then return it else return null */
+<b class="nc"><i>66</i>&nbsp;        if ((llcList != null) &amp;&amp; (llcList.size() == 1)) {</b>
+<b class="nc"><i>67</i>&nbsp;            return llcList.get(0);</b>
+<i>68</i>&nbsp;        }
+<b class="nc"><i>69</i>&nbsp;        return null;</b>
+<i>70</i>&nbsp;    }
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    /**
+<i>73</i>&nbsp;     * creates LanguageLocationCode in database
+<i>74</i>&nbsp;     *
+<i>75</i>&nbsp;     * @param record of LanguageLocationCode
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    @Override
+<i>78</i>&nbsp;    public void create(LanguageLocationCode record) {
+<b class="nc"><i>79</i>&nbsp;        languageLocationCodeDataService.create(record);</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;
+<i>82</i>&nbsp;    /**
+<i>83</i>&nbsp;     * updates LanguageLocationCode in database
+<i>84</i>&nbsp;     *
+<i>85</i>&nbsp;     * @param record of LanguageLocationCode
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    @Override
+<i>88</i>&nbsp;    public void update(LanguageLocationCode record) {
+<b class="nc"><i>89</i>&nbsp;        languageLocationCodeDataService.update(record);</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * deletes LanguageLocationCode from database
+<i>94</i>&nbsp;     *
+<i>95</i>&nbsp;     * @param record of LanguageLocationCode
+<i>96</i>&nbsp;     */
+<i>97</i>&nbsp;    @Override
+<i>98</i>&nbsp;    public void delete(LanguageLocationCode record) {
+<b class="nc"><i>99</i>&nbsp;        languageLocationCodeDataService.delete(record);</b>
+<i>100</i>&nbsp;    }
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    /**
+<i>103</i>&nbsp;     * This method returns the language location code record for a location
+<i>104</i>&nbsp;     *
+<i>105</i>&nbsp;     * @param stateCode    code of the state
+<i>106</i>&nbsp;     * @param districtCode code of the district
+<i>107</i>&nbsp;     * @return returns null if record not found, else return the languagelocationCode object.
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    @Override
+<i>110</i>&nbsp;    public LanguageLocationCode getRecordByLocationCode(Long stateCode, Long districtCode) {
+<b class="nc"><i>111</i>&nbsp;        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode);</b>
+<i>112</i>&nbsp;    }
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;    /**
+<i>115</i>&nbsp;     * This method returns the value of  MA language location code for a location (state, district)
+<i>116</i>&nbsp;     *
+<i>117</i>&nbsp;     * @param stateCode    code of the state
+<i>118</i>&nbsp;     * @param districtCode code of the district
+<i>119</i>&nbsp;     * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
+<i>120</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>121</i>&nbsp;     */
+<i>122</i>&nbsp;    @Override
+<i>123</i>&nbsp;    public Integer getLanguageLocationCodeMAByLocationCode(Long stateCode, Long districtCode) {
+<b class="nc"><i>124</i>&nbsp;        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeMA();</b>
+<i>125</i>&nbsp;    }
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;    /**
+<i>128</i>&nbsp;     * This method returns the value of MA language location code for a circle
+<i>129</i>&nbsp;     *
+<i>130</i>&nbsp;     * @param circleCode code of the circle for which language location code is to determined
+<i>131</i>&nbsp;     * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
+<i>132</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>133</i>&nbsp;     */
+<i>134</i>&nbsp;    @Override
+<i>135</i>&nbsp;    public Integer getLanguageLocationCodeMAByCircleCode(final String circleCode) {
+<b class="nc"><i>136</i>&nbsp;        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, &quot;languageLocationCodeMA&quot;);</b>
+<b class="nc"><i>137</i>&nbsp;        return executeUniqueLanguageLocationCodeQuery(query);</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;
+<i>140</i>&nbsp;    /**
+<i>141</i>&nbsp;     * This method returns the value of default MA language location code for a circle
+<i>142</i>&nbsp;     *
+<i>143</i>&nbsp;     * @param circleCode code of the circle for which default language location code is to determined
+<i>144</i>&nbsp;     * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
+<i>145</i>&nbsp;     * else returns the determined value of default Language Location Code.
+<i>146</i>&nbsp;     */
+<i>147</i>&nbsp;    @Override
+<i>148</i>&nbsp;    public Integer getDefaultLanguageLocationCodeMAByCircleCode(String circleCode) {
+<b class="nc"><i>149</i>&nbsp;        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeMA();</b>
+<i>150</i>&nbsp;    }
+<i>151</i>&nbsp;
+<i>152</i>&nbsp;    /**
+<i>153</i>&nbsp;     * This method returns the value of  MK language location code for a location (state, district)
+<i>154</i>&nbsp;     *
+<i>155</i>&nbsp;     * @param stateCode    code of the state
+<i>156</i>&nbsp;     * @param districtCode code of the district
+<i>157</i>&nbsp;     * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
+<i>158</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>159</i>&nbsp;     */
+<i>160</i>&nbsp;    @Override
+<i>161</i>&nbsp;    public Integer getLanguageLocationCodeMKByLocationCode(Long stateCode, Long districtCode) {
+<b class="nc"><i>162</i>&nbsp;        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeMK();</b>
+<i>163</i>&nbsp;    }
+<i>164</i>&nbsp;
+<i>165</i>&nbsp;    /**
+<i>166</i>&nbsp;     * This method returns the value of MK language location code for a circle
+<i>167</i>&nbsp;     *
+<i>168</i>&nbsp;     * @param circleCode code of the circle for which language location code is to determined
+<i>169</i>&nbsp;     * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
+<i>170</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>171</i>&nbsp;     */
+<i>172</i>&nbsp;    @Override
+<i>173</i>&nbsp;    public Integer getLanguageLocationCodeMKByCircleCode(String circleCode) {
+<b class="nc"><i>174</i>&nbsp;        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, &quot;languageLocationCodeMA&quot;);</b>
+<b class="nc"><i>175</i>&nbsp;        return executeUniqueLanguageLocationCodeQuery(query);</b>
+<i>176</i>&nbsp;    }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    /**
+<i>179</i>&nbsp;     * This method returns the value of default MK language location code for a circle
+<i>180</i>&nbsp;     *
+<i>181</i>&nbsp;     * @param circleCode code of the circle for which default language location code is to determined
+<i>182</i>&nbsp;     * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
+<i>183</i>&nbsp;     * else returns the determined value of default Language Location Code.
+<i>184</i>&nbsp;     */
+<i>185</i>&nbsp;    @Override
+<i>186</i>&nbsp;    public Integer getDefaultLanguageLocationCodeMKByCircleCode(String circleCode) {
+<b class="nc"><i>187</i>&nbsp;        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeMK();</b>
+<i>188</i>&nbsp;    }
+<i>189</i>&nbsp;
+<i>190</i>&nbsp;    /**
+<i>191</i>&nbsp;     * This method returns the value of  KK language location code for a location (state, district)
+<i>192</i>&nbsp;     *
+<i>193</i>&nbsp;     * @param stateCode    code of the state
+<i>194</i>&nbsp;     * @param districtCode code of the district
+<i>195</i>&nbsp;     * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
+<i>196</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>197</i>&nbsp;     */
+<i>198</i>&nbsp;    @Override
+<i>199</i>&nbsp;    public Integer getLanguageLocationCodeKKByLocationCode(Long stateCode, Long districtCode) {
+<b class="nc"><i>200</i>&nbsp;        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeKK();</b>
+<i>201</i>&nbsp;    }
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;    /**
+<i>204</i>&nbsp;     * This method returns the value of KK language location code for a circle
+<i>205</i>&nbsp;     *
+<i>206</i>&nbsp;     * @param circleCode code of the circle for which language location code is to determined
+<i>207</i>&nbsp;     * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
+<i>208</i>&nbsp;     * else returns the determined languageLocationCode value
+<i>209</i>&nbsp;     */
+<i>210</i>&nbsp;    @Override
+<i>211</i>&nbsp;    public Integer getLanguageLocationCodeKKByCircleCode(String circleCode) {
+<b class="nc"><i>212</i>&nbsp;        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, &quot;languageLocationCodeMA&quot;);</b>
+<b class="nc"><i>213</i>&nbsp;        return executeUniqueLanguageLocationCodeQuery(query);</b>
+<i>214</i>&nbsp;    }
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;    /**
+<i>217</i>&nbsp;     * This method returns the value of default KK language location code for a circle
+<i>218</i>&nbsp;     *
+<i>219</i>&nbsp;     * @param circleCode code of the circle for which default language location code is to determined
+<i>220</i>&nbsp;     * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
+<i>221</i>&nbsp;     * else returns the determined value of default Language Location Code.
+<i>222</i>&nbsp;     */
+<i>223</i>&nbsp;    @Override
+<i>224</i>&nbsp;    public Integer getDefaultLanguageLocationCodeKKByCircleCode(String circleCode) {
+<b class="nc"><i>225</i>&nbsp;        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeKK();</b>
+<i>226</i>&nbsp;    }
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;
+<i>229</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 13:48</div>
+</div>
+</body>
+</html>

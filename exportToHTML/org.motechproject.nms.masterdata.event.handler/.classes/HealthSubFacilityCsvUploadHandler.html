@@ -1,0 +1,317 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HealthSubFacilityCsvUploadHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.event.handler</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HealthSubFacilityCsvUploadHandler (org.motechproject.nms.masterdata.event.handler)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HealthSubFacilityCsvUploadHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 101)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.event.handler;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * This class handles the csv upload for success and failure events for HealthSubFacilityCsv.
+<i>5</i>&nbsp; */
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import org.motechproject.event.MotechEvent;
+<i>8</i>&nbsp;import org.motechproject.event.listener.annotations.MotechListener;
+<i>9</i>&nbsp;import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+<i>10</i>&nbsp;import org.motechproject.nms.masterdata.domain.*;
+<i>11</i>&nbsp;import org.motechproject.nms.masterdata.repository.*;
+<i>12</i>&nbsp;import org.motechproject.nms.util.BulkUploadError;
+<i>13</i>&nbsp;import org.motechproject.nms.util.CsvProcessingSummary;
+<i>14</i>&nbsp;import org.motechproject.nms.util.helper.DataValidationException;
+<i>15</i>&nbsp;import org.motechproject.nms.util.helper.ParseDataHelper;
+<i>16</i>&nbsp;import org.motechproject.nms.util.service.BulkUploadErrLogService;
+<i>17</i>&nbsp;import org.slf4j.Logger;
+<i>18</i>&nbsp;import org.slf4j.LoggerFactory;
+<i>19</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>20</i>&nbsp;import org.springframework.stereotype.Component;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;import java.util.ArrayList;
+<i>23</i>&nbsp;import java.util.List;
+<i>24</i>&nbsp;import java.util.Map;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;@Component
+<b class="nc"><i>27</i>&nbsp;public class HealthSubFacilityCsvUploadHandler {</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @Autowired
+<i>30</i>&nbsp;    private StateRecordsDataService stateRecordsDataService;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    @Autowired
+<i>33</i>&nbsp;    private DistrictRecordsDataService districtRecordsDataService;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    @Autowired
+<i>36</i>&nbsp;    private TalukaRecordsDataService talukaRecordsDataService;
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    @Autowired
+<i>39</i>&nbsp;    private HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService;
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    @Autowired
+<i>42</i>&nbsp;    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Autowired
+<i>45</i>&nbsp;    private HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService;
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    @Autowired
+<i>48</i>&nbsp;    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Autowired
+<i>51</i>&nbsp;    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    @Autowired
+<i>54</i>&nbsp;    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    @Autowired
+<i>57</i>&nbsp;    private BulkUploadErrLogService bulkUploadErrLogService;
+<i>58</i>&nbsp;
+<b class="nc"><i>59</i>&nbsp;    private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * This method handle the event which is raised after csv is uploaded successfully.
+<i>63</i>&nbsp;     * this method also populates the records in HealthSubFacility table after checking its validity.
+<i>64</i>&nbsp;     *
+<i>65</i>&nbsp;     * @param motechEvent This is the object from which required parameters are fetched.
+<i>66</i>&nbsp;     */
+<i>67</i>&nbsp;    @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS})
+<i>68</i>&nbsp;    public void healthSubFacilityCsvSuccess(MotechEvent motechEvent) {
+<i>69</i>&nbsp;
+<b class="nc"><i>70</i>&nbsp;        int failedRecordCount = 0;</b>
+<b class="nc"><i>71</i>&nbsp;        int successRecordCount = 0;</b>
+<i>72</i>&nbsp;
+<b class="nc"><i>73</i>&nbsp;        logger.info(&quot;HEALTH_SUB_FACILITY_CSV_SUCCESS event received&quot;);</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;        Map&lt;String, Object&gt; params = motechEvent.getParameters();</b>
+<i>76</i>&nbsp;
+<b class="nc"><i>77</i>&nbsp;        String csvFileName = (String) params.get(&quot;csv-import.filename&quot;);</b>
+<b class="nc"><i>78</i>&nbsp;        logger.debug(&quot;Csv file name received in event : {}&quot;, csvFileName);</b>
+<b class="nc"><i>79</i>&nbsp;        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);</b>
+<b class="nc"><i>80</i>&nbsp;        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);</b>
+<b class="nc"><i>81</i>&nbsp;        BulkUploadError errorDetails = new BulkUploadError();</b>
+<b class="nc"><i>82</i>&nbsp;        String userName = null;</b>
+<b class="nc"><i>83</i>&nbsp;        List&lt;Long&gt; createdIds = (ArrayList&lt;Long&gt;) params.get(&quot;csv-import.created_ids&quot;);</b>
+<b class="nc"><i>84</i>&nbsp;        HealthSubFacilityCsv healthSubFacilityCsvRecord = null;</b>
+<i>85</i>&nbsp;
+<b class="nc"><i>86</i>&nbsp;        for (Long id : createdIds) {</b>
+<i>87</i>&nbsp;            try {
+<b class="nc"><i>88</i>&nbsp;                logger.debug(&quot;HEALTH_SUB_FACILITY_CSV_SUCCESS event processing start for ID: {}&quot;, id);</b>
+<b class="nc"><i>89</i>&nbsp;                healthSubFacilityCsvRecord = healthSubFacilityCsvRecordsDataService.findById(id);</b>
+<i>90</i>&nbsp;
+<b class="nc"><i>91</i>&nbsp;                if (healthSubFacilityCsvRecord != null) {</b>
+<b class="nc"><i>92</i>&nbsp;                    logger.info(&quot;Id exist in Health Sub Facility Temporary Entity&quot;);</b>
+<b class="nc"><i>93</i>&nbsp;                    userName = healthSubFacilityCsvRecord.getOwner();</b>
+<b class="nc"><i>94</i>&nbsp;                    HealthSubFacility record = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);</b>
+<b class="nc"><i>95</i>&nbsp;                    processHealthSubFacilityData(record,healthSubFacilityCsvRecord.getOperation());</b>
+<b class="nc"><i>96</i>&nbsp;                    result.incrementSuccessCount();</b>
+<b class="nc"><i>97</i>&nbsp;                } else {</b>
+<b class="nc"><i>98</i>&nbsp;                    logger.info(&quot;Id do not exist in Health Sub Facility Temporary Entity&quot;);</b>
+<b class="nc"><i>99</i>&nbsp;                    errorDetails.setRecordDetails(id.toString());</b>
+<b class="nc"><i>100</i>&nbsp;                    errorDetails.setErrorCategory(&quot;Record_Not_Found&quot;);</b>
+<b class="nc"><i>101</i>&nbsp;                    errorDetails.setErrorDescription(&quot;Record not in database&quot;);</b>
+<b class="nc"><i>102</i>&nbsp;                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);</b>
+<b class="nc"><i>103</i>&nbsp;                    result.incrementFailureCount();</b>
+<i>104</i>&nbsp;                }
+<b class="nc"><i>105</i>&nbsp;            } catch (DataValidationException dataValidationException) {</b>
+<b class="nc"><i>106</i>&nbsp;                logger.error(&quot;HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}&quot;, dataValidationException.getErroneousField());</b>
+<b class="nc"><i>107</i>&nbsp;                errorDetails.setRecordDetails(healthSubFacilityCsvRecord.toString());</b>
+<b class="nc"><i>108</i>&nbsp;                errorDetails.setErrorCategory(dataValidationException.getErrorCode());</b>
+<b class="nc"><i>109</i>&nbsp;                errorDetails.setErrorDescription(dataValidationException.getErroneousField());</b>
+<b class="nc"><i>110</i>&nbsp;                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);</b>
+<b class="nc"><i>111</i>&nbsp;                result.incrementFailureCount();</b>
+<b class="nc"><i>112</i>&nbsp;            } catch (Exception e) {</b>
+<b class="nc"><i>113</i>&nbsp;                logger.error(&quot;HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}&quot;, e);</b>
+<b class="nc"><i>114</i>&nbsp;                result.incrementFailureCount();</b>
+<i>115</i>&nbsp;            }
+<i>116</i>&nbsp;            finally {
+<b class="nc"><i>117</i>&nbsp;                if(null != healthSubFacilityCsvRecord){</b>
+<b class="nc"><i>118</i>&nbsp;                    healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);</b>
+<i>119</i>&nbsp;                }
+<i>120</i>&nbsp;            }
+<b class="nc"><i>121</i>&nbsp;        }</b>
+<b class="nc"><i>122</i>&nbsp;        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);</b>
+<i>123</i>&nbsp;    }
+<i>124</i>&nbsp;
+<i>125</i>&nbsp;    /**
+<i>126</i>&nbsp;     * This method handle the event which is raised after csv upload is failed.
+<i>127</i>&nbsp;     * This method also deletes all the csv records which get inserted in this upload..
+<i>128</i>&nbsp;     *
+<i>129</i>&nbsp;     * @param motechEvent This is the object from which required parameters are fetched.
+<i>130</i>&nbsp;     */
+<i>131</i>&nbsp;    @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_FAILED})
+<i>132</i>&nbsp;    public void healthSubFacilityCsvFailed(MotechEvent motechEvent) {
+<i>133</i>&nbsp;
+<b class="nc"><i>134</i>&nbsp;        Map&lt;String, Object&gt; params = motechEvent.getParameters();</b>
+<b class="nc"><i>135</i>&nbsp;        logger.info(&quot;HEALTH_SUB_FACILITY_CSV_FAILED event received&quot;);</b>
+<b class="nc"><i>136</i>&nbsp;        List&lt;Long&gt; createdIds = (List&lt;Long&gt;) params.get(&quot;csv-import.created_ids&quot;);</b>
+<i>137</i>&nbsp;
+<b class="nc"><i>138</i>&nbsp;        for (Long id : createdIds) {</b>
+<b class="nc"><i>139</i>&nbsp;            logger.debug(&quot;HEALTH_SUB_FACILITY_CSV_FAILED event processing start for ID: {}&quot;, id);</b>
+<b class="nc"><i>140</i>&nbsp;            HealthSubFacilityCsv healthSubFacilityCsv = healthSubFacilityCsvRecordsDataService.findById(id);</b>
+<b class="nc"><i>141</i>&nbsp;            healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsv);</b>
+<b class="nc"><i>142</i>&nbsp;        }</b>
+<b class="nc"><i>143</i>&nbsp;        logger.info(&quot;HEALTH_SUB_FACILITY_CSV_FAILED event processing finished&quot;);</b>
+<i>144</i>&nbsp;    }
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    private HealthSubFacility mapHealthSubFacilityCsv(HealthSubFacilityCsv record) throws DataValidationException {
+<b class="nc"><i>147</i>&nbsp;        HealthSubFacility newRecord = new HealthSubFacility();</b>
+<i>148</i>&nbsp;
+<b class="nc"><i>149</i>&nbsp;        String healthSubFacilityName = ParseDataHelper.parseString(&quot;HealthSubFacilityName&quot;, record.getName(), true);</b>
+<b class="nc"><i>150</i>&nbsp;        Long stateCode = ParseDataHelper.parseLong(&quot;StateCode&quot;, record.getStateCode(), true);</b>
+<b class="nc"><i>151</i>&nbsp;        Long districtCode = ParseDataHelper.parseLong(&quot;DistrictCode&quot;, record.getDistrictCode(), true);</b>
+<b class="nc"><i>152</i>&nbsp;        String talukaCode = ParseDataHelper.parseString(&quot;TalukaCode&quot;, record.getTalukaCode(), true);</b>
+<b class="nc"><i>153</i>&nbsp;        Long healthBlockCode = ParseDataHelper.parseLong(&quot;HealthBlockCode&quot;, record.getHealthBlockCode(), true);</b>
+<b class="nc"><i>154</i>&nbsp;        Long healthfacilityCode = ParseDataHelper.parseLong(&quot;HealthFacilityCode&quot;, record.getHealthFacilityCode(), true);</b>
+<b class="nc"><i>155</i>&nbsp;        Long healthSubFacilityCode = ParseDataHelper.parseLong(&quot;HealthSubFacilityCode&quot;, record.getHealthSubFacilityCode(), true);</b>
+<i>156</i>&nbsp;
+<b class="nc"><i>157</i>&nbsp;        State state = stateRecordsDataService.findRecordByStateCode(stateCode);</b>
+<b class="nc"><i>158</i>&nbsp;        if (state == null) {</b>
+<b class="nc"><i>159</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;State&quot;, &quot;StateCode&quot;);</b>
+<i>160</i>&nbsp;        }
+<i>161</i>&nbsp;
+<b class="nc"><i>162</i>&nbsp;        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);</b>
+<b class="nc"><i>163</i>&nbsp;        if (district == null) {</b>
+<b class="nc"><i>164</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;District&quot;, &quot;DistrictCode&quot;);</b>
+<i>165</i>&nbsp;        }
+<i>166</i>&nbsp;
+<b class="nc"><i>167</i>&nbsp;        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);</b>
+<i>168</i>&nbsp;
+<b class="nc"><i>169</i>&nbsp;        if (taluka == null) {</b>
+<b class="nc"><i>170</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;Taluka&quot;, &quot;TalukaCode&quot;);</b>
+<i>171</i>&nbsp;        }
+<i>172</i>&nbsp;
+<b class="nc"><i>173</i>&nbsp;        HealthBlock healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(</b>
+<i>174</i>&nbsp;                stateCode, districtCode, talukaCode, healthBlockCode);
+<b class="nc"><i>175</i>&nbsp;        if (healthBlock == null) {</b>
+<b class="nc"><i>176</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;HealthBlock&quot;, &quot;HealthBlockCode&quot;);</b>
+<i>177</i>&nbsp;        }
+<i>178</i>&nbsp;
+<b class="nc"><i>179</i>&nbsp;        HealthFacility healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);</b>
+<b class="nc"><i>180</i>&nbsp;        if (healthFacility == null) {</b>
+<b class="nc"><i>181</i>&nbsp;            ParseDataHelper.raiseInvalidDataException(&quot;HealthFacility&quot;, &quot;HealthFacilityCode&quot;);</b>
+<i>182</i>&nbsp;        }
+<b class="nc"><i>183</i>&nbsp;        newRecord.setName(healthSubFacilityName);</b>
+<b class="nc"><i>184</i>&nbsp;        newRecord.setStateCode(stateCode);</b>
+<b class="nc"><i>185</i>&nbsp;        newRecord.setDistrictCode(districtCode);</b>
+<b class="nc"><i>186</i>&nbsp;        newRecord.setTalukaCode(talukaCode);</b>
+<b class="nc"><i>187</i>&nbsp;        newRecord.setHealthBlockCode(healthBlockCode);</b>
+<b class="nc"><i>188</i>&nbsp;        newRecord.setHealthFacilityCode(healthfacilityCode);</b>
+<b class="nc"><i>189</i>&nbsp;        newRecord.setHealthSubFacilityCode(healthSubFacilityCode);</b>
+<b class="nc"><i>190</i>&nbsp;        newRecord.setCreator(record.getCreator());</b>
+<b class="nc"><i>191</i>&nbsp;        newRecord.setOwner(record.getOwner());</b>
+<b class="nc"><i>192</i>&nbsp;        newRecord.setModifiedBy(record.getModifiedBy());</b>
+<i>193</i>&nbsp;
+<b class="nc"><i>194</i>&nbsp;        return newRecord;</b>
+<i>195</i>&nbsp;    }
+<i>196</i>&nbsp;
+<i>197</i>&nbsp;    private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) {
+<i>198</i>&nbsp;
+<b class="nc"><i>199</i>&nbsp;        logger.debug(&quot;Health Sub Facility data contains Sub Facility code : {}&quot;,healthSubFacilityData.getHealthSubFacilityCode());</b>
+<i>200</i>&nbsp;
+<b class="nc"><i>201</i>&nbsp;        HealthSubFacility existHealthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(</b>
+<i>202</i>&nbsp;                healthSubFacilityData.getStateCode(),
+<i>203</i>&nbsp;                healthSubFacilityData.getDistrictCode(),
+<i>204</i>&nbsp;                healthSubFacilityData.getTalukaCode(),
+<i>205</i>&nbsp;                healthSubFacilityData.getHealthBlockCode(),
+<i>206</i>&nbsp;                healthSubFacilityData.getHealthFacilityCode(),
+<i>207</i>&nbsp;                healthSubFacilityData.getHealthSubFacilityCode()
+<i>208</i>&nbsp;        );
+<i>209</i>&nbsp;
+<b class="nc"><i>210</i>&nbsp;        if (existHealthSubFacilityData != null) {</b>
+<b class="nc"><i>211</i>&nbsp;            if (null != operation &amp;&amp; operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {</b>
+<b class="nc"><i>212</i>&nbsp;                healthSubFacilityRecordsDataService.delete(existHealthSubFacilityData);</b>
+<b class="nc"><i>213</i>&nbsp;                logger.info(&quot;HealthSubFacility data is successfully deleted.&quot;);</b>
+<i>214</i>&nbsp;            } else {
+<b class="nc"><i>215</i>&nbsp;                updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);</b>
+<b class="nc"><i>216</i>&nbsp;                logger.info(&quot;HealthSubFacility Permanent data is successfully updated.&quot;);</b>
+<i>217</i>&nbsp;            }
+<i>218</i>&nbsp;        } else {
+<b class="nc"><i>219</i>&nbsp;            HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(</b>
+<i>220</i>&nbsp;                    healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
+<i>221</i>&nbsp;                    healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
+<i>222</i>&nbsp;                    healthSubFacilityData.getHealthFacilityCode());
+<i>223</i>&nbsp;
+<b class="nc"><i>224</i>&nbsp;            healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);</b>
+<b class="nc"><i>225</i>&nbsp;            healthFacilityRecordsDataService.update(healthFacilityData);</b>
+<b class="nc"><i>226</i>&nbsp;            logger.info(&quot;HealthSubFacility Permanent data is successfully inserted.&quot;);</b>
+<i>227</i>&nbsp;        }
+<i>228</i>&nbsp;    }
+<i>229</i>&nbsp;
+<i>230</i>&nbsp;    private void updateHealthSubFacilityDAta(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
+<b class="nc"><i>231</i>&nbsp;        existHealthSubFacilityData.setName(healthSubFacilityData.getName());</b>
+<b class="nc"><i>232</i>&nbsp;        healthSubFacilityRecordsDataService.update(existHealthSubFacilityData);</b>
+<i>233</i>&nbsp;    }
+<i>234</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>

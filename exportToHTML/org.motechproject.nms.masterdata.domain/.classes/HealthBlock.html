@@ -1,0 +1,157 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: HealthBlock</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.masterdata.domain</a> ]
+</div>
+
+<h1>Coverage Summary for Class: HealthBlock (org.motechproject.nms.masterdata.domain)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HealthBlock</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.8%
+  </span>
+  <span class="absValue">
+    (9/ 11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    82.4%
+  </span>
+  <span class="absValue">
+    (14/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.masterdata.domain;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.mds.annotations.Cascade;
+<i>4</i>&nbsp;import org.motechproject.mds.annotations.Entity;
+<i>5</i>&nbsp;import org.motechproject.mds.annotations.Field;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.Set;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class Models data for HealthBlock location records
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;@Entity(recordHistory = true)
+<i>13</i>&nbsp;public class HealthBlock extends LocationUnitMetaData {
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    @Field
+<i>16</i>&nbsp;    private Long healthBlockCode;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    @Field
+<i>19</i>&nbsp;    @Cascade(delete = true)
+<i>20</i>&nbsp;    private Set&lt;HealthFacility&gt; healthBlock;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    @Field
+<i>23</i>&nbsp;    private String talukaCode;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Field
+<i>26</i>&nbsp;    private Long districtCode;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @Field
+<i>29</i>&nbsp;    private Long stateCode;
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;    public HealthBlock() {</b>
+<i>32</i>&nbsp;
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    public Long getHealthBlockCode() {
+<b class="fc"><i>36</i>&nbsp;        return healthBlockCode;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public void setHealthBlockCode(Long healthBlockCode) {
+<b class="fc"><i>40</i>&nbsp;        this.healthBlockCode = healthBlockCode;</b>
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public Set&lt;HealthFacility&gt; getHealthBlock() {
+<b class="nc"><i>44</i>&nbsp;        return healthBlock;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    public void setHealthBlock(Set&lt;HealthFacility&gt; healthBlock) {
+<b class="nc"><i>48</i>&nbsp;        this.healthBlock = healthBlock;</b>
+<b class="nc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    public String getTalukaCode() {
+<b class="fc"><i>52</i>&nbsp;        return talukaCode;</b>
+<i>53</i>&nbsp;    }
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    public void setTalukaCode(String talukaCode) {
+<b class="fc"><i>56</i>&nbsp;        this.talukaCode = talukaCode;</b>
+<b class="fc"><i>57</i>&nbsp;    }</b>
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    public Long getDistrictCode() {
+<b class="fc"><i>60</i>&nbsp;        return districtCode;</b>
+<i>61</i>&nbsp;    }
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    public void setDistrictCode(Long districtCode) {
+<b class="fc"><i>64</i>&nbsp;        this.districtCode = districtCode;</b>
+<b class="fc"><i>65</i>&nbsp;    }</b>
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    public Long getStateCode() {
+<b class="fc"><i>68</i>&nbsp;        return stateCode;</b>
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public void setStateCode(Long stateCode) {
+<b class="fc"><i>72</i>&nbsp;        this.stateCode = stateCode;</b>
+<b class="fc"><i>73</i>&nbsp;    }</b>
+<i>74</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 13:48</div>
+</div>
+</body>
+</html>

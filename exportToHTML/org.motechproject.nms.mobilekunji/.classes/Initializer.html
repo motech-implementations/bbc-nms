@@ -1,0 +1,134 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Initializer</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">org.motechproject.nms.mobilekunji</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Initializer (org.motechproject.nms.mobilekunji)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Initializer</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package org.motechproject.nms.mobilekunji;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import org.motechproject.nms.mobilekunji.domain.Configuration;
+<i>4</i>&nbsp;import org.motechproject.nms.mobilekunji.service.ConfigurationService;
+<i>5</i>&nbsp;import org.slf4j.Logger;
+<i>6</i>&nbsp;import org.slf4j.LoggerFactory;
+<i>7</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>8</i>&nbsp;import org.springframework.stereotype.Component;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import javax.annotation.PostConstruct;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import static org.motechproject.nms.mobilekunji.constants.KunjiConstants.*;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;/**
+<i>16</i>&nbsp; * The purpose of this class is to perform initialization for MobileKunji Service.
+<i>17</i>&nbsp; * It creates and initializes the configuration parameters with default values, if not created already
+<i>18</i>&nbsp; */
+<i>19</i>&nbsp;@Component
+<b class="nc"><i>20</i>&nbsp;public class Initializer {</b>
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;    private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    @Autowired
+<i>26</i>&nbsp;    private ConfigurationService configurationService;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @PostConstruct
+<i>29</i>&nbsp;    public void initializeConfiguration() {
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;        /*
+<i>32</i>&nbsp;         * Check if configuration is not present then create with default values
+<i>33</i>&nbsp;         */
+<b class="nc"><i>34</i>&nbsp;        if (!configurationService.isConfigurationPresent()) {</b>
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;            Configuration configuration = new Configuration();</b>
+<i>38</i>&nbsp;
+<b class="nc"><i>39</i>&nbsp;            LOG.info(&quot;Creating Configuration with default values&quot;);</b>
+<b class="nc"><i>40</i>&nbsp;            configuration.setIndex(CONFIGURATION_INDEX);</b>
+<b class="nc"><i>41</i>&nbsp;            configuration.setNmsMkCappingType(DEFAULT_CAPPING_TYPE);</b>
+<b class="nc"><i>42</i>&nbsp;            configuration.setNmsMkMaxHealthCards(DEFAULT_MAX_HEALTH_CARDS);</b>
+<b class="nc"><i>43</i>&nbsp;            configuration.setNmsMkMaxWelcomeMessage(DEFAULT_MAX_WELCOME_MESSAGE);</b>
+<b class="nc"><i>44</i>&nbsp;            configuration.setNmsMkMaxEndofusageMessage(DEFAULT_MAX_END_OF_USAGE_MESSAGE);</b>
+<b class="nc"><i>45</i>&nbsp;            configuration.setNmsMkNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);</b>
+<b class="nc"><i>46</i>&nbsp;            configurationService.createConfiguration(configuration);</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;        }
+<i>49</i>&nbsp;    }
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-02-06 11:47</div>
+</div>
+</body>
+</html>
