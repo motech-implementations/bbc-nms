@@ -19,9 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class handles the csv upload for success and failure events for DistrictCsv.
@@ -159,7 +157,9 @@ public class DistrictCsvUploadHandler {
         District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                districtRecordsDataService.delete(existDistrictData);
+                State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
+                boolean b = stateData.getDistrict().remove(existDistrictData);
+                stateRecordsDataService.update(stateData);
                 logger.info("District data is successfully deleted.");
             } else {
                 updateDistrict(existDistrictData, districtData);

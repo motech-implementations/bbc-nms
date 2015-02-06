@@ -61,4 +61,30 @@ public class District extends LocationUnitMetaData {
                 ", stateCode=" + stateCode +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || (o.getClass() != this.getClass())) {
+            return false;
+        }
+
+        District district = (District) o;
+
+        if (district != null) {
+            if (district.getStateCode().equals(this.getStateCode())
+                    && district.getDistrictCode().equals(this.getDistrictCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = districtCode != null ? districtCode.hashCode() : 0;
+        result = 31 * result + (stateCode != null ? stateCode.hashCode() : 0);
+        return result;
+    }
 }

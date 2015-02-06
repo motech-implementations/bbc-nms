@@ -30,6 +30,17 @@ public class LocationServiceImpl implements LocationService {
     @Autowired
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
+
+    public LocationServiceImpl(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.villageRecordsDataService = villageRecordsDataService;
+        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
+        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
+    }
+
     @Override
     public boolean validateLocation(Long stateId, Long districtId) {
 
@@ -73,7 +84,7 @@ public class LocationServiceImpl implements LocationService {
             State state = stateRecordsDataService.findById(stateId);
 
             if (null != state) {
-                return districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
+                    return districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
             }
 
         }
