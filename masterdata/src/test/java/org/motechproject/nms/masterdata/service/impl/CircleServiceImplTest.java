@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -28,34 +27,6 @@ public class CircleServiceImplTest extends TestCase {
     }
 
     @Test
-    public void testCreate() throws Exception {
-
-        Circle circleData = getCircleData();
-
-        when(circleDataService.create(circleData)).thenReturn(circleData);
-
-        circleService.create(circleData);
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-
-        Circle circleData = getCircleData();
-
-        when(circleDataService.update(circleData)).thenReturn(circleData);
-
-        circleService.update(circleData);
-    }
-
-    public void testDelete() throws Exception {
-
-        Circle circleData = getCircleData();
-
-        doNothing().when(circleDataService).delete(circleData);
-
-        circleService.delete(circleData);
-    }
-
     public void testGetRecordByCode() throws Exception {
 
         Circle circleData = getCircleData();

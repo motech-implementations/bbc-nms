@@ -7,7 +7,6 @@ import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.repository.OperatorCsvDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -39,16 +38,4 @@ public class OperatorCsvServiceImplTest extends TestCase {
         assertTrue("Add".equals(operatorCsvService.getRecord(1L).getOperation()));
     }
 
-    public void testDelete() throws Exception {
-        OperatorCsv operatorCsvData = new OperatorCsv();
-        operatorCsvData.setId(1L);
-        operatorCsvData.setName("Test");
-        operatorCsvData.setCode("123");
-        operatorCsvData.setOperation("Add");
-
-        doNothing().when(operatorCsvDataService).delete(operatorCsvData);
-
-        operatorCsvService.delete(operatorCsvData);
-
-    }
 }

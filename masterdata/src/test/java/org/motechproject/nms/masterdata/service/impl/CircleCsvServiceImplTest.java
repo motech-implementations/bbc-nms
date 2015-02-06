@@ -2,11 +2,11 @@ package org.motechproject.nms.masterdata.service.impl;
 
 import junit.framework.TestCase;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -26,15 +26,7 @@ public class CircleCsvServiceImplTest extends TestCase {
         this.circleCsvService = new CircleCsvServiceImpl(circleCsvDataService);
     }
 
-    public void testDelete() throws Exception {
-
-        CircleCsv circleCsvData = getCircleCsvData();
-
-        doNothing().when(circleCsvDataService).delete(circleCsvData);
-
-        circleCsvService.delete(circleCsvData);
-    }
-
+    @Test
     public void testGetRecordByCode() throws Exception {
 
         CircleCsv circleCsvData = getCircleCsvData();
