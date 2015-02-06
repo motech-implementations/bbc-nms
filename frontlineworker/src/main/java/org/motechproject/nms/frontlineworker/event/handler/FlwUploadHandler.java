@@ -1,17 +1,11 @@
 package org.motechproject.nms.frontlineworker.event.handler;
 
-/**
- * Created by abhishek on 2/2/15.
- * This class provides Motech Listeners for Front Line Worker upload for both success and failure scenarios.
- * This class also provides methods used to validate csv data and save the data in Motech database in case of success
- * and raise exceptions in case of failure
- */
-
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.FrontLineWorkerConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
+import org.motechproject.nms.frontlineworker.domain.Status;
 import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
 import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
 import org.motechproject.nms.masterdata.domain.*;
@@ -31,6 +25,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Created by abhishek on 2/2/15.
+ * This class provides Motech Listeners for Front Line Worker upload for both success and failure scenarios.
+ * This class also provides methods used to validate csv data and save the data in Motech database in case of success
+ * and raise exceptions in case of failure
+ */
 
 @Component
 public class FlwUploadHandler {
@@ -66,8 +67,8 @@ public class FlwUploadHandler {
 
 
     /**
-     * This method provides a listerner to the Front Line Worker upload success scenario.
-     * @param motechEvent   name of the event raised during upload
+     * This method provides a listener to the Front Line Worker upload success scenario.
+     * @param motechEvent name of the event raised during upload
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandler(MotechEvent motechEvent) {
@@ -87,7 +88,7 @@ public class FlwUploadHandler {
                         record = flwCsvRecordsDataService.findById(id);
                         if (record != null) {
                             frontLineWorker = null;
-                            frontLineWorker = flwCsvtoFlwMapper(record);
+                            frontLineWorker = mapFrontLineWorkerFrom(record);
                             if (frontLineWorker != null) {
                                 FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(),
                                         frontLineWorker.getStateCode());
@@ -99,10 +100,21 @@ public class FlwUploadHandler {
                                             flwCsvRecordsDataService.delete(record);
                                             summary.incrementSuccessCount();
                                         } else {
+                                            boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
+                                            if (dbRecord.getStatus() == Status.INVALID && valid )
+                                            {
+                                                summary.incrementFailureCount();
+                                                errorDetails.setRecordDetails(id.toString());
+                                                errorDetails.setErrorCategory("status changed from invalid to valid");
+                                                errorDetails.setErrorDescription("status changed from invalid to valid");
+                                                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                            }
+                                            else {
+                                                flwRecordDataService.update(frontLineWorker);
+                                                flwCsvRecordsDataService.delete(record);
+                                                summary.incrementSuccessCount();
+                                            }
 
-                                            flwRecordDataService.update(frontLineWorker);
-                                            flwCsvRecordsDataService.delete(record);
-                                            summary.incrementSuccessCount();
                                         }
                                     }
                                 } else {
@@ -117,7 +129,7 @@ public class FlwUploadHandler {
                                 errorDetails.setRecordDetails(id.toString());
                                 errorDetails.setErrorCategory("Record_Not_Found");
                                 errorDetails.setErrorDescription("Record not found in Csv database");
-
+                                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             }
                         }
                     }
@@ -126,62 +138,54 @@ public class FlwUploadHandler {
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 summary.incrementFailureCount();
-
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }catch(Exception e){
                 summary.incrementFailureCount();
+            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
             }
 
 
 
     /**
-     * This method provides a listerner to the Front Line Worker upload failure scenario.
+     * This method provides a listener to the Front Line Worker upload failure scenario.
      *
-     * @param motechEvent   name of the event raised during upload
+     * @param motechEvent name of the event raised during upload
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_FAILED})
     public void frontLineWorkerFailure(MotechEvent motechEvent) {
         logger.error("entered frontLineWorkerFailed");
 
         String errorFileName = "FrontLineWorkerCsv_" + new Date().toString();
-        try {
+
             Map<String, Object> params = motechEvent.getParameters();
-            CsvProcessingSummary result = processCsvRecordsFailure(params);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("etasha","FrontLineWorkerCsv", errorFileName, result);
-        } catch (Exception ex) {
-        }
-    }
+            CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
+            String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
+            String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
+            List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+            for(Long id : createdIds) {
+                FrontLineWorkerCsv record =  flwCsvRecordsDataService.findById(id);
+                flwCsvRecordsDataService.delete(record);
+                summary.incrementFailureCount();
+                errorDetails.setRecordDetails(id.toString());
+                errorDetails.setErrorCategory("Upload failure");
+                errorDetails.setErrorDescription("Upload failure");
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            }
+
+    }
 
 
     /**
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param params
-     * @return the summary of the failure operation i.e the number of failed records.
-     */
-    private CsvProcessingSummary processCsvRecordsFailure(Map<String, Object> params) {
-        CsvProcessingSummary result = new CsvProcessingSummary(successCount,failCount);
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        for(Long id : createdIds) {
-            FrontLineWorkerCsv record =  flwCsvRecordsDataService.findById(id);
-            flwCsvRecordsDataService.delete(record);
-            result.incrementFailureCount();
-        }
-
-        return result;
-    }
-
-    /**
-     * This method validates a field of Date type for null/empty values, and raises exception if a
-     * mandatory field is empty/null or is invalid date format
-     *
-     * @param record the Front Line Worker record fron Csv that is to be validated
+     * @param record the Front Line Worker record from Csv that is to be validated
      * @return the Front Line Worker generated after applying validations.
      * @throws DataValidationException
      */
-    private FrontLineWorker flwCsvtoFlwMapper(FrontLineWorkerCsv record)  throws DataValidationException{
+    private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record)  throws DataValidationException{
         BulkUploadError errorRecord = new BulkUploadError();
 
         Long stateCode;
@@ -196,6 +200,9 @@ public class FlwUploadHandler {
         HealthBlock healthBlock;
         HealthFacility healthFacility;
         HealthSubFacility healthSubFacility;
+        Status status = null;
+        String statusTemp;
+        String statusTemporary;
 
         stateCode = ParseDataHelper.parseLong("State", record.getStateCode(), true);
         districtCode = ParseDataHelper.parseLong("District", record.getDistrictCode(), true);
@@ -235,13 +242,14 @@ public class FlwUploadHandler {
 
         frontLineWorker.setFlwId(ParseDataHelper.parseLong("Flw Id", record.getFlwId(), false));
         frontLineWorker.setAshaNumber(ParseDataHelper.parseString("Asha Number", record.getAshaNumber(), false));
-        frontLineWorker.setValid(ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false));
         frontLineWorker.setValidated(ParseDataHelper.parseBoolean("IsValidated", record.getIsValidated(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.parseString("Adhaar Number", record.getAdhaarNo(), false));
 
         frontLineWorker.setLanguageLocationCodeId(languageLocationCodeService.getRecordByLocationCode(stateCode,
                         districtCode).getId());
-        frontLineWorker.setStatus("Inactive");
+
+        statusTemp = ParseDataHelper.parseString("Status",status.toString(), true);
+        frontLineWorker.setStatus(Status.INACTIVE);
         frontLineWorker.setOperatorId(null);
 
         return frontLineWorker;
