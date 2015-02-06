@@ -46,19 +46,19 @@ import java.util.Map;
 public class FlwUploadHandler {
 
 
-    @Autowired
+    //@Autowired
     private FlwRecordDataService flwRecordDataService;
 
-    @Autowired
+    //@Autowired
     private FlwCsvRecordsDataService flwCsvRecordsDataService;
 
-    @Autowired
+    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    @Autowired
+    //@Autowired
     private LocationService locationService;
 
-    @Autowired
+    //@Autowired
     private LanguageLocationCodeService languageLocationCodeService;
 
 
@@ -69,6 +69,30 @@ public class FlwUploadHandler {
     private Integer failCount = 0;
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
+
+
+    @Autowired
+    public FlwUploadHandler(FlwRecordDataService flwRecordDataService,
+                            FlwCsvRecordsDataService flwCsvRecordsDataService,
+                            BulkUploadErrLogService bulkUploadErrLogService,
+                            LocationService locationService,
+                            LanguageLocationCodeService languageLocationCodeService) {
+
+        System.out.println("Constructor call");
+
+        this.flwRecordDataService = flwRecordDataService;
+        System.out.println("flwRecordDataService" + this.flwCsvRecordsDataService);
+        this.flwCsvRecordsDataService = flwCsvRecordsDataService;
+        System.out.println("flwCsvRecordsDataServicel" + this.flwCsvRecordsDataService);
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        System.out.println("bulkUploadErrLogService" + this.bulkUploadErrLogService);
+        this.locationService = locationService;
+        System.out.println("locationService" + this.locationService);
+        this.languageLocationCodeService = languageLocationCodeService;
+        System.out.println("languageLocationCodeService" + this.languageLocationCodeService);
+    }
+
+
 
 
     /**

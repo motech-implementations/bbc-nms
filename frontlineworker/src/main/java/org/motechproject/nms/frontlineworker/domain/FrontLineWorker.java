@@ -223,4 +223,29 @@ public class FrontLineWorker extends MdsEntity {
 
     public FrontLineWorker() {
     }
+
+    public FrontLineWorker(Long flwId, String contactNo, String name, String designation, Long operatorId,
+                           Long stateCode, State stateId, District districtId, Taluka talukaId, HealthBlock
+                           healthBlockId, HealthFacility healthFacilityId, HealthSubFacility healthSubFacilityId,
+                           Village villageId, String ashaNumber, boolean isValidated, String adhaarNumber,
+                           Status status, Long languageLocationCodeId) {
+        this.flwId = flwId;
+        this.contactNo = contactNo;
+        this.name = name;
+        this.designation = designation;
+        this.operatorId = operatorId;
+        this.stateCode = stateCode;
+        this.stateId = stateId;
+        this.districtId = districtId;
+        this.talukaId = talukaId;
+        this.healthBlockId = healthBlockId;
+        this.healthFacilityId = healthFacilityId;
+        this.healthSubFacilityId = healthSubFacilityId;
+        this.villageId = villageId;
+        this.ashaNumber = ashaNumber;
+        this.isValidated = isValidated;
+        this.adhaarNumber = adhaarNumber;
+        this.status = status;
+        this.languageLocationCodeId = languageLocationCodeId;
+    }
 }
