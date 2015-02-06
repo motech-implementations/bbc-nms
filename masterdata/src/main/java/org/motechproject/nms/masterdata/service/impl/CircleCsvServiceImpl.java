@@ -12,6 +12,10 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     @Autowired
     private CircleCsvDataService circleCsvDataService;
 
+    public CircleCsvServiceImpl(CircleCsvDataService circleCsvDataService) {
+        this.circleCsvDataService = circleCsvDataService;
+    }
+
     /**
      * gets CircleCsv object based by id
      *

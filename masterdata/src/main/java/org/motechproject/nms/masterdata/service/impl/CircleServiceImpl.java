@@ -12,6 +12,10 @@ public class CircleServiceImpl implements CircleService {
     @Autowired
     private CircleDataService circleDataService;
 
+    public CircleServiceImpl(CircleDataService circleDataService) {
+        this.circleDataService = circleDataService;
+    }
+
     /**
      * create Circle type object
      *

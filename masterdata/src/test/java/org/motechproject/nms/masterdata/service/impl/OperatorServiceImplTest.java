@@ -28,53 +28,47 @@ public class OperatorServiceImplTest extends TestCase {
     @Test
     public void testCreate() throws Exception {
 
-        Operator operatorData = new Operator();
-        operatorData.setId(1L);
-        operatorData.setName("Test");
-        operatorData.setCode("123");
+        Operator operatorData =getOperatorData();
 
-        when(operatorDataService.findById(1L)).thenReturn(operatorData);
+        when(operatorDataService.create(operatorData)).thenReturn(operatorData);
+
         operatorService.create(operatorData);
     }
 
     @Test
     public void testUpdate() throws Exception {
 
-        Operator operatorData = new Operator();
-        operatorData.setId(1L);
-        operatorData.setName("Test");
-        operatorData.setCode("123");
+        Operator operatorData = getOperatorData();
 
-        operatorService.create(operatorData);
+        when(operatorDataService.update(operatorData)).thenReturn(operatorData);
 
-        when(operatorDataService.findById(1L)).thenReturn(operatorData);
-
-        operatorData.setName("Test1");
         operatorService.update(operatorData);
-
-        assertTrue("Test1".equals(operatorDataService.findById(1L).getName()));
     }
 
     public void testDelete() throws Exception {
-        Operator operatorData = new Operator();
-        operatorData.setId(1L);
-        operatorData.setName("Test");
-        operatorData.setCode("123");
+
+        Operator operatorData = getOperatorData();
 
         doNothing().when(operatorDataService).delete(operatorData);
+
         operatorService.delete(operatorData);
     }
 
     public void testGetRecordByCode() throws Exception {
 
-        Operator operatorData = new Operator();
-        operatorData.setId(1L);
-        operatorData.setName("TestName");
-        operatorData.setCode("123");
+        Operator operatorData = getOperatorData();
 
         when(operatorDataService.findByCode("anyString")).thenReturn(operatorData);
 
         assertNotNull(operatorService.getRecordByCode("anyString"));
-        assertTrue("TestName".equals(operatorService.getRecordByCode("anyString").getName()));
+        assertTrue("Test".equals(operatorService.getRecordByCode("anyString").getName()));
+    }
+
+    private Operator getOperatorData() {
+        Operator operatorData = new Operator();
+        operatorData.setId(1L);
+        operatorData.setName("Test");
+        operatorData.setCode("123");
+        return operatorData;
     }
 }
