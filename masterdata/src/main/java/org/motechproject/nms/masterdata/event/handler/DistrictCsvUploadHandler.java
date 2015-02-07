@@ -107,27 +107,6 @@ public class DistrictCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
-    /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_FAILED})
-    public void districtCsvFailed(MotechEvent motechEvent) {
-
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("DISTRICT_CSV_FAILED event received");
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            logger.debug("DISTRICT_CSV_FAILED event processing start for ID: {}", id);
-            DistrictCsv districtCsv = districtCsvRecordsDataService.findById(id);
-            districtCsvRecordsDataService.delete(districtCsv);
-        }
-        logger.info("DISTRICT_CSV_FAILED event processing finished");
-    }
-
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
 
         String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);

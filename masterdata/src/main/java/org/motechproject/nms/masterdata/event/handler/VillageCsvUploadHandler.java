@@ -113,28 +113,6 @@ public class VillageCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
-    /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_FAILED})
-    public void villageCsvFailed(MotechEvent motechEvent) {
-
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("VILLAGE_CSV_FAILED event received");
-        logger.info(String.format("Start processing VillageCsv-import failure for upload %s", params.toString()));
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            logger.debug("VILLAGE_CSV_FAILED event processing start for ID: {}", id);
-            VillageCsv villageCsv = villageCsvRecordsDataService.findById(id);
-            villageCsvRecordsDataService.delete(villageCsv);
-        }
-        logger.info("VILLAGE_CSV_FAILED event processing finished");
-    }
-
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
         Village newRecord = new Village();
 
