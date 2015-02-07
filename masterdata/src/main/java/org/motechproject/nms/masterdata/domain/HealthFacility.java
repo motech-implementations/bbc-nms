@@ -92,11 +92,11 @@ public class HealthFacility extends LocationUnitMetaData {
 
         HealthFacility that = (HealthFacility) o;
 
-        if (!districtCode.equals(that.districtCode)) return false;
-        if (!healthBlockCode.equals(that.healthBlockCode)) return false;
-        if (!healthFacilityCode.equals(that.healthFacilityCode)) return false;
-        if (!stateCode.equals(that.stateCode)) return false;
-        if (!talukaCode.equals(that.talukaCode)) return false;
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
+        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
+        if (!this.getStateCode().equals(that.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
 
         return true;
     }
