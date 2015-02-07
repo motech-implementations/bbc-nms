@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
@@ -14,15 +15,17 @@ import java.util.Set;
 public class District extends LocationUnitMetaData {
 
     @Field
-    private Long districtCode;
-
-    @Field
     @Cascade(delete = true)
     @Persistent(defaultFetchGroup = "true")
     private Set<Taluka> taluka;
 
     @Field
+    @UIDisplayable(position = 1)
     private Long stateCode;
+
+    @Field
+    @UIDisplayable(position = 2)
+    private Long districtCode;
 
 
     public District() {

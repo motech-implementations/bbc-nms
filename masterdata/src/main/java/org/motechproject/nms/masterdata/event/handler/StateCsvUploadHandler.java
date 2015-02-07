@@ -132,7 +132,7 @@ public class StateCsvUploadHandler {
         return newRecord;
     }
 
-    private void processStateData(State stateData, String operation) {
+    private void processStateData(State stateData, String operation) throws DataValidationException{
 
 
         logger.debug("State data contains state code : {}",stateData.getStateCode() );
@@ -148,6 +148,9 @@ public class StateCsvUploadHandler {
                 logger.info("State data is successfully updated.");
             }
         } else {
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
             stateRecordsDataService.create(stateData);
             logger.info("State data is successfully inserted.");
         }

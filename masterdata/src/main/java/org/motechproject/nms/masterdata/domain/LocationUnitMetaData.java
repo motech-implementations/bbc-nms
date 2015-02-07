@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -19,6 +20,7 @@ public class LocationUnitMetaData extends MdsEntity {
     }
 
     @Field(name = "name")
+    @UIDisplayable(position = 0)
     private String name;
 
     public LocationUnitMetaData() {

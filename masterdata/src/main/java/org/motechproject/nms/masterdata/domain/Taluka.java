@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import java.util.Set;
 
@@ -13,6 +14,15 @@ import java.util.Set;
 public class Taluka extends LocationUnitMetaData {
 
     @Field
+    @UIDisplayable(position = 1)
+    private Long stateCode;
+
+    @Field
+    @UIDisplayable(position = 2)
+    private Long districtCode;
+
+    @Field
+    @UIDisplayable(position = 3)
     private String talukaCode;
 
     @Field
@@ -23,11 +33,6 @@ public class Taluka extends LocationUnitMetaData {
     @Cascade(delete = true)
     private Set<Village> village;
 
-    @Field
-    private Long districtCode;
-
-    @Field
-    private Long stateCode;
 
     public Taluka() {
     }
@@ -70,6 +75,34 @@ public class Taluka extends LocationUnitMetaData {
 
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || (o.getClass() != this.getClass())) {
+            return false;
+        }
+
+        Taluka taluka = (Taluka) o;
+
+        if (taluka != null) {
+            if (taluka.getStateCode() == this.getStateCode()
+                    && taluka.getDistrictCode() == this.getDistrictCode()
+                    && taluka.getTalukaCode().equals(this.getTalukaCode())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stateCode.hashCode();
+        result = 31 * result + districtCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
+        return result;
     }
 
     @Override

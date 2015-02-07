@@ -182,7 +182,7 @@ public class HealthFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void processHealthFacilityData(HealthFacility healthFacilityData, String operation) {
+    private void processHealthFacilityData(HealthFacility healthFacilityData, String operation) throws DataValidationException {
 
         logger.debug("Health Facility data contains facility code : {}",healthFacilityData.getHealthFacilityCode());
         HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
@@ -194,16 +194,31 @@ public class HealthFacilityCsvUploadHandler {
 
         if (existHealthFacilityData != null) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                healthFacilityRecordsDataService.delete(existHealthFacilityData);
-                logger.info("HealthFacility data is successfully deleted.");
+
+            HealthBlock healthBlockRecord = healthBlockRecordsDataService.findHealthBlockByParentCode(healthFacilityData.getStateCode(),
+                        healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(),
+                        healthFacilityData.getHealthBlockCode());
+
+            boolean b = healthBlockRecord.getHealthFacility().remove(existHealthFacilityData);
+            healthBlockRecordsDataService.update(healthBlockRecord);
+
+            logger.info("HealthFacility data is successfully deleted.");
+
             } else {
                 updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
                 logger.info("HealthFacility data is successfully updated.");
             }
         } else {
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
+
             HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
-                    healthFacilityData.getStateCode(), healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode());
-            healthBlockData.getHealthBlock().add(healthFacilityData);
+                    healthFacilityData.getStateCode(), healthFacilityData.getDistrictCode(),
+                    healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode());
+
+            healthBlockData.getHealthFacility().add(healthFacilityData);
             healthBlockRecordsDataService.update(healthBlockData);
             logger.info("HealthFacility data is successfully inserted.");
         }

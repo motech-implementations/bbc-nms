@@ -167,7 +167,7 @@ public class HealthBlockCsvUploadHandler {
         return newRecord;
     }
 
-    private void processHealthBlockData(HealthBlock healthBlockData, String operation) {
+    private void processHealthBlockData(HealthBlock healthBlockData, String operation) throws DataValidationException {
 
         logger.debug("Health Block data contains Health Block code : {}",healthBlockData.getHealthBlockCode());
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
@@ -178,13 +178,22 @@ public class HealthBlockCsvUploadHandler {
 
         if (existHealthBlockData != null) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                healthBlockRecordsDataService.delete(existHealthBlockData);
+                Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(),
+                        healthBlockData.getDistrictCode(),healthBlockData.getTalukaCode());
+
+                boolean b = talukaRecord.getHealthBlock().remove(existHealthBlockData);
+
+                talukaRecordsDataService.update(talukaRecord);
                 logger.info("HealthBlock data is successfully deleted.");
             } else {
                 updateHealthBlock(existHealthBlockData, healthBlockData);
                 logger.info("HealthBlock data is successfully updated.");
             }
         } else {
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
 
             Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
             talukaRecord.getHealthBlock().add(healthBlockData);

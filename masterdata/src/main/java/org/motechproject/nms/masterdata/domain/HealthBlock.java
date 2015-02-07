@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import java.util.Set;
 
@@ -13,20 +14,25 @@ import java.util.Set;
 public class HealthBlock extends LocationUnitMetaData {
 
     @Field
-    private Long healthBlockCode;
-
-    @Field
     @Cascade(delete = true)
-    private Set<HealthFacility> healthBlock;
+    private Set<HealthFacility> healthFacility;
 
     @Field
-    private String talukaCode;
+    @UIDisplayable(position = 1)
+    private Long stateCode;
 
     @Field
+    @UIDisplayable(position = 2)
     private Long districtCode;
 
     @Field
-    private Long stateCode;
+    @UIDisplayable(position = 3)
+    private String talukaCode;
+
+    @Field
+    @UIDisplayable(position = 4)
+    private Long healthBlockCode;
+
 
     public HealthBlock() {
 
@@ -40,12 +46,12 @@ public class HealthBlock extends LocationUnitMetaData {
         this.healthBlockCode = healthBlockCode;
     }
 
-    public Set<HealthFacility> getHealthBlock() {
-        return healthBlock;
+    public Set<HealthFacility> getHealthFacility() {
+        return healthFacility;
     }
 
-    public void setHealthBlock(Set<HealthFacility> healthBlock) {
-        this.healthBlock = healthBlock;
+    public void setHealthFacility(Set<HealthFacility> healthFacility) {
+        this.healthFacility = healthFacility;
     }
 
     public String getTalukaCode() {
@@ -70,5 +76,29 @@ public class HealthBlock extends LocationUnitMetaData {
 
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HealthBlock)) return false;
+
+        HealthBlock that = (HealthBlock) o;
+
+        if (!districtCode.equals(that.districtCode)) return false;
+        if (!healthBlockCode.equals(that.healthBlockCode)) return false;
+        if (!stateCode.equals(that.stateCode)) return false;
+        if (!talukaCode.equals(that.talukaCode)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stateCode.hashCode();
+        result = 31 * result + districtCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
+        result = 31 * result + healthBlockCode.hashCode();
+        return result;
     }
 }

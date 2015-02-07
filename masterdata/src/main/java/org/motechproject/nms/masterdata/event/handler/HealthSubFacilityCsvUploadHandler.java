@@ -194,7 +194,7 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) {
+    private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) throws DataValidationException {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}",healthSubFacilityData.getHealthSubFacilityCode());
 
@@ -209,13 +209,28 @@ public class HealthSubFacilityCsvUploadHandler {
 
         if (existHealthSubFacilityData != null) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                healthSubFacilityRecordsDataService.delete(existHealthSubFacilityData);
+
+                HealthFacility healthFacilityDeleteRecord = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
+                        healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
+                        healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
+                        healthSubFacilityData.getHealthFacilityCode());
+
+                boolean b = healthFacilityDeleteRecord.getHealthSubFacility().remove(existHealthSubFacilityData);
+
+                healthFacilityRecordsDataService.update(healthFacilityDeleteRecord);
+
                 logger.info("HealthSubFacility data is successfully deleted.");
+
             } else {
                 updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
                 logger.info("HealthSubFacility Permanent data is successfully updated.");
             }
         } else {
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
+
             HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                     healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
                     healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),

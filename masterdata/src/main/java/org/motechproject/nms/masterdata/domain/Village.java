@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 /**
  * This class Models data for Village location records
@@ -10,16 +11,20 @@ import org.motechproject.mds.annotations.Field;
 public class Village extends LocationUnitMetaData {
 
     @Field
-    private Long villageCode;
+    @UIDisplayable(position = 1)
+    private Long stateCode;
 
     @Field
-    private String talukaCode;
-
-    @Field
+    @UIDisplayable(position = 2)
     private Long districtCode;
 
     @Field
-    private Long stateCode;
+    @UIDisplayable(position = 3)
+    private String talukaCode;
+
+    @Field
+    @UIDisplayable(position = 4)
+    private Long villageCode;
 
     public Village() {
 
@@ -55,5 +60,39 @@ public class Village extends LocationUnitMetaData {
 
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Village)) return false;
+
+        Village village = (Village) o;
+
+        if (!districtCode.equals(village.districtCode)) return false;
+        if (!stateCode.equals(village.stateCode)) return false;
+        if (!talukaCode.equals(village.talukaCode)) return false;
+        if (!villageCode.equals(village.villageCode)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stateCode.hashCode();
+        result = 31 * result + districtCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
+        result = 31 * result + villageCode.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Village{" +
+                "stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", villageCode=" + villageCode +
+                '}';
     }
 }
