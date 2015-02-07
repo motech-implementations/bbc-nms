@@ -18,6 +18,10 @@ public class HealthFacility extends LocationUnitMetaData {
     private Set<HealthSubFacility> healthSubFacility;
 
     @Field
+    @UIDisplayable(position = 6)
+    private Integer healthFacilityType;
+
+    @Field
     @UIDisplayable(position = 5)
     private Long stateCode;
 
@@ -36,6 +40,14 @@ public class HealthFacility extends LocationUnitMetaData {
     @Field
     @UIDisplayable(position = 1)
     private Long healthFacilityCode;
+
+    public Integer getHealthFacilityType() {
+        return healthFacilityType;
+    }
+
+    public void setHealthFacilityType(Integer healthFacilityType) {
+        this.healthFacilityType = healthFacilityType;
+    }
 
     public Long getHealthFacilityCode() {
         return healthFacilityCode;
@@ -95,6 +107,7 @@ public class HealthFacility extends LocationUnitMetaData {
         if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
         if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
         if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
+        if (!this.getHealthFacilityType().equals(that.getHealthFacilityType())) return false;
         if (!this.getStateCode().equals(that.getStateCode())) return false;
         if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
 
@@ -103,7 +116,8 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Override
     public int hashCode() {
-        int result = stateCode.hashCode();
+        int result = healthFacilityType.hashCode();
+        result = 31 * result + stateCode.hashCode();
         result = 31 * result + districtCode.hashCode();
         result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthBlockCode.hashCode();
@@ -115,6 +129,7 @@ public class HealthFacility extends LocationUnitMetaData {
     public String toString() {
         return "HealthFacility{" +
                 "healthSubFacility=" + healthSubFacility +
+                ", healthFacilityType=" + healthFacilityType +
                 ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
                 ", talukaCode='" + talukaCode + '\'' +
