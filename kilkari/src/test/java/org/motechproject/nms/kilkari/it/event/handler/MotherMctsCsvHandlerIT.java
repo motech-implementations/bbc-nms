@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.it.event.handler;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,13 +27,12 @@ import org.slf4j.LoggerFactory;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldRecordServiceIT extends CommonStructure {
+public class MotherMctsCsvHandlerIT extends CommonStructure {
 
-    private static Logger logger = LoggerFactory.getLogger(HelloWorldRecordServiceIT.class);
+    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandlerIT.class);
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -57,7 +56,6 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
         logger.info("Inside createSameMsisdnDifferentMcts");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -86,7 +84,6 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -122,7 +119,6 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedChangedLmpDate() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -160,7 +156,6 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
@@ -195,7 +190,6 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDeleteOperation() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();

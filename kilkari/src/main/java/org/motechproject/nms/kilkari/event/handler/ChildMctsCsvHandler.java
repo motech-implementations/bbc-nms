@@ -9,7 +9,6 @@ import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.District;
@@ -146,7 +145,7 @@ public class ChildMctsCsvHandler {
                 logger.error("DataValidationException ::::", dve);
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
-                errorDetails.setErrorDescription(dve.getErroneousField());
+                errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 summary.incrementFailureCount();
 
@@ -235,6 +234,24 @@ public class ChildMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
+
+        /*
+        Create new subscriber and subscription if there is no existing record for childMctsId or motherMctsId
+             with msisdn matching the one in childCsvRecord.  Also check that number of existing
+             active subscribers is not exceeding the value of Max Allowed Active Kilkari Subscribers.
+
+        Update the subscriber record if there is an existing record
+            - Having MCTS Id same as the one in childMctsCsv Record.
+            - Having null or empty MCTS Id and MSISDN matching the one in childMctsCsv Record.
+
+        Update an existing subscription’s status as Deactivated, if in  childMctsCsv Record
+            - EntryType is Death i.e. child death is reported.
+            - DOB is modified (also create a new subscription in this case)
+            - motherMCTSid matches to the existing Subscription (having status as Active/PendingActivation),
+              create new subscription as per child DOB.
+
+         */
+
         /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_48);
         if (dbSubscription == null) { 
@@ -243,11 +260,11 @@ public class ChildMctsCsvHandler {
             /* Find subscription from database based on mctsid(ChildMcts), packName, status */
             dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
-                logger.info("Not found active subscription from database based on Childmctsid[{}], packName[{}]", subscriber.getChildMctsId(), PACK_48);
+                logger.debug("Not found active subscription from database based on Childmctsid[{}], packName[{}]", subscriber.getChildMctsId(), PACK_48);
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
                 dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
                 if (dbSubscription == null) {
-                    logger.info("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_48);
+                    logger.debug("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_48);
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
                     /* check for maximum allowed beneficiary */
@@ -255,7 +272,7 @@ public class ChildMctsCsvHandler {
                         Subscriber dbSubscriber = subscriberService.create(subscriber); 
                         createSubscription(subscriber, null, dbSubscriber);
                     } else {
-                        logger.info("Reached maximum beneficery count can't add any more");
+                        logger.info("Reached maximum beneficery count, can't add any more");
                         throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
                     }
                     

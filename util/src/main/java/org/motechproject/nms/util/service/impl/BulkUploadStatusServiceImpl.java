@@ -16,10 +16,14 @@ import org.springframework.stereotype.Service;
 @Service("bulkUploadStatusService")
 public class BulkUploadStatusServiceImpl implements BulkUploadStatusService {
 
-    @Autowired
     private BulkUploadStatusDataService bulkUploadStatusDataService;
 
     private Logger logger = LoggerFactory.getLogger(BulkUploadStatusServiceImpl.class);
+
+    @Autowired
+    public BulkUploadStatusServiceImpl(BulkUploadStatusDataService bulkUploadStatusDataService) {
+        this.bulkUploadStatusDataService = bulkUploadStatusDataService;
+    }
 
     /**
      * Method to create a new record of upload status.

@@ -14,22 +14,12 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Autowired
     private SubscriberDataService subscriberDataService;
     
-    @Override
-    public void create(String name, String message) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void add(Subscriber record) {
         subscriberDataService.create(record);
     }
 
-    @Override
-    public Subscriber findRecordByName(String recordName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public List<Subscriber> getRecords() {

@@ -35,10 +35,14 @@ import java.util.Enumeration;
 @Service("bulkUploadErrLogService")
 public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
-    @Autowired
     private BulkUploadStatusService bulkUploadStatusService;
 
     private Logger logger = LoggerFactory.getLogger(BulkUploadErrLogServiceImpl.class);
+
+    @Autowired
+    public BulkUploadErrLogServiceImpl(BulkUploadStatusService bulkUploadStatusService) {
+        this.bulkUploadStatusService = bulkUploadStatusService;
+    }
 
     /**
      * This method is used to write logs for erroneous records

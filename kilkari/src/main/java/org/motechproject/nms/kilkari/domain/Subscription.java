@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.domain;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 
 import org.joda.time.DateTime;

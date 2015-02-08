@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.motechproject.mds.filter.Filter;
-import org.motechproject.mds.filter.FilterType;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
@@ -21,11 +19,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private SubscriptionDataService subscriptionDataService;
     
-    @Override
-    public void create(String name, String message) {
-        // TODO Auto-generated method stub
-
-    }
 
     @Override
     public void add(Subscription record) {
@@ -33,18 +26,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
-    @Override
-    public Subscription findRecordByName(String recordName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<Subscription> getRecords() {
-        subscriptionDataService.retrieveAll();
-        // TODO Auto-generated method stub
-        return null;
-    }
 
     @Override
     public void delete(Subscription record) {
@@ -95,15 +76,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         List<Subscription> activeRecord = subscriptionDataService.getSubscriptionByStatus(Status.Active);
         List<Subscription> pendingRecord = subscriptionDataService.getSubscriptionByStatus(Status.PendingActivation);
         return activeRecord.size() + pendingRecord.size();
-        
-        
-        //Filter filter = new Filter();
-        //filter.setField("status");
-        //filter.setType(FilterType.fromString("Active"));
-        //long activeRecord = subscriptionDataService.countForFilter(filter);
-        //filter.setType(FilterType.fromString("PendingActivation"));
-        //long pendingRecord = subscriptionDataService.countForFilter(filter);
-        //return activeRecord + pendingRecord;
     }
     
     public class LlcListQueryExecutionImpl implements
@@ -118,7 +90,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
     
     public Subscription getSubscriptionByMctsIdState(String mctsId, Long stateCode){
-        Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdState(mctsId, stateCode);
-        return subscription;
+        return subscriptionDataService.getSubscriptionByMctsIdState(mctsId, stateCode);
     }
 }

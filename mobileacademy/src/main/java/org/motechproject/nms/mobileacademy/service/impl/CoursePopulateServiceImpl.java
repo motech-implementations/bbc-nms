@@ -12,6 +12,7 @@ import org.motechproject.mtraining.domain.Question;
 import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.commons.UserDetailsDTO;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
@@ -45,10 +46,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * populateMtrainingCourseData()
+     * populateMtrainingCourseData
+     * (org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
-    public Course populateMtrainingCourseData() {
+    public Course populateMtrainingCourseData(UserDetailsDTO userDetailsDTO) {
         List<Chapter> chapters = new ArrayList<>();
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
             List<Lesson> lessons = new ArrayList<>();
@@ -58,6 +60,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                 + String.format(
                                         MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                         lessonCount), null, null);
+                lesson.setCreator(userDetailsDTO.getCreator());
+                lesson.setModifiedBy(userDetailsDTO.getModifiedBy());
+                lesson.setOwner(userDetailsDTO.getOwner());
                 lessons.add(lesson);
             }
             List<Question> questions = new ArrayList<>();
@@ -71,15 +76,24 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
             }
             Quiz quiz = new Quiz(MobileAcademyConstants.QUIZ, null, null,
                     questions, 0.0);
+            quiz.setCreator(userDetailsDTO.getCreator());
+            quiz.setModifiedBy(userDetailsDTO.getModifiedBy());
+            quiz.setOwner(userDetailsDTO.getOwner());
             Chapter chapter = new Chapter(MobileAcademyConstants.CHAPTER
                     + String.format(
                             MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                             chapterCount), null, null, lessons, quiz);
+            chapter.setCreator(userDetailsDTO.getCreator());
+            chapter.setModifiedBy(userDetailsDTO.getModifiedBy());
+            chapter.setOwner(userDetailsDTO.getOwner());
             chapters.add(chapter);
         }
 
         Course course = new Course(MobileAcademyConstants.DEFAULT_COURSE_NAME,
                 CourseUnitState.Inactive, null, chapters);
+        course.setCreator(userDetailsDTO.getCreator());
+        course.setModifiedBy(userDetailsDTO.getModifiedBy());
+        course.setOwner(userDetailsDTO.getOwner());
         mTrainingService.createCourse(course);
         LOGGER.info("Course Structure in Mtraining Populated");
         return course;
@@ -162,15 +176,18 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * updateCourseState(org.motechproject.mtraining.domain.CourseUnitState)
+     * updateCourseState(org.motechproject.mtraining.domain.CourseUnitState,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
-    public void updateCourseState(CourseUnitState courseUnitState) {
+    public void updateCourseState(CourseUnitState courseUnitState,
+            UserDetailsDTO userDetailsDTO) {
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
         if (CollectionUtils.isNotEmpty(courses)) {
             Course course = courses.get(0);
             course.setState(courseUnitState);
+            course.setModifiedBy(userDetailsDTO.getModifiedBy());
             mTrainingService.updateCourse(course);
         }
     }
@@ -179,11 +196,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * updateCorrectAnswer(java.lang.String, java.lang.String, java.lang.String)
+     * updateCorrectAnswer(java.lang.String, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
     public void updateCorrectAnswer(String chapterName, String questionName,
-            String answer) {
+            String answer, UserDetailsDTO userDetailsDTO) {
         List<Chapter> chapters = mTrainingService.getChapterByName(chapterName);
         if (CollectionUtils.isNotEmpty(chapters)) {
             Chapter chapter = chapters.get(0);
@@ -191,6 +209,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
             for (Question question : quiz.getQuestions()) {
                 if (questionName.equalsIgnoreCase(question.getQuestion())) {
                     question.setAnswer(answer);
+                    quiz.setModifiedBy(userDetailsDTO.getModifiedBy());
                     mTrainingService.updateQuiz(quiz);
                     break;
                 }
@@ -241,11 +260,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setLessonContent(int, int, java.lang.String, java.lang.String)
+     * setLessonContent(int, int, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
     public void setLessonContent(int chapterId, int lessonId, String type,
-            String fileName) {
+            String fileName, UserDetailsDTO userDetailsDTO) {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -257,8 +277,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                 && (lessonContent.getName()
                                         .equalsIgnoreCase(type))) {
                             lessonContent.setAudioFile(fileName);
+                            lessonContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
+                            chapterContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
-                            return;
                         }
                     }
                 }
@@ -298,11 +321,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setQuestionContent(int, int, java.lang.String, java.lang.String)
+     * setQuestionContent(int, int, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
     public void setQuestionContent(int chapterId, int questionId, String type,
-            String fileName) {
+            String fileName, UserDetailsDTO userDetailsDTO) {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -314,8 +338,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                 && (questionContent.getName()
                                         .equalsIgnoreCase(type))) {
                             questionContent.setAudioFile(fileName);
+                            questionContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
+                            chapterContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
-                            return;
                         }
                     }
                 }
@@ -357,11 +384,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * 
      * @see
      * org.motechproject.nms.mobileacademy.service.CoursePopulateService#setScore
-     * (int, int, java.lang.String, java.lang.String)
+     * (int, int, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
     public void setScore(int chapterId, int scoreId, String type,
-            String fileName) {
+            String fileName, UserDetailsDTO userDetailsDTO) {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -374,8 +402,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                                 scoreId)))) {
                             scoreContent.setAudioFile(fileName);
+                            scoreContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
+                            chapterContent.setModifiedBy(userDetailsDTO
+                                    .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
-                            return;
                         }
                     }
                 }
@@ -409,10 +440,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setChapterContent(int, java.lang.String, java.lang.String)
+     * setChapterContent(int, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
-    public void setChapterContent(int chapterId, String type, String fileName) {
+    public void setChapterContent(int chapterId, String type, String fileName,
+            UserDetailsDTO userDetailsDTO) {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -420,8 +453,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     if (chapterContent.getName().equalsIgnoreCase(type)) {
                         chapterContent.setAudioFile(fileName);
+                        chapterContent.setModifiedBy(userDetailsDTO
+                                .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
-                        return;
                     }
                 }
             }
@@ -455,10 +489,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      * (non-Javadoc)
      * 
      * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setQuizContent(int, java.lang.String, java.lang.String)
+     * setQuizContent(int, java.lang.String, java.lang.String,
+     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
      */
     @Override
-    public void setQuizContent(int chapterId, String type, String fileName) {
+    public void setQuizContent(int chapterId, String type, String fileName,
+            UserDetailsDTO userDetailsDTO) {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -467,8 +503,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                     QuizContent quizContent = chapterContent.getQuiz();
                     if (quizContent.getName().equalsIgnoreCase(type)) {
                         quizContent.setAudioFile(fileName);
+                        quizContent.setModifiedBy(userDetailsDTO
+                                .getModifiedBy());
+                        chapterContent.setModifiedBy(userDetailsDTO
+                                .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
-                        return;
                     }
                 }
             }

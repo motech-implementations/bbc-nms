@@ -211,5 +211,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     @After
     public void tearDown() {
         contentUploadDataService.deleteAll();
+        llcDataService.deleteAll();
+        districtService.deleteAll();
+        stateService.deleteAll();
+        circleDataService.deleteAll();
     }
 }

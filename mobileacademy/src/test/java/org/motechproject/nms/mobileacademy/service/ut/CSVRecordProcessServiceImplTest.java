@@ -16,7 +16,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.nms.mobileacademy.commons.CourseFlags;
 import org.motechproject.nms.mobileacademy.commons.FileType;
@@ -29,10 +28,9 @@ import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
-import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
-import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.motechproject.nms.mobileacademy.service.impl.CSVRecordProcessServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -58,9 +56,6 @@ public class CSVRecordProcessServiceImplTest {
     private CoursePopulateService coursePopulateService;
 
     @Mock
-    private MasterDataService masterDataService;
-
-    @Mock
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Before
@@ -77,45 +72,25 @@ public class CSVRecordProcessServiceImplTest {
     public void testProcessRawRecords() {
         List<CourseContentCsv> courseContentCsvRecords = new ArrayList<CourseContentCsv>() {
         };
-        courseContentCsvRecords.add(new CourseContentCsv("ADD", "100014", "AP", "14",
-                "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseContentCsvRecords.add(new CourseContentCsv("DEL", "100015", "AP", "14",
-                "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseContentCsvRecords.add(new CourseContentCsv("MOD", "100016", "AP", "14",
-                "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseContentCsvRecords.add(new CourseContentCsv("ADD", "100017", "AP", "14",
-                "Chapter01_Lesson02", "Content", "ch1_l2.wav", "150", ""));
+        courseContentCsvRecords
+                .add(new CourseContentCsv("ADD", "100014", "AP", "14",
+                        "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150",
+                        ""));
+        courseContentCsvRecords
+                .add(new CourseContentCsv("DEL", "100015", "AP", "14",
+                        "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150",
+                        ""));
+        courseContentCsvRecords
+                .add(new CourseContentCsv("MOD", "100016", "AP", "14",
+                        "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150",
+                        ""));
+        courseContentCsvRecords
+                .add(new CourseContentCsv("ADD", "100017", "AP", "14",
+                        "Chapter01_Lesson02", "Content", "ch1_l2.wav", "150",
+                        ""));
         assertEquals(csvRecordProcessServiceImpl.processRawRecords(
                 courseContentCsvRecords, "Book1.csv"),
                 "Records Processed Successfully");
-    }
-
-    /*
-     * This test case is used to validate the circle and the language location
-     * code for a specific raw record.
-     */
-    @Test
-    public void testValidateCircleAndLLC() {
-        Mockito.when(masterDataService.isCircleValid("AP")).thenReturn(true);
-        Mockito.when(masterDataService.isLlcValidInCircle("AP", 14))
-                .thenReturn(true);
-        Method method = null;
-        Boolean status = false;
-        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
-                "100014", "AP", "14", "Chapter01_Lesson01", "Content",
-                "ch1_l1.wav", "150", "");
-        try {
-            method = csvRecordProcessServiceImpl.getClass().getDeclaredMethod(
-                    "validateCircleAndLLC",
-                    new Class[] { CourseContentCsv.class });
-            method.setAccessible(true);
-            status = (Boolean) method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseContentCsv });
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-        }
-        assertTrue(status);
     }
 
     /*

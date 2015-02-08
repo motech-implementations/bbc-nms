@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.it.event.handler;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -15,8 +15,6 @@ import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
-import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -36,7 +34,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -54,13 +51,11 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(dbSubscriber);
         assertTrue(dbSubscription.getChannel().equals(Channel.MCTS));
         assertTrue(dbSubscriber.getName().equals(csv.getMotherName()));
-        assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
     } 
     
     @Test
     public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
         logger.info("Inside createSameMsisdnDifferentMcts");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -89,7 +84,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -124,7 +118,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -158,7 +151,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedChildDeath() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -193,7 +185,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDeleteOperation() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -223,7 +214,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();

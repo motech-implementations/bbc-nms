@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.ut;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -34,7 +34,7 @@ public class BulkUploadErrLogServiceTest {
     private BulkUploadStatusService bulkUploadStatusService;
 
     @InjectMocks
-    private BulkUploadErrLogService bulkUploadErrLogService =  new BulkUploadErrLogServiceImpl();
+    private BulkUploadErrLogService bulkUploadErrLogService =  new BulkUploadErrLogServiceImpl(bulkUploadStatusService);
 
     @Before
     public void setUp() {
@@ -81,7 +81,7 @@ public class BulkUploadErrLogServiceTest {
 
         List<String> expectedLogs = new ArrayList<>();
         expectedLogs.add("Record upload failed for : ");
-        expectedLogs.add("Record Details, Invalid Data, Upload unsuccessful as Code invalid.");
+        expectedLogs.add("Record Details, Invalid Data, Upload unsuccessful as Code is invalid.");
         try {
             List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
             Assert.assertEquals(lines.size(), expectedLogs.size());

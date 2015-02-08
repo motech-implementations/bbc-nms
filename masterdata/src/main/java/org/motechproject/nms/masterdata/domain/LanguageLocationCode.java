@@ -15,21 +15,18 @@ import javax.jdo.annotations.Unique;
 public class LanguageLocationCode extends MdsEntity {
 
     @Field(required = true, name = "state_id")
-    @Cascade(persist = false, update = false)
     private State state;
 
     @Field(required = true)
     private Long stateCode;
 
     @Field(required = true, name = "district_id")
-    @Cascade(persist = false, update = false)
     private District district;
 
     @Field(required = true)
     private Long districtCode;
 
     @Field(required = true, name = "circle_id")
-    @Cascade(persist = false, update = false)
     private Circle circle;
 
     @Field(required = true)

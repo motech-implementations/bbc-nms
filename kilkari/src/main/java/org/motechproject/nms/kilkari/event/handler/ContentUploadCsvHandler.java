@@ -84,8 +84,8 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvService.getRecord(id);
 
                 if (record != null) {
-                    ContentUpload newRecord = mapContentUploadFrom(record);
                     userName = record.getOwner();
+                    ContentUpload newRecord = mapContentUploadFrom(record);
 
                     persistentRecord = contentUploadService.getRecordByContentId(newRecord.getContentId());
                     if (persistentRecord != null) {
