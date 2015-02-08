@@ -42,9 +42,6 @@ public class HealthFacilityCsvUploadHandler {
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
     @Autowired
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
-
-    @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
     @Autowired

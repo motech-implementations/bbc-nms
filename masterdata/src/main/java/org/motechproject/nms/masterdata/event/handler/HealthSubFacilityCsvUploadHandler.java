@@ -36,9 +36,6 @@ public class HealthSubFacilityCsvUploadHandler {
     private TalukaRecordsDataService talukaRecordsDataService;
 
     @Autowired
-    private HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService;
-
-    @Autowired
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
     @Autowired
@@ -46,9 +43,6 @@ public class HealthSubFacilityCsvUploadHandler {
 
     @Autowired
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
-
-    @Autowired
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
 
     @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
