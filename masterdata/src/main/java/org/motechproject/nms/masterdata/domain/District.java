@@ -57,31 +57,24 @@ public class District extends LocationUnitMetaData {
     }
 
     @Override
-    public String toString() {
-        return "District{" +
-                "districtCode=" + districtCode +
-                ", taluka=" + taluka +
-                ", stateCode=" + stateCode +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || (o.getClass() != this.getClass())) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof District)) {
             return false;
         }
 
         District district = (District) o;
 
-        if (district != null) {
-            if (district.getStateCode() == this.getStateCode()
-                    && district.getDistrictCode() == this.getDistrictCode()) {
-                return true;
-            }
+        if (!districtCode.equals(district.districtCode)) {
+            return false;
         }
-        return false;
+        if (!stateCode.equals(district.stateCode)) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -89,5 +82,14 @@ public class District extends LocationUnitMetaData {
         int result = districtCode != null ? districtCode.hashCode() : 0;
         result = 31 * result + (stateCode != null ? stateCode.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "District{" +
+                "districtCode=" + districtCode +
+                ", taluka=" + taluka +
+                ", stateCode=" + stateCode +
+                '}';
     }
 }

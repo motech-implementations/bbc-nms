@@ -45,27 +45,24 @@ import java.util.Map;
 @Component
 public class FlwUploadHandler {
 
-
-    //@Autowired
     private FlwRecordDataService flwRecordDataService;
 
-    //@Autowired
     private FlwCsvRecordsDataService flwCsvRecordsDataService;
 
-    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    //@Autowired
     private LocationService locationService;
 
-    //@Autowired
     private LanguageLocationCodeService languageLocationCodeService;
 
-
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
+
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
+
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
+
     private Integer successCount = 0;
+
     private Integer failCount = 0;
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
@@ -315,7 +312,6 @@ public class FlwUploadHandler {
         }
         logger.info("validateFrontLineWorker process end");
         return frontLineWorkerContent;
-
     }
 
     /**

@@ -19,15 +19,15 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 6)
-    private Integer healthFacilityType;
-
-    @Field
-    @UIDisplayable(position = 5)
     private Long stateCode;
 
     @Field
-    @UIDisplayable(position = 4)
+    @UIDisplayable(position = 5)
     private Long districtCode;
+
+    @Field
+    @UIDisplayable(position = 4)
+    private Long healthBlockCode;
 
     @Field
     @UIDisplayable(position = 3)
@@ -35,7 +35,7 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private Long healthBlockCode;
+    private Integer healthFacilityType;
 
     @Field
     @UIDisplayable(position = 1)
@@ -99,15 +99,30 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HealthFacility)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof HealthFacility)) {
+            return false;
+        }
 
         HealthFacility that = (HealthFacility) o;
 
-        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
-        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
-        if (!this.getStateCode().equals(that.getStateCode())) return false;
-        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
+        if (!districtCode.equals(that.districtCode)) {
+            return false;
+        }
+        if (!healthBlockCode.equals(that.healthBlockCode)) {
+            return false;
+        }
+        if (!healthFacilityCode.equals(that.healthFacilityCode)) {
+            return false;
+        }
+        if (!stateCode.equals(that.stateCode)) {
+            return false;
+        }
+        if (!talukaCode.equals(that.talukaCode)) {
+            return false;
+        }
 
         return true;
     }
@@ -118,6 +133,7 @@ public class HealthFacility extends LocationUnitMetaData {
         result = 31 * result + districtCode.hashCode();
         result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthBlockCode.hashCode();
+        result = 31 * result + healthFacilityCode.hashCode();
         return result;
     }
 
@@ -130,6 +146,7 @@ public class HealthFacility extends LocationUnitMetaData {
                 ", districtCode=" + districtCode +
                 ", talukaCode='" + talukaCode + '\'' +
                 ", healthBlockCode=" + healthBlockCode +
+                ", healthFacilityCode=" + healthFacilityCode +
                 '}';
     }
 }

@@ -80,16 +80,28 @@ public class HealthBlock extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HealthBlock)) return false;
+
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof HealthBlock)) {
+            return false;
+        }
 
         HealthBlock that = (HealthBlock) o;
 
-        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
-        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
-        if (!this.getStateCode().equals(that.getStateCode())) return false;
-        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
-
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) {
+            return false;
+        }
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) {
+            return false;
+        }
+        if (!this.getStateCode().equals(that.getStateCode())) {
+            return false;
+        }
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) {
+            return false;
+        }
         return true;
     }
 

@@ -80,21 +80,15 @@ public class Taluka extends LocationUnitMetaData {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
-        if (o == null || (o.getClass() != this.getClass())) {
-            return false;
-        }
+        if (!(o instanceof Taluka)) return false;
 
         Taluka taluka = (Taluka) o;
 
-        if (taluka != null) {
-            if (taluka.getStateCode() == this.getStateCode()
-                    && taluka.getDistrictCode() == this.getDistrictCode()
-                    && taluka.getTalukaCode().equals(this.getTalukaCode())) {
-                return true;
-            }
-        }
-        return false;
+        if (!districtCode.equals(taluka.districtCode)) return false;
+        if (!stateCode.equals(taluka.stateCode)) return false;
+        if (!talukaCode.equals(taluka.talukaCode)) return false;
+
+        return true;
     }
 
     @Override
@@ -108,11 +102,11 @@ public class Taluka extends LocationUnitMetaData {
     @Override
     public String toString() {
         return "Taluka{" +
-                "talukaCode='" + talukaCode + '\'' +
+                "stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode='" + talukaCode + '\'' +
                 ", healthBlock=" + healthBlock +
                 ", village=" + village +
-                ", districtCode=" + districtCode +
-                ", stateCode=" + stateCode +
                 '}';
     }
 }
