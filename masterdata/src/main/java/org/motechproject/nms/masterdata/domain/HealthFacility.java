@@ -106,8 +106,6 @@ public class HealthFacility extends LocationUnitMetaData {
 
         if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
         if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
-        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
-        if (!this.getHealthFacilityType().equals(that.getHealthFacilityType())) return false;
         if (!this.getStateCode().equals(that.getStateCode())) return false;
         if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
 
@@ -116,12 +114,10 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Override
     public int hashCode() {
-        int result = healthFacilityType.hashCode();
-        result = 31 * result + stateCode.hashCode();
+        int result = stateCode.hashCode();
         result = 31 * result + districtCode.hashCode();
         result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthBlockCode.hashCode();
-        result = 31 * result + healthFacilityCode.hashCode();
         return result;
     }
 
@@ -134,7 +130,6 @@ public class HealthFacility extends LocationUnitMetaData {
                 ", districtCode=" + districtCode +
                 ", talukaCode='" + talukaCode + '\'' +
                 ", healthBlockCode=" + healthBlockCode +
-                ", healthFacilityCode=" + healthFacilityCode +
                 '}';
     }
 }
