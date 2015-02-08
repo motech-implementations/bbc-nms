@@ -46,4 +46,13 @@ public class Circle extends MdsEntity {
     public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
+
+    @Override
+    public String toString() {
+        return "Circle{" +
+                "name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", defaultLanguageLocationCode=" + defaultLanguageLocationCode +
+                '}';
+    }
 }

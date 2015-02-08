@@ -33,14 +33,14 @@ public class StateCsvUploadHandler {
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
+
     @Autowired
     public StateCsvUploadHandler(StateRecordsDataService stateRecordsDataService, StateCsvRecordsDataService stateCsvRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateRecordsDataService = stateRecordsDataService;
         this.stateCsvRecordsDataService = stateCsvRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
-
-    private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.

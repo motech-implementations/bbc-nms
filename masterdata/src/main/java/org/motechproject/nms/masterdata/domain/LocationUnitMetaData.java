@@ -11,6 +11,10 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class LocationUnitMetaData extends MdsEntity {
 
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
+
     public String getName() {
         return name;
     }
@@ -19,12 +23,10 @@ public class LocationUnitMetaData extends MdsEntity {
         this.name = name;
     }
 
-    @Field(name = "name")
-    @UIDisplayable(position = 0)
-    private String name;
-
-    public LocationUnitMetaData() {
-
+    @Override
+    public String toString() {
+        return "LocationUnitMetaData{" +
+                "name='" + name + '\'' +
+                '}';
     }
-
 }

@@ -1,6 +1,5 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -125,5 +124,21 @@ public class LanguageLocationCode extends MdsEntity {
 
     public void setCircleCode(String circleCode) {
         this.circleCode = circleCode;
+    }
+
+    @Override
+    public String toString() {
+        return "LanguageLocationCode{" +
+                "state=" + state +
+                ", stateCode=" + stateCode +
+                ", district=" + district +
+                ", districtCode=" + districtCode +
+                ", circle=" + circle +
+                ", circleCode='" + circleCode + '\'' +
+                ", languageLocationCode=" + languageLocationCode +
+                ", languageMA='" + languageMA + '\'' +
+                ", languageMK='" + languageMK + '\'' +
+                ", languageKK='" + languageKK + '\'' +
+                '}';
     }
 }
