@@ -67,10 +67,10 @@ public class District extends LocationUnitMetaData {
 
         District district = (District) o;
 
-        if (!districtCode.equals(district.districtCode)) {
+        if (!this.getDistrictCode().equals(district.getDistrictCode())) {
             return false;
         }
-        if (!stateCode.equals(district.stateCode)) {
+        if (!this.getStateCode().equals(district.getStateCode())) {
             return false;
         }
 
