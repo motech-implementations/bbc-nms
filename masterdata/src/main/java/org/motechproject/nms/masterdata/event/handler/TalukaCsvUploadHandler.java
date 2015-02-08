@@ -150,7 +150,7 @@ public class TalukaCsvUploadHandler {
         if (existTalukaData != null) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
                 District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
-                boolean b = districtData.getTaluka().remove(talukaData);
+                districtData.getTaluka().remove(talukaData);
                 districtRecordsDataService.update(districtData);
                 logger.info("Taluka data is successfully deleted.");
             } else {

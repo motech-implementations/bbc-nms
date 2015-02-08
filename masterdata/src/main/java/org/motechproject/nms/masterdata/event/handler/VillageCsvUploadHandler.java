@@ -164,10 +164,8 @@ public class VillageCsvUploadHandler {
                 Taluka talukaDeleteRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
                         villageData.getDistrictCode(), villageData.getTalukaCode());
 
-                boolean b = talukaDeleteRecord.getVillage().remove(existVillageData);
-
+                talukaDeleteRecord.getVillage().remove(existVillageData);
                 talukaRecordsDataService.update(talukaDeleteRecord);
-
                 logger.info("Village data is successfully deleted.");
             } else {
                 updateVillage(existVillageData, villageData);

@@ -181,14 +181,12 @@ public class HealthFacilityCsvUploadHandler {
                         healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(),
                         healthFacilityData.getHealthBlockCode());
 
-            boolean b = healthBlockRecord.getHealthFacility().remove(existHealthFacilityData);
+            healthBlockRecord.getHealthFacility().remove(existHealthFacilityData);
             healthBlockRecordsDataService.update(healthBlockRecord);
-
             logger.info("HealthFacility data is successfully deleted.");
-
             } else {
-                updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
-                logger.info("HealthFacility data is successfully updated.");
+            updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
+            logger.info("HealthFacility data is successfully updated.");
             }
         } else {
 

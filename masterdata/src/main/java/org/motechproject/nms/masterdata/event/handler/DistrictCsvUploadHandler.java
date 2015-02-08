@@ -137,7 +137,7 @@ public class DistrictCsvUploadHandler {
         if (null != existDistrictData) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
                 State stateDeleteRecord = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
-                boolean b = stateDeleteRecord.getDistrict().remove(existDistrictData);
+                stateDeleteRecord.getDistrict().remove(existDistrictData);
                 stateRecordsDataService.update(stateDeleteRecord);
                 logger.info("District data is successfully deleted.");
             } else {

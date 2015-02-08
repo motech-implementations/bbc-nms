@@ -160,8 +160,7 @@ public class HealthBlockCsvUploadHandler {
                 Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(),
                         healthBlockData.getDistrictCode(),healthBlockData.getTalukaCode());
 
-                boolean b = talukaRecord.getHealthBlock().remove(existHealthBlockData);
-
+                talukaRecord.getHealthBlock().remove(existHealthBlockData);
                 talukaRecordsDataService.update(talukaRecord);
                 logger.info("HealthBlock data is successfully deleted.");
             } else {

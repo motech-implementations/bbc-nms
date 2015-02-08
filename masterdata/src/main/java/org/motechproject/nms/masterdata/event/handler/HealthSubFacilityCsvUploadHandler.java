@@ -194,12 +194,9 @@ public class HealthSubFacilityCsvUploadHandler {
                         healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
                         healthSubFacilityData.getHealthFacilityCode());
 
-                boolean b = healthFacilityDeleteRecord.getHealthSubFacility().remove(existHealthSubFacilityData);
-
+                healthFacilityDeleteRecord.getHealthSubFacility().remove(existHealthSubFacilityData);
                 healthFacilityRecordsDataService.update(healthFacilityDeleteRecord);
-
                 logger.info("HealthSubFacility data is successfully deleted.");
-
             } else {
                 updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
                 logger.info("HealthSubFacility Permanent data is successfully updated.");
