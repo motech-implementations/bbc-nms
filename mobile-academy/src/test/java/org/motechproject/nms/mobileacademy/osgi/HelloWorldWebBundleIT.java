@@ -1,4 +1,4 @@
-package org.motechproject.nms.flw.osgi;
+package org.motechproject.nms.mobileacademy.osgi;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.HttpStatus;
@@ -31,7 +31,7 @@ public class HelloWorldWebBundleIT extends BasePaxIT {
 
     @Test
     public void testHelloWorldGetRequest() throws IOException, InterruptedException {
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/flw/sayHello",
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/mobileacademy/sayHello",
                 TestContext.getJettyPort()));
         addAuthHeader(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -42,7 +42,7 @@ public class HelloWorldWebBundleIT extends BasePaxIT {
 
     @Test
     public void testStatusGetRequest() throws IOException, InterruptedException {
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/flw/web-api/status",
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/mobileacademy/web-api/status",
                 TestContext.getJettyPort()));
         addAuthHeader(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
