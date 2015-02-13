@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker.it;
+package org.motechproject.nms.frontlineworker.it.event.handler;
 
 
 import org.junit.Before;

@@ -747,10 +747,45 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>2.17</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.6.4.201312101107</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
         <plugins>
+
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-unit-test-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>target/jacoco-ut.exec</destFile>
+                            <propertyName>jacoco.agent.arg-ut</propertyName>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>generate-unit-test-report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>properties-maven-plugin</artifactId>
@@ -799,7 +834,7 @@
                 </dependencies>
                 <configuration>
                     <skipTests>${unitTests.skip}</skipTests>
-                    <argLine>-XX:-UseSplitVerifier</argLine>
+                    <argLine>${jacoco.agent.arg-ut} -XX:-UseSplitVerifier</argLine>
                     <!-- bug in powermock on java7 -->
                     <forkMode>once</forkMode>
                     <!-- bug in surefire; won't pass argline for never -->
@@ -968,6 +1003,37 @@
                             </execution>
                         </executions>
                     </plugin>
+
+
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-integration-test-agent</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                                <configuration>
+                                    <destFile>target/jacoco-it.exec</destFile>
+                                    <propertyName>jacoco.agent.arg-it</propertyName>
+                                </configuration>
+                            </execution>
+
+                            <execution>
+                                <id>generate-integration-test-report</id>
+                                <goals>
+                                    <goal>report-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+
+
+
+
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
@@ -990,6 +1056,7 @@
                                     <encoding>UTF-8</encoding>
                                     <summaryFile>target/failsafe-reports/failsafe-summary-it.xml</summaryFile>
                                     <systemPropertiesFile>${modules.root.dir}/maven.properties</systemPropertiesFile>
+                                    <argLine>${jacoco.agent.arg-it}</argLine>
                                 </configuration>
                             </execution>
                             <execution>
