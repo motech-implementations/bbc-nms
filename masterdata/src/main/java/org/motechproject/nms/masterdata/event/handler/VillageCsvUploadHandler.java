@@ -171,7 +171,7 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
-    private void processVillageData(Village villageData, String operation) {
+    private void processVillageData(Village villageData, String operation) throws DataValidationException{
 
         logger.debug("Village data contains village code : {}",villageData.getVillageCode());
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
@@ -182,14 +182,27 @@ public class VillageCsvUploadHandler {
 
         if (existVillageData != null) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                villageRecordsDataService.delete(existVillageData);
+
+                Taluka talukaDeleteRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
+                        villageData.getDistrictCode(), villageData.getTalukaCode());
+
+                boolean b = talukaDeleteRecord.getVillage().remove(existVillageData);
+
+                talukaRecordsDataService.update(talukaDeleteRecord);
+
                 logger.info("Village data is successfully deleted.");
             } else {
                 updateVillage(existVillageData, villageData);
                 logger.info("Village data is successfully updated.");
             }
         } else {
-            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(), villageData.getDistrictCode(), villageData.getTalukaCode());
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
+
+            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
+                    villageData.getDistrictCode(), villageData.getTalukaCode());
             talukaRecord.getVillage().add(villageData);
             talukaRecordsDataService.update(talukaRecord);
             logger.info("Village data is successfully inserted.");

@@ -151,21 +151,26 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void processDistrictData(District districtData, String operation) {
+    private void processDistrictData(District districtData, String operation) throws DataValidationException {
 
         logger.debug("District data contains district code : {}",districtData.getDistrictCode());
         District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
-                boolean b = stateData.getDistrict().remove(existDistrictData);
-                stateRecordsDataService.update(stateData);
+                State stateDeleteRecord = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
+                boolean b = stateDeleteRecord.getDistrict().remove(existDistrictData);
+                stateRecordsDataService.update(stateDeleteRecord);
                 logger.info("District data is successfully deleted.");
             } else {
                 updateDistrict(existDistrictData, districtData);
                 logger.info("District data is successfully updated.");
             }
         } else {
+
+            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
+                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
+            }
+
             State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
             stateRecordsDataService.update(stateData);

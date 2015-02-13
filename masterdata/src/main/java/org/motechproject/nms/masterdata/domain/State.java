@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
@@ -13,6 +14,7 @@ import java.util.Set;
 public class State extends LocationUnitMetaData {
 
     @Field
+    @UIDisplayable(position = 1)
     private Long stateCode;
 
     @Field
@@ -20,11 +22,13 @@ public class State extends LocationUnitMetaData {
     @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
-    @Field(defaultValue = "-1")
-    private Integer mkCapping;
-
-    @Field (defaultValue = "-1")
+    @Field
+    @UIDisplayable(position = 2)
     private Integer maCapping;
+
+    @Field
+    @UIDisplayable(position = 3)
+    private Integer mkCapping;
 
     public State() {
     }

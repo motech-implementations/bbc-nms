@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import java.util.Set;
 
@@ -13,23 +14,28 @@ import java.util.Set;
 public class HealthFacility extends LocationUnitMetaData {
 
     @Field
-    private Long healthFacilityCode;
-
-    @Field
     @Cascade(delete = true)
     private Set<HealthSubFacility> healthSubFacility;
 
     @Field
-    private Long healthBlockCode;
+    @UIDisplayable(position = 1)
+    private Long stateCode;
 
     @Field
-    private String talukaCode;
-
-    @Field
+    @UIDisplayable(position = 2)
     private Long districtCode;
 
     @Field
-    private Long stateCode;
+    @UIDisplayable(position = 3)
+    private String talukaCode;
+
+    @Field
+    @UIDisplayable(position = 4)
+    private Long healthBlockCode;
+
+    @Field
+    @UIDisplayable(position = 5)
+    private Long healthFacilityCode;
 
     public Long getHealthFacilityCode() {
         return healthFacilityCode;
@@ -77,5 +83,43 @@ public class HealthFacility extends LocationUnitMetaData {
 
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HealthFacility)) return false;
+
+        HealthFacility that = (HealthFacility) o;
+
+        if (!districtCode.equals(that.districtCode)) return false;
+        if (!healthBlockCode.equals(that.healthBlockCode)) return false;
+        if (!healthFacilityCode.equals(that.healthFacilityCode)) return false;
+        if (!stateCode.equals(that.stateCode)) return false;
+        if (!talukaCode.equals(that.talukaCode)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = stateCode.hashCode();
+        result = 31 * result + districtCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
+        result = 31 * result + healthBlockCode.hashCode();
+        result = 31 * result + healthFacilityCode.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HealthFacility{" +
+                "healthSubFacility=" + healthSubFacility +
+                ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", healthBlockCode=" + healthBlockCode +
+                ", healthFacilityCode=" + healthFacilityCode +
+                '}';
     }
 }

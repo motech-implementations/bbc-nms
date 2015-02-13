@@ -1,18 +1,13 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.event.CrudEventType;
 
 /**
  * This class Models data records provided in the District Csv Upload
  */
 @Entity(
         recordHistory = true
-)
-@CrudEvents(
-        CrudEventType.CREATE
 )
 public class DistrictCsv extends LocationUnitMetaDataCsv {
 

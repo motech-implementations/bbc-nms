@@ -12,10 +12,13 @@ import org.motechproject.mds.annotations.Field;
 )
 public class StateCsv extends LocationUnitMetaDataCsv {
 
+    @Field
     private String stateCode;
 
+    @Field(defaultValue = "-1")
     private String maCapping;
 
+    @Field(defaultValue = "-1")
     private String mkCapping;
 
 

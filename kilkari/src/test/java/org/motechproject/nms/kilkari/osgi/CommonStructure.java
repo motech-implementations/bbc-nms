@@ -1,8 +1,25 @@
 package org.motechproject.nms.kilkari.osgi;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.junit.Before;
+import org.motechproject.event.MotechEvent;
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.event.handler.ChildMctsCsvHandler;
+import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
+import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
+import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.LocationValidatorService;
+import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -15,6 +32,8 @@ import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 
 public class CommonStructure extends BasePaxIT {
@@ -33,6 +52,36 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    
+    @Inject
+    protected SubscriberService subscriberService;
+    
+    @Inject
+    protected MotherMctsCsvDataService motherMctsCsvDataService;
+    
+    @Inject
+    protected MotherMctsCsvService motherMctsCsvService;
+    
+    @Inject
+    protected ChildMctsCsvDataService childMctsCsvDataService;
+    
+    @Inject
+    protected ChildMctsCsvService childMctsCsvService;
+
+    @Inject
+    protected SubscriptionService subscriptionService;
+
+    @Inject
+    protected LanguageLocationCodeService languageLocationCodeService;
+
+    @Inject
+    protected BulkUploadErrLogService bulkUploadErrLogService;
+
+    @Inject
+    protected ConfigurationService configurationService;
+
+    @Inject
+    protected LocationValidatorService locationValidatorService;
 
     private static boolean setUpIsDone = false;
     
@@ -167,5 +216,78 @@ public class CommonStructure extends BasePaxIT {
         talukaRecord.getVillage().add(newRecord);
         talukaRecordsDataService.update(talukaRecord);
         System.out.println("Village data is successfully inserted.");
+    }
+    
+    protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
+        csv.setStateCode("1");
+        csv.setDistrictCode("1");
+        csv.setTalukaCode("1");
+        csv.setHealthBlockCode("1");
+        csv.setPhcCode("1");
+        csv.setSubCentreCode("1");
+        csv.setVillageCode("1");
+        csv.setName("test");
+        csv.setLmpDate("2014-12-01 08:08:08");
+        csv.setAbortion("Abortion");
+        csv.setOutcomeNos("0");
+        csv.setAge("30");
+        csv.setEntryType("Birth");
+        csv.setAadharNo("123456789876");
+        return csv;
+    }
+    
+    protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
+        System.out.println("Inside  callMotherMctsCsvHandlerSuccessEvent");
+        Map<String, Object> parameters = new HashMap<>();
+        System.out.println("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "MotherMctsCsv.csv");
+        
+        MotherMctsCsvHandler motherMctsCsvHandler = new MotherMctsCsvHandler(motherMctsCsvService, 
+                subscriptionService, 
+                subscriberService, 
+                locationValidatorService, 
+                languageLocationCodeService, 
+                bulkUploadErrLogService, 
+                configurationService);
+        
+        MotechEvent motechEvent = new MotechEvent("MotherMctsCsv.csv_success", parameters);
+        motherMctsCsvHandler.motherMctsCsvSuccess(motechEvent);
+    }
+    
+    protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
+        System.out.println("Inside  callChildMctsCsvHandlerSuccessEvent");
+        Map<String, Object> parameters = new HashMap<>();
+        System.out.println("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ChildMctsCsv.csv");
+        
+        ChildMctsCsvHandler childMctsCsvHandler = new ChildMctsCsvHandler(childMctsCsvService, 
+                subscriptionService, 
+                subscriberService, 
+                locationValidatorService, 
+                languageLocationCodeService, 
+                bulkUploadErrLogService, 
+                configurationService);
+        
+        MotechEvent motechEvent = new MotechEvent("ChildMctsCsv.csv_success", parameters);
+        childMctsCsvHandler.childMctsCsvSuccess(motechEvent);
+    }
+    
+    protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {
+        csv.setStateCode("1");
+        csv.setDistrictCode("1");
+        csv.setTalukaCode("1");
+        csv.setHealthBlockCode("1");
+        csv.setPhcCode("1");
+        csv.setSubCentreCode("1");
+        csv.setVillageCode("1");
+        csv.setMotherName("motherName");
+        csv.setBirthdate("2001-01-01 00:00:00");
+        csv.setEntryType("Death");
+        csv.setCreator("Deepak");
+        csv.setOwner("Deepak");
+        csv.setModifiedBy("Deepak");
+        return csv;
     }
 }
