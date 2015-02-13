@@ -242,7 +242,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 healthFacility.getStateCode(), healthFacility.getDistrictCode(), healthFacility.getTalukaCode(),
                 healthFacility.getHealthBlockCode());
-        healthBlockData.getHealthBlock().add(healthFacility);
+        healthBlockData.getHealthFacility().add(healthFacility);
         healthBlockRecordsDataService.update(healthBlockData);
         assertNotNull(healthFacility);
         System.out.println("HealthFacility data is successfully inserted.");
