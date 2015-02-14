@@ -25,27 +25,28 @@ import java.util.Map;
 @Component
 public class VillageCsvUploadHandler {
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private TalukaRecordsDataService talukaRecordsDataService;
 
-    @Autowired
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
-    @Autowired
     private VillageRecordsDataService villageRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
-    public VillageCsvUploadHandler() {
+    @Autowired
+    public VillageCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.villageCsvRecordsDataService = villageCsvRecordsDataService;
+        this.villageRecordsDataService = villageRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
     /**

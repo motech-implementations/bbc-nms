@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -44,6 +45,8 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     private StateCsvUploadHandler stateCsvUploadHandler;
 
+    List<Long> createdIds = new ArrayList<Long>();
+
     @Before
     public void setUp() {
        stateCsvUploadHandler = new StateCsvUploadHandler(stateRecordsDataService,
@@ -63,15 +66,45 @@ public class StateCsvHandlerIT extends BasePaxIT {
         StateCsv csvData = TestHelper.getStateCsvData();
         stateCsvRecordsService.create(csvData);
 
-        List<Long> createdIds = new ArrayList<Long>();
+
         createdIds.add(csvData.getId());
 
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds,MasterDataConstants.STATE_CSV_SUCCESS));
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
 
         State stateData = stateRecordsDataService.findRecordByStateCode(123L);
 
         assertNotNull(stateData);
         assertTrue(123L == stateData.getStateCode());
-        assertTrue("MotechEventCreateTest".equals(stateData.getName()));
+        assertTrue("UP".equals(stateData.getName()));
+
+        //Updated Name in State
+        csvData = TestHelper.getUpdatedStateCsvData();
+        stateCsvRecordsService.create(csvData);
+
+        clearId();
+        createdIds.add(csvData.getId());
+
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+        State updatedStateData = stateRecordsDataService.findRecordByStateCode(123L);
+
+        assertNotNull(updatedStateData);
+        assertTrue(123L == updatedStateData.getStateCode());
+        assertTrue("UK".equals(updatedStateData.getName()));
+
+        csvData = TestHelper.getDeleteStateCsvData();
+        stateCsvRecordsService.create(csvData);
+
+        clearId();
+        createdIds.add(csvData.getId());
+
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds,MasterDataConstants.STATE_CSV_SUCCESS));
+        State deletedStateData = stateRecordsDataService.findRecordByStateCode(123L);
+
+        assertNull(deletedStateData);
+    }
+
+    private void clearId(){
+
+        createdIds.clear();
     }
 }

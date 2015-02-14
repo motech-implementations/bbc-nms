@@ -25,25 +25,29 @@ import java.util.Map;
 @Component
 public class HealthBlockCsvUploadHandler {
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private TalukaRecordsDataService talukaRecordsDataService;
 
-    @Autowired
     private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
 
-    @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
+
+    @Autowired
+    public HealthBlockCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
+        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.

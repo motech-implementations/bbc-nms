@@ -28,19 +28,23 @@ import java.util.*;
 @Component
 public class DistrictCsvUploadHandler {
 
-    @Autowired
     private DistrictCsvRecordsDataService districtCsvRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
+
+    @Autowired
+    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictRecordsDataService districtRecordsDataService, StateRecordsDataService stateRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.districtCsvRecordsDataService = districtCsvRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.

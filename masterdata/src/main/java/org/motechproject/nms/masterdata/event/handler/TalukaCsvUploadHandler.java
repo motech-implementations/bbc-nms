@@ -31,22 +31,26 @@ import java.util.Map;
 @Component
 public class TalukaCsvUploadHandler {
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
 
-    @Autowired
     private TalukaRecordsDataService talukaRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
+
+    @Autowired
+    public TalukaCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.talukaCsvRecordsDataService = talukaCsvRecordsDataService;
+        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
