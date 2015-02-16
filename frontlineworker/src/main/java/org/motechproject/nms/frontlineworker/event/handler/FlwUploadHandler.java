@@ -78,18 +78,11 @@ public class FlwUploadHandler {
                             LocationService locationService,
                             LanguageLocationCodeService languageLocationCodeService) {
 
-        System.out.println("Constructor call");
-
         this.flwRecordDataService = flwRecordDataService;
-        System.out.println("flwRecordDataService" + this.flwCsvRecordsDataService);
         this.flwCsvRecordsDataService = flwCsvRecordsDataService;
-        System.out.println("flwCsvRecordsDataServicel" + this.flwCsvRecordsDataService);
         this.bulkUploadErrLogService = bulkUploadErrLogService;
-        System.out.println("bulkUploadErrLogService" + this.bulkUploadErrLogService);
         this.locationService = locationService;
-        System.out.println("locationService" + this.locationService);
         this.languageLocationCodeService = languageLocationCodeService;
-        System.out.println("languageLocationCodeService" + this.languageLocationCodeService);
     }
 
 
@@ -133,7 +126,7 @@ public class FlwUploadHandler {
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
 
                     if (dbRecord == null) {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
                             summary.incrementFailureCount();
                             errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
@@ -148,7 +141,7 @@ public class FlwUploadHandler {
 
                     } else {
 
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
                             logger.info("Front line worker deletion starts");
                             flwRecordDataService.delete(dbRecord);
                             summary.incrementSuccessCount();
@@ -256,41 +249,6 @@ public class FlwUploadHandler {
 
     }
 
-    /**
-     * This method provides a listener to the Front Line Worker upload failure scenario.
-     *
-     * @param motechEvent name of the event raised during upload
-     */
-    @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_FAILED})
-    public void flwDataHandlerFailure(MotechEvent motechEvent) {
-
-        BulkUploadError errorDetails = null;
-        logger.info("Failure[flwDataHandlerFailure] method start for FrontLineWorkerCsv");
-        Map<String, Object> params = motechEvent.getParameters();
-        CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
-        String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
-
-        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-
-        //This loop processes each of the entries in the Front Line Worker Csv and performs the deletion of the record
-        //from the Csv.If some error occurs in any of the records, it is reported.
-        for (Long id : createdIds) {
-            try {
-                logger.info("Processing uploaded ID : {}", id);
-                FrontLineWorkerCsv record = flwCsvRecordsDataService.findById(id);
-                flwCsvRecordsDataService.delete(record);
-                summary.incrementFailureCount();
-                errorDetails = populateErrorDetails(record.toString(), "Upload failure", "Front Line Worker Upload Failure");
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-            } catch (Exception ex) {
-                summary.incrementFailureCount();
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-            }
-        }
-        logger.info("Failure[flwDataHandlerFailure] method finished for FrontLineWorkerCsv");
-    }
-
 
     /**
      * This method validates a field of Date type for null/empty values, and raises exception if a
@@ -341,9 +299,12 @@ public class FlwUploadHandler {
 
         designation = ParseDataHelper.parseString("Type", record.getType(), true);
 
-        if (Designation.of(designation) != Designation.ANM && Designation.of(designation) != Designation.AWW &&
-                Designation.of(designation) != Designation.ASHA && Designation.of(designation) != Designation.USHA) {
+        if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
+                Designation.getEnum(designation) != Designation.ASHA && Designation.getEnum(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
+        }
+        else {
+            frontLineWorkerContent.setDesignation(Designation.getEnum(designation));
         }
         logger.info("validateFrontLineWorker process end");
         return frontLineWorkerContent;
@@ -368,7 +329,7 @@ public class FlwUploadHandler {
         frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
 
         frontLineWorker.setName(ParseDataHelper.parseString("Name", record.getName(), true));
-        frontLineWorker.setDesignation(ParseDataHelper.parseString("Type", record.getType(), true));
+        frontLineWorker.setDesignation(frontLineWorkerContent.getDesignation());
 
         frontLineWorker.setStateCode(frontLineWorkerContent.getStateCode());
         frontLineWorker.setStateId(frontLineWorkerContent.getState());
@@ -386,7 +347,6 @@ public class FlwUploadHandler {
         LanguageLocationCode locationCode = languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
                 frontLineWorker.getDistrictId().getDistrictCode());
         if (null != locationCode) {
-
             frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
         }
 
@@ -398,6 +358,7 @@ public class FlwUploadHandler {
         frontLineWorker.setModificationDate(record.getModificationDate());
         frontLineWorker.setCreationDate(record.getCreationDate());
 
+        frontLineWorker.setValidated(ParseDataHelper.parseBoolean("Is Validated", record.getIsValidated(), false));
         logger.info("mapFrontLineWorkerFrom process end");
 
         return frontLineWorker;
@@ -453,7 +414,7 @@ public class FlwUploadHandler {
                     ParseDataHelper.raiseInvalidDataException("Village", record);
                 }
             } else {
-                logger.warn("Village ID[{}] present withour Taluka", villageCode);
+                logger.warn("Village ID[{}] present without Taluka", villageCode);
                 ParseDataHelper.raiseInvalidDataException("Village", record);
             }
         }
