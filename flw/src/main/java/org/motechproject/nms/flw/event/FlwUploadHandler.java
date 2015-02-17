@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
+
 @Component
 public class FlwUploadHandler {
 
@@ -26,7 +28,7 @@ public class FlwUploadHandler {
     @Autowired
     private FlwCsvRecordsDataService flwCsvRecordsDataService;
 
-    @MotechListener(subjects = { "mds.crud.flw.FrontLineWorkerCsv.CREATE" })
+    @MotechListener(subjects = {FLW_UPLOAD_SUCCESS})
     public void flwDataHandler(MotechEvent event) {
         List<FrontLineWorkerCsv> frontLineWorkerCsvList = flwCsvRecordsDataService.retrieveAll();
 
@@ -45,6 +47,11 @@ public class FlwUploadHandler {
                 FrontLineWorker flwData = new FrontLineWorker(flwCsvData.getDistrictId(), Long.valueOf(flwCsvData.getStateId()).longValue(), flwCsvData.getContactNumber(), flwCsvData.getName(), flwCsvData.getType(), 1, Long.valueOf(flwCsvData.getDistrictId()).longValue(), "true", "true");
 
         return flwData;
+    }
+
+    @MotechListener(subjects = {FLW_UPLOAD_FAILED})
+    public void frontLineWorkerFailed(MotechEvent event) {
+        flwCsvRecordsDataService.deleteAll();
     }
 
 }
