@@ -1,14 +1,7 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.StateCsv;
-import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.masterdata.service.StateRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.motechproject.nms.masterdata.service.LocationService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Created by abhishek on 26/1/15.
@@ -17,4 +10,8 @@ import java.util.List;
 public class LocationServiceImpl implements LocationService {
 
 
+    @Override
+    public boolean validateLocation(Long stateId, Long districtId) {
+        return false;
+    }
 }
