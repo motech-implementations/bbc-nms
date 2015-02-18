@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 @Service("mobileKunjiService")
 public class MobileKunjiServiceImpl implements MobileKunjiService {
 
-    @Override
-    public String sayHello() {
-        return "Hello World";
-    }
+
 
 }
