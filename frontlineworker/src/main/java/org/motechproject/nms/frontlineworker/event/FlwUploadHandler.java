@@ -1,4 +1,4 @@
-package org.motechproject.nms.flw.event;
+package org.motechproject.nms.frontlineworker.event;
 
 /**
  * Created by abhishek on 2/2/15.
@@ -7,10 +7,10 @@ package org.motechproject.nms.flw.event;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.flw.domain.FrontLineWorker;
-import org.motechproject.nms.flw.domain.FrontLineWorkerCsv;
-import org.motechproject.nms.flw.repository.FlwCsvRecordsDataService;
-import org.motechproject.nms.flw.repository.FlwRecordDataService;
+import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
+import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
+import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.List;
-
-import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
 
 @Component
 public class FlwUploadHandler {
@@ -34,9 +32,7 @@ public class FlwUploadHandler {
 
 
 
-
-
-    @MotechListener(subjects = {FLW_UPLOAD_SUCCESS})
+    @MotechListener(subjects = {"mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success"})
     public void flwDataHandler(MotechEvent event) {
 
         logger.error("entered flwDataHandler");
@@ -65,7 +61,7 @@ public class FlwUploadHandler {
         return flwData;
     }
 
-    @MotechListener(subjects = {FLW_UPLOAD_FAILED})
+    @MotechListener(subjects = {"mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failed"})
     public void frontLineWorkerFailed(MotechEvent event) {
 
         logger.error("entered frontLineWorkerFailed");

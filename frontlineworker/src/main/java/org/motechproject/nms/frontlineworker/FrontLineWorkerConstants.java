@@ -1,4 +1,4 @@
-package org.motechproject.nms.flw;
+package org.motechproject.nms.frontlineworker;
 
 /**
  * Created by abhishek on 17/2/15.

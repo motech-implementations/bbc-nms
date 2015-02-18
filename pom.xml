@@ -688,7 +688,7 @@
     
     <modules>
         <module>mobileacademy</module>
-        <module>flw</module>
+        <module>frontlineworker</module>
         <module>kilkari</module>
         <module>mobilekunji</module>        
         <module>util</module>        

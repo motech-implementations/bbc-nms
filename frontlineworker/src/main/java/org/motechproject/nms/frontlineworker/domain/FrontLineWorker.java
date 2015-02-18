@@ -1,4 +1,4 @@
-package org.motechproject.nms.flw.domain;
+package org.motechproject.nms.frontlineworker.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
@@ -6,13 +6,13 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Unique;
-import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
+
+import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.*;
 /**
  * Created by abhishek on 26/1/15.
  */
 
 @Entity
-@Unique(name = "FLW_COMPOSITE_KEYS", members = { "flwId", "stateId" })
 public class FrontLineWorker {
 
     @Field(required = true)
@@ -23,6 +23,7 @@ public class FrontLineWorker {
     private long stateId;
 
     @Field(required = true)
+    @Unique
     private String contactNo;
 
     @Field(required = true)
