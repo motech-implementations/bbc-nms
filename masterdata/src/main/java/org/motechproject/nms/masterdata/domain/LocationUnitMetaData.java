@@ -7,7 +7,6 @@ import org.motechproject.mds.domain.MdsEntity;
 /**
  * Created by abhishek on 24/1/15.
  */
-
 @Entity
 public class LocationUnitMetaData extends MdsEntity {
 

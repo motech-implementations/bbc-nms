@@ -1,13 +1,20 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 /**
  * Created by abhishek on 24/1/15.
  */
 
-@Entity
+@Entity(
+        recordHistory = true
+)
+@CrudEvents(
+        CrudEventType.CREATE
+)
 public class HealthFacilityCsv extends LocationUnitMetaDataCsv{
 
     @Field

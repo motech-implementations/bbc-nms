@@ -1,24 +1,23 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.event.CrudEventType;
 
 /**
  * Created by abhishek on 24/1/15.
  */
 
-@Entity
-@CrudEvents(CrudEventType.CREATE)
+@Entity(
+        recordHistory = true
+)
 public class StateCsv extends LocationUnitMetaDataCsv {
 
-    @Field
+    @Field(name = "stateid")
     private String stateId;
 
-    public StateCsv(String operation, String name, String stateId) {
+    public StateCsv(String operation, String name, String stateid) {
         super(operation, name);
-        this.stateId = stateId;
+        this.setStateId(getStateId());
     }
 
     public String getStateId() {

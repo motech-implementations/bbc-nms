@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by abhishek on 24/1/15.
  */
-@Entity
+@Entity(recordHistory = true)
 public class District extends LocationUnitMetaData {
 
     @Field

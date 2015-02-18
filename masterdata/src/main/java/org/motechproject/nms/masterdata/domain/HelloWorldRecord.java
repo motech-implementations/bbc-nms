@@ -3,13 +3,12 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Models data for simple records in a portable manner.
  */
-@Entity
+@Entity(recordHistory = true)
 public class HelloWorldRecord {
 
     @Field

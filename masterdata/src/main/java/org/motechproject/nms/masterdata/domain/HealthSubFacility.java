@@ -7,7 +7,7 @@ import org.motechproject.mds.annotations.Field;
  * Created by abhishek on 24/1/15.
  */
 
-@Entity
+@Entity(recordHistory = true)
 public class HealthSubFacility extends LocationUnitMetaData {
 
 
