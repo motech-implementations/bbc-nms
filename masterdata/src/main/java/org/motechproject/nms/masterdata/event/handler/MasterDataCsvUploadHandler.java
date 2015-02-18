@@ -3,6 +3,10 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +22,17 @@ import java.util.*;
 @Component
 public class MasterDataCsvUploadHandler {
 
-//    @Autowired
-//    private StateRecordsDataService stateRecordsDataService;
-//
-//    @Autowired
-//    private StateCsvRecordsDataService stateCsvRecordsDataService;
-//
-//    @Autowired
-//    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
-//
-//    @Autowired
-//    private DistrictRecordsDataService districtRecordsDataService;
+    @Autowired
+    private StateRecordsDataService stateRecordsDataService;
+
+    @Autowired
+    private StateCsvRecordsDataService stateCsvRecordsDataService;
+
+    @Autowired
+    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+
+    @Autowired
+    private DistrictRecordsDataService districtRecordsDataService;
 
     @Autowired
     private LocationService locationService;
