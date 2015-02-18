@@ -20,4 +20,13 @@
     <osgi:service ref="locationService"
                   interface="org.motechproject.nms.master.service.LocationService" />
 
+    <osgi:reference id="languageLocationCodeCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService" />
+
+    <osgi:service ref="languageLocationCodeService"
+                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService" />
+
+    <osgi:reference id="languageLocationCodeDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService" />
+
 </beans>

@@ -1,29 +1,24 @@
-package org.motechproject.nms.masterdata.event;
+package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import org.motechproject.nms.masterdata.event.mapper.EntityMapper;
+
 import java.lang.Long;
 import java.lang.NumberFormatException;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-
-/**
- * Created by abhishek on 26/1/15.
- */
 @Component
 public class MasterDataCsvUploadHandler {
 
@@ -38,6 +33,27 @@ public class MasterDataCsvUploadHandler {
 
     @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
+
+    @Autowired
+    private LocationService locationService;
+
+    @Autowired
+    LanguageLocationCodeService languageLocationCodeService;
+
+    @Autowired
+    LanguageLocationCodeServiceCsv languageLocationCodeServiceCsv;
+
+    @Autowired
+    CircleService circleService;
+
+    @Autowired
+    CircleCsvService circleCsvService;
+
+    @Autowired
+    OperatorService operatorService;
+
+    @Autowired
+    OperatorCsvService operatorCsvService;
 
     private static Logger logger = LoggerFactory.getLogger(MasterDataCsvUploadHandler.class);
 
@@ -141,6 +157,114 @@ public class MasterDataCsvUploadHandler {
         districtCsvRecordsDataService.deleteAll();
 
         logger.info("District successfully deleted from temporary tables");
+    }
+
+
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
+    public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                LanguageLocationCodeCsv record =  languageLocationCodeServiceCsv.findById(id);
+                LanguageLocationCode newRecord = EntityMapper.mapLanguageLocationCodeFrom(record);
+                languageLocationCodeService.create(newRecord);
+                languageLocationCodeServiceCsv.delete(record);
+            }
+        }catch (Exception ex) {
+        }
+    }
+
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
+    public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                LanguageLocationCodeCsv record =  languageLocationCodeServiceCsv.findById(id);
+                languageLocationCodeServiceCsv.delete(record);
+            }
+
+        }catch (Exception ex) {
+        }
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
+    public void circleCsvSuccess(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                CircleCsv record =  circleCsvService.findById(id);
+                Circle newRecord = EntityMapper.mapCircleFrom(record);
+                circleService.create(newRecord);
+                circleCsvService.delete(record);
+            }
+        }catch (Exception ex) {
+        }
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
+    public void circleCsvFailure(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                CircleCsv record =  circleCsvService.findById(id);
+                circleCsvService.delete(record);
+            }
+        }catch (Exception ex) {
+        }
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
+    public void operatorCsvSuccess(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                OperatorCsv record =  operatorCsvService.findById(id);
+                Operator newRecord = EntityMapper.mapOperatorFrom(record);
+                operatorService.create(newRecord);
+                operatorCsvService.delete(record);
+            }
+        }catch (Exception ex) {
+        }
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
+    public void operatorCsvFailure(MotechEvent motechEvent) {
+        try {
+            Map<String, Object> params = motechEvent.getParameters();;
+            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+
+            for(Long id : createdIds) {
+                OperatorCsv record =  operatorCsvService.findById(id);
+                operatorCsvService.delete(record);
+            }
+        }catch (Exception ex) {
+        }
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
+    public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {
+
+        System.out.println("import successfull");
+
+    }
+
+    @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
+    public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
+
+        System.out.println("import failed");
+
     }
 
     private void setDistrictList(State stateData,DistrictCsv districtCsvData){

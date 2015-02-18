@@ -2,6 +2,7 @@ package org.motechproject.nms.util.service.impl;
 
 import org.motechproject.nms.util.constants.Constants;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.motechproject.nms.util.BulkUploadErrRecordDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
@@ -18,25 +20,22 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
     @Override
     public void writeBulkUploadErrLog(String logFileName,
-            String erroneousRecord, String errorCode, String errorCause) {
+            BulkUploadErrRecordDetails bulkUploadErrRecordDetails) {
         
         try {
 
-            java.util.Date date = new java.util.Date();
-            Timestamp currentTimestamp = new Timestamp(date.getTime());
+            Date date = new Date();
+            Path logFilePath = FileSystems.getDefault().getPath(".", logFileName.toString());
 
             StringBuffer errLog = new StringBuffer();
             errLog.append(Constants.ERROR_LOG_TITLE);
+            errLog.append(new Timestamp(date.getTime()));
             errLog.append(Constants.SPACE);
-            errLog.append(currentTimestamp);
+            errLog.append(bulkUploadErrRecordDetails.getRecordDetails());
             errLog.append(Constants.SPACE);
-            errLog.append(erroneousRecord);
+            errLog.append(bulkUploadErrRecordDetails.getErrorCode());
             errLog.append(Constants.SPACE);
-            errLog.append(errorCode);
-            errLog.append(Constants.SPACE);
-            errLog.append(errorCause);
-
-            Path logFilePath = FileSystems.getDefault().getPath(".", logFileName.toString());
+            errLog.append(bulkUploadErrRecordDetails.getErrorDescription());
 
             Files.write(logFilePath,
                     errLog.toString().getBytes(),
@@ -46,7 +45,8 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
             Files.write(logFilePath,
                     Constants.NEXT_LINE.getBytes(),
                     StandardOpenOption.APPEND);
-        } catch(IOException ioe) {
+
+        } catch (IOException ioe) {
             logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
         }
         
@@ -58,30 +58,28 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
             Integer numberOfFailedRecords) {
         try {
 
-            java.util.Date date = new java.util.Date();
-            Timestamp currentTimestamp = new Timestamp(date.getTime());
-            String logTitle = "BULK UPLOAD SUMMARY : ";
-            
-            StringBuffer errLog = new StringBuffer();
-            errLog.append(logTitle);
-            errLog.append(currentTimestamp);
-            errLog.append(Constants.SPACE);
-            errLog.append("Number Of Records Successful : ");
-            errLog.append(numberOfSuccessfulRecords.toString());
-            errLog.append("Number Of Records Failed : ");
-            errLog.append(numberOfFailedRecords.toString());
-            
+            Date date = new Date();
             Path logFilePath = FileSystems.getDefault().getPath(".", logFileName.toString());
+
+            StringBuffer uploadProcessingSummary = new StringBuffer();
+            uploadProcessingSummary.append(Constants.BULK_UPLOAD_SUMMARY_TITLE);
+            uploadProcessingSummary.append(new Timestamp(date.getTime()));
+            uploadProcessingSummary.append(Constants.SPACE);
+            uploadProcessingSummary.append(Constants.SUCCESSFUL_RECORDS);
+            uploadProcessingSummary.append(numberOfSuccessfulRecords.toString());
+            uploadProcessingSummary.append(Constants.FAILED_RECORDS);
+            uploadProcessingSummary.append(numberOfFailedRecords.toString());
             
             Files.write(logFilePath,
-                    errLog.toString().getBytes(),
+                    uploadProcessingSummary.toString().getBytes(),
                     StandardOpenOption.CREATE, 
                     StandardOpenOption.APPEND);
             
             Files.write(logFilePath,
                     Constants.NEXT_LINE.getBytes(),
                     StandardOpenOption.APPEND);
-        } catch(IOException ioe) {
+
+        } catch (IOException ioe) {
             logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
         }
     }

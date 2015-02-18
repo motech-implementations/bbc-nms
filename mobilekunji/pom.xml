@@ -9,7 +9,7 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <artifactId>kunji</artifactId>
+    <artifactId>mobilekunji</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Kunji module</name>
@@ -71,9 +71,9 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>kunji/resources</Resource-Path>
                         <Context-Path>kunji</Context-Path>
-                        <Export-Package>org.motechproject.nms.kunji.service;version=${project.version},
-                            org.motechproject.nms.kunji.repository;version=${project.version},
-                            org.motechproject.nms.kunji.domain;version=${project.version},</Export-Package>
+                        <Export-Package>org.motechproject.nms.mobilekunji.service;version=${project.version},
+                            org.motechproject.nms.mobilekunji.repository;version=${project.version},
+                            org.motechproject.nms.mobilekunji.domain;version=${project.version},</Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *</Import-Package>
                     </instructions>
