@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
+import java.lang.Override;
+import java.lang.String;
+
 /**
  * Created by abhishek on 24/1/15.
  */
@@ -67,5 +70,15 @@ public class HealthBlockCsv extends LocationUnitMetaDataCsv {
 
     public void settCode(String tCode) {
         this.tCode = tCode;
+    }
+
+    @Override
+    public String toString() {
+        return "HealthBlockCsv{" +
+                "healthBlockId=" + healthBlockId +
+                ", stateId=" + stateId +
+                ", dCode=" + dCode +
+                ", tCode=" + tCode +
+                '}';
     }
 }

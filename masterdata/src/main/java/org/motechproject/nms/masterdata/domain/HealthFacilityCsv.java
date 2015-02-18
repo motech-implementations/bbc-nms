@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
+import java.lang.Override;
+import java.lang.String;
+
 /**
  * Created by abhishek on 24/1/15.
  */
@@ -93,4 +96,15 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv{
         this.facilityType = facilityType;
     }
 
+    @Override
+    public String toString() {
+        return "HealthFacilityCsv{" +
+                "phcId=" + phcId +
+                ", stateId=" + stateId +
+                ", districtId=" + districtId +
+                ", tCode=" + tCode +
+                ", healthBlockId=" + healthBlockId +
+                ", facilityType=" + facilityType +
+                '}';
+    }
 }
