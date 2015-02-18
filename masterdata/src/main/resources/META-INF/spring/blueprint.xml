@@ -17,4 +17,7 @@
     <osgi:reference id="districtRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.DistrictRecordsDataService" />
 
+    <osgi:service ref="locationService"
+                  interface="org.motechproject.nms.master.service.LocationService" />
+
 </beans>

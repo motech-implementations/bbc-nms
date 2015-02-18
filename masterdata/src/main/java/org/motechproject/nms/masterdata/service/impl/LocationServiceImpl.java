@@ -13,24 +13,8 @@ import java.util.List;
 /**
  * Created by abhishek on 26/1/15.
  */
-@Service("stateRecordService")
-public class StateRecordServiceImpl implements StateRecordService {
+@Service("locationService")
+public class LocationServiceImpl implements LocationService {
 
-    @Autowired
-    private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
-    private StateCsvRecordsDataService stateCsvRecordsDataService;
-
-    @Override
-    public void add(State record) {
-
-        stateRecordsDataService.create(record);
-    }
-
-    public List<StateCsv> retrieveAllRecords() {
-
-        return stateCsvRecordsDataService.retrieveAll();
-
-    }
 }
