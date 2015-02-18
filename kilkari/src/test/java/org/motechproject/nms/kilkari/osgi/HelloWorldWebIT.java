@@ -7,7 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
-import org.motechproject.testing.utils.TestContext;
+import org.motechproject.testing.osgi.TestContext;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -25,13 +25,13 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldWebBundleIT extends BasePaxIT {
+public class HelloWorldWebIT extends BasePaxIT {
     private static final String ADMIN_USERNAME = "motech";
     private static final String ADMIN_PASSWORD = "motech";
 
     @Test
     public void testHelloWorldGetRequest() throws IOException, InterruptedException {
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kilkari/sayHello",
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/util/sayHello",
                 TestContext.getJettyPort()));
         addAuthHeader(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 
@@ -42,7 +42,7 @@ public class HelloWorldWebBundleIT extends BasePaxIT {
 
     @Test
     public void testStatusGetRequest() throws IOException, InterruptedException {
-        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/kilkari/web-api/status",
+        HttpGet httpGet = new HttpGet(String.format("http://localhost:%d/util/web-api/status",
                 TestContext.getJettyPort()));
         addAuthHeader(httpGet, ADMIN_USERNAME, ADMIN_PASSWORD);
 

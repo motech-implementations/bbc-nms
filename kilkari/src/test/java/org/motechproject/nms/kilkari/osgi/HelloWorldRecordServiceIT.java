@@ -1,9 +1,9 @@
 package org.motechproject.nms.kilkari.osgi;
 
-import org.motechproject.nms.kilkari.domain.HelloWorldRecord;
-import org.motechproject.nms.kilkari.service.HelloWorldRecordService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.nms.kilkari.domain.HelloWorldRecord;
+import org.motechproject.nms.kilkari.service.HelloWorldRecordService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldRecordServiceBundleIT extends BasePaxIT {
+public class HelloWorldRecordServiceIT extends BasePaxIT {
 
     @Inject
     private HelloWorldRecordService helloRecordService;
