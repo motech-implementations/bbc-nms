@@ -1,9 +1,8 @@
-package bulkuploadloggingutil;
-
+package org.motechproject.nms.util.service;
 
 public interface BulkUploadErrLogService {
 
-    public void writeBulkUploadErrLog(String logFileName, String erroneousRecord, String errorCode, String errorCause);
+    void writeBulkUploadErrLog(String logFileName, String erroneousRecord, String errorCode, String errorCause);
 
-    public void writeBulkUploadProcessingSummary(String logFileName, Integer numberOfSuccessfulRecords, Integer numberOfFailedRecords);
+    void writeBulkUploadProcessingSummary(String logFileName, Integer numberOfSuccessfulRecords, Integer numberOfFailedRecords);
 }

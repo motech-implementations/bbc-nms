@@ -11,6 +11,9 @@
     <osgi:service ref="helloWorldRecordService"
         interface="org.motechproject.nms.util.service.HelloWorldRecordService" />
 
+    <osgi:service ref="bulkUploadErrLogService"
+        interface="org.motechproject.nms.util.service.BulkUploadErrLogService" />
+
     <osgi:reference id="helloWorldRecordsDataService"
                     interface="org.motechproject.nms.util.repository.HelloWorldRecordsDataService" />
 
