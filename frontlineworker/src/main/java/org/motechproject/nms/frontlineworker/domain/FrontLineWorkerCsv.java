@@ -2,12 +2,14 @@ package org.motechproject.nms.frontlineworker.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
+
 /**
  * Created by abhishek on 26/1/15.
  */
 
 @Entity
-public class FrontLineWorkerCsv {
+public class FrontLineWorkerCsv extends MdsEntity {
 
     @Field
     private String flwId;

@@ -3,6 +3,7 @@ package org.motechproject.nms.frontlineworker.domain;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Unique;
@@ -13,7 +14,7 @@ import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.*;
  */
 
 @Entity
-public class FrontLineWorker {
+public class FrontLineWorker extends MdsEntity {
 
     @Field(required = true)
     @Column(length = FLW_ID_LENGTH)
