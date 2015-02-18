@@ -7,8 +7,8 @@ import org.motechproject.mds.annotations.Field;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Unique;
 
-import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.
-*/**
+import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.*;
+/**
  * Created by abhishek on 26/1/15.
  */
 
