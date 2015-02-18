@@ -14,4 +14,9 @@ public class OperatorServiceImpl implements OperatorService {
     public void create(Operator record){
         operatorDataService.create(record);
     }
+
+    @Override
+    public void update(Operator record) {
+        operatorDataService.update(record);
+    }
 }

@@ -4,10 +4,15 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
 import java.lang.String;
 
 @Entity
 public class LanguageLocationCodeCsv {
+
+    @Field(required = true)
+    @Unique
+    Long index;
 
     @Field
     private String operation = "ADD";
@@ -56,6 +61,26 @@ public class LanguageLocationCodeCsv {
 
     @Field
     private String isDeployedKK;
+
+    public Long getIndex() {
+        return index;
+    }
+
+    public void setIndex(Long index) {
+        this.index = index;
+    }
+
+    public void setIsDeployedMA(String isDeployedMA) {
+        this.isDeployedMA = isDeployedMA;
+    }
+
+    public void setIsDeployedMK(String isDeployedMK) {
+        this.isDeployedMK = isDeployedMK;
+    }
+
+    public void setIsDeployedKK(String isDeployedKK) {
+        this.isDeployedKK = isDeployedKK;
+    }
 
     public String getIsDeployedMA() {
         return isDeployedMA;
@@ -180,8 +205,5 @@ public class LanguageLocationCodeCsv {
         this.isDefaultLanguageLocationCodeKK = isDefaultLanguageLocationCodeKK;
     }
 
-    public boolean validate(LanguageLocationCodeCsv record) {
 
-        return true;
-    }
 }

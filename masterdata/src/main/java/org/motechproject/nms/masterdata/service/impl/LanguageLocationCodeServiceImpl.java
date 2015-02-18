@@ -17,4 +17,9 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     public void create(LanguageLocationCode record) {
         languageLocationCodeDataService.create(record);
     }
+
+    @Override
+    public void update(LanguageLocationCode record) {
+        languageLocationCodeDataService.update(record);
+    }
 }

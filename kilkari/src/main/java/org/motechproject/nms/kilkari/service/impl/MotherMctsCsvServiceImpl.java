@@ -50,4 +50,9 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService{
 		
 	}
 
+	@Override
+	public MotherMctsCsv findRecordById(Long id) {
+		return motherMctsCsvDataService.findById(id);
+	}
+
 }

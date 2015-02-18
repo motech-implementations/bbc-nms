@@ -5,9 +5,14 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Column;
+<<<<<<< HEAD:frontlineworker/src/main/java/org/motechproject/nms/frontlineworker/domain/FrontLineWorker.java
 import javax.jdo.annotations.Unique;
 
 import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.*;
+=======
+
+import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
+>>>>>>> 913e8464a69d21ccdb6cef4fad6f89f5f18d93bf:flw/src/main/java/org/motechproject/nms/flw/domain/FrontLineWorker.java
 /**
  * Created by abhishek on 26/1/15.
  */

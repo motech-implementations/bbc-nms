@@ -19,9 +19,9 @@ public final class FrontLineWorkerConstants {
 
     public static final int LANGUAGE_LOCATION_CODE_LENGTH = 20;
 
-    public static final String FLW_UPLOAD_SUCCESS = "mds.crud.flw.FrontLineWorkerCsv.csv-import.success";
+    public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success";
 
-    public static final String FLW_UPLOAD_FAILED = "mds.crud.flw.FrontLineWorkerCsv.csv-import.failed";
+    public static final String FLW_UPLOAD_FAILED = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failed";
 
 
 
