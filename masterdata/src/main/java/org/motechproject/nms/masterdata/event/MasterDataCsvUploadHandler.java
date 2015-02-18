@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.Long;
+import java.lang.NumberFormatException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,9 +53,9 @@ public class MasterDataCsvUploadHandler {
 
             if (csvRecord.getStateId() != null) {
 
-                long stateId = getLongId(csvRecord.getStateId());
+                Long stateId = getLongId(csvRecord.getStateId());
 
-                if (stateId == 0) {
+                if (null == stateId) {
 
                     logger.error("stateId is invalid " + csvRecord.getStateId());
 
@@ -61,7 +63,7 @@ public class MasterDataCsvUploadHandler {
 
                     State stateExistData = stateRecordsDataService.findRecordById(Long.parseLong(csvRecord.getStateId()));
 
-                    if (stateExistData != null) {
+                    if (null != stateExistData) {
 
                         setStateName(stateExistData, csvRecord);
 
@@ -194,14 +196,14 @@ public class MasterDataCsvUploadHandler {
         return data;
     }
 
-    private long getLongId(String id) {
+    private Long getLongId(String id){
         try {
 
-            long longId = Long.parseLong(id.trim());
+            Long longId = Long.parseLong(id.trim());
 
             return longId;
         } catch (NumberFormatException ex) {
-            return 0;
+            return null;
         }
     }
 }
