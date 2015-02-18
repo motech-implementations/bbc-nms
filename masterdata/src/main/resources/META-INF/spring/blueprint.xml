@@ -5,25 +5,16 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="helloWorldService"
-        interface="org.motechproject.nms.masterdata.service.HelloWorldService" />
-
-    <osgi:service ref="helloWorldRecordService"
-        interface="org.motechproject.nms.masterdata.service.HelloWorldRecordService" />
-
-    <osgi:service ref="stateRecordService"
-                  interface="org.motechproject.nms.masterdata.service.StateRecordService" />
-
-    <osgi:service ref="helloWorldRecordService"
-                  interface="org.motechproject.nms.masterdata.service.HelloWorldRecordService" />
-
-    <osgi:reference id="helloWorldRecordsDataService"
-                    interface="org.motechproject.nms.masterdata.repository.HelloWorldRecordsDataService" />
-
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService" />
 
     <osgi:reference id="stateCsvRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService" />
+
+    <osgi:reference id="districtCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService" />
+
+    <osgi:reference id="districtRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.DistrictRecordsDataService" />
 
 </beans>
