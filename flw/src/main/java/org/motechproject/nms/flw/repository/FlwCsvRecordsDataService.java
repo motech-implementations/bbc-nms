@@ -6,5 +6,5 @@ import org.motechproject.nms.flw.domain.FrontLineWorkerCsv;
 /**
  * Created by abhishek on 2/2/15.
  */
-public class FlwCsvRecordsDataService extends MotechDataService<FrontLineWorkerCsv> {
+public interface FlwCsvRecordsDataService extends MotechDataService<FrontLineWorkerCsv> {
 }

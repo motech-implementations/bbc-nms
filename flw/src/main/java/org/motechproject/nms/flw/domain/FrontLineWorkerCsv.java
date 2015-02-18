@@ -12,7 +12,7 @@ import javax.jdo.annotations.Column;
 
 @Entity
 @CrudEvents(CrudEventType.CREATE)
-public class FrontLineWorkerCsv{
+public class FrontLineWorkerCsv {
 
     @Field
     private String stateId;
@@ -21,18 +21,18 @@ public class FrontLineWorkerCsv{
     private String contactNumber;
 
     @Field
-    @Column(length = 250)
+    @Column
     private String name;
 
     @Field
-    @Column(length = 50)
+    @Column
     private String type;
 
     @Field
     private String districtId;
 
     @Field
-    @Column(length = 50)
+    @Column
     private String tCode;
 
     @Field
@@ -48,7 +48,7 @@ public class FrontLineWorkerCsv{
     private String villageId;
 
     @Field
-    @Column(length = 10)
+    @Column
     private String ashaNumber;
 
     @Field

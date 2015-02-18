@@ -12,52 +12,52 @@ import javax.jdo.annotations.Unique;
  */
 
 @Entity
-@Unique(name="FLW_COMPOSITE_KEYS", members={"flwId", "stateId"})
+@Unique(name = "FLW_COMPOSITE_KEYS", members = { "flwId", "stateId" })
 public class FrontLineWorker {
 
     @Field(required = true)
-    @Column(length = 20)
+    @Column
     private String flwId;
 
-    @Field(name="stateId", required = true)
+    @Field(name = "stateId", required = true)
     private long stateId;
 
     @Field(required = true)
     private String contactNo;
 
     @Field(required = true)
-    @Column(length = 250)
+    @Column
     private String name;
 
     @Field(required = true)
-    @Column(length = 50)
+    @Column
     private String type;
 
     @Field(required = true)
     private long operatorId;
 
-    @Field(name="districtId", required = true)
+    @Field(name = "districtId", required = true)
     private long districtId;
 
-    @Field(name="talukaId")
-    @Column(length = 50)
+    @Field(name = "talukaId")
+    @Column
     private String talukaId;
 
     @Field
-    @Column(name="healthBlockId")
+    @Column(name = "healthBlockId")
     private Long healthBlockId;
 
-    @Field(name="phcId")
+    @Field(name = "phcId")
      private Long phcId;
 
-    @Field(name="subCentreId")
+    @Field(name = "subCentreId")
     private Long subCentreId;
 
-    @Field(name="villageId")
+    @Field(name = "villageId")
     private Long villageId;
 
     @Field
-    @Column(length = 10)
+    @Column
     private String ashaNumber;
 
     @Field
@@ -70,16 +70,16 @@ public class FrontLineWorker {
     private DateTime registrationDate;
 
     @Field(required = true)
-    @Column(length = 20)
+    @Column
     private String status;
 
     @Field(required = true)
-    @Column(length = 20)
+    @Column
     private String languageLocationCode;
 
 
     public FrontLineWorker(String flwId, long stateId, String contactNo, String name, String type, long operatorId,
-                           long districtId, DateTime registrationDate, String status, String languageLocationCode) {
+                           long districtId,  String status, String languageLocationCode) {
         this.flwId = flwId;
         this.stateId = stateId;
         this.contactNo = contactNo;
@@ -87,7 +87,6 @@ public class FrontLineWorker {
         this.type = type;
         this.operatorId = operatorId;
         this.districtId = districtId;
-        this.registrationDate = registrationDate;
         this.status = status;
         this.languageLocationCode = languageLocationCode;
     }
