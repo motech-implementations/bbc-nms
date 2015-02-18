@@ -3,7 +3,6 @@ package org.motechproject.nms.util.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
