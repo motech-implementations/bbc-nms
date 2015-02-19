@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 @Entity
-public class MobileKunjiContentUploadCsv {
+public class ContentUploadCsv {
 
     @Field
     private String operation = "ADD";

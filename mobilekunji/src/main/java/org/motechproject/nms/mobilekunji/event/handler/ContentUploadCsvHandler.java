@@ -2,10 +2,10 @@ package org.motechproject.nms.mobilekunji.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.mobilekunji.domain.MobileKunjiContentUpload;
-import org.motechproject.nms.mobilekunji.domain.MobileKunjiContentUploadCsv;
-import org.motechproject.nms.mobilekunji.repository.MobileKunjiContentUploadCsvRecordDataService;
-import org.motechproject.nms.mobilekunji.repository.MobileKunjiContentUploadRecordDataService;
+import org.motechproject.nms.mobilekunji.domain.ContentUpload;
+import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
+import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
+import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +15,32 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class MobileKunjiCsvUploadHandler {
+public class ContentUploadCsvHandler {
 
 
     @Autowired
-    MobileKunjiContentUploadCsvRecordDataService mobileKunjiContentUploadCsv;
+    ContentUploadCsvRecordDataService contentUploadCsv;
 
     @Autowired
-    MobileKunjiContentUploadRecordDataService mobileKunjiContentUpload;
+    ContentUploadRecordDataService contentUpload;
 
 
-    private static Logger logger = LoggerFactory.getLogger(MobileKunjiCsvUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
 
 
     @MotechListener(subjects = {"mds.crud.mobilekunji.MobileKunjiContentUploadCsv.csv-import.success"})
     public void mobileKunjiContentUploadCsvSuccess(MotechEvent event) {
 
-        List<MobileKunjiContentUploadCsv> mobileKunjiContentUploadCsvList = mobileKunjiContentUploadCsv.retrieveAll();
+        List<ContentUploadCsv> mobileKunjiContentUploadCsvList = mobileKunjiContentUploadCsv.retrieveAll();
 
-        for (Iterator<MobileKunjiContentUploadCsv> itr = mobileKunjiContentUploadCsvList.iterator(); itr.hasNext(); ) {
+        for (Iterator<ContentUploadCsv> itr = mobileKunjiContentUploadCsvList.iterator(); itr.hasNext(); ) {
 
-            MobileKunjiContentUploadCsv csvRecord = itr.next();
+            ContentUploadCsv csvRecord = itr.next();
 
             if (true == csvRecord.validateParameters()) {
 
 
-                MobileKunjiContentUpload kunjiData = mobileKunjiContentUpload.findRecordByContentId(Integer.parseInt(csvRecord.getContentId()));
+                ContentUpload kunjiData = mobileKunjiContentUpload.findRecordByContentId(Integer.parseInt(csvRecord.getContentId()));
 
                 if (null != kunjiData) {
 
