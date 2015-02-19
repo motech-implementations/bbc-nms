@@ -17,7 +17,6 @@ import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
 public class FrontLineWorkerCsv {
 
     @Field
-    @Column(length = FLW_ID_LENGTH)
     private String flwId;
 
     @Field
@@ -27,18 +26,15 @@ public class FrontLineWorkerCsv {
     private String contactNumber;
 
     @Field
-    @Column(length = FLW_NAME_LENGTH)
     private String name;
 
     @Field
-    @Column(length = FLW_TYPE_LENGTH)
     private String type;
 
     @Field
     private String districtId;
 
     @Field
-    @Column(length = TALUKA_ID_LENGTH)
     private String tCode;
 
     @Field

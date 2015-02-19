@@ -5,14 +5,13 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Column;
-import javax.jdo.annotations.Unique;
+
 import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
 /**
  * Created by abhishek on 26/1/15.
  */
 
 @Entity
-@Unique(name = "FLW_COMPOSITE_KEYS", members = { "flwId", "stateId" })
 public class FrontLineWorker {
 
     @Field(required = true)
