@@ -11,6 +11,8 @@ public interface MotherMctsCsvService {
     void add(MotherMctsCsv record);
 
     MotherMctsCsv findRecordByName(String recordName);
+    
+    MotherMctsCsv findRecordById(Long id);
 
     List<MotherMctsCsv> getRecords();
 
