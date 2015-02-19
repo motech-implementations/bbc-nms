@@ -16,7 +16,7 @@ public class FrontLineWorker {
 
     @Field(required = true)
     @Column(length = FLW_ID_LENGTH)
-    private String flwId;
+    private long flwId;
 
     @Field(name = "stateId", required = true)
     private long stateId;
@@ -77,7 +77,7 @@ public class FrontLineWorker {
     private String languageLocationCode;
 
 
-    public FrontLineWorker(String flwId, long stateId, String contactNo, String name, String type, long operatorId,
+    public FrontLineWorker(long flwId, long stateId, String contactNo, String name, String type, long operatorId,
                            long districtId,  String status, String languageLocationCode) {
         this.flwId = flwId;
         this.stateId = stateId;
@@ -90,11 +90,11 @@ public class FrontLineWorker {
         this.languageLocationCode = languageLocationCode;
     }
 
-    public String getFlwId() {
+    public long getFlwId() {
         return flwId;
     }
 
-    public void setFlwId(String flwId) {
+    public void setFlwId(long flwId) {
         this.flwId = flwId;
     }
 

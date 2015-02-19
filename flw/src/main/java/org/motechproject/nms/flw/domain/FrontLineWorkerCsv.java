@@ -59,6 +59,14 @@ public class FrontLineWorkerCsv {
     @Field
     private String aadhaarNumber;
 
+    public String getFlwId() {
+        return flwId;
+    }
+
+    public void setFlwId(String flwId) {
+        this.flwId = flwId;
+    }
+
     public String getStateId() {
         return stateId;
     }

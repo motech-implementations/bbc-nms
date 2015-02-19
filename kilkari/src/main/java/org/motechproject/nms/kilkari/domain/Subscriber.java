@@ -259,7 +259,14 @@ public class Subscriber {
 	public void setChildDeath(boolean childDeath) {
 		this.childDeath = childDeath;
 	}
-	
-	
-	
+
+	public List<Subscription> getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(List<Subscription> subscriber) {
+		this.subscriber = subscriber;
+	}
+
+		
 }
