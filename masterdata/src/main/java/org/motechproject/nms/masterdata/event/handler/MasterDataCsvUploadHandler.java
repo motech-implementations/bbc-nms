@@ -202,6 +202,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
+        String errorFileName = "LanguageLocationCodeCsv" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -210,9 +211,11 @@ public class MasterDataCsvUploadHandler {
                 LanguageLocationCodeCsv record =  languageLocationCodeServiceCsv.findById(id);
                 languageLocationCodeServiceCsv.delete(record);
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, 0, createdIds.size());
 
         }catch (MdsException ex) {
         }
+
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
@@ -244,6 +247,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
+        String errorFileName = "CircleCsv" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -252,13 +256,14 @@ public class MasterDataCsvUploadHandler {
                 CircleCsv record =  circleCsvService.findById(id);
                 circleCsvService.delete(record);
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, 0, createdIds.size());
         }catch (Exception ex) {
         }
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "CircleCsv" + new Date().toString();
+        String errorFileName = "OperatorCsv" + new Date().toString();
 
         try {
             Map<String, Object> params = motechEvent.getParameters();;
@@ -285,6 +290,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
+        String errorFileName = "OperatorCsv" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -293,6 +299,7 @@ public class MasterDataCsvUploadHandler {
                 OperatorCsv record =  operatorCsvService.findById(id);
                 operatorCsvService.delete(record);
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, 0, createdIds.size());
         }catch (Exception ex) {
         }
     }

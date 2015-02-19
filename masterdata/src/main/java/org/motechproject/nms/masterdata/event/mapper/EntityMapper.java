@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.event.mapper;
 
+import org.motechproject.nms.masterdata.constants.ErrorDescriptionConstant;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.BulkUploadErrRecordDetails;
 import org.motechproject.nms.util.constants.ErrorCodeConstants;
@@ -51,60 +52,50 @@ public class EntityMapper {
 
         if (isEmptyOrNull(record.getCircleId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("circleId"));
             return errorRecord;
         }
         if (isEmptyOrNull(record.getDistrictId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("districtId"));
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getStateId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("stateId"));
             return errorRecord;
         }
-
-        if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeKK())) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
-            return errorRecord;
-        }
-
-        if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMA())) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
-            return errorRecord;
-        }
-
-        if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMK())) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
-            return errorRecord;
-        }
-
 
         if(record.getIsDeployedKK().equals("true")) {
-            if (isEmptyOrNull(record.getLanguageLocationCodeKK())) {
+            if (isEmptyOrNull(record.getLanguageLocationCodeKK()) ||
+                    isEmptyOrNull(record.getIsDefaultLanguageLocationCodeKK()) ||
+                    isEmptyOrNull(record.getLanguageKK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription("");
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                        .format("LanguageLocationCodeKK or DefaultLanguageLocationCodeKK or LanguageKK"));
                 return errorRecord;
             }
         }
 
         if(record.getIsDeployedMA().equals("true")) {
-            if (isEmptyOrNull(record.getLanguageLocationCodeMA())) {
+            if (isEmptyOrNull(record.getLanguageLocationCodeMA()) ||
+                    isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMA()) ||
+                    isEmptyOrNull(record.getLanguageMA())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription("");
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                        .format("LanguageLocationCodeMA or DefaultLanguageLocationCodeMA or LanguageMA"));
                 return errorRecord;
             }
         }
 
         if(record.getIsDeployedMK().equals("true")) {
-            if (isEmptyOrNull(record.getLanguageLocationCodeMK())) {
+            if (isEmptyOrNull(record.getLanguageLocationCodeMK()) ||
+                    isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMK()) ||
+                    isEmptyOrNull(record.getLanguageMK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription("");
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                        .format("LanguageLocationCodeMK or DefaultLanguageLocationCodeMK or LanguageMK"));
                 return errorRecord;
             }
         }
