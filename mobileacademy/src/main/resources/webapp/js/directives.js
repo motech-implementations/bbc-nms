@@ -1,6 +1,6 @@
 (function () {
     'use strict';
 
-    var directives = angular.module('academy.directives', []);
+    var directives = angular.module('mobileacademy.directives', []);
 
 }());

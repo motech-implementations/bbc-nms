@@ -3,9 +3,9 @@
 
     /* Services */
 
-    var services = angular.module('academy.services', ['ngResource']);
+    var services = angular.module('mobileacademy.services', ['ngResource']);
 
-    services.factory('HelloWorld', function($resource) {
-        return $resource('../academy/sayHello');
+    services.factory('MobileAcademyWorld', function($resource) {
+        return $resource('../mobileacademy/sayHello');
     });
 }());

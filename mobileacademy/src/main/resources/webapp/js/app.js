@@ -3,10 +3,10 @@
 
     /* App Module */
 
-    angular.module('academy', ['motech-dashboard', 'academy.controllers', 'academy.directives', 'academy.services', 'ngCookies'])
+    angular.module('mobileacademy', ['motech-dashboard', 'mobileacademy.controllers', 'mobileacademy.directives', 'mobileacademy.services', 'ngCookies'])
         .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
-                when('/helloWorld/', {templateUrl: '../academy/resources/partials/say-hello.html', controller: 'AcademyHelloWorldController'});
+                when('/mobileacademy/', {templateUrl: '../mobileacademy/resources/partials/add-mobileacademy.html', controller: 'MobileAcademyController'});
     }]);
 }());
