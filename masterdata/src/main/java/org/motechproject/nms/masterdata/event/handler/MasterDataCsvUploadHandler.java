@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.mds.ex.MdsException;
+import org.motechproject.nms.masterdata.constants.ErrorDescriptionConstant;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
@@ -24,6 +25,11 @@ import java.util.*;
 
 @Component
 public class MasterDataCsvUploadHandler {
+
+    public static Integer successCount = 0;
+    public static Integer failCount = 0;
+
+
 
     @Autowired
     private StateRecordsDataService stateRecordsDataService;
@@ -181,10 +187,14 @@ public class MasterDataCsvUploadHandler {
                     LanguageLocationCode newRecord = EntityMapper.mapLanguageLocationCodeFrom(record);
                     languageLocationCodeService.create(newRecord);
                     languageLocationCodeServiceCsv.delete(record);
+                    successCount++;
                 }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
                 }
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
         }catch (Exception ex) {
         }
     }
@@ -220,10 +230,14 @@ public class MasterDataCsvUploadHandler {
                     Circle newRecord = EntityMapper.mapCircleFrom(record);
                     circleService.create(newRecord);
                     circleCsvService.delete(record);
+                    successCount++;
                 }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
                 }
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
         }catch (Exception ex) {
         }
     }
@@ -257,10 +271,14 @@ public class MasterDataCsvUploadHandler {
                     Operator newRecord = EntityMapper.mapOperatorFrom(record);
                     operatorService.create(newRecord);
                     operatorCsvService.delete(record);
+                    successCount++;
                 }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
                 }
             }
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
         }catch (Exception ex) {
         }
     }

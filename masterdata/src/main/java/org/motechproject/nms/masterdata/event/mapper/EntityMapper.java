@@ -49,50 +49,37 @@ public class EntityMapper {
     public static BulkUploadErrRecordDetails validateLanguageLocationCodeCsv(LanguageLocationCodeCsv record) {
         BulkUploadErrRecordDetails errorRecord = new BulkUploadErrRecordDetails();
 
-        if (record.getIndex() == null) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(null);
-            errorRecord.setErrorDescription("Index field is missing");
-            return errorRecord;
-        }
-
         if (isEmptyOrNull(record.getCircleId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
         if (isEmptyOrNull(record.getDistrictId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getStateId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeKK())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMA())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMK())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
@@ -101,7 +88,6 @@ public class EntityMapper {
         if(record.getIsDeployedKK().equals("true")) {
             if (isEmptyOrNull(record.getLanguageLocationCodeKK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setRecordDetails(record.getIndex().toString());
                 errorRecord.setErrorDescription("");
                 return errorRecord;
             }
@@ -110,7 +96,6 @@ public class EntityMapper {
         if(record.getIsDeployedMA().equals("true")) {
             if (isEmptyOrNull(record.getLanguageLocationCodeMA())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setRecordDetails(record.getIndex().toString());
                 errorRecord.setErrorDescription("");
                 return errorRecord;
             }
@@ -119,7 +104,6 @@ public class EntityMapper {
         if(record.getIsDeployedMK().equals("true")) {
             if (isEmptyOrNull(record.getLanguageLocationCodeMK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setRecordDetails(record.getIndex().toString());
                 errorRecord.setErrorDescription("");
                 return errorRecord;
             }
@@ -130,23 +114,14 @@ public class EntityMapper {
     public static BulkUploadErrRecordDetails validateCircleCsv(CircleCsv record) {
         BulkUploadErrRecordDetails errorRecord = new BulkUploadErrRecordDetails();
 
-        if(record.getIndex() == null) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(null);
-            errorRecord.setErrorDescription("Index field is missing");
-            return errorRecord;
-        }
-
         if (isEmptyOrNull(record.getCode())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getName())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
@@ -155,23 +130,15 @@ public class EntityMapper {
 
     public static BulkUploadErrRecordDetails validateOperatorCsv(OperatorCsv record) {
         BulkUploadErrRecordDetails errorRecord = new BulkUploadErrRecordDetails();
-        if(record.getIndex() == null) {
-            errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(null);
-            errorRecord.setErrorDescription("Index field is missing");
-            return errorRecord;
-        }
 
         if (isEmptyOrNull(record.getCode())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getName())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setRecordDetails(record.getIndex().toString());
             errorRecord.setErrorDescription("");
             return errorRecord;
         }
