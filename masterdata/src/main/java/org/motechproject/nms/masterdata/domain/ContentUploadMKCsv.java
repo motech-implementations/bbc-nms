@@ -3,8 +3,14 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
+
 @Entity
 public class ContentUploadMKCsv {
+
+    @Field(required = true)
+    @Unique
+    Long index;
 
     @Field
     private String operation = "ADD";
@@ -32,6 +38,14 @@ public class ContentUploadMKCsv {
 
     @Field
     private String contentDuration;
+
+    public Long getIndex() {
+        return index;
+    }
+
+    public void setIndex(Long index) {
+        this.index = index;
+    }
 
     public String getOperation() {
         return operation;
