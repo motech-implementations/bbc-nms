@@ -1,10 +1,7 @@
 package org.motechproject.nms.mobilekunji.repository;
 
-import org.motechproject.nms.mobilekunji.domain.MobileKunjiConfiguration;
-
-import org.motechproject.mds.annotations.Lookup;
-import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.nms.mobilekunji.domain.MobileKunjiStateCapMapping;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -12,7 +9,6 @@ import org.motechproject.mds.service.MotechDataService;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface MobileKunjiConfigurationRecordDataService extends MotechDataService<MobileKunjiConfiguration> {
-    @Lookup
-    MobileKunjiConfiguration findRecordByIndex(@LookupField(name = "index") Integer index);
+public interface MobileKunjiStateCapMappingRecordDataService extends MotechDataService<MobileKunjiStateCapMapping> {
+
 }

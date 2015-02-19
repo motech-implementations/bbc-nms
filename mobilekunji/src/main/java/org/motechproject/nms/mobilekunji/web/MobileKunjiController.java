@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MobileKunjiController {
 
     @Autowired
-    private MobileKunjiService helloWorldService;
+    private MobileKunjiService mobileKunjiService;
 
     private static final String OK = "OK";
 
@@ -24,9 +24,5 @@ public class MobileKunjiController {
         return OK;
     }
 
-    @RequestMapping("/sayHello")
-    @ResponseBody
-    public String sayHello() {
-        return String.format("{\"message\":\"%s\"}", helloWorldService.sayHello());
-    }
+
 }
