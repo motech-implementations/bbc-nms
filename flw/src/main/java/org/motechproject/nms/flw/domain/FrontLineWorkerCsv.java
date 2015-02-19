@@ -6,6 +6,8 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
 import javax.jdo.annotations.Column;
+
+import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
 /**
  * Created by abhishek on 26/1/15.
  */
@@ -15,24 +17,28 @@ import javax.jdo.annotations.Column;
 public class FrontLineWorkerCsv {
 
     @Field
+    @Column(length = FLW_ID_LENGTH)
+    private String flwId;
+
+    @Field
     private String stateId;
 
     @Field
     private String contactNumber;
 
     @Field
-    @Column
+    @Column(length = FLW_NAME_LENGTH)
     private String name;
 
     @Field
-    @Column
+    @Column(length = FLW_TYPE_LENGTH)
     private String type;
 
     @Field
     private String districtId;
 
     @Field
-    @Column
+    @Column(length = TALUKA_ID_LENGTH)
     private String tCode;
 
     @Field
@@ -48,7 +54,7 @@ public class FrontLineWorkerCsv {
     private String villageId;
 
     @Field
-    @Column
+    @Column(length = FLW_ASHA_NUMBER_LENGTH)
     private String ashaNumber;
 
     @Field
@@ -56,6 +62,14 @@ public class FrontLineWorkerCsv {
 
     @Field
     private String aadhaarNumber;
+
+    public String getFlwId() {
+        return flwId;
+    }
+
+    public void setFlwId(String flwId) {
+        this.flwId = flwId;
+    }
 
     public String getStateId() {
         return stateId;

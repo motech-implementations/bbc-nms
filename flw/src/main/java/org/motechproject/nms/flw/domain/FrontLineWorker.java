@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Unique;
-
+import static org.motechproject.nms.flw.FrontLineWorkerConstants.*;
 /**
  * Created by abhishek on 26/1/15.
  */
@@ -16,8 +16,8 @@ import javax.jdo.annotations.Unique;
 public class FrontLineWorker {
 
     @Field(required = true)
-    @Column
-    private String flwId;
+    @Column(length = FLW_ID_LENGTH)
+    private long flwId;
 
     @Field(name = "stateId", required = true)
     private long stateId;
@@ -26,11 +26,11 @@ public class FrontLineWorker {
     private String contactNo;
 
     @Field(required = true)
-    @Column
+    @Column(length = FLW_NAME_LENGTH)
     private String name;
 
     @Field(required = true)
-    @Column
+    @Column(length = FLW_TYPE_LENGTH)
     private String type;
 
     @Field(required = true)
@@ -40,7 +40,7 @@ public class FrontLineWorker {
     private long districtId;
 
     @Field(name = "talukaId")
-    @Column
+    @Column(length = TALUKA_ID_LENGTH)
     private String talukaId;
 
     @Field
@@ -57,7 +57,7 @@ public class FrontLineWorker {
     private Long villageId;
 
     @Field
-    @Column
+    @Column(length = FLW_ASHA_NUMBER_LENGTH)
     private String ashaNumber;
 
     @Field
@@ -70,15 +70,15 @@ public class FrontLineWorker {
     private DateTime registrationDate;
 
     @Field(required = true)
-    @Column
+    @Column(length = FLW_STATUS_LENGTH)
     private String status;
 
     @Field(required = true)
-    @Column
+    @Column(length = LANGUAGE_LOCATION_CODE_LENGTH)
     private String languageLocationCode;
 
 
-    public FrontLineWorker(String flwId, long stateId, String contactNo, String name, String type, long operatorId,
+    public FrontLineWorker(long flwId, long stateId, String contactNo, String name, String type, long operatorId,
                            long districtId,  String status, String languageLocationCode) {
         this.flwId = flwId;
         this.stateId = stateId;
@@ -91,11 +91,11 @@ public class FrontLineWorker {
         this.languageLocationCode = languageLocationCode;
     }
 
-    public String getFlwId() {
+    public long getFlwId() {
         return flwId;
     }
 
-    public void setFlwId(String flwId) {
+    public void setFlwId(long flwId) {
         this.flwId = flwId;
     }
 

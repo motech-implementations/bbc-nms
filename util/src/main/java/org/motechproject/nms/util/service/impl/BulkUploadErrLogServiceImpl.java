@@ -1,4 +1,10 @@
-package bulkuploadloggingutil.impl;
+package org.motechproject.nms.util.service.impl;
+
+import org.motechproject.nms.util.constants.Constants;
+import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.motechproject.nms.util.BulkUploadErrRecordDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -6,49 +12,41 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.sql.Timestamp;
-import java.util.logging.Logger;
+import java.util.Date;
 
-import bulkuploadloggingutil.BulkUploadErrLogService;
-
-public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService{
+public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
     private Logger logger = LoggerFactory.getLogger(BulkUploadErrLogServiceImpl.class);
 
     @Override
     public void writeBulkUploadErrLog(String logFileName,
-            String erroneousRecord, String errorCode, String errorCause) {
+            BulkUploadErrRecordDetails bulkUploadErrRecordDetails) {
         
         try {
-            
-            String lineBreak = "\n"; //will remove hardcoding
-            String blankSpace = " "; //will remove hardcoding
-            java.util.Date date= new java.util.Date();
-            Timestamp currentTimestamp =  new Timestamp(date.getTime());
-            String logTitle = "ERROR :";
-            
-            StringBuffer errLog = new StringBuffer();
-            errLog.append(logTitle);
-            errLog.append(blankSpace);
-            errLog.append(currentTimestamp);
-            errLog.append(blankSpace);
-            errLog.append(erroneousRecord);
-            errLog.append(blankSpace);
-            errLog.append(errorCode);
-            errLog.append(blankSpace);
-            errLog.append(errorCause);
-            
+
+            Date date = new Date();
             Path logFilePath = FileSystems.getDefault().getPath(".", logFileName.toString());
-            
+
+            StringBuffer errLog = new StringBuffer();
+            errLog.append(Constants.ERROR_LOG_TITLE);
+            errLog.append(new Timestamp(date.getTime()));
+            errLog.append(Constants.SPACE);
+            errLog.append(bulkUploadErrRecordDetails.getRecordDetails());
+            errLog.append(Constants.SPACE);
+            errLog.append(bulkUploadErrRecordDetails.getErrorCode());
+            errLog.append(Constants.SPACE);
+            errLog.append(bulkUploadErrRecordDetails.getErrorDescription());
+
             Files.write(logFilePath,
                     errLog.toString().getBytes(),
-                    StandardOpenOption.CREATE, 
+                    StandardOpenOption.CREATE,
                     StandardOpenOption.APPEND);
-            
+
             Files.write(logFilePath,
-                    lineBreak.getBytes(),
+                    Constants.NEXT_LINE.getBytes(),
                     StandardOpenOption.APPEND);
-        }
-        catch ( IOException ioe ) {
+
+        } catch (IOException ioe) {
             logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
         }
         
@@ -59,40 +57,30 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService{
             Integer numberOfSuccessfulRecords,
             Integer numberOfFailedRecords) {
         try {
-            
-            String lineBreak = "\n"; //will remove hardcoding
-            String blankSpace = " "; //will remove hardcoding
-            java.util.Date date= new java.util.Date();
-            Timestamp currentTimestamp =  new Timestamp(date.getTime());
-            String logTitle = "BULK UPLOAD SUMMARY : ";
-            
-            StringBuffer errLog = new StringBuffer();
-            errLog.append(logTitle);
-            errLog.append(currentTimestamp);
-            errLog.append(blankSpace);
-            errLog.append("Number Of Records Successful : ");
-            errLog.append(numberOfSuccessfulRecords.toString());
-            errLog.append("Number Of Records Failed : ");
-            errLog.append(numberOfFailedRecords.toString());
-            
+
+            Date date = new Date();
             Path logFilePath = FileSystems.getDefault().getPath(".", logFileName.toString());
+
+            StringBuffer uploadProcessingSummary = new StringBuffer();
+            uploadProcessingSummary.append(Constants.BULK_UPLOAD_SUMMARY_TITLE);
+            uploadProcessingSummary.append(new Timestamp(date.getTime()));
+            uploadProcessingSummary.append(Constants.SPACE);
+            uploadProcessingSummary.append(Constants.SUCCESSFUL_RECORDS);
+            uploadProcessingSummary.append(numberOfSuccessfulRecords.toString());
+            uploadProcessingSummary.append(Constants.FAILED_RECORDS);
+            uploadProcessingSummary.append(numberOfFailedRecords.toString());
             
             Files.write(logFilePath,
-                    errLog.toString().getBytes(),
+                    uploadProcessingSummary.toString().getBytes(),
                     StandardOpenOption.CREATE, 
                     StandardOpenOption.APPEND);
             
             Files.write(logFilePath,
-                    lineBreak.getBytes(),
+                    Constants.NEXT_LINE.getBytes(),
                     StandardOpenOption.APPEND);
-        }
-        catch ( IOException ioe ) {
+
+        } catch (IOException ioe) {
             logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
         }
-        
-
-        
     }
-
-
 }

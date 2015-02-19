@@ -1,10 +1,8 @@
 package org.motechproject.nms.masterdata.service;
 
-/**
- * Created by abhishek on 26/1/15.
- */
+import org.motechproject.nms.masterdata.domain.*;
+
 public interface LocationService {
 
     boolean validateLocation(Long stateId, Long districtId);
-
 }
