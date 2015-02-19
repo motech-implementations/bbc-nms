@@ -20,9 +20,6 @@ import java.lang.String;
 public class TalukaCsv extends LocationUnitMetaDataCsv {
 
     @Field
-    private String talukaId;
-
-    @Field
     private String districtId;
 
     @Field
@@ -31,20 +28,11 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     @Field
     private String tCode;
 
-    public TalukaCsv(String operation, String name, String talukaId,String districtId,String stateId,String tCode) {
+    public TalukaCsv(String operation, String name, String districtId,String stateId,String tCode) {
         super(operation, name);
-        this.talukaId = talukaId;
         this.districtId = districtId;
         this.stateId = stateId;
         this.tCode = tCode;
-    }
-
-    public String getTalukaId() {
-        return talukaId;
-    }
-
-    public void setTalukaId(String talukaId) {
-        this.talukaId = talukaId;
     }
 
     public String getDistrictId() {
@@ -74,7 +62,6 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     @Override
     public String toString() {
         return "TalukaCsv{" +
-                "talukaId=" + talukaId +
                 ", districtId=" + districtId +
                 ", stateId=" + stateId +
                 ", tCode=" + tCode +
