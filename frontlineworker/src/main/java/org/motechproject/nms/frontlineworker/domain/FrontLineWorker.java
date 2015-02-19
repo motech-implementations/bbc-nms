@@ -13,7 +13,7 @@ import static org.motechproject.nms.frontlineworker.FrontLineWorkerConstants.*;
  * Created by abhishek on 26/1/15.
  */
 
-@Entity
+@Entity(recordHistory = true)
 public class FrontLineWorker extends MdsEntity {
 
     @Field(required = true)
