@@ -4,30 +4,34 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * Models data for simple records in a portable manner.
  */
 @Entity
-public class MobileKunjiConfigurationRecord {
+public class ServiceConfiguration {
 
     @Field(required = true)
     @Unique
-    private String index;
+    @Min(1)
+    @Max(1)
+    private int index;
 
     @Field(name = "NMS_MK_CAPPING_TYPE", required = true)
-    private Integer nmsMkCappingType;
+    private int nmsMkCappingType;
 
     @Field(name = "NMS_MK_NATIONAL_CAP_VALUE", required = true)
-    private Integer nmsMkNationalCapValue;
+    private int nmsMkNationalCapValue;
     @Field(name = "NMS_MK_MAX_HEALTH_CARDS", required = true)
-    private Integer nmsMkMaxHealthCards;
+    private int nmsMkMaxHealthCards;
     @Field(name = "NMS_MK_MAX_WELCOME_MESSAGE", required = true)
-    private Integer nmsMkMaxWelcomeMessage;
+    private int nmsMkMaxWelcomeMessage;
     @Field(name = "NMS_MK_MAX_ENDOFUSAGE_MESSAGE", required = true)
-    private Integer nmsMkMaxEndofusageMessage;
+    private int nmsMkMaxEndofusageMessage;
 
-    public MobileKunjiConfigurationRecord(String index, Integer nmsMkCappingType, Integer nmsMkNationalCapValue, Integer nmsMkMaxHealthCards, Integer nmsMkMaxWelcomeMessage, Integer nmsMkMaxEndofusageMessage) {
+    public ServiceConfiguration(int index, int nmsMkCappingType, int nmsMkNationalCapValue, int nmsMkMaxHealthCards, int nmsMkMaxWelcomeMessage, int nmsMkMaxEndofusageMessage) {
         this.index = index;
         this.nmsMkCappingType = nmsMkCappingType;
         this.nmsMkNationalCapValue = nmsMkNationalCapValue;
@@ -36,51 +40,51 @@ public class MobileKunjiConfigurationRecord {
         this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
     }
 
-    public String getIndex() {
+    public int getIndex() {
         return index;
     }
 
-    public void setIndex(String index) {
+    public void setIndex(int index) {
         this.index = index;
     }
 
-    public Integer getNmsMkCappingType() {
+    public int getNmsMkCappingType() {
         return nmsMkCappingType;
     }
 
-    public void setNmsMkCappingType(Integer nmsMkCappingType) {
+    public void setNmsMkCappingType(int nmsMkCappingType) {
         this.nmsMkCappingType = nmsMkCappingType;
     }
 
-    public Integer getNmsMkNationalCapValue() {
+    public int getNmsMkNationalCapValue() {
         return nmsMkNationalCapValue;
     }
 
-    public void setNmsMkNationalCapValue(Integer nmsMkNationalCapValue) {
+    public void setNmsMkNationalCapValue(int nmsMkNationalCapValue) {
         this.nmsMkNationalCapValue = nmsMkNationalCapValue;
     }
 
-    public Integer getNmsMkMaxHealthCards() {
+    public int getNmsMkMaxHealthCards() {
         return nmsMkMaxHealthCards;
     }
 
-    public void setNmsMkMaxHealthCards(Integer nmsMkMaxHealthCards) {
+    public void setNmsMkMaxHealthCards(int nmsMkMaxHealthCards) {
         this.nmsMkMaxHealthCards = nmsMkMaxHealthCards;
     }
 
-    public Integer getNmsMkMaxWelcomeMessage() {
+    public int getNmsMkMaxWelcomeMessage() {
         return nmsMkMaxWelcomeMessage;
     }
 
-    public void setNmsMkMaxWelcomeMessage(Integer nmsMkMaxWelcomeMessage) {
+    public void setNmsMkMaxWelcomeMessage(int nmsMkMaxWelcomeMessage) {
         this.nmsMkMaxWelcomeMessage = nmsMkMaxWelcomeMessage;
     }
 
-    public Integer getNmsMkMaxEndofusageMessage() {
+    public int getNmsMkMaxEndofusageMessage() {
         return nmsMkMaxEndofusageMessage;
     }
 
-    public void setNmsMkMaxEndofusageMessage(Integer nmsMkMaxEndofusageMessage) {
+    public void setNmsMkMaxEndofusageMessage(int nmsMkMaxEndofusageMessage) {
         this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
     }
 }
