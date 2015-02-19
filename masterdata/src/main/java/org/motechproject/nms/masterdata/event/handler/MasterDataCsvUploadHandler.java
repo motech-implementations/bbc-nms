@@ -175,21 +175,39 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "LanguageLocationCodeCsv" + new Date().toString();
+        String errorFileName = "LanguageLocationCodeCsv_" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
 
+            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+            BulkUploadErrRecordDetails error;
+
+            for(Long id : updatedIds) {
+                LanguageLocationCodeCsv record =  languageLocationCodeServiceCsv.findById(id);
+                error = EntityMapper.validateLanguageLocationCodeCsv(record);
+                if(error == null) {
+                    LanguageLocationCode newRecord = EntityMapper.mapLanguageLocationCodeFrom(record);
+                    languageLocationCodeService.create(newRecord);
+                    languageLocationCodeServiceCsv.delete(record);
+                    successCount++;
+                }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
+                }
+            }
+
             for(Long id : createdIds) {
                 LanguageLocationCodeCsv record =  languageLocationCodeServiceCsv.findById(id);
-                BulkUploadErrRecordDetails error = EntityMapper.validateLanguageLocationCodeCsv(record);
+                error = EntityMapper.validateLanguageLocationCodeCsv(record);
                 if (error == null) {
                     LanguageLocationCode newRecord = EntityMapper.mapLanguageLocationCodeFrom(record);
                     languageLocationCodeService.create(newRecord);
                     languageLocationCodeServiceCsv.delete(record);
                     successCount++;
                 }else {
-                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
                     failCount++;
                 }
@@ -202,7 +220,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
-        String errorFileName = "LanguageLocationCodeCsv" + new Date().toString();
+        String errorFileName = "LanguageLocationCodeCsv_" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -220,22 +238,40 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
     public void circleCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "CircleCsv" + new Date().toString();
+        String errorFileName = "CircleCsv_" + new Date().toString();
 
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
 
+            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+            BulkUploadErrRecordDetails error;
+            for(Long id : updatedIds) {
+                CircleCsv record =  circleCsvService.findById(id);
+                error = EntityMapper.validateCircleCsv(record);
+                if(error == null) {
+                    Circle newRecord = EntityMapper.mapCircleFrom(record);
+                    circleService.update(newRecord);
+                    circleCsvService.delete(record);
+                    successCount++;
+                }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
+                }
+
+            }
+
             for(Long id : createdIds) {
                 CircleCsv record =  circleCsvService.findById(id);
-                BulkUploadErrRecordDetails error = EntityMapper.validateCircleCsv(record);
+                error = EntityMapper.validateCircleCsv(record);
                 if (error == null) {
                     Circle newRecord = EntityMapper.mapCircleFrom(record);
                     circleService.create(newRecord);
                     circleCsvService.delete(record);
                     successCount++;
                 }else {
-                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
                     failCount++;
                 }
@@ -247,7 +283,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
-        String errorFileName = "CircleCsv" + new Date().toString();
+        String errorFileName = "CircleCsv_" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -263,24 +299,42 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "OperatorCsv" + new Date().toString();
+        String errorFileName = "OperatorCsv_" + new Date().toString();
 
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
 
+            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+            BulkUploadErrRecordDetails error;
+
+            for(Long id : updatedIds) {
+                OperatorCsv record =  operatorCsvService.findById(id);
+                error = EntityMapper.validateOperatorCsv(record);
+                if(error == null) {
+                    Operator newRecord = EntityMapper.mapOperatorFrom(record);
+                    operatorService.update(newRecord);
+                    operatorCsvService.delete(record);
+                    successCount++;
+                }else {
+                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+                    failCount++;
+                }
+
+
+            }
+
             for(Long id : createdIds) {
                 OperatorCsv record =  operatorCsvService.findById(id);
-                BulkUploadErrRecordDetails error = EntityMapper.validateOperatorCsv(record);
+                error = EntityMapper.validateOperatorCsv(record);
                 if (error == null) {
                     Operator newRecord = EntityMapper.mapOperatorFrom(record);
                     operatorService.create(newRecord);
                     operatorCsvService.delete(record);
                     successCount++;
                 }else {
-                    error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL.format(record.getIndex().toString()));
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
-                    failCount++;
+
                 }
             }
             bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
@@ -290,7 +344,7 @@ public class MasterDataCsvUploadHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
-        String errorFileName = "OperatorCsv" + new Date().toString();
+        String errorFileName = "OperatorCsv_" + new Date().toString();
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -381,4 +435,36 @@ public class MasterDataCsvUploadHandler {
             return null;
         }
     }
+
+//    private void processUpdatedRecords(Map<String, Object> params, Object record) {
+//        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+//
+//        String entityName = (String)params.get("entityName");
+//        BulkUploadErrRecordDetails error;
+//            LanguageLocationCodeCsv record;
+//
+//        if(entityName.equals("CircleCsv")) {
+//            record = new CircleCsv();
+//        }
+//
+//        if(entityName.equals("OperatorCsv")) {
+//            //OperatorCsv record;
+//        }
+//
+//        for(Long id : updatedIds) {
+//            record =  languageLocationCodeServiceCsv.findById(id);
+//            error = EntityMapper.validateLanguageLocationCodeCsv(record);
+//            if(error == null) {
+//                LanguageLocationCode newRecord = EntityMapper.mapLanguageLocationCodeFrom(record);
+//                languageLocationCodeService.create(newRecord);
+//                languageLocationCodeServiceCsv.delete(record);
+//                successCount++;
+//            }else {
+//                error.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(record.getIndex().toString()));
+//                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, error);
+//                failCount++;
+//            }
+//        }
+
+    //}
 }

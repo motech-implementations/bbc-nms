@@ -6,6 +6,9 @@ import org.motechproject.nms.util.BulkUploadErrRecordDetails;
 import org.motechproject.nms.util.constants.ErrorCodeConstants;
 
 import java.lang.Exception;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class EntityMapper {
 
@@ -52,18 +55,18 @@ public class EntityMapper {
 
         if (isEmptyOrNull(record.getCircleId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("circleId"));
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("circleId"));
             return errorRecord;
         }
         if (isEmptyOrNull(record.getDistrictId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("districtId"));
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("districtId"));
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getStateId())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON.format("stateId"));
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("stateId"));
             return errorRecord;
         }
 
@@ -72,7 +75,7 @@ public class EntityMapper {
                     isEmptyOrNull(record.getIsDefaultLanguageLocationCodeKK()) ||
                     isEmptyOrNull(record.getLanguageKK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC
                         .format("LanguageLocationCodeKK or DefaultLanguageLocationCodeKK or LanguageKK"));
                 return errorRecord;
             }
@@ -83,7 +86,7 @@ public class EntityMapper {
                     isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMA()) ||
                     isEmptyOrNull(record.getLanguageMA())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC
                         .format("LanguageLocationCodeMA or DefaultLanguageLocationCodeMA or LanguageMA"));
                 return errorRecord;
             }
@@ -94,7 +97,7 @@ public class EntityMapper {
                     isEmptyOrNull(record.getIsDefaultLanguageLocationCodeMK()) ||
                     isEmptyOrNull(record.getLanguageMK())) {
                 errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD_UNSUCCESSFUL_REASON
+                errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC
                         .format("LanguageLocationCodeMK or DefaultLanguageLocationCodeMK or LanguageMK"));
                 return errorRecord;
             }
@@ -107,13 +110,13 @@ public class EntityMapper {
 
         if (isEmptyOrNull(record.getCode())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("code"));
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getName())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("name"));
             return errorRecord;
         }
         return null;
@@ -124,17 +127,19 @@ public class EntityMapper {
 
         if (isEmptyOrNull(record.getCode())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("code"));
             return errorRecord;
         }
 
         if (isEmptyOrNull(record.getName())) {
             errorRecord.setErrorCode(ErrorCodeConstants.MANDATORY_PARAMETER_MISSING);
-            errorRecord.setErrorDescription("");
+            errorRecord.setErrorDescription(ErrorDescriptionConstant.RECORD_UPLOAD__ERROR_DESC.format("name"));
             return errorRecord;
         }
         return null;
     }
+
+
 
     public static boolean isEmptyOrNull(String value) {
         return !(value != null && !"".equals(value.trim()));

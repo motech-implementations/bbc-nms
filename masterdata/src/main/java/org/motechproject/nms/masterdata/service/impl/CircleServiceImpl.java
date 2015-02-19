@@ -14,4 +14,9 @@ public class CircleServiceImpl implements CircleService {
     public void create(Circle record) {
         circleDataService.create(record);
     }
+
+    @Override
+    public void update(Circle record) {
+        circleDataService.update(record);
+    }
 }
