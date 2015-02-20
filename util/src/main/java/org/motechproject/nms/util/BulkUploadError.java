@@ -12,7 +12,6 @@ public class BulkUploadError {
     private String recordDetails;
     private String errorCategory;
     private String errorDescription;
-    private String userName;
 
     public BulkUploadError() { }
 
@@ -20,7 +19,6 @@ public class BulkUploadError {
         this.recordDetails = recordDetails;
         this.errorCategory = errorCategory;
         this.errorDescription = errorDescription;
-        this.userName = userName;
     }
 
     public String getRecordDetails() {
@@ -45,14 +43,6 @@ public class BulkUploadError {
 
     public void setErrorDescription(String errorDescription) {
         this.errorDescription = errorDescription;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     /**

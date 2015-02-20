@@ -51,7 +51,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
      * @param    bulkUploadErrRecordDetails  String describing another coding guideline
      */
     @Override
-    public void writeBulkUploadErrLog(String bulkUploadFileName, String logFileName, BulkUploadError bulkUploadErrRecordDetails) {
+    public void writeBulkUploadErrLog(String logFileName, BulkUploadError bulkUploadErrRecordDetails) {
 
         Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
 

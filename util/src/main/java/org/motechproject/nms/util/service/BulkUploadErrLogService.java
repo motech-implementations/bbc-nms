@@ -9,7 +9,7 @@ import org.motechproject.nms.util.CsvProcessingSummary;
  */
 public interface BulkUploadErrLogService {
 
-    void writeBulkUploadErrLog(String bulkUploadFileName, String logFileName, BulkUploadError erroneousRecord);
+    void writeBulkUploadErrLog(String logFileName, BulkUploadError erroneousRecord);
 
     void writeBulkUploadProcessingSummary(String userName, String bulkUploadFileName, String logFileName, CsvProcessingSummary csvProcessingSummary);
 }
