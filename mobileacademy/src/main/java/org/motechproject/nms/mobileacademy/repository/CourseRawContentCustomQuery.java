@@ -1,17 +1,17 @@
 package org.motechproject.nms.mobileacademy.repository;
 
-import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.util.InstanceSecurityRestriction;
+import java.util.List;
 
 import javax.jdo.Query;
-import java.util.List;
+
+import org.motechproject.mds.query.QueryExecution;
+import org.motechproject.mds.util.InstanceSecurityRestriction;
 
 /**
  * Class contains custom query related to course raw content.
  *
  */
 public class CourseRawContentCustomQuery {
-
 
     /**
      * LlcListQueryExecutionImpl class prepares a custom MDS query. The query
