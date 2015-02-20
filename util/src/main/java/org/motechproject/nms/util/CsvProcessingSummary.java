@@ -1,5 +1,10 @@
 package org.motechproject.nms.util;
 
+/**
+ * This class contains the count of records successfully uploaded
+ * and the count of records failed to upload after processing of
+ * bulk upload file(csv file)
+ */
 public class CsvProcessingSummary {
 
     private Integer successCount;

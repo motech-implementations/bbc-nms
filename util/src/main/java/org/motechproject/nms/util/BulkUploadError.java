@@ -5,7 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- *
+ * This class models Bulk Upload erroneous record details
+ * and the category and description of error
  */
 public class BulkUploadError {
 
