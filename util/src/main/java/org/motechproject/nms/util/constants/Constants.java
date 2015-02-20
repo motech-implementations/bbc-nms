@@ -1,5 +1,9 @@
 package org.motechproject.nms.util.constants;
 
+/**
+ * This class defines all the commonly used constants
+ * as well as constants required in Util module
+ */
 public final class Constants {
 
     public static final String NEXT_LINE = "\n";
@@ -12,6 +16,4 @@ public final class Constants {
     public static final String SUCCESSFUL_RECORDS_TITLE = "Number Of Records Successful : ";
     public static final String FAILED_RECORDS_TITLE = "Number Of Records Failed : ";
 
-    private Constants() {
-    }
 }

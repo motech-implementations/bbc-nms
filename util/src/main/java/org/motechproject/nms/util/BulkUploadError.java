@@ -64,7 +64,6 @@ public class BulkUploadError {
     public static String getBulkUploadErrLogFileName(String csvFileName) {
 
         DateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss");
-        String logFileName = csvFileName + "_processing_" + logDateFormat.format(new Date()) + ".log";
-        return logFileName;
+        return(csvFileName + "_processing_" + logDateFormat.format(new Date()) + ".log");
     }
 }

@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Implementation of the {@link BulkUploadStatusService} interface. Uses
- * {@link org.motechproject.nms.util.repository.BulkUploadStatusDataService} in order to retrieve and persist records.
+ * {@link org.motechproject.nms.util.repository.BulkUploadStatusDataService}
+ * in order to persist records.
  */
 @Service("bulkUploadStatusService")
 public class BulkUploadStatusServiceImpl implements BulkUploadStatusService {
