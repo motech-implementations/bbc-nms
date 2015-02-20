@@ -21,5 +21,4 @@ public class BulkUploadStatusServiceImpl implements BulkUploadStatusService {
     public void add(BulkUploadStatus bulkUploadStatusRecord) {
         bulkUploadStatusDataService.create(bulkUploadStatusRecord);
     }
-
 }

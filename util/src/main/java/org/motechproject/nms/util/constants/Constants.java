@@ -16,4 +16,8 @@ public final class Constants {
     public static final String SUCCESSFUL_RECORDS_TITLE = "Number Of Records Successful : ";
     public static final String FAILED_RECORDS_TITLE = "Number Of Records Failed : ";
 
+    private Constants() {
+
+    }
+
 }
