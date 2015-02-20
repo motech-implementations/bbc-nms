@@ -5,28 +5,28 @@ package org.motechproject.nms.util;
  */
 public class CsvProcessingSummary {
 
-    private int successCount;
+    private Integer successCount;
 
-    private int failureCount;
+    private Integer failureCount;
 
-    public CsvProcessingSummary(int successCount, int failureCount) {
+    public CsvProcessingSummary(Integer successCount, Integer failureCount) {
         this.successCount = successCount;
         this.failureCount = failureCount;
     }
 
-    public int getSuccessCount() {
+    public Integer getSuccessCount() {
         return successCount;
     }
 
-    public void setSuccessCount(int successCount) {
+    public void setSuccessCount(Integer successCount) {
         this.successCount = successCount;
     }
 
-    public int getFailureCount() {
+    public Integer getFailureCount() {
         return failureCount;
     }
 
-    public void setFailureCount(int failureCount) {
+    public void setFailureCount(Integer failureCount) {
         this.failureCount = failureCount;
     }
 }

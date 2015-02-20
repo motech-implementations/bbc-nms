@@ -12,7 +12,7 @@
         <constructor-arg name="url" value="../util/resources/index.html" />
         <constructor-arg name="angularModules">
             <list>
-                <value>hello-world</value>
+                <value>util</value>
             </list>
         </constructor-arg>
         <constructor-arg name="i18n">
@@ -20,7 +20,7 @@
                 <entry key="messages" value="../util/resources/messages/" />
             </map>
         </constructor-arg>
-        <property name="defaultURL" value="/helloWorld"/>
+        <property name="defaultURL" value="/util"/>
     </bean>
 
 
