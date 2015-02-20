@@ -10,7 +10,6 @@ public interface ConfigurationService {
         /**
          * Create Kilkari Service configuration
          * @param configuration object to save
-         * @return configuration object created in the store
          */
         void createConfiguration(Configuration configuration);
 
@@ -20,11 +19,11 @@ public interface ConfigurationService {
          */
         Configuration getConfiguration();
 
-       /**
-        * Checks if the configuration is already present
-        * @return true if present, else false
-        */
-        Boolean isConfigurationPresent();
+        /**
+         * Checks if the configuration is already present
+         * @return true if present, else false
+         */
+         Boolean isConfigurationPresent();
 
 
 }
