@@ -4,7 +4,7 @@ package org.motechproject.nms.kilkari.constants;
 
 public final class ConfigurationConstants {
 
-    public static final Long CONFIGURATION_INDEX = 1;
+    public static final Long CONFIGURATION_INDEX = 1l;
 
     public static final Integer DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK = 1;
 

@@ -3,173 +3,172 @@ package org.motechproject.nms.kilkari.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-@Entity(name="childMctsCsv")
+@Entity
 public class ChildMctsCsv {
-	
-	@Field
-	private String operation;
-	
-	@Field
-	private String stateId;
-	
-	@Field
-	private String districtId;
-	
-	@Field
-	private String talukaId;
-	
-	@Field
-	private String healthBlockId;
-	
-	@Field
-	private String phcId;
-	
-	@Field
-	private String subCentreId;
-	
-	@Field
-	private String villageId;
-	
-	@Field
-	private String idNo;
-	
-	@Field
-	private String name;
-	
-	@Field
-	private String motherName;
-	
-	@Field
-	private String motherId;
-	
-	@Field
-	private String whomPhoneNo;
-	
-	@Field
-	private String birthdate;
-	
-	@Field
-	private String entryType;
 
-	public String getStateId() {
-		return stateId;
-	}
+    @Field
+    private String operation;
 
-	public String getOperation() {
-		return operation;
-	}
+    @Field
+    private String stateId;
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
+    @Field
+    private String districtId;
 
-	public void setStateId(String stateId) {
-		this.stateId = stateId;
-	}
+    @Field
+    private String talukaId;
 
-	public String getDistrictId() {
-		return districtId;
-	}
+    @Field
+    private String healthBlockId;
 
-	public void setDistrictId(String districtId) {
-		this.districtId = districtId;
-	}
+    @Field
+    private String phcId;
 
-	public String getTalukaId() {
-		return talukaId;
-	}
+    @Field
+    private String subCentreId;
 
-	public void setTalukaId(String talukaId) {
-		this.talukaId = talukaId;
-	}
+    @Field
+    private String villageId;
 
-	public String getHealthBlockId() {
-		return healthBlockId;
-	}
+    @Field
+    private String idNo;
 
-	public void setHealthBlockId(String healthBlockId) {
-		this.healthBlockId = healthBlockId;
-	}
+    @Field
+    private String name;
 
-	public String getPhcId() {
-		return phcId;
-	}
+    @Field
+    private String motherName;
 
-	public void setPhcId(String phcId) {
-		this.phcId = phcId;
-	}
+    @Field
+    private String motherId;
 
-	public String getSubCentreId() {
-		return subCentreId;
-	}
+    @Field
+    private String whomPhoneNo;
 
-	public void setSubCentreId(String subCentreId) {
-		this.subCentreId = subCentreId;
-	}
+    @Field
+    private String birthdate;
 
-	public String getVillageId() {
-		return villageId;
-	}
+    @Field
+    private String entryType;
 
-	public void setVillageId(String villageId) {
-		this.villageId = villageId;
-	}
+    public String getStateId() {
+        return stateId;
+    }
 
-	public String getIdNo() {
-		return idNo;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setIdNo(String idNo) {
-		this.idNo = idNo;
-	}
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setStateId(String stateId) {
+        this.stateId = stateId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getDistrictId() {
+        return districtId;
+    }
 
-	public String getMotherName() {
-		return motherName;
-	}
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
 
-	public void setMotherName(String motherName) {
-		this.motherName = motherName;
-	}
+    public String getTalukaId() {
+        return talukaId;
+    }
 
-	public String getMotherId() {
-		return motherId;
-	}
+    public void setTalukaId(String talukaId) {
+        this.talukaId = talukaId;
+    }
 
-	public void setMotherId(String motherId) {
-		this.motherId = motherId;
-	}
+    public String getHealthBlockId() {
+        return healthBlockId;
+    }
 
-	public String getWhomPhoneNo() {
-		return whomPhoneNo;
-	}
+    public void setHealthBlockId(String healthBlockId) {
+        this.healthBlockId = healthBlockId;
+    }
 
-	public void setWhomPhoneNo(String whomPhoneNo) {
-		this.whomPhoneNo = whomPhoneNo;
-	}
+    public String getPhcId() {
+        return phcId;
+    }
 
-	public String getBirthdate() {
-		return birthdate;
-	}
+    public void setPhcId(String phcId) {
+        this.phcId = phcId;
+    }
 
-	public void setBirthdate(String birthdate) {
-		this.birthdate = birthdate;
-	}
+    public String getSubCentreId() {
+        return subCentreId;
+    }
 
-	public String getEntryType() {
-		return entryType;
-	}
+    public void setSubCentreId(String subCentreId) {
+        this.subCentreId = subCentreId;
+    }
 
-	public void setEntryType(String entryType) {
-		this.entryType = entryType;
-	}
-	
-	
+    public String getVillageId() {
+        return villageId;
+    }
+
+    public void setVillageId(String villageId) {
+        this.villageId = villageId;
+    }
+
+    public String getIdNo() {
+        return idNo;
+    }
+
+    public void setIdNo(String idNo) {
+        this.idNo = idNo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getMotherName() {
+        return motherName;
+    }
+
+    public void setMotherName(String motherName) {
+        this.motherName = motherName;
+    }
+
+    public String getMotherId() {
+        return motherId;
+    }
+
+    public void setMotherId(String motherId) {
+        this.motherId = motherId;
+    }
+
+    public String getWhomPhoneNo() {
+        return whomPhoneNo;
+    }
+
+    public void setWhomPhoneNo(String whomPhoneNo) {
+        this.whomPhoneNo = whomPhoneNo;
+    }
+
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public String getEntryType() {
+        return entryType;
+    }
+
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
+    }
+
 }

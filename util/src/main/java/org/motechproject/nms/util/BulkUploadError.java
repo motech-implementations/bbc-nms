@@ -52,7 +52,7 @@ public class BulkUploadError {
      * @param csvFileName Name of the csv file for which error log file name is to be created
      * @return Name of the error log file
      */
-    public static String getBulkUploadErrLogFileName(String csvFileName) {
+    public static String createBulkUploadErrLogFileName(String csvFileName) {
 
         DateFormat logDateFormat = new SimpleDateFormat("yyyy-MM-ddThh:mm:ss");
         return(csvFileName + "_processing_" + logDateFormat.format(new Date()) + ".log");

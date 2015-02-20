@@ -25,7 +25,7 @@ public class ContentUploadKKCsvHandler {
 
     BulkUploadError errorDetail = new BulkUploadError();
 
-    CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
+    
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -43,14 +43,16 @@ public class ContentUploadKKCsvHandler {
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             processContentUploadKKCsvRecords(params, errorFileName);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
+    	
         String errorFileName = "ContentUploadKKCsv_" + new Date().toString();
+        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
+        
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
@@ -59,12 +61,14 @@ public class ContentUploadKKCsvHandler {
             contentUploadKKCsvService.deleteAll();
             summary.setFailureCount(createdIds.size() + updatedIds.size());
             summary.setSuccessCount(0);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", "", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
 
     private void processContentUploadKKCsvRecords(Map<String, Object> params, String errorFileName) {
+    	CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
+    	
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         int  successCount = 0;
@@ -98,14 +102,13 @@ public class ContentUploadKKCsvHandler {
         }
         summary.setSuccessCount(successCount);
         summary.setFailureCount(failureCount);
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", "", errorFileName, summary);
     }
 
     private void logErrorRecord(String errorFileName, String recordStr) {
         errorDetail.setErrorDescription("");
         errorDetail.setErrorCategory("");
         errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
-        errorDetail.setUserName("");
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 

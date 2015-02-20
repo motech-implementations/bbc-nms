@@ -5,12 +5,21 @@ import java.util.List;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 
-
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-@Entity(module="",  name="subscriber")
-public class Subscriber {
+import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
+
+@Entity
+public class Subscriber extends MdsEntity {
 	
 	@Field(required=true)
 	private String msisdn;
@@ -31,37 +40,36 @@ public class Subscriber {
     private String name;
 	
 	@Field
-	private int age;
+	private Integer age;
 	
-	@Field
-	private long stateId;
+	@Field(name="state_id")
+	private State state;
 	
-	@Field
-	private long districtId;
+	@Field(name="district_id")
+	private District districtId;
 	
-	@Field
+	@Field(name="taluka_id")
 	@Column(length=50)
-	private String talukaId;
+	private Taluka talukaId;
 	
-	@Field
-	private long healthBlockId;
+	@Field(name="healthBlock_id")
+	private HealthBlock healthBlockId;
 	
-	@Field
-	private long phcId;
+	@Field(name="phc_id")
+	private HealthFacility phcId;
 	
-	@Field
-	private long subCentreId;
+	@Field(name="subCentre_id")
+	private HealthSubFacility subCentreId;
 	
-	@Field
-	private long villageId;
+	@Field(name="village_id")
+	private Village villageId;
 	
-	@Field(required=true)
+	@Field(required=true, name="languageLocationCode_id")
 	@Column(length=2)
-	private int languageLocationCode;
+	private LanguageLocationCode languageLocationCode;
 	
 	@Field
-	@Column(length=12)
-	private int aadharNumber;
+	private String aadharNumber;
 	
 	@Field
 	private DateTime lmp;
@@ -70,16 +78,16 @@ public class Subscriber {
 	private DateTime dob;
 	
 	@Field
-	private boolean stillBirth;
+	private Boolean stillBirth;
 	
 	@Field
-	private boolean abortion;
+	private Boolean abortion;
 	
 	@Field
-	private boolean motherDeath;
+	private Boolean motherDeath;
 	
 	@Field
-	private boolean childDeath;
+	private Boolean childDeath;
 	
 	@Persistent(mappedBy = "subscriber")
 	private List<Subscription> subscriber;
@@ -132,83 +140,83 @@ public class Subscriber {
 		this.name = name;
 	}
 
-	public int getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(int age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
-	public long getStateId() {
-		return stateId;
+	public State getState() {
+		return state;
 	}
 
-	public void setStateId(long stateId) {
-		this.stateId = stateId;
+	public void setState(State state) {
+		this.state = state;
 	}
 
-	public long getDistrictId() {
+	public District getDistrictId() {
 		return districtId;
 	}
 
-	public void setDistrictId(long districtId) {
+	public void setDistrictId(District districtId) {
 		this.districtId = districtId;
 	}
 
-	public String getTalukaId() {
+	public Taluka getTalukaId() {
 		return talukaId;
 	}
 
-	public void setTalukaId(String talukaId) {
+	public void setTalukaId(Taluka talukaId) {
 		this.talukaId = talukaId;
 	}
 
-	public long getHealthBlockId() {
+	public HealthBlock getHealthBlockId() {
 		return healthBlockId;
 	}
 
-	public void setHealthBlockId(long healthBlockId) {
+	public void setHealthBlockId(HealthBlock healthBlockId) {
 		this.healthBlockId = healthBlockId;
 	}
 
-	public long getPhcId() {
+	public HealthFacility getPhcId() {
 		return phcId;
 	}
 
-	public void setPhcId(long phcId) {
+	public void setPhcId(HealthFacility phcId) {
 		this.phcId = phcId;
 	}
 
-	public long getSubCentreId() {
+	public HealthSubFacility getSubCentreId() {
 		return subCentreId;
 	}
 
-	public void setSubCentreId(long subCentreId) {
+	public void setSubCentreId(HealthSubFacility subCentreId) {
 		this.subCentreId = subCentreId;
 	}
 
-	public long getVillageId() {
+	public Village getVillageId() {
 		return villageId;
 	}
 
-	public void setVillageId(long villageId) {
+	public void setVillageId(Village villageId) {
 		this.villageId = villageId;
 	}
 
-	public int getLanguageLocationCode() {
+	public LanguageLocationCode getLanguageLocationCode() {
 		return languageLocationCode;
 	}
 
-	public void setLanguageLocationCode(int languageLocationCode) {
+	public void setLanguageLocationCode(LanguageLocationCode languageLocationCode) {
 		this.languageLocationCode = languageLocationCode;
 	}
 
-	public int getAadharNumber() {
+	public String getAadharNumber() {
 		return aadharNumber;
 	}
 
-	public void setAadharNumber(int aadharNumber) {
+	public void setAadharNumber(String aadharNumber) {
 		this.aadharNumber = aadharNumber;
 	}
 
@@ -228,35 +236,35 @@ public class Subscriber {
 		this.dob = dob;
 	}
 
-	public boolean isStillBirth() {
+	public Boolean getStillBirth() {
 		return stillBirth;
 	}
 
-	public void setStillBirth(boolean stillBirth) {
+	public void setStillBirth(Boolean stillBirth) {
 		this.stillBirth = stillBirth;
 	}
 
-	public boolean isAbortion() {
+	public Boolean getAbortion() {
 		return abortion;
 	}
 
-	public void setAbortion(boolean abortion) {
+	public void setAbortion(Boolean abortion) {
 		this.abortion = abortion;
 	}
 
-	public boolean isMotherDeath() {
+	public Boolean getMotherDeath() {
 		return motherDeath;
 	}
 
-	public void setMotherDeath(boolean motherDeath) {
+	public void setMotherDeath(Boolean motherDeath) {
 		this.motherDeath = motherDeath;
 	}
 
-	public boolean isChildDeath() {
+	public Boolean getChildDeath() {
 		return childDeath;
 	}
 
-	public void setChildDeath(boolean childDeath) {
+	public void setChildDeath(Boolean childDeath) {
 		this.childDeath = childDeath;
 	}
 
@@ -266,7 +274,5 @@ public class Subscriber {
 
 	public void setSubscriber(List<Subscription> subscriber) {
 		this.subscriber = subscriber;
-	}
-
-		
+	}		
 }

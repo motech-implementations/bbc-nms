@@ -4,11 +4,10 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 
 import org.joda.time.DateTime;
-import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-@Entity
-//@ForeignKey(name="FK", table="KILKARI_MODULE_SUBSCRIPTIONPACK", members={"week"})
-public class Subscription {
+import org.motechproject.mds.domain.MdsEntity;
+
+public class Subscription extends MdsEntity {
 
 	
 	@Persistent
@@ -18,7 +17,7 @@ public class Subscription {
 	private Subscriber subscriber;
 
 	@Field(required=true)
-	private int operator_Id;
+	private Integer operator_Id;
 
 	@Field(required=true)
 	private Channel channel;
@@ -27,13 +26,13 @@ public class Subscription {
 	private Status status;
 
 	@Field
-	private boolean isDeactivatedBySystem;
+	private Boolean isDeactivatedBySystem;
 
 	@Field(required=true)
-	private int weekNumber;
+	private Integer weekNumber;
 	
 	@Field(required=true)
-	private int messageNumber;
+	private Integer messageNumber;
 
 	@Field(required=true)
 	private DateTime startDate;
@@ -61,11 +60,11 @@ public class Subscription {
 		this.subscriber = subscriber;
 	}
 
-	public int getOperator_Id() {
+	public Integer getOperator_Id() {
 		return operator_Id;
 	}
 
-	public void setOperator_Id(int operator_Id) {
+	public void setOperator_Id(Integer operator_Id) {
 		this.operator_Id = operator_Id;
 	}
 
@@ -85,27 +84,27 @@ public class Subscription {
 		this.status = status;
 	}
 
-	public boolean isDeactivatedBySystem() {
+	public Boolean isDeactivatedBySystem() {
 		return isDeactivatedBySystem;
 	}
 
-	public void setDeactivatedBySystem(boolean isDeactivatedBySystem) {
+	public void setDeactivatedBySystem(Boolean isDeactivatedBySystem) {
 		this.isDeactivatedBySystem = isDeactivatedBySystem;
 	}
 
-	public int getWeekNumber() {
+	public Integer getWeekNumber() {
 		return weekNumber;
 	}
 
-	public void setWeekNumber(int weekNumber) {
+	public void setWeekNumber(Integer weekNumber) {
 		this.weekNumber = weekNumber;
 	}
 
-	public int getMessageNumber() {
+	public Integer getMessageNumber() {
 		return messageNumber;
 	}
 
-	public void setMessageNumber(int messageNumber) {
+	public void setMessageNumber(Integer messageNumber) {
 		this.messageNumber = messageNumber;
 	}
 

@@ -5,8 +5,9 @@ import javax.jdo.annotations.Unique;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 @Entity
-public class SubscriptionPack {
+public class SubscriptionPack extends MdsEntity  {
 	
 	@Unique
 	@Field(required=true)
@@ -14,13 +15,13 @@ public class SubscriptionPack {
 	
 	@Unique
 	@Persistent(mappedBy = "subscriptionPack")	
-	private int startWeekNumber;
+	private Integer startWeekNumber;
 	
 	@Field(required=true)
-	private int durationInWeeks;
+	private Integer durationInWeeks;
 	
 	@Field(required=true)
-	private int numMsgPerWeek;
+	private Integer numMsgPerWeek;
 
 
 	public String getName() {
@@ -31,27 +32,27 @@ public class SubscriptionPack {
 		this.name = name;
 	}
 
-	public int getStartWeekNumber() {
+	public Integer getStartWeekNumber() {
 		return startWeekNumber;
 	}
 
-	public void setStartWeekNumber(int startWeekNumber) {
+	public void setStartWeekNumber(Integer startWeekNumber) {
 		this.startWeekNumber = startWeekNumber;
 	}
 
-	public int getDurationInWeeks() {
+	public Integer getDurationInWeeks() {
 		return durationInWeeks;
 	}
 
-	public void setDurationInWeeks(int durationInWeeks) {
+	public void setDurationInWeeks(Integer durationInWeeks) {
 		this.durationInWeeks = durationInWeeks;
 	}
 
-	public int getNumMsgPerWeek() {
+	public Integer getNumMsgPerWeek() {
 		return numMsgPerWeek;
 	}
 
-	public void setNumMsgPerWeek(int numMsgPerWeek) {
+	public void setNumMsgPerWeek(Integer numMsgPerWeek) {
 		this.numMsgPerWeek = numMsgPerWeek;
 	}
 	
