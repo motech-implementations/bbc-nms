@@ -4,7 +4,6 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-@Entity
 public class Circle  extends MdsEntity{
 
     @Field(required = true)

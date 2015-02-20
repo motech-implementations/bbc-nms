@@ -10,7 +10,6 @@ import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
-import org.motechproject.nms.util.BulkUploadErrRecordDetails;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +23,6 @@ import java.util.*;
 
 @Component
 public class MasterDataCsvUploadHandler {
-
-    public static Integer successCount = 0;
-    public static Integer failCount = 0;
-
 
     @Autowired
     private StateRecordsDataService stateRecordsDataService;
@@ -43,12 +38,6 @@ public class MasterDataCsvUploadHandler {
 
     @Autowired
     private LocationService locationService;
-
-    @Autowired
-    private LanguageLocationCodeServiceCsv languageLocationCodeServiceCsv;
-
-    @Autowired
-    private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(MasterDataCsvUploadHandler.class);
 
@@ -153,9 +142,6 @@ public class MasterDataCsvUploadHandler {
 
         logger.info("District successfully deleted from temporary tables");
     }
-
-
-
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {

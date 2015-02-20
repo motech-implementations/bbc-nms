@@ -2,9 +2,9 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
-@Entity
-public class Operator {
+public class Operator extends MdsEntity{
 
     @Field(required = true)
     private String name;

@@ -7,7 +7,9 @@ import org.motechproject.nms.kilkari.domain.ContentUploadKK;
 import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
 import org.motechproject.nms.kilkari.service.ContentUploadKKCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadKKService;
-import org.motechproject.nms.util.BulkUploadErrRecordDetails;
+import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -21,10 +23,9 @@ import java.util.Map;
 
 public class ContentUploadKKCsvHandler {
 
-    private static Integer successCount = 0;
-    private static Integer failCount = 0;
+    BulkUploadError errorDetail = new BulkUploadError();
 
-    BulkUploadErrRecordDetails errorDetail = new BulkUploadErrRecordDetails();
+    CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -42,7 +43,7 @@ public class ContentUploadKKCsvHandler {
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             processContentUploadKKCsvRecords(params, errorFileName);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
@@ -53,9 +54,12 @@ public class ContentUploadKKCsvHandler {
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
             contentUploadKKCsvService.deleteAll();
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, 0, createdIds.size());
+            summary.setFailureCount(createdIds.size() + updatedIds.size());
+            summary.setSuccessCount(0);
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
@@ -63,16 +67,19 @@ public class ContentUploadKKCsvHandler {
     private void processContentUploadKKCsvRecords(Map<String, Object> params, String errorFileName) {
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-
+        int  successCount = 0;
+        int failureCount = 0;
         for(Long id : updatedIds) {
             ContentUploadKKCsv record = contentUploadKKCsvService.findById(id);
             if (record != null) {
-                ContentUploadKK newRecord = mapContentUploadKKFrom(record);
+                ContentUploadKK newRecord = mapContentUploadKKFrom(record, errorFileName);
                 contentUploadKKService.update(newRecord);
                 contentUploadKKCsvService.delete(record);
-                successCount++;
+
+                ++successCount;
             } else {
-                logErrorRecord(errorFileName, record.getIndex());
+                failureCount++;
+                logErrorRecord(errorFileName, record.toString());
             }
         }
 
@@ -80,25 +87,29 @@ public class ContentUploadKKCsvHandler {
             ContentUploadKKCsv record = contentUploadKKCsvService.findById(id);
 
             if (record != null) {
-                ContentUploadKK newRecord = mapContentUploadKKFrom(record);
+                ContentUploadKK newRecord = mapContentUploadKKFrom(record, errorFileName);
                 contentUploadKKService.create(newRecord);
                 contentUploadKKCsvService.delete(record);
                 successCount++;
             } else {
-                logErrorRecord(errorFileName, record.getIndex());
+                failureCount++;
+                logErrorRecord(errorFileName, record.toString());
             }
         }
+        summary.setSuccessCount(successCount);
+        summary.setFailureCount(failureCount);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName, Long index) {
-        errorDetail.setErrorCode("");
+    private void logErrorRecord(String errorFileName, String recordStr) {
         errorDetail.setErrorDescription("");
-        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(index.toString()));
+        errorDetail.setErrorCategory("");
+        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
+        errorDetail.setUserName("");
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-        failCount++;
     }
 
-    private static ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) {
+    private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record, String errorFile) {
         ContentUploadKK newRecord = new ContentUploadKK();
         try {
             newRecord.setCircleCode(ParseDataHelper.parseString("", record.getCircleCode(), true));
@@ -116,7 +127,10 @@ public class ContentUploadKKCsvHandler {
 
             newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("", record.getLanguageLocationCode(), true));
         }catch (DataValidationException ex) {
-
+            errorDetail.setErrorCategory(ex.getErrorCode());
+            errorDetail.setRecordDetails(record.toString());
+            errorDetail.setErrorDescription(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION.format(ex.getErroneousField()));
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFile, errorDetail);
 
         }
         return newRecord;

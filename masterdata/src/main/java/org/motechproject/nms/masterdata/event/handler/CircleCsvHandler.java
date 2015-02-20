@@ -7,7 +7,10 @@ import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
-import org.motechproject.nms.util.BulkUploadErrRecordDetails;
+import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCodeConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -20,10 +23,9 @@ import java.util.Map;
 
 public class CircleCsvHandler {
 
-    private static Integer successCount = 0;
-    private static Integer failCount = 0;
+    BulkUploadError errorDetail = new BulkUploadError();
 
-    BulkUploadErrRecordDetails errorDetail = new BulkUploadErrRecordDetails();
+    CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -41,7 +43,7 @@ public class CircleCsvHandler {
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             processCircleCsvRecords(params, errorFileName);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, successCount, failCount);
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
@@ -52,9 +54,12 @@ public class CircleCsvHandler {
         try {
             Map<String, Object> params = motechEvent.getParameters();;
             List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
             circleCsvService.deleteAll();
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary(errorFileName, 0, createdIds.size());
+            summary.setSuccessCount(0);;
+            summary.setFailureCount(createdIds.size() + updatedIds.size());
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
         }
     }
@@ -62,16 +67,18 @@ public class CircleCsvHandler {
     private void processCircleCsvRecords(Map<String, Object> params, String errorFileName) {
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-
+        int successCount = 0;
+        int failureCount = 0;
         for(Long id : updatedIds) {
             CircleCsv record = circleCsvService.findById(id);
             if (record != null) {
                 Circle newRecord = mapCircleFrom(record);
                 circleService.update(newRecord);
                 circleCsvService.delete(record);
-                successCount++;
+                ++successCount;
             } else {
-                logErrorRecord(errorFileName, record.getIndex());
+                failureCount++;
+                logErrorRecord(errorFileName, record.toString());
             }
         }
 
@@ -84,27 +91,32 @@ public class CircleCsvHandler {
                 circleCsvService.delete(record);
                 successCount++;
             } else {
-                logErrorRecord(errorFileName, record.getIndex());
+                failureCount++;
+                logErrorRecord(errorFileName, record.toString());
             }
         }
+        summary.setFailureCount(failureCount);
+        summary.setSuccessCount(successCount);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName, Long index) {
-        errorDetail.setErrorCode("");
+    private void logErrorRecord(String errorFileName, String recordStr) {
         errorDetail.setErrorDescription("");
-        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(index.toString()));
+        errorDetail.setErrorCategory("");
+        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
+        errorDetail.setUserName("");
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-        failCount++;
     }
 
-    private static Circle mapCircleFrom(CircleCsv record) {
+    private Circle mapCircleFrom(CircleCsv record) {
         Circle newRecord = new Circle();
         try {
             newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
             newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         }catch (DataValidationException ex) {
-
-
+            errorDetail.setErrorCategory(ex.getErrorCode());
+            errorDetail.setRecordDetails(record.toString());
+            errorDetail.setErrorDescription(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION.format(ex.getErroneousField()));
         }
         return newRecord;
     }

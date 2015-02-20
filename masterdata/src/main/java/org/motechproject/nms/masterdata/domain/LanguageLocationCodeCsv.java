@@ -10,10 +10,6 @@ import java.lang.String;
 @Entity
 public class LanguageLocationCodeCsv {
 
-    @Field(required = true)
-    @Unique
-    Long index;
-
     @Field
     private String operation = "ADD";
 
@@ -61,14 +57,6 @@ public class LanguageLocationCodeCsv {
 
     @Field
     private String isDeployedKK;
-
-    public Long getIndex() {
-        return index;
-    }
-
-    public void setIndex(Long index) {
-        this.index = index;
-    }
 
     public void setIsDeployedMA(String isDeployedMA) {
         this.isDeployedMA = isDeployedMA;
@@ -203,6 +191,29 @@ public class LanguageLocationCodeCsv {
 
     public void setIsDefaultLanguageLocationCodeKK(String isDefaultLanguageLocationCodeKK) {
         this.isDefaultLanguageLocationCodeKK = isDefaultLanguageLocationCodeKK;
+    }
+
+    public String toString() {
+
+        StringBuffer recordStr = new StringBuffer();
+        recordStr.append("stateId" + this.stateId);
+
+        recordStr.append(",districtId" + this.districtId);
+        recordStr.append(",circleId" + this.circleId);
+        recordStr.append(",languageLocationCodeMA" + this.languageLocationCodeMA);
+        recordStr.append(",languageMA" + this.languageMA);
+        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.isDefaultLanguageLocationCodeMA);
+        recordStr.append(",languageLocationCodeMK" + this.languageLocationCodeMK);
+        recordStr.append(",languageMK" + this.languageMK);
+        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.isDefaultLanguageLocationCodeMK);
+        recordStr.append(",languageLocationCodeKK" + this.languageLocationCodeKK);
+        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.isDefaultLanguageLocationCodeKK);
+        recordStr.append(",isDeployedMA" + this.isDeployedMA);
+        recordStr.append(",isDeployedMK" + this.isDeployedMK);
+        recordStr.append(",isDeployedKK" + this.isDeployedKK);
+
+        return recordStr.toString();
+
     }
 
 
