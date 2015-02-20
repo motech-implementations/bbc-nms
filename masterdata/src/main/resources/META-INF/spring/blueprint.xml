@@ -17,16 +17,37 @@
     <osgi:reference id="districtRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.DistrictRecordsDataService" />
 
-    <osgi:service ref="locationService"
-                  interface="org.motechproject.nms.master.service.LocationService" />
+    <osgi:reference id="talukaCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService" />
 
-    <osgi:reference id="languageLocationCodeCsvDataService"
-                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService" />
+    <osgi:reference id="talukaRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.TalukaRecordsDataService" />
 
-    <osgi:service ref="languageLocationCodeService"
-                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService" />
+    <osgi:reference id="healthBlockCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService" />
 
-    <osgi:reference id="languageLocationCodeDataService"
-                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService" />
+    <osgi:reference id="healthBlockRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService" />
+
+    <osgi:reference id="healthFacilityCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService" />
+
+    <osgi:reference id="healthFacilityRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService" />
+
+    <osgi:reference id="healthSubFacilityCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService" />
+
+    <osgi:reference id="healthSubFacilityRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService" />
+
+    <osgi:reference id="villageCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService" />
+
+    <osgi:reference id="villageRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.VillageRecordsDataService" />
+
+    <osgi:reference id="mdsLookupService"
+                    interface="org.motechproject.mds.service.MDSLookupService" />
 
 </beans>

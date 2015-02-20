@@ -15,20 +15,24 @@
         interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />  
         
 	<osgi:service ref="childMctsCsvService"
-        interface="org.motechproject.nms.kilkari.service.ChildMctsCsvService" />           
+        interface="org.motechproject.nms.kilkari.service.ChildMctsCsvService" />
+
+    <osgi:service ref="configurationService"
+                  interface="org.motechproject.nms.kilkari.service.ConfigurationService" />
         
     <osgi:reference id="helloWorldRecordsDataService"
                     interface="org.motechproject.nms.kilkari.repository.HelloWorldRecordsDataService" />
-                    
-	<osgi:reference id="helloWorldRecordsDataService"
-                    interface="org.motechproject.nms.kilkari.repository.HelloWorldRecordsDataService" />   
                     
 	<osgi:reference id="motherMctsCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService" />
                     
 	<osgi:reference id="childMctsCsvDataService"
-                    interface="org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService" />                                                         
-               
-	
-    
+                    interface="org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService" />
+
+    <osgi:reference id="configurationDataService"
+                    interface="org.motechproject.nms.kilkari.repository.ConfigurationDataService" />
+
+
+
+
 </beans>
