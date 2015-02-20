@@ -3,8 +3,14 @@ package org.motechproject.nms.mobilekunji.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
+
 @Entity
 public class ContentUploadCsv {
+
+    @Field(required = true)
+    @Unique
+    Long index;
 
     @Field
     private String operation = "ADD";

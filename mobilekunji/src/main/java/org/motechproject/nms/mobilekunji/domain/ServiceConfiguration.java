@@ -19,16 +19,16 @@ public class ServiceConfiguration {
     @Max(1)
     private int index;
 
-    @Field(name = "NMS_MK_CAPPING_TYPE", required = true)
+    @Field(required = true)
     private int nmsMkCappingType;
 
-    @Field(name = "NMS_MK_NATIONAL_CAP_VALUE", required = true)
+    @Field(required = true)
     private int nmsMkNationalCapValue;
-    @Field(name = "NMS_MK_MAX_HEALTH_CARDS", required = true)
+    @Field(required = true)
     private int nmsMkMaxHealthCards;
-    @Field(name = "NMS_MK_MAX_WELCOME_MESSAGE", required = true)
+    @Field(required = true)
     private int nmsMkMaxWelcomeMessage;
-    @Field(name = "NMS_MK_MAX_ENDOFUSAGE_MESSAGE", required = true)
+    @Field(required = true)
     private int nmsMkMaxEndofusageMessage;
 
     public ServiceConfiguration(int index, int nmsMkCappingType, int nmsMkNationalCapValue, int nmsMkMaxHealthCards, int nmsMkMaxWelcomeMessage, int nmsMkMaxEndofusageMessage) {
@@ -87,4 +87,5 @@ public class ServiceConfiguration {
     public void setNmsMkMaxEndofusageMessage(int nmsMkMaxEndofusageMessage) {
         this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
     }
+
 }

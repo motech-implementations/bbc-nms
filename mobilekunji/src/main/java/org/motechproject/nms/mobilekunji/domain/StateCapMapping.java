@@ -28,4 +28,5 @@ public class StateCapMapping {
     public void setMobileKunjiCappingValue(int mobileKunjiCappingValue) {
         this.mobileKunjiCappingValue = mobileKunjiCappingValue;
     }
+
 }

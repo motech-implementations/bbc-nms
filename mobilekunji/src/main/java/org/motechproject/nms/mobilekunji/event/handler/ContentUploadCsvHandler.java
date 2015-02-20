@@ -19,28 +19,28 @@ public class ContentUploadCsvHandler {
 
 
     @Autowired
-    ContentUploadCsvRecordDataService contentUploadCsv;
+    private ContentUploadCsvRecordDataService contentUploadCsv;
 
     @Autowired
-    ContentUploadRecordDataService contentUpload;
+    private ContentUploadRecordDataService contentUpload;
 
 
     private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
 
 
-    @MotechListener(subjects = {"mds.crud.mobilekunji.MobileKunjiContentUploadCsv.csv-import.success"})
+    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success" })
     public void mobileKunjiContentUploadCsvSuccess(MotechEvent event) {
 
-        List<ContentUploadCsv> mobileKunjiContentUploadCsvList = mobileKunjiContentUploadCsv.retrieveAll();
+        List<ContentUploadCsv> mobileKunjiContentUploadCsvList = contentUploadCsv.retrieveAll();
 
-        for (Iterator<ContentUploadCsv> itr = mobileKunjiContentUploadCsvList.iterator(); itr.hasNext(); ) {
+        for (Iterator<ContentUploadCsv> itr = mobileKunjiContentUploadCsvList.iterator(); itr.hasNext();) {
 
             ContentUploadCsv csvRecord = itr.next();
 
             if (true == csvRecord.validateParameters()) {
 
-
-                ContentUpload kunjiData = mobileKunjiContentUpload.findRecordByContentId(Integer.parseInt(csvRecord.getContentId()));
+                int contentId = Integer.parseInt(csvRecord.getContentId());
+                ContentUpload kunjiData = contentUpload.findRecordByContentId(contentId);
 
                 if (null != kunjiData) {
 
@@ -56,10 +56,10 @@ public class ContentUploadCsvHandler {
         }
     }
 
-    @MotechListener(subjects = {"mds.crud.mobilekunji.MobileKunjiContentUploadCsv.csv-import.failed"})
+    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed" })
     public void mobileKunjiContentUploadCsvFailure(MotechEvent event) {
 
-            mobileKunjiContentUploadCsv.deleteAll();
+        contentUploadCsv.deleteAll();
 
         logger.info("Upload data successfully deleted");
     }
