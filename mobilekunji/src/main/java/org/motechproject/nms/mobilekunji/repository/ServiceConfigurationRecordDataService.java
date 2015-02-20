@@ -1,7 +1,10 @@
 package org.motechproject.nms.mobilekunji.repository;
 
+import org.motechproject.nms.mobilekunji.domain.ServiceConfiguration;
+
+import org.motechproject.mds.annotations.Lookup;
+import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.mobilekunji.domain.MobileKunjiContentUploadCsv;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -9,6 +12,7 @@ import org.motechproject.nms.mobilekunji.domain.MobileKunjiContentUploadCsv;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface MobileKunjiContentUploadCsvRecordDataService extends MotechDataService<MobileKunjiContentUploadCsv> {
-
+public interface ServiceConfigurationRecordDataService extends MotechDataService<ServiceConfiguration> {
+    @Lookup
+    ServiceConfiguration findRecordByIndex(@LookupField(name = "index") Integer index);
 }

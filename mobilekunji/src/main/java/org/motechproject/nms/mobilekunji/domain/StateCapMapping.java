@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 @Entity
-public class MobileKunjiStateCapMapping {
+public class StateCapMapping {
 
 
     @Field(required = true)
@@ -28,4 +28,5 @@ public class MobileKunjiStateCapMapping {
     public void setMobileKunjiCappingValue(int mobileKunjiCappingValue) {
         this.mobileKunjiCappingValue = mobileKunjiCappingValue;
     }
+
 }

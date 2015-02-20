@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobilekunji.repository;
 
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.mobilekunji.domain.MobileKunjiStateCapMapping;
+import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -9,6 +9,6 @@ import org.motechproject.nms.mobilekunji.domain.MobileKunjiStateCapMapping;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface MobileKunjiStateCapMappingRecordDataService extends MotechDataService<MobileKunjiStateCapMapping> {
+public interface ContentUploadCsvRecordDataService extends MotechDataService<ContentUploadCsv> {
 
 }

@@ -1,8 +1,6 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
-import org.motechproject.nms.mobilekunji.service.MobileKunjiService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,8 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MobileKunjiController {
 
-    @Autowired
-    private MobileKunjiService mobileKunjiService;
+
 
     private static final String OK = "OK";
 

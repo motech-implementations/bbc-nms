@@ -14,11 +14,11 @@ import java.util.List;
 public class State extends LocationUnitMetaData{
 
     @Field
-    private long stateId;
+    private Long stateId;
 
     @Field
-    @Persistent(defaultFetchGroup = "true")
-    @Column(name="state_id")
+    @Column(name ="state_id")
+    @Persistent(defaultFetchGroup = "true",mappedBy = "state_id")
     private List<District> district;
 
 
@@ -36,11 +36,11 @@ public class State extends LocationUnitMetaData{
         this.district = district;
     }
 
-    public long getStateId() {
+    public Long getStateId() {
         return stateId;
     }
 
-    public void setStateId(long stateId) {
+    public void setStateId(Long stateId) {
         this.stateId = stateId;
     }
 

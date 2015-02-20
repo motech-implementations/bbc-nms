@@ -9,7 +9,19 @@
         interface="org.motechproject.nms.mobilekunji.service.MobileKunjiService" />
 
 
-    <osgi:reference id="helloWorldRecordsDataService"
-                    interface="org.motechproject.nms.mobilekunji.repository.MobileKunjiConfigurationRecordDataService" />
+    <osgi:reference id="serviceConfiguration"
+                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConfigurationRecordDataService" />
 
+    <osgi:reference id="contentUpload"
+                    interface="org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService" />
+
+    <osgi:reference id="contentUploadCsv"
+                    interface="org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService" />
+
+
+    <osgi:reference id="stateCapMapping"
+                    interface="org.motechproject.nms.mobilekunji.repository.StateCapMappingRecordDataService" />
+
+    <osgi:reference id="stateCapMappingCsv"
+                    interface="org.motechproject.nms.mobilekunji.repository.StateCapMappingCsvRecordDataService" />
 </beans>

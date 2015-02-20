@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 @Entity
-public class MobileKunjiContentUpload {
+public class ContentUpload {
 
     @Field(required = true)
     private int contentId;
@@ -30,7 +30,7 @@ public class MobileKunjiContentUpload {
     @Field(required = true)
     private int contentDuration;
 
-    public MobileKunjiContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, int cardNumber, int contentDuration) {
+    public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, int cardNumber, int contentDuration) {
         this.contentId = contentId;
         this.circleCode = circleCode;
         this.languageLocationCode = languageLocationCode;
