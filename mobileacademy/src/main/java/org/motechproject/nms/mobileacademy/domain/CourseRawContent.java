@@ -3,6 +3,7 @@ package org.motechproject.nms.mobileacademy.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+
 /**
  * CourseRawContent correspond to Course Csv Content table (containing mobile
  * academy course related data) which populate using CSV import.

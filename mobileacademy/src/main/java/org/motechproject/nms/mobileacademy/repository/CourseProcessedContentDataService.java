@@ -9,3 +9,4 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 public interface CourseProcessedContentDataService extends MotechDataService<CourseProcessedContent> {
 
 }
+

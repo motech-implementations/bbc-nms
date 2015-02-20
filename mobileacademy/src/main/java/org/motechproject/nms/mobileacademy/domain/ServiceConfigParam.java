@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Size;
 

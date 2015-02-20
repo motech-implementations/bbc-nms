@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+
 import java.util.List;
 
 import org.motechproject.mds.annotations.Entity;

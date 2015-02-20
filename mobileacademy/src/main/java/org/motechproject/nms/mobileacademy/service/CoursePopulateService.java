@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.service;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
 
+
 /**
  * Service interface contains APIs to perform course populate operations.
  *

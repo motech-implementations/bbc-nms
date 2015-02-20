@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
+
 import org.apache.commons.collections.CollectionUtils;
 import org.motechproject.mtraining.domain.*;
 import org.motechproject.mtraining.service.MTrainingService;

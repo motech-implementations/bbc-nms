@@ -4,6 +4,7 @@ package org.motechproject.nms.mobileacademy.domain;
  * Created by nitin on 2/9/15.
  */
 
+
 public enum FileType {
     LessonContent,
     LessonEndMenu,

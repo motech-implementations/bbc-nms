@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.domain;
 
 import org.motechproject.mds.annotations.Entity;
 
+
 /**
  * Created by nitin on 2/9/15.
  */

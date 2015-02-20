@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+
 /**
  * Created by nitin on 2/13/15.
  */

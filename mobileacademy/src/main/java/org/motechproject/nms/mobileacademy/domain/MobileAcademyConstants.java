@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+
 /**
  * Class containing constants used in mobile academy.
  *

@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class CourseRawContentCustomQuery {
 
+
     /**
      * LlcListQueryExecutionImpl class prepares a custom MDS query. The query
      * should return list of distinct LLC id based on operation.
