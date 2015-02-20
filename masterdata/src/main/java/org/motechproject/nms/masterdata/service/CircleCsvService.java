@@ -7,4 +7,6 @@ public interface CircleCsvService {
     CircleCsv findById(Long id);
 
     void delete(CircleCsv record);
+
+    void deleteAll();
 }

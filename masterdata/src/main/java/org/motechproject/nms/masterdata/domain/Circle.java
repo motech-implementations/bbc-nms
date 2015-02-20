@@ -2,9 +2,10 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 @Entity
-public class Circle {
+public class Circle  extends MdsEntity{
 
     @Field(required = true)
     private String name;

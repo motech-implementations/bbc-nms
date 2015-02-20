@@ -19,4 +19,9 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     public void delete(CircleCsv record) {
         circleCsvDataService.delete(record);
     }
+
+    @Override
+    public void deleteAll() {
+        circleCsvDataService.deleteAll();
+    }
 }

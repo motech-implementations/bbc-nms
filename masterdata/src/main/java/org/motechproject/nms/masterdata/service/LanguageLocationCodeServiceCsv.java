@@ -7,4 +7,6 @@ public interface LanguageLocationCodeServiceCsv {
     LanguageLocationCodeCsv findById(Long id);
 
     void delete(LanguageLocationCodeCsv record);
+
+    void deleteAll();
 }

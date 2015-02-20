@@ -7,4 +7,6 @@ public interface OperatorCsvService {
     OperatorCsv findById(Long id);
 
     void delete(OperatorCsv record);
+
+    void deleteAll();
 }

@@ -19,4 +19,9 @@ public class OperatorCsvServiceImpl implements OperatorCsvService {
     public void delete(OperatorCsv record) {
         operatorCsvDataService.delete(record);
     }
+
+    @Override
+    public void deleteAll() {
+        operatorCsvDataService.deleteAll();
+    }
 }

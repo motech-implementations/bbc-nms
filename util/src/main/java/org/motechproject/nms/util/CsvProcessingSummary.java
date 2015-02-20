@@ -1,8 +1,5 @@
 package org.motechproject.nms.util;
 
-/**
- * Created by abhishek on 20/2/15.
- */
 public class CsvProcessingSummary {
 
     private Integer successCount;

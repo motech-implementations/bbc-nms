@@ -9,16 +9,16 @@ import java.lang.String;
 public class LanguageLocationCode {
 
     @Field(required = true)
-    private int stateId;
+    private Integer stateId;
 
     @Field(required = true)
-    private int districtId;
+    private Integer districtId;
 
     @Field(required = true)
     private String circleId;
 
     @Field(required = true)
-    private int languageLocationCodeMA;
+    private Integer languageLocationCodeMA;
 
     @Field(required = true)
     private String languageMA;
@@ -27,7 +27,7 @@ public class LanguageLocationCode {
     private boolean isDefaultLanguageLocationCodeMA;
 
     @Field(required = true)
-    private int languageLocationCodeMK;
+    private Integer languageLocationCodeMK;
 
     @Field(required = true)
     private String languageMK;
@@ -36,7 +36,7 @@ public class LanguageLocationCode {
     private boolean isDefaultLanguageLocationCodeMK;
 
     @Field(required = true)
-    private int languageLocationCodeKK;
+    private Integer languageLocationCodeKK;
 
     @Field(required = true)
     private String languageKK;
@@ -56,26 +56,26 @@ public class LanguageLocationCode {
 
     public LanguageLocationCode(){}
 
-    public LanguageLocationCode(int stateId, int districtId, String circleId) {
+    public LanguageLocationCode(Integer stateId, Integer districtId, String circleId) {
         this.stateId = stateId;
         this.districtId = districtId;
         this.circleId = circleId;
     }
 
 
-    public int getStateId() {
+    public Integer getStateId() {
         return stateId;
     }
 
-    public void setStateId(int stateId) {
+    public void setStateId(Integer stateId) {
         this.stateId = stateId;
     }
 
-    public int getDistrictId() {
+    public Integer getDistrictId() {
         return districtId;
     }
 
-    public void setDistrictId(int districtId) {
+    public void setDistrictId(Integer districtId) {
         this.districtId = districtId;
     }
 
@@ -87,11 +87,11 @@ public class LanguageLocationCode {
         this.circleId = circleId;
     }
 
-    public int getLanguageLocationCodeMA() {
+    public Integer getLanguageLocationCodeMA() {
         return languageLocationCodeMA;
     }
 
-    public void setLanguageLocationCodeMA(int languageLocationCodeMA) {
+    public void setLanguageLocationCodeMA(Integer languageLocationCodeMA) {
         this.languageLocationCodeMA = languageLocationCodeMA;
     }
 
@@ -111,11 +111,11 @@ public class LanguageLocationCode {
         this.isDefaultLanguageLocationCodeMA = isDefaultLanguageLocationCodeMA;
     }
 
-    public int getLanguageLocationCodeMK() {
+    public Integer getLanguageLocationCodeMK() {
         return languageLocationCodeMK;
     }
 
-    public void setLanguageLocationCodeMK(int languageLocationCodeMK) {
+    public void setLanguageLocationCodeMK(Integer languageLocationCodeMK) {
         this.languageLocationCodeMK = languageLocationCodeMK;
     }
 
@@ -135,11 +135,11 @@ public class LanguageLocationCode {
         this.isDefaultLanguageLocationCodeMK = isDefaultLanguageLocationCodeMK;
     }
 
-    public int getLanguageLocationCodeKK() {
+    public Integer getLanguageLocationCodeKK() {
         return languageLocationCodeKK;
     }
 
-    public void setLanguageLocationCodeKK(int languageLocationCodeKK) {
+    public void setLanguageLocationCodeKK(Integer languageLocationCodeKK) {
         this.languageLocationCodeKK = languageLocationCodeKK;
     }
 

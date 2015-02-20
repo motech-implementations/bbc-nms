@@ -19,4 +19,9 @@ public class LanguageLocationCodeServiceCsvImpl implements LanguageLocationCodeS
     public void delete(LanguageLocationCodeCsv record) {
         languageLocationCodeCsvDataService.delete(record);
     }
+
+    @Override
+    public void deleteAll() {
+        languageLocationCodeCsvDataService.deleteAll();
+    }
 }
