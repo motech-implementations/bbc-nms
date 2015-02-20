@@ -4,7 +4,10 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-
+/**
+ * QuestionContent object to refer question related data.
+ *
+ */
 @Entity
 public class QuestionContent extends MdsEntity {
 
@@ -17,10 +20,21 @@ public class QuestionContent extends MdsEntity {
     @Field
     private String audioFile;
 
+    /**
+     * constructor with 0 arguments.
+     */
     public QuestionContent() {
 
     }
 
+    /**
+     * constructor with all arguments.
+     * 
+     * @param questionNumber question number identifier i.e. 1, 2, 3, 4
+     * @param name name of the meta field i.e question, correctAnswer,
+     *            wrongAnswer
+     * @param audioFile name of the audio file.
+     */
     public QuestionContent(Integer questionNumber, String name, String audioFile) {
         this.questionNumber = questionNumber;
         this.name = name;

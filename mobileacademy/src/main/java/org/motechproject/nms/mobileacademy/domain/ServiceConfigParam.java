@@ -1,6 +1,5 @@
 package org.motechproject.nms.mobileacademy.domain;
 
-
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Size;
 
@@ -38,6 +37,37 @@ public class ServiceConfigParam extends MdsEntity {
      */
     public ServiceConfigParam() {
 
+    }
+
+    /**
+     * constructor with all arguments.
+     * 
+     * @param index unique record identifier
+     * @param nmsMaCappingType specify capping type: 0-No capping 1-National
+     *            Capping 2-State wise capping
+     * @param nmsMaNationalCapValue specify national cap value.
+     * @param nmsMaMaxEndOfUsuageMessage Maximum no. of times end of usage
+     *            message can be played to the user on usage unavailability.
+     *            After the expiry of this value, call will be simply dropped.
+     * @param nmsMaCourseQualifyingScore Minimum score a user should achieve in
+     *            order to qualify the MA course.
+     * @param nmsMaDefaultLanguageLocationCode language Location Code value in
+     *            case circle for a user could not be determined.
+     * @param nmsMaSmsSenderAddress Address to be populated in from field of SMS
+     *            which will be sent on successful completion of course.
+     */
+    public ServiceConfigParam(Long index, Integer nmsMaCappingType,
+            Integer nmsMaNationalCapValue, Integer nmsMaMaxEndOfUsuageMessage,
+            Integer nmsMaCourseQualifyingScore,
+            Integer nmsMaDefaultLanguageLocationCode,
+            String nmsMaSmsSenderAddress) {
+        this.index = index;
+        this.nmsMaCappingType = nmsMaCappingType;
+        this.nmsMaNationalCapValue = nmsMaNationalCapValue;
+        this.nmsMaMaxEndOfUsuageMessage = nmsMaMaxEndOfUsuageMessage;
+        this.nmsMaCourseQualifyingScore = nmsMaCourseQualifyingScore;
+        this.nmsMaDefaultLanguageLocationCode = nmsMaDefaultLanguageLocationCode;
+        this.nmsMaSmsSenderAddress = nmsMaSmsSenderAddress;
     }
 
     public Long getIndex() {

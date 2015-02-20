@@ -2,68 +2,80 @@ package org.motechproject.nms.mobileacademy.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * CourseRawContent correspond to Course Csv Content table (containing mobile
- * academy course related data) which populate using CSV import.
+ * CourseRawContent object to refer Course raw Content(mobile academy course
+ * related data) which populate using CSV import from Motech GUI.
  *
  */
 @Entity
-public class CourseRawContent {
+public class CourseRawContent extends MdsEntity {
 
-    /**
-     * ADD/MOD/DEL. Default ADD.
-     */
     @Field
     private String operation;
-    /**
-     * Unique identifier of the content.
-     */
+
     @Field
     private String contentId;
-    /**
-     * Circle code.
-     */
+
     @Field
     private String circle;
-    /**
-     * Language location code for the content. One circle may have multiple
-     * language location codes.
-     */
+
     @Field
     private String languageLocationCode;
-    /**
-     * Name of the course content.
-     */
+
     @Field
     private String contentName;
-    /**
-     * Type of the content – prompt or content.
-     */
+
     @Field
     private String contentType;
-    /**
-     * Name of the content audio file.
-     */
+
     @Field
     private String contentFile;
-    /**
-     * Duration of the content audio file.
-     */
+
     @Field
     private String contentDuration;
-    /**
-     * Any additional information related to content. It can contain name-value
-     * pairs separated by semicolon(;). The name and value are separated by
-     * hyphen (-:).
-     */
+
     @Field
     private String metaData;
 
     /**
-     * flag correspond to record update status.
+     * constructor with 0 arguments.
      */
+    public CourseRawContent() {
+
+    }
+
+    /**
+     * constructor with all arguments.
+     * 
+     * @param operation Indicate either ADD/MOD/DEL operation.
+     * @param contentId Unique identifier of the content.
+     * @param circle Circle code.
+     * @param languageLocationCode Language location code for the content. One
+     *            circle may have multiple language location codes.
+     * @param contentName Name of the course content.
+     * @param contentType Type of the content – prompt or content.
+     * @param contentFile Name of the content audio file.
+     * @param contentDuration Duration of the content audio file.
+     * @param metaData Any additional information related to content. It can
+     *            contain name-value pairs separated by semicolon(;). The name
+     *            and value are separated by hyphen (-:).
+     */
+    public CourseRawContent(String operation, String contentId, String circle,
+            String languageLocationCode, String contentName,
+            String contentType, String contentFile, String contentDuration,
+            String metaData) {
+        this.operation = operation;
+        this.contentId = contentId;
+        this.circle = circle;
+        this.languageLocationCode = languageLocationCode;
+        this.contentName = contentName;
+        this.contentType = contentType;
+        this.contentFile = contentFile;
+        this.contentDuration = contentDuration;
+        this.metaData = metaData;
+    }
 
     public String getOperation() {
         return operation;

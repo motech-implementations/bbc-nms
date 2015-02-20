@@ -1,12 +1,15 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+import java.util.List;
+
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-
-import java.util.List;
-
+/**
+ * ChapterContent object to refer chapter related data.
+ *
+ */
 @Entity
 public class ChapterContent extends MdsEntity {
 
@@ -28,10 +31,23 @@ public class ChapterContent extends MdsEntity {
     @Field
     private QuizContent quiz;
 
+    /**
+     * constructor with 0 arguments.
+     */
     public ChapterContent() {
 
     }
 
+    /**
+     * constructor with all arguments.
+     * 
+     * @param chapterNumber chapter number identifier i.e 1, 2, ..11
+     * @param name chapter meta data field i.e menu
+     * @param audioFile name of the audio file
+     * @param lessons list of lesson content
+     * @param scores list of score
+     * @param quiz quiz object related to chapter
+     */
     public ChapterContent(Integer chapterNumber, String name, String audioFile,
             List<LessonContent> lessons, List<Score> scores, QuizContent quiz) {
         this.chapterNumber = chapterNumber;

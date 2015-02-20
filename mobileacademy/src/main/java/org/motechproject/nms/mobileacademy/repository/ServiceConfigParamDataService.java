@@ -3,7 +3,6 @@ package org.motechproject.nms.mobileacademy.repository;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.mobileacademy.domain.ServiceConfigParam;
 
-
 /**
  * Interface for repository that persists simple records and allows CRUD on
  * ServiceConfigParam table. MotechDataService base class will provide the
