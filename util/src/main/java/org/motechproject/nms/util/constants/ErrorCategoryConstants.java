@@ -10,4 +10,7 @@ public final class ErrorCategoryConstants {
     public static final String INCONSISTENT_DATA = "Inconsistent Data";
     public static final String INVALID_DATA = "Invalid Data";
 
+    private ErrorCategoryConstants() {
+
+    }
 }

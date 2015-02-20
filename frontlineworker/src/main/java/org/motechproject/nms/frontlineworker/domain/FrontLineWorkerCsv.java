@@ -21,7 +21,7 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String stateId;
 
     @Field
-    private String contactNumber;
+    private String contactNo;
 
     @Field
     private String name;
@@ -30,22 +30,22 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String type;
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String tCode;
+    private String talukaCode;
 
     @Field
-    private String healthBlockId;
+    private String healthBlockCode;
 
     @Field
-    private String phcId;
+    private String phcCode;
 
     @Field
-    private String subCentreId;
+    private String subCentreCode;
 
     @Field
-    private String villageId;
+    private String villageCode;
 
     @Field
     private String ashaNumber;
@@ -54,7 +54,13 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String isValidated;
 
     @Field
-    private String aadhaarNumber;
+    private String adhaarNo;
+
+    @Field
+    private String operation;
+
+    @Field
+    private String isValid;
 
     public String getFlwId() {
         return flwId;
@@ -72,12 +78,12 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.stateId = stateId;
     }
 
-    public String getContactNumber() {
-        return contactNumber;
+    public String getContactNo() {
+        return contactNo;
     }
 
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
     }
 
     public String getName() {
@@ -96,52 +102,52 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.type = type;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String gettCode() {
-        return tCode;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void settCode(String tCode) {
-        this.tCode = tCode;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
     }
 
-    public String getHealthBlockId() {
-        return healthBlockId;
+    public String getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(String healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(String healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getPhcId() {
-        return phcId;
+    public String getPhcCode() {
+        return phcCode;
     }
 
-    public void setPhcId(String phcId) {
-        this.phcId = phcId;
+    public void setPhcCode(String phcCode) {
+        this.phcCode = phcCode;
     }
 
-    public String getSubCentreId() {
-        return subCentreId;
+    public String getSubCentreCode() {
+        return subCentreCode;
     }
 
-    public void setSubCentreId(String subCentreId) {
-        this.subCentreId = subCentreId;
+    public void setSubCentreCode(String subCentreCode) {
+        this.subCentreCode = subCentreCode;
     }
 
-    public String getVillageId() {
-        return villageId;
+    public String getVillageCode() {
+        return villageCode;
     }
 
-    public void setVillageId(String villageId) {
-        this.villageId = villageId;
+    public void setVillageCode(String villageCode) {
+        this.villageCode = villageCode;
     }
 
     public String getAshaNumber() {
@@ -160,11 +166,27 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.isValidated = isValidated;
     }
 
-    public String getAadhaarNumber() {
-        return aadhaarNumber;
+    public String getAdhaarNo() {
+        return adhaarNo;
     }
 
-    public void setAadhaarNumber(String aadhaarNumber) {
-        this.aadhaarNumber = aadhaarNumber;
+    public void setAdhaarNo(String adhaarNo) {
+        this.adhaarNo = adhaarNo;
+    }
+
+    public String getOperation() {
+        return operation;
+    }
+
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(String isValid) {
+        this.isValid = isValid;
     }
 }

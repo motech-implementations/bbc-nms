@@ -15,9 +15,11 @@
      * parsing the data from string to specific types.
      * Helper methods also raises exception if parameters is invalid or empty/null (if mandatory).
      */
-    public class ParseDataHelper {
+    public final class ParseDataHelper {
 
+        private ParseDataHelper() {
 
+        }
 
         /**
          * checks if the field value is null or empty
