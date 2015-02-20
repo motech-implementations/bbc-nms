@@ -8,10 +8,6 @@ import javax.jdo.annotations.Unique;
 @Entity
 public class ContentUploadKKCsv {
 
-    @Field(required = true)
-    @Unique
-    Long index;
-
     @Field
     private String operation = "ADD";
 
@@ -35,14 +31,6 @@ public class ContentUploadKKCsv {
 
     @Field
     private String contentDuration;
-
-    public Long getIndex() {
-        return index;
-    }
-
-    public void setIndex(Long index) {
-        this.index = index;
-    }
 
     public String getOperation() {
         return operation;
@@ -106,5 +94,19 @@ public class ContentUploadKKCsv {
 
     public void setContentDuration(String contentDuration) {
         this.contentDuration = contentDuration;
+    }
+
+    public String toString() {
+
+        StringBuffer recordStr = new StringBuffer();
+        recordStr.append("name" + this.contentId);
+        recordStr.append(",circleCode" + this.circleCode);
+        recordStr.append(",languageLocationCode" + this.languageLocationCode);
+        recordStr.append(",contentName" + this.contentName);
+        recordStr.append(",contentType" + this.contentType);
+        recordStr.append(",contentFile" + this.contentFile);
+        recordStr.append(",contentDuration" + this.contentDuration);
+        return recordStr.toString();
+
     }
 }

@@ -3,18 +3,18 @@ package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
-@Entity
-public class ContentUploadKK {
+public class ContentUploadKK extends MdsEntity{
 
     @Field(required = true)
-    private int contentId;
+    private Integer contentId;
 
     @Field(required = true)
     private String circleCode;
 
     @Field(required = true)
-    private int languageLocationCode;
+    private Integer languageLocationCode;
 
     @Field(required = true)
     private String contentName;
@@ -26,13 +26,13 @@ public class ContentUploadKK {
     private String contentFile;
 
     @Field(required = true)
-    private int contentDuration;
+    private Integer contentDuration;
 
-    public int getContentId() {
+    public Integer getContentId() {
         return contentId;
     }
 
-    public void setContentId(int contentId) {
+    public void setContentId(Integer contentId) {
         this.contentId = contentId;
     }
 
@@ -44,11 +44,11 @@ public class ContentUploadKK {
         this.circleCode = circleCode;
     }
 
-    public int getLanguageLocationCode() {
+    public Integer getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(int languageLocationCode) {
+    public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -76,11 +76,11 @@ public class ContentUploadKK {
         this.contentFile = contentFile;
     }
 
-    public int getContentDuration() {
+    public Integer getContentDuration() {
         return contentDuration;
     }
 
-    public void setContentDuration(int contentDuration) {
+    public void setContentDuration(Integer contentDuration) {
         this.contentDuration = contentDuration;
     }
 }

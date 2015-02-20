@@ -2,11 +2,11 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.lang.String;
 
-@Entity
-public class LanguageLocationCode {
+public class LanguageLocationCode extends MdsEntity{
 
     @Field(required = true)
     private Integer stateId;
@@ -24,7 +24,7 @@ public class LanguageLocationCode {
     private String languageMA;
 
     @Field(required = true)
-    private boolean isDefaultLanguageLocationCodeMA;
+    private Integer DefaultLanguageLocationCodeMA;
 
     @Field(required = true)
     private Integer languageLocationCodeMK;
@@ -33,7 +33,7 @@ public class LanguageLocationCode {
     private String languageMK;
 
     @Field(required = true)
-    private boolean isDefaultLanguageLocationCodeMK;
+    private Integer DefaultLanguageLocationCodeMK;
 
     @Field(required = true)
     private Integer languageLocationCodeKK;
@@ -42,26 +42,9 @@ public class LanguageLocationCode {
     private String languageKK;
 
     @Field(required = true)
-    private boolean isDefaultLanguageLocationCodeKK;
-
-    @Field(required = true)
-    private String isDeployedMA;
-
-    @Field(required = true)
-    private String isDeployedMK;
-
-    @Field(required = true)
-    private String isDeployedKK;
-
+    private Integer DefaultLanguageLocationCodeKK;
 
     public LanguageLocationCode(){}
-
-    public LanguageLocationCode(Integer stateId, Integer districtId, String circleId) {
-        this.stateId = stateId;
-        this.districtId = districtId;
-        this.circleId = circleId;
-    }
-
 
     public Integer getStateId() {
         return stateId;
@@ -103,14 +86,6 @@ public class LanguageLocationCode {
         this.languageMA = languageMA;
     }
 
-    public boolean isDefaultLanguageLocationCodeMA() {
-        return isDefaultLanguageLocationCodeMA;
-    }
-
-    public void setDefaultLanguageLocationCodeMA(boolean isDefaultLanguageLocationCodeMA) {
-        this.isDefaultLanguageLocationCodeMA = isDefaultLanguageLocationCodeMA;
-    }
-
     public Integer getLanguageLocationCodeMK() {
         return languageLocationCodeMK;
     }
@@ -125,14 +100,6 @@ public class LanguageLocationCode {
 
     public void setLanguageMK(String languageMK) {
         this.languageMK = languageMK;
-    }
-
-    public boolean isDefaultLanguageLocationCodeMK() {
-        return isDefaultLanguageLocationCodeMK;
-    }
-
-    public void setDefaultLanguageLocationCodeMK(boolean isDefaultLanguageLocationCodeMK) {
-        this.isDefaultLanguageLocationCodeMK = isDefaultLanguageLocationCodeMK;
     }
 
     public Integer getLanguageLocationCodeKK() {
@@ -151,35 +118,27 @@ public class LanguageLocationCode {
         this.languageKK = languageKK;
     }
 
-    public String getIsDeployedMA() {
-        return isDeployedMA;
+    public Integer getDefaultLanguageLocationCodeMA() {
+        return DefaultLanguageLocationCodeMA;
     }
 
-    public void setIsDeployedMA(String isDeployedMA) {
-        this.isDeployedMA = isDeployedMA;
+    public void setDefaultLanguageLocationCodeMA(Integer defaultLanguageLocationCodeMA) {
+        DefaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
     }
 
-    public String getIsDeployedMK() {
-        return isDeployedMK;
+    public Integer getDefaultLanguageLocationCodeMK() {
+        return DefaultLanguageLocationCodeMK;
     }
 
-    public void setIsDeployedMK(String isDeployedMK) {
-        this.isDeployedMK = isDeployedMK;
+    public void setDefaultLanguageLocationCodeMK(Integer defaultLanguageLocationCodeMK) {
+        DefaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
     }
 
-    public String getIsDeployedKK() {
-        return isDeployedKK;
+    public Integer getDefaultLanguageLocationCodeKK() {
+        return DefaultLanguageLocationCodeKK;
     }
 
-    public void setIsDeployedKK(String isDeployedKK) {
-        this.isDeployedKK = isDeployedKK;
-    }
-
-    public boolean isDefaultLanguageLocationCodeKK() {
-        return isDefaultLanguageLocationCodeKK;
-    }
-
-    public void setDefaultLanguageLocationCodeKK(boolean isDefaultLanguageLocationCodeKK) {
-        this.isDefaultLanguageLocationCodeKK = isDefaultLanguageLocationCodeKK;
+    public void setDefaultLanguageLocationCodeKK(Integer defaultLanguageLocationCodeKK) {
+        DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
     }
 }

@@ -9,10 +9,6 @@ import javax.jdo.annotations.Unique;
 @Entity
 public class OperatorCsv {
 
-    @Field(required = true)
-    @Unique
-    Long index;
-
     @Field
     private String operation = "ADD";
 
@@ -21,14 +17,6 @@ public class OperatorCsv {
 
     @Field
     private String code;
-
-    public Long getIndex() {
-        return index;
-    }
-
-    public void setIndex(Long index) {
-        this.index = index;
-    }
 
     public String getOperation() {
         return operation;
@@ -52,5 +40,15 @@ public class OperatorCsv {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String toString() {
+
+        StringBuffer recordStr = new StringBuffer();
+        recordStr.append("name" + this.name);
+
+        recordStr.append(",code" + this.code);
+        return recordStr.toString();
+
     }
 }
