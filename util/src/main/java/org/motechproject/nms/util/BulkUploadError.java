@@ -16,7 +16,7 @@ public class BulkUploadError {
 
     public BulkUploadError() { }
 
-    public BulkUploadError(String recordDetails, String errorCategory, String errorDescription, String userName) {
+    public BulkUploadError(String recordDetails, String errorCategory, String errorDescription) {
         this.recordDetails = recordDetails;
         this.errorCategory = errorCategory;
         this.errorDescription = errorDescription;

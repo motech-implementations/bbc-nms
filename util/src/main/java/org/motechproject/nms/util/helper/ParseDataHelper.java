@@ -1,15 +1,14 @@
     package org.motechproject.nms.util.helper;
 
-    import org.motechproject.nms.util.constants.ErrorCodeConstants;
-
     import org.joda.time.DateTime;
+    import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 
     import java.text.DateFormat;
     import java.text.ParseException;
     import java.text.SimpleDateFormat;
     import java.util.Date;
 
-    import static org.motechproject.nms.util.constants.ErrorCodeConstants.*;
+
 
     /**
      * This class provides static helper methods for checking empty/null values and
@@ -17,6 +16,8 @@
      * Helper methods also raises exception if parameters is invalid or empty/null (if mandatory).
      */
     public class ParseDataHelper {
+
+
 
         /**
          * checks if the field value is null or empty
@@ -43,7 +44,8 @@
                 throws DataValidationException {
             if (isNullOrEmpty(fieldValue)) {
                 if (isMandatory) {
-                    throw new DataValidationException("Missing mandatory data for [" + fieldName + "]", MANDATORY_PARAMETER_MISSING, fieldName);
+                    String errMessage = DataValidationException.MANDATORY_MISSING_MESSAGE.format(fieldValue);
+                    throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING, fieldName);
                 } else {
                     return null;
                 }
@@ -72,18 +74,16 @@
                 } else {
                     DateTime dateTime = null;
                     DateFormat dateFormat = new SimpleDateFormat("");
-                    DateFormat convertedDateFormat = new SimpleDateFormat("");
-                    try {
-                        Date date = dateFormat.parse(fieldValue);
-                        dateTime = new DateTime(date);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+
+                    Date date = dateFormat.parse(fieldValue);
+                    dateTime = new DateTime(date);
+
                     return dateTime;
                 }
 
-            } catch (NumberFormatException e) {
-                throw new DataValidationException("Invalid Data for [" + fieldName + "]", INVALID_DATA, fieldName);
+            } catch (NumberFormatException | ParseException e) {
+                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
             }
         }
 
@@ -107,7 +107,9 @@
                     return Integer.parseInt(fieldValue);
                 }
             } catch (NumberFormatException e) {
-                throw new DataValidationException("Invalid Data for [" + fieldName + "]", INVALID_DATA, fieldName);
+
+                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
             }
         }
 
@@ -131,7 +133,8 @@
                     return Long.parseLong(fieldValue);
                 }
             } catch (NumberFormatException e) {
-                throw new DataValidationException("Invalid Data for [" + fieldName + "]", INVALID_DATA, fieldName);
+                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
             }
         }
 
@@ -155,7 +158,8 @@
                     return Boolean.parseBoolean(fieldValue);
                 }
             } catch (NumberFormatException e) {
-                throw new DataValidationException("Invalid Data for [" + fieldName + "]", INVALID_DATA, fieldName);
+                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
             }
 
         }

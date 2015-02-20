@@ -2,6 +2,9 @@ package org.motechproject.nms.util.helper;
 
 public class DataValidationException extends Exception {
 
+    public static final String MANDATORY_MISSING_MESSAGE = "Missing mandatory data for [ {} ]";
+    public static final String INVALID_FORMAT_MESSAGE = "Invalid Format for [ {} ]";
+
     private String errorCode;
     private String erroneousField;
 
