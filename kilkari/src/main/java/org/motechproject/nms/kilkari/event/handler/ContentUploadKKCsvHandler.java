@@ -42,26 +42,16 @@ public class ContentUploadKKCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
         Map<String, Object> params = motechEvent.getParameters();
-        String errorFileName = params.get("entity_name_") + new Date().toString();
-        try {
-            int createdCount = (int)params.get("csv-import.created_count");
-            int updatedCount = (int)params.get("csv-import.updated_count");
-            String csvImportFileName = (String)params.get("csv-import.filename");
+        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
-            contentUploadKKCsvService.deleteAll();
-            summary.setFailureCount(createdCount + updatedCount);
-            summary.setSuccessCount(0);
-            //todo : username
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
-        }catch (Exception ex) {
-            //todo: errorDetail for this error. can we replace it with a common helper method
-            errorDetail.setErrorCategory("");
-            errorDetail.setErrorDescription(ex.getMessage());
-            errorDetail.setRecordDetails("");
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+        for(Long id : createdIds) {
+            contentUploadKKCsvService.delete(contentUploadKKCsvService.findById(id));
+        }
+
+        for(Long id : updatedIds) {
+            contentUploadKKCsvService.delete(contentUploadKKCsvService.findById(id));
         }
     }
 
@@ -83,17 +73,15 @@ public class ContentUploadKKCsvHandler {
                     contentUploadKKService.create(newRecord);
                     contentUploadKKCsvService.delete(record);
                     successCount++;
+                } else {
+                    failureCount++;
+                    logErrorRecord(errorFileName, errorDetail);
                 }
             }catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(String.format(
                         ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-            }catch (Exception ex) {
-                errorDetail.setErrorCategory("");
-                errorDetail.setErrorDescription(ex.getMessage());
-                errorDetail.setRecordDetails("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
             }
         }
@@ -113,19 +101,19 @@ public class ContentUploadKKCsvHandler {
 
     private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {
         ContentUploadKK newRecord = new ContentUploadKK();
-        newRecord.setCircleCode(ParseDataHelper.parseString("", record.getCircleCode(), true));
-        newRecord.setContentDuration(ParseDataHelper.parseInt("", record.getContentDuration(), true));
-        newRecord.setContentFile(ParseDataHelper.parseString("", record.getContentFile(), true));
-        newRecord.setContentId(ParseDataHelper.parseInt("", record.getContentId(), true));
-        newRecord.setContentName(ParseDataHelper.parseString("", record.getContentName(), true));
+        newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
+        newRecord.setContentDuration(ParseDataHelper.parseInt("ContentDuration", record.getContentDuration(), true));
+        newRecord.setContentFile(ParseDataHelper.parseString("ContentFile", record.getContentFile(), true));
+        newRecord.setContentId(ParseDataHelper.parseInt("ContentId", record.getContentId(), true));
+        newRecord.setContentName(ParseDataHelper.parseString("ContentName", record.getContentName(), true));
 
-        String contentType = ParseDataHelper.parseString("", record.getContentType(), true);
+        String contentType = ParseDataHelper.parseString("contentType", record.getContentType(), true);
         if (contentType.equals(ContentType.CONTENT.toString())) {
             newRecord.setContentType(ContentType.CONTENT);
         } else {
             newRecord.setContentType(ContentType.PROMPT);
         }
-        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("", record.getLanguageLocationCode(), true));
+        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode", record.getLanguageLocationCode(), true));
         return newRecord;
     }
 }
