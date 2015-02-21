@@ -2,9 +2,10 @@ package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 @Entity
-public class MotherMctsCsv {
+public class MotherMctsCsv extends MdsEntity {
 	
 	@Field
 	private String operation;

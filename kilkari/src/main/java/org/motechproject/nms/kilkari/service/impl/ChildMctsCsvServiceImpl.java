@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.service.impl;
 import java.util.List;
 
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.HelloWorldRecordsDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
@@ -50,5 +51,20 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+    public ChildMctsCsv findRecordById(Long id) {
+        return childMctsCsvDataService.findById(id);
+    }
+
+    @Override
+    public void deleteAll() {
+        childMctsCsvDataService.deleteAll();
+    }
+
+    @Override
+    public ChildMctsCsv findById(Long id) {
+        return childMctsCsvDataService.findById(id);
+    }
 
 }

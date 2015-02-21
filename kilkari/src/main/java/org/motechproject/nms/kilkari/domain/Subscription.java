@@ -17,7 +17,19 @@ public class Subscription extends MdsEntity {
 	private Subscriber subscriber;
 
 	@Field(required=true)
-	private Integer operator_Id;
+	private Integer operatorCode;  
+	
+	@Field(required=true)
+    private String msisdn;
+    
+    @Field
+    private String mctsId;
+    
+    @Field
+    private Long stateCode;
+    
+    @Field
+    private String packName;
 
 	@Field(required=true)
 	private Channel channel;
@@ -44,92 +56,124 @@ public class Subscription extends MdsEntity {
 	@Column(name="oldSubscritption_Id")
 	private Subscription oldSubscritptionId;
 
-	public SubscriptionPack getSubscriptionPack() {
-		return subscriptionPack;
-	}
+    public SubscriptionPack getSubscriptionPack() {
+        return subscriptionPack;
+    }
 
-	public void setSubscriptionPack(SubscriptionPack subscriptionPack) {
-		this.subscriptionPack = subscriptionPack;
-	}
+    public void setSubscriptionPack(SubscriptionPack subscriptionPack) {
+        this.subscriptionPack = subscriptionPack;
+    }
 
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
+    public Subscriber getSubscriber() {
+        return subscriber;
+    }
 
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
+    public void setSubscriber(Subscriber subscriber) {
+        this.subscriber = subscriber;
+    }
 
-	public Integer getOperator_Id() {
-		return operator_Id;
-	}
+    public Integer getOperatorCode() {
+        return operatorCode;
+    }
 
-	public void setOperator_Id(Integer operator_Id) {
-		this.operator_Id = operator_Id;
-	}
+    public void setOperatorCode(Integer operatorCode) {
+        this.operatorCode = operatorCode;
+    }
 
-	public Channel getChannel() {
-		return channel;
-	}
+    public String getMsisdn() {
+        return msisdn;
+    }
 
-	public void setChannel(Channel channel) {
-		this.channel = channel;
-	}
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
 
-	public Status getStatus() {
-		return status;
-	}
+    public Long getStateCode() {
+        return stateCode;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status;
-	}
+    public String getMctsId() {
+        return mctsId;
+    }
 
-	public Boolean isDeactivatedBySystem() {
-		return isDeactivatedBySystem;
-	}
+    public void setMctsId(String mctsId) {
+        this.mctsId = mctsId;
+    }
 
-	public void setDeactivatedBySystem(Boolean isDeactivatedBySystem) {
-		this.isDeactivatedBySystem = isDeactivatedBySystem;
-	}
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
+    }
 
-	public Integer getWeekNumber() {
-		return weekNumber;
-	}
+    public String getPackName() {
+        return packName;
+    }
 
-	public void setWeekNumber(Integer weekNumber) {
-		this.weekNumber = weekNumber;
-	}
+    public void setPackName(String packName) {
+        this.packName = packName;
+    }
 
-	public Integer getMessageNumber() {
-		return messageNumber;
-	}
+    public Channel getChannel() {
+        return channel;
+    }
 
-	public void setMessageNumber(Integer messageNumber) {
-		this.messageNumber = messageNumber;
-	}
+    public void setChannel(Channel channel) {
+        this.channel = channel;
+    }
 
-	public DateTime getStartDate() {
-		return startDate;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
-	public void setStartDate(DateTime startDate) {
-		this.startDate = startDate;
-	}
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
-	public DateTime getNextObdDate() {
-		return nextObdDate;
-	}
+    public Boolean getIsDeactivatedBySystem() {
+        return isDeactivatedBySystem;
+    }
 
-	public void setNextObdDate(DateTime nextObdDate) {
-		this.nextObdDate = nextObdDate;
-	}
+    public void setIsDeactivatedBySystem(Boolean isDeactivatedBySystem) {
+        this.isDeactivatedBySystem = isDeactivatedBySystem;
+    }
 
-	public Subscription getOldSubscritptionId() {
-		return oldSubscritptionId;
-	}
+    public Integer getWeekNumber() {
+        return weekNumber;
+    }
 
-	public void setOldSubscritptionId(Subscription oldSubscritptionId) {
-		this.oldSubscritptionId = oldSubscritptionId;
-	}
-	
+    public void setWeekNumber(Integer weekNumber) {
+        this.weekNumber = weekNumber;
+    }
+
+    public Integer getMessageNumber() {
+        return messageNumber;
+    }
+
+    public void setMessageNumber(Integer messageNumber) {
+        this.messageNumber = messageNumber;
+    }
+
+    public DateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public DateTime getNextObdDate() {
+        return nextObdDate;
+    }
+
+    public void setNextObdDate(DateTime nextObdDate) {
+        this.nextObdDate = nextObdDate;
+    }
+
+    public Subscription getOldSubscritptionId() {
+        return oldSubscritptionId;
+    }
+
+    public void setOldSubscritptionId(Subscription oldSubscritptionId) {
+        this.oldSubscritptionId = oldSubscritptionId;
+    }
+
 }

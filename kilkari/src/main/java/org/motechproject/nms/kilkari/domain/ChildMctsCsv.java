@@ -2,9 +2,10 @@ package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 @Entity
-public class ChildMctsCsv {
+public class ChildMctsCsv extends MdsEntity{
 
     @Field
     private String operation;
@@ -32,9 +33,6 @@ public class ChildMctsCsv {
 
     @Field
     private String idNo;
-
-    @Field
-    private String name;
 
     @Field
     private String motherName;
@@ -121,14 +119,6 @@ public class ChildMctsCsv {
 
     public void setIdNo(String idNo) {
         this.idNo = idNo;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getMotherName() {

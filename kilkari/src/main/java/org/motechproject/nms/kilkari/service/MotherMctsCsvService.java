@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.service;
 
 import java.util.List;
 
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 
 public interface MotherMctsCsvService {
@@ -19,4 +20,8 @@ public interface MotherMctsCsvService {
     void delete(MotherMctsCsv record);
 
     void update(MotherMctsCsv record);
+    
+    void deleteAll();
+    
+    MotherMctsCsv findById(Long id);
 }

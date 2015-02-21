@@ -11,48 +11,57 @@ import org.springframework.stereotype.Service;
 @Service("motherMctsCsvService")
 public class MotherMctsCsvServiceImpl implements MotherMctsCsvService{
 
-	@Autowired
-	private MotherMctsCsvDataService motherMctsCsvDataService;
-	
-	@Override
-	public void create(String name, String message) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Autowired
+    private MotherMctsCsvDataService motherMctsCsvDataService;
 
-	@Override
-	public void add(MotherMctsCsv record) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void create(String name, String message) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public MotherMctsCsv findRecordByName(String recordName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    }
 
-	@Override
-	public List<MotherMctsCsv> getRecords() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void add(MotherMctsCsv record) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void delete(MotherMctsCsv record) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	@Override
-	public void update(MotherMctsCsv record) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public MotherMctsCsv findRecordByName(String recordName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public MotherMctsCsv findRecordById(Long id) {
-		return motherMctsCsvDataService.findById(id);
-	}
+    @Override
+    public List<MotherMctsCsv> getRecords() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void delete(MotherMctsCsv record) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void update(MotherMctsCsv record) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public MotherMctsCsv findRecordById(Long id) {
+        return motherMctsCsvDataService.findById(id);
+    }
+    
+    public void deleteAll() {
+        motherMctsCsvDataService.deleteAll();
+    }
+
+    @Override
+    public MotherMctsCsv findById(Long id) {
+        return motherMctsCsvDataService.findById(id);
+    }
 
 }

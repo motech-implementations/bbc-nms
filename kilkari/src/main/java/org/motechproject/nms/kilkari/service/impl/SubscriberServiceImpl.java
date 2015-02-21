@@ -22,7 +22,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
 	@Override
 	public void add(Subscriber record) {
-		// TODO Auto-generated method stub
+	    
 
 	}
 

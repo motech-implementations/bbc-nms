@@ -17,8 +17,8 @@ public class Configuration {
     @Max(1)
     @NotNull
     private Long index;
-	
-	@Field(required=true)
+    
+    @Field(required=true)
 	private Integer nmsKk72WeeksPackMsgsPerWeek;
 	
 	@Field(required=true)

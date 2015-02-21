@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.service;
 import java.util.List;
 
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 
 public interface ChildMctsCsvService {
 
@@ -17,4 +18,12 @@ public interface ChildMctsCsvService {
     void delete(ChildMctsCsv record);
 
     void update(ChildMctsCsv record);
+    
+    ChildMctsCsv findRecordById(Long id);
+    
+    void deleteAll();
+    
+    ChildMctsCsv findById(Long id);
+    
+    
 }

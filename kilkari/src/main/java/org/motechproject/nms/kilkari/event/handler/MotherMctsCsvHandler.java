@@ -1,19 +1,23 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkari.util.HelperMethods;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -34,124 +38,294 @@ import org.springframework.stereotype.Component;
 @Component
 public class MotherMctsCsvHandler {
 
-	private static final String CSV_IMPORT_PREFIX = "csv-import.";
-	public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-	public static final String CSV_IMPORT_UPDATED_IDS = CSV_IMPORT_PREFIX + "updated_ids";
-	public static final String CSV_IMPORT_CREATED_COUNT = CSV_IMPORT_PREFIX + "created_count";
-	public static final String CSV_IMPORT_UPDATED_COUNT = CSV_IMPORT_PREFIX + "updated_count";
-	public static final String CSV_IMPORT_TOTAL_COUNT = CSV_IMPORT_PREFIX + "total_count";
-	public static final String CSV_IMPORT_FAILURE_MSG = CSV_IMPORT_PREFIX + "failure_message";
-	public static final String CSV_IMPORT_FAILURE_STACKTRACE = CSV_IMPORT_PREFIX + "failure_stacktrace";
+    private static final String CSV_IMPORT_PREFIX = "csv-import.";
+    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
+    public static final String CSV_IMPORT_UPDATED_IDS = CSV_IMPORT_PREFIX + "updated_ids";
+    public static final String CSV_IMPORT_CREATED_COUNT = CSV_IMPORT_PREFIX + "created_count";
+    public static final String CSV_IMPORT_UPDATED_COUNT = CSV_IMPORT_PREFIX + "updated_count";
+    public static final String CSV_IMPORT_TOTAL_COUNT = CSV_IMPORT_PREFIX + "total_count";
+    public static final String CSV_IMPORT_FAILURE_MSG = CSV_IMPORT_PREFIX + "failure_message";
+    public static final String CSV_IMPORT_FAILURE_STACKTRACE = CSV_IMPORT_PREFIX + "failure_stacktrace";
+    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-	@Autowired
-	private MotherMctsCsvService motherMctsCsvService;
+    @Autowired
+    private MotherMctsCsvService motherMctsCsvService;
 
-	@Autowired
-	private ChildMctsCsvService childMctsCsvService;
+    @Autowired
+    private SubscriptionService subscriptionService;
+    
+    @Autowired
+    private SubscriberService subscriberService;
 
-	@Autowired
-	private SubscriptionService subscriptionService;
-	
-	@Autowired
-	private LocationService locationService;
-	
-	@MotechListener(subjects = "mds.crud.kilkarimodule.MotherMctsCsv.csv-import.success")
-	public void motherMctsCsvSuccess(MotechEvent uploadEvent){
-		
-		Map<String, Object> parameters = uploadEvent.getParameters();
-		String logFile = BulkUploadError.createBulkUploadErrLogFileName((String) parameters.get(""));
-		BulkUploadErrLogService logger = new BulkUploadErrLogServiceImpl();
-		BulkUploadError errorDetails = new BulkUploadError();
-		logger.writeBulkUploadErrLog("logger.txt", errorDetails);
+    @Autowired
+    private LocationService locationService;
 
-		System.out.println(uploadEvent.getSubject());
-		System.out.println("success");
-		System.out.println(motherMctsCsvService.getClass().getName());
-		System.out.println(childMctsCsvService.getClass().getName());
-		
+    @Autowired
+    private BulkUploadErrLogService bulkUploadErrLogService;
 
-		List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
-		int failedRecordCount = 0;
-		int successRecordCount = 0;
-		MotherMctsCsv motherMctsCsv = null;
-		
-		for (Long id : uploadedIDs) {
-			try {
-				motherMctsCsv = motherMctsCsvService.findRecordById(id);
-				if(motherMctsCsv!=null ){
-					Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
-					successRecordCount++;
-				}
-				else {
-					failedRecordCount++;
-					errorDetails.setRecordDetails(id.toString());
-					errorDetails.setErrorCategory("Record_Not_Found");
-					errorDetails.setErrorDescription("Record not in database");
-				}
-			}catch(DataValidationException dve) {
-				errorDetails.setRecordDetails(motherMctsCsv.toString());
-				errorDetails.setErrorCategory(dve.getErrorCode());
-				errorDetails.setErrorDescription(dve.getErroneousField());
-				logger.writeBulkUploadErrLog(logFile, errorDetails);
-				failedRecordCount++;
-				
-			}catch(Exception e){
-				failedRecordCount++;
-			}
-		}
-		CsvProcessingSummary summary = new CsvProcessingSummary(successRecordCount, failedRecordCount);
-		logger.writeBulkUploadProcessingSummary("username", "csv file name", logFile, summary);
-	}
+    @MotechListener(subjects = "mds.crud.kilkarimodule.MotherMctsCsv.csv-import.success")
+    public void motherMctsCsvSuccess(MotechEvent uploadEvent){
 
-	private Subscriber motherMctsToSubscriberMapper(MotherMctsCsv motherMctsCsv) throws DataValidationException  {
-		
-		Subscriber subscriber = new Subscriber();
-		
-		Long stateCode = ParseDataHelper.parseLong(motherMctsCsv.getStateId(), "State Id", true);
-		State state = locationService.getStateByCode(stateCode);
-		
-		Long districtCode = ParseDataHelper.parseLong(motherMctsCsv.getDistrictId(), "District Id", true);
-		District district = locationService.getDistrictByCode(state.getId(), districtCode);
-		
-		String talukaCode = ParseDataHelper.parseString(motherMctsCsv.getTalukaId(), "Taluka Id", false);
-		Taluka taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
-		
-		Long healthBlockCode = ParseDataHelper.parseLong(motherMctsCsv.getHealthBlockId(), "Block ID", false);
-		HealthBlock healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
-		
-		Long phcCode = ParseDataHelper.parseLong(motherMctsCsv.getPhcId(), "Phc Id", false);
-		HealthFacility healthFacility  = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
-		
-		Long subCenterCode = ParseDataHelper.parseLong(motherMctsCsv.getSubCentreId(), "Sub centered ID", false);
-		HealthSubFacility healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
-		
-		Long villageCode = ParseDataHelper.parseLong(motherMctsCsv.getVillageId(), "Village id", false);
-		Village village = locationService.getVillageByCode(taluka.getId(), villageCode);
+        System.out.println(uploadEvent.getSubject());
+        System.out.println("success");
+        System.out.println(motherMctsCsvService.getClass().getName());
+        
+        Map<String, Object> parameters = uploadEvent.getParameters();
+        List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
+        String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
+        
+        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
+        CsvProcessingSummary summary = new CsvProcessingSummary();
+        BulkUploadError errorDetails = new BulkUploadError();
+        
+        MotherMctsCsv motherMctsCsv = null;
 
-		subscriber.setState(state);
-		subscriber.setDistrictId(district);
-		subscriber.setTalukaId(taluka);
-		subscriber.setHealthBlockId(healthBlock);
-		subscriber.setPhcId(healthFacility);
-		subscriber.setSubCentreId(healthSubFacility);
-		subscriber.setVillageId(village);
-		
-		subscriber.setMsisdn(ParseDataHelper.parseString(motherMctsCsv.getIdNo(), "idNo", true));
-		subscriber.setMotherMctsId(ParseDataHelper.parseString(motherMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true));
-		subscriber.setAge(ParseDataHelper.parseInt(motherMctsCsv.getAge(), "Age", false));
-		subscriber.setAadharNumber(ParseDataHelper.parseString(motherMctsCsv.getAadharNo(), "AAdhar Num", true));
+        for (Long id : uploadedIDs) {
+            try {
+                motherMctsCsv = motherMctsCsvService.findRecordById(id);
+                if(motherMctsCsv!=null ){
+                    Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
+                    summary.incrementSuccessCount();
+                }
+                else {
+                    summary.incrementFailureCount();
+                    errorDetails.setRecordDetails(id.toString());
+                    errorDetails.setErrorCategory("Record_Not_Found");
+                    errorDetails.setErrorDescription("Record not in database");
+                }
+            }catch(DataValidationException dve) {
+                errorDetails.setRecordDetails(motherMctsCsv.toString());
+                errorDetails.setErrorCategory(dve.getErrorCode());
+                errorDetails.setErrorDescription(dve.getErrorDesc());
+                summary.incrementFailureCount();
 
-		subscriber.setLmp(ParseDataHelper.parseDate(motherMctsCsv.getLmpDate(), "Lmp Date", true));
-		subscriber.setStillBirth("0".equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
-		subscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
-		subscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
-		subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-		return subscriber;
-	}
+            }catch(Exception e){
+                summary.incrementFailureCount();
+            }
+        }
+        
+        motherMctsCsvService.deleteAll();
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("username", csvFileName, logFile, summary);
+    }
 
-	@MotechListener(subjects = "mds.crud.kilkarimodule.MotherMctsCsv.csv-import.failure")
-	public void motherMctsCsvFailure(MotechEvent uploadEvent){
-		System.out.println("Inside Failure");
-	}
+    private Subscriber motherMctsToSubscriberMapper(MotherMctsCsv motherMctsCsv) throws DataValidationException  {
+
+        Subscriber motherSubscriber = new Subscriber();
+
+        Long stateCode = ParseDataHelper.parseLong("State Id", motherMctsCsv.getStateId(),  true);
+        State state = locationService.getStateByCode(stateCode);
+        if(state == null){
+            HelperMethods.raiseInvalidException("State Id", motherMctsCsv.getStateId());
+        }
+
+        Long districtCode = ParseDataHelper.parseLong("District Id", motherMctsCsv.getDistrictId(), true);
+        District district = locationService.getDistrictByCode(state.getId(), districtCode);
+        if(district == null){
+            HelperMethods.raiseInvalidException( "District Id", motherMctsCsv.getDistrictId());
+        }
+
+        String talukaCode = ParseDataHelper.parseString("Taluka Id", motherMctsCsv.getTalukaId(), false);
+        Taluka taluka = null;
+        if (talukaCode!=null) {
+            taluka = locationService.getTalukaByCode(district.getId(),talukaCode);
+            if(taluka == null){
+                HelperMethods.raiseInvalidException("Taluka Id", motherMctsCsv.getTalukaId());
+            }
+        }
+
+
+        Long healthBlockCode = ParseDataHelper.parseLong("Block ID", motherMctsCsv.getHealthBlockId(), false);
+        HealthBlock healthBlock = null;
+        if (healthBlockCode!=null) {
+            if (taluka != null) {
+            healthBlock = locationService.getHealthBlockByCode(taluka.getId(),healthBlockCode);
+            if(healthBlock == null){
+                HelperMethods.raiseInvalidException("Block ID", motherMctsCsv.getHealthBlockId());
+            }
+            }else {
+                HelperMethods.raiseInvalidException("Taluka ID", motherMctsCsv.getTalukaId());
+            }
+        }
+
+        Long phcCode = ParseDataHelper.parseLong("Phc Id", motherMctsCsv.getPhcId(), false);
+        HealthFacility healthFacility = null;
+        if (phcCode!=null) {
+            healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
+            if(healthFacility == null){
+                HelperMethods.raiseInvalidException("Phc Id", motherMctsCsv.getPhcId());
+            }
+        }
+
+        Long subCenterCode = ParseDataHelper.parseLong("Sub centered ID", motherMctsCsv.getSubCentreId(), false);
+        HealthSubFacility healthSubFacility = null;
+        if (subCenterCode!=null) {
+            healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
+            if(healthSubFacility == null){
+                HelperMethods.raiseInvalidException("Sub centered ID", motherMctsCsv.getSubCentreId());
+            }
+        }
+
+        Long villageCode = ParseDataHelper.parseLong("Village id", motherMctsCsv.getVillageId(), false);
+        Village village = null;
+        if (villageCode!=null) {
+            village = locationService.getVillageByCode(taluka.getId(),villageCode);
+            if(village == null){
+                HelperMethods.raiseInvalidException("Village id", motherMctsCsv.getVillageId());
+            }
+        }
+
+        motherSubscriber.setState(state);
+        motherSubscriber.setDistrictId(district);
+        motherSubscriber.setTalukaId(taluka);
+        motherSubscriber.setHealthBlockId(healthBlock);
+        motherSubscriber.setPhcId(healthFacility);
+        motherSubscriber.setSubCentreId(healthSubFacility);
+        motherSubscriber.setVillageId(village);
+
+        motherSubscriber.setMsisdn(ParseDataHelper.parseString(motherMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true));
+        motherSubscriber.setMotherMctsId(ParseDataHelper.parseString(motherMctsCsv.getIdNo(), "idNo", true));
+        motherSubscriber.setAge(ParseDataHelper.parseInt(motherMctsCsv.getAge(), "Age", false));
+        motherSubscriber.setAadharNumber(ParseDataHelper.parseString(motherMctsCsv.getAadharNo(), "AAdhar Num", true));
+        motherSubscriber.setName(ParseDataHelper.parseString(motherMctsCsv.getName(), "Name", false));
+
+        motherSubscriber.setLmp(ParseDataHelper.parseDate(motherMctsCsv.getLmpDate(), "Lmp Date", true));
+        motherSubscriber.setStillBirth("0".equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
+        motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
+        motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
+        motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+
+        motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
+
+        return motherSubscriber;
+    }
+
+    @MotechListener(subjects = "mds.crud.kilkarimodule.MotherMctsCsv.csv-import.failure")
+    public void motherMctsCsvFailure(MotechEvent uploadEvent){
+
+        System.out.println("Inside Failure");
+
+        Map<String, Object> params = uploadEvent.getParameters();
+        List<Long> createdIds = (List<Long>)params.get("csv-import.created_ids");
+        List<Long> updatedIds = (List<Long>)params.get("csv-import.updated_ids");
+        
+        for(Long id : createdIds) {
+            MotherMctsCsv motherMctsCsv= motherMctsCsvService.findById(id);
+            motherMctsCsvService.delete(motherMctsCsv);
+        }
+        
+        for(Long id : updatedIds) {
+            MotherMctsCsv motherMctsCsv= motherMctsCsvService.findById(id);
+            motherMctsCsvService.delete(motherMctsCsv);
+        }
+        
+
+
+    }
+    
+    public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException{
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMsisdnPackStatus(subscriber.getMsisdn(), "PackName", Status.Active);
+        if (dbSubscription == null ){
+            dbSubscription = subscriptionService.getPackSubscriptionByMctsIdPackStatus(subscriber.getMotherMctsId(), "72WeeksPack", Status.Active);
+            if (dbSubscription == null){
+                
+                createSubscriberSubscription(subscriber);
+    
+            }else{
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
+                return;
+            }
+        }else{
+            if(dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
+                //Update Subscriber (motherMctsId, name, age, location, abort, still, motherDeath, lmp)
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
+                
+            }else {
+                throw new DataValidationException("RECORD_ALREADY_EXIST","RECORD_ALREADY_EXIST","RECORD_ALREADY_EXIST", "");
+            }
+        }
+    }
+
+    private void createSubscriberSubscription(Subscriber subscriber) {
+        Subscription subscription = new Subscription();
+        subscription.setMctsId(subscriber.getMotherMctsId());
+        subscription.setMsisdn(subscriber.getMsisdn());
+        subscription.setStateCode(subscriber.getState().getStateCode());
+        subscription.setSubscriber(subscriber);
+        List<Subscription> subscriptionList = new ArrayList<Subscription>();
+        subscriptionList.add(subscription);
+        subscriber.setSubscriptionList(subscriptionList);
+        subscriberService.add(subscriber);//CREATE
+        subscriptionService.add(subscription);//Create
+    }
+
+    private void updateSubscriberSubscription(Subscriber subscriber,
+            Subscription dbSubscription, Subscriber dbSubscriber) {
+        
+        if(!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())){
+            dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
+            dbSubscription.setMsisdn(subscriber.getMsisdn());
+        }                                 
+        
+        if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()){
+            
+            dbSubscription.setStatus(Status.Deactivated);
+            dbSubscription.setMctsId(subscriber.getMotherMctsId());
+            dbSubscription.setChannel(Channel.MCTS);
+            dbSubscription.setMsisdn(subscriber.getMsisdn());
+            subscriptionService.update(dbSubscription);
+            
+        }else {
+            if(!dbSubscriber.getLmp().equals(subscriber.getLmp())){
+                dbSubscription.setStatus(Status.Deactivated);
+                Subscription newSubscription = new Subscription();
+                newSubscription.setOldSubscritptionId(dbSubscription);
+                newSubscription.setStatus(Status.PendingActivation);
+                newSubscription.setMctsId(subscriber.getMotherMctsId());
+                newSubscription.setChannel(Channel.MCTS);
+                newSubscription.setMsisdn(subscriber.getMsisdn());
+                
+                subscriptionService.add(newSubscription);
+                subscriptionService.update(dbSubscription);
+
+            }else{
+                dbSubscription.setChannel(Channel.MCTS);
+                dbSubscription.setMctsId(subscriber.getMotherMctsId());
+                dbSubscription.setMsisdn(subscriber.getMsisdn());
+                subscriptionService.update(dbSubscription);
+            }
+        }
+        
+        /*
+         * Update dbSubscriber with update Subscriber
+         * motherMctsId, name, age, location, abort, still, motherDeath, lmp
+         */
+        dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
+        dbSubscriber.setName(subscriber.getName());
+        dbSubscriber.setAge(subscriber.getAge());
+        dbSubscriber.setState(subscriber.getState());
+        dbSubscriber.setDistrictId(subscriber.getDistrictId());
+        dbSubscriber.setTalukaId(subscriber.getTalukaId());
+        dbSubscriber.setHealthBlockId(subscriber.getHealthBlockId());
+        dbSubscriber.setPhcId(subscriber.getPhcId());
+        dbSubscriber.setSubCentreId(subscriber.getSubCentreId());
+        dbSubscriber.setVillageId(subscriber.getVillageId());
+        dbSubscriber.setAbortion(subscriber.getAbortion());
+        dbSubscriber.setStillBirth(subscriber.getStillBirth());
+        dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
+        dbSubscriber.setLmp(subscriber.getLmp());
+        
+        subscriberService.update(dbSubscriber);      
+        
+        
+
+           
+        
+        
+    }
+    
+    
 
 }

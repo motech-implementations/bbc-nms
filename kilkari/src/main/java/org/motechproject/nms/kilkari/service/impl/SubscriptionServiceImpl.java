@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
+import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -54,5 +55,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 	public Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem){
 		return subscriptionDataService.findRecordIsDeactivatedBySystem(isDeactivatedBySystem);
 	}
+	
+    public Subscription getSubscriptionByMsisdnPackStatus(String msisdn, String packName, Status status){
+        return subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, status);
+    }
 
+    public Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status){
+        return subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, status);
+    }
 }

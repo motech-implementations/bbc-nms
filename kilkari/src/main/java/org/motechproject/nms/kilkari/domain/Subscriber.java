@@ -64,9 +64,9 @@ public class Subscriber extends MdsEntity {
 	@Field(name="village_id")
 	private Village villageId;
 	
-	@Field(required=true, name="languageLocationCode_id")
+	@Field
 	@Column(length=2)
-	private LanguageLocationCode languageLocationCode;
+	private Integer languageLocationCode;
 	
 	@Field
 	private String aadharNumber;
@@ -90,7 +90,7 @@ public class Subscriber extends MdsEntity {
 	private Boolean childDeath;
 	
 	@Persistent(mappedBy = "subscriber")
-	private List<Subscription> subscriber;
+	private List<Subscription> subscriptionList;
 
 	public String getMsisdn() {
 		return msisdn;
@@ -204,11 +204,11 @@ public class Subscriber extends MdsEntity {
 		this.villageId = villageId;
 	}
 
-	public LanguageLocationCode getLanguageLocationCode() {
+	public Integer getLanguageLocationCode() {
 		return languageLocationCode;
 	}
 
-	public void setLanguageLocationCode(LanguageLocationCode languageLocationCode) {
+	public void setLanguageLocationCode(Integer languageLocationCode) {
 		this.languageLocationCode = languageLocationCode;
 	}
 
@@ -268,11 +268,12 @@ public class Subscriber extends MdsEntity {
 		this.childDeath = childDeath;
 	}
 
-	public List<Subscription> getSubscriber() {
-		return subscriber;
-	}
+    public List<Subscription> getSubscriptionList() {
+        return subscriptionList;
+    }
 
-	public void setSubscriber(List<Subscription> subscriber) {
-		this.subscriber = subscriber;
-	}		
+    public void setSubscriptionList(List<Subscription> subscriptionList) {
+        this.subscriptionList = subscriptionList;
+    }
+
 }

@@ -61,5 +61,14 @@
 
     <osgi:reference id="contentUploadKKCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadKKCsvDataService" />
+                    
+    <osgi:reference id="subscriptionPackDataService"
+                    interface="org.motechproject.nms.kilkari.repository.SubscriptionPackDataService" />  
+                    
+    <osgi:reference id="locationService"
+                    interface="org.motechproject.nms.masterdata.service.LocationService"/>
+                    
+    <osgi:reference id="bulkUploadErrLogService"
+                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>                        
 
 </beans>
