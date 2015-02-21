@@ -76,7 +76,14 @@ public class LanguageLocationCodeCsvHandler {
                     if (record != null) {
                         userName = record.getOwner();
                         LanguageLocationCode newRecord = mapLanguageLocationCodeFrom(record);
-                        languageLocationCodeService.create(newRecord);
+
+                        LanguageLocationCode oldRecord = languageLocationCodeService.getLanguageLocationCodeRecord(
+                                Long.parseLong(record.getStateId()), Long.parseLong(record.getDistrictId()));
+                        if(oldRecord == null) {
+                            languageLocationCodeService.create(newRecord);
+                        }else {
+                            languageLocationCodeService.update(newRecord);
+                        }
                         languageLocationCodeServiceCsv.delete(record);
                         successCount++;
                     } else {
@@ -110,7 +117,7 @@ public class LanguageLocationCodeCsvHandler {
 
         newRecord.setStateCode(ParseDataHelper.parseInt("StateCode", record.getStateId(), true));
         newRecord.setDistrictCode(ParseDataHelper.parseInt("DistrictCode", record.getDistrictId(), true));
-        newRecord.setCircleCode(ParseDataHelper.parseInt("CircleCode", record.getCircleId(), true));
+        newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleId(), true));
         
         Long stateId = ParseDataHelper.parseLong("stateId", record.getStateId(), true);
         Circle circle = circleService.getCircleByCode(ParseDataHelper.parseString("circleId", record.getCircleId(), true));
