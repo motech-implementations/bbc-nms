@@ -3,11 +3,11 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Unique;
 
-@Entity
-public class OperatorCsv {
+public class OperatorCsv extends MdsEntity{
 
     @Field
     private String operation = "ADD";

@@ -21,4 +21,10 @@ public class CircleServiceImpl implements CircleService {
     public void update(Circle record) {
         circleDataService.update(record);
     }
+
+    @Override
+    public Circle getCircleByCode(String circleCode) {
+        return circleDataService.getCircleByCode(circleCode);
+
+    }
 }

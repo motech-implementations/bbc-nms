@@ -1,14 +1,13 @@
 package org.motechproject.nms.masterdata.domain;
 
-//import com.sun.org.glassfish.gmbal.DescriptorFields;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Unique;
 import java.lang.String;
 
-@Entity
-public class LanguageLocationCodeCsv {
+public class LanguageLocationCodeCsv extends MdsEntity{
 
     @Field
     private String operation = "ADD";
@@ -29,7 +28,7 @@ public class LanguageLocationCodeCsv {
     private String languageMA;
 
     @Field
-    private String isDefaultLanguageLocationCodeMA;
+    private String DefaultLanguageLocationCodeMA;
 
     @Field
     private String languageLocationCodeMK;
@@ -38,7 +37,7 @@ public class LanguageLocationCodeCsv {
     private String languageMK;
 
     @Field
-    private String isDefaultLanguageLocationCodeMK;
+    private String DefaultLanguageLocationCodeMK;
 
     @Field
     private String languageLocationCodeKK;
@@ -47,40 +46,7 @@ public class LanguageLocationCodeCsv {
     private String languageKK;
 
     @Field
-    private String isDefaultLanguageLocationCodeKK;
-
-    @Field
-    private String isDeployedMA;
-
-    @Field
-    private String isDeployedMK;
-
-    @Field
-    private String isDeployedKK;
-
-    public void setIsDeployedMA(String isDeployedMA) {
-        this.isDeployedMA = isDeployedMA;
-    }
-
-    public void setIsDeployedMK(String isDeployedMK) {
-        this.isDeployedMK = isDeployedMK;
-    }
-
-    public void setIsDeployedKK(String isDeployedKK) {
-        this.isDeployedKK = isDeployedKK;
-    }
-
-    public String getIsDeployedMA() {
-        return isDeployedMA;
-    }
-
-    public String getIsDeployedMK() {
-        return isDeployedMK;
-    }
-
-    public String getIsDeployedKK() {
-        return isDeployedKK;
-    }
+    private String DefaultLanguageLocationCodeKK;
 
     public LanguageLocationCodeCsv(String operation, String stateId, String districtId, String circleId) {
         this.operation = operation;
@@ -137,14 +103,6 @@ public class LanguageLocationCodeCsv {
         this.languageMA = languageMA;
     }
 
-    public String getIsDefaultLanguageLocationCodeMA() {
-        return isDefaultLanguageLocationCodeMA;
-    }
-
-    public void setIsDefaultLanguageLocationCodeMA(String isDefaultLanguageLocationCodeMA) {
-        this.isDefaultLanguageLocationCodeMA = isDefaultLanguageLocationCodeMA;
-    }
-
     public String getLanguageLocationCodeMK() {
         return languageLocationCodeMK;
     }
@@ -159,14 +117,6 @@ public class LanguageLocationCodeCsv {
 
     public void setLanguageMK(String languageMK) {
         this.languageMK = languageMK;
-    }
-
-    public String getIsDefaultLanguageLocationCodeMK() {
-        return isDefaultLanguageLocationCodeMK;
-    }
-
-    public void setIsDefaultLanguageLocationCodeMK(String isDefaultLanguageLocationCodeMK) {
-        this.isDefaultLanguageLocationCodeMK = isDefaultLanguageLocationCodeMK;
     }
 
     public String getLanguageLocationCodeKK() {
@@ -185,12 +135,28 @@ public class LanguageLocationCodeCsv {
         this.languageKK = languageKK;
     }
 
-    public String getIsDefaultLanguageLocationCodeKK() {
-        return isDefaultLanguageLocationCodeKK;
+    public String getDefaultLanguageLocationCodeMA() {
+        return DefaultLanguageLocationCodeMA;
     }
 
-    public void setIsDefaultLanguageLocationCodeKK(String isDefaultLanguageLocationCodeKK) {
-        this.isDefaultLanguageLocationCodeKK = isDefaultLanguageLocationCodeKK;
+    public void setDefaultLanguageLocationCodeMA(String defaultLanguageLocationCodeMA) {
+        DefaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
+    }
+
+    public String getDefaultLanguageLocationCodeKK() {
+        return DefaultLanguageLocationCodeKK;
+    }
+
+    public void setDefaultLanguageLocationCodeKK(String defaultLanguageLocationCodeKK) {
+        DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
+    }
+
+    public String getDefaultLanguageLocationCodeMK() {
+        return DefaultLanguageLocationCodeMK;
+    }
+
+    public void setDefaultLanguageLocationCodeMK(String defaultLanguageLocationCodeMK) {
+        DefaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
     }
 
     public String toString() {
@@ -202,16 +168,12 @@ public class LanguageLocationCodeCsv {
         recordStr.append(",circleId" + this.circleId);
         recordStr.append(",languageLocationCodeMA" + this.languageLocationCodeMA);
         recordStr.append(",languageMA" + this.languageMA);
-        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.isDefaultLanguageLocationCodeMA);
+        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.DefaultLanguageLocationCodeMA);
         recordStr.append(",languageLocationCodeMK" + this.languageLocationCodeMK);
         recordStr.append(",languageMK" + this.languageMK);
-        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.isDefaultLanguageLocationCodeMK);
+        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.DefaultLanguageLocationCodeMK);
         recordStr.append(",languageLocationCodeKK" + this.languageLocationCodeKK);
-        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.isDefaultLanguageLocationCodeKK);
-        recordStr.append(",isDeployedMA" + this.isDeployedMA);
-        recordStr.append(",isDeployedMK" + this.isDeployedMK);
-        recordStr.append(",isDeployedKK" + this.isDeployedKK);
-
+        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.DefaultLanguageLocationCodeKK);
         return recordStr.toString();
 
     }

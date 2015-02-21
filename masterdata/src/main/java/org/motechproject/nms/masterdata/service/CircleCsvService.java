@@ -10,6 +10,4 @@ public interface CircleCsvService {
     void delete(CircleCsv record);
 
     void deleteAll();
-
-    Circle getCircleByCode(String circleCode);
 }

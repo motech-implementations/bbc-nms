@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ContentUploadKKCsvHandler {
-    BulkUploadError errorDetail = new BulkUploadError();
+
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -35,22 +35,14 @@ public class ContentUploadKKCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void ContentUploadKKCsvSuccess(MotechEvent motechEvent) {
-        //todo datetime format
         Map<String, Object> params = motechEvent.getParameters();
         String errorFileName = params.get("entity_name_") + new Date().toString();
-        try {
-            processContentUploadKKCsvRecords(params, errorFileName);
-        }catch (Exception ex) {
-            //todo: errorDetail for this error. can we replace it with a common helper method
-            errorDetail.setErrorCategory("");
-            errorDetail.setErrorDescription(ex.getMessage());
-            errorDetail.setRecordDetails("");
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-        }
+        processContentUploadKKCsvRecords(params, errorFileName);
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
+        BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
         Map<String, Object> params = motechEvent.getParameters();
         String errorFileName = params.get("entity_name_") + new Date().toString();
@@ -74,37 +66,35 @@ public class ContentUploadKKCsvHandler {
     }
 
     private void processContentUploadKKCsvRecords(Map<String, Object> params, String errorFileName) {
+        BulkUploadError errorDetail = new BulkUploadError();
     	CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
         String csvImportFileName = (String)params.get("csv-import.filename");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         int  successCount = 0;
         int failureCount = 0;
-        for(Long id : updatedIds) {
-            ContentUploadKKCsv record = contentUploadKKCsvService.findById(id);
-            if (record != null) {
-                ContentUploadKK newRecord = mapContentUploadKKFrom(record, errorFileName);
-                contentUploadKKService.update(newRecord);
-                contentUploadKKCsvService.delete(record);
-
-                ++successCount;
-            } else {
-                failureCount++;
-                logErrorRecord(errorFileName);
-            }
-        }
+        ContentUploadKKCsv record = null;
 
         for(Long id : createdIds) {
-            ContentUploadKKCsv record = contentUploadKKCsvService.findById(id);
+            try {
+                record = contentUploadKKCsvService.findById(id);
 
-            if (record != null) {
-                ContentUploadKK newRecord = mapContentUploadKKFrom(record, errorFileName);
-                contentUploadKKService.create(newRecord);
-                contentUploadKKCsvService.delete(record);
-                successCount++;
-            } else {
-                failureCount++;
-                logErrorRecord(errorFileName);
+                if (record != null) {
+                    ContentUploadKK newRecord = mapContentUploadKKFrom(record);
+                    contentUploadKKService.create(newRecord);
+                    contentUploadKKCsvService.delete(record);
+                    successCount++;
+                }
+            }catch (DataValidationException ex) {
+                errorDetail.setErrorCategory(ex.getErrorCode());
+                errorDetail.setRecordDetails(record.toString());
+                errorDetail.setErrorDescription(String.format(
+                        ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+            }catch (Exception ex) {
+                errorDetail.setErrorCategory("");
+                errorDetail.setErrorDescription(ex.getMessage());
+                errorDetail.setRecordDetails("");
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
             }
         }
         summary.setSuccessCount(successCount);
@@ -113,7 +103,7 @@ public class ContentUploadKKCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName) {
+    private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
         //todo: errorDetail for this error. can we replace it with a common helper method
         errorDetail.setErrorDescription("Record not found in the database");
         errorDetail.setErrorCategory("");
@@ -121,31 +111,21 @@ public class ContentUploadKKCsvHandler {
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
-    private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record, String errorFile) {
+    private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {
         ContentUploadKK newRecord = new ContentUploadKK();
-        try {
-            newRecord.setCircleCode(ParseDataHelper.parseString("", record.getCircleCode(), true));
-            newRecord.setContentDuration(ParseDataHelper.parseInt("", record.getContentDuration(), true));
-            newRecord.setContentFile(ParseDataHelper.parseString("", record.getContentFile(), true));
-            newRecord.setContentId(ParseDataHelper.parseInt("", record.getContentId(), true));
-            newRecord.setContentName(ParseDataHelper.parseString("", record.getContentName(), true));
+        newRecord.setCircleCode(ParseDataHelper.parseString("", record.getCircleCode(), true));
+        newRecord.setContentDuration(ParseDataHelper.parseInt("", record.getContentDuration(), true));
+        newRecord.setContentFile(ParseDataHelper.parseString("", record.getContentFile(), true));
+        newRecord.setContentId(ParseDataHelper.parseInt("", record.getContentId(), true));
+        newRecord.setContentName(ParseDataHelper.parseString("", record.getContentName(), true));
 
-            String contentType = ParseDataHelper.parseString("", record.getContentType(), true);
-            if (contentType.equals(ContentType.CONTENT.toString())) {
-                newRecord.setContentType(ContentType.CONTENT);
-            } else {
-                newRecord.setContentType(ContentType.PROMPT);
-            }
-
-            newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("", record.getLanguageLocationCode(), true));
-        }catch (DataValidationException ex) {
-            errorDetail.setErrorCategory(ex.getErrorCode());
-            errorDetail.setRecordDetails(record.toString());
-            errorDetail.setErrorDescription(String.format(
-                    ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFile, errorDetail);
-
+        String contentType = ParseDataHelper.parseString("", record.getContentType(), true);
+        if (contentType.equals(ContentType.CONTENT.toString())) {
+            newRecord.setContentType(ContentType.CONTENT);
+        } else {
+            newRecord.setContentType(ContentType.PROMPT);
         }
+        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("", record.getLanguageLocationCode(), true));
         return newRecord;
     }
 }

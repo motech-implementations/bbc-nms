@@ -7,4 +7,11 @@ public interface CircleService {
     void create(Circle record);
 
     void update(Circle record);
+
+    /**
+     * get Circle record for given Circle Census code
+     * @param circleCode State Census Code
+     * @return State object corresponding to the census code
+     */
+    Circle getCircleByCode(String circleCode);
 }

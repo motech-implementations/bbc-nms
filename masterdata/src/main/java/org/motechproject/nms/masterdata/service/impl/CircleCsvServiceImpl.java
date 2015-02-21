@@ -27,10 +27,4 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     public void deleteAll() {
         circleCsvDataService.deleteAll();
     }
-
-    @Override
-    public Circle getCircleByCode(String circleCode) {
-        return circleCsvDataService.getCircleByCode(circleCode);
-
-    }
 }

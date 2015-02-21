@@ -21,9 +21,6 @@ import java.util.Map;
 
 public class CircleCsvHandler {
 
-    BulkUploadError errorDetail = new BulkUploadError();
-    CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
-
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
@@ -35,22 +32,16 @@ public class CircleCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
     public void circleCsvSuccess(MotechEvent motechEvent) {
-        //todo datetime format
         Map<String, Object> params = motechEvent.getParameters();
-        String errorFileName = params.get("entity_name_") + new Date().toString();
-        try {
-            processCircleCsvRecords(params, errorFileName);
-        }catch (Exception ex) {
-            //todo: errorDetail for this error. can we replace it with a common helper method
-            errorDetail.setErrorCategory("");
-            errorDetail.setErrorDescription(ex.getMessage());
-            errorDetail.setRecordDetails("");
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-        }
+        String csvImportFileName = (String)params.get("csv-import.filename");
+        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
+        processCircleCsvRecords(params, errorFileName);
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
+        BulkUploadError errorDetail = new BulkUploadError();
+        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
         Map<String, Object> params = motechEvent.getParameters();
         String errorFileName = params.get("entity_name_") + new Date().toString();
         try {
@@ -73,35 +64,38 @@ public class CircleCsvHandler {
     }
 
     private void processCircleCsvRecords(Map<String, Object> params, String errorFileName) {
+        BulkUploadError errorDetail = new BulkUploadError();
+        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
+
         String csvImportFileName = (String)params.get("csv-import.filename");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         int successCount = 0;
         int failureCount = 0;
-        for(Long id : updatedIds) {
-            CircleCsv record = circleCsvService.findById(id);
-            if (record != null) {
-                Circle newRecord = mapCircleFrom(record, errorFileName);
-                circleService.update(newRecord);
-                circleCsvService.delete(record);
-                ++successCount;
-            } else {
-                failureCount++;
-                logErrorRecord(errorFileName);
-            }
-        }
+        CircleCsv record = null;
 
         for(Long id : createdIds) {
-            CircleCsv record = circleCsvService.findById(id);
+            try {
+                record = circleCsvService.findById(id);
 
-            if (record != null) {
-                Circle newRecord = mapCircleFrom(record, errorFileName);
-                circleService.create(newRecord);
-                circleCsvService.delete(record);
-                successCount++;
-            } else {
-                failureCount++;
-                logErrorRecord(errorFileName);
+                if (record != null) {
+                    Circle newRecord = mapCircleFrom(record);
+                    circleService.create(newRecord);
+                    circleCsvService.delete(record);
+                    successCount++;
+                }
+            } catch (DataValidationException ex) {
+                errorDetail.setErrorCategory(ex.getErrorCode());
+                errorDetail.setRecordDetails(record.toString());
+                errorDetail.setErrorDescription(String.format(
+                        ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+            } catch (Exception ex) {
+                errorDetail.setErrorDescription("Record not found in the database");
+                errorDetail.setErrorCategory("");
+                errorDetail.setRecordDetails("Record is null");
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+
             }
         }
         summary.setFailureCount(failureCount);
@@ -110,7 +104,7 @@ public class CircleCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName) {
+    private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
         //todo: errorDetail for this error. can we replace it with a common helper method
         errorDetail.setErrorDescription("Record not found in the database");
         errorDetail.setErrorCategory("");
@@ -118,18 +112,10 @@ public class CircleCsvHandler {
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
-    private Circle mapCircleFrom(CircleCsv record, String errorFileName) {
+    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException{
         Circle newRecord = new Circle();
-        try {
             newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
             newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
-        }catch (DataValidationException ex) {
-            errorDetail.setErrorCategory(ex.getErrorCode());
-            errorDetail.setRecordDetails(record.toString());
-            errorDetail.setErrorDescription(String.format(
-                    ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-        }
         return newRecord;
     }
 }
