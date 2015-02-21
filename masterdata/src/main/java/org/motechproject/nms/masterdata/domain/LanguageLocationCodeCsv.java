@@ -1,25 +1,23 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Unique;
 import java.lang.String;
 
 public class LanguageLocationCodeCsv extends MdsEntity{
 
     @Field
-    private String operation = "ADD";
+    private String operation;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String circleId;
+    private String circleCode;
 
     @Field
     private String languageLocationCodeMA;
@@ -48,11 +46,11 @@ public class LanguageLocationCodeCsv extends MdsEntity{
     @Field
     private String DefaultLanguageLocationCodeKK;
 
-    public LanguageLocationCodeCsv(String operation, String stateId, String districtId, String circleId) {
+    public LanguageLocationCodeCsv(String operation, String stateCode, String districtCode, String circleId) {
         this.operation = operation;
-        this.stateId = stateId;
-        this.districtId = districtId;
-        this.circleId = circleId;
+        this.stateCode = stateCode;
+        this.districtCode = districtCode;
+        this.circleCode = circleCode;
     }
 
     public String getOperation() {
@@ -63,28 +61,28 @@ public class LanguageLocationCodeCsv extends MdsEntity{
         this.operation = operation;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getCircleId() {
-        return circleId;
+    public String getCircleCode() {
+        return circleCode;
     }
 
-    public void setCircleId(String circleId) {
-        this.circleId = circleId;
+    public void setCircleCode(String circleCode) {
+        this.circleCode = circleCode;
     }
 
     public String getLanguageLocationCodeMA() {
@@ -162,10 +160,10 @@ public class LanguageLocationCodeCsv extends MdsEntity{
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("stateId" + this.stateId);
+        recordStr.append("stateCode" + this.stateCode);
 
-        recordStr.append(",districtId" + this.districtId);
-        recordStr.append(",circleId" + this.circleId);
+        recordStr.append(",districtCode" + this.districtCode);
+        recordStr.append(",circleCode" + this.circleCode);
         recordStr.append(",languageLocationCodeMA" + this.languageLocationCodeMA);
         recordStr.append(",languageMA" + this.languageMA);
         recordStr.append(",isDefaultLanguageLocationCodeMA" + this.DefaultLanguageLocationCodeMA);

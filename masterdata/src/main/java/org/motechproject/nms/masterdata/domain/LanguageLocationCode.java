@@ -5,20 +5,20 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 import java.lang.String;
-
+@Entity(recordHistory = true)
 public class LanguageLocationCode extends MdsEntity{
 
     @Field(required = true, name="state_id" )
     private State stateId;
 
     @Field(required=true)
-    private Integer stateCode;
+    private Long stateCode;
 
     @Field(required = true, name="district_id")
     private District districtId;
 
     @Field(required = true)
-    private Integer districtCode;
+    private Long districtCode;
 
     @Field(required = true, name = "circle_id")
     private Circle circleId;
@@ -151,19 +151,19 @@ public class LanguageLocationCode extends MdsEntity{
         DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
     }
 
-    public Integer getStateCode() {
+    public Long getStateCode() {
         return stateCode;
     }
 
-    public void setStateCode(Integer stateCode) {
+    public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
     }
 
-    public Integer getDistrictCode() {
+    public Long getDistrictCode() {
         return districtCode;
     }
 
-    public void setDistrictCode(Integer districtCode) {
+    public void setDistrictCode(Long districtCode) {
         this.districtCode = districtCode;
     }
 

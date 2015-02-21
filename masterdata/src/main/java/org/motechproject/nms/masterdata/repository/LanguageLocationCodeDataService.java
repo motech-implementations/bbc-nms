@@ -12,9 +12,9 @@ public interface LanguageLocationCodeDataService extends MotechDataService<Langu
 
 
     @Lookup
-    LanguageLocationCode findLanguageLocationCodeByLocation(@LookupField(name="stateCode") Integer stateCode,
-                                                  @LookupField(name="districtCode") Integer districtCode);
+    LanguageLocationCode findByLocation(@LookupField(name="stateCode") Long stateCode,
+                                                  @LookupField(name="districtCode") Long districtCode);
 
     @Lookup
-    List<LanguageLocationCode> findLanguageLocationCodeByCircle(@LookupField(name="stateCode") String circleCode);
+    List<LanguageLocationCode> findCircle(@LookupField(name="stateCode") String circleCode);
 }

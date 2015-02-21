@@ -13,7 +13,7 @@ public class LanguageLocationCodeServiceCsvImpl implements LanguageLocationCodeS
     private LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService;
 
     @Override
-    public LanguageLocationCodeCsv findById(Long id) {
+    public LanguageLocationCodeCsv getRecord(Long id) {
         return languageLocationCodeCsvDataService.findById(id);
     }
 
@@ -22,8 +22,4 @@ public class LanguageLocationCodeServiceCsvImpl implements LanguageLocationCodeS
         languageLocationCodeCsvDataService.delete(record);
     }
 
-    @Override
-    public void deleteAll() {
-        languageLocationCodeCsvDataService.deleteAll();
-    }
 }

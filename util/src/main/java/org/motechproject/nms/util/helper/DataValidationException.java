@@ -25,7 +25,7 @@ public class DataValidationException extends Exception {
         this.erroneousField = erroneousField;
     }
 
-    public DataValidationException(String message, String errorCode, String errorDesc,String erroneousField,
+    public DataValidationException(String message, String errorCode, String errorDesc, String erroneousField,
                                    Throwable cause) {
         super(message, cause);
         this.errorCode = errorCode;
@@ -33,7 +33,7 @@ public class DataValidationException extends Exception {
         this.erroneousField = erroneousField;
     }
 
-    public DataValidationException(String message, String errorCode, String errorDesc,String erroneousField) {
+    public DataValidationException(String message, String errorCode, String errorDesc, String erroneousField) {
         super(message);
         this.errorCode = errorCode;
         this.errorDesc = errorDesc;

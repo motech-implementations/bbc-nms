@@ -12,11 +12,8 @@ import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,11 +48,11 @@ public class LanguageLocationCodeCsvHandler {
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
         for(Long id : createdIds) {
-            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.findById(id));
+            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
         }
 
         for(Long id : updatedIds) {
-            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.findById(id));
+            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
         }
     }
 
@@ -72,13 +69,13 @@ public class LanguageLocationCodeCsvHandler {
         LanguageLocationCodeCsv record = null;
             for (Long id : createdIds) {
                 try {
-                    record = languageLocationCodeServiceCsv.findById(id);
+                    record = languageLocationCodeServiceCsv.getRecord(id);
                     if (record != null) {
                         userName = record.getOwner();
                         LanguageLocationCode newRecord = mapLanguageLocationCodeFrom(record);
 
                         LanguageLocationCode oldRecord = languageLocationCodeService.getLanguageLocationCodeRecord(
-                                Long.parseLong(record.getStateId()), Long.parseLong(record.getDistrictId()));
+                                Long.parseLong(record.getStateCode()), Long.parseLong(record.getDistrictCode()));
                         if(oldRecord == null) {
                             languageLocationCodeService.create(newRecord);
                         }else {
@@ -110,24 +107,24 @@ public class LanguageLocationCodeCsvHandler {
     private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException{
         LanguageLocationCode newRecord = new LanguageLocationCode();
 
-        newRecord.setStateCode(ParseDataHelper.parseInt("StateCode", record.getStateId(), true));
-        newRecord.setDistrictCode(ParseDataHelper.parseInt("DistrictCode", record.getDistrictId(), true));
-        newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleId(), true));
+        newRecord.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
+        newRecord.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
+        newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
         
-        Long stateId = ParseDataHelper.parseLong("stateId", record.getStateId(), true);
-        Circle circle = circleService.getCircleByCode(ParseDataHelper.parseString("circleId", record.getCircleId(), true));
+        Long stateId = ParseDataHelper.parseLong("stateId", record.getStateCode(), true);
+        Circle circle = circleService.getRecordByCode(ParseDataHelper.parseString("circleId", record.getCircleCode(), true));
         State state = locationService.getStateByCode(stateId);
-        District district = locationService.getDistrictByCode(stateId,ParseDataHelper.parseLong("districtId", record.getDistrictId(), true));
+        District district = locationService.getDistrictByCode(stateId,ParseDataHelper.parseLong("districtId", record.getDistrictCode(), true));
 
         if(circle == null) {
-            invalidDataException("circleId", record.getCircleId());
+            invalidDataException("circleId", record.getCircleCode());
         }
         if(state == null) {
             invalidDataException("stateId", stateId.toString());
         }
 
         if(district == null) {
-            invalidDataException("districtId", record.getDistrictId());
+            invalidDataException("districtId", record.getDistrictCode());
         }
             newRecord.setCircleId(circle);
             newRecord.setStateId(state);

@@ -4,9 +4,8 @@ import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
 
 public interface LanguageLocationCodeServiceCsv {
 
-    LanguageLocationCodeCsv findById(Long id);
+    LanguageLocationCodeCsv getRecord(Long id);
 
     void delete(LanguageLocationCodeCsv record);
 
-    void deleteAll();
 }
