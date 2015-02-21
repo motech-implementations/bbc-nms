@@ -21,4 +21,24 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     public void update(LanguageLocationCode record) {
         languageLocationCodeDataService.update(record);
     }
+
+    @Override
+    public LanguageLocationCode getLanguageLocationCodeRecord(Long stateCode, Long districtCode) {
+        return null;
+    }
+
+    @Override
+    public Integer getLanguageLocationCodeByLocation(Long stateCode, Long districtCode) {
+        return null;
+    }
+
+    @Override
+    public Integer getLanguageLocationCodeByCircle(String circleCode) {
+        return null;
+    }
+
+    @Override
+    public Integer getDefaultLanguageLocationCodeByCircle(String circleCode) {
+        return null;
+    }
 }

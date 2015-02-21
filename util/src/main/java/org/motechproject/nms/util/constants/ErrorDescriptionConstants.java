@@ -10,6 +10,7 @@ public final class ErrorDescriptionConstants {
 
     public static final String MANDATORY_PARAMETER_MISSING_DESCRIPTION = "Upload unsuccessful. %s missing.";
     public static final String INVALID_DATA_DESCRIPTION = "Upload unsuccessful. Invalid %s";
+    public static final String CSV_RECORD_MISSING_DESCRIPTION = "Record Not Found in CSV";
 
     private ErrorDescriptionConstants() {
 

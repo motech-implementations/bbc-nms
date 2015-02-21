@@ -9,6 +9,7 @@ public final class ErrorCategoryConstants {
     public static final String MANDATORY_PARAMETER_MISSING = "Mandatory Parameter Missing";
     public static final String INCONSISTENT_DATA = "Inconsistent Data";
     public static final String INVALID_DATA = "Invalid Data";
+    public static final String CSV_RECORD_MISSING = "CSV Record Not Found";
 
     private ErrorCategoryConstants() {
 

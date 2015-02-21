@@ -8,14 +8,23 @@ import java.lang.String;
 
 public class LanguageLocationCode extends MdsEntity{
 
-    @Field(required = true)
+    @Field(required = true, name="state_id" )
     private State stateId;
 
-    @Field(required = true)
+    @Field(required=true)
+    private Integer stateCode;
+
+    @Field(required = true, name="district_id")
     private District districtId;
 
-    @Field(required = true)
+    @Field(required=true)
+    private Integer stateCode;
+
+    @Field(required = true, name="circle_id")
     private Circle circleId;
+
+    @Field(required=true)
+    private String circleCode;
 
     @Field(required = true)
     private Integer languageLocationCodeMA;
