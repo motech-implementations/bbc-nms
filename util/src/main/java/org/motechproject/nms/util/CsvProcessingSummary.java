@@ -7,13 +7,18 @@ package org.motechproject.nms.util;
  */
 public class CsvProcessingSummary {
 
-    private Integer successCount;
+    private int successCount;
 
-    private Integer failureCount;
+    private int failureCount;
 
     public CsvProcessingSummary(Integer successCount, Integer failureCount) {
         this.successCount = successCount;
         this.failureCount = failureCount;
+    }
+
+    public CsvProcessingSummary() {
+        this.successCount = 0;
+        this.failureCount = 0;
     }
 
     public Integer getSuccessCount() {
@@ -34,10 +39,10 @@ public class CsvProcessingSummary {
 
     public void incrementSuccessCount() {
 
-        successCount = successCount + 1;
+        successCount++;
     }
     public void incrementFailureCount() {
 
-        failureCount = failureCount + 1;
+        failureCount++;
     }
 }
