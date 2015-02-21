@@ -8,6 +8,7 @@ import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
@@ -79,7 +80,10 @@ public class CircleCsvHandler {
                     successCount++;
                 } else {
                     failureCount++;
-                    logErrorRecord(errorFileName, errorDetail);
+                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetail.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 }
             } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
@@ -92,14 +96,6 @@ public class CircleCsvHandler {
         summary.setFailureCount(failureCount);
         summary.setSuccessCount(successCount);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
-    }
-
-    private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
-        //todo: errorDetail for this error. can we replace it with a common helper method
-        errorDetail.setErrorDescription("Record not found in the database");
-        errorDetail.setErrorCategory("");
-        errorDetail.setRecordDetails("Record is null");
-        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
     private Circle mapCircleFrom(CircleCsv record) throws DataValidationException{

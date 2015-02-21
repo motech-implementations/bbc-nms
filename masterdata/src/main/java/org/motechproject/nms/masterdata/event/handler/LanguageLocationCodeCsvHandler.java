@@ -88,7 +88,10 @@ public class LanguageLocationCodeCsvHandler {
                         successCount++;
                     } else {
                         failureCount++;
-                        logErrorRecord(errorFileName, errorDetail);
+                        errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                        errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                        errorDetail.setRecordDetails("Record is null");
+                        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                     }
                 } catch (DataValidationException ex) {
                     failureCount++;
@@ -102,14 +105,6 @@ public class LanguageLocationCodeCsvHandler {
         summary.setFailureCount(failureCount);
         summary.setSuccessCount(successCount);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
-    }
-
-    private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
-        //todo: errorDetail for this error. can we replace it with a common helper method
-        errorDetail.setErrorDescription("Record not found in the database");
-        errorDetail.setErrorCategory("");
-        errorDetail.setRecordDetails("Record is null");
-        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
     private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException{

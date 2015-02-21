@@ -9,6 +9,7 @@ import org.motechproject.nms.kilkari.service.ContentUploadKKCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadKKService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
@@ -63,6 +64,7 @@ public class ContentUploadKKCsvHandler {
         int  successCount = 0;
         int failureCount = 0;
         ContentUploadKKCsv record = null;
+        String userName = null;
 
         for(Long id : createdIds) {
             try {
@@ -70,12 +72,16 @@ public class ContentUploadKKCsvHandler {
 
                 if (record != null) {
                     ContentUploadKK newRecord = mapContentUploadKKFrom(record);
+                    userName = record.getOwner();
                     contentUploadKKService.create(newRecord);
                     contentUploadKKCsvService.delete(record);
                     successCount++;
                 } else {
                     failureCount++;
-                    logErrorRecord(errorFileName, errorDetail);
+                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetail.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 }
             }catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
@@ -87,19 +93,10 @@ public class ContentUploadKKCsvHandler {
         }
         summary.setSuccessCount(successCount);
         summary.setFailureCount(failureCount);
-        //todo : username
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
-        //todo: errorDetail for this error. can we replace it with a common helper method
-        errorDetail.setErrorDescription("Record not found in the database");
-        errorDetail.setErrorCategory("");
-        errorDetail.setRecordDetails("Record is null");
-        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-    }
-
-    private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {
+        private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {
         ContentUploadKK newRecord = new ContentUploadKK();
         newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
         newRecord.setContentDuration(ParseDataHelper.parseInt("ContentDuration", record.getContentDuration(), true));
