@@ -17,10 +17,10 @@ public class LanguageLocationCode extends MdsEntity{
     @Field(required = true, name="district_id")
     private District districtId;
 
-    @Field(required=true)
-    private Integer stateCode;
+    @Field(required = true)
+    private Integer districtCode;
 
-    @Field(required = true, name="circle_id")
+    @Field(required = true, name = "circle_id")
     private Circle circleId;
 
     @Field(required=true)
@@ -149,5 +149,29 @@ public class LanguageLocationCode extends MdsEntity{
 
     public void setDefaultLanguageLocationCodeKK(Integer defaultLanguageLocationCodeKK) {
         DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
+    }
+
+    public Integer getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Integer stateCode) {
+        this.stateCode = stateCode;
+    }
+
+    public Integer getDistrictCode() {
+        return districtCode;
+    }
+
+    public void setDistrictCode(Integer districtCode) {
+        this.districtCode = districtCode;
+    }
+
+    public String  getCircleCode() {
+        return circleCode;
+    }
+
+    public void setCircleCode(String circleCode) {
+        this.circleCode = circleCode;
     }
 }

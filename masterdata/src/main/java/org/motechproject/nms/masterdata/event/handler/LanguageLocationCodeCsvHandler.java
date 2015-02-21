@@ -46,30 +46,17 @@ public class LanguageLocationCodeCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
-        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
         Map<String, Object> params = motechEvent.getParameters();
+        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
-        String csvImportFileName = (String)params.get("csv-import.filename");
-        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
-
-        try {
-            int createdCount = (int)params.get("csv-import.created_count");
-            int updatedCount = (int)params.get("csv-import.updated_count");
-
-            languageLocationCodeServiceCsv.deleteAll();
-            summary.setFailureCount(createdCount + updatedCount);
-            summary.setSuccessCount(0);
-            //todo : username
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
-        } catch (Exception ex) {
-            //todo: errorDetail for this error. Can we replace it with a common helper method
-            BulkUploadError errorDetail = new BulkUploadError();
-            errorDetail.setErrorCategory("General Exception");
-            errorDetail.setErrorDescription(ex.getMessage());
-            errorDetail.setRecordDetails("");
-            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+        for(Long id : createdIds) {
+            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.findById(id));
         }
 
+        for(Long id : updatedIds) {
+            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.findById(id));
+        }
     }
 
     private void processLanguageLocationCodeCsvRecords(Map<String, Object> params, String errorFileName) {
@@ -81,15 +68,20 @@ public class LanguageLocationCodeCsvHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         int successCount = 0;
         int failureCount = 0;
+        String userName = null;
         LanguageLocationCodeCsv record = null;
             for (Long id : createdIds) {
                 try {
                     record = languageLocationCodeServiceCsv.findById(id);
                     if (record != null) {
+                        userName = record.getOwner();
                         LanguageLocationCode newRecord = mapLanguageLocationCodeFrom(record);
                         languageLocationCodeService.create(newRecord);
                         languageLocationCodeServiceCsv.delete(record);
                         successCount++;
+                    } else {
+                        failureCount++;
+                        logErrorRecord(errorFileName, errorDetail);
                     }
                 } catch (DataValidationException ex) {
                     failureCount++;
@@ -98,19 +90,11 @@ public class LanguageLocationCodeCsvHandler {
                             ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
                     errorDetail.setRecordDetails(record.toString());
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-
-                } catch (Exception ex) {
-                    failureCount++;
-                    errorDetail.setRecordDetails("");
-                    errorDetail.setErrorCategory("General Exception");
-                    errorDetail.setErrorDescription(ex.getMessage());
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 }
             }
         summary.setFailureCount(failureCount);
         summary.setSuccessCount(successCount);
-        //todo : username
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
     private void logErrorRecord(String errorFileName, BulkUploadError errorDetail) {
@@ -124,6 +108,10 @@ public class LanguageLocationCodeCsvHandler {
     private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException{
         LanguageLocationCode newRecord = new LanguageLocationCode();
 
+        newRecord.setStateCode(ParseDataHelper.parseInt("StateCode", record.getStateId(), true));
+        newRecord.setDistrictCode(ParseDataHelper.parseInt("DistrictCode", record.getDistrictId(), true));
+        newRecord.setCircleCode(ParseDataHelper.parseInt("CircleCode", record.getCircleId(), true));
+        
         Long stateId = ParseDataHelper.parseLong("stateId", record.getStateId(), true);
         Circle circle = circleService.getCircleByCode(ParseDataHelper.parseString("circleId", record.getCircleId(), true));
         State state = locationService.getStateByCode(stateId);
