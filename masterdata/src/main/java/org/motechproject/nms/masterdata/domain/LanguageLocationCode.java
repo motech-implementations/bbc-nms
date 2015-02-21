@@ -9,13 +9,13 @@ import java.lang.String;
 public class LanguageLocationCode extends MdsEntity{
 
     @Field(required = true)
-    private Integer stateId;
+    private State stateId;
 
     @Field(required = true)
-    private Integer districtId;
+    private District districtId;
 
     @Field(required = true)
-    private String circleId;
+    private Circle circleId;
 
     @Field(required = true)
     private Integer languageLocationCodeMA;
@@ -46,27 +46,27 @@ public class LanguageLocationCode extends MdsEntity{
 
     public LanguageLocationCode(){}
 
-    public Integer getStateId() {
+    public State getStateId() {
         return stateId;
     }
 
-    public void setStateId(Integer stateId) {
+    public void setStateId(State stateId) {
         this.stateId = stateId;
     }
 
-    public Integer getDistrictId() {
+    public District getDistrictId() {
         return districtId;
     }
 
-    public void setDistrictId(Integer districtId) {
+    public void setDistrictId(District districtId) {
         this.districtId = districtId;
     }
 
-    public String getCircleId() {
+    public Circle getCircleId() {
         return circleId;
     }
 
-    public void setCircleId(String circleId) {
+    public void setCircleId(Circle circleId) {
         this.circleId = circleId;
     }
 

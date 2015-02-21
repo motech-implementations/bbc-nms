@@ -1,10 +1,13 @@
 package org.motechproject.nms.masterdata.service.impl;
 
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("circleCsvService")
 public class CircleCsvServiceImpl implements CircleCsvService {
 
     @Autowired
@@ -23,5 +26,11 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     @Override
     public void deleteAll() {
         circleCsvDataService.deleteAll();
+    }
+
+    @Override
+    public Circle getCircleByCode(String circleCode) {
+        return circleCsvDataService.getCircleByCode(circleCode);
+
     }
 }

@@ -5,6 +5,24 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <osgi:service ref="circleCsvService"
+                  interface="org.motechproject.nms.masterdata.service.CircleCsvService" />
+
+    <osgi:service ref="circleService"
+                  interface="org.motechproject.nms.masterdata.service.CircleService" />
+
+    <osgi:service ref="languageLocationCodeService"
+                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService" />
+
+    <osgi:service ref="languageLocationCodeServiceCsv"
+                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv" />
+
+    <osgi:service ref="operatorCsvService"
+                  interface="org.motechproject.nms.masterdata.service.OperatorCsvService" />
+
+    <osgi:service ref="operatorService"
+                  interface="org.motechproject.nms.masterdata.service.OperatorService" />
+
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService" />
 
@@ -49,5 +67,23 @@
 
     <osgi:reference id="mdsLookupService"
                     interface="org.motechproject.mds.service.MDSLookupService" />
+
+    <osgi:reference id="circleCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.CircleCsvDataService" />
+
+    <osgi:reference id="circleDataService"
+                    interface="org.motechproject.nms.masterdata.repository.CircleDataService" />
+
+    <osgi:reference id="operatorCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.OperatorCsvDataService" />
+
+    <osgi:reference id="operatorDataService"
+                    interface="org.motechproject.nms.masterdata.repository.OperatorDataService" />
+
+    <osgi:reference id="languageLocationCodeCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService" />
+
+    <osgi:reference id="languageLocationCodeDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService" />
 
 </beans>

@@ -4,7 +4,9 @@ import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.repository.OperatorDataService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("operatorService")
 public class OperatorServiceImpl implements OperatorService {
 
     @Autowired

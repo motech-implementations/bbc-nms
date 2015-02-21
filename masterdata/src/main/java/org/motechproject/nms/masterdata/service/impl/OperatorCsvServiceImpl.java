@@ -4,7 +4,9 @@ import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.repository.OperatorCsvDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("operatorCsvService")
 public class OperatorCsvServiceImpl implements OperatorCsvService {
 
     @Autowired

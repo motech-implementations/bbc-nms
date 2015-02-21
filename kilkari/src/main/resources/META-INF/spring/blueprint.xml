@@ -27,7 +27,13 @@
         interface="org.motechproject.nms.kilkari.service.SubscriberService" />  
         
 	<osgi:service ref="subscriptionPackService"
-        interface="org.motechproject.nms.kilkari.service.SubscriptionPackService" />                               
+        interface="org.motechproject.nms.kilkari.service.SubscriptionPackService" />
+
+    <osgi:service ref="contentUploadKKService"
+                  interface="org.motechproject.nms.kilkari.service.ContentUploadKKService" />
+
+    <osgi:service ref="contentUploadKKCsvService"
+                  interface="org.motechproject.nms.kilkari.service.ContentUploadKKCsvService" />
         
     <osgi:reference id="helloWorldRecordsDataService"
                     interface="org.motechproject.nms.kilkari.repository.HelloWorldRecordsDataService" />
@@ -48,6 +54,12 @@
                     interface="org.motechproject.nms.kilkari.repository.SubscriberDataService" />   
                     
 	<osgi:reference id="subscriptionPackDataService"
-                    interface="org.motechproject.nms.kilkari.repository.SubscriptionPackDataService" />                                                                                                                    
-               
+                    interface="org.motechproject.nms.kilkari.repository.SubscriptionPackDataService" />
+
+    <osgi:reference id="contentUploadKKDataService"
+                    interface="org.motechproject.nms.kilkari.repository.ContentUploadKKDataService" />
+
+    <osgi:reference id="contentUploadKKCsvDataService"
+                    interface="org.motechproject.nms.kilkari.repository.ContentUploadKKCsvDataService" />
+
 </beans>

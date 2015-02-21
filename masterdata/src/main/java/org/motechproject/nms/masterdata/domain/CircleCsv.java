@@ -42,11 +42,9 @@ public class CircleCsv {
     }
 
     public String toString() {
-
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("name" + this.name);
+        recordStr.append("name" + this.name).append(",code" + this.code);
 
-        recordStr.append(",code" + this.code);
         return recordStr.toString();
 
     }

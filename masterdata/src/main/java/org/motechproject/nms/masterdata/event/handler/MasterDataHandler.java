@@ -35,10 +35,10 @@ public class MasterDataHandler {
 //        }
 //    }
 
-    private State getStateData(StateCsv csvData)
-    {
-        State data= new State(csvData.getName(),Long.parseLong(csvData.getStateId()),null);
-
-        return data;
-    }
+//    private State getStateData(StateCsv csvData)
+//    {
+//        State data= new State(csvData.getName(),Long.parseLong(csvData.getStateId()),null);
+//
+//        return data;
+//    }
 }

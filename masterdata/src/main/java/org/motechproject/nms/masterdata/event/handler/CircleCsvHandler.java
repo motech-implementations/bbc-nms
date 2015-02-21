@@ -2,14 +2,12 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.ErrorDescriptionConstant;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
-import org.motechproject.nms.util.constants.ErrorCodeConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
@@ -24,7 +22,6 @@ import java.util.Map;
 public class CircleCsvHandler {
 
     BulkUploadError errorDetail = new BulkUploadError();
-
     CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
 
     @Autowired
@@ -38,33 +35,45 @@ public class CircleCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
     public void circleCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "CircleCsv_" + new Date().toString();
-
+        //todo datetime format
+        Map<String, Object> params = motechEvent.getParameters();
+        String errorFileName = params.get("entity_name_") + new Date().toString();
         try {
-            Map<String, Object> params = motechEvent.getParameters();;
             processCircleCsvRecords(params, errorFileName);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
         }catch (Exception ex) {
+            //todo: errorDetail for this error. can we replace it with a common helper method
+            errorDetail.setErrorCategory("");
+            errorDetail.setErrorDescription(ex.getMessage());
+            errorDetail.setRecordDetails("");
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
         }
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
-        String errorFileName = "CircleCsv_" + new Date().toString();
+        Map<String, Object> params = motechEvent.getParameters();
+        String errorFileName = params.get("entity_name_") + new Date().toString();
         try {
-            Map<String, Object> params = motechEvent.getParameters();;
-            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+            int createdCount = (int)params.get("csv-import.created_count");
+            int updatedCount = (int)params.get("csv-import.updated_count");
+            String csvImportFileName = (String)params.get("csv-import.filename");
 
             circleCsvService.deleteAll();
             summary.setSuccessCount(0);;
-            summary.setFailureCount(createdIds.size() + updatedIds.size());
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+            summary.setFailureCount(createdCount + updatedCount);
+            //todo : username
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
         }catch (Exception ex) {
+            //todo: errorDetail for this error. can we replace it with a common helper method
+            errorDetail.setErrorCategory("");
+            errorDetail.setErrorDescription(ex.getMessage());
+            errorDetail.setRecordDetails("");
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
         }
     }
 
     private void processCircleCsvRecords(Map<String, Object> params, String errorFileName) {
+        String csvImportFileName = (String)params.get("csv-import.filename");
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         int successCount = 0;
@@ -72,13 +81,13 @@ public class CircleCsvHandler {
         for(Long id : updatedIds) {
             CircleCsv record = circleCsvService.findById(id);
             if (record != null) {
-                Circle newRecord = mapCircleFrom(record);
+                Circle newRecord = mapCircleFrom(record, errorFileName);
                 circleService.update(newRecord);
                 circleCsvService.delete(record);
                 ++successCount;
             } else {
                 failureCount++;
-                logErrorRecord(errorFileName, record.toString());
+                logErrorRecord(errorFileName);
             }
         }
 
@@ -86,29 +95,30 @@ public class CircleCsvHandler {
             CircleCsv record = circleCsvService.findById(id);
 
             if (record != null) {
-                Circle newRecord = mapCircleFrom(record);
+                Circle newRecord = mapCircleFrom(record, errorFileName);
                 circleService.create(newRecord);
                 circleCsvService.delete(record);
                 successCount++;
             } else {
                 failureCount++;
-                logErrorRecord(errorFileName, record.toString());
+                logErrorRecord(errorFileName);
             }
         }
         summary.setFailureCount(failureCount);
         summary.setSuccessCount(successCount);
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", errorFileName, summary);
+        //todo : username
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName, String recordStr) {
-        errorDetail.setErrorDescription("");
+    private void logErrorRecord(String errorFileName) {
+        //todo: errorDetail for this error. can we replace it with a common helper method
+        errorDetail.setErrorDescription("Record not found in the database");
         errorDetail.setErrorCategory("");
-        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
-        errorDetail.setUserName("");
+        errorDetail.setRecordDetails("Record is null");
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
-    private Circle mapCircleFrom(CircleCsv record) {
+    private Circle mapCircleFrom(CircleCsv record, String errorFileName) {
         Circle newRecord = new Circle();
         try {
             newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
@@ -116,7 +126,9 @@ public class CircleCsvHandler {
         }catch (DataValidationException ex) {
             errorDetail.setErrorCategory(ex.getErrorCode());
             errorDetail.setRecordDetails(record.toString());
-            errorDetail.setErrorDescription(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION.format(ex.getErroneousField()));
+            errorDetail.setErrorDescription(String.format(
+                    ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
         }
         return newRecord;
     }

@@ -4,7 +4,9 @@ import org.motechproject.nms.kilkari.domain.ContentUploadKK;
 import org.motechproject.nms.kilkari.repository.ContentUploadKKDataService;
 import org.motechproject.nms.kilkari.service.ContentUploadKKService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service("contentUploadKKService")
 public class ContentUploadKKServiceImpl implements ContentUploadKKService {
 
     @Autowired

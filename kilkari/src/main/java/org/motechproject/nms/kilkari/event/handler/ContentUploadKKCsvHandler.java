@@ -22,10 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ContentUploadKKCsvHandler {
-
     BulkUploadError errorDetail = new BulkUploadError();
-
-    
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -38,37 +35,47 @@ public class ContentUploadKKCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void ContentUploadKKCsvSuccess(MotechEvent motechEvent) {
-        String errorFileName = "ContentUploadKKCsv_" + new Date().toString();
-
+        //todo datetime format
+        Map<String, Object> params = motechEvent.getParameters();
+        String errorFileName = params.get("entity_name_") + new Date().toString();
         try {
-            Map<String, Object> params = motechEvent.getParameters();;
             processContentUploadKKCsvRecords(params, errorFileName);
         }catch (Exception ex) {
+            //todo: errorDetail for this error. can we replace it with a common helper method
+            errorDetail.setErrorCategory("");
+            errorDetail.setErrorDescription(ex.getMessage());
+            errorDetail.setRecordDetails("");
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
         }
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
-    	
-        String errorFileName = "ContentUploadKKCsv_" + new Date().toString();
         CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
-        
+        Map<String, Object> params = motechEvent.getParameters();
+        String errorFileName = params.get("entity_name_") + new Date().toString();
         try {
-            Map<String, Object> params = motechEvent.getParameters();;
-            List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-            List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+            int createdCount = (int)params.get("csv-import.created_count");
+            int updatedCount = (int)params.get("csv-import.updated_count");
+            String csvImportFileName = (String)params.get("csv-import.filename");
 
             contentUploadKKCsvService.deleteAll();
-            summary.setFailureCount(createdIds.size() + updatedIds.size());
+            summary.setFailureCount(createdCount + updatedCount);
             summary.setSuccessCount(0);
-            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", "", errorFileName, summary);
+            //todo : username
+            bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
         }catch (Exception ex) {
+            //todo: errorDetail for this error. can we replace it with a common helper method
+            errorDetail.setErrorCategory("");
+            errorDetail.setErrorDescription(ex.getMessage());
+            errorDetail.setRecordDetails("");
+            bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
         }
     }
 
     private void processContentUploadKKCsvRecords(Map<String, Object> params, String errorFileName) {
     	CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
-    	
+        String csvImportFileName = (String)params.get("csv-import.filename");
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         int  successCount = 0;
@@ -83,7 +90,7 @@ public class ContentUploadKKCsvHandler {
                 ++successCount;
             } else {
                 failureCount++;
-                logErrorRecord(errorFileName, record.toString());
+                logErrorRecord(errorFileName);
             }
         }
 
@@ -97,18 +104,20 @@ public class ContentUploadKKCsvHandler {
                 successCount++;
             } else {
                 failureCount++;
-                logErrorRecord(errorFileName, record.toString());
+                logErrorRecord(errorFileName);
             }
         }
         summary.setSuccessCount(successCount);
         summary.setFailureCount(failureCount);
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", "", errorFileName, summary);
+        //todo : username
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary("", csvImportFileName, errorFileName, summary);
     }
 
-    private void logErrorRecord(String errorFileName, String recordStr) {
-        errorDetail.setErrorDescription("");
+    private void logErrorRecord(String errorFileName) {
+        //todo: errorDetail for this error. can we replace it with a common helper method
+        errorDetail.setErrorDescription("Record not found in the database");
         errorDetail.setErrorCategory("");
-        errorDetail.setRecordDetails(ErrorDescriptionConstant.RECORD_UPLOAD_ERROR_DETAIL.format(recordStr));
+        errorDetail.setRecordDetails("Record is null");
         bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
     }
 
@@ -132,7 +141,8 @@ public class ContentUploadKKCsvHandler {
         }catch (DataValidationException ex) {
             errorDetail.setErrorCategory(ex.getErrorCode());
             errorDetail.setRecordDetails(record.toString());
-            errorDetail.setErrorDescription(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION.format(ex.getErroneousField()));
+            errorDetail.setErrorDescription(String.format(
+                    ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
             bulkUploadErrLogService.writeBulkUploadErrLog(errorFile, errorDetail);
 
         }

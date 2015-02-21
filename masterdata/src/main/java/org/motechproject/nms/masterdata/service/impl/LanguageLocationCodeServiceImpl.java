@@ -4,10 +4,9 @@ import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-/**
- * Created by ashish on 18/2/15.
- */
+@Service("languageLocationCodeService")
 public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {
 
     @Autowired
