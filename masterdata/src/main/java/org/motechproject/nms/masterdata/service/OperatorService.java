@@ -8,4 +8,5 @@ public interface OperatorService {
 
     void update(Operator record);
 
+    public Operator getRecordByCode(String operatorCode);
 }

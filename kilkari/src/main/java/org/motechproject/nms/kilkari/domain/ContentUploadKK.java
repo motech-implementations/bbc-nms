@@ -5,10 +5,11 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+@Entity(recordHistory = true)
 public class ContentUploadKK extends MdsEntity{
 
     @Field(required = true)
-    private Integer contentId;
+    private Long contentId;
 
     @Field(required = true)
     private String circleCode;
@@ -28,11 +29,11 @@ public class ContentUploadKK extends MdsEntity{
     @Field(required = true)
     private Integer contentDuration;
 
-    public Integer getContentId() {
+    public Long getContentId() {
         return contentId;
     }
 
-    public void setContentId(Integer contentId) {
+    public void setContentId(Long contentId) {
         this.contentId = contentId;
     }
 

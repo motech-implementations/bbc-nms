@@ -33,10 +33,54 @@ public class OperatorCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
+
+        OperatorCsv record = null;
+        Operator persistentRecord = null;
+        String userName = null;
+
+        BulkUploadError errorDetail = new BulkUploadError();
+        CsvProcessingSummary summary = new CsvProcessingSummary();
+
         Map<String, Object> params = motechEvent.getParameters();
+        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
         String csvImportFileName = (String)params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
-        processOperatorCsvRecords(params, errorFileName);
+
+        for(Long id : createdIds) {
+            try {
+                record = operatorCsvService.getRecord(id);
+                if (record != null) {
+                    userName = record.getOwner();
+                    Operator newRecord = mapOperatorFrom(record);
+
+                    persistentRecord = operatorService.getRecordByCode(newRecord.getCode());
+                    if (persistentRecord != null) {
+                        newRecord.setId(persistentRecord.getId());
+                        newRecord.setModifiedBy(userName);
+                        operatorService.update(newRecord);
+                    }else {
+                        newRecord.setOwner(userName);
+                        newRecord.setModifiedBy(userName);
+                        operatorService.create(newRecord);
+                    }
+                    summary.incrementSuccessCount();
+                }else {
+                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetail.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+                    summary.incrementFailureCount();
+                }
+            }catch (DataValidationException ex) {
+                errorDetail.setErrorCategory(ex.getErrorCode());
+                errorDetail.setRecordDetails(record.toString());
+                errorDetail.setErrorDescription(ex.getErrorDesc());
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+                summary.incrementFailureCount();
+            }
+        }
+
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
@@ -47,52 +91,12 @@ public class OperatorCsvHandler {
         List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
 
         for(Long id : createdIds) {
-            operatorCsvService.delete(operatorCsvService.findById(id));
+            operatorCsvService.delete(operatorCsvService.getRecord(id));
         }
 
         for(Long id : updatedIds) {
-            operatorCsvService.delete(operatorCsvService.findById(id));
+            operatorCsvService.delete(operatorCsvService.getRecord(id));
         }
-    }
-
-    private void processOperatorCsvRecords(Map<String, Object> params, String errorFileName) {
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
-        String csvImportFileName = (String)params.get("csv-import.filename");
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        OperatorCsv record = null;
-        int successCount = 0;
-        int failureCount = 0;
-
-        String userName = null;
-
-        for(Long id : createdIds) {
-            try {
-                record = operatorCsvService.findById(id);
-                if (record != null) {
-                    userName = record.getOwner();
-                    Operator newRecord = mapOperatorFrom(record);
-                    operatorService.create(newRecord);
-                    operatorCsvService.delete(record);
-                    successCount++;
-                } else {
-                    failureCount++;
-                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetail.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                }
-            }catch (DataValidationException ex) {
-                errorDetail.setErrorCategory(ex.getErrorCode());
-                errorDetail.setRecordDetails(record.toString());
-                errorDetail.setErrorDescription(String.format(
-                        ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-            }
-        }
-        summary.setSuccessCount(successCount);
-        summary.setFailureCount(failureCount);
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
     private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException{

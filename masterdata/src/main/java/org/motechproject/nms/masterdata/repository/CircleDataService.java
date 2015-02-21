@@ -7,5 +7,5 @@ import org.motechproject.nms.masterdata.domain.Circle;
 
 public interface CircleDataService extends MotechDataService<Circle> {
     @Lookup
-    Circle getCircleByCode(@LookupField(name = "code") String recordName);
+    Circle findByCode(@LookupField(name = "code") String code);
 }

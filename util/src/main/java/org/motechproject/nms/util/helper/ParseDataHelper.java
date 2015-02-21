@@ -2,6 +2,7 @@
 
     import org.joda.time.DateTime;
     import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+    import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 
     import java.text.DateFormat;
     import java.text.ParseException;
@@ -23,9 +24,8 @@
 
         /**
          * checks if the field value is null or empty
-         *
+         * @param field The value of the field to be checked
          * @return true if null or empty else false
-         * @field The value of the field to be checked
          */
         public static boolean isNullOrEmpty(String field) {
             /* "NULL" with ignore case is also considered as empty */
@@ -46,15 +46,12 @@
                 throws DataValidationException {
             if (isNullOrEmpty(fieldValue)) {
                 if (isMandatory) {
-                    String errMessage = DataValidationException.MANDATORY_MISSING_MESSAGE.format(fieldValue);
-                    throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING, fieldName);
+                    raiseMissingDataException(fieldName, fieldValue);
                 } else {
-                    return null;
+                    fieldValue = null;
                 }
-            } else {
-                return fieldValue;
             }
-
+            return fieldValue;
         }
 
         /**
@@ -70,23 +67,22 @@
          */
         public static DateTime parseDate(String fieldName, String fieldValue, boolean isMandatory)
                 throws DataValidationException {
+            DateTime parsedDateTime = null;
+
             try {
-                if (parseString(fieldName, fieldValue, isMandatory) == null) {
-                    return null;
-                } else {
-                    DateTime dateTime = null;
+                if (parseString(fieldName, fieldValue, isMandatory) != null) {
                     DateFormat dateFormat = new SimpleDateFormat("");
 
                     Date date = dateFormat.parse(fieldValue);
-                    dateTime = new DateTime(date);
+                    parsedDateTime = new DateTime(date);
 
-                    return dateTime;
                 }
 
             } catch (NumberFormatException | ParseException e) {
-                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
+                raiseInvalidDataException(fieldName, fieldValue, e);
             }
+
+            return parsedDateTime;
         }
 
         /**
@@ -102,17 +98,16 @@
          */
         public static Integer parseInt(String fieldName, String fieldValue, boolean isMandatory)
                 throws DataValidationException {
+            Integer parsedValue = null;
             try {
-                if (parseString(fieldName, fieldValue, isMandatory) == null) {
-                    return null;
-                } else {
-                    return Integer.parseInt(fieldValue);
+                if (parseString(fieldName, fieldValue, isMandatory) != null) {
+                    parsedValue = Integer.parseInt(fieldValue);
                 }
             } catch (NumberFormatException e) {
-
-                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
+                raiseInvalidDataException(fieldName, fieldValue, e);
             }
+
+            return parsedValue;
         }
 
         /**
@@ -128,16 +123,16 @@
          */
         public static Long parseLong(String fieldName, String fieldValue, boolean isMandatory)
                 throws DataValidationException {
+            Long parsedValue = null;
             try {
-                if (parseString(fieldName, fieldValue, isMandatory) == null) {
-                    return null;
-                } else {
-                    return Long.parseLong(fieldValue);
+                if (parseString(fieldName, fieldValue, isMandatory) != null) {
+                    parsedValue = Long.parseLong(fieldValue);
                 }
             } catch (NumberFormatException e) {
-                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
+                raiseInvalidDataException(fieldName, fieldValue, e);
             }
+
+            return parsedValue;
         }
 
         /**
@@ -153,17 +148,39 @@
          */
         public static Boolean parseBoolean(String fieldName, String fieldValue, boolean isMandatory)
                 throws DataValidationException {
+            Boolean parsedValue = null;
             try {
-                if (parseString(fieldName, fieldValue, isMandatory) == null) {
-                    return null;
-                } else {
-                    return Boolean.parseBoolean(fieldValue);
+                if (parseString(fieldName, fieldValue, isMandatory) != null) {
+                    parsedValue =  Boolean.parseBoolean(fieldValue);
                 }
             } catch (NumberFormatException e) {
-                String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, fieldName, e);
+                raiseInvalidDataException(fieldName, fieldValue, e);
             }
 
+            return parsedValue;
+        }
+
+        public static void raiseInvalidDataException(String fieldName, String fieldValue, Exception e)
+                throws DataValidationException{
+            String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+            String errDesc = ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION.format(fieldName);
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName, e);
+        }
+
+
+        public static void raiseInvalidDataException(String fieldName, String fieldValue)
+                throws DataValidationException{
+            String errMessage = DataValidationException.INVALID_FORMAT_MESSAGE.format(fieldValue);
+            String errDesc = ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION.format(fieldName);
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName);
+        }
+
+        public static void raiseMissingDataException(String fieldName, String fieldValue)
+                throws DataValidationException{
+            String errMessage = DataValidationException.MANDATORY_MISSING_MESSAGE.format(fieldValue);
+            String errDesc = ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION.format(fieldName);
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING,
+                    errDesc, fieldName);
         }
 
     }

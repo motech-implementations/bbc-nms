@@ -13,5 +13,5 @@ public interface CircleService {
      * @param circleCode State Census Code
      * @return State object corresponding to the census code
      */
-    Circle getCircleByCode(String circleCode);
+    Circle getRecordByCode(String circleCode);
 }

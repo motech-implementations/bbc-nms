@@ -13,7 +13,7 @@ public class ContentUploadKKCsvServiceImpl implements ContentUploadKKCsvService{
     private ContentUploadKKCsvDataService contentUploadKKCsvDataService;
 
     @Override
-    public ContentUploadKKCsv findById(Long id) {
+    public ContentUploadKKCsv getRecord(Long id) {
         return contentUploadKKCsvDataService.findById(id);
     }
 
@@ -22,8 +22,4 @@ public class ContentUploadKKCsvServiceImpl implements ContentUploadKKCsvService{
         contentUploadKKCsvDataService.delete(record);
     }
 
-    @Override
-    public void deleteAll() {
-        contentUploadKKCsvDataService.deleteAll();
-    }
 }
