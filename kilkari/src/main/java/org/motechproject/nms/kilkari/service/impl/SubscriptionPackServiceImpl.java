@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 @Service("subscriptionPackService")
 public class SubscriptionPackServiceImpl implements SubscriptionPackService {
 
-	@Autowired
-	private SubscriptionPackDataService subscriptionPackDataService; 
 	
 	@Override
 	public void create(String name, String message) {

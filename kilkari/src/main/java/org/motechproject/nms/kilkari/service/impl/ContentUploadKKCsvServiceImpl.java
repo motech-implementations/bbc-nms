@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("contentUploadKKCsvService")
-public class ContentUploadKKCsvServiceImpl implements ContentUploadKKCsvService{
+public class ContentUploadKKCsvServiceImpl implements ContentUploadKKCsvService {
 
     @Autowired
     private ContentUploadKKCsvDataService contentUploadKKCsvDataService;

@@ -22,8 +22,11 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -54,6 +57,9 @@ public class MotherMctsCsvHandler {
 
     @Autowired
     private LocationValidator locationValidator;
+    
+    @Autowired
+    private LanguageLocationCodeService languageLocationCodeService;
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -74,19 +80,23 @@ public class MotherMctsCsvHandler {
         BulkUploadError errorDetails = new BulkUploadError();
         
         MotherMctsCsv motherMctsCsv = null;
-
+        String userName = null;
         for (Long id : uploadedIDs) {
             try {
+                
                 motherMctsCsv = motherMctsCsvService.findRecordById(id);
                 if(motherMctsCsv!=null ){
+                    userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
+                    insertSubscriptionSubccriber(subscriber);
                     summary.incrementSuccessCount();
                 }
                 else {
+                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetails.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                     summary.incrementFailureCount();
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
                 }
             }catch(DataValidationException dve) {
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
@@ -100,7 +110,7 @@ public class MotherMctsCsvHandler {
         }
         
         motherMctsCsvService.deleteAll();
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary("username", csvFileName, logFile, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFile, summary);
     }
 
     private Subscriber motherMctsToSubscriberMapper(MotherMctsCsv motherMctsCsv) throws DataValidationException  {
@@ -148,8 +158,11 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
         motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        motherSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeByLocation(stateCode, districtCode));
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
+        motherSubscriber.setCreator(motherMctsCsv.getCreator());
+        motherSubscriber.setOwner(motherMctsCsv.getOwner());
 
         return motherSubscriber;
     }
@@ -191,7 +204,6 @@ public class MotherMctsCsvHandler {
             }
         }else{
             if(dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
-                //Update Subscriber (motherMctsId, name, age, location, abort, still, motherDeath, lmp)
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
                 
@@ -216,45 +228,54 @@ public class MotherMctsCsvHandler {
 
     private void updateSubscriberSubscription(Subscriber subscriber,
             Subscription dbSubscription, Subscriber dbSubscriber) {
-        
-        if(!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())){
-            dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
-            dbSubscription.setMsisdn(subscriber.getMsisdn());
-        }                                 
+        Subscription newSubscription = null;
+                               
         
         if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()){
             
             dbSubscription.setStatus(Status.Deactivated);
-            dbSubscription.setMctsId(subscriber.getMotherMctsId());
+            dbSubscription.setStateCode(subscriber.getState().getStateCode());
             dbSubscription.setChannel(Channel.MCTS);
+            dbSubscription.setMctsId(subscriber.getMotherMctsId());
             dbSubscription.setMsisdn(subscriber.getMsisdn());
             subscriptionService.update(dbSubscription);
             
         }else {
             if(!dbSubscriber.getLmp().equals(subscriber.getLmp())){
                 dbSubscription.setStatus(Status.Deactivated);
-                Subscription newSubscription = new Subscription();
+                dbSubscription.setStateCode(subscriber.getState().getStateCode());
+                dbSubscription.setChannel(Channel.MCTS);
+                dbSubscription.setMctsId(subscriber.getMotherMctsId());
+                dbSubscription.setMsisdn(subscriber.getMsisdn());
+                dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+                subscriptionService.update(dbSubscription);
+                
+                newSubscription = new Subscription();
                 newSubscription.setOldSubscritptionId(dbSubscription);
                 newSubscription.setStatus(Status.PendingActivation);
                 newSubscription.setMctsId(subscriber.getMotherMctsId());
                 newSubscription.setChannel(Channel.MCTS);
                 newSubscription.setMsisdn(subscriber.getMsisdn());
+                newSubscription.setPackName("72Week");
                 
+                newSubscription.setModifiedBy(subscriber.getModifiedBy());
                 subscriptionService.create(newSubscription);
-                subscriptionService.update(dbSubscription);
+                
 
             }else{
+                dbSubscription.setStateCode(subscriber.getState().getStateCode());
                 dbSubscription.setChannel(Channel.MCTS);
                 dbSubscription.setMctsId(subscriber.getMotherMctsId());
                 dbSubscription.setMsisdn(subscriber.getMsisdn());
+                dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
                 subscriptionService.update(dbSubscription);
             }
         }
         
-        /*
-         * Update dbSubscriber with update Subscriber
-         * motherMctsId, name, age, location, abort, still, motherDeath, lmp
-         */
+        if(!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())){
+            dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
+        }  
+        
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setName(subscriber.getName());
         dbSubscriber.setAge(subscriber.getAge());
@@ -269,6 +290,7 @@ public class MotherMctsCsvHandler {
         dbSubscriber.setStillBirth(subscriber.getStillBirth());
         dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
         dbSubscriber.setLmp(subscriber.getLmp());
+        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
         
         subscriberService.update(dbSubscriber);      
                 

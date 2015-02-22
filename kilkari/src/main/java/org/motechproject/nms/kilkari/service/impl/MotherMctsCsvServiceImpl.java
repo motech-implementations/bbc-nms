@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("motherMctsCsvService")
-public class MotherMctsCsvServiceImpl implements MotherMctsCsvService{
+public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
     @Autowired
     private MotherMctsCsvDataService motherMctsCsvDataService;

@@ -8,7 +8,7 @@ import org.motechproject.nms.kilkari.domain.Subscription;
 
 public interface SubscriptionService {
 
-	void create(String name, String message);
+    void create(String name, String message);
 
     void add(Subscription record);
 
@@ -20,12 +20,12 @@ public interface SubscriptionService {
 
     void update(Subscription record);
     
-    public Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem);
+    Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem);
     
-    public Subscription getSubscriptionByMsisdnPackStatus(String msisdn, String packName, Status status);
+    Subscription getSubscriptionByMsisdnPackStatus(String msisdn, String packName, Status status);
     
-    public Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status);
+    Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status);
     
-    public Subscription create(Subscription subscription);
+    Subscription create(Subscription subscription);
 
 }

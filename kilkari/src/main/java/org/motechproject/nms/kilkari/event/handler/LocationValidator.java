@@ -22,7 +22,7 @@ public class LocationValidator {
     public State stateConsistencyCheck(String stateId,
             Long stateCode) throws DataValidationException {
         State state = locationService.getStateByCode(stateCode);
-        if(state == null){
+        if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State Id", stateId);
         }
         return state;
@@ -30,7 +30,7 @@ public class LocationValidator {
 
     public District districtConsistencyCheck(String districtId, State state, Long districtCode) throws DataValidationException {
         District district = locationService.getDistrictByCode(state.getId(), districtCode);
-        if(district == null){
+        if (district == null) {
             ParseDataHelper.raiseInvalidDataException( "District Id", districtId);
         }
         return district;
@@ -38,9 +38,9 @@ public class LocationValidator {
 
     public Village villageConsistencyCheck(String villageId, String talukaId, Taluka taluka, Long villageCode) throws DataValidationException {
         Village village = null;
-        if (villageCode!=null) {
-            if(taluka!=null){
-                village = locationService.getVillageByCode(taluka.getId(),villageCode);
+        if (villageCode != null) {
+            if (taluka != null) {
+                village = locationService.getVillageByCode(taluka.getId(), villageCode);
                 if(village == null){
                     ParseDataHelper.raiseInvalidDataException("Village id", villageId);
                 }
