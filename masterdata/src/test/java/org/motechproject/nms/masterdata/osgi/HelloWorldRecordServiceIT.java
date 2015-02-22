@@ -1,7 +1,7 @@
 package org.motechproject.nms.masterdata.osgi;
 
-import org.motechproject.nms.masterdata.domain.HelloWorldRecord;
-import org.motechproject.nms.masterdata.service.HelloWorldRecordService;
+/*import org.motechproject.nms.masterdata.domain.HelloWorldRecord;
+import org.motechproject.nms.masterdata.service.HelloWorldRecordService;*/
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class HelloWorldRecordServiceIT extends BasePaxIT {
 
-    @Inject
+    /*@Inject
     private HelloWorldRecordService helloRecordService;
 
     @Test
@@ -43,5 +43,5 @@ public class HelloWorldRecordServiceIT extends BasePaxIT {
         helloRecordService.delete(testRecord);
         record = helloRecordService.findRecordByName(testRecord.getName());
         assertNull(record);
-    }
+    }*/
 }

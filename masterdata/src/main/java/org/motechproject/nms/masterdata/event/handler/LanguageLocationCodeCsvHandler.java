@@ -35,119 +35,125 @@ public class LanguageLocationCodeCsvHandler {
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
+
+        LanguageLocationCodeCsv record = null;
+        LanguageLocationCode persistentRecord = null;
+        String userName = null;
+
+        BulkUploadError errorDetail = new BulkUploadError();
+        CsvProcessingSummary summary = new CsvProcessingSummary();
+
         Map<String, Object> params = motechEvent.getParameters();
-        String csvImportFileName = (String)params.get("csv-import.filename");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
-        processLanguageLocationCodeCsvRecords(params, errorFileName);
+
+        for (Long id : createdIds) {
+            try {
+                record = languageLocationCodeServiceCsv.getRecord(id);
+                if (record != null) {
+                    userName = record.getOwner();
+                    LanguageLocationCode newRecord = mapLanguageLocationCodeFrom(record);
+
+                    LanguageLocationCode oldRecord = languageLocationCodeService.getRecordByLocationCode(
+                            newRecord.getStateCode(), newRecord.getDistrictCode());
+                    if (oldRecord == null) {
+                        newRecord.setOwner(userName);
+                        newRecord.setModifiedBy(userName);
+                        languageLocationCodeService.create(newRecord);
+                    } else {
+                        newRecord.setOwner(oldRecord.getOwner());
+                        newRecord.setModifiedBy(userName);
+                        languageLocationCodeService.update(newRecord);
+                    }
+                    languageLocationCodeServiceCsv.delete(record);
+                    summary.incrementSuccessCount();
+                } else {
+                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetail.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+                    summary.incrementFailureCount();
+                }
+            } catch (DataValidationException ex) {
+                errorDetail.setErrorCategory(ex.getErrorCode());
+                errorDetail.setRecordDetails(record.toString());
+                errorDetail.setErrorDescription(ex.getErrorDesc());
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+                summary.incrementFailureCount();
+            }
+        }
+
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
-
-        for(Long id : createdIds) {
-            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
-        }
-
-        for(Long id : updatedIds) {
-            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
-        }
-    }
-
-    private void processLanguageLocationCodeCsvRecords(Map<String, Object> params, String errorFileName) {
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary summary = new CsvProcessingSummary(0,0);
-
-        String csvImportFileName = (String)params.get("csv-import.filename");
-
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        int successCount = 0;
-        int failureCount = 0;
-        String userName = null;
-        LanguageLocationCodeCsv record = null;
-            for (Long id : createdIds) {
-                try {
-                    record = languageLocationCodeServiceCsv.getRecord(id);
-                    if (record != null) {
-                        userName = record.getOwner();
-                        LanguageLocationCode newRecord = mapLanguageLocationCodeFrom(record);
 
-                        LanguageLocationCode oldRecord = languageLocationCodeService.getLanguageLocationCodeRecord(
-                                Long.parseLong(record.getStateCode()), Long.parseLong(record.getDistrictCode()));
-                        if(oldRecord == null) {
-                            languageLocationCodeService.create(newRecord);
-                        }else {
-                            languageLocationCodeService.update(newRecord);
-                        }
-                        languageLocationCodeServiceCsv.delete(record);
-                        successCount++;
-                    } else {
-                        failureCount++;
-                        errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                        errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                        errorDetail.setRecordDetails("Record is null");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                    }
-                } catch (DataValidationException ex) {
-                    failureCount++;
-                    errorDetail.setErrorCategory(ex.getErrorCode());
-                    errorDetail.setErrorDescription(String.format(
-                            ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, ex.getErroneousField()));
-                    errorDetail.setRecordDetails(record.toString());
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                }
-            }
-        summary.setFailureCount(failureCount);
-        summary.setSuccessCount(successCount);
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        for (Long id : createdIds) {
+            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
+        }
+
     }
 
-    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException{
-        LanguageLocationCode newRecord = new LanguageLocationCode();
+
+    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException {
+        LanguageLocationCode newRecord = null;
+
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
+        String circleCode = ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true);
+
+        State state = locationService.getStateByCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("stateCode", record.getStateCode());
+        }
+
+        District district = locationService.getDistrictByCode(state.getId(), districtCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException("districtCode", record.getDistrictCode());
+        }
+
+        Circle circle = circleService.getRecordByCode(circleCode);
+        if (circle == null) {
+            ParseDataHelper.raiseInvalidDataException("circleCode", record.getCircleCode());
+        }
+
+
+        /* Update the Default Language Location Codes in Circle entity */
+        circle.setDefaultLanguageLocationCodeMK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMK",
+                record.getDefaultLanguageLocationCodeMK(), true));
+        circle.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMA",
+                record.getDefaultLanguageLocationCodeMA(), true));
+        circle.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("defaultLanguageLocationCodeKK",
+                record.getDefaultLanguageLocationCodeKK(), true));
+
+        circleService.update(circle);
+
+        /* Create a new object of LanguageLocationCode and fill it with values from CSV */
+        newRecord = new LanguageLocationCode();
 
         newRecord.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
         newRecord.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
         newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
-        
-        Long stateId = ParseDataHelper.parseLong("stateId", record.getStateCode(), true);
-        Circle circle = circleService.getRecordByCode(ParseDataHelper.parseString("circleId", record.getCircleCode(), true));
-        State state = locationService.getStateByCode(stateId);
-        District district = locationService.getDistrictByCode(stateId,ParseDataHelper.parseLong("districtId", record.getDistrictCode(), true));
 
-        if(circle == null) {
-            invalidDataException("circleId", record.getCircleCode());
-        }
-        if(state == null) {
-            invalidDataException("stateId", stateId.toString());
-        }
+        newRecord.setCircle(circle);
+        newRecord.setState(state);
+        newRecord.setDistrict(district);
 
-        if(district == null) {
-            invalidDataException("districtId", record.getDistrictCode());
-        }
-            newRecord.setCircleId(circle);
-            newRecord.setStateId(state);
-            newRecord.setDistrictId(district);
+        newRecord.setLanguageLocationCodeKK(ParseDataHelper.parseInt("LanguageLocationCodeKK", record.getLanguageLocationCodeKK(), true));
+        newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));
 
-                newRecord.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeKK", record.getDefaultLanguageLocationCodeKK(), true));
-                newRecord.setLanguageLocationCodeKK(ParseDataHelper.parseInt("LanguageLocationCodeKK", record.getLanguageLocationCodeKK(), true));
-                newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));
+        newRecord.setLanguageLocationCodeMK(ParseDataHelper.parseInt("LanguageLocationCodeMK", record.getLanguageLocationCodeMK(), true));
+        newRecord.setLanguageMK(ParseDataHelper.parseString("LanguageMK", record.getLanguageMK(), true));
 
-                newRecord.setDefaultLanguageLocationCodeMK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMK", record.getDefaultLanguageLocationCodeMK(), true));
-                newRecord.setLanguageLocationCodeMK(ParseDataHelper.parseInt("LanguageLocationCodeMK", record.getLanguageLocationCodeMK(), true));
-                newRecord.setLanguageMK(ParseDataHelper.parseString("LanguageMK", record.getLanguageMK(), true));
+        newRecord.setLanguageLocationCodeMA(ParseDataHelper.parseInt("LanguageLocationCodeMA", record.getLanguageLocationCodeMA(), true));
+        newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));
 
-                newRecord.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMA", record.getDefaultLanguageLocationCodeMA(), true));
-                newRecord.setLanguageLocationCodeMA(ParseDataHelper.parseInt("LanguageLocationCodeMA", record.getLanguageLocationCodeMA(), true));
-                newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));
-            return newRecord;
+        return newRecord;
     }
 
-    private void invalidDataException(String fieldName, String fieldValue) throws DataValidationException {
-        throw new DataValidationException(
-            String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldValue),
-            ErrorCategoryConstants.INVALID_DATA, fieldName);
-    }
 }
 

@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.osgi;
 
-import org.motechproject.nms.masterdata.service.HelloWorldService;
+/*import org.motechproject.nms.masterdata.service.HelloWorldService;*/
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNotNull;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class HelloWorldServiceIT extends BasePaxIT {
 
-    @Inject
+   /* @Inject
     private HelloWorldService helloService;
 
     @Test
     public void testHelloWorldServicePresent() throws Exception {
         assertNotNull(helloService);
         assertNotNull(helloService.sayHello());
-    }
+    }*/
 }

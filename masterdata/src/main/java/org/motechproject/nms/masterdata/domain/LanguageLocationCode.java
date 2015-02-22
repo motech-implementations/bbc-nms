@@ -9,19 +9,19 @@ import java.lang.String;
 public class LanguageLocationCode extends MdsEntity{
 
     @Field(required = true, name="state_id" )
-    private State stateId;
+    private State state;
 
     @Field(required=true)
     private Long stateCode;
 
     @Field(required = true, name="district_id")
-    private District districtId;
+    private District district;
 
     @Field(required = true)
     private Long districtCode;
 
     @Field(required = true, name = "circle_id")
-    private Circle circleId;
+    private Circle circle;
 
     @Field(required=true)
     private String circleCode;
@@ -32,8 +32,7 @@ public class LanguageLocationCode extends MdsEntity{
     @Field(required = true)
     private String languageMA;
 
-    @Field(required = true)
-    private Integer DefaultLanguageLocationCodeMA;
+
 
     @Field(required = true)
     private Integer languageLocationCodeMK;
@@ -42,41 +41,35 @@ public class LanguageLocationCode extends MdsEntity{
     private String languageMK;
 
     @Field(required = true)
-    private Integer DefaultLanguageLocationCodeMK;
-
-    @Field(required = true)
     private Integer languageLocationCodeKK;
 
     @Field(required = true)
     private String languageKK;
 
-    @Field(required = true)
-    private Integer DefaultLanguageLocationCodeKK;
-
     public LanguageLocationCode(){}
 
-    public State getStateId() {
-        return stateId;
+    public State getState() {
+        return state;
     }
 
-    public void setStateId(State stateId) {
-        this.stateId = stateId;
+    public void setState(State state) {
+        this.state = state;
     }
 
-    public District getDistrictId() {
-        return districtId;
+    public District getDistrict() {
+        return district;
     }
 
-    public void setDistrictId(District districtId) {
-        this.districtId = districtId;
+    public void setDistrict(District district) {
+        this.district = district;
     }
 
-    public Circle getCircleId() {
-        return circleId;
+    public Circle getCircle() {
+        return circle;
     }
 
-    public void setCircleId(Circle circleId) {
-        this.circleId = circleId;
+    public void setCircle(Circle circle) {
+        this.circle = circle;
     }
 
     public Integer getLanguageLocationCodeMA() {
@@ -125,30 +118,6 @@ public class LanguageLocationCode extends MdsEntity{
 
     public void setLanguageKK(String languageKK) {
         this.languageKK = languageKK;
-    }
-
-    public Integer getDefaultLanguageLocationCodeMA() {
-        return DefaultLanguageLocationCodeMA;
-    }
-
-    public void setDefaultLanguageLocationCodeMA(Integer defaultLanguageLocationCodeMA) {
-        DefaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
-    }
-
-    public Integer getDefaultLanguageLocationCodeMK() {
-        return DefaultLanguageLocationCodeMK;
-    }
-
-    public void setDefaultLanguageLocationCodeMK(Integer defaultLanguageLocationCodeMK) {
-        DefaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
-    }
-
-    public Integer getDefaultLanguageLocationCodeKK() {
-        return DefaultLanguageLocationCodeKK;
-    }
-
-    public void setDefaultLanguageLocationCodeKK(Integer defaultLanguageLocationCodeKK) {
-        DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
     }
 
     public Long getStateCode() {
