@@ -23,4 +23,6 @@ public interface SubscriberService {
     
     public List<Subscriber> findRecordByMsisdn(String msisdn);
     
+    public Subscriber create(Subscriber subscriber);
+    
 }

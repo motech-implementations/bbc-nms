@@ -63,4 +63,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status){
         return subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, status);
     }
+
+    @Override
+    public Subscription create(Subscription subscription) {
+        return subscriptionDataService.create(subscription); 
+    }
 }

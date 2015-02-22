@@ -8,16 +8,13 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.kilkari.util.HelperMethods;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -25,13 +22,11 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-import org.motechproject.nms.util.service.impl.BulkUploadErrLogServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -58,7 +53,7 @@ public class MotherMctsCsvHandler {
     private SubscriberService subscriberService;
 
     @Autowired
-    private LocationService locationService;
+    private LocationValidator locationValidator;
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -113,66 +108,26 @@ public class MotherMctsCsvHandler {
         Subscriber motherSubscriber = new Subscriber();
 
         Long stateCode = ParseDataHelper.parseLong("State Id", motherMctsCsv.getStateId(),  true);
-        State state = locationService.getStateByCode(stateCode);
-        if(state == null){
-            HelperMethods.raiseInvalidException("State Id", motherMctsCsv.getStateId());
-        }
+        State state = locationValidator.stateConsistencyCheck(motherMctsCsv.getStateId(), stateCode);
 
         Long districtCode = ParseDataHelper.parseLong("District Id", motherMctsCsv.getDistrictId(), true);
-        District district = locationService.getDistrictByCode(state.getId(), districtCode);
-        if(district == null){
-            HelperMethods.raiseInvalidException( "District Id", motherMctsCsv.getDistrictId());
-        }
+        District district = locationValidator.districtConsistencyCheck(motherMctsCsv.getDistrictId(), state, districtCode);
 
         String talukaCode = ParseDataHelper.parseString("Taluka Id", motherMctsCsv.getTalukaId(), false);
-        Taluka taluka = null;
-        if (talukaCode!=null) {
-            taluka = locationService.getTalukaByCode(district.getId(),talukaCode);
-            if(taluka == null){
-                HelperMethods.raiseInvalidException("Taluka Id", motherMctsCsv.getTalukaId());
-            }
-        }
-
+        Taluka taluka = locationValidator.talukaConsistencyCheck(motherMctsCsv.getTalukaId(), district, talukaCode);
 
         Long healthBlockCode = ParseDataHelper.parseLong("Block ID", motherMctsCsv.getHealthBlockId(), false);
-        HealthBlock healthBlock = null;
-        if (healthBlockCode!=null) {
-            if (taluka != null) {
-            healthBlock = locationService.getHealthBlockByCode(taluka.getId(),healthBlockCode);
-            if(healthBlock == null){
-                HelperMethods.raiseInvalidException("Block ID", motherMctsCsv.getHealthBlockId());
-            }
-            }else {
-                HelperMethods.raiseInvalidException("Taluka ID", motherMctsCsv.getTalukaId());
-            }
-        }
+        HealthBlock healthBlock = locationValidator.healthBlockConsistencyCheck(motherMctsCsv.getHealthBlockId(), motherMctsCsv.getTalukaId(), taluka, healthBlockCode);
 
         Long phcCode = ParseDataHelper.parseLong("Phc Id", motherMctsCsv.getPhcId(), false);
-        HealthFacility healthFacility = null;
-        if (phcCode!=null) {
-            healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
-            if(healthFacility == null){
-                HelperMethods.raiseInvalidException("Phc Id", motherMctsCsv.getPhcId());
-            }
-        }
+        HealthFacility healthFacility = locationValidator.phcConsistencyCheck(motherMctsCsv.getPhcId(), motherMctsCsv.getHealthBlockId(), healthBlock, phcCode);
 
         Long subCenterCode = ParseDataHelper.parseLong("Sub centered ID", motherMctsCsv.getSubCentreId(), false);
-        HealthSubFacility healthSubFacility = null;
-        if (subCenterCode!=null) {
-            healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
-            if(healthSubFacility == null){
-                HelperMethods.raiseInvalidException("Sub centered ID", motherMctsCsv.getSubCentreId());
-            }
-        }
+        HealthSubFacility healthSubFacility = locationValidator.subCenterCodeCheck(motherMctsCsv.getSubCentreId(), motherMctsCsv.getPhcId(), healthFacility, subCenterCode);
 
         Long villageCode = ParseDataHelper.parseLong("Village id", motherMctsCsv.getVillageId(), false);
-        Village village = null;
-        if (villageCode!=null) {
-            village = locationService.getVillageByCode(taluka.getId(),villageCode);
-            if(village == null){
-                HelperMethods.raiseInvalidException("Village id", motherMctsCsv.getVillageId());
-            }
-        }
+        Village village = locationValidator.villageConsistencyCheck(motherMctsCsv.getVillageId(), motherMctsCsv.getTalukaId(), taluka, villageCode);
+
 
         motherSubscriber.setState(state);
         motherSubscriber.setDistrictId(district);
@@ -218,8 +173,6 @@ public class MotherMctsCsvHandler {
             motherMctsCsvService.delete(motherMctsCsv);
         }
         
-
-
     }
     
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException{
@@ -257,8 +210,8 @@ public class MotherMctsCsvHandler {
         List<Subscription> subscriptionList = new ArrayList<Subscription>();
         subscriptionList.add(subscription);
         subscriber.setSubscriptionList(subscriptionList);
-        subscriberService.add(subscriber);//CREATE
-        subscriptionService.add(subscription);//Create
+        subscriberService.create(subscriber);//CREATE
+        subscriptionService.create(subscription);//Create
     }
 
     private void updateSubscriberSubscription(Subscriber subscriber,
@@ -287,7 +240,7 @@ public class MotherMctsCsvHandler {
                 newSubscription.setChannel(Channel.MCTS);
                 newSubscription.setMsisdn(subscriber.getMsisdn());
                 
-                subscriptionService.add(newSubscription);
+                subscriptionService.create(newSubscription);
                 subscriptionService.update(dbSubscription);
 
             }else{
@@ -318,14 +271,6 @@ public class MotherMctsCsvHandler {
         dbSubscriber.setLmp(subscriber.getLmp());
         
         subscriberService.update(dbSubscriber);      
-        
-        
-
-           
-        
-        
+                
     }
-    
-    
-
 }

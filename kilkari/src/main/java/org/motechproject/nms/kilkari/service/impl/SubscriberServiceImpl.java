@@ -54,4 +54,9 @@ public class SubscriberServiceImpl implements SubscriberService {
 		return subscriberDataService.findRecordByMsisdn(msisdn);
 	}
 
+    @Override
+    public Subscriber create(Subscriber subscriber) {
+        return subscriberDataService.create(subscriber);
+    }
+
 }

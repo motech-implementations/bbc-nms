@@ -25,5 +25,7 @@ public interface SubscriptionService {
     public Subscription getSubscriptionByMsisdnPackStatus(String msisdn, String packName, Status status);
     
     public Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status);
+    
+    public Subscription create(Subscription subscription);
 
 }
