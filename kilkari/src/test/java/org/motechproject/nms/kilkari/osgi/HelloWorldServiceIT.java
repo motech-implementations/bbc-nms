@@ -22,12 +22,12 @@ import static org.junit.Assert.assertNotNull;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class HelloWorldServiceIT extends BasePaxIT {
 
-    @Inject
+    /*@Inject
     private HelloWorldService helloService;
 
     @Test
     public void testHelloWorldServicePresent() throws Exception {
         assertNotNull(helloService);
         assertNotNull(helloService.sayHello());
-    }
+    }*/
 }

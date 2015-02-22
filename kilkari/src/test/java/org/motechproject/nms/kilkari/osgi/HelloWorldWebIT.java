@@ -26,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class HelloWorldWebIT extends BasePaxIT {
-    private static final String ADMIN_USERNAME = "motech";
+    /*private static final String ADMIN_USERNAME = "motech";
     private static final String ADMIN_PASSWORD = "motech";
 
     @Test
@@ -54,5 +54,5 @@ public class HelloWorldWebIT extends BasePaxIT {
     private void addAuthHeader(HttpGet httpGet, String userName, String password) {
         httpGet.addHeader("Authorization",
                 "Basic " + new String(Base64.encodeBase64((userName + ":" + password).getBytes())));
-    }
+    }*/
 }
