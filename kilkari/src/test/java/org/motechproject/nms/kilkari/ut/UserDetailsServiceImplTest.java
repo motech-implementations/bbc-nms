@@ -18,6 +18,8 @@ import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.impl.UserDetailsServiceImpl;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 
 import java.util.ArrayList;
@@ -46,6 +48,11 @@ public class UserDetailsServiceImplTest {
     @Mock
     private CircleService circleService;
 
+    @Mock
+    private OperatorService operatorService;
+
+
+
     @InjectMocks
     private UserDetailsServiceImpl userDetailsService  = new UserDetailsServiceImpl();
 
@@ -55,7 +62,6 @@ public class UserDetailsServiceImplTest {
     SubscriptionBuilder builder = new SubscriptionBuilder();
     LocationBuilder locationBuilder = new LocationBuilder();
     LanguageLocationCodeBuilder llcBuilder = new LanguageLocationCodeBuilder();
-
 
     @Test
     public void shouldGetSubscriberDetailsWhenLlcCodeIsPresentInSubscriberDetail() {
@@ -321,6 +327,93 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        }
+    }
+
+    @Test
+    public void shouldGetSubscriberDetailsWhenValidCircleCodeAndOperatorCode() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //set the subscriber details
+        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
+        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(operatorService.getRecordByCode("OC")).thenReturn(llcBuilder.buildOperator("OC", "XYZ"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", "OC");
+
+            //Do Assertions.
+            Assert.assertTrue(response.getLanguageLocationCode() == 123);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        }
+    }
+
+    @Test
+    public void shouldThrowDataValidationExceptionWhenInvalidCircleCodeAndOperatorCode() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //Stub the service methods
+        when(circleService.getRecordByCode("AP")).thenReturn(null);
+        when(operatorService.getRecordByCode("OC")).thenReturn(null);
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", "OC");
+
+        } catch (DataValidationException ex) {
+            Assert.assertTrue(ex instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
+    }
+
+    @Test
+    public void shouldThrowDataValidationExceptionWhenInvalidCircleCode() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //Stub the service methods
+        when(circleService.getRecordByCode("AP")).thenReturn(null);
+        when(operatorService.getRecordByCode("OC")).thenReturn(llcBuilder.buildOperator("OC", "XYZ"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", "OC");
+
+        } catch (DataValidationException ex) {
+            Assert.assertTrue(ex instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
+    }
+
+    @Test
+    public void shouldThrowDataValidationExceptionWhenInvalidOperatorCode() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //Stub the service methods
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(operatorService.getRecordByCode("OC")).thenReturn(null);
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", "OC");
+
+        } catch (DataValidationException ex) {
+            Assert.assertTrue(ex instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
     }
 
