@@ -74,7 +74,7 @@ public class HealthBlockCsvUploadHandler {
                     Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
 
                     if (stateRecord != null && districtRecord != null && talukaRecord != null) {
-                        insertHealthBlockData(newRecord);
+                        insertHealthBlockData(talukaRecord,newRecord);
                         result.incrementSuccessCount();
                         healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
                     } else {
@@ -130,7 +130,7 @@ public class HealthBlockCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthBlockData(HealthBlock healthBlockData) {
+    private void insertHealthBlockData(Taluka talukaData,HealthBlock healthBlockData) {
 
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 healthBlockData.getStateCode(),
@@ -143,7 +143,8 @@ public class HealthBlockCsvUploadHandler {
             healthBlockRecordsDataService.update(healthBlockData);
             logger.info("HealthBlock permanent data is successfully updated.");
         } else {
-            healthBlockRecordsDataService.create(healthBlockData);
+            talukaData.getHealthBlock().add(healthBlockData);
+            talukaRecordsDataService.create(talukaData);
             logger.info("HealthBlock permanent data is successfully updated.");
         }
     }

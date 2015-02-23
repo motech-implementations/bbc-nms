@@ -5,7 +5,8 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * This class Models data for BulkUploadStatus records.
+ * This class Models data for BulkUploadStatus records
+ * which are created after every bulk upload processing completion.
  */
 @Entity
 public class BulkUploadStatus extends MdsEntity {

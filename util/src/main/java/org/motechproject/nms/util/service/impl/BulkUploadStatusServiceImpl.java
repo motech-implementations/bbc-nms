@@ -17,6 +17,12 @@ public class BulkUploadStatusServiceImpl implements BulkUploadStatusService {
     @Autowired
     private BulkUploadStatusDataService bulkUploadStatusDataService;
 
+    /**
+     * Method to create a new record of upload status.
+     * This is invoked after csv processing is complete.
+     *
+     * @param bulkUploadStatusRecord
+     */
     @Override
     public void add(BulkUploadStatus bulkUploadStatusRecord) {
         bulkUploadStatusDataService.create(bulkUploadStatusRecord);

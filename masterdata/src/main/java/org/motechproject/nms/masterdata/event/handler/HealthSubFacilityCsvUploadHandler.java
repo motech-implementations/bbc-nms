@@ -98,7 +98,7 @@ public class HealthSubFacilityCsvUploadHandler {
                             newRecord.getHealthFacilityCode());
 
                     if (stateRecord != null && districtRecord != null && talukaRecord != null && healthBlockRecord != null) {
-                        insertHealthSubFacilityData(newRecord);
+                        insertHealthSubFacilityData(healthFacilityRecord,newRecord);
                         result.incrementSuccessCount();
                         healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
                     } else {
@@ -159,7 +159,7 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertHealthSubFacilityData(HealthSubFacility healthSubFacilityData) {
+    private void insertHealthSubFacilityData(HealthFacility healthFacilityData,HealthSubFacility healthSubFacilityData) {
 
         HealthSubFacility existHealthFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),
@@ -175,7 +175,8 @@ public class HealthSubFacilityCsvUploadHandler {
             healthSubFacilityRecordsDataService.update(healthSubFacilityData);
             logger.info("HealthSubFacility Permanent data is successfully updated.");
         } else {
-            healthSubFacilityRecordsDataService.create(healthSubFacilityData);
+            healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
+            healthFacilityRecordsDataService.create(healthFacilityData);
             logger.info("HealthSubFacility Permanent data is successfully updated.");
         }
     }

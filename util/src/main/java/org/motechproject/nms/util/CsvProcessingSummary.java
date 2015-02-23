@@ -41,6 +41,7 @@ public class CsvProcessingSummary {
 
         successCount++;
     }
+
     public void incrementFailureCount() {
 
         failureCount++;
