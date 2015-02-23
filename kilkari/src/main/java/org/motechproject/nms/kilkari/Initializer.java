@@ -1,18 +1,25 @@
 package org.motechproject.nms.kilkari;
 
-import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.*;
-import org.motechproject.nms.kilkari.constants.ConfigurationConstants;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_ALLOWED_BENEFICIARY_COUNT;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_FRESH_OBD_PRIORITY;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_FRESH_OBD_SERVICE_ID;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY1_OBD_PRIORITY;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY1_OBD_SERVICE_ID;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY2_OBD_PRIORITY;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY2_OBD_SERVICE_ID;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_PRIORITY;
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID;
 
 import javax.annotation.PostConstruct;
+
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 
@@ -29,7 +36,7 @@ public class Initializer {
 
 
     @Autowired
-    ConfigurationService configurationService;
+    private ConfigurationService configurationService;
 
     @PostConstruct
     public void initializeConfiguration() {
@@ -37,7 +44,7 @@ public class Initializer {
         /*
          * Check if configuration is not present then create with default values
          */
-        if(!configurationService.isConfigurationPresent()) {
+        if (!configurationService.isConfigurationPresent()) {
 
 
             Configuration configuration = new Configuration();

@@ -4,10 +4,8 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Unique;
-
 @Entity
-public class ContentUploadKKCsv extends MdsEntity{
+public class ContentUploadKKCsv extends MdsEntity {
 
     @Field
     private String operation;

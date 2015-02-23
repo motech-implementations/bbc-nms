@@ -31,7 +31,7 @@ public class LocationValidator {
     public District districtConsistencyCheck(String districtId, State state, Long districtCode) throws DataValidationException {
         District district = locationService.getDistrictByCode(state.getId(), districtCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException( "District Id", districtId);
+            ParseDataHelper.raiseInvalidDataException("District Id", districtId);
         }
         return district;
     }
@@ -41,10 +41,10 @@ public class LocationValidator {
         if (villageCode != null) {
             if (taluka != null) {
                 village = locationService.getVillageByCode(taluka.getId(), villageCode);
-                if(village == null){
+                if (village == null) {
                     ParseDataHelper.raiseInvalidDataException("Village id", villageId);
                 }
-            }else{
+            } else {
                 ParseDataHelper.raiseMissingDataException("Taluka Id", talukaId);
             }
         }
@@ -55,13 +55,13 @@ public class LocationValidator {
             HealthFacility healthFacility, Long subCenterCode)
             throws DataValidationException {
         HealthSubFacility healthSubFacility = null;
-        if (subCenterCode!=null) {
-            if(healthFacility != null){
+        if (subCenterCode != null) {
+            if (healthFacility != null) {
                 healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
-                if(healthSubFacility == null){
+                if (healthSubFacility == null) {
                     ParseDataHelper.raiseInvalidDataException("Sub centered ID", subCenterId);
                 }
-            }else {
+            } else {
                 ParseDataHelper.raiseMissingDataException("Phc Id", phcId);
             }
         }
@@ -72,14 +72,14 @@ public class LocationValidator {
             HealthBlock healthBlock, Long phcCode)
             throws DataValidationException {
         HealthFacility healthFacility = null;
-        if (phcCode!=null) {
-            if(healthBlock != null){
+        if (phcCode != null) {
+            if (healthBlock != null) {
                 healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
-                if(healthFacility == null){
+                if (healthFacility == null) {
                     ParseDataHelper.raiseInvalidDataException("Phc Id", phcId);
                 }
-            }else{
-                ParseDataHelper.raiseMissingDataException("Block ID", healthBlockId);//Missing Block ID
+            } else {
+                ParseDataHelper.raiseMissingDataException("Block ID", healthBlockId); //Missing Block ID
             }
         }
         return healthFacility;
@@ -90,11 +90,11 @@ public class LocationValidator {
         HealthBlock healthBlock = null;
         if (healthBlockCode != null) {
             if (taluka != null) {
-                healthBlock = locationService.getHealthBlockByCode(taluka.getId(),healthBlockCode);
-                if(healthBlock == null){
+                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
+                if (healthBlock == null) {
                     ParseDataHelper.raiseInvalidDataException("Block ID", healthBlockId);
                 }
-            }else {
+            } else {
                 //Missing taluka id"
                 ParseDataHelper.raiseMissingDataException("Taluka Id", talukaId);
             }
@@ -104,9 +104,9 @@ public class LocationValidator {
 
     public Taluka talukaConsistencyCheck(String talukaId, District district, String talukaCode) throws DataValidationException {
         Taluka taluka = null;
-        if (talukaCode!=null) {
-            taluka = locationService.getTalukaByCode(district.getId(),talukaCode);
-            if(taluka == null){
+        if (talukaCode != null) {
+            taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
+            if (taluka == null) {
                 ParseDataHelper.raiseInvalidDataException("Taluka Id", talukaId);
             }
         }

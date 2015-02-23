@@ -3,7 +3,6 @@ package org.motechproject.nms.kilkari.service;
 import java.util.List;
 
 import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
 public interface SubscriptionService {

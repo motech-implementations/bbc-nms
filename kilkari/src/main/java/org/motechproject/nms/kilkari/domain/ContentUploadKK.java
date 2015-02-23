@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 @Entity(recordHistory = true)
-public class ContentUploadKK extends MdsEntity{
+public class ContentUploadKK extends MdsEntity {
 
     @Field(required = true)
     private Long contentId;
