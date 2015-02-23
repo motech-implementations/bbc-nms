@@ -91,6 +91,7 @@
                         <!-- Bug 22 -->
                         <Context-Path>mobilekunji</Context-Path>
                         <Resource-Path>mobilekunji/resources</Resource-Path>
+                        <!--<Context-File>META-INF/motech/applicationContext.xml</Context-File>-->
                         <Export-Package>org.motechproject.nms.mobilekunji;version=${project.version},
                             org.motechproject.nms.mobilekunji.service;version=${project.version},
                             org.motechproject.nms.mobilekunji.repository;version=${project.version},
