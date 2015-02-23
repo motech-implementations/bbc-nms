@@ -8,22 +8,10 @@ import org.motechproject.nms.kilkari.commons.Constants;
  */
 public enum SubscriptionPack  {
     
-    PACK_72_WEEKS("72WeeksPack"),
-    PACK_48_WEEKS("48WeeksPack");
+    PACK_72_WEEKS,
+    PACK_48_WEEKS;
 
-    private String name;
 
-    private SubscriptionPack(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getStartWeekNumber() {
         return PACK_72_WEEKS.equals(this)? Constants.START_WEEK_OF_72_WEEK_PACK:Constants.START_WEEK_OF_48_WEEK_PACK;
@@ -33,9 +21,5 @@ public enum SubscriptionPack  {
         return PACK_72_WEEKS.equals(this)?Constants.DURATION_OF_72_WEEK_PACK:Constants.DURATION_OF_48_WEEK_PACK;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 
 }

@@ -101,6 +101,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                logger.error("**** Generic Exception Raised *****:", e);
                 uploadedStatus.incrementFailureCount();
             }finally {
                 logger.debug("Inside finally");
