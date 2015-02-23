@@ -14,6 +14,8 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -38,6 +40,8 @@ public class LanguageLocationCodeCsvHandler {
 
     @Autowired
     private LocationService locationService;
+
+    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -72,15 +76,21 @@ public class LanguageLocationCodeCsvHandler {
                     if (oldRecord != null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             languageLocationCodeService.delete(oldRecord);
+                            logger.info(String.format(
+                                    "Record deleted successfully for statecode : %s and districtcode : %s", newRecord.getStateCode(), newRecord.getDistrictCode()));
                         } else {
                             newRecord.setOwner(oldRecord.getOwner());
                             newRecord.setModifiedBy(userName);
                             languageLocationCodeService.update(newRecord);
+                            logger.info(String.format(
+                                    "Record updated successfully for statecode : %s and districtcode : %s", newRecord.getStateCode(), newRecord.getDistrictCode()));
                         }
                     } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         languageLocationCodeService.create(newRecord);
+                        logger.info(String.format(
+                                "Record created successfully for statecode : %s and districtcode : %s", newRecord.getStateCode(), newRecord.getDistrictCode()));
                     }
                     languageLocationCodeServiceCsv.delete(record);
                     summary.incrementSuccessCount();
@@ -118,6 +128,7 @@ public class LanguageLocationCodeCsvHandler {
             LanguageLocationCodeCsv oldRecord = languageLocationCodeServiceCsv.getRecord(id);
             if (oldRecord != null) {
                 languageLocationCodeServiceCsv.delete(oldRecord);
+                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
             }
         }
 

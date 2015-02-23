@@ -14,6 +14,8 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ public class CircleCsvHandler {
 
     @Autowired
     private CircleCsvService circleCsvService;
+
+    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -68,16 +72,19 @@ public class CircleCsvHandler {
                     if (persistentRecord != null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             circleService.delete(persistentRecord);
+                            logger.info(String.format("Record deleted successfully for circlecode %s", newRecord.getCode()));
                         } else {
                             newRecord.setId(persistentRecord.getId());
                             newRecord.setModifiedBy(userName);
                             circleService.update(newRecord);
+                            logger.info(String.format("Record updated successfully for circlecode %s", newRecord.getCode()));
                         }
 
                     } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         circleService.create(newRecord);
+                        logger.info(String.format("Record created successfully for circlecode %s", newRecord.getCode()));
                     }
                     summary.incrementSuccessCount();
                 } else {
@@ -115,6 +122,7 @@ public class CircleCsvHandler {
             CircleCsv oldRecord = circleCsvService.getRecord(id);
             if (oldRecord != null) {
                 circleCsvService.delete(oldRecord);
+                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
             }
         }
 

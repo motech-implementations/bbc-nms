@@ -14,6 +14,8 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ public class OperatorCsvHandler {
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -67,15 +71,18 @@ public class OperatorCsvHandler {
                     if (persistentRecord != null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             operatorService.delete(persistentRecord);
+                            logger.info(String.format("Record deleted successfully for operatorcode %s", newRecord.getCode()));
                         }else {
                             newRecord.setId(persistentRecord.getId());
                             newRecord.setModifiedBy(userName);
                             operatorService.update(newRecord);
+                            logger.info(String.format("Record updated successfully for operatorcode %s", newRecord.getCode()));
                         }
                     } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         operatorService.create(newRecord);
+                        logger.info(String.format("Record created successfully for operatorcode %s", newRecord.getCode()));
                     }
                     summary.incrementSuccessCount();
                 } else {
@@ -113,6 +120,7 @@ public class OperatorCsvHandler {
             OperatorCsv oldRecord = operatorCsvService.getRecord(id);
             if (oldRecord != null) {
                 operatorCsvService.delete(oldRecord);
+                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
             }
         }
     }
