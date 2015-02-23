@@ -31,5 +31,5 @@ public interface OperatorService {
      * @param operatorCode Operator Census Code
      * @return Operator object corresponding to the census code
      */
-    public Operator getRecordByCode(String operatorCode);
+    Operator getRecordByCode(String operatorCode);
 }

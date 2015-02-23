@@ -24,7 +24,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     private String languageMA;
 
     @Field
-    private String DefaultLanguageLocationCodeMA;
+    private String defaultLanguageLocationCodeMA;
 
     @Field
     private String languageLocationCodeMK;
@@ -33,7 +33,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     private String languageMK;
 
     @Field
-    private String DefaultLanguageLocationCodeMK;
+    private String defaultLanguageLocationCodeMK;
 
     @Field
     private String languageLocationCodeKK;
@@ -42,14 +42,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     private String languageKK;
 
     @Field
-    private String DefaultLanguageLocationCodeKK;
-
-    public LanguageLocationCodeCsv(String operation, String stateCode, String districtCode, String circleId) {
-        this.operation = operation;
-        this.stateCode = stateCode;
-        this.districtCode = districtCode;
-        this.circleCode = circleCode;
-    }
+    private String defaultLanguageLocationCodeKK;
 
     public String getOperation() {
         return operation;
@@ -131,28 +124,28 @@ public class LanguageLocationCodeCsv extends MdsEntity {
         this.languageKK = languageKK;
     }
 
-    public String getDefaultLanguageLocationCodeMA() {
-        return DefaultLanguageLocationCodeMA;
-    }
-
-    public void setDefaultLanguageLocationCodeMA(String defaultLanguageLocationCodeMA) {
-        DefaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
-    }
-
-    public String getDefaultLanguageLocationCodeKK() {
-        return DefaultLanguageLocationCodeKK;
-    }
-
-    public void setDefaultLanguageLocationCodeKK(String defaultLanguageLocationCodeKK) {
-        DefaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
-    }
-
     public String getDefaultLanguageLocationCodeMK() {
-        return DefaultLanguageLocationCodeMK;
+        return defaultLanguageLocationCodeMK;
     }
 
     public void setDefaultLanguageLocationCodeMK(String defaultLanguageLocationCodeMK) {
-        DefaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
+        this.defaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
+    }
+
+    public String getDefaultLanguageLocationCodeMA() {
+        return defaultLanguageLocationCodeMA;
+    }
+
+    public void setDefaultLanguageLocationCodeMA(String defaultLanguageLocationCodeMA) {
+        this.defaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
+    }
+
+    public String getDefaultLanguageLocationCodeKK() {
+        return defaultLanguageLocationCodeKK;
+    }
+
+    public void setDefaultLanguageLocationCodeKK(String defaultLanguageLocationCodeKK) {
+        this.defaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
     }
 
     public String toString() {
@@ -164,12 +157,12 @@ public class LanguageLocationCodeCsv extends MdsEntity {
         recordStr.append(",circleCode" + this.circleCode);
         recordStr.append(",languageLocationCodeMA" + this.languageLocationCodeMA);
         recordStr.append(",languageMA" + this.languageMA);
-        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.DefaultLanguageLocationCodeMA);
+        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.defaultLanguageLocationCodeMA);
         recordStr.append(",languageLocationCodeMK" + this.languageLocationCodeMK);
         recordStr.append(",languageMK" + this.languageMK);
-        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.DefaultLanguageLocationCodeMK);
+        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.defaultLanguageLocationCodeMK);
         recordStr.append(",languageLocationCodeKK" + this.languageLocationCodeKK);
-        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.DefaultLanguageLocationCodeKK);
+        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.defaultLanguageLocationCodeKK);
         return recordStr.toString();
 
     }

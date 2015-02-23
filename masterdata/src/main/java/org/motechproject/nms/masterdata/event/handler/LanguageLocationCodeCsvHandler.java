@@ -2,7 +2,12 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
@@ -53,7 +58,6 @@ public class LanguageLocationCodeCsvHandler {
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
 
         LanguageLocationCodeCsv record = null;
-        LanguageLocationCode persistentRecord = null;
         String userName = null;
 
         BulkUploadError errorDetail = new BulkUploadError();

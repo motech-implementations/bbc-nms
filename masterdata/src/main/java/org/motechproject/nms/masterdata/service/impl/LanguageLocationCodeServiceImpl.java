@@ -1,7 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.service.MDSLookupService;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
@@ -22,9 +21,6 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
     @Autowired
     private CircleService circleService;
-
-    @Autowired
-    private MDSLookupService mdsLookupService;
 
     /**
      * This class represents the query to find list of service specific languageLocationCode for a circleCode

@@ -72,7 +72,7 @@ public class OperatorCsvHandler {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             operatorService.delete(persistentRecord);
                             logger.info(String.format("Record deleted successfully for operatorcode %s", newRecord.getCode()));
-                        }else {
+                        } else {
                             newRecord.setId(persistentRecord.getId());
                             newRecord.setModifiedBy(userName);
                             operatorService.update(newRecord);
