@@ -187,7 +187,7 @@ public class HealthFacilityCsvUploadHandler {
                 healthFacilityData.getHealthFacilityCode());
 
         if (existHealthFacilityData != null) {
-            updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
+            updateHealthFacilityData(existHealthFacilityData, healthFacilityData);
             logger.info("HealthFacility data is successfully updated.");
         } else {
 
@@ -201,7 +201,7 @@ public class HealthFacilityCsvUploadHandler {
         }
     }
 
-    private void updateHealthFacilityDAta(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
+    private void updateHealthFacilityData(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
         existHealthFacilityData.setHealthFacilityType(healthFacilityData.getHealthFacilityType());
         healthFacilityService.update(existHealthFacilityData);

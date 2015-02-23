@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
@@ -61,13 +62,20 @@ public class CallerDataController extends BaseController {
                 Long.parseLong(callId));
         log.trace("getUserDetails:Ended");
         return userDetailApiResponse;
-
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
     public void saveCallDetails(HttpServletRequest request) {
+
         saveCallDetailsService.saveCallDetails();
+    }
+
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
+    public @ResponseBody int updateLanguageLocationCode(  @RequestParam(value = "languageLocationCode") String languageLocationCode,
+                                                          @RequestParam(value = "callingNumber") String callingNumber){
+
+        return HttpStatus.SC_OK;
     }
 
 
