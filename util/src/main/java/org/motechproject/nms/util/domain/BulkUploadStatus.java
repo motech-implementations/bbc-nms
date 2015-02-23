@@ -1,11 +1,13 @@
 package org.motechproject.nms.util.domain;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for BulkUploadStatus records.
  */
+@Entity
 public class BulkUploadStatus extends MdsEntity {
 
     @Field
