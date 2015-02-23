@@ -7,6 +7,12 @@ import org.motechproject.nms.util.domain.BulkUploadStatus;
  */
 public interface BulkUploadStatusService {
 
-    void add(BulkUploadStatus record);
+    /**
+     * Method to create a new record of upload status.
+     * This is invoked after csv processing is complete.
+     *
+     * @param bulkUploadStatus
+     */
+    void add(BulkUploadStatus bulkUploadStatus);
 
 }

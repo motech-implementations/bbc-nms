@@ -1,5 +1,9 @@
 package org.motechproject.nms.util.helper;
 
+/**
+ * This class models a user-defined exception for data
+ * validation failure while parsing bulk upload data.
+ */
 public class DataValidationException extends Exception {
 
     public static final String MANDATORY_MISSING_MESSAGE = "Missing mandatory data for [ %s ]";

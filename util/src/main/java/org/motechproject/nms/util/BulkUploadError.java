@@ -14,7 +14,8 @@ public class BulkUploadError {
     private String errorCategory;
     private String errorDescription;
 
-    public BulkUploadError() { }
+    public BulkUploadError() {
+    }
 
     public BulkUploadError(String recordDetails, String errorCategory, String errorDescription) {
         this.recordDetails = recordDetails;
@@ -49,6 +50,7 @@ public class BulkUploadError {
     /**
      * This method returns the name of Bulk upload error log file in the format
      * <csvFileName>_processing_<2007-12-14T15:30:00>.log
+     *
      * @param csvFileName Name of the csv file for which error log file name is to be created
      * @return Name of the error log file
      */
