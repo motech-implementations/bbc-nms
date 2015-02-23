@@ -17,6 +17,6 @@ import org.motechproject.mds.service.MotechDataService;
 public interface ConfigurationDataService extends MotechDataService<Configuration> {
 
     @Lookup
-    Configuration findConfigurationByIndex(@LookupField(name="index") Long index);
+    Configuration findConfigurationByIndex(@LookupField(name = "index") Long index);
 
 }

@@ -24,5 +24,4 @@ public final class FrontLineWorkerConstants {
     public static final String FLW_UPLOAD_FAILED = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failed";
 
 
-
 }

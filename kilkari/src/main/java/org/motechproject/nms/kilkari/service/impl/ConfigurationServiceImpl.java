@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Autowired
-    ConfigurationDataService configurationDataService;
+    private ConfigurationDataService configurationDataService;
 
     @Override
     public void createConfiguration(Configuration configuration) {

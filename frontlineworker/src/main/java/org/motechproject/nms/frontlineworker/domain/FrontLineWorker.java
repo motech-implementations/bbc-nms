@@ -6,6 +6,7 @@ import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.masterdata.domain.*;
 
 import javax.jdo.annotations.Unique;
+
 /**
  * Created by abhishek on 26/1/15.
  * This class Models data for Front Line Worker records
@@ -47,7 +48,7 @@ public class FrontLineWorker extends MdsEntity {
     private HealthBlock healthBlockId;
 
     @Field(name = "healthFacility_Id")
-     private HealthFacility healthFacilityId;
+    private HealthFacility healthFacilityId;
 
     @Field(name = "healthSubFacility_Id")
     private HealthSubFacility healthSubFacilityId;
@@ -62,13 +63,10 @@ public class FrontLineWorker extends MdsEntity {
     private boolean isValidated;
 
     @Field
-    private boolean isValid;
-
-    @Field
     private String adhaarNumber;
 
     @Field(required = true)
-    private String status;
+    private Status status;
 
     @Field
     private Long languageLocationCodeId;
@@ -193,14 +191,6 @@ public class FrontLineWorker extends MdsEntity {
         this.isValidated = isValidated;
     }
 
-    public boolean isValid() {
-        return isValid;
-    }
-
-    public void setValid(boolean isValid) {
-        this.isValid = isValid;
-    }
-
     public String getAdhaarNumber() {
         return adhaarNumber;
     }
@@ -209,11 +199,11 @@ public class FrontLineWorker extends MdsEntity {
         this.adhaarNumber = adhaarNumber;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

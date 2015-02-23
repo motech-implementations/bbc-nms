@@ -9,17 +9,17 @@ import org.motechproject.mds.domain.MdsEntity;
 
 public class Subscription extends MdsEntity {
 
-	
-	@Persistent
-	private SubscriptionPack subscriptionPack;
+    
+    @Persistent
+    private SubscriptionPack subscriptionPack;
 
-	@Persistent
-	private Subscriber subscriber;
+    @Persistent
+    private Subscriber subscriber;
 
-	@Field(required=true)
-	private Integer operatorCode;  
-	
-	@Field(required=true)
+    @Field(required = true)
+    private Integer operatorCode;  
+    
+    @Field(required = true)
     private String msisdn;
     
     @Field
@@ -31,30 +31,30 @@ public class Subscription extends MdsEntity {
     @Field
     private String packName;
 
-	@Field(required=true)
-	private Channel channel;
+    @Field(required = true)
+    private Channel channel;
 
-	@Field(required=true)
-	private Status status;
+    @Field(required = true)
+    private Status status;
 
-	@Field
-	private Boolean isDeactivatedBySystem;
+    @Field
+    private Boolean isDeactivatedBySystem;
 
-	@Field(required=true)
-	private Integer weekNumber;
-	
-	@Field(required=true)
-	private Integer messageNumber;
+    @Field(required = true)
+    private Integer weekNumber;
+    
+    @Field(required = true)
+    private Integer messageNumber;
 
-	@Field(required=true)
-	private DateTime startDate;
+    @Field(required = true)
+    private DateTime startDate;
 
-	@Field(required=true)
-	private DateTime nextObdDate;
+    @Field(required = true)
+    private DateTime nextObdDate;
 
-	@Field
-	@Column(name="oldSubscritption_Id")
-	private Subscription oldSubscritptionId;
+    @Field
+    @Column(name = "oldSubscritption_Id")
+    private Subscription oldSubscritptionId;
 
     public SubscriptionPack getSubscriptionPack() {
         return subscriptionPack;
@@ -175,5 +175,5 @@ public class Subscription extends MdsEntity {
     public void setOldSubscritptionId(Subscription oldSubscritptionId) {
         this.oldSubscritptionId = oldSubscritptionId;
     }
-
 }
+

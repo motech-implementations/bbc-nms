@@ -132,6 +132,8 @@ public class CircleCsvHandler {
         Circle newRecord = new Circle();
         newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

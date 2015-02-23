@@ -1,5 +1,9 @@
 package org.motechproject.nms.kilkari.event.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.ContentType;
@@ -19,10 +23,6 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
@@ -47,7 +47,7 @@ public class ContentUploadKKCsvHandler {
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
-    public void ContentUploadKKCsvSuccess(MotechEvent motechEvent) {
+    public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {
 
         ContentUploadKKCsv record = null;
         ContentUploadKK persistentRecord = null;
@@ -57,12 +57,12 @@ public class ContentUploadKKCsvHandler {
         CsvProcessingSummary summary = new CsvProcessingSummary();
 
         Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        String csvImportFileName = (String)params.get("csv-import.filename");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
 
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             try {
                 record = contentUploadKKCsvService.getRecord(id);
 
@@ -72,6 +72,7 @@ public class ContentUploadKKCsvHandler {
 
                     persistentRecord = contentUploadKKService.getRecordByContentId(newRecord.getContentId());
                     if (persistentRecord != null) {
+                        
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             contentUploadKKService.delete(persistentRecord);
                             logger.info(String.format("Record deleted successfully for contentid : %s", newRecord.getContentId()));
@@ -81,7 +82,7 @@ public class ContentUploadKKCsvHandler {
                             contentUploadKKService.update(newRecord);
                             logger.info(String.format("Record updated successfully for contentid : %s", newRecord.getContentId()));
                         }
-                    }else {
+                    } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         contentUploadKKService.create(newRecord);
@@ -97,7 +98,7 @@ public class ContentUploadKKCsvHandler {
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                     summary.incrementFailureCount();
                 }
-            }catch (DataValidationException ex) {
+            } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
@@ -116,11 +117,11 @@ public class ContentUploadKKCsvHandler {
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
-    public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
+    public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
             if (oldRecord != null) {
                 contentUploadKKCsvService.delete(oldRecord);

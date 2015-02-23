@@ -84,30 +84,15 @@ public class HealthSubFacilityCsvUploadHandler {
                 if (healthSubFacilityCsvRecord != null) {
 
                     HealthSubFacility newRecord = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
-
-                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-                    District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
-                    Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-
-                    HealthBlock healthBlockRecord = healthBlockRecordsDataService.findHealthBlockByParentCode(
-                            newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode(), newRecord.getHealthBlockCode());
-
                     HealthFacility healthFacilityRecord = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                             newRecord.getStateCode(), newRecord.getDistrictCode(),
                             newRecord.getTalukaCode(), newRecord.getHealthBlockCode(),
                             newRecord.getHealthFacilityCode());
 
-                    if (stateRecord != null && districtRecord != null && talukaRecord != null && healthBlockRecord != null) {
-                        insertHealthSubFacilityData(healthFacilityRecord,newRecord);
-                        result.incrementSuccessCount();
-                        healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
-                    } else {
-                        result.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not in database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    }
+                    insertHealthSubFacilityData(healthFacilityRecord, newRecord);
+                    result.incrementSuccessCount();
+                    healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
+
                 } else {
                     result.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
@@ -147,7 +132,32 @@ public class HealthSubFacilityCsvUploadHandler {
         Long healthfacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
+        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("State", null);
+        }
 
+        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException("District", null);
+        }
+
+        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+
+        if (taluka == null) {
+            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+        }
+
+        HealthBlock healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(
+                stateCode, districtCode, talukaCode, healthBlockCode);
+        if (healthBlock == null) {
+            ParseDataHelper.raiseInvalidDataException("HealthBlock", null);
+        }
+
+        HealthFacility healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
+        if (healthFacility == null) {
+            ParseDataHelper.raiseInvalidDataException("HealthFacility", null);
+        }
         newRecord.setName(healthSubFacilityName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
@@ -155,11 +165,13 @@ public class HealthSubFacilityCsvUploadHandler {
         newRecord.setHealthBlockCode(healthBlockCode);
         newRecord.setHealthFacilityCode(healthfacilityCode);
         newRecord.setHealthSubFacilityCode(healthSubFacilityCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }
 
-    private void insertHealthSubFacilityData(HealthFacility healthFacilityData,HealthSubFacility healthSubFacilityData) {
+    private void insertHealthSubFacilityData(HealthFacility healthFacilityData, HealthSubFacility healthSubFacilityData) {
 
         HealthSubFacility existHealthFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),

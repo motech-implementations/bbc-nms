@@ -66,24 +66,11 @@ public class HealthBlockCsvUploadHandler {
                 healthBlockCsvRecord = healthBlockCsvRecordsDataService.findById(id);
 
                 if (healthBlockCsvRecord != null) {
-
-                    HealthBlock newRecord = mapHealthBlockCsv(healthBlockCsvRecord);
-
-                    State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
-                    District districtRecord = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
-                    Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
-
-                    if (stateRecord != null && districtRecord != null && talukaRecord != null) {
+                        HealthBlock newRecord = mapHealthBlockCsv(healthBlockCsvRecord);
+                        Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
                         insertHealthBlockData(talukaRecord,newRecord);
                         result.incrementSuccessCount();
                         healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
-                    } else {
-                        result.incrementFailureCount();
-                        errorDetails.setRecordDetails(id.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not in database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    }
                 } else {
                     result.incrementFailureCount();
                     errorDetails.setRecordDetails(id.toString());
@@ -121,11 +108,28 @@ public class HealthBlockCsvUploadHandler {
         String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
 
+        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException("State", null);
+        }
+
+        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException("District", null);
+        }
+
+        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+
+        if (taluka == null) {
+            ParseDataHelper.raiseInvalidDataException("Taluka", null);
+        }
         newRecord.setName(healthBlockName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
         newRecord.setTalukaCode(talukaCode);
         newRecord.setHealthBlockCode(healthBlockCode);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setOwner(record.getOwner());
 
         return newRecord;
     }

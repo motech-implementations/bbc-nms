@@ -3,17 +3,22 @@ package org.motechproject.nms.mobilekunji.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+import javax.jdo.annotations.Unique;
+/**
+ * This class Models data for Content Upload records
+ */
 @Entity
 public class ContentUpload {
 
     @Field(required = true)
+    @Unique
     private int contentId;
 
     @Field(required = true)
     private String circleCode;
 
     @Field(required = true)
-    private int languageLocationCode;
+    private Integer languageLocationCode;
 
     @Field(required = true)
     private String contentName;
@@ -29,6 +34,11 @@ public class ContentUpload {
 
     @Field(required = true)
     private int contentDuration;
+
+    public ContentUpload()
+    {
+
+    }
 
     public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, int cardNumber, int contentDuration) {
         this.contentId = contentId;

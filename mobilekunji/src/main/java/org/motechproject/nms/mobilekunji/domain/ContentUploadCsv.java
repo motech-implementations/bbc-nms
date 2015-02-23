@@ -4,7 +4,10 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
-
+/**
+ * Created by abhishek on 26/1/15.
+ * This class Models data records provided in the Content Csv Upload
+ */
 @Entity
 public class ContentUploadCsv {
 

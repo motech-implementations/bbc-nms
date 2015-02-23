@@ -5,6 +5,6 @@ package org.motechproject.nms.frontlineworker;
  */
 public final class FrontLineWorkerErrorConstants {
 
-    public static  final String RECORD_PARENT_MISSING_ERROR_DESC = "Uplaod unsuccessful. {0} is needed for {1}.";
+    public static final String RECORD_PARENT_MISSING_ERROR_DESC = "Uplaod unsuccessful. {0} is needed for {1}.";
 
 }
