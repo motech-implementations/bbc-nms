@@ -2,6 +2,8 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
+import org.motechproject.mds.filter.Filter;
+import org.motechproject.mds.filter.FilterType;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -66,5 +68,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Subscription create(Subscription subscription) {
         return subscriptionDataService.create(subscription); 
+    }
+
+    @Override
+    public long getActiveUserCount() {
+        Filter filter = new Filter();
+        filter.setField("status");
+        filter.setType(FilterType.fromString("Active"));
+        long activeRecord = subscriptionDataService.countForFilter(filter);
+        filter.setType(FilterType.fromString("PendingActivation"));
+        long pendingRecord = subscriptionDataService.countForFilter(filter);
+        return activeRecord + pendingRecord;
     }
 }

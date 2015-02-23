@@ -8,10 +8,12 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
@@ -63,6 +65,9 @@ public class MotherMctsCsvHandler {
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
+    
+    @Autowired
+    private ConfigurationService configurationService;
 
     @MotechListener(subjects = "mds.crud.kilkarimodule.MotherMctsCsv.csv-import.success")
     public void motherMctsCsvSuccess(MotechEvent uploadEvent){
@@ -158,7 +163,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
         motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-        motherSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeByLocation(stateCode, districtCode));
+        motherSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeKKByLocationCode(stateCode, districtCode));
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
@@ -189,18 +194,26 @@ public class MotherMctsCsvHandler {
     }
     
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException{
-        Subscription dbSubscription = subscriptionService.getSubscriptionByMsisdnPackStatus(subscriber.getMsisdn(), "PackName", Status.Active);
+        
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMsisdnPackStatus(subscriber.getMsisdn(), "72WeeksPack", Status.Active);
         if (dbSubscription == null ){
+            
             dbSubscription = subscriptionService.getPackSubscriptionByMctsIdPackStatus(subscriber.getMotherMctsId(), "72WeeksPack", Status.Active);
             if (dbSubscription == null){
                 
-                createSubscriberSubscription(subscriber);
-    
-            }else{
-                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                Configuration configuration = configurationService.getConfiguration();
+                long activeUserCount = subscriptionService.getActiveUserCount();
                 
+                if(activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                    Subscriber dbSubscriber = subscriberService.create(subscriber);//CREATE
+                    createSubscription(subscriber, null, dbSubscriber);
+                } else {
+                     //logging
+                }
+            }else{
+                
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
-                return;
             }
         }else{
             if(dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
@@ -213,69 +226,63 @@ public class MotherMctsCsvHandler {
         }
     }
 
-    private void createSubscriberSubscription(Subscriber subscriber) {
-        Subscription subscription = new Subscription();
-        subscription.setMctsId(subscriber.getMotherMctsId());
-        subscription.setMsisdn(subscriber.getMsisdn());
-        subscription.setStateCode(subscriber.getState().getStateCode());
-        subscription.setSubscriber(subscriber);
-        List<Subscription> subscriptionList = new ArrayList<Subscription>();
-        subscriptionList.add(subscription);
-        subscriber.setSubscriptionList(subscriptionList);
-        subscriberService.create(subscriber);//CREATE
-        subscriptionService.create(subscription);//Create
-    }
-
     private void updateSubscriberSubscription(Subscriber subscriber,
             Subscription dbSubscription, Subscriber dbSubscriber) {
-        Subscription newSubscription = null;
-                               
         
         if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()){
-            
-            dbSubscription.setStatus(Status.Deactivated);
-            dbSubscription.setStateCode(subscriber.getState().getStateCode());
-            dbSubscription.setChannel(Channel.MCTS);
-            dbSubscription.setMctsId(subscriber.getMotherMctsId());
-            dbSubscription.setMsisdn(subscriber.getMsisdn());
-            subscriptionService.update(dbSubscription);
-            
+            updateSubscription(subscriber, dbSubscription, true);
         }else {
             if(!dbSubscriber.getLmp().equals(subscriber.getLmp())){
-                dbSubscription.setStatus(Status.Deactivated);
-                dbSubscription.setStateCode(subscriber.getState().getStateCode());
-                dbSubscription.setChannel(Channel.MCTS);
-                dbSubscription.setMctsId(subscriber.getMotherMctsId());
-                dbSubscription.setMsisdn(subscriber.getMsisdn());
-                dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-                subscriptionService.update(dbSubscription);
-                
-                newSubscription = new Subscription();
-                newSubscription.setOldSubscritptionId(dbSubscription);
-                newSubscription.setStatus(Status.PendingActivation);
-                newSubscription.setMctsId(subscriber.getMotherMctsId());
-                newSubscription.setChannel(Channel.MCTS);
-                newSubscription.setMsisdn(subscriber.getMsisdn());
-                newSubscription.setPackName("72Week");
-                
-                newSubscription.setModifiedBy(subscriber.getModifiedBy());
-                subscriptionService.create(newSubscription);
-                
-
+                updateSubscription(subscriber, dbSubscription, true);
+                createSubscription(subscriber, dbSubscription, dbSubscriber);
             }else{
-                dbSubscription.setStateCode(subscriber.getState().getStateCode());
-                dbSubscription.setChannel(Channel.MCTS);
-                dbSubscription.setMctsId(subscriber.getMotherMctsId());
-                dbSubscription.setMsisdn(subscriber.getMsisdn());
-                dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
-                subscriptionService.update(dbSubscription);
+                updateSubscription(subscriber, dbSubscription, false);
             }
         }
         
+        updateDbSubscriber(subscriber, dbSubscriber);
+                
+    }
+    
+    private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+        
+        if(statusFlag){
+            dbSubscription.setStatus(Status.Deactivated);
+        }
+        dbSubscription.setStateCode(subscriber.getState().getStateCode());
+        dbSubscription.setMctsId(subscriber.getMotherMctsId());
+        dbSubscription.setChannel(Channel.MCTS);
+        dbSubscription.setMsisdn(subscriber.getMsisdn());
+        dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+        subscriptionService.update(dbSubscription);
+    }
+    
+    private void createSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+        
+        Subscription newSubscription;
+        newSubscription = new Subscription();
+        if (dbSubscription != null) {
+            newSubscription.setOldSubscritptionId(dbSubscription);
+        }
+        newSubscription.setStatus(Status.PendingActivation);
+        newSubscription.setMctsId(subscriber.getMotherMctsId());
+        newSubscription.setMsisdn(subscriber.getMsisdn());
+        newSubscription.setChannel(Channel.MCTS);
+        newSubscription.setPackName("Pack_72");
+        newSubscription.setModifiedBy(subscriber.getModifiedBy());
+        newSubscription.setCreator(subscriber.getCreator());
+        newSubscription.setOwner(subscriber.getOwner());
+        newSubscription.setSubscriber(dbSubscriber);
+        
+        subscriptionService.create(newSubscription);
+    }
+    
+    private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber){
+
         if(!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())){
             dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
         }  
-        
+
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setName(subscriber.getName());
         dbSubscriber.setAge(subscriber.getAge());
@@ -286,13 +293,16 @@ public class MotherMctsCsvHandler {
         dbSubscriber.setPhcId(subscriber.getPhcId());
         dbSubscriber.setSubCentreId(subscriber.getSubCentreId());
         dbSubscriber.setVillageId(subscriber.getVillageId());
+        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
+        
         dbSubscriber.setAbortion(subscriber.getAbortion());
         dbSubscriber.setStillBirth(subscriber.getStillBirth());
         dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
         dbSubscriber.setLmp(subscriber.getLmp());
-        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
         
-        subscriberService.update(dbSubscriber);      
-                
+
+        subscriberService.update(dbSubscriber);
     }
+    
+    
 }

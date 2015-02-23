@@ -9,10 +9,12 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.District;
@@ -64,6 +66,9 @@ public class ChildMctsCsvHandler {
 
     @Autowired
     private SubscriberService subscriberService;
+    
+    @Autowired
+    private ConfigurationService configurationService;
 
     @MotechListener(subjects = "mds.crud.kilkarimodule.ChildMctsCsv.csv-import.success")
     public void motherMctsCsvSuccess(MotechEvent uploadEvent){
@@ -79,7 +84,6 @@ public class ChildMctsCsvHandler {
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary summary = new CsvProcessingSummary();
         BulkUploadError errorDetails = new BulkUploadError();
-
         ChildMctsCsv childMctsCsv = null;
 
         for (Long id : uploadedIDs) {
@@ -154,7 +158,7 @@ public class ChildMctsCsvHandler {
         childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(childMctsCsv.getEntryType(), "Entry Type", true)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         childSubscriber.setName(ParseDataHelper.parseString(childMctsCsv.getMotherName(), "Mother Name", false));
-        childSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeByLocation(stateCode, districtCode));
+        childSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeKKByLocationCode(stateCode, districtCode));
         childSubscriber.setDob(ParseDataHelper.parseDate(childMctsCsv.getBirthdate(), "Birth Date", true));
 
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
@@ -192,102 +196,89 @@ public class ChildMctsCsvHandler {
             if (dbSubscription == null){
                 dbSubscription = subscriptionService.getPackSubscriptionByMctsIdPackStatus(subscriber.getMotherMctsId(), PACK_72, Status.Active);
                 if(dbSubscription==null){
-                    createSubscriberSubscription(subscriber);
-
-                } else {
-                    Subscription newSubscription = null;
-                    Subscriber dbSubscriber = dbSubscription.getSubscriber();
-
-                    dbSubscription.setStatus(Status.Deactivated);
-                    dbSubscription.setStateCode(subscriber.getState().getStateCode());
-                    dbSubscription.setMsisdn(subscriber.getMsisdn());
-                    dbSubscription.setChannel(Channel.MCTS);
-                    dbSubscription.setMctsId(subscriber.getChildMctsId());
-                    dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-                    subscriptionService.update(dbSubscription);
-
-                    if(!subscriber.getChildDeath()){
-                        newSubscription = new Subscription();
-                        newSubscription.setOldSubscritptionId(dbSubscription);
-                        newSubscription.setStatus(Status.PendingActivation);
-                        newSubscription.setMctsId(subscriber.getMotherMctsId());
-                        newSubscription.setChannel(Channel.MCTS);
-                        newSubscription.setMsisdn(subscriber.getMsisdn());
-                        newSubscription.setPackName(PACK_48);
-                        newSubscription.setSubscriber(dbSubscriber);
-                        newSubscription.setModifiedBy(subscriber.getModifiedBy());
-                        newSubscription.setCreator(subscriber.getCreator());
-                        newSubscription.setOwner(subscriber.getOwner());
-
-                        subscriptionService.create(newSubscription);
+                    Configuration configuration = configurationService.getConfiguration();
+                    long activeUserCount = subscriptionService.getActiveUserCount();
+                    
+                    if(activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                        Subscriber dbSubscriber = subscriberService.create(subscriber);//CREATE
+                        createSubscription(subscriber, null, dbSubscriber);
+                    } else{
+                        //logging
                     }
-
-
+                    
+                } else {
+                    Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                    updateSubscription(subscriber, dbSubscription, true);
+                    if(!subscriber.getChildDeath()){
+                        createSubscription(subscriber, dbSubscription, dbSubscriber);
+                    }
                     updateDbSubscriber(subscriber, dbSubscriber);
+                
                 }
             } else {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         }else{
-            Subscriber dbSubscriber = dbSubscription.getSubscriber();
-            if(dbSubscriber.getChildMctsId() == null || dbSubscriber.getChildMctsId()==subscriber.getChildMctsId()) {
+            if(dbSubscription.getMctsId() == null || dbSubscription.getMctsId()==subscriber.getChildMctsId()) {
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             } else {
                 throw new DataValidationException("RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "");
             }
         }
     }
-
-    private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription,
-            Subscriber dbSubscriber) {
-        Subscription newSubscription = null;
+    
+    private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+        
         if(subscriber.getChildDeath()) {
-            dbSubscription.setStatus(Status.Deactivated);
-            dbSubscription.setStateCode(subscriber.getState().getStateCode());
-            dbSubscription.setMsisdn(subscriber.getMsisdn());
-            dbSubscription.setChannel(Channel.MCTS);
-            dbSubscription.setMctsId(subscriber.getChildMctsId());
-            dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-            subscriptionService.update(dbSubscription);
+            updateSubscription(subscriber, dbSubscription, true);
+            
         }else{
             if(!dbSubscriber.getDob().equals(subscriber.getDob())){
-
-                dbSubscription.setStatus(Status.Deactivated);
-                dbSubscription.setStateCode(subscriber.getState().getStateCode());
-                dbSubscription.setMsisdn(subscriber.getMsisdn());
-                dbSubscription.setChannel(Channel.MCTS);
-                dbSubscription.setMctsId(subscriber.getChildMctsId());
-                dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-                subscriptionService.update(dbSubscription);
-
-                newSubscription = new Subscription();
-                newSubscription.setOldSubscritptionId(dbSubscription);
-                newSubscription.setStatus(Status.PendingActivation);
-                newSubscription.setMctsId(subscriber.getMotherMctsId());
-                newSubscription.setChannel(Channel.MCTS);
-                newSubscription.setMsisdn(subscriber.getMsisdn());
-                newSubscription.setPackName(PACK_48);
-                newSubscription.setSubscriber(dbSubscriber);  
-                newSubscription.setStateCode(subscriber.getState().getStateCode());
-                newSubscription.setModifiedBy(subscriber.getModifiedBy());
-                newSubscription.setCreator(subscriber.getCreator());
-                newSubscription.setOwner(subscriber.getOwner());
-                subscriptionService.create(newSubscription);
-
+                updateSubscription(subscriber, dbSubscription, true);
+                createSubscription(subscriber, dbSubscription, dbSubscriber);
             }  else{
-                dbSubscription.setStateCode(subscriber.getState().getStateCode());
-                dbSubscription.setMsisdn(subscriber.getMsisdn());
-                dbSubscription.setChannel(Channel.MCTS);
-                dbSubscription.setMctsId(subscriber.getChildMctsId());
-                dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-                subscriptionService.update(dbSubscription);
+                updateSubscription(subscriber, dbSubscription, false);
             }
         }
 
         updateDbSubscriber(subscriber, dbSubscriber);
     }
-
+    
+    private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+        if(statusFlag){
+            dbSubscription.setStatus(Status.Deactivated);
+        }
+        dbSubscription.setStateCode(subscriber.getState().getStateCode());
+        dbSubscription.setMctsId(subscriber.getChildMctsId());
+        dbSubscription.setChannel(Channel.MCTS);
+        dbSubscription.setMsisdn(subscriber.getMsisdn());
+        dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+        subscriptionService.update(dbSubscription);
+        
+    }
+    
+    private void createSubscription(Subscriber subscriber,
+            Subscription dbSubscription, Subscriber dbSubscriber) {
+        
+        Subscription newSubscription;
+        newSubscription = new Subscription();
+        if (dbSubscription != null) {
+            newSubscription.setOldSubscritptionId(dbSubscription);
+        }
+        newSubscription.setStatus(Status.PendingActivation);
+        newSubscription.setMctsId(subscriber.getChildMctsId());
+        newSubscription.setChannel(Channel.MCTS);
+        newSubscription.setMsisdn(subscriber.getMsisdn());
+        newSubscription.setPackName(PACK_48);
+        newSubscription.setModifiedBy(subscriber.getModifiedBy());
+        newSubscription.setCreator(subscriber.getCreator());
+        newSubscription.setOwner(subscriber.getOwner());
+        newSubscription.setSubscriber(dbSubscriber);
+        
+        subscriptionService.create(newSubscription);
+    }
 
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber){
 
@@ -295,7 +286,7 @@ public class ChildMctsCsvHandler {
             dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
         }  
 
-        dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
+        dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
         dbSubscriber.setName(subscriber.getName());
         dbSubscriber.setAge(subscriber.getAge());
         dbSubscriber.setState(subscriber.getState());
@@ -306,30 +297,10 @@ public class ChildMctsCsvHandler {
         dbSubscriber.setSubCentreId(subscriber.getSubCentreId());
         dbSubscriber.setVillageId(subscriber.getVillageId());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
+        
+        dbSubscriber.setDob(subscriber.getDob());
 
         subscriberService.update(dbSubscriber);
     }
-
-    private void createSubscriberSubscription(Subscriber subscriber) {
-        Subscription newSubscription = new Subscription();
-        newSubscription.setStatus(Status.PendingActivation);
-        newSubscription.setMctsId(subscriber.getMotherMctsId());
-        newSubscription.setChannel(Channel.MCTS);
-        newSubscription.setMsisdn(subscriber.getMsisdn());
-        newSubscription.setPackName(PACK_48);
-        newSubscription.setSubscriber(subscriber);
-        newSubscription.setModifiedBy(subscriber.getModifiedBy());
-        newSubscription.setCreator(subscriber.getCreator());
-        newSubscription.setOwner(subscriber.getOwner());
-
-        subscriptionService.create(newSubscription);
-
-        List<Subscription> subscriptionList = new ArrayList<Subscription>();
-        subscriptionList.add(newSubscription);
-        subscriber.setSubscriptionList(subscriptionList);
-        subscriberService.create(subscriber);//CREATE
-
-    }
-
 
 }
