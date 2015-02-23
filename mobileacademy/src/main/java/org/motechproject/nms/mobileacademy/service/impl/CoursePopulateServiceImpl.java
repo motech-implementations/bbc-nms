@@ -12,8 +12,6 @@ import org.motechproject.mtraining.domain.Question;
 import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service implementation for course population.
+ * Service implementation for course population and querying in mtraining
+ * 
  *
  */
 @Service("CoursePopulateService")
@@ -30,19 +29,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     @Autowired
     private MTrainingService mTrainingService;
 
-    @Autowired
-    private CourseRawContentDataService courseRawContentDataService;
-
-    @Autowired
-    private ChapterContentDataService chapterContentDataService;
-
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CoursePopulateServiceImpl.class);
 
-    /**
-     * populate course static Data in mtraining.
-     */
-    private void populateMtrainingCourseData() {
+    @Override
+    public void populateMtrainingCourseData() {
         List<Chapter> chapters = new ArrayList<>();
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
             List<Lesson> lessons = new ArrayList<>();
@@ -72,28 +63,17 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         LOGGER.info("Course Structure in Mtraining Populated");
     }
 
-    /**
-     * find Course State
-     * 
-     * @return Course state enum contain course state
-     */
+    @Override
     public CourseUnitState findCourseState() {
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAUlT_COURSE_NAME);
-        if (CollectionUtils.isEmpty(courses)) {
-            populateMtrainingCourseData();
-            return CourseUnitState.Inactive;
-        } else if (CollectionUtils.isNotEmpty(courses)) {
+        if (CollectionUtils.isNotEmpty(courses)) {
             return courses.get(0).getState();
         }
         return null;
     }
 
-    /**
-     * update Course State
-     * 
-     * @param courseUnitState Course state enum contain course state
-     */
+    @Override
     public void updateCourseState(CourseUnitState courseUnitState) {
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAUlT_COURSE_NAME);
@@ -105,9 +85,20 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public void updateCorrectAnswer(int chapterId, int questionId, int answerId) {
+    public void updateCorrectAnswer(String chapterName, String questionName,
+            String answer) {
+        List<Chapter> chapters = mTrainingService.getChapterByName(chapterName);
+        if (CollectionUtils.isNotEmpty(chapters)) {
+            Chapter chapter = chapters.get(0);
+            Quiz quiz = chapter.getQuiz();
+            for (Question question : quiz.getQuestions()) {
+                if (questionName.equalsIgnoreCase(question.getQuestion())) {
+                    question.setAnswer(answer);
+                    mTrainingService.updateQuiz(quiz);
+                    break;
+                }
+            }
+        }
 
-        LOGGER.info("Correct Answer Updated");
     }
-
 }

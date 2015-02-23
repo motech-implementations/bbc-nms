@@ -1,12 +1,43 @@
 package org.motechproject.nms.mobileacademy.repository;
 
+import java.util.List;
+
+import org.motechproject.mds.annotations.Lookup;
+import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 
 /**
- * Created by nitin on 2/17/15.
+ * Interface for repository that persists simple records and allows CRUD on
+ * CourseProcessedContent table. MotechDataService base class will provide the
+ * implementation of this class as well as methods for adding, deleting, saving
+ * and finding all instances. In this class we define and custom lookups we may
+ * need.
  */
-public interface CourseProcessedContentDataService extends MotechDataService<CourseProcessedContent> {
+public interface CourseProcessedContentDataService extends
+        MotechDataService<CourseProcessedContent> {
 
+    /**
+     * find Content By LLC
+     * 
+     * @param languageLocationCode LLC identifier
+     * @return List<CourseProcessedContent>
+     */
+    @Lookup
+    List<CourseProcessedContent> findContentByLlc(
+            @LookupField(name = "languageLocationCode") int languageLocationCode);
+
+    /**
+     * find By Circle Llc and ContentName
+     * 
+     * @param circle circle identifier
+     * @param languageLocationCode LLC identifier
+     * @param contentName content name
+     * @return
+     */
+    @Lookup
+    CourseProcessedContent findByCircleLlcContentName(
+            @LookupField(name = "circle") String circle,
+            @LookupField(name = "languageLocationCode") int languageLocationCode,
+            @LookupField(name = "contentName") String contentName);
 }
-

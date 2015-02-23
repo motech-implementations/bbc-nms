@@ -1,12 +1,12 @@
 package org.motechproject.nms.mobileacademy.web;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
 import org.motechproject.nms.mobileacademy.service.RecordProcessService;
 import org.slf4j.Logger;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,13 +43,13 @@ public class MobileAcademyController {
 
     @RequestMapping(value = "/processData")
     @ResponseBody
-    public String processData(){
+    public String processData() {
         return recordProcessService.processRawRecords();
     }
 
     @RequestMapping(value = "/deleteData")
     @ResponseBody
-    public String deleteData(){
+    public String deleteData() {
         courseRawContentService.deleteAll();
         courseProcessedContentService.deleteAll();
         return "Data Deleted";
@@ -57,10 +57,19 @@ public class MobileAcademyController {
 
     @RequestMapping(value = "/resetState")
     @ResponseBody
-    public String resetState(){
+    public String resetState() {
         coursePopulateService.updateCourseState(CourseUnitState.Inactive);
         return "Course Unit State is reset";
     }
 
+    @RequestMapping(value = "/findCourseState")
+    @ResponseBody
+    public String findCourseState() {
+        coursePopulateService.updateCorrectAnswer(
+                MobileAcademyConstants.CHAPTER + String.format("%02d", 2),
+                MobileAcademyConstants.QUESTION + String.format("%02d", 3),
+                String.valueOf(2));
+        return "Course Unit State is reset";
+    }
 
 }

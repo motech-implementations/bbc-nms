@@ -1,6 +1,5 @@
 package org.motechproject.nms.mobileacademy.domain;
 
-
 /**
  * Class containing constants used in mobile academy.
  *
@@ -42,6 +41,10 @@ public class MobileAcademyConstants {
     public static final String SCORE = "score";
 
     public static final String DEFAUlT_COURSE_NAME = "MobileAcademyCourse";
+
+    public static final String COURSE_CSV_UPLOAD_SUCCESS = "mds.crud.mobileacademymodule.CourseRawContent.csv-import.success";
+
+    public static final String COURSE_CSV_UPLOAD_FAILED = "mds.crud.mobileacademymodule.CourseRawContent.csv-import.failed";
 
     private MobileAcademyConstants() {
     }

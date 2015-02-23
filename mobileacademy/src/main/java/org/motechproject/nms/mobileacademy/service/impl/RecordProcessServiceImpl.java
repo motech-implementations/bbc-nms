@@ -1,28 +1,33 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.mtraining.domain.CourseUnitState;
-import org.motechproject.nms.mobileacademy.domain.*;
+import org.motechproject.nms.mobileacademy.domain.ChapterContent;
+import org.motechproject.nms.mobileacademy.domain.ContentType;
+import org.motechproject.nms.mobileacademy.domain.CourseOperator;
+import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
+import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
+import org.motechproject.nms.mobileacademy.domain.FileType;
+import org.motechproject.nms.mobileacademy.domain.LessonContent;
+import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.domain.QuestionContent;
+import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.Record;
+import org.motechproject.nms.mobileacademy.domain.Score;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
 import org.motechproject.nms.mobileacademy.service.RecordProcessService;
-import org.motechproject.nms.mobileacademy.domain.ContentType;
-import org.motechproject.nms.mobileacademy.domain.CourseOperator;
-import org.motechproject.nms.mobileacademy.domain.FileType;
-import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by nitin on 2/9/15.
@@ -45,35 +50,55 @@ public class RecordProcessServiceImpl implements RecordProcessService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     String Response = "";
-    
+
     boolean flagForLessonFilesOfChapter[][][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_LESSONS][2];
+
     boolean flagForQuestionFilesOfChapter[][][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_QUESTIONS][3];
+
     boolean flagForQuizHeader[] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS];
+
     boolean flagForScoreFilesOfChapter[][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_SCORE_FILES];
+
     boolean flagForChapterEndMenu[] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS];
-    
+
     @Override
     public String processRawRecords() {
-        int minNoOfEntriesInCSVPerCourse = MobileAcademyConstants.NUM_OF_CHAPTERS * (
-                1    //For Chapter End Menu
-                        + MobileAcademyConstants.NUM_OF_LESSONS * 2    //For Lesson Content and Menu file
-                        + MobileAcademyConstants.NUM_OF_QUESTIONS * 3    //For Question content, correct answer and wrong Answer file
-                        + 1        //For Quiz Header in each Quiz
-                        + MobileAcademyConstants.NUM_OF_SCORE_FILES
-        );
+        int minNoOfEntriesInCSVPerCourse = MobileAcademyConstants.NUM_OF_CHAPTERS
+                * (1 // For Chapter End Menu
+                        + MobileAcademyConstants.NUM_OF_LESSONS * 2 // For
+                                                                    // Lesson
+                                                                    // Content
+                                                                    // and Menu
+                                                                    // file
+                        + MobileAcademyConstants.NUM_OF_QUESTIONS * 3 // For
+                                                                      // Question
+                                                                      // content,
+                                                                      // correct
+                                                                      // answer
+                                                                      // and
+                                                                      // wrong
+                                                                      // Answer
+                                                                      // file
+                        + 1 // For Quiz Header in each Quiz
+                + MobileAcademyConstants.NUM_OF_SCORE_FILES);
 
         int i = 0;
 
-        List<String> listOfLLCs = courseRawContentService.findCourseRawContentLlcIds("ADD");
+        List<String> listOfLLCs = courseRawContentService
+                .findCourseRawContentLlcIds("ADD");
 
         if (CollectionUtils.isNotEmpty(listOfLLCs)) {
             for (String llcString : listOfLLCs) {
                 int LLC;
                 try {
                     LLC = Integer.parseInt(llcString);
-                } catch(NumberFormatException exc) {
-                    logger.info("LLC " + llcString + "is not numeric. Deleting all Addition records corresponding to it.");
-                    courseRawContentService.deleteCourseRawContentByLLcAndOperation(llcString, "ADD");
+                } catch (NumberFormatException exc) {
+                    logger.info("LLC "
+                            + llcString
+                            + "is not numeric. Deleting all Addition records corresponding to it.");
+                    courseRawContentService
+                            .deleteCourseRawContentByLLcAndOperation(llcString,
+                                    "ADD");
                     continue;
                 }
                 if (coursePopulateService.findCourseState() == CourseUnitState.Active) {
@@ -83,10 +108,15 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
                 resetTheFlags();
 
-                List<CourseRawContent> courseRawContents = courseRawContentService.findContentByLlcAndOperation(llcString, "ADD");
-                if (CollectionUtils.isNotEmpty(courseRawContents) && courseRawContents.size() < minNoOfEntriesInCSVPerCourse) {
-                    courseRawContentService.deleteCourseRawContentByLLcAndOperation(llcString,"ADD");
-                    logger.info("Insufficient Records to populate the course against Language Location Code:" + LLC);
+                List<CourseRawContent> courseRawContents = courseRawContentService
+                        .findContentByLlcAndOperation(llcString, "ADD");
+                if (CollectionUtils.isNotEmpty(courseRawContents)
+                        && courseRawContents.size() < minNoOfEntriesInCSVPerCourse) {
+                    courseRawContentService
+                            .deleteCourseRawContentByLLcAndOperation(llcString,
+                                    "ADD");
+                    logger.info("Insufficient Records to populate the course against Language Location Code:"
+                            + LLC);
                     continue;
                 }
 
@@ -100,11 +130,14 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                         logger.info("Record " + i++ + "Validation Failed");
                         continue;
                     }
-                    //if record is question type, store it somewhere so that mtraining can be populated at the last.
+                    // if record is question type, store it somewhere so that
+                    // mtraining can be populated at the last.
                     //
-                    checkTypeAndProcessRecord(record, chapterContents.get(record.getChapterId() - 1));
+                    checkTypeAndProcessRecord(record,
+                            chapterContents.get(record.getChapterId() - 1));
                     logger.info("Record" + i++ + " Validated");
-                    //System.out.println("Response-" + i++ + " :" + Response + "\n");
+                    // System.out.println("Response-" + i++ + " :" + Response +
+                    // "\n");
                 }
 
                 if (hasCompleteCourseArrived()) {
@@ -112,14 +145,17 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                     for (CourseRawContent courseRawContent : courseRawContents) {
                         updateRecordInContentProcessedTable(courseRawContent);
                         courseRawContentService.delete(courseRawContent);
-                        logger.info("Record" + ++i + " has been processed successfully");
+                        logger.info("Record" + ++i
+                                + " has been processed successfully");
                     }
-                    //Update Course;
+                    // Update Course;
                     for (i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
-                        chapterContentDataService.create(chapterContents.get(i));
+                        chapterContentDataService
+                                .create(chapterContents.get(i));
                     }
-                    //Change the state to Active
-                    coursePopulateService.updateCourseState(CourseUnitState.Active);
+                    // Change the state to Active
+                    coursePopulateService
+                            .updateCourseState(CourseUnitState.Active);
                 }
             }
 
@@ -128,16 +164,21 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         listOfLLCs = courseRawContentService.findCourseRawContentLlcIds("MOD");
         if (CollectionUtils.isNotEmpty(listOfLLCs)) {
             for (String llcString : listOfLLCs) {
-                //get Course
+                // get Course
                 int LLC;
                 try {
                     LLC = Integer.parseInt(llcString);
                 } catch (NumberFormatException exc) {
-                    logger.info("LLC " + llcString + "is not numeric. Deleting all modification records corresponding to it.");
-                    courseRawContentService.deleteCourseRawContentByLLcAndOperation(llcString, "MOD");
+                    logger.info("LLC "
+                            + llcString
+                            + "is not numeric. Deleting all modification records corresponding to it.");
+                    courseRawContentService
+                            .deleteCourseRawContentByLLcAndOperation(llcString,
+                                    "MOD");
                     continue;
                 }
-                for (CourseRawContent courseRawContent : courseRawContentService.findContentByLlcAndOperation(llcString, "MOD")) {
+                for (CourseRawContent courseRawContent : courseRawContentService
+                        .findContentByLlcAndOperation(llcString, "MOD")) {
                     Record record = validateRawContent(courseRawContent);
 
                     if (record == null) {
@@ -146,7 +187,8 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                         continue;
                     }
 
-                    ChapterContent chapterContent = chapterContentDataService.findChapterContentByNumber(record.getChapterId());
+                    ChapterContent chapterContent = chapterContentDataService
+                            .findChapterContentByNumber(record.getChapterId());
                     checkTypeAndProcessRecord(record, chapterContent);
 
                     updateRecordInContentProcessedTable(courseRawContent);
@@ -155,7 +197,8 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                     chapterContentDataService.update(chapterContent);
 
                     logger.info("Record" + i++ + " Validated");
-                    //System.out.println("Response-" + i++ + " :" + Response + "\n");
+                    // System.out.println("Response-" + i++ + " :" + Response +
+                    // "\n");
                 }
             }
         }
@@ -224,52 +267,54 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return listOfChapters;
     }
 
-    private void updateRecordInContentProcessedTable(CourseRawContent courseRawContent) {
-        courseProcessedContentService.create(new CourseProcessedContent(
-                Integer.parseInt(courseRawContent.getContentId()),
-                courseRawContent.getCircle(),
-                Integer.parseInt(courseRawContent.getLanguageLocationCode()),
-                courseRawContent.getContentName(),
+    private void updateRecordInContentProcessedTable(
+            CourseRawContent courseRawContent) {
+        courseProcessedContentService.create(new CourseProcessedContent(Integer
+                .parseInt(courseRawContent.getContentId()), courseRawContent
+                .getCircle(), Integer.parseInt(courseRawContent
+                .getLanguageLocationCode()), courseRawContent.getContentName(),
                 ContentType.getFor(courseRawContent.getContentType()),
-                courseRawContent.getContentFile(),
-                Integer.parseInt(courseRawContent.getContentDuration()),
-                courseRawContent.getMetaData()
-        ));
+                courseRawContent.getContentFile(), Integer
+                        .parseInt(courseRawContent.getContentDuration()),
+                courseRawContent.getMetaData()));
     }
-    
-    private boolean hasCompleteCourseArrived(){
-    	
-    	for(int i=0; i<MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
-    		for(int j=0; j<MobileAcademyConstants.NUM_OF_LESSONS; j++) {
-    			if(!(flagForLessonFilesOfChapter[i][j][0] && flagForLessonFilesOfChapter[i][j][1])){
-    				return false;
-    			}
-    		}
-    		for(int j=0; j<MobileAcademyConstants.NUM_OF_QUESTIONS; j++) {
-    			if(!(flagForQuestionFilesOfChapter[i][j][0] && flagForQuestionFilesOfChapter[i][j][1] && flagForQuestionFilesOfChapter[i][j][2])){
-    				return false;
-    			}
-    		}
-    		if(!flagForQuizHeader[i])
-    			return false;
-    		
-    		for(int j=0; j<MobileAcademyConstants.NUM_OF_SCORE_FILES; j++) {
-    			if(!(flagForScoreFilesOfChapter[i][j])){
-    				return false;
-    			}
-    		}
-    		
-    		if(!flagForChapterEndMenu[i])
-    			return false;
-    	}
-    	
-    	return true;
+
+    private boolean hasCompleteCourseArrived() {
+
+        for (int i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
+            for (int j = 0; j < MobileAcademyConstants.NUM_OF_LESSONS; j++) {
+                if (!(flagForLessonFilesOfChapter[i][j][0] && flagForLessonFilesOfChapter[i][j][1])) {
+                    return false;
+                }
+            }
+            for (int j = 0; j < MobileAcademyConstants.NUM_OF_QUESTIONS; j++) {
+                if (!(flagForQuestionFilesOfChapter[i][j][0]
+                        && flagForQuestionFilesOfChapter[i][j][1] && flagForQuestionFilesOfChapter[i][j][2])) {
+                    return false;
+                }
+            }
+            if (!flagForQuizHeader[i])
+                return false;
+
+            for (int j = 0; j < MobileAcademyConstants.NUM_OF_SCORE_FILES; j++) {
+                if (!(flagForScoreFilesOfChapter[i][j])) {
+                    return false;
+                }
+            }
+
+            if (!flagForChapterEndMenu[i])
+                return false;
+        }
+
+        return true;
     }
 
     private Record validateRawContent(CourseRawContent courseRawContent) {
         Record record = new Record();
 
-        if (StringUtils.isNotBlank(courseRawContent.getOperation()) && courseRawContent.getOperation().trim().equalsIgnoreCase("MOD")) {
+        if (StringUtils.isNotBlank(courseRawContent.getOperation())
+                && courseRawContent.getOperation().trim()
+                        .equalsIgnoreCase("MOD")) {
             record.setOperator(CourseOperator.MOD);
         } else {
             record.setOperator(CourseOperator.ADD);
@@ -281,19 +326,19 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         try {
             Integer.parseInt(courseRawContent.getContentId());
         } catch (NumberFormatException exception) {
-            //log Error(incorrect format);
+            // log Error(incorrect format);
             logger.info("*****Error: ContentID not Integer*****");
             return null;
         }
         if (StringUtils.isBlank(courseRawContent.getLanguageLocationCode())) {
-            //log Error(Missing)
+            // log Error(Missing)
             logger.info("*****Error: LLC missing*****");
             return null;
         }
         try {
             Integer.parseInt(courseRawContent.getLanguageLocationCode());
         } catch (NumberFormatException exception) {
-            //log Error(incorrect format);
+            // log Error(incorrect format);
 
             logger.info("*****Error: LLC not numeric*****");
             return null;
@@ -301,9 +346,9 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
         String contentName;
         if (StringUtils.isNotBlank(courseRawContent.getContentName())) {
-            //log incorrect format
+            // log incorrect format
             contentName = courseRawContent.getContentName().trim();
-            if(contentName.indexOf("_") == -1) {
+            if (contentName.indexOf("_") == -1) {
                 logger.info("*****Error: ContentName not separated by _*****");
                 return null;
             }
@@ -312,23 +357,26 @@ public class RecordProcessServiceImpl implements RecordProcessService {
             return null;
         }
 
-        String chapterString = contentName.substring(0, contentName.indexOf("_"));
+        String chapterString = contentName.substring(0,
+                contentName.indexOf("_"));
         String subString = contentName.substring(1 + contentName.indexOf("_"));
 
-        if(StringUtils.isBlank(subString)) {
+        if (StringUtils.isBlank(subString)) {
             logger.info("*****Error: Unable to find complete content name*****");
             return null;
         }
 
-        if (!chapterString.substring(0, chapterString.length() - 2).equalsIgnoreCase("Chapter")) {
-            //log Chapter in incorrect format
+        if (!chapterString.substring(0, chapterString.length() - 2)
+                .equalsIgnoreCase("Chapter")) {
+            // log Chapter in incorrect format
             logger.info("*****Error: Chapter not found*****");
             return null;
         } else {
             try {
-                record.setChapterId(Integer.parseInt(chapterString.substring(chapterString.length() - 2)));
+                record.setChapterId(Integer.parseInt(chapterString
+                        .substring(chapterString.length() - 2)));
             } catch (NumberFormatException exception) {
-                //log CHAPTER-id NOT NUMERIC
+                // log CHAPTER-id NOT NUMERIC
                 logger.info("*****Error: ChapterID not Numeric*****");
                 return null;
             }
@@ -338,7 +386,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
             return null;
 
         if (StringUtils.isBlank(courseRawContent.getContentDuration())) {
-            //log Error(Missing)
+            // log Error(Missing)
 
             logger.info("*****Error: ContentDuration missing*****");
             return null;
@@ -346,7 +394,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         try {
             Integer.parseInt(courseRawContent.getContentDuration());
         } catch (NumberFormatException exception) {
-            //log Error(incorrect format);
+            // log Error(incorrect format);
 
             logger.info("*****Error: ContentDuration not Numeric*****");
             return null;
@@ -354,19 +402,21 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
         if (record.getType() == FileType.QuestionContent) {
             String metaData = courseRawContent.getMetaData();
-            if(metaData.isEmpty()){
+            if (metaData.isEmpty()) {
                 logger.info("No MetaData found");
                 return null;
             }
-            if (!metaData.substring(0, metaData.indexOf(":")).equalsIgnoreCase("CorrectAnswer")) {
-                //log correctAnswer in incorrect format
+            if (!metaData.substring(0, metaData.indexOf(":")).equalsIgnoreCase(
+                    "CorrectAnswer")) {
+                // log correctAnswer in incorrect format
                 logger.info("*****Error: CorrectAnswer not found*****");
                 return null;
             } else {
                 try {
-                    record.setAnswerId(Integer.parseInt(metaData.substring(metaData.indexOf(":") + 1)));
+                    record.setAnswerId(Integer.parseInt(metaData
+                            .substring(metaData.indexOf(":") + 1)));
                 } catch (NumberFormatException exception) {
-                    //log chapter-id NOT NUMERIC
+                    // log chapter-id NOT NUMERIC
                     logger.info("*****Error: CorrectAnswerOption not Numeric*****");
                     return null;
                 }
@@ -374,7 +424,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
 
         if (StringUtils.isBlank(courseRawContent.getContentFile())) {
-            //log Error(Missing)
+            // log Error(Missing)
             logger.info("*****Error: ContentFile missing*****");
             return null;
         }
@@ -402,7 +452,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         try {
             index = Integer.parseInt(indexString);
         } catch (NumberFormatException exception) {
-            //log unable to determine the index in content name
+            // log unable to determine the index in content name
             logger.info("*****Error: Second Index in content name not Numeric*****");
 
             return false;
@@ -439,83 +489,100 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
-    private void checkTypeAndProcessRecord(Record record, ChapterContent chapterContent) {
-    	
-    	if (record.getType() == FileType.LessonContent) {
+    private void checkTypeAndProcessRecord(Record record,
+            ChapterContent chapterContent) {
+
+        if (record.getType() == FileType.LessonContent) {
             List<LessonContent> lessons = chapterContent.getLessons();
-            for(LessonContent lesson: lessons) {
-                if((lesson.getLessonNumber()==record.getLessonId())&&
-                        (lesson.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_LESSON))) {
+            for (LessonContent lesson : lessons) {
+                if ((lesson.getLessonNumber() == record.getLessonId())
+                        && (lesson.getName()
+                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_LESSON))) {
                     lesson.setAudioFile(record.getFileName());
                 }
             }
-            flagForLessonFilesOfChapter[record.getChapterId()-1][record.getLessonId()-1][0] = true;
-        }
-        else if (record.getType() == FileType.LessonEndMenu) {
+            flagForLessonFilesOfChapter[record.getChapterId() - 1][record
+                    .getLessonId() - 1][0] = true;
+        } else if (record.getType() == FileType.LessonEndMenu) {
             List<LessonContent> lessons = chapterContent.getLessons();
-            for(LessonContent lesson: lessons) {
-                if((lesson.getLessonNumber()==record.getLessonId())&&
-                        (lesson.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))) {
+            for (LessonContent lesson : lessons) {
+                if ((lesson.getLessonNumber() == record.getLessonId())
+                        && (lesson.getName()
+                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))) {
                     lesson.setAudioFile(record.getFileName());
                 }
             }
 
-            flagForLessonFilesOfChapter[record.getChapterId()-1][record.getLessonId()-1][1] = true;
-        }
-        else if (record.getType() == FileType.QuizHeader) {
+            flagForLessonFilesOfChapter[record.getChapterId() - 1][record
+                    .getLessonId() - 1][1] = true;
+        } else if (record.getType() == FileType.QuizHeader) {
             QuizContent quiz = chapterContent.getQuiz();
 
-            if((quiz.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
+            if ((quiz.getName()
+                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
                 quiz.setAudioFile(record.getFileName());
             }
 
-            flagForQuizHeader[record.getChapterId()-1] = true;
-        }
-        else if (record.getType() == FileType.QuestionContent) {
-            List<QuestionContent> questions = chapterContent.getQuiz().getQuestions();
-            for(QuestionContent question: questions) {
-                if((question.getQuestionNumber()==record.getQuestionId())&&
-                        (question.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
+            flagForQuizHeader[record.getChapterId() - 1] = true;
+        } else if (record.getType() == FileType.QuestionContent) {
+            List<QuestionContent> questions = chapterContent.getQuiz()
+                    .getQuestions();
+            for (QuestionContent question : questions) {
+                if ((question.getQuestionNumber() == record.getQuestionId())
+                        && (question.getName()
+                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
                     question.setAudioFile(record.getFileName());
                 }
             }
-            coursePopulateService.updateCorrectAnswer(record.getChapterId(), record.getQuestionId(), record.getAnswerId());
-            flagForQuestionFilesOfChapter[record.getChapterId()-1][record.getQuestionId()-1][0] = true;
-        }
-        else if (record.getType() == FileType.CorrectAnswer) {
-            List<QuestionContent> questions = chapterContent.getQuiz().getQuestions();
-            for(QuestionContent question: questions) {
-                if((question.getQuestionNumber()==record.getQuestionId())&&
-                        (question.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER))) {
+            coursePopulateService.updateCorrectAnswer(
+                    MobileAcademyConstants.CHAPTER
+                            + String.format("%02d", record.getChapterId()),
+                    MobileAcademyConstants.QUESTION
+                            + String.format("%02d", record.getQuestionId()),
+                    String.valueOf(record.getAnswerId()));
+            flagForQuestionFilesOfChapter[record.getChapterId() - 1][record
+                    .getQuestionId() - 1][0] = true;
+        } else if (record.getType() == FileType.CorrectAnswer) {
+            List<QuestionContent> questions = chapterContent.getQuiz()
+                    .getQuestions();
+            for (QuestionContent question : questions) {
+                if ((question.getQuestionNumber() == record.getQuestionId())
+                        && (question.getName()
+                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER))) {
                     question.setAudioFile(record.getFileName());
                 }
             }
 
-            flagForQuestionFilesOfChapter[record.getChapterId()-1][record.getQuestionId()-1][1] = true;
-        }
-        else if (record.getType() == FileType.WrongAnswer) {
-            List<QuestionContent> questions = chapterContent.getQuiz().getQuestions();
-            for(QuestionContent question: questions) {
-                if((question.getQuestionNumber()==record.getQuestionId())&&
-                        (question.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER))) {
+            flagForQuestionFilesOfChapter[record.getChapterId() - 1][record
+                    .getQuestionId() - 1][1] = true;
+        } else if (record.getType() == FileType.WrongAnswer) {
+            List<QuestionContent> questions = chapterContent.getQuiz()
+                    .getQuestions();
+            for (QuestionContent question : questions) {
+                if ((question.getQuestionNumber() == record.getQuestionId())
+                        && (question.getName()
+                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER))) {
                     question.setAudioFile(record.getFileName());
                 }
             }
-            flagForQuestionFilesOfChapter[record.getChapterId()-1][record.getQuestionId()-1][2] = true;
-        }
-        else if (record.getType() == FileType.ChapterEndMenu) {
-            if(chapterContent.getName().equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))
+            flagForQuestionFilesOfChapter[record.getChapterId() - 1][record
+                    .getQuestionId() - 1][2] = true;
+        } else if (record.getType() == FileType.ChapterEndMenu) {
+            if (chapterContent.getName().equalsIgnoreCase(
+                    MobileAcademyConstants.CONTENT_MENU))
                 chapterContent.setAudioFile(record.getFileName());
-            flagForChapterEndMenu[record.getChapterId()-1] = true;
-        }
-        else if (record.getType() == FileType.Score) {
+            flagForChapterEndMenu[record.getChapterId() - 1] = true;
+        } else if (record.getType() == FileType.Score) {
             List<Score> scores = chapterContent.getScores();
-            for(Score score: scores) {
-                if(score.getName().equalsIgnoreCase(MobileAcademyConstants.SCORE + String.format("%02d", record.getScoreID()))) {
+            for (Score score : scores) {
+                if (score.getName().equalsIgnoreCase(
+                        MobileAcademyConstants.SCORE
+                                + String.format("%02d", record.getScoreID()))) {
                     score.setAudioFile(record.getFileName());
                 }
             }
-            flagForScoreFilesOfChapter[record.getChapterId()-1][record.getScoreID()] = true;
+            flagForScoreFilesOfChapter[record.getChapterId() - 1][record
+                    .getScoreID()] = true;
         }
     }
 

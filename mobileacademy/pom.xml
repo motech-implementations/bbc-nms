@@ -147,6 +147,11 @@
             <artifactId>mtraining</artifactId>
             <version>${motech.version}</version>
         </dependency>
+         <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>util</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <repositories>
