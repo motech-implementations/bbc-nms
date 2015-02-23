@@ -48,7 +48,6 @@ public class Subscriber extends MdsEntity {
     private District districtId;
     
     @Field(name = "taluka_id")
-    @Column(length = 50)
     private Taluka talukaId;
     
     @Field(name = "healthBlock_id")

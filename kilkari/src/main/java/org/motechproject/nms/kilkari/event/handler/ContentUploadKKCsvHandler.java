@@ -47,7 +47,7 @@ public class ContentUploadKKCsvHandler {
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
-    public void ContentUploadKKCsvSuccess(MotechEvent motechEvent) {
+    public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {
 
         ContentUploadKKCsv record = null;
         ContentUploadKK persistentRecord = null;
@@ -82,7 +82,7 @@ public class ContentUploadKKCsvHandler {
                             contentUploadKKService.update(newRecord);
                             logger.info(String.format("Record updated successfully for contentid : %s", newRecord.getContentId()));
                         }
-                    }else {
+                    } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         contentUploadKKService.create(newRecord);
@@ -117,11 +117,11 @@ public class ContentUploadKKCsvHandler {
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
-    public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
+    public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
             if (oldRecord != null) {
                 contentUploadKKCsvService.delete(oldRecord);
