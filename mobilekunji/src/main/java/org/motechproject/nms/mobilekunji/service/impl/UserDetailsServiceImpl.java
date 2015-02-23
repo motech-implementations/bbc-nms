@@ -1,8 +1,9 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
@@ -48,24 +49,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode);
 
-        if(userProfileData.isCreated()) {
-            setFlwData(userProfileData);
-        }
-
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
         return userDetailApiResponse;
     }
 
-    private void setFlwData(UserProfile userProfile) {
+    @Override
+    public int updateLanguageLocationCode(String msisdn, Integer languageLocationCode) throws DataValidationException {
 
-        ServiceConsumptionFlw serviceConsumptionFlw = new ServiceConsumptionFlw();
-        serviceConsumptionFlw.setNmsFlwId(userProfile.getNmsId());
-        serviceConsumptionFlw.setWelcomePromptFlag(KunjiConstants.FALSE);
-        serviceConsumptionFlw.setCurrentUsageInPulses(KunjiConstants.ZERO);
-        serviceConsumptionFlw.setEndOfUsagePrompt(KunjiConstants.ZERO);
+         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(languageLocationCode,msisdn);
 
-        serviceConsumptionFlwService.create(serviceConsumptionFlw);
+         return HttpStatus.SC_OK;
     }
+
 
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) {
 
@@ -76,14 +71,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
-        userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
 
         //method for capping
-        setNmsCappingValue(userDetailApiResponse,userProfile);
-        userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+        setNmsCappingValue(userDetailApiResponse, userProfile);
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
-        userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
 
+        if(null != serviceConsumptionFlw) {
+            userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
+            userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
+            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+        } else {
+            userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
+            userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
+            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
+        }
         return userDetailApiResponse;
     }
 
@@ -91,14 +92,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         switch(configurationService.getConfiguration().getCappingType()){
 
-            case KunjiConstants.ZERO:
+            case ConfigurationConstants.DEFAULT_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(-1);
                 break;
 
-            case KunjiConstants.ONE:
+            case ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNationalCapValue());
 
-            case KunjiConstants.TWO:
+            case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(userProfile.getMaxStateLevelCappingValue());
         }
     }

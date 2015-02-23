@@ -68,13 +68,11 @@ public class CallerDataController extends BaseController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request){
-        
+    public @ResponseBody int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+
+        userDetailsService.updateLanguageLocationCode(request.getCallingNumber(), request.getLanguageLocationCode());
         return HttpStatus.SC_OK;
     }
-
-
-
 
     /**
      * validate Input Data For Get User Details API
