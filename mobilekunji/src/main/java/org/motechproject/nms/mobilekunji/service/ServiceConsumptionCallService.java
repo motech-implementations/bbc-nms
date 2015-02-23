@@ -3,7 +3,7 @@ package org.motechproject.nms.mobilekunji.service;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionCall;
 
 /**
- * Created by abhishek on 13/3/15.
+ * The purpose of this class is to provide methods to create, delete and update the service level ServiceConsumptionCall.
  */
 public interface ServiceConsumptionCallService {
 

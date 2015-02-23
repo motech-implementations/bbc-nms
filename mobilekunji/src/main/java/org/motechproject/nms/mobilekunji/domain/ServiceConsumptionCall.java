@@ -9,7 +9,7 @@ import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
- * Created by abhishek on 18/3/15.
+ * This class Models data records provided in the Service Consumption Call
  */
 
 @Entity(recordHistory = true)

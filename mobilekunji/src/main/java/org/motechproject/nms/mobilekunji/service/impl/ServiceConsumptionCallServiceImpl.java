@@ -6,7 +6,7 @@ import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 13/3/15.
+ * This class provides the implementation of ServiceConsumptionCallService
  */
 
 @Service("serviceConsumptionCallService")

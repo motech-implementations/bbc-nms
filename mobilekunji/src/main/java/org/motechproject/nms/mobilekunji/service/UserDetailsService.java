@@ -15,4 +15,5 @@ public interface UserDetailsService {
      * @return User detail response object
      */
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, Long callId) throws DataValidationException;
+
 }
