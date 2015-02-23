@@ -2,7 +2,6 @@ package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.service.MDSLookupService;
-import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
@@ -11,13 +10,11 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import java.util.List;
 
 @Service("languageLocationCodeService")
 public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {
-
 
 
     @Autowired
@@ -40,6 +37,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
         /**
          * All param Constructor
+         *
          * @param circleCode
          * @param resultParamName "languageLocationCodeXX"
          */
@@ -50,7 +48,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
         @Override
         public List<Integer> execute(Query query,
-                                    InstanceSecurityRestriction restriction) {
+                                     InstanceSecurityRestriction restriction) {
             query.setFilter("circleCode == '" + circleCode + "'");
             query.setResult("DISTINCT " + resultParamName + "");
             return (List<Integer>) query.execute();
@@ -59,10 +57,11 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
     /**
      * This method executes the LanguagelocationQuery and returns the unique language location code
+     *
      * @param query LanguageLocationCode Query
      * @return unique languageLocationCode else null
      */
-    private Integer executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query){
+    private Integer executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query) {
 
         /* get the list of distinct MA languageLocationCodes for the circle */
         List<Integer> llcList = languageLocationCodeDataService.executeQuery(query);
@@ -82,6 +81,11 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     @Override
     public void update(LanguageLocationCode record) {
         languageLocationCodeDataService.update(record);
+    }
+
+    @Override
+    public void delete(LanguageLocationCode record) {
+        languageLocationCodeDataService.delete(record);;
     }
 
     @Override

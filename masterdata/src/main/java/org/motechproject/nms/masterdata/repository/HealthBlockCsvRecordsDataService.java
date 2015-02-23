@@ -6,5 +6,5 @@ import org.motechproject.nms.masterdata.domain.HealthBlockCsv;
 /**
  * Created by abhishek on 31/1/15.
  */
-public interface HealthBlockCsvRecordsDataService extends MotechDataService<HealthBlockCsv>{
+public interface HealthBlockCsvRecordsDataService extends MotechDataService<HealthBlockCsv> {
 }

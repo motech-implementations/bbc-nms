@@ -4,14 +4,11 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import java.lang.Override;
-import java.lang.String;
-
 /**
  * Created by abhishek on 18/1/15.
  */
 @Entity
-public class LocationUnitMetaDataCsv extends MdsEntity{
+public class LocationUnitMetaDataCsv extends MdsEntity {
 
     @Field
     private String operation;

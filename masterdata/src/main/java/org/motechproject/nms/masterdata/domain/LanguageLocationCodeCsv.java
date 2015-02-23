@@ -3,9 +3,7 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import java.lang.String;
-
-public class LanguageLocationCodeCsv extends MdsEntity{
+public class LanguageLocationCodeCsv extends MdsEntity {
 
     @Field
     private String operation;

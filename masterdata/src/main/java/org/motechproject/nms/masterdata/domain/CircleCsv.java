@@ -1,12 +1,9 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Unique;
-
-public class CircleCsv extends MdsEntity{
+public class CircleCsv extends MdsEntity {
 
     @Field
     private String operation;
@@ -41,6 +38,13 @@ public class CircleCsv extends MdsEntity{
         this.code = code;
     }
 
+
+    /**
+     * This method override the toString method to create string for name and
+     * value for the instance variables
+     *
+     * @return The string of the name and value of the instance variables.
+     */
     public String toString() {
         StringBuffer recordStr = new StringBuffer();
         recordStr.append("name" + this.name).append(",code" + this.code);

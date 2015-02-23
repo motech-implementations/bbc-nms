@@ -111,12 +111,12 @@ public class HealthBlockCsvUploadHandler {
         logger.info("HealthBlock successfully deleted from temporary tables");
     }
 
-    private HealthBlock mapHealthBlockCsv(HealthBlockCsv record)  throws DataValidationException {
+    private HealthBlock mapHealthBlockCsv(HealthBlockCsv record) throws DataValidationException {
         HealthBlock newRecord = new HealthBlock();
 
         String healthBlockName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(),true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(),true);
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
         String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
 

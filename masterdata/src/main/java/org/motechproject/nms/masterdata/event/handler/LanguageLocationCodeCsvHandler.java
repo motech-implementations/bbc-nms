@@ -3,7 +3,10 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
+import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -17,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class handles the csv upload for success and failure events for LanguageLocationCodeCsv.
+ */
 public class LanguageLocationCodeCsvHandler {
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
@@ -33,6 +39,12 @@ public class LanguageLocationCodeCsvHandler {
     @Autowired
     private LocationService locationService;
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in LanguageLocationCode table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
 
@@ -57,14 +69,18 @@ public class LanguageLocationCodeCsvHandler {
 
                     LanguageLocationCode oldRecord = languageLocationCodeService.getRecordByLocationCode(
                             newRecord.getStateCode(), newRecord.getDistrictCode());
-                    if (oldRecord == null) {
+                    if (oldRecord != null) {
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            languageLocationCodeService.delete(oldRecord);
+                        } else {
+                            newRecord.setOwner(oldRecord.getOwner());
+                            newRecord.setModifiedBy(userName);
+                            languageLocationCodeService.update(newRecord);
+                        }
+                    } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         languageLocationCodeService.create(newRecord);
-                    } else {
-                        newRecord.setOwner(oldRecord.getOwner());
-                        newRecord.setModifiedBy(userName);
-                        languageLocationCodeService.update(newRecord);
                     }
                     languageLocationCodeServiceCsv.delete(record);
                     summary.incrementSuccessCount();
@@ -87,13 +103,22 @@ public class LanguageLocationCodeCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            languageLocationCodeServiceCsv.delete(languageLocationCodeServiceCsv.getRecord(id));
+            LanguageLocationCodeCsv oldRecord = languageLocationCodeServiceCsv.getRecord(id);
+            if (oldRecord != null) {
+                languageLocationCodeServiceCsv.delete(oldRecord);
+            }
         }
 
     }

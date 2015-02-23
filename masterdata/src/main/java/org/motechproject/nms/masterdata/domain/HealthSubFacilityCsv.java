@@ -8,7 +8,7 @@ import org.motechproject.mds.annotations.Field;
  */
 
 @Entity(recordHistory = true)
-public class HealthSubFacilityCsv extends LocationUnitMetaDataCsv{
+public class HealthSubFacilityCsv extends LocationUnitMetaDataCsv {
 
     @Field
     private String healthFacilityCode;

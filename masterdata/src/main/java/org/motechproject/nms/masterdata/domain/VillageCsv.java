@@ -5,9 +5,6 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
-import java.lang.Override;
-import java.lang.String;
-
 /**
  * Created by abhishek on 24/1/15.
  */
@@ -17,7 +14,7 @@ import java.lang.String;
 @CrudEvents(
         CrudEventType.CREATE
 )
-public class VillageCsv extends LocationUnitMetaDataCsv{
+public class VillageCsv extends LocationUnitMetaDataCsv {
 
     @Field
     private String villageCode;

@@ -43,4 +43,22 @@ public class State extends LocationUnitMetaData {
                 ", district=" + district +
                 '}';
     }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof State)) {
+            return false;
+        }
+
+        State state = (State) o;
+
+        if (!state.getStateCode().equals(state.getStateCode())) {
+            return false;
+        }
+
+        return true;
+
+    }
 }

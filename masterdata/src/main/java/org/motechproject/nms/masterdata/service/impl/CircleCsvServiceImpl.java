@@ -1,6 +1,5 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
@@ -13,11 +12,22 @@ public class CircleCsvServiceImpl implements CircleCsvService {
     @Autowired
     private CircleCsvDataService circleCsvDataService;
 
+    /**
+     * gets CircleCsv object based by id
+     *
+     * @param id primary key of the record
+     * @return CircleCsv type object
+     */
     @Override
     public CircleCsv getRecord(Long id) {
         return circleCsvDataService.findById(id);
     }
 
+    /**
+     * deletes CircleCsv from database
+     *
+     * @param record CircleCsv type object
+     */
     @Override
     public void delete(CircleCsv record) {
         circleCsvDataService.delete(record);

@@ -7,6 +7,7 @@ import org.motechproject.nms.kilkari.domain.ContentUploadKK;
 import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
 import org.motechproject.nms.kilkari.service.ContentUploadKKCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadKKService;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -14,16 +15,16 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-import org.motechproject.nms.masterdata.constants.ErrorDescriptionConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
+ */
 public class ContentUploadKKCsvHandler {
-
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -34,6 +35,12 @@ public class ContentUploadKKCsvHandler {
     @Autowired
     private ContentUploadKKCsvService contentUploadKKCsvService;
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in ContentUploadKK table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void ContentUploadKKCsvSuccess(MotechEvent motechEvent) {
 
@@ -60,9 +67,13 @@ public class ContentUploadKKCsvHandler {
 
                     persistentRecord = contentUploadKKService.getRecordByContentId(newRecord.getContentId());
                     if (persistentRecord != null) {
-                        newRecord.setId(persistentRecord.getId());
-                        newRecord.setModifiedBy(userName);
-                        contentUploadKKService.update(newRecord);
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            contentUploadKKService.delete(persistentRecord);
+                        } else {
+                            newRecord.setId(persistentRecord.getId());
+                            newRecord.setModifiedBy(userName);
+                            contentUploadKKService.update(newRecord);
+                        }
                     }else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
@@ -90,15 +101,23 @@ public class ContentUploadKKCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void ContentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
 
         for(Long id : createdIds) {
-            contentUploadKKCsvService.delete(contentUploadKKCsvService.getRecord(id));
+            ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
+            if (oldRecord != null) {
+                contentUploadKKCsvService.delete(oldRecord);
+            }
         }
-
     }
 
     private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {

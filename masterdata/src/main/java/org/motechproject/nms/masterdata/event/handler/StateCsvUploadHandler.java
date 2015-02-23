@@ -47,7 +47,7 @@ public class StateCsvUploadHandler {
 
         Map<String, Object> params = motechEvent.getParameters();
 
-        String csvFileName = (String)params.get("csv-import.filename");
+        String csvFileName = (String) params.get("csv-import.filename");
 
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
@@ -94,20 +94,20 @@ public class StateCsvUploadHandler {
         logger.info("State successfully deleted from Temporary table");
     }
 
-    private State mapStateCsv(StateCsv record)  throws DataValidationException{
+    private State mapStateCsv(StateCsv record) throws DataValidationException {
         State newRecord = new State();
 
-        String stateName = ParseDataHelper.parseString("StateName",record.getName(),true);
+        String stateName = ParseDataHelper.parseString("StateName", record.getName(), true);
 
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(),true);
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);
-
+        
         return newRecord;
     }
 
-    private void insertStateData(State stateData){
+    private void insertStateData(State stateData) {
 
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
 
@@ -115,10 +115,10 @@ public class StateCsvUploadHandler {
             stateExistData.setName(stateData.getName());
             stateRecordsDataService.update(stateExistData);
             logger.info("State permanent data is successfully updated.");
-            } else {
+        } else {
             stateRecordsDataService.create(stateData);
             logger.info("State permanent data is successfully inserted.");
-            }
         }
+    }
 
 }

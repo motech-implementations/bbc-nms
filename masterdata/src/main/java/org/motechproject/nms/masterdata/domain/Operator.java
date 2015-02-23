@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 @Entity(recordHistory = true)
-public class Operator extends MdsEntity{
+public class Operator extends MdsEntity {
 
     @Field(required = true)
     private String name;

@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by abhishek on 24/1/15.
  */
 @Entity(recordHistory = true)
-public class HealthFacility extends LocationUnitMetaData{
+public class HealthFacility extends LocationUnitMetaData {
 
     @Field
     private Long healthFacilityCode;

@@ -51,7 +51,7 @@ public class DistrictCsvUploadHandler {
 
         Map<String, Object> params = motechEvent.getParameters();
 
-        String csvFileName = (String)params.get("csv-import.filename");
+        String csvFileName = (String) params.get("csv-import.filename");
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -67,16 +67,16 @@ public class DistrictCsvUploadHandler {
                     District newRecord = mapDistrictCsv(districtCsvRecord);
                     State stateRecord = stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode());
 
-                    if(stateRecord != null) {
-                    insertDistrictData(newRecord);
-                    result.incrementSuccessCount();
-                    districtCsvRecordsDataService.delete(districtCsvRecord);
+                    if (stateRecord != null) {
+                        insertDistrictData(newRecord);
+                        result.incrementSuccessCount();
+                        districtCsvRecordsDataService.delete(districtCsvRecord);
                     } else {
-                    result.incrementFailureCount();
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                        result.incrementFailureCount();
+                        errorDetails.setRecordDetails(id.toString());
+                        errorDetails.setErrorCategory("Record_Not_Found");
+                        errorDetails.setErrorDescription("Record not in database");
+                        bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
                     }
                 } else {
                     result.incrementFailureCount();
@@ -99,18 +99,18 @@ public class DistrictCsvUploadHandler {
     }
 
     @MotechListener(subjects = {"mds.crud.masterdata.DistrictCsv.csv-import.failed"})
-    public void districtCsvFailed(){
+    public void districtCsvFailed() {
 
         districtCsvRecordsDataService.deleteAll();
         logger.info("District successfully deleted from temporary tables");
     }
 
-    private District mapDistrictCsv(DistrictCsv record)  throws DataValidationException{
+    private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
 
-        District newRecord = new District();
+        District newRecord =new District();
         String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(),true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(),true);
+        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
 
         newRecord.setName(districtName);
         newRecord.setStateCode(stateCode);
@@ -119,23 +119,23 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertDistrictData(District districtData){
+    private void insertDistrictData(District districtData) {
 
         District dist = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
 
-        if(dist != null) {
+        if (dist != null) {
             districtRecordsDataService.update(districtData);
             logger.info("District permanent data is successfully updated.");
-        }else {
+        } else {
             districtRecordsDataService.create(districtData);
             logger.info("District permanent data is successfully inserted.");
         }
     }
 
-    private State isStateExist(Long stateCode){
+    private State isStateExist(Long stateCode) {
 
         State stateRecord = stateRecordsDataService.findRecordByStateCode(stateCode);
-        if(stateRecord != null){
+        if (stateRecord != null) {
             return stateRecord;
         }
         return null;

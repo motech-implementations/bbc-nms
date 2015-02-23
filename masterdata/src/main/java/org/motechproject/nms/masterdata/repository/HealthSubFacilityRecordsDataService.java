@@ -10,9 +10,9 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
  */
 public interface HealthSubFacilityRecordsDataService extends MotechDataService<HealthSubFacility> {
     @Lookup
-    HealthSubFacility findHealthSubFacilityByParentCode(@LookupField(name = "stateCode") Long stateCode,@LookupField(name = "districtCode") Long districtCode,
-                                                  @LookupField(name = "talukaCode") String talukaCode,@LookupField(name = "healthBlockCode") Long healthBlockCode,
-                                                  @LookupField(name = "healthFacilityCode") Long healthFacilityCode,
-                                                  @LookupField(name = "healthSubFacilityCode") Long healthSubFacilityCode);
+    HealthSubFacility findHealthSubFacilityByParentCode(@LookupField(name = "stateCode") Long stateCode, @LookupField(name = "districtCode") Long districtCode,
+                                                        @LookupField(name = "talukaCode") String talukaCode, @LookupField(name = "healthBlockCode") Long healthBlockCode,
+                                                        @LookupField(name = "healthFacilityCode") Long healthFacilityCode,
+                                                        @LookupField(name = "healthSubFacilityCode") Long healthSubFacilityCode);
 
 }

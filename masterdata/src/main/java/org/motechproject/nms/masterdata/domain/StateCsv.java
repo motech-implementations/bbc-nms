@@ -3,9 +3,6 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
-import java.lang.Override;
-import java.lang.String;
-
 /**
  * Created by abhishek on 24/1/15.
  */

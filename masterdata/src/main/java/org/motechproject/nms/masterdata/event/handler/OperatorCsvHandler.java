@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
@@ -16,10 +17,12 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class handles the csv upload for success and failure events for OperatorCsv.
+ */
 public class OperatorCsvHandler {
 
     @Autowired
@@ -31,6 +34,12 @@ public class OperatorCsvHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in Operator table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
 
@@ -42,11 +51,11 @@ public class OperatorCsvHandler {
         CsvProcessingSummary summary = new CsvProcessingSummary();
 
         Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        String csvImportFileName = (String)params.get("csv-import.filename");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             try {
                 record = operatorCsvService.getRecord(id);
                 if (record != null) {
@@ -54,24 +63,29 @@ public class OperatorCsvHandler {
                     Operator newRecord = mapOperatorFrom(record);
 
                     persistentRecord = operatorService.getRecordByCode(newRecord.getCode());
+
                     if (persistentRecord != null) {
-                        newRecord.setId(persistentRecord.getId());
-                        newRecord.setModifiedBy(userName);
-                        operatorService.update(newRecord);
-                    }else {
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            operatorService.delete(persistentRecord);
+                        }else {
+                            newRecord.setId(persistentRecord.getId());
+                            newRecord.setModifiedBy(userName);
+                            operatorService.update(newRecord);
+                        }
+                    } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         operatorService.create(newRecord);
                     }
                     summary.incrementSuccessCount();
-                }else {
+                } else {
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                     summary.incrementFailureCount();
                 }
-            }catch (DataValidationException ex) {
+            } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
@@ -83,26 +97,30 @@ public class OperatorCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
 
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
-        for(Long id : createdIds) {
-            operatorCsvService.delete(operatorCsvService.getRecord(id));
-        }
-
-        for(Long id : updatedIds) {
-            operatorCsvService.delete(operatorCsvService.getRecord(id));
+        for (Long id : createdIds) {
+            OperatorCsv oldRecord = operatorCsvService.getRecord(id);
+            if (oldRecord != null) {
+                operatorCsvService.delete(oldRecord);
+            }
         }
     }
 
-    private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException{
+    private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
         Operator newRecord = new Operator();
-            newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
-            newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
+        newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
+        newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
         return newRecord;
     }
 }

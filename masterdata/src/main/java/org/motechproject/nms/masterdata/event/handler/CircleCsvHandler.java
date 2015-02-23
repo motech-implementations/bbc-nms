@@ -4,6 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.BulkUploadError;
@@ -16,10 +17,12 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class handles the csv upload for success and failure events for CircleCsv.
+ */
 public class CircleCsvHandler {
 
     @Autowired
@@ -31,6 +34,12 @@ public class CircleCsvHandler {
     @Autowired
     private CircleCsvService circleCsvService;
 
+    /**
+     * This method handle the event which is raised after csv is uploaded successfully.
+     * this method also populates the records in Circle table after checking its validity.
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
     public void circleCsvSuccess(MotechEvent motechEvent) {
 
@@ -43,11 +52,11 @@ public class CircleCsvHandler {
         CsvProcessingSummary summary = new CsvProcessingSummary();
 
         Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        String csvImportFileName = (String)params.get("csv-import.filename");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
 
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             try {
                 record = circleCsvService.getRecord(id);
 
@@ -57,10 +66,15 @@ public class CircleCsvHandler {
 
                     persistentRecord = circleService.getRecordByCode(newRecord.getCode());
                     if (persistentRecord != null) {
-                        newRecord.setId(persistentRecord.getId());
-                        newRecord.setModifiedBy(userName);
-                        circleService.update(newRecord);
-                    }else {
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            circleService.delete(persistentRecord);
+                        } else {
+                            newRecord.setId(persistentRecord.getId());
+                            newRecord.setModifiedBy(userName);
+                            circleService.update(newRecord);
+                        }
+
+                    } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         circleService.create(newRecord);
@@ -73,7 +87,7 @@ public class CircleCsvHandler {
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                     summary.incrementFailureCount();
                 }
-            }catch (DataValidationException ex) {
+            } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
@@ -85,20 +99,28 @@ public class CircleCsvHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
     }
 
+    /**
+     * This method handle the event which is raised after csv upload is failed.
+     * This method also deletes all the csv records which get inserted in this upload..
+     *
+     * @param motechEvent This is the object from which required parameters are fetched.
+     */
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
 
-        List<Long> createdIds = (ArrayList<Long>)params.get("csv-import.created_ids");
-        List<Long> updatedIds = (ArrayList<Long>)params.get("csv-import.updated_ids");
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
-        for(Long id : createdIds) {
-            circleCsvService.delete(circleCsvService.getRecord(id));
+        for (Long id : createdIds) {
+            CircleCsv oldRecord = circleCsvService.getRecord(id);
+            if (oldRecord != null) {
+                circleCsvService.delete(oldRecord);
+            }
         }
 
     }
 
-    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException{
+    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
         Circle newRecord = new Circle();
         newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));

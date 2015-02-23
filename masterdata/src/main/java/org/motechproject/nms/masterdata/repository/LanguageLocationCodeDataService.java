@@ -1,6 +1,5 @@
 package org.motechproject.nms.masterdata.repository;
 
-import org.apache.commons.codec.language.bm.Lang;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;

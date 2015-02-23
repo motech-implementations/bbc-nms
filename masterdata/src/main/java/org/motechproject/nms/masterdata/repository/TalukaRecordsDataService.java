@@ -8,9 +8,9 @@ import org.motechproject.nms.masterdata.domain.Taluka;
 /**
  * Created by abhishek on 29/1/15.
  */
-public interface TalukaRecordsDataService extends MotechDataService<Taluka>{
+public interface TalukaRecordsDataService extends MotechDataService<Taluka> {
     @Lookup
     Taluka findTalukaByParentCode(@LookupField(name = "stateCode") Long stateCode,
-                                                  @LookupField(name = "districtCode") Long districtCode,
-                                                  @LookupField(name = "talukaCode") String talukaCode);
-   }
+                                  @LookupField(name = "districtCode") Long districtCode,
+                                  @LookupField(name = "talukaCode") String talukaCode);
+}

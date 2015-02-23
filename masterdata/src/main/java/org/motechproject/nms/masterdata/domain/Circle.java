@@ -6,7 +6,7 @@ import org.motechproject.mds.domain.MdsEntity;
 
 
 @Entity(recordHistory = true)
-public class Circle  extends MdsEntity{
+public class Circle extends MdsEntity {
 
     @Field(required = true)
     private String name;
