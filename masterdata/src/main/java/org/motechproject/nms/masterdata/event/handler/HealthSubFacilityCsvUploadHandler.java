@@ -114,11 +114,18 @@ public class HealthSubFacilityCsvUploadHandler {
     }
 
     @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_FAILED})
-    public void healthSubFacilityCsvFailed(MotechEvent event) {
+    public void healthSubFacilityCsvFailed(MotechEvent motechEvent) {
 
-        healthSubFacilityCsvRecordsDataService.deleteAll();
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing HealthSubFacilityCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
-        logger.info("HealthSubFacility successfully deleted from temporary tables");
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from HealthSubFacilityCsv table for id %s", id.toString()));
+            HealthSubFacilityCsv healthSubFacilityCsv = healthSubFacilityCsvRecordsDataService.findById(id);
+            healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsv);
+        }
+        logger.info("Failure method finished for HealthSubFacilityCsv");
     }
 
     private HealthSubFacility mapHealthSubFacilityCsv(HealthSubFacilityCsv record) throws DataValidationException {

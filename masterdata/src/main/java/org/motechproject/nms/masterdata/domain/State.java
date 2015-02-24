@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
@@ -14,6 +15,7 @@ public class State extends LocationUnitMetaData {
     private Long stateCode;
 
     @Field
+    @Cascade(delete = true)
     private Set<District> district;
 
     @Field

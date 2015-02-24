@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.util.BulkUploadError;
@@ -48,7 +49,7 @@ public class VillageCsvUploadHandler {
     public VillageCsvUploadHandler() {
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.VillageCsv.csv-import.success"})
+    @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_SUCCESS})
     public void villageCsvSuccess(MotechEvent motechEvent) {
 
         int failedRecordCount = 0;
@@ -94,12 +95,19 @@ public class VillageCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary("userName", csvFileName, logFileName, result);
     }
 
-    @MotechListener(subjects = {"mds.crud.masterdata.VillageCsv.csv-import.failed"})
-    public void villageCsvFailed(MotechEvent event) {
+    @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_FAILED})
+    public void villageCsvFailed(MotechEvent motechEvent) {
 
-        villageCsvRecordsDataService.deleteAll();
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing VillageCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
-        logger.info("Village successfully deleted from temporary tables");
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from VillageCsv table for id %s", id.toString()));
+            VillageCsv villageCsv = villageCsvRecordsDataService.findById(id);
+            villageCsvRecordsDataService.delete(villageCsv);
+        }
+        logger.info("Failure method finished for VillageCsv");
     }
 
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
