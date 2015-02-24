@@ -1,10 +1,9 @@
 package org.motechproject.nms.mobilekunji.repository;
 
-import org.motechproject.nms.mobilekunji.domain.ServiceConfiguration;
-
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.nms.mobilekunji.domain.ServiceConfiguration;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.

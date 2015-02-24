@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker;
+package org.motechproject.nms.frontlineworker.constants;
 
 /**
  * Created by abhishek on 17/2/15.
@@ -19,9 +19,12 @@ public final class FrontLineWorkerConstants {
 
     public static final int LANGUAGE_LOCATION_CODE_LENGTH = 20;
 
+    public static final int FLW_CONTACT_NUMBER_LENGTH = 10;
+
     public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success";
 
     public static final String FLW_UPLOAD_FAILED = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failed";
 
-
+    private FrontLineWorkerConstants() {
+    }
 }
