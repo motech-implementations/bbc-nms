@@ -58,9 +58,9 @@ public class MobileAcademyConstants {
             + 1 // For Quiz Header in each Quiz
     + NUM_OF_SCORE_FILES);
 
-    public static final String COURSE_CSV_UPLOAD_SUCCESS = "mds.crud.mobileacademymodule.CourseRawContent.csv-import.success";
+    public static final String COURSE_CSV_UPLOAD_SUCCESS = "mds.crud.MobileAcademy.CourseRawContent.csv-import.success";
 
-    public static final String COURSE_CSV_UPLOAD_FAILED = "mds.crud.mobileacademymodule.CourseRawContent.csv-import.failed";
+    public static final String COURSE_CSV_UPLOAD_FAILED = "mds.crud.MobileAcademy.CourseRawContent.csv-import.failed";
 
     private MobileAcademyConstants() {
     }

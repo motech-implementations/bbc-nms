@@ -7,6 +7,9 @@ import java.util.Map;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
+import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.service.RecordProcessService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -30,6 +33,12 @@ public class CourseUploadCsvHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Autowired
+    RecordProcessService recordProcessService;
+
+    @Autowired
+    CourseRawContentDataService courseRawContentDataService;
+
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CourseUploadCsvHandler.class);
 
@@ -52,8 +61,23 @@ public class CourseUploadCsvHandler {
                 .createBulkUploadErrLogFileName(csvImportFileName);
         System.out.println("Rows inserted---" + createdIds);
         // TODO yogesh success code
+
+        recordProcessService
+                .processRawRecords(getListOfCourseRawContents(createdIds));
+
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName,
                 csvImportFileName, errorFileName, summary);
+    }
+
+    private List<CourseRawContent> getListOfCourseRawContents(
+            List<Long> createdIds) {
+        // TODO Auto-generated method stub
+        List<CourseRawContent> listOfCourseRawContents = new ArrayList<>();
+        for (Long id : createdIds) {
+            listOfCourseRawContents.add(courseRawContentDataService
+                    .findById(id));
+        }
+        return listOfCourseRawContents;
     }
 
     /**
