@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * This entity represents the content upload record in kilkari module
+ */
 @Entity(recordHistory = true)
 public class ContentUploadKK extends MdsEntity {
 

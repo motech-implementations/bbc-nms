@@ -38,7 +38,7 @@ public class OperatorCsvHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(OperatorCsvHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -49,7 +49,7 @@ public class OperatorCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing OperatorCsv-import success for upload %s", params.toString()));
+        logger.info("Start processing OperatorCsv-import success for upload {}", params.toString());
 
         OperatorCsv record = null;
         Operator persistentRecord = null;
@@ -72,22 +72,22 @@ public class OperatorCsvHandler {
                     if (persistentRecord != null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             operatorService.delete(persistentRecord);
-                            logger.info(String.format("Record deleted successfully for operatorcode %s", newRecord.getCode()));
+                            logger.info("Record deleted successfully for operatorcode {}", newRecord.getCode());
                         } else {
                             newRecord.setId(persistentRecord.getId());
                             newRecord.setModifiedBy(userName);
                             operatorService.update(newRecord);
-                            logger.info(String.format("Record updated successfully for operatorcode %s", newRecord.getCode()));
+                            logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
                         }
                     } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         operatorService.create(newRecord);
-                        logger.info(String.format("Record created successfully for operatorcode %s", newRecord.getCode()));
+                        logger.info("Record created successfully for operatorcode {}", newRecord.getCode());
                     }
                     summary.incrementSuccessCount();
                 } else {
-                    logger.error(String.format("Record not found in the OperatorCsv table with id %s", id));
+                    logger.error("Record not found in the OperatorCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -116,7 +116,7 @@ public class OperatorCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing OperatorCsv-import failure for upload %s", params.toString()));
+        logger.info("Start processing OperatorCsv-import failure for upload {}", params.toString());
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
@@ -124,7 +124,7 @@ public class OperatorCsvHandler {
             OperatorCsv oldRecord = operatorCsvService.getRecord(id);
             if (oldRecord != null) {
                 operatorCsvService.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully from OperatorCsv table for id %s", id.toString()));
+                logger.info("Record deleted successfully from OperatorCsv table for id {}", id.toString());
             }
         }
         logger.info("Finished processing OperatorCsv-import failure");

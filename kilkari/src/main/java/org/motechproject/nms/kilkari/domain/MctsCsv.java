@@ -4,6 +4,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * This entity represents the mother mcts record.
+ */
 @Entity
 public class MctsCsv extends MdsEntity {
     
