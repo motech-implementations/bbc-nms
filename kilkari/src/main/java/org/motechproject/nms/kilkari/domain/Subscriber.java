@@ -17,7 +17,7 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 
-@Entity
+@Entity(recordHistory=true)
 public class Subscriber extends MdsEntity {
     
     @Field(required = true)

@@ -23,10 +23,12 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
  */
+@Component
 public class ContentUploadKKCsvHandler {
 
     @Autowired
