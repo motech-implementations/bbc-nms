@@ -23,10 +23,12 @@ import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
  */
+@Component
 public class ContentUploadKKCsvHandler {
 
     @Autowired
@@ -48,15 +50,14 @@ public class ContentUploadKKCsvHandler {
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing ContentUploadKKCsv-import success for upload %s", params.toString()));
 
         ContentUploadKKCsv record = null;
         ContentUploadKK persistentRecord = null;
         String userName = null;
-
         BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary();
-
-        Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
@@ -92,6 +93,7 @@ public class ContentUploadKKCsvHandler {
                     contentUploadKKCsvService.delete(record);
                     summary.incrementSuccessCount();
                 } else {
+                    logger.error(String.format("Record not found in the ContentUploadKKCsv table with id %s", id));
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -108,6 +110,7 @@ public class ContentUploadKKCsvHandler {
         }
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        logger.info("Finished processing CircleCsv-import success");
     }
 
     /**
@@ -119,15 +122,17 @@ public class ContentUploadKKCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing ContentUploadKKCsv-import failure for upload %s", params.toString()));
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
             ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
             if (oldRecord != null) {
                 contentUploadKKCsvService.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
+                logger.info(String.format("Record deleted successfully from ContentUploadKKCsv table for id %s", id.toString()));
             }
         }
+        logger.info("Finished processing ContentUploadKKCsv-import failure");
     }
 
     private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {

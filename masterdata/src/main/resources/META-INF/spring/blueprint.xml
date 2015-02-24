@@ -90,9 +90,6 @@
     <osgi:reference id="languageLocationCodeDataService"
                     interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService"/>
 
-    <osgi:reference id="languageLocationCodeDataService"
-                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService" />
-
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 </beans>

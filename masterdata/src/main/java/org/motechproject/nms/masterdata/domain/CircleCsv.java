@@ -1,8 +1,10 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+@Entity
 public class CircleCsv extends MdsEntity {
 
     @Field

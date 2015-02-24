@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import javax.jdo.annotations.Unique;
+
 /**
  * This class Models data for Content Upload records
  */
@@ -35,8 +36,7 @@ public class ContentUpload {
     @Field(required = true)
     private int contentDuration;
 
-    public ContentUpload()
-    {
+    public ContentUpload() {
 
     }
 

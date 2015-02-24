@@ -115,13 +115,18 @@ public class StateCsvUploadHandler {
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
 
         if (null != stateExistData) {
-            stateExistData.setName(stateData.getName());
-            stateRecordsDataService.update(stateExistData);
-            logger.info("State permanent data is successfully updated.");
+            updateState(stateExistData,stateData);
+            logger.info("State data is successfully updated.");
         } else {
             stateRecordsDataService.create(stateData);
-            logger.info("State permanent data is successfully inserted.");
+            logger.info("State data is successfully inserted.");
         }
+    }
+
+    private void updateState(State stateExistData,State stateData){
+
+        stateExistData.setName(stateData.getName());
+        stateRecordsDataService.update(stateExistData);
     }
 
 }

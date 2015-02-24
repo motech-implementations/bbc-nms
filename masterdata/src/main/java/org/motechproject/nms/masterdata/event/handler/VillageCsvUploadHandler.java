@@ -148,12 +148,17 @@ public class VillageCsvUploadHandler {
 
         if (existVillageData != null) {
 
-            villageRecordsDataService.update(villageData);
-            logger.info("Village permanent data is successfully updated.");
+            updateVillage(existVillageData,villageData);
+            logger.info("Village data is successfully updated.");
         } else {
             talukaData.getVillage().add(villageData);
             talukaRecordsDataService.create(talukaData);
-            logger.info("Village permanent data is successfully updated.");
+            logger.info("Village data is successfully inserted.");
         }
+    }
+
+    private void updateVillage(Village existVillageData, Village villageData) {
+        existVillageData.setName(villageData.getName());
+        villageRecordsDataService.update(existVillageData);
     }
 }

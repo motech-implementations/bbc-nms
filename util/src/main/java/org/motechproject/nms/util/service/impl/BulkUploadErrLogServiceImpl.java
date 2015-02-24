@@ -15,7 +15,11 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.file.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.FileSystems;
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -69,7 +73,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         try {
             Files.write(logFilePath, errLog.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException ioe) {
-            logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
+            logger.error("IOException while writing error log to file : {} Error : {}", logFileName, ioe.getMessage());
         }
     }
 
@@ -116,7 +120,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         try {
             Files.write(logFilePath, uploadProcessingSummary.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException ioe) {
-            logger.error("IOException while writing error log to file : " + logFileName + "Error : " + ioe.getMessage());
+            logger.error("IOException while writing error log to file : {} Error : {}", logFileName, ioe.getMessage());
         }
 
         //Determining the full path of log file including the file name
@@ -134,6 +138,8 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         //Adding the record to bulk upload status table
         bulkUploadStatusService.add(bulkUploadStatus);
 
+        logger.info("Record added successfully for bulk upload completion status for csv : {}", bulkUploadFileName);
+
     }
 
     /**
@@ -150,7 +156,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         try {
             netInterfaces = NetworkInterface.getNetworkInterfaces();
         } catch (SocketException e) {
-            logger.error("Socket Exception while retrieving host name. Error : " + e.getMessage());
+            logger.error("Socket Exception while retrieving host name. Error : {}", e.getMessage());
             return Constants.EMPTY_STRING;
         }
 

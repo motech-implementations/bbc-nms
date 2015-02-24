@@ -13,7 +13,7 @@
 	<artifactId>masterdata</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>Masterdata module</name>
+	<name>masterdata</name>
 
 	<properties>
 		<modules.root.dir>${basedir}/..</modules.root.dir>
@@ -76,11 +76,11 @@
 				<configuration>
 					<instructions>
 						<Blueprint-Enabled>true</Blueprint-Enabled>
-						<Resource-Path>kilkari/resources</Resource-Path>
-						<Context-Path>kilkari</Context-Path>
-						<Export-Package>org.motechproject.nms.kilkari.service;version=${project.version},
-							org.motechproject.nms.kilkari.repository;version=${project.version},
-							org.motechproject.nms.kilkari.domain;version=${project.version},</Export-Package>
+						<Resource-Path>masterdata/resources</Resource-Path>
+						<Context-Path>masterdata</Context-Path>
+						<Export-Package>org.motechproject.nms.masterdata.service;version=${project.version},
+							org.motechproject.nms.masterdata.repository;version=${project.version},
+							org.motechproject.nms.masterdata.domain;version=${project.version},</Export-Package>
 						<Import-Package>org.motechproject.osgi.web,
 							*</Import-Package>
 					</instructions>

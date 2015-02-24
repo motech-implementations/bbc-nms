@@ -43,7 +43,7 @@ public class HealthBlockCsvUploadHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS})
     public void healthBlockCsvSuccess(MotechEvent motechEvent) {
@@ -143,13 +143,17 @@ public class HealthBlockCsvUploadHandler {
                 healthBlockData.getHealthBlockCode());
 
         if (existHealthBlockData != null) {
-
-            healthBlockRecordsDataService.update(healthBlockData);
-            logger.info("HealthBlock permanent data is successfully updated.");
+            updateHealthBlock(existHealthBlockData,healthBlockData);
+            logger.info("HealthBlock data is successfully updated.");
         } else {
             talukaData.getHealthBlock().add(healthBlockData);
             talukaRecordsDataService.create(talukaData);
-            logger.info("HealthBlock permanent data is successfully updated.");
+            logger.info("HealthBlock data is successfully inserted.");
         }
+    }
+
+    private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
+        existHealthBlockData.setName(healthBlockData.getName());
+        healthBlockRecordsDataService.update(existHealthBlockData);
     }
 }
