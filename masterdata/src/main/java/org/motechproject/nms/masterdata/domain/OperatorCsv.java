@@ -5,6 +5,10 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * This class Models data records provided in the Operator Csv Upload
+ */
+
 @Entity
 public class OperatorCsv extends MdsEntity {
 

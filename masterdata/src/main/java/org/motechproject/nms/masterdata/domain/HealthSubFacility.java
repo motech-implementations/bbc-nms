@@ -4,7 +4,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 /**
- * Created by abhishek on 24/1/15.
+ * This class Models data for HealthSubFacility location records
  */
 
 @Entity(recordHistory = true)

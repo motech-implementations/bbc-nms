@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.event.CrudEventType;
 
 /**
- * Created by abhishek on 24/1/15.
+ * This class Models data records provided in the Taluka Csv Upload
  */
 @Entity(
         recordHistory = true
