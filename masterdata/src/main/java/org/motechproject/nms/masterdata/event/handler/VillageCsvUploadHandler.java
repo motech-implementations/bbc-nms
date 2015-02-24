@@ -83,7 +83,7 @@ public class VillageCsvUploadHandler {
                     logger.info("Id exist in Village Temporary Entity");
                     userName = villageCsvRecord.getOwner();
                     Village record = mapVillageCsv(villageCsvRecord);
-                    insertVillageData(record, villageCsvRecord.getOperation());
+                    processVillageData(record, villageCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Village Temporary Entity");
@@ -171,7 +171,7 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
-    private void insertVillageData(Village villageData, String operation) {
+    private void processVillageData(Village villageData, String operation) {
 
         logger.debug("Village data contains village code : {}",villageData.getVillageCode());
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
