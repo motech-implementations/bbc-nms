@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari;
 
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.CONFIGURATION_INDEX;
 import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK;
 import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK;
 import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_ALLOWED_BENEFICIARY_COUNT;
@@ -50,11 +51,11 @@ public class Initializer {
             Configuration configuration = new Configuration();
 
             LOG.info("Creating Configuration with default values");
-
+            configuration.setIndex(CONFIGURATION_INDEX);
             configuration.setNmsKk48WeeksPackMsgsPerWeek(DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK);
-            configuration.setNmsKk48WeeksPackMsgsPerWeek(DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK);
+            configuration.setNmsKk72WeeksPackMsgsPerWeek(DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK);
             configuration.setNmsKkMaxAllowedActiveBeneficiaryCount(DEFAULT_ALLOWED_BENEFICIARY_COUNT);
-            configuration.setNmsKkFreshObdPriority(DEFAULT_FRESH_OBD_SERVICE_ID);
+            configuration.setNmsKkFreshObdServiceId(DEFAULT_FRESH_OBD_SERVICE_ID);
             configuration.setNmsKkRetryDay1ObdServiceId(DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
             configuration.setNmsKkRetryDay2ObdServiceId(DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
             configuration.setNmsKkRetryDay3ObdServiceId(DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
