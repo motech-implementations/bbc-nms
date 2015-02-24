@@ -52,5 +52,10 @@ public class ChildMctsCsv extends MctsCsv {
     public void setEntryType(String entryType) {
         this.entryType = entryType;
     }
+    
+    @Override
+    public String toString() {
+        return "Mcts Id["+this.getId()+"] stateCode["+this.getStateId()+"]";
+    }
 
 }

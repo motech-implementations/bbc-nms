@@ -45,9 +45,12 @@ public class StateCsvUploadHandler {
         int failedRecordCount = 0;
         int successRecordCount = 0;
 
+        logger.info("STATE_CSV_SUCCESS event received");
+
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
@@ -57,28 +60,42 @@ public class StateCsvUploadHandler {
 
         for (Long id : createdIds) {
             try {
+
+                logger.debug("STATE_CSV_SUCCESS event processing start for ID: {}", id);
                 stateCsvRecord = stateCsvRecordsDataService.findById(id);
 
                 if (stateCsvRecord != null) {
+
+                    logger.info("Id exist in State Temporary Entity");
                     State newRecord = mapStateCsv(stateCsvRecord);
                     insertStateData(newRecord,stateCsvRecord.getOperation());
                     result.incrementSuccessCount();
-                    stateCsvRecordsDataService.delete(stateCsvRecord);
+
                 } else {
-                    result.incrementFailureCount();
+                    logger.info("Id do not exist in State Temporary Entity");
                     errorDetails.setRecordDetails(id.toString());
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
+                    result.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
+
+                logger.error("STATE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(stateCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                stateCsvRecordsDataService.delete(stateCsvRecord);
+                result.incrementFailureCount();
             } catch (Exception e) {
-                failedRecordCount++;
+
+                logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                result.incrementFailureCount();
+            }
+              finally {
+                if(null != stateCsvRecord){
+                    stateCsvRecordsDataService.delete(stateCsvRecord);
+                }
             }
         }
 
@@ -89,15 +106,15 @@ public class StateCsvUploadHandler {
     public void stateCsvFailed(MotechEvent motechEvent) {
 
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing StateCsv-import failure for upload %s", params.toString()));
+        logger.info("STATE_CSV_FAILED event received");
         List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Record deleted successfully from StateCsv table for id %s", id.toString()));
+            logger.debug("STATE_CSV_FAILED event processing start for ID: {}", id);
             StateCsv stateCsv = stateCsvRecordsDataService.findById(id);
             stateCsvRecordsDataService.delete(stateCsv);
         }
-        logger.info("Failure method finished for StateCsv");
+        logger.info("STATE_CSV_FAILED event processing finished");
     }
 
     private State mapStateCsv(StateCsv record) throws DataValidationException {
@@ -117,6 +134,8 @@ public class StateCsvUploadHandler {
 
     private void insertStateData(State stateData, String operation) {
 
+
+        logger.debug("State data contains state code : {}",stateData.getStateCode() );
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
 
         if (null != stateExistData) {

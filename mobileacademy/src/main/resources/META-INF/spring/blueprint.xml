@@ -20,6 +20,9 @@
 
     <osgi:service ref="CoursePopulateService"
                     interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
+    
+    <osgi:service ref="FLWService"
+                    interface="org.motechproject.nms.mobileacademy.service.FLWService" />
 
     <osgi:reference id="CourseProcessedContentDataService"
                     interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />

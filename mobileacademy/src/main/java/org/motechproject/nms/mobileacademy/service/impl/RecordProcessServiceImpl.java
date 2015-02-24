@@ -74,7 +74,6 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         for (CourseRawContent courseRawContent : courseRawContents) {
             if (!(validateSchema(courseRawContent) && validateCircleAndLLC(courseRawContent))) {
                 courseRawContentService.delete(courseRawContent);
-                courseRawContents.remove(courseRawContent);
                 continue;
             }
             if (courseRawContent.getOperation().equalsIgnoreCase(
@@ -89,11 +88,15 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                     putRecordInModifyMap(mapForModifyRecords, courseRawContent);
                 } else {
                     courseRawContent
-                            .setOperation(MobileAcademyConstants.COURSE_MOD);
+                            .setOperation(MobileAcademyConstants.COURSE_ADD);
                     putRecordInAddMap(mapForAddRecords, courseRawContent);
                 }
             }
-            courseRawContents.remove(courseRawContent);
+        }
+
+        int size = courseRawContents.size();
+        for (int counter = size - 1; counter >= 0; counter--) {
+            courseRawContents.remove(counter);
         }
 
         processAddRecords(mapForAddRecords);
@@ -466,8 +469,12 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                         continue;
                     }
 
-                    if (coursePopulateService.findCourseState() == CourseUnitState.Inactive)
+                    CourseUnitState courseState = coursePopulateService
+                            .findCourseState();
+                    if (courseState == null) {
                         populateCourseStructure = true;
+                        coursePopulateService.populateMtrainingCourseData();
+                    }
 
                     courseFlags.resetTheFlags();
                     answerOptionRecordList.clear();

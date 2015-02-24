@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.domain.OperationType;
@@ -46,7 +47,7 @@ public class CircleCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
+    @MotechListener(subjects = MasterDataConstants.CIRCLE_CSV_SUCCESS)
     public void circleCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing CircleCsv-import success for upload {}", params.toString());
@@ -118,7 +119,7 @@ public class CircleCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
+    @MotechListener(subjects = MasterDataConstants.CIRCLE_CSV_FAILED)
     public void circleCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing CircleCsv-import failure for upload {}", params.toString());

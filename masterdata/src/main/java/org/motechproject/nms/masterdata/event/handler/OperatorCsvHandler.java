@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
@@ -46,7 +47,7 @@ public class OperatorCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
+    @MotechListener(subjects = MasterDataConstants.OPERATOR_CSV_SUCCESS)
     public void operatorCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing OperatorCsv-import success for upload {}", params.toString());
@@ -113,7 +114,7 @@ public class OperatorCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
+    @MotechListener(subjects = MasterDataConstants.OPERATOR_CSV_FAILED)
     public void operatorCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing OperatorCsv-import failure for upload {}", params.toString());
