@@ -48,15 +48,14 @@ public class OperatorCsvHandler {
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.success")
     public void operatorCsvSuccess(MotechEvent motechEvent) {
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing OperatorCsv-import success for upload %s", params.toString()));
 
         OperatorCsv record = null;
         Operator persistentRecord = null;
         String userName = null;
-
         BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary();
-
-        Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
@@ -88,6 +87,7 @@ public class OperatorCsvHandler {
                     }
                     summary.incrementSuccessCount();
                 } else {
+                    logger.error(String.format("Record not found in the OperatorCsv table with id %s", id));
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -104,6 +104,7 @@ public class OperatorCsvHandler {
         }
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        logger.info("Finished processing OperatorCsv-import success");
     }
 
     /**
@@ -115,6 +116,7 @@ public class OperatorCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.OperatorCsv.csv-import.failure")
     public void operatorCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing OperatorCsv-import failure for upload %s", params.toString()));
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
@@ -122,9 +124,10 @@ public class OperatorCsvHandler {
             OperatorCsv oldRecord = operatorCsvService.getRecord(id);
             if (oldRecord != null) {
                 operatorCsvService.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
+                logger.info(String.format("Record deleted successfully from OperatorCsv table for id %s", id.toString()));
             }
         }
+        logger.info("Finished processing OperatorCsv-import failure");
     }
 
     private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {

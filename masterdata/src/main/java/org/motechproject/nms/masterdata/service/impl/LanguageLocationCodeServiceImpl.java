@@ -81,7 +81,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
     @Override
     public void delete(LanguageLocationCode record) {
-        languageLocationCodeDataService.delete(record);;
+        languageLocationCodeDataService.delete(record);
     }
 
     @Override

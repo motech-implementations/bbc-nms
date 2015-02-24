@@ -58,14 +58,15 @@ public class LanguageLocationCodeCsvHandler {
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.success")
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
-
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing LanguageLocationCodeCsv-import success for upload %s", params.toString()));
         LanguageLocationCodeCsv record = null;
         String userName = null;
 
         BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary();
 
-        Map<String, Object> params = motechEvent.getParameters();
+
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
@@ -101,6 +102,7 @@ public class LanguageLocationCodeCsvHandler {
                     languageLocationCodeServiceCsv.delete(record);
                     summary.incrementSuccessCount();
                 } else {
+                    logger.error(String.format("Record not found in the LanguageLocationCodeCsv table with id %s", id));
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -117,6 +119,7 @@ public class LanguageLocationCodeCsvHandler {
         }
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        logger.info("Finished processing LanguageLocationCodeCsv-import success");
     }
 
     /**
@@ -128,16 +131,18 @@ public class LanguageLocationCodeCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.LanguageLocationCodeCsv.csv-import.failure")
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing LanguageLocationCodeCsv-import failure for upload %s", params.toString()));
+
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
             LanguageLocationCodeCsv oldRecord = languageLocationCodeServiceCsv.getRecord(id);
             if (oldRecord != null) {
                 languageLocationCodeServiceCsv.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
+                logger.info(String.format("Record deleted successfully from LanguageLocationCodeCsv table for id %s", id.toString()));
             }
         }
-
+        logger.info("Finished processing LanguageLocationCodeCsv-import failure");
     }
 
 

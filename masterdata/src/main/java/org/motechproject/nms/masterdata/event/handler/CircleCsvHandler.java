@@ -48,7 +48,8 @@ public class CircleCsvHandler {
      */
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.success")
     public void circleCsvSuccess(MotechEvent motechEvent) {
-
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing CircleCsv-import success for upload %s", params.toString()));
 
         CircleCsv record = null;
         Circle persistentRecord = null;
@@ -57,7 +58,7 @@ public class CircleCsvHandler {
         BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary();
 
-        Map<String, Object> params = motechEvent.getParameters();
+
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvImportFileName = (String) params.get("csv-import.filename");
         String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
@@ -90,6 +91,7 @@ public class CircleCsvHandler {
                     }
                     summary.incrementSuccessCount();
                 } else {
+                    logger.error(String.format("Record not found in the CircleCsv table with id %s", id));
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -106,6 +108,7 @@ public class CircleCsvHandler {
         }
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        logger.info("Finished processing CircleCsv-import success");
     }
 
     /**
@@ -117,6 +120,8 @@ public class CircleCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.CircleCsv.csv-import.failure")
     public void circleCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing CircleCsv-import failure for upload %s", params.toString()));
+
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
@@ -124,10 +129,10 @@ public class CircleCsvHandler {
             CircleCsv oldRecord = circleCsvService.getRecord(id);
             if (oldRecord != null) {
                 circleCsvService.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully for id %s", id.toString()));
+                logger.info(String.format("Record deleted successfully from CircleCsv table for id %s", id.toString()));
             }
         }
-
+        logger.info("Finished processing CircleCsv-import failure");
     }
 
     private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
