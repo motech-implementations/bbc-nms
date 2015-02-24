@@ -76,7 +76,7 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
                     ContentUpload newRecord = mapContentUploadFrom(record);
-                    if (newRecord != null) {
+
                         ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
                         if (dbRecord != null) {
                             contentUploadRecordDataService.update(dbRecord);
@@ -88,12 +88,7 @@ public class ContentUploadCsvHandler {
                             summary.incrementSuccessCount();
 
                         }
-                    } else {
-                        summary.incrementFailureCount();
-                        setErrorDetails(record.toString(), "Record_Not_Found", "Record not found in Csv database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
 
-                    }
                 }
             } catch (DataValidationException dve) {
                 setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());

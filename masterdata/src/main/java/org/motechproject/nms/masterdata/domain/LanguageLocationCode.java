@@ -4,6 +4,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * This class Models data for LanguageLocationCode records
+ */
 @Entity(recordHistory = true)
 public class LanguageLocationCode extends MdsEntity {
 
