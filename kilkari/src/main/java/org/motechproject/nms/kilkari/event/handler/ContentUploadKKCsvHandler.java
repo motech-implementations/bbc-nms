@@ -12,7 +12,6 @@ import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
 import org.motechproject.nms.kilkari.service.ContentUploadKKCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadKKService;
 import org.motechproject.nms.masterdata.domain.OperationType;
-import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -40,7 +39,7 @@ public class ContentUploadKKCsvHandler {
     @Autowired
     private ContentUploadKKCsvService contentUploadKKCsvService;
 
-    private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(ContentUploadKKCsvHandler.class);
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.

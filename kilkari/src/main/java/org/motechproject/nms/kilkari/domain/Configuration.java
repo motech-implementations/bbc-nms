@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.nms.kilkari.constants.ConfigurationConstants;
 
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class Configuration {
 
     @Unique
-    @Field(required = true, defaultValue = "1")
+    @Field(required = true)
     @Min(1)
     @Max(1)
     @NotNull
@@ -53,6 +54,11 @@ public class Configuration {
 
     public Long getIndex() {
         return index;
+    }
+
+    /* Hardcoded to ConfigurationConstants.CONFIGURATION_INDEX */
+    public void setIndex(Long index) {
+        this.index = ConfigurationConstants.CONFIGURATION_INDEX;
     }
 
     public Integer getNmsKk72WeeksPackMsgsPerWeek() {

@@ -140,9 +140,7 @@ public class MotherMctsCsvHandler {
      *  This method is used to validate csv uploaded record 
      *  and map Mother mcts to subscriber
      * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
+     *  @param motherMctsCsv csv uploaded subscriber
      */
     private Subscriber motherMctsToSubscriberMapper(MotherMctsCsv motherMctsCsv) throws DataValidationException {
 
@@ -319,7 +317,7 @@ public class MotherMctsCsvHandler {
      *  This method is used to update Subscriber info in database
      * 
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
+     *  @param dbSubscriber database Subscriber
      */
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
         

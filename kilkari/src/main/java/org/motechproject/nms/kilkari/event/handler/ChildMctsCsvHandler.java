@@ -77,7 +77,7 @@ public class ChildMctsCsvHandler {
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandler.class);
 
     /**
-     * This method is used to process record when ChildMctsCsv upload successfully.
+     * This method is used to process record when ChildMctsCsv upload is successful.
      * 
      * @param motechEvent This is motechEvent having uploaded record details 
      */
@@ -142,9 +142,7 @@ public class ChildMctsCsvHandler {
      *  This method is used to validate csv uploaded record 
      *  and map Child mcts to subscriber
      * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
+     *  @param childMctsCsv csv uploaded record
      */
     private Subscriber childMctsToSubscriberMapper(ChildMctsCsv childMctsCsv) throws DataValidationException {
 
@@ -205,7 +203,7 @@ public class ChildMctsCsvHandler {
     /**
      * This method is used to process record when ChildMctscsv upload fails.
      * 
-     * @param motechEvent This is motechEvent having uploaded record details 
+     * @param uploadEvent This is motechEvent having uploaded record details
      */
     @MotechListener(subjects = "mds.crud.kilkarimodule.ChildMctsCsv.csv-import.failure")
     public void childMctsCsvFailure(MotechEvent uploadEvent) {
@@ -337,7 +335,7 @@ public class ChildMctsCsvHandler {
      *  This method is used to update Subscriber info in database
      * 
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
+     *  @param dbSubscriber database Subscriber
      */
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
 
