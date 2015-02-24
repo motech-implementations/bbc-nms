@@ -25,7 +25,7 @@ public interface CourseProcessedContentDataService extends
      */
     @Lookup
     List<CourseProcessedContent> findContentByLlc(
-            @LookupField(name = "languageLocationCode") int languageLocationCode);
+            @LookupField(name = "languageLocationCode") Integer languageLocationCode);
 
     /**
      * find By Circle Llc and ContentName
@@ -38,6 +38,6 @@ public interface CourseProcessedContentDataService extends
     @Lookup
     CourseProcessedContent findByCircleLlcContentName(
             @LookupField(name = "circle") String circle,
-            @LookupField(name = "languageLocationCode") int languageLocationCode,
+            @LookupField(name = "languageLocationCode") Integer languageLocationCode,
             @LookupField(name = "contentName") String contentName);
 }

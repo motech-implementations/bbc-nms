@@ -1,23 +1,34 @@
 package org.motechproject.nms.mobileacademy.domain;
 
 import org.motechproject.mds.annotations.Entity;
-
+import org.motechproject.nms.mobileacademy.commons.ContentType;
 
 /**
  * Created by nitin on 2/9/15.
  */
 @Entity
 public class CourseProcessedContent {
-    private int contentID;
+
+    private Integer contentID;
+
     private String circle;
-    private int languageLocationCode;
+
+    private Integer languageLocationCode;
+
     private String contentName;
+
     private ContentType contentType;
+
     private String contentFile;
-    private int contentDuration;
+
+    private Integer contentDuration;
+
     private String metadata;
 
-    public CourseProcessedContent(int contentID, String circle, int languageLocationCode, String contentName, ContentType contentType, String contentFile, int contentDuration, String metadata) {
+    public CourseProcessedContent(Integer contentID, String circle,
+            Integer languageLocationCode, String contentName,
+            ContentType contentType, String contentFile,
+            Integer contentDuration, String metadata) {
 
         this.contentID = contentID;
         this.circle = circle;
@@ -37,19 +48,19 @@ public class CourseProcessedContent {
         this.metadata = metadata;
     }
 
-    public int getContentDuration() {
+    public Integer getContentDuration() {
         return contentDuration;
     }
 
-    public void setContentDuration(int contentDuration) {
+    public void setContentDuration(Integer contentDuration) {
         this.contentDuration = contentDuration;
     }
 
-    public int getContentID() {
+    public Integer getContentID() {
         return contentID;
     }
 
-    public void setContentID(int contentID) {
+    public void setContentID(Integer contentID) {
         this.contentID = contentID;
     }
 
@@ -61,11 +72,11 @@ public class CourseProcessedContent {
         this.circle = circle;
     }
 
-    public int getLanguageLocationCode() {
+    public Integer getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(int languageLocationCode) {
+    public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -93,4 +104,3 @@ public class CourseProcessedContent {
         this.contentFile = contentFile;
     }
 }
-

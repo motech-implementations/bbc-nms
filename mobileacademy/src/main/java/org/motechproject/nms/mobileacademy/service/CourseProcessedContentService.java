@@ -9,21 +9,23 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
  */
 public interface CourseProcessedContentService {
 
-    void create(CourseProcessedContent courseProcessedContent);
-
-    void deleteAll();
-
     // Check if course for a particular LLC exists in CPC or not
-    public boolean doesLLCExistsInCPC(int languageLocationCode);
+    public boolean doesLLCExistsInCPC(int LLC);
 
     // Provide list of distinct LLCs existing in CPC
     List<Integer> getListOfAllExistingLLcs();
 
     // Provide the record having combination of below three in CPC
-    CourseProcessedContent getRecordforModification(String circle,
-            int languageLocationCode, String contentName);
+    CourseProcessedContent getRecordforModification(String circle, int lLC,
+            String contentName);
 
-    // Provide implementation for deleting all the records corresponding to a
-    // LLC in CPC.
-    void deleteRecordsByLLC(int languageLocationCode);
+    // Already been implemented
+    void create(CourseProcessedContent courseProcessedContent);
+
+    void deleteAll();
+
+    void update(CourseProcessedContent courseProcessedContent);
+
+    public void deleteRecordsByLLC(int languageLocationCode);
+
 }

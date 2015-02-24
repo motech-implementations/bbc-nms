@@ -11,7 +11,14 @@ import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.domain.Question;
 import org.motechproject.mtraining.domain.Quiz;
 import org.motechproject.mtraining.service.MTrainingService;
-import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.domain.ChapterContent;
+import org.motechproject.nms.mobileacademy.domain.LessonContent;
+import org.motechproject.nms.mobileacademy.domain.QuestionContent;
+import org.motechproject.nms.mobileacademy.domain.QuizContent;
+import org.motechproject.nms.mobileacademy.domain.Score;
+import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +35,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 
     @Autowired
     private MTrainingService mTrainingService;
+
+    @Autowired
+    private CourseRawContentDataService courseRawContentDataService;
+
+    @Autowired
+    private ChapterContentDataService chapterContentDataService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CoursePopulateServiceImpl.class);
@@ -100,5 +113,129 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
             }
         }
 
+    }
+
+    @Override
+    public List<ChapterContent> getAllChapterContents() {
+        chapterContentDataService.retrieveAll();
+        return null;
+    }
+
+    @Override
+    public LessonContent getLessonContent(int chapterId, int lessonId,
+            String type) {
+        for (LessonContent lessonContent : chapterContentDataService
+                .retrieveAll().get(chapterId - 1).getLessons()) {
+            if ((lessonContent.getLessonNumber() == lessonId)
+                    && (lessonContent.getName().equalsIgnoreCase(type))) {
+                return lessonContent;
+            }
+        }
+        return null;
+    }
+
+    public void setLessonContent(int chapterId, int lessonId, String type,
+            String fileName) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        for (LessonContent lessonContent : chapterContent.getLessons()) {
+            if ((lessonContent.getLessonNumber() == lessonId)
+                    && (lessonContent.getName().equalsIgnoreCase(type))) {
+                lessonContent.setAudioFile(fileName);
+                chapterContentDataService.update(chapterContent);
+                return;
+            }
+        }
+    }
+
+    public QuestionContent getQuestionContent(int chapterId, int questionId,
+            String type) {
+        for (QuestionContent questionContent : chapterContentDataService
+                .retrieveAll().get(chapterId - 1).getQuiz().getQuestions()) {
+            if ((questionContent.getQuestionNumber() == questionId)
+                    && (questionContent.getName().equalsIgnoreCase(type))) {
+                return questionContent;
+            }
+        }
+        return null;
+    }
+
+    public void setQuestionContent(int chapterId, int questionId, String type,
+            String fileName) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        for (QuestionContent questionContent : chapterContent.getQuiz()
+                .getQuestions()) {
+            if ((questionContent.getQuestionNumber() == questionId)
+                    && (questionContent.getName().equalsIgnoreCase(type))) {
+                questionContent.setAudioFile(fileName);
+                chapterContentDataService.update(chapterContent);
+                return;
+            }
+        }
+    }
+
+    public Score getScore(int chapterId, int scoreId, String type) {
+        for (Score score : chapterContentDataService.retrieveAll()
+                .get(chapterId - 1).getScores()) {
+            if ((score.getName().equalsIgnoreCase(type
+                    + String.format("%02d", scoreId)))) {
+                return score;
+            }
+        }
+        return null;
+    }
+
+    public void setScore(int chapterId, int scoreId, String type,
+            String fileName) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        for (Score score : chapterContent.getScores()) {
+            if ((score.getName().equalsIgnoreCase(type
+                    + String.format("%02d", scoreId)))) {
+                score.setAudioFile(fileName);
+                chapterContentDataService.update(chapterContent);
+                return;
+            }
+        }
+    }
+
+    public ChapterContent getChapterContent(int chapterId, String type) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        if (chapterContent.getName().equalsIgnoreCase(type)) {
+            return chapterContent;
+        }
+        return null;
+    }
+
+    public void setChapterContent(int chapterId, String type, String fileName) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        if (chapterContent.getName().equalsIgnoreCase(type)) {
+            chapterContent.setAudioFile(fileName);
+            chapterContentDataService.update(chapterContent);
+            return;
+        }
+    }
+
+    public QuizContent getQuizContent(int chapterId, String type) {
+        QuizContent quizContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1).getQuiz();
+        if (quizContent.getName().equalsIgnoreCase(type)) {
+            return quizContent;
+        }
+        return null;
+    }
+
+    public void setQuizContent(int chapterId, String type, String fileName) {
+        ChapterContent chapterContent = chapterContentDataService.retrieveAll()
+                .get(chapterId - 1);
+        QuizContent quizContent = chapterContent.getQuiz();
+        if (quizContent.getName().equalsIgnoreCase(type)) {
+            quizContent.setAudioFile(fileName);
+            chapterContentDataService.update(chapterContent);
+            return;
+        }
     }
 }
