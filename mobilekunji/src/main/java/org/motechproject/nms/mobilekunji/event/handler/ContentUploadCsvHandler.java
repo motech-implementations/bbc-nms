@@ -34,8 +34,8 @@ public class ContentUploadCsvHandler {
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    public static Integer successCount = 0;
-    public static Integer failCount = 0;
+    private Integer successCount = 0;
+    private Integer failCount = 0;
     @Autowired
     private ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
 
@@ -43,10 +43,10 @@ public class ContentUploadCsvHandler {
     private ContentUploadRecordDataService contentUploadRecordDataService;
 
     @Autowired
-    BulkUploadError errorDetails;
+    private BulkUploadError errorDetails;
 
     @Autowired
-    BulkUploadErrLogService bulkUploadErrLogService;
+    private BulkUploadErrLogService bulkUploadErrLogService;
 
 
     private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
@@ -54,12 +54,12 @@ public class ContentUploadCsvHandler {
 
     /**
      * This method provides a listener to the Content upload success scenario.
+     *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success" })
+    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success"})
     public void mobileKunjiContentUploadCsvSuccess(MotechEvent motechEvent) {
 
-        String userName = null;
         ContentUploadCsv record = null;
 
         Map<String, Object> params = motechEvent.getParameters();
@@ -70,9 +70,9 @@ public class ContentUploadCsvHandler {
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
 
-        try {
 
-            for (Long id : createdIds) {
+        for (Long id : createdIds) {
+            try {
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
                     ContentUpload newRecord = mapContentUploadFrom(record);
@@ -90,25 +90,20 @@ public class ContentUploadCsvHandler {
                         }
                     } else {
                         summary.incrementFailureCount();
-                        errorDetails.setRecordDetails(record.toString());
-                        errorDetails.setErrorCategory("Record_Not_Found");
-                        errorDetails.setErrorDescription("Record not found in Csv database");
+                        setErrorDetails(record.toString(), "Record_Not_Found", "Record not found in Csv database");
                         bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
 
                     }
                 }
+            } catch (DataValidationException dve) {
+                setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
+                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            } catch (Exception ex) {
+                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
-        } catch (DataValidationException dve) {
-            errorDetails.setRecordDetails(record.toString());
-            errorDetails.setErrorCategory(dve.getErrorCode());
-            errorDetails.setErrorDescription(dve.getErrorDesc());
-            summary.incrementFailureCount();
-            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-        }catch (Exception ex) {
-            summary.incrementFailureCount();
-            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
         }
-
     }
 
 
@@ -120,7 +115,7 @@ public class ContentUploadCsvHandler {
      * @return the Conetnt Upload generated after applying validations.
      * @throws DataValidationException
      */
-    private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException{
+    private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
 
         int contentId;
         String circleCode;
@@ -128,22 +123,23 @@ public class ContentUploadCsvHandler {
         String contentName;
         ContentType contentType = null;
         String content;
-        String contentTemp;
         String contentFile;
         int cardNumber;
         int contentDuration;
 
-        contentId = ParseDataHelper.parseInt("Content Id", record.getContentId(),true);
+        contentId = ParseDataHelper.parseInt("Content Id", record.getContentId(), true);
         circleCode = ParseDataHelper.parseString("Circle Code", record.getCircleCode(), true);
         languageLocationCode = ParseDataHelper.parseInt("Language Location Code", record.getLanguageLocationCode(), true);
         contentName = ParseDataHelper.parseString("Conteny name", record.getContentName(), true);
         contentFile = ParseDataHelper.parseString("Content File", record.getContentFile(), true);
         cardNumber = ParseDataHelper.parseInt("Card number", record.getCardNumber(), true);
         contentDuration = ParseDataHelper.parseInt("Content Duration", record.getContentDuration(), true);
-        contentTemp = contentType.toString();
-        content = ParseDataHelper.parseString("Content Type", contentTemp, true);
-        ContentType.valueOf()
+        content = ParseDataHelper.parseString("Content Type", record.getContentType(), true);
+
         ContentUpload newRecord = new ContentUpload();
+        if (ContentType.of(content) != ContentType.CONTENT || ContentType.of(content) != ContentType.PROMPT) {
+            ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
+        }
 
         newRecord.setContentId(contentId);
         newRecord.setCircleCode(circleCode);
@@ -154,6 +150,7 @@ public class ContentUploadCsvHandler {
         newRecord.setContentDuration(contentDuration);
         newRecord.setContentType(contentType);
         return newRecord;
+
     }
 
 
@@ -162,10 +159,8 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed" })
+    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed"})
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
-
-        logger.error("entered frontLineWorkerFailed");
 
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
@@ -173,15 +168,46 @@ public class ContentUploadCsvHandler {
 
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        for(Long id : createdIds) {
-            ContentUploadCsv record =  contentUploadCsvRecordDataService.findById(id);
-            contentUploadCsvRecordDataService.delete(record);
-            summary.incrementFailureCount();
-            errorDetails.setRecordDetails(id.toString());
-            errorDetails.setErrorCategory("Upload failure");
-            errorDetails.setErrorDescription("Upload failure");
-            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+        for (Long id : createdIds) {
+            try {
+                ContentUploadCsv record = contentUploadCsvRecordDataService.findById(id);
+                contentUploadCsvRecordDataService.delete(record);
+                summary.incrementFailureCount();
+                setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            } catch (Exception ex) {
+                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            }
         }
     }
 
+    /**
+     * This method is used to set error record details
+     *
+     * @param id               record for which error is generated
+     * @param errorCategory    specifies error category
+     * @param errorDescription specifies error descriotion
+     */
+    private void setErrorDetails(String id, String errorCategory, String errorDescription) {
+        errorDetails.setRecordDetails(id);
+        errorDetails.setErrorCategory(errorCategory);
+        errorDetails.setErrorDescription(errorDescription);
+    }
+
+    public Integer getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    public Integer getSuccessCount() {
+        return successCount;
+    }
+
+    public void setSuccessCount(Integer successCount) {
+        this.successCount = successCount;
+    }
 }

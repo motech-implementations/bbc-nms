@@ -7,4 +7,13 @@ package org.motechproject.nms.mobilekunji.domain;
 public enum ContentType {
 
     PROMPT, CONTENT;
+
+    public static ContentType of(String str) {
+        for (ContentType contentType : values()) {
+            if (contentType.toString().equals(str)) {
+                return contentType;
+            }
+        }
+        return null;
+    }
 }

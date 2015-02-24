@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MobileKunjiController {
 
 
-
     private static final String OK = "OK";
 
     @RequestMapping("/web-api/status")
