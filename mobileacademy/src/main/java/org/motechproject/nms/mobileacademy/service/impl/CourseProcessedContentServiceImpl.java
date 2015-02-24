@@ -31,6 +31,11 @@ public class CourseProcessedContentServiceImpl implements
     }
 
     @Override
+    public void update(CourseProcessedContent courseProcessedContent) {
+        courseProcessedContentDataService.update(courseProcessedContent);
+    }
+
+    @Override
     public boolean doesLLCExistsInCPC(int languageLocationCode) {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(languageLocationCode);

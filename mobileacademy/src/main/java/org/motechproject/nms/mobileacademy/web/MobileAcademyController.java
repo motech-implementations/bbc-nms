@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.web;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
-import org.motechproject.nms.mobileacademy.domain.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Controller for HelloWorld message and bundle status.
+ * Controller for MobileAcademy Module
  */
 @Controller
 public class MobileAcademyController {
@@ -33,6 +33,9 @@ public class MobileAcademyController {
     @Autowired
     RecordProcessService recordProcessService;
 
+    @Autowired
+    CourseRawContentDataService courseRawContentDataService;
+
     private static final String OK = "OK";
 
     @RequestMapping("/web-api/status")
@@ -44,7 +47,8 @@ public class MobileAcademyController {
     @RequestMapping(value = "/processData")
     @ResponseBody
     public String processData() {
-        return recordProcessService.processRawRecords();
+        return recordProcessService
+                .processRawRecords(courseRawContentDataService.retrieveAll());
     }
 
     @RequestMapping(value = "/deleteData")
@@ -59,16 +63,6 @@ public class MobileAcademyController {
     @ResponseBody
     public String resetState() {
         coursePopulateService.updateCourseState(CourseUnitState.Inactive);
-        return "Course Unit State is reset";
-    }
-
-    @RequestMapping(value = "/findCourseState")
-    @ResponseBody
-    public String findCourseState() {
-        coursePopulateService.updateCorrectAnswer(
-                MobileAcademyConstants.CHAPTER + String.format("%02d", 2),
-                MobileAcademyConstants.QUESTION + String.format("%02d", 3),
-                String.valueOf(2));
         return "Course Unit State is reset";
     }
 

@@ -1,10 +1,17 @@
 package org.motechproject.nms.mobileacademy.service;
 
+import java.util.List;
+
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.nms.mobileacademy.domain.ChapterContent;
+import org.motechproject.nms.mobileacademy.domain.LessonContent;
+import org.motechproject.nms.mobileacademy.domain.QuestionContent;
+import org.motechproject.nms.mobileacademy.domain.QuizContent;
+import org.motechproject.nms.mobileacademy.domain.Score;
 
 /**
  * Service interface contains APIs to perform course populate operations in
- * mtraining.
+ * mtraining and content tables.
  *
  */
 public interface CoursePopulateService {
@@ -40,4 +47,31 @@ public interface CoursePopulateService {
      */
     public void updateCorrectAnswer(String chapterName, String questionName,
             String answer);
+
+    public List<ChapterContent> getAllChapterContents();
+
+    public LessonContent getLessonContent(int chapterId, int lessonId,
+            String type);
+
+    public QuestionContent getQuestionContent(int chapterId, int questionId,
+            String type);
+
+    public Score getScore(int chapterId, int scoreId, String type);
+
+    public ChapterContent getChapterContent(int chapterId, String type);
+
+    public QuizContent getQuizContent(int chapterId, String type);
+
+    public void setLessonContent(int chapterId, int lessonId, String type,
+            String fileName);
+
+    public void setQuestionContent(int chapterId, int questionId, String type,
+            String fileName);
+
+    public void setScore(int chapterId, int scoreId, String type,
+            String fileName);
+
+    public void setChapterContent(int chapterId, String type, String fileName);
+
+    public void setQuizContent(int chapterId, String type, String fileName);
 }

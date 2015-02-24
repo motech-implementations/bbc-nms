@@ -1,4 +1,5 @@
-package org.motechproject.nms.mobileacademy.domain;
+package org.motechproject.nms.mobileacademy.commons;
+
 
 
 /**
