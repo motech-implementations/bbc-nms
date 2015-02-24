@@ -29,7 +29,7 @@ public class BulkUploadStatusServiceImpl implements BulkUploadStatusService {
      */
     @Override
     public void add(BulkUploadStatus bulkUploadStatusRecord) {
-        logger.debug("Creating record for bulk upload completion status for csv : {}", bulkUploadStatusRecord.getBulkUploadFileName());
+        logger.debug("Creating bulk upload completion status record for csv : {}", bulkUploadStatusRecord.getBulkUploadFileName());
         bulkUploadStatusDataService.create(bulkUploadStatusRecord);
     }
 }
