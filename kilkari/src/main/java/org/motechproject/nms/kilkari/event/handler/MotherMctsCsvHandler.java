@@ -89,7 +89,7 @@ public class MotherMctsCsvHandler {
         List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
         String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
         
-        logger.info(String.format("Processing Csv file[%s]", csvFileName));
+        logger.info("Processing Csv file[{}]", csvFileName);
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary summary = new CsvProcessingSummary();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -99,13 +99,17 @@ public class MotherMctsCsvHandler {
         
         for (Long id : uploadedIDs) {
             try {
-                logger.info(String.format("Processing record id[%d]", id));
+                logger.info("Processing record id[{}]", id);
                 motherMctsCsv = motherMctsCsvService.findRecordById(id);
                 if (motherMctsCsv != null) {
                     logger.info("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
-                    insertSubscriptionSubccriber(subscriber);
+                    if(motherMctsCsv.getOperation().equalsIgnoreCase("Delete")) {
+                        deleteSubscription(subscriber);
+                    } else {
+                        insertSubscriptionSubccriber(subscriber);
+                    }
                     motherMctsCsvService.delete(motherMctsCsv);
                     summary.incrementSuccessCount();
                 } else {
@@ -114,9 +118,9 @@ public class MotherMctsCsvHandler {
                     errorDetails.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                     summary.incrementFailureCount();
-                    logger.error(String.format("Record not found for uploaded id {}", id));
+                    logger.error("Record not found for uploaded id [{}]", id);
                 }
-                logger.info(String.format("Processing finished for record id[%d]", id));
+                logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
@@ -144,7 +148,7 @@ public class MotherMctsCsvHandler {
 
         Subscriber motherSubscriber = new Subscriber();
         
-        logger.info(String.format("Validation and map to entity process start"));
+        logger.info("Validation and map to entity process start");
         Long stateCode = ParseDataHelper.parseLong("State Id", motherMctsCsv.getStateId(),  true);
         State state = locationValidator.stateConsistencyCheck(motherMctsCsv.getStateId(), stateCode);
 
@@ -192,7 +196,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
 
-        logger.info(String.format("Validation and map to entity process finished"));
+        logger.info("Validation and map to entity process finished");
         return motherSubscriber;
     }
 
@@ -223,31 +227,31 @@ public class MotherMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
-        //Find subscription from database based on msisdn, packName, status
+        /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72, Status.Active);
         if (dbSubscription == null) {
-            logger.info(String.format("Not found subscription from database based on msisdn[%s], packName[%s], status[%s]", subscriber.getMsisdn(), PACK_72, Status.Active));
-            //Find subscription from database based on mctsid, packName, status
-            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, Status.Active);
+            logger.info("Not found subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
+            /* Find subscription from database based on mctsid, packName, status */
+            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, Status.Active, subscriber.getState().getId());
             if (dbSubscription == null) {
-                logger.info(String.format("Not found subscription from database based on Mothermctsid[%s], packName[%s], status[%s]", subscriber.getMotherMctsId(), PACK_72, Status.Active));
+                logger.info("Not found subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
                 Configuration configuration = configurationService.getConfiguration();
                 long activeUserCount = subscriptionService.getActiveUserCount();
-                //check for maximum allowed beneficiary
+                /* check for maximum allowed beneficiary */
                 if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
-                    Subscriber dbSubscriber = subscriberService.create(subscriber); //CREATE new subscriber
-                    createSubscription(subscriber, null, dbSubscriber); //create subscription for above created subscriber
+                    Subscriber dbSubscriber = subscriberService.create(subscriber); /* CREATE new subscriber */
+                    createSubscription(subscriber, null, dbSubscriber); /* create subscription for above created subscriber */
                 } else {
-                    logger.info(String.format("Reached maximum beneficery count can't add any more"));
-                    return; //Reached maximum beneficery count
+                    logger.info("Reached maximum beneficery count can't add any more");
+                    return; /* Reached maximum beneficery count */
                 }
-            } else { //Record found based on mctsid than update subscriber and subscription
-                logger.info(String.format("Found subscription from database based on Mothermctsid[%s], packName[%s], status[%s]", subscriber.getMotherMctsId(), PACK_72, Status.Active));
+            } else { /* Record found based on mctsid than update subscriber and subscription */
+                logger.info("Found subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         } else {
-            logger.info(String.format("Found subscription from database based on msisdn[%s], packName[%s], status[%s]", subscriber.getMsisdn(), PACK_72, Status.Active));
+            logger.info("Found subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
@@ -306,7 +310,7 @@ public class MotherMctsCsvHandler {
         
         Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscription, dbSubscriber);
         newSubscription.setMctsId(subscriber.getMotherMctsId());
-        newSubscription.setPackName("Pack_72");
+        newSubscription.setPackName(PACK_72);
         
         subscriptionService.create(newSubscription);
     }
@@ -329,5 +333,20 @@ public class MotherMctsCsvHandler {
         subscriberService.update(dbSubscriber);
     }
     
+    /**
+     *  This method is used to deactivate subscription based on csv operation
+     * 
+     *  @param subscriber csv uploaded subscriber
+     *  @param dbSubscription database Subscription
+     */
+    private void deleteSubscription(Subscriber subscriber) throws DataValidationException{
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(), subscriber.getState().getId());
+        if(dbSubscription != null) { 
+            updateSubscription(subscriber, dbSubscription, true);
+            updateDbSubscriber(subscriber, dbSubscription.getSubscriber());
+        }else {
+            throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");
+        }
+    }
     
 }

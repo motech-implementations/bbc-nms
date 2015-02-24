@@ -65,10 +65,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscription;
     }
 
-    public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status) {
-        Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, status);
+    public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status, Long stateCode) {
+        Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, status, stateCode);
         if(subscription == null) {
-            subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, Status.PendingActivation);
+            subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.PendingActivation, stateCode);
         }
         return subscription;
     }
@@ -87,5 +87,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         filter.setType(FilterType.fromString("PendingActivation"));
         long pendingRecord = subscriptionDataService.countForFilter(filter);
         return activeRecord + pendingRecord;
+    }
+    
+    public Subscription getSubscriptionByMctsIdState(String mctsId, Long stateCode){
+        Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdState(mctsId, stateCode);
+        return subscription;
     }
 }
