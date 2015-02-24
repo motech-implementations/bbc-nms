@@ -2,6 +2,8 @@ package org.motechproject.nms.frontlineworker.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.frontlineworker.Designation;
+import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.constants.FrontLineWorkerConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;

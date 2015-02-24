@@ -3,7 +3,7 @@ package org.motechproject.nms.frontlineworker.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.nms.frontlineworker.event.handler.Status;
+import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;

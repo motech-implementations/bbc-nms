@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker.event.handler;
+package org.motechproject.nms.frontlineworker;
 
 /**
  * Created by abhishek on 24/2/15.

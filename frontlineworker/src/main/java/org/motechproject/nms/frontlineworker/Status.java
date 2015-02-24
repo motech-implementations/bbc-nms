@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker.event.handler;
+package org.motechproject.nms.frontlineworker;
 
 /**
  * This enum specified the possible values for Front Line Worker status
