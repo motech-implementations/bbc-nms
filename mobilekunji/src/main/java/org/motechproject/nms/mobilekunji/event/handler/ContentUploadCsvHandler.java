@@ -9,9 +9,12 @@ import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataSe
 import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,14 +61,15 @@ public class ContentUploadCsvHandler {
      * @param motechEvent name of the event raised during upload
      */
     @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success"})
-    public void mobileKunjiContentUploadCsvSuccess(MotechEvent motechEvent) {
-
+    public void mobileKunjiContentUploadSuccess(MotechEvent motechEvent) {
+        logger.info("Success[mobileKunjiContentUploadSuccess] method start for mobileKunjiContentUploadCsv");
         ContentUploadCsv record = null;
 
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
+        logger.info("Processing Csv file");
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
@@ -73,32 +77,45 @@ public class ContentUploadCsvHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.debug("Processing uploaded id : {}", id);
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
+                    logger.info("Record found in Csv database")
                     ContentUpload newRecord = mapContentUploadFrom(record);
 
-                        ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
-                        if (dbRecord != null) {
-                            contentUploadRecordDataService.update(dbRecord);
-                            contentUploadCsvRecordDataService.delete(record);
-                            summary.incrementSuccessCount();
+                    ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
+
+                    if (dbRecord == null) {
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            summary.incrementFailureCount();
+                            setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                            logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
                             contentUploadRecordDataService.create(newRecord);
                             contentUploadCsvRecordDataService.delete(record);
                             summary.incrementSuccessCount();
-
                         }
 
+                    } else {
+                        contentUploadRecordDataService.update(dbRecord);
+                        contentUploadCsvRecordDataService.delete(record);
+                        summary.incrementSuccessCount();
+                    }
                 }
+
             } catch (DataValidationException dve) {
                 setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                logger.warn("Record not found for uploaded ID: {}", id);
             } catch (Exception ex) {
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
         }
+
+        logger.info("Success[mobileKunjiContentUploadSuccess] method finished for mobileKunjiContentUploadCsv");
     }
 
 
@@ -111,7 +128,7 @@ public class ContentUploadCsvHandler {
      * @throws DataValidationException
      */
     private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
-
+        logger.info("mapContentUploadFrom process start");
         int contentId;
         String circleCode;
         Integer languageLocationCode;
@@ -144,6 +161,7 @@ public class ContentUploadCsvHandler {
         newRecord.setCardNumber(cardNumber);
         newRecord.setContentDuration(contentDuration);
         newRecord.setContentType(contentType);
+        logger.info("mapContentUploadFrom process end");
         return newRecord;
 
     }
@@ -157,6 +175,7 @@ public class ContentUploadCsvHandler {
     @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed"})
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
 
+        logger.info("Failure[mobileKunjiContentUploadFailure] method start for mobileKunjiContentUploadCsv");
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
@@ -175,6 +194,7 @@ public class ContentUploadCsvHandler {
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
         }
+        logger.info("Failure[mobileKunjiContentUploadFailure] method finished for mobileKunjiContentUploadCsv");
     }
 
     /**

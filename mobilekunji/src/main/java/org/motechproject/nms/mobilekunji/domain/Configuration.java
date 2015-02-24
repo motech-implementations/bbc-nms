@@ -11,13 +11,13 @@ import javax.validation.constraints.Min;
  * Models data for simple records in a portable manner.
  */
 @Entity
-public class ServiceConfiguration {
+public class Configuration {
 
     @Field(required = true)
     @Unique
     @Min(1)
     @Max(1)
-    private int index;
+    private Long index;
 
     @Field(required = true)
     private int nmsMkCappingType;
@@ -31,20 +31,11 @@ public class ServiceConfiguration {
     @Field(required = true)
     private int nmsMkMaxEndofusageMessage;
 
-    public ServiceConfiguration(int index, int nmsMkCappingType, int nmsMkNationalCapValue, int nmsMkMaxHealthCards, int nmsMkMaxWelcomeMessage, int nmsMkMaxEndofusageMessage) {
-        this.index = index;
-        this.nmsMkCappingType = nmsMkCappingType;
-        this.nmsMkNationalCapValue = nmsMkNationalCapValue;
-        this.nmsMkMaxHealthCards = nmsMkMaxHealthCards;
-        this.nmsMkMaxWelcomeMessage = nmsMkMaxWelcomeMessage;
-        this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
-    }
-
-    public int getIndex() {
+    public Long getIndex() {
         return index;
     }
 
-    public void setIndex(int index) {
+    public void setIndex(Long index) {
         this.index = index;
     }
 
