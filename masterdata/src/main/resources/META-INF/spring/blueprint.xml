@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
+
+    <import resource="classpath*:META-INF/motech/*.xml"/>
+
+    <osgi:service ref="locationService"
+                  interface="org.motechproject.nms.masterdata.service.LocationService"/>
+
+    <osgi:service ref="circleCsvService"
+                  interface="org.motechproject.nms.masterdata.service.CircleCsvService"/>
+
+    <osgi:service ref="circleService"
+                  interface="org.motechproject.nms.masterdata.service.CircleService"/>
+
+    <osgi:service ref="languageLocationCodeService"
+                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
+
+    <osgi:service ref="languageLocationCodeServiceCsv"
+                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv"/>
+
+    <osgi:service ref="operatorCsvService"
+                  interface="org.motechproject.nms.masterdata.service.OperatorCsvService"/>
+
+    <osgi:service ref="operatorService"
+                  interface="org.motechproject.nms.masterdata.service.OperatorService"/>
+
+    <osgi:service ref="stateCsvService"
+                  interface="org.motechproject.nms.masterdata.service.StateCsvService"/>
+
+    <osgi:service ref="stateService"
+                  interface="org.motechproject.nms.masterdata.service.StateService"/>
+
+    <osgi:service ref="districtCsvService"
+                  interface="org.motechproject.nms.masterdata.service.DistrictCsvService"/>
+
+    <osgi:service ref="districtService"
+                  interface="org.motechproject.nms.masterdata.service.DistrictService"/>
+
+    <osgi:service ref="talukaCsvService"
+                  interface="org.motechproject.nms.masterdata.service.TalukaCsvService"/>
+
+    <osgi:service ref="talukaService"
+                  interface="org.motechproject.nms.masterdata.service.TalukaService"/>
+
+    <osgi:service ref="villageCsvService"
+                  interface="org.motechproject.nms.masterdata.service.VillageCsvService"/>
+
+    <osgi:service ref="villageService"
+                  interface="org.motechproject.nms.masterdata.service.VillageService"/>
+
+    <osgi:service ref="healthBlockCsvService"
+                  interface="org.motechproject.nms.masterdata.service.HealthBlockCsvService"/>
+
+    <osgi:service ref="healthBlockService"
+                  interface="org.motechproject.nms.masterdata.service.HealthBlockService"/>
+
+    <osgi:service ref="healthFacilityCsvService"
+                  interface="org.motechproject.nms.masterdata.service.HealthFacilityCsvService"/>
+
+    <osgi:service ref="healthFacilityService"
+                  interface="org.motechproject.nms.masterdata.service.HealthFacilityService"/>
+
+    <osgi:service ref="healthSubFacilityCsvService"
+                  interface="org.motechproject.nms.masterdata.service.HealthSubFacilityCsvService"/>
+
+    <osgi:service ref="healthSubFacilityService"
+                  interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
+
+
+    <osgi:reference id="stateRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService"/>
+
+    <osgi:reference id="stateCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService"/>
+
+    <osgi:reference id="districtCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService"/>
+
+    <osgi:reference id="districtRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.DistrictRecordsDataService"/>
+
+    <osgi:reference id="talukaCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService"/>
+
+    <osgi:reference id="talukaRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.TalukaRecordsDataService"/>
+
+    <osgi:reference id="healthBlockCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService"/>
+
+    <osgi:reference id="healthBlockRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService"/>
+
+    <osgi:reference id="healthFacilityCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService"/>
+
+    <osgi:reference id="healthFacilityRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService"/>
+
+    <osgi:reference id="healthSubFacilityCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService"/>
+
+    <osgi:reference id="healthSubFacilityRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService"/>
+
+    <osgi:reference id="villageCsvRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService"/>
+
+    <osgi:reference id="villageRecordsDataService"
+                    interface="org.motechproject.nms.masterdata.repository.VillageRecordsDataService"/>
+
+    <osgi:reference id="circleCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.CircleCsvDataService"/>
+
+    <osgi:reference id="circleDataService"
+                    interface="org.motechproject.nms.masterdata.repository.CircleDataService"/>
+
+    <osgi:reference id="operatorCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.OperatorCsvDataService"/>
+
+    <osgi:reference id="operatorDataService"
+                    interface="org.motechproject.nms.masterdata.repository.OperatorDataService"/>
+
+    <osgi:reference id="languageLocationCodeCsvDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService"/>
+
+    <osgi:reference id="languageLocationCodeDataService"
+                    interface="org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService"/>
+
+    <osgi:reference id="bulkUploadErrLogService"
+                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
+
+
+</beans>

@@ -1,0 +1,2 @@
+operation,stateId,districtId,talukaId,healthBlockId,phcId,subCentreId,villageId,idNo,name,whomPhoneNo,lmpDate,abortion,outcomeNos,age,entryType,aadharNo
+ADD,1,1,,,,,,123,test,9876543210,10-12-2014,NONE,outcomeNos,30,Birth,987654567897
