@@ -20,6 +20,6 @@ public interface FlwRecordDataService extends MotechDataService<FrontLineWorker>
     FrontLineWorker getFlwByFlwIdAndStateId(@LookupField(name = "flwId") Long flwId, @LookupField(name = "stateCode") Long stateCode);
 
     @Lookup
-    FrontLineWorker getFlwByContactNo(@LookupField(name = "ContactNo") String contactNo);
+    FrontLineWorker getFlwByContactNo(@LookupField(name = "contactNo") String contactNo);
 
 }

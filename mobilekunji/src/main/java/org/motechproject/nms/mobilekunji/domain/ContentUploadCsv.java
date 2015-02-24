@@ -128,4 +128,16 @@ public class ContentUploadCsv {
     public void setIndex(Long index) {
         this.index = index;
     }
+
+    @Override
+    public String toString() {
+
+        return "Content Index[" + this.getIndex() + "] Operation[" + this.getOperation() + "] Content ID " +
+                "[" + this.getContentId() + "] Circle Code [" + this.getCircleCode() + "] Language Location Code [" +
+                this.getLanguageLocationCode() + "] Content Name [" + this.getContentName() + "] Content Type [" +
+                this.getContentType() + "Content File [" + this.contentFile + "] Content Duration [" +
+                this.getContentDuration() + "] Card Number [" + this.getCardNumber() + "]";
+
+
+    }
 }

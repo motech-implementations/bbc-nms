@@ -189,4 +189,16 @@ public class FrontLineWorkerCsv extends MdsEntity {
     public void setIsValid(String isValid) {
         this.isValid = isValid;
     }
+
+    @Override
+    public String toString() {
+
+        if (this.getFlwId() != null) {
+            return "Flw Id[" + this.getFlwId() + "]";
+        } else {
+            return "Contact No[" + this.getContactNo() + "]";
+        }
+
+    }
+
 }

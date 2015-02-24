@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
@@ -14,7 +15,6 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-import org.motechproject.nms.masterdata.domain.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,9 @@ public class ContentUploadCsvHandler {
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
 
-
+        //this loop processes each of the entries in the Content Upload Csv and performs operation(DEL/ADD/MOD)
+        // on the record and also deleted each record after processing from the Csv. If some error occurs in any
+        // of the records, it is reported.
         for (Long id : createdIds) {
             try {
                 logger.debug("Processing uploaded id : {}", id);
@@ -182,6 +184,9 @@ public class ContentUploadCsvHandler {
 
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
+        //This loop processes each of the entries in the Content Upload Csv and performs the deletion of the record
+        //from the Csv.If some error occurs in any of the records, it is reported.
         for (Long id : createdIds) {
             try {
                 ContentUploadCsv record = contentUploadCsvRecordDataService.findById(id);

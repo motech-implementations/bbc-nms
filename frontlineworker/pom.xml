@@ -88,6 +88,8 @@
                         <Export-Package>org.motechproject.nms.frontlineworker.service;version=${project.version},
                             org.motechproject.nms.frontlineworker.repository;version=${project.version},
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
+                            org.motechproject.nms.frontlineworker.constants;version=${project.version},
+                            org.motechproject.nms.frontlineworker.event;version=${project.version},
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

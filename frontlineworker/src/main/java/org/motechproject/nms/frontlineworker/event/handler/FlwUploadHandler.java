@@ -21,11 +21,11 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-import org.motechproject.nms.util.constants.ErrorCategoryConstants;
-import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +94,9 @@ public class FlwUploadHandler {
         FrontLineWorkerContent frontLineWorkerContent;
         FrontLineWorkerCsv record = null;
 
+        //this loop processes each of the entries in the Front Line Worker Csv and performs operation(DEL/ADD/MOD)
+        // on the record and also deleted each record after processing from the Csv. If some error occurs in any
+        // of the records, it is reported.
         for (Long id : createdIds) {
             try {
                 logger.debug("Processing uploaded id : {}", id);
@@ -135,7 +138,7 @@ public class FlwUploadHandler {
                         }
                     }
                 }
-            }catch (DataValidationException dve) {
+            } catch (DataValidationException dve) {
                 setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
@@ -163,6 +166,9 @@ public class FlwUploadHandler {
 
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
+        //This loop processes each of the entries in the Front Line Worker Csv and performs the deletion of the record
+        //from the Csv.If some error occurs in any of the records, it is reported.
         for (Long id : createdIds) {
             try {
                 logger.info("Processing uploaded ID : {}", id);
@@ -241,7 +247,7 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param record                   the Front Line Worker record from Csv
+     * @param record                 the Front Line Worker record from Csv
      * @param frontLineWorkerContent temporary flw record that is to be stored to database
      * @return the Front Line Worker generated.
      * @throws DataValidationException
@@ -448,16 +454,16 @@ public class FlwUploadHandler {
     /**
      * This method is used to set error record details
      *
-     * @param flwId FlwId for which db record is to be found
+     * @param flwId     FlwId for which db record is to be found
      * @param stateCode specifies the state code from the Csv record
      * @param contactNo specifies the contact no from the Csv record
      * @return null if thier is no db record for given FlwId else the record generated from db
      * @throws DataValidationException
      */
-    private FrontLineWorker checkExistenceOfFlw( Long flwId, Long stateCode, String contactNo) throws DataValidationException {
+    private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {
         logger.debug("FLW state Code : {}", stateCode);
         FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
-        if(dbRecord == null) {
+        if (dbRecord == null) {
             logger.debug("FLW Contact Number : {}", contactNo);
             dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
         }
