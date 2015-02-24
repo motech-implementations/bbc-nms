@@ -34,7 +34,7 @@
 
 		<!-- masterdata dependency -->
 		<dependency>
-			<groupId>org.motechproject.nms.masterdata</groupId>
+			<groupId>org.motechproject.nms</groupId>
 			<artifactId>masterdata</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
