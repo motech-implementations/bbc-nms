@@ -86,6 +86,7 @@ public class FlwUploadHandler {
 
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
+        logger.info("Processing Csv file");
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         TemporaryFrontLineWorker temporaryFrontLineWorker;
@@ -93,10 +94,10 @@ public class FlwUploadHandler {
 
         for (Long id : createdIds) {
             try {
-                logger.info("Processing uploaded id: {}", id);
+                logger.info("Processing uploaded id");
                 record = flwCsvRecordsDataService.findById(id);
                 if (record != null) {
-                    logger.info("Record found in Csv database for record id: {}", id);
+                    logger.info("Record found in Csv database");
                     frontLineWorker = null;
                     temporaryFrontLineWorker = null;
                     temporaryFrontLineWorker = validateFrontLineWorker(record);
@@ -207,6 +208,7 @@ public class FlwUploadHandler {
 
         TemporaryFrontLineWorker temporaryFrontLineWorker = null;
 
+        logger.info("validateFrontLineWorker process start");
         temporaryFrontLineWorker.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
         temporaryFrontLineWorker.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
 
@@ -239,6 +241,7 @@ public class FlwUploadHandler {
                 Designation.of(designation) != Designation.ASHA || Designation.of(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
+        logger.info("validateFrontLineWorker process end");
         return temporaryFrontLineWorker;
 
     }
@@ -254,6 +257,7 @@ public class FlwUploadHandler {
      */
     private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record, TemporaryFrontLineWorker temporaryFrontLineWorker) throws DataValidationException {
 
+        logger.info("mapFrontLineWorkerFrom process start");
         frontLineWorker.setContactNo(temporaryFrontLineWorker.getContactNo());
 
         frontLineWorker.setName(ParseDataHelper.parseString("Name", record.getName(), true));
@@ -278,6 +282,7 @@ public class FlwUploadHandler {
         frontLineWorker.setStatus(Status.INACTIVE);
         frontLineWorker.setOperatorId(null);
 
+        logger.info("mapFrontLineWorkerFrom process end");
         return frontLineWorker;
     }
 
@@ -299,6 +304,7 @@ public class FlwUploadHandler {
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(districtId, talukaCode);
             if (taluka == null) {
+                logger.warn("Record not found for Taluka ID[{}]", talukaCode);
                 ParseDataHelper.raiseInvalidDataException("Taluka", record);
 
             }
@@ -326,9 +332,11 @@ public class FlwUploadHandler {
             if (talukaId != null) {
                 village = locationService.getVillageByCode(talukaId, villageCode);
                 if (village == null) {
+                    logger.warn("Record not found for Village ID[{}]", villageCode);
                     ParseDataHelper.raiseInvalidDataException("Village", record);
                 }
             } else {
+                logger.warn("Village ID[{}] present withour Taluka", villageCode);
                 ParseDataHelper.raiseInvalidDataException("Village", record);
             }
         }
@@ -355,9 +363,11 @@ public class FlwUploadHandler {
             if (talukaId != null) {
                 healthBlock = locationService.getHealthBlockByCode(talukaId, healthclockCode);
                 if (healthBlock == null) {
+                    logger.warn("Record not found for HealthBlock ID[{}]", healthclockCode);
                     ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
                 }
             } else {
+                logger.warn("HealthBlock ID[{}] present withour Taluka", healthclockCode);
                 ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
             }
         }
@@ -385,9 +395,11 @@ public class FlwUploadHandler {
             if (healthBlockId != null) {
                 healthFacility = locationService.getHealthFacilityByCode(healthBlockId, healthFacilityCode);
                 if (healthFacility == null) {
+                    logger.warn("Record not found for HealthFacility ID[{}]", healthFacilityCode);
                     ParseDataHelper.raiseInvalidDataException("HealthFacility", record);
                 }
             } else {
+                logger.warn("HealthFacility ID[{}] present withour HealthBlock", healthFacilityCode);
                 ParseDataHelper.raiseInvalidDataException("HealthFacility", record);
             }
         }
@@ -414,9 +426,11 @@ public class FlwUploadHandler {
             if (healthFacilityId != null) {
                 healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacilityId, healthSubFacilityCode);
                 if (healthSubFacility == null) {
+                    logger.warn("Record not found for HealthSubFacility ID[{}]", healthSubFacilityCode);
                     ParseDataHelper.raiseInvalidDataException("HealthSubFacility", record);
                 }
             } else {
+                logger.warn("HealthSubFacility ID[{}] present withour HealthFacility", healthSubFacilityCode);
                 ParseDataHelper.raiseInvalidDataException("HealthSubFacility", record);
             }
         }
