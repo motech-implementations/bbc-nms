@@ -57,12 +57,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionDataService.findRecordIsDeactivatedBySystem(isDeactivatedBySystem);
     }
     
-    public Subscription getSubscriptionByMsisdnPackStatus(String msisdn, String packName, Status status) {
-        return subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, status);
+    public Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName, Status status) {
+        Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, status);
+        if(subscription == null) {
+            subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.PendingActivation);
+        }
+        return subscription;
     }
 
-    public Subscription getPackSubscriptionByMctsIdPackStatus(String mctsId, String packName, Status status) {
-        return subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, status);
+    public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status) {
+        Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, status);
+        if(subscription == null) {
+            subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(mctsId, packName, Status.PendingActivation);
+        }
+        return subscription;
     }
 
     @Override

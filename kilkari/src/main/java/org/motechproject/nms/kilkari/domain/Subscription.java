@@ -4,12 +4,13 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
 
 import org.joda.time.DateTime;
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+@Entity(recordHistory=true)
 public class Subscription extends MdsEntity {
 
-    
     @Persistent
     private SubscriptionPack subscriptionPack;
 
