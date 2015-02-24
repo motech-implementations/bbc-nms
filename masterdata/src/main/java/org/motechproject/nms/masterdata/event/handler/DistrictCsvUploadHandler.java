@@ -91,10 +91,18 @@ public class DistrictCsvUploadHandler {
     }
 
     @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_FAILED})
-    public void districtCsvFailed() {
+    public void districtCsvFailed(MotechEvent motechEvent) {
 
-        districtCsvRecordsDataService.deleteAll();
-        logger.info("District successfully deleted from temporary tables");
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing DistrictCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
+
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from DistrictCsv table for id %s", id.toString()));
+            DistrictCsv districtCsv = districtCsvRecordsDataService.findById(id);
+            districtCsvRecordsDataService.delete(districtCsv);
+        }
+        logger.info("Failure method finished for DistrictCsv");
     }
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {

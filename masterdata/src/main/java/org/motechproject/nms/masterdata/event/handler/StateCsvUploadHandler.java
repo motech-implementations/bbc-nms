@@ -37,7 +37,6 @@ public class StateCsvUploadHandler {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
     @MotechListener(subjects = {MasterDataConstants.STATE_CSV_SUCCESS})
@@ -49,9 +48,7 @@ public class StateCsvUploadHandler {
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
-
         String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-
         CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
         BulkUploadError errorDetails = new BulkUploadError();
 
@@ -89,10 +86,18 @@ public class StateCsvUploadHandler {
     }
 
     @MotechListener(subjects = {MasterDataConstants.STATE_CSV_FAILED})
-    public void stateCsvFailed(MotechEvent event) {
+    public void stateCsvFailed(MotechEvent motechEvent) {
 
-        stateCsvRecordsDataService.deleteAll();
-        logger.info("State successfully deleted from Temporary table");
+        Map<String, Object> params = motechEvent.getParameters();
+        logger.info(String.format("Start processing StateCsv-import failure for upload %s", params.toString()));
+        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
+
+        for (Long id : createdIds) {
+            logger.info(String.format("Record deleted successfully from StateCsv table for id %s", id.toString()));
+            StateCsv stateCsv = stateCsvRecordsDataService.findById(id);
+            stateCsvRecordsDataService.delete(stateCsv);
+        }
+        logger.info("Failure method finished for StateCsv");
     }
 
     private State mapStateCsv(StateCsv record) throws DataValidationException {

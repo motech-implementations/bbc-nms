@@ -23,10 +23,12 @@ public interface SubscriptionService {
     
     Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName, Status status);
     
-    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status);
+    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status, Long stateCode);
     
     Subscription create(Subscription subscription);
     
     long getActiveUserCount();
+
+    Subscription getSubscriptionByMctsIdState(String mctsId, Long id);
 
 }

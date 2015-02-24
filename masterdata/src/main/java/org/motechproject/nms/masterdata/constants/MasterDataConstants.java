@@ -21,6 +21,10 @@ public final class MasterDataConstants {
 
     public static final String HEALTH_BLOCK_CSV_FAILED = "mds.crud.masterdata.HealthBlockCsv.csv-import.failed";
 
+    public static final String VILLAGE_CSV_SUCCESS = "mds.crud.masterdata.VillageCsv.csv-import.success";
+
+    public static final String VILLAGE_CSV_FAILED = "mds.crud.masterdata.VillageCsv.csv-import.failed";
+
     public static final String HEALTH_FACILITY_CSV_SUCCESS = "mds.crud.masterdata.HealthFacilityCsv.csv-import.success";
 
     public static final String HEALTH_FACILITY_CSV_FAILED = "mds.crud.masterdata.HealthFacilityCsv.csv-import.failed";
