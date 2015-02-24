@@ -3,6 +3,9 @@ package org.motechproject.nms.kilkari.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+/**
+ * This entity represents the mothercsv mcts record.
+ */
 @Entity
 public class MotherMctsCsv extends MctsCsv {
     

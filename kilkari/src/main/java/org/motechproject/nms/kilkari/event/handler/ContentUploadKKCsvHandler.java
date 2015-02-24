@@ -50,7 +50,7 @@ public class ContentUploadKKCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.success")
     public void contentUploadKKCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing ContentUploadKKCsv-import success for upload %s", params.toString()));
+        logger.info("Start processing ContentUploadKKCsv-import success for upload {}", params.toString());
 
         ContentUploadKKCsv record = null;
         ContentUploadKK persistentRecord = null;
@@ -75,24 +75,24 @@ public class ContentUploadKKCsvHandler {
                         
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             contentUploadKKService.delete(persistentRecord);
-                            logger.info(String.format("Record deleted successfully for contentid : %s", newRecord.getContentId()));
+                            logger.info("Record deleted successfully for contentid : {}", newRecord.getContentId());
                         } else {
                             newRecord.setId(persistentRecord.getId());
                             newRecord.setModifiedBy(userName);
                             contentUploadKKService.update(newRecord);
-                            logger.info(String.format("Record updated successfully for contentid : %s", newRecord.getContentId()));
+                            logger.info("Record updated successfully for contentid : {}", newRecord.getContentId());
                         }
                     } else {
                         newRecord.setOwner(userName);
                         newRecord.setModifiedBy(userName);
                         contentUploadKKService.create(newRecord);
-                        logger.info(String.format("Record created successfully for contentid : %s", newRecord.getContentId()));
+                        logger.info("Record created successfully for contentid : {}", newRecord.getContentId());
                     }
 
                     contentUploadKKCsvService.delete(record);
                     summary.incrementSuccessCount();
                 } else {
-                    logger.error(String.format("Record not found in the ContentUploadKKCsv table with id %s", id));
+                    logger.error("Record not found in the ContentUploadKKCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
@@ -121,14 +121,14 @@ public class ContentUploadKKCsvHandler {
     @MotechListener(subjects = "mds.crud.masterdatamodule.ContentUploadKKCsv.csv-import.failure")
     public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info(String.format("Start processing ContentUploadKKCsv-import failure for upload %s", params.toString()));
+        logger.info("Start processing ContentUploadKKCsv-import failure for upload {}", params.toString());
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
             ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
             if (oldRecord != null) {
                 contentUploadKKCsvService.delete(oldRecord);
-                logger.info(String.format("Record deleted successfully from ContentUploadKKCsv table for id %s", id.toString()));
+                logger.info("Record deleted successfully from ContentUploadKKCsv table for id {}", id.toString());
             }
         }
         logger.info("Finished processing ContentUploadKKCsv-import failure");

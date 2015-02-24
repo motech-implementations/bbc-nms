@@ -17,6 +17,9 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 
+/**
+ * This entity represents the subscriber record.
+ */
 @Entity(recordHistory=true)
 public class Subscriber extends MdsEntity {
     
