@@ -17,9 +17,14 @@ public interface SubscriptionDataService extends MotechDataService<Subscription>
             @LookupField(name = "status") Status status);
     
     @Lookup
-    Subscription getPackSubscriptionByMctsIdPackStatus(
+    Subscription getSubscriptionByMctsIdPackStatus(
             @LookupField(name = "mctsId") String mctsId, 
             @LookupField(name = "packName") String packName,
-            @LookupField(name = "status") Status status);
+            @LookupField(name = "status") Status status,
+            @LookupField(name = "stateCode") Long stateCode);
+
+    @Lookup
+    Subscription getSubscriptionByMctsIdState(@LookupField(name = "mctsId") String mctsId, 
+            @LookupField(name = "stateCode") Long stateCode);
 
 }

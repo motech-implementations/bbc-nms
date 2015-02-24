@@ -77,7 +77,7 @@ public class ChildMctsCsvHandler {
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandler.class);
 
     /**
-     * This method is used to process record when ChildMctsCsv upload successfully.
+     * This method is used to process record when ChildMctsCsv upload is successful.
      * 
      * @param motechEvent This is motechEvent having uploaded record details 
      */
@@ -88,7 +88,7 @@ public class ChildMctsCsvHandler {
         List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
         String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
         
-        logger.info(String.format("Processing Csv file[%s]", csvFileName));
+        logger.info("Processing Csv file[{}]", csvFileName);
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         CsvProcessingSummary summary = new CsvProcessingSummary();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -99,14 +99,19 @@ public class ChildMctsCsvHandler {
         for (Long id : uploadedIDs) {
 
             try {
-                logger.info(String.format("Processing record id[%d]", id));
+                logger.info("Processing record id[{}]", id);
                 childMctsCsv = childMctsCsvService.findRecordById(id);
                 
                 if (childMctsCsv != null) {
-                    logger.info(String.format("Record found in database for record id[%d]", id));
+                    logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
-                    insertSubscriptionSubccriber(subscriber);
+                    if(childMctsCsv.getOperation().equalsIgnoreCase("Delete")) {
+                        deleteSubscription(subscriber);
+                    } else {
+                        insertSubscriptionSubccriber(subscriber);
+                    }
+                    
                     childMctsCsvService.delete(childMctsCsv);
                     summary.incrementSuccessCount();
                 } else {
@@ -115,7 +120,7 @@ public class ChildMctsCsvHandler {
                     errorDetails.setErrorCategory("Record_Not_Found");
                     errorDetails.setErrorDescription("Record not in database");
                     bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                    logger.error(String.format("Record not found for uploaded id %s", id));
+                    logger.error("Record not found for uploaded id [{}]", id);
                 }
             } catch (DataValidationException dve) {
                 errorDetails.setRecordDetails(childMctsCsv.toString());
@@ -137,14 +142,12 @@ public class ChildMctsCsvHandler {
      *  This method is used to validate csv uploaded record 
      *  and map Child mcts to subscriber
      * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
+     *  @param childMctsCsv csv uploaded record
      */
     private Subscriber childMctsToSubscriberMapper(ChildMctsCsv childMctsCsv) throws DataValidationException {
 
         Subscriber childSubscriber = new Subscriber();
-        logger.info(String.format("Validation and map to entity process start"));
+        logger.info("Validation and map to entity process start");
         Long stateCode = ParseDataHelper.parseLong("State Id", childMctsCsv.getStateId(),  true);
         State state = locationValidator.stateConsistencyCheck(childMctsCsv.getStateId(), stateCode);
 
@@ -153,7 +156,6 @@ public class ChildMctsCsvHandler {
 
         String talukaCode = ParseDataHelper.parseString("Taluka Id", childMctsCsv.getTalukaId(), false);
         Taluka taluka = locationValidator.talukaConsistencyCheck(childMctsCsv.getTalukaId(), district, talukaCode);
-
 
         Long healthBlockCode = ParseDataHelper.parseLong("Block ID", childMctsCsv.getHealthBlockId(), false);
         HealthBlock healthBlock = locationValidator.healthBlockConsistencyCheck(childMctsCsv.getHealthBlockId(), childMctsCsv.getTalukaId(), taluka, healthBlockCode);
@@ -193,7 +195,7 @@ public class ChildMctsCsvHandler {
         childSubscriber.setCreator(childMctsCsv.getCreator());
         childSubscriber.setOwner(childMctsCsv.getOwner());
 
-        logger.info(String.format("Validation and map to entity process finished"));
+        logger.info("Validation and map to entity process finished");
         return childSubscriber;
     }
 
@@ -201,7 +203,7 @@ public class ChildMctsCsvHandler {
     /**
      * This method is used to process record when ChildMctscsv upload fails.
      * 
-     * @param motechEvent This is motechEvent having uploaded record details 
+     * @param uploadEvent This is motechEvent having uploaded record details
      */
     @MotechListener(subjects = "mds.crud.kilkarimodule.ChildMctsCsv.csv-import.failure")
     public void childMctsCsvFailure(MotechEvent uploadEvent) {
@@ -211,7 +213,7 @@ public class ChildMctsCsvHandler {
         List<Long> updatedIds = (List<Long>) params.get("csv-import.updated_ids");
 
         for (Long id : createdIds) {
-            logger.info(String.format("Processing uploaded id[%d]", id));
+            logger.info("Processing uploaded id[{}]", id);
             ChildMctsCsv childMctsCsv = childMctsCsvService.findById(id);
             childMctsCsvService.delete(childMctsCsv);
         }
@@ -225,50 +227,51 @@ public class ChildMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
-      //Find subscription from database based on msisdn, packName, status
+        /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_48, Status.Active);
-        if (dbSubscription == null) {
-            logger.info(String.format("Not found subscription from database based on msisdn[%s], packName[%s], status[%s]", subscriber.getMsisdn(), PACK_48, Status.Active));
-            //Find subscription from database based on mctsid(ChildMcts), packName, status
-            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, Status.Active);
+        if (dbSubscription == null) { 
+            
+            logger.info("Not found subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.Active);
+            /* Find subscription from database based on mctsid(ChildMcts), packName, status */
+            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, Status.Active, subscriber.getState().getId());
             if (dbSubscription == null) {
-                logger.info(String.format("Not found subscription from database based on Childmctsid[%s], packName[%s], status[%s]", subscriber.getChildMctsId(), PACK_48, Status.Active));
-                //Find subscription from database based on mctsid(MotherMcts), packName, status
-                dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, Status.Active);
+                logger.info("Not found subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.Active);
+                /* Find subscription from database based on mctsid(MotherMcts), packName, status */
+                dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, Status.Active, subscriber.getState().getId());
                 if (dbSubscription == null) {
-                    logger.info(String.format("Not Found subscription from database based on Mothermctsid[%s], packName[%s], status[%s]", subscriber.getMotherMctsId(), PACK_48, Status.Active));
+                    logger.info("Not Found subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.Active);
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
-                    //check for maximum allowed beneficiary
+                    /* check for maximum allowed beneficiary */
                     if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
-                        Subscriber dbSubscriber = subscriberService.create(subscriber); //CREATE
+                        Subscriber dbSubscriber = subscriberService.create(subscriber); 
                         createSubscription(subscriber, null, dbSubscriber);
                     } else {
-                        logger.info(String.format("Reached maximum beneficery count can't add any more"));
-                        return; //Reached maximum beneficery count
+                        logger.info("Reached maximum beneficery count can't add any more");
+                        return; /* Reached maximum beneficery count */
                     }
                     
-                } else {  //Record found based on mctsid(MotherMcts) than 
-                    logger.info(String.format("Found subscription from database based on Mothermctsid[%s], packName[%s], status[%s]", subscriber.getMotherMctsId(), PACK_48, Status.Active));
+                } else {  /* Record found based on mctsid(MotherMcts) than */ 
+                    logger.info("Found subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.Active);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    updateSubscription(subscriber, dbSubscription, true);  //Deactivate mother subscription
+                    updateSubscription(subscriber, dbSubscription, true);  /* Deactivate mother subscription */
                     if (!subscriber.getChildDeath()) {
-                        createSubscription(subscriber, dbSubscription, dbSubscriber); //add new subscription for child
+                        createSubscription(subscriber, dbSubscription, dbSubscriber); /* add new subscription for child */
                     }
-                    updateDbSubscriber(subscriber, dbSubscriber); //update subscriber info
+                    updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
                 
                 }
-            } else { //Record found based on mctsid(ChildMcts) than 
-                logger.info(String.format("Found subscription from database based on Childmctsid[%s], packName[%s], status[%s]", subscriber.getChildMctsId(), PACK_48, Status.Active));
+            } else { /* Record found based on mctsid(ChildMcts) than */
+                logger.info("Found subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.Active);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); //update subscriber and subscription info
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             }
-        } else { //Record found based on msisdn than 
-            logger.info(String.format("Found subscription from database based on msisdn[%s], packName[%s], status[%s]", subscriber.getMsisdn(), PACK_48, Status.Active));
+        } else { /* Record found based on msisdn than */
+            logger.info("Found subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.Active);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getChildMctsId()) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); //update subscriber and subscription info
-            } else { //can't subscribe subscription for two phone num.
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
+            } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException("RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "");
             }
         }
@@ -332,16 +335,31 @@ public class ChildMctsCsvHandler {
      *  This method is used to update Subscriber info in database
      * 
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
+     *  @param dbSubscriber database Subscriber
      */
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
 
         MctsCsvHelper.polpulateDbSubscriber(subscriber, dbSubscriber);
         dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
+        dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setDob(subscriber.getDob());
 
         subscriberService.update(dbSubscriber);
     }
     
-    
+    /**
+     *  This method is used to deactivate subscription based on csv operation
+     * 
+     *  @param subscriber csv uploaded subscriber
+     *  @param dbSubscription database Subscription
+     */
+    private void deleteSubscription(Subscriber subscriber) throws DataValidationException{
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getId());
+        if(dbSubscription != null) { 
+            updateSubscription(subscriber, dbSubscription, true);
+            updateDbSubscriber(subscriber, dbSubscription.getSubscriber());
+        }else {
+            throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");
+        }
+    }
 }
