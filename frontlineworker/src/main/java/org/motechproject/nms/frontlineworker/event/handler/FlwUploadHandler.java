@@ -5,7 +5,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.constants.FrontLineWorkerConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
-import org.motechproject.nms.frontlineworker.domain.Status;
 import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
 import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
 import org.motechproject.nms.masterdata.domain.District;
@@ -77,9 +76,8 @@ public class FlwUploadHandler {
      * @param motechEvent name of the event raised during upload
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
-    public void flwDataHandler(MotechEvent motechEvent) {
-        logger.error("entered frontLineWorkerSuccess");
-
+    public void flwDataHandlerSuccess(MotechEvent motechEvent) {
+        logger.info("Success[flwDataHandlerSuccess] method start for FrontLineWorkerCsv");
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
@@ -92,13 +90,15 @@ public class FlwUploadHandler {
 
         for (Long id : createdIds) {
             try {
+                logger.info("Processing uploaded id: {}", id);
                 record = flwCsvRecordsDataService.findById(id);
                 if (record != null) {
+                    logger.info("Record found in Csv database for record id: {}", id);
                     frontLineWorker = null;
                     temporaryFrontLineWorker = null;
                     temporaryFrontLineWorker = validateFrontLineWorker(record);
                     frontLineWorker = mapFrontLineWorkerFrom(record, temporaryFrontLineWorker);
-                    if (frontLineWorker != null) {
+
                         FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(),
                                 frontLineWorker.getStateCode());
                         if (dbRecord == null) {
@@ -107,41 +107,42 @@ public class FlwUploadHandler {
                                 flwRecordDataService.create(frontLineWorker);
                                 flwCsvRecordsDataService.delete(record);
                                 summary.incrementSuccessCount();
+                                logger.info("Successful creation of new front line worker");
                             } else {
                                 boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
                                 if (dbRecord.getStatus() == Status.INVALID && valid) {
                                     summary.incrementFailureCount();
                                     setErrorDetails(record.toString(), "status changed from invalid to valid", "status changed from invalid to valid");
                                     bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                    logger.warn("Status change try from invalid to valid for id : {}", id);
                                 } else {
                                     flwRecordDataService.update(frontLineWorker);
                                     flwCsvRecordsDataService.delete(record);
                                     summary.incrementSuccessCount();
+                                    logger.info("Record updated successfully for Flw. Searched By: Contact number");
                                 }
 
                             }
                         } else {
-
                             flwRecordDataService.update(frontLineWorker);
                             flwCsvRecordsDataService.delete(record);
                             summary.incrementSuccessCount();
+                            logger.info("Record updated successfully for Flw. Searched By: Flw ID and State ID");
                         }
 
-                    } else {
-                        summary.incrementFailureCount();
-                        setErrorDetails(record.toString(), "Record_Not_Found", "Record not found in Csv database");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                    }
+
                 }
             } catch (DataValidationException dve) {
                 setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                logger.warn("Record not found for uploaded ID: {}", id);
             } catch (Exception e) {
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
         }
+        logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
     }
 
     /**
@@ -150,7 +151,8 @@ public class FlwUploadHandler {
      * @param motechEvent name of the event raised during upload
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_FAILED})
-    public void frontLineWorkerFailure(MotechEvent motechEvent) {
+    public void flwDataHandlerFailure(MotechEvent motechEvent) {
+        logger.info("Failure[flwDataHandlerFailure] method start for FrontLineWorkerCsv");
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
@@ -159,6 +161,7 @@ public class FlwUploadHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         for (Long id : createdIds) {
             try {
+                logger.info("Processing uploaded ID : {}", id);
                 FrontLineWorkerCsv record = flwCsvRecordsDataService.findById(id);
                 flwCsvRecordsDataService.delete(record);
                 summary.incrementFailureCount();
@@ -185,6 +188,7 @@ public class FlwUploadHandler {
 
         String contactNo;
         String finalContactNo;
+        String designation;
         int contactNoLength;
         State state;
         District district;
@@ -217,7 +221,12 @@ public class FlwUploadHandler {
         finalContactNo = (contactNoLength > FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
         temporaryFrontLineWorker.setContactNo(finalContactNo);
 
+        designation = ParseDataHelper.parseString("Type", record.getType(), true);
 
+        if (Designation.of(designation) != Designation.ANM || Designation.of(designation) != Designation.AWW ||
+                Designation.of(designation) != Designation.ASHA ||Designation.of(designation) != Designation.USHA) {
+            ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
+        }
         return temporaryFrontLineWorker;
 
     }

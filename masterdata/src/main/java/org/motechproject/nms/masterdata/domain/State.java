@@ -4,7 +4,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
 import java.util.Set;
-
+/**
+ * This class Models data for State location records
+ */
 @Entity(recordHistory = true)
 public class State extends LocationUnitMetaData {
 

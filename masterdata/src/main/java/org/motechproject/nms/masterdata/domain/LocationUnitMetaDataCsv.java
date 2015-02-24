@@ -5,8 +5,9 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * Created by abhishek on 18/1/15.
+ * This class acts as parent class to model data records provided in the masterdata Csv Uploads
  */
+
 @Entity
 public class LocationUnitMetaDataCsv extends MdsEntity {
 

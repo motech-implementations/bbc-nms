@@ -6,7 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import java.util.Set;
 
 /**
- * Created by abhishek on 24/1/15.
+ * This class Models data for District location records
  */
 @Entity(recordHistory = true)
 public class District extends LocationUnitMetaData {

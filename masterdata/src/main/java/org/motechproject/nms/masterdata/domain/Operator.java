@@ -3,7 +3,9 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
-
+/**
+ * This class Models data for Operator records
+ */
 @Entity(recordHistory = true)
 public class Operator extends MdsEntity {
 
