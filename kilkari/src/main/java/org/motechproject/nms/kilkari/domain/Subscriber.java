@@ -1,9 +1,10 @@
 package org.motechproject.nms.kilkari.domain;
 
 import java.util.List;
+import java.util.Set;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Persistent;
+import javax.validation.constraints.Size;
 
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
@@ -27,9 +28,6 @@ public class Subscriber extends MdsEntity {
     private String msisdn;
     
     @Field
-    private String oldMsisdn;
-    
-    @Field
     private String childMctsId;
     
     @Field
@@ -48,25 +46,25 @@ public class Subscriber extends MdsEntity {
     private State state;
     
     @Field(name = "district_id")
-    private District districtId;
+    private District district;
     
     @Field(name = "taluka_id")
-    private Taluka talukaId;
+    private Taluka taluka;
     
     @Field(name = "healthBlock_id")
-    private HealthBlock healthBlockId;
+    private HealthBlock healthBlock;
     
     @Field(name = "phc_id")
-    private HealthFacility phcId;
+    private HealthFacility phc;
     
     @Field(name = "subCentre_id")
-    private HealthSubFacility subCentreId;
+    private HealthSubFacility subCentre;
     
     @Field(name = "village_id")
-    private Village villageId;
+    private Village village;
     
     @Field
-    @Column(length = 2)
+    @Size(max=2)
     private Integer languageLocationCode;
     
     @Field
@@ -91,7 +89,7 @@ public class Subscriber extends MdsEntity {
     private Boolean childDeath;
     
     @Persistent(mappedBy = "subscriber")
-    private List<Subscription> subscriptionList;
+    private Set<Subscription> subscriptionList;
 
     public String getMsisdn() {
         return msisdn;
@@ -100,15 +98,7 @@ public class Subscriber extends MdsEntity {
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
-
-    public String getOldMsisdn() {
-        return oldMsisdn;
-    }
-
-    public void setOldMsisdn(String oldMsisdn) {
-        this.oldMsisdn = oldMsisdn;
-    }
-
+    
     public String getChildMctsId() {
         return childMctsId;
     }
@@ -157,52 +147,52 @@ public class Subscriber extends MdsEntity {
         this.state = state;
     }
 
-    public District getDistrictId() {
-        return districtId;
+    public District getDistrict() {
+        return district;
     }
 
-    public void setDistrictId(District districtId) {
-        this.districtId = districtId;
+    public void setDistrict(District district) {
+        this.district = district;
     }
 
-    public Taluka getTalukaId() {
-        return talukaId;
+    public Taluka getTaluka() {
+        return taluka;
     }
 
-    public void setTalukaId(Taluka talukaId) {
-        this.talukaId = talukaId;
+    public void setTaluka(Taluka taluka) {
+        this.taluka = taluka;
     }
 
-    public HealthBlock getHealthBlockId() {
-        return healthBlockId;
+    public HealthBlock getHealthBlock() {
+        return healthBlock;
     }
 
-    public void setHealthBlockId(HealthBlock healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(HealthBlock healthBlock) {
+        this.healthBlock = healthBlock;
     }
 
-    public HealthFacility getPhcId() {
-        return phcId;
+    public HealthFacility getPhc() {
+        return phc;
     }
 
-    public void setPhcId(HealthFacility phcId) {
-        this.phcId = phcId;
+    public void setPhc(HealthFacility phc) {
+        this.phc = phc;
     }
 
-    public HealthSubFacility getSubCentreId() {
-        return subCentreId;
+    public HealthSubFacility getSubCentre() {
+        return subCentre;
     }
 
-    public void setSubCentreId(HealthSubFacility subCentreId) {
-        this.subCentreId = subCentreId;
+    public void setSubCentre(HealthSubFacility subCentre) {
+        this.subCentre = subCentre;
     }
 
-    public Village getVillageId() {
-        return villageId;
+    public Village getVillage() {
+        return village;
     }
 
-    public void setVillageId(Village villageId) {
-        this.villageId = villageId;
+    public void setVillage(Village village) {
+        this.village = village;
     }
 
     public Integer getLanguageLocationCode() {
@@ -269,11 +259,11 @@ public class Subscriber extends MdsEntity {
         this.childDeath = childDeath;
     }
 
-    public List<Subscription> getSubscriptionList() {
+    public Set<Subscription> getSubscriptionList() {
         return subscriptionList;
     }
 
-    public void setSubscriptionList(List<Subscription> subscriptionList) {
+    public void setSubscriptionList(Set<Subscription> subscriptionList) {
         this.subscriptionList = subscriptionList;
     }
 

@@ -20,56 +20,85 @@ public class LocationValidator {
     @Autowired
     private LocationService locationService;
     
-    public State stateConsistencyCheck(String stateId,
-            Long stateCode) throws DataValidationException {
+    /**
+     *  This method is used to fetch state from DB based stateCode
+     * 
+     *  @param stateCode csv uploaded stateCode
+     */
+    public State stateConsistencyCheck(Long stateCode) throws DataValidationException {
         State state = locationService.getStateByCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State Id", stateId);
+            ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
         }
         return state;
     }
 
-    public District districtConsistencyCheck(String districtId, State state, Long districtCode) throws DataValidationException {
+    /**
+     *  This method is used to fetch district from DB based on stateId and districtCode
+     * 
+     *  @param state State Object
+     *  @param districtCode csv uploaded districtCode
+     */
+    public District districtConsistencyCheck(State state, Long districtCode) throws DataValidationException {
         District district = locationService.getDistrictByCode(state.getId(), districtCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District Id", districtId);
+            ParseDataHelper.raiseInvalidDataException("District Code", districtCode.toString());
         }
         return district;
     }
-
-    public Village villageConsistencyCheck(String villageId, String talukaId, Taluka taluka, Long villageCode) throws DataValidationException {
-        Village village = null;
-        if (villageCode != null) {
+    
+    /**
+     *  This method is used to fetch Taluka from DB 
+     *  based on districtId and talukaCode
+     * 
+     *  @param district District object
+     *  @param talukaCode csv uploaded districtCode
+     */
+    public Taluka talukaConsistencyCheck(District district, String talukaCode) throws DataValidationException {
+        Taluka taluka = null;
+        if (talukaCode != null) {
+            taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
+            if (taluka == null) {
+                ParseDataHelper.raiseInvalidDataException("Taluka Code", talukaCode);
+            }
+        }
+        return taluka;
+    }
+    
+    /**
+     *  This method is used to fetch Health Block from DB 
+     *  based on talukaId and healthBlockCode
+     * 
+     *  @param talukaCode csv uploaded talukaCode
+     *  @param taluka Taluka object
+     *  @param talukaCode csv uploaded healthBlockCode
+     */
+    public HealthBlock healthBlockConsistencyCheck(String talukaCode, 
+            Taluka taluka, Long healthBlockCode) throws DataValidationException {
+        HealthBlock healthBlock = null;
+        if (healthBlockCode != null) {
             if (taluka != null) {
-                village = locationService.getVillageByCode(taluka.getId(), villageCode);
-                if (village == null) {
-                    ParseDataHelper.raiseInvalidDataException("Village id", villageId);
+                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
+                if (healthBlock == null) {
+                    ParseDataHelper.raiseInvalidDataException("Block Code", healthBlockCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Taluka Id", talukaId);
+                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode);
             }
         }
-        return village;
+        return healthBlock;
     }
 
-    public HealthSubFacility subCenterCodeCheck(String subCenterId, String phcId,
-            HealthFacility healthFacility, Long subCenterCode)
-            throws DataValidationException {
-        HealthSubFacility healthSubFacility = null;
-        if (subCenterCode != null) {
-            if (healthFacility != null) {
-                healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
-                if (healthSubFacility == null) {
-                    ParseDataHelper.raiseInvalidDataException("Sub centered ID", subCenterId);
-                }
-            } else {
-                ParseDataHelper.raiseMissingDataException("Phc Id", phcId);
-            }
-        }
-        return healthSubFacility;
-    }
 
-    public HealthFacility phcConsistencyCheck(String phcId, String healthBlockId, 
+    /**
+     *  This method is used to fetch HealthFacility(phc) from DB 
+     *  based on healthBloackId and phcCode
+     * 
+     *  @param healthBlockCode csv uploaded healthBlockCode
+     *  @param healthBlock HealthBlock Object
+     *  @param phcCode csv uploaded phcCode
+     */
+    public HealthFacility phcConsistencyCheck(Long healthBlockCode, 
             HealthBlock healthBlock, Long phcCode)
             throws DataValidationException {
         HealthFacility healthFacility = null;
@@ -77,41 +106,59 @@ public class LocationValidator {
             if (healthBlock != null) {
                 healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
                 if (healthFacility == null) {
-                    ParseDataHelper.raiseInvalidDataException("Phc Id", phcId);
+                    ParseDataHelper.raiseInvalidDataException("Phc Code", phcCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Block ID", healthBlockId); //Missing Block ID
+                ParseDataHelper.raiseMissingDataException("Block Code", healthBlockCode.toString()); //Missing Block ID
             }
         }
         return healthFacility;
     }
-
-    public HealthBlock healthBlockConsistencyCheck(String healthBlockId, String talukaId, 
-            Taluka taluka, Long healthBlockCode) throws DataValidationException {
-        HealthBlock healthBlock = null;
-        if (healthBlockCode != null) {
-            if (taluka != null) {
-                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
-                if (healthBlock == null) {
-                    ParseDataHelper.raiseInvalidDataException("Block ID", healthBlockId);
+    
+    /**
+     *  This method is used to fetch HealthSubFacility(subCenter) from DB 
+     *  based on healthFacilityId(phc) and HealthSubFacilityCode(subCenterCode)
+     * 
+     *  @param phcCode csv uploaded phcCode
+     *  @param healthFacility HealthFacility Object
+     *  @param subCenterCode csv uploaded subCenterCode
+     */
+    public HealthSubFacility subCenterCodeCheck(Long phcCode,
+            HealthFacility healthFacility, Long subCenterCode)
+            throws DataValidationException {
+        HealthSubFacility healthSubFacility = null;
+        if (subCenterCode != null) {
+            if (healthFacility != null) {
+                healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
+                if (healthSubFacility == null) {
+                    ParseDataHelper.raiseInvalidDataException("Sub centered Code", subCenterCode.toString());
                 }
             } else {
-                //Missing taluka id"
-                ParseDataHelper.raiseMissingDataException("Taluka Id", talukaId);
+                ParseDataHelper.raiseMissingDataException("Phc Code", phcCode.toString());
             }
         }
-        return healthBlock;
+        return healthSubFacility;
     }
 
-    public Taluka talukaConsistencyCheck(String talukaId, District district, String talukaCode) throws DataValidationException {
-        Taluka taluka = null;
-        if (talukaCode != null) {
-            taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
-            if (taluka == null) {
-                ParseDataHelper.raiseInvalidDataException("Taluka Id", talukaId);
+    /**
+     *  This method is used to fetch village from DB based on talukaId and villageCode
+     * 
+     *  @param talukaCode csv uploaded talukaCode
+     *  @param taluka Taluka Object
+     *  @param villageCode csv uploaded districtCode
+     */
+    public Village villageConsistencyCheck(String talukaCode, Taluka taluka, Long villageCode) throws DataValidationException {
+        Village village = null;
+        if (villageCode != null) {
+            if (taluka != null) {
+                village = locationService.getVillageByCode(taluka.getId(), villageCode);
+                if (village == null) {
+                    ParseDataHelper.raiseInvalidDataException("Village Code", villageCode.toString());
+                }
+            } else {
+                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode.toString());
             }
         }
-        return taluka;
+        return village;
     }
-
 }

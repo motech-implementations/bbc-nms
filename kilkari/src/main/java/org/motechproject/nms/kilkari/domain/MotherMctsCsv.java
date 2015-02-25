@@ -25,9 +25,6 @@ public class MotherMctsCsv extends MctsCsv {
     private String age;
     
     @Field
-    private String entryType;
-    
-    @Field
     private String aadharNo;
 
     public String getName() {
@@ -70,14 +67,6 @@ public class MotherMctsCsv extends MctsCsv {
         this.age = age;
     }
 
-    public String getEntryType() {
-        return entryType;
-    }
-
-    public void setEntryType(String entryType) {
-        this.entryType = entryType;
-    }
-
     public String getAadharNo() {
         return aadharNo;
     }
@@ -88,6 +77,6 @@ public class MotherMctsCsv extends MctsCsv {
 
     @Override
     public String toString() {
-        return "Mcts Id["+this.getId()+"] stateCode["+this.getStateId()+"]";
+        return "Mcts Id["+this.getId()+"] stateCode["+this.getStateCode()+"]";
     }
 }

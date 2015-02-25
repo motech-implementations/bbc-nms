@@ -13,7 +13,7 @@
 	<artifactId>kilkari</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>Kilkari module</name>
+	<name>kilkari</name>
 
 	<properties>
 		<modules.root.dir>${basedir}/..</modules.root.dir>

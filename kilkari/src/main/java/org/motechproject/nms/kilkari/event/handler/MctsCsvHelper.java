@@ -5,23 +5,20 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
-public class MctsCsvHelper {
+public final class MctsCsvHelper {
     
     static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
         
-        if (!dbSubscriber.getMsisdn().equals(subscriber.getMsisdn())) {
-            dbSubscriber.setOldMsisdn(dbSubscriber.getMsisdn());
-        }  
-        
+        dbSubscriber.setMsisdn(subscriber.getMsisdn());
         dbSubscriber.setName(subscriber.getName());
         dbSubscriber.setAge(subscriber.getAge());
         dbSubscriber.setState(subscriber.getState());
-        dbSubscriber.setDistrictId(subscriber.getDistrictId());
-        dbSubscriber.setTalukaId(subscriber.getTalukaId());
-        dbSubscriber.setHealthBlockId(subscriber.getHealthBlockId());
-        dbSubscriber.setPhcId(subscriber.getPhcId());
-        dbSubscriber.setSubCentreId(subscriber.getSubCentreId());
-        dbSubscriber.setVillageId(subscriber.getVillageId());
+        dbSubscriber.setDistrict(subscriber.getDistrict());
+        dbSubscriber.setTaluka(subscriber.getTaluka());
+        dbSubscriber.setHealthBlockCode(subscriber.getHealthBlock());
+        dbSubscriber.setPhc(subscriber.getPhc());
+        dbSubscriber.setSubCentre(subscriber.getSubCentre());
+        dbSubscriber.setVillage(subscriber.getVillage());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
     

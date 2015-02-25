@@ -21,9 +21,9 @@ public interface SubscriptionService {
     
     Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem);
     
-    Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName, Status status);
+    Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName);
     
-    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Status status, Long stateCode);
+    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode);
     
     Subscription create(Subscription subscription);
     

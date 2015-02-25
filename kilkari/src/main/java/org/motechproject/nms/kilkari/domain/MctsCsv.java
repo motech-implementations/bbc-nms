@@ -14,31 +14,34 @@ public class MctsCsv extends MdsEntity {
     private String operation;
 
     @Field
-    private String stateId;
+    private String stateCode;
 
     @Field
-    private String districtId;
+    private String districtCode;
 
     @Field
-    private String talukaId;
+    private String talukaCode;
 
     @Field
-    private String healthBlockId;
+    private String healthBlockCode;
 
     @Field
-    private String phcId;
+    private String phcCode;
 
     @Field
-    private String subCentreId;
+    private String subCentreCode;
 
     @Field
-    private String villageId;
+    private String villageCode;
     
     @Field
     private String idNo;
     
     @Field
     private String whomPhoneNo;
+    
+    @Field
+    private String entryType;
 
     public String getOperation() {
         return operation;
@@ -48,60 +51,60 @@ public class MctsCsv extends MdsEntity {
         this.operation = operation;
     }
 
-    public String getStateId() {
-        return stateId;
+    public String getStateCode() {
+        return stateCode;
     }
 
-    public void setStateId(String stateId) {
-        this.stateId = stateId;
+    public void setStateCode(String stateCode) {
+        this.stateCode = stateCode;
     }
 
-    public String getDistrictId() {
-        return districtId;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setDistrictId(String districtId) {
-        this.districtId = districtId;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode;
     }
 
-    public String getTalukaId() {
-        return talukaId;
+    public String getTalukaCode() {
+        return talukaCode;
     }
 
-    public void setTalukaId(String talukaId) {
-        this.talukaId = talukaId;
+    public void setTalukaCode(String talukaCode) {
+        this.talukaCode = talukaCode;
     }
 
-    public String getHealthBlockId() {
-        return healthBlockId;
+    public String getHealthBlockCode() {
+        return healthBlockCode;
     }
 
-    public void setHealthBlockId(String healthBlockId) {
-        this.healthBlockId = healthBlockId;
+    public void setHealthBlockCode(String healthBlockCode) {
+        this.healthBlockCode = healthBlockCode;
     }
 
-    public String getPhcId() {
-        return phcId;
+    public String getPhcCode() {
+        return phcCode;
     }
 
-    public void setPhcId(String phcId) {
-        this.phcId = phcId;
+    public void setPhcCode(String phcCode) {
+        this.phcCode = phcCode;
     }
 
-    public String getSubCentreId() {
-        return subCentreId;
+    public String getSubCentreCode() {
+        return subCentreCode;
     }
 
-    public void setSubCentreId(String subCentreId) {
-        this.subCentreId = subCentreId;
+    public void setSubCentreCode(String subCentreCode) {
+        this.subCentreCode = subCentreCode;
     }
 
-    public String getVillageId() {
-        return villageId;
+    public String getVillageCode() {
+        return villageCode;
     }
 
-    public void setVillageId(String villageId) {
-        this.villageId = villageId;
+    public void setVillageId(String villageCode) {
+        this.villageCode = villageCode;
     }
 
     public String getIdNo() {
@@ -118,6 +121,14 @@ public class MctsCsv extends MdsEntity {
 
     public void setWhomPhoneNo(String whomPhoneNo) {
         this.whomPhoneNo = whomPhoneNo;
+    }
+
+    public String getEntryType() {
+        return entryType;
+    }
+
+    public void setEntryType(String entryType) {
+        this.entryType = entryType;
     }
     
 }

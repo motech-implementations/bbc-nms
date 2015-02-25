@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.domain;
 
-import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.Unique;
 
 import org.motechproject.mds.annotations.Entity;
@@ -15,7 +14,6 @@ public class SubscriptionPack extends MdsEntity  {
     private String name;
     
     @Unique
-    @Persistent(mappedBy = "subscriptionPack")    
     private Integer startWeekNumber;
     
     @Field(required = true)
