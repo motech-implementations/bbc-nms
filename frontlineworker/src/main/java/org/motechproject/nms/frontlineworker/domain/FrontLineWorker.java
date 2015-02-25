@@ -220,4 +220,7 @@ public class FrontLineWorker extends MdsEntity {
     public void setLanguageLocationCodeId(Long languageLocationCodeId) {
         this.languageLocationCodeId = languageLocationCodeId;
     }
+
+    public FrontLineWorker() {
+    }
 }
