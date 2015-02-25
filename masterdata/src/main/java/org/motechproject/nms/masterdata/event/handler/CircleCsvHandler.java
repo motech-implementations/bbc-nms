@@ -79,14 +79,11 @@ public class CircleCsvHandler {
                             logger.info("Record deleted successfully for circlecode {}", newRecord.getCode());
                         } else {
                             newRecord.setId(persistentRecord.getId());
-                            newRecord.setModifiedBy(userName);
                             circleService.update(newRecord);
                             logger.info("Record updated successfully for circlecode {}", newRecord.getCode());
                         }
 
                     } else {
-                        newRecord.setOwner(userName);
-                        newRecord.setModifiedBy(userName);
                         circleService.create(newRecord);
                         logger.info("Record created successfully for circlecode {}", newRecord.getCode());
                     }
@@ -107,6 +104,10 @@ public class CircleCsvHandler {
                 result.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                errorDetail.setErrorCategory("");
+                errorDetail.setRecordDetails("");
+                errorDetail.setErrorDescription("");
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
             }
             finally {
