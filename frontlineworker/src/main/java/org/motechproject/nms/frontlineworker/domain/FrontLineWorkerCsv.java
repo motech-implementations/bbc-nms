@@ -1,17 +1,14 @@
 package org.motechproject.nms.frontlineworker.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.mds.event.CrudEventType;
 
 /**
  * This class Models data records provided in the Front Line Worker Csv Upload
  */
 
 @Entity(recordHistory = true)
-@CrudEvents(CrudEventType.CREATE)
 public class FrontLineWorkerCsv extends MdsEntity {
 
     @Field

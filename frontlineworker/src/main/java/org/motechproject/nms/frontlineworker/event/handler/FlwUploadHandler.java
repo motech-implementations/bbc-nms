@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by abhishek on 2/2/15.
+ *
  * This class provides Motech Listeners for Front Line Worker upload for both success and failure scenarios.
  * This class also provides methods used to validate csv data and save the data in Motech database in case of success
  * and raise exceptions in case of failure
@@ -44,12 +44,8 @@ import java.util.Map;
 
 @Component
 public class FlwUploadHandler {
-    private static final String CSV_IMPORT_PREFIX = "csv-import.";
-    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    private Integer successCount = 0;
-    private Integer failCount = 0;
+
 
     @Autowired
     private FlwRecordDataService flwRecordDataService;
@@ -61,16 +57,18 @@ public class FlwUploadHandler {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Autowired
-    private FrontLineWorker frontLineWorker;
-
-    @Autowired
     private LocationService locationService;
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
 
-    @Autowired
-    private BulkUploadError errorDetails;
+
+
+    private static final String CSV_IMPORT_PREFIX = "csv-import.";
+    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
+    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
+    private Integer successCount = 0;
+    private Integer failCount = 0;
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
 
@@ -82,6 +80,8 @@ public class FlwUploadHandler {
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandlerSuccess(MotechEvent motechEvent) {
+
+
         logger.info("Success[flwDataHandlerSuccess] method start for FrontLineWorkerCsv");
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
@@ -93,6 +93,7 @@ public class FlwUploadHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         FrontLineWorkerContent frontLineWorkerContent;
         FrontLineWorkerCsv record = null;
+        BulkUploadError errorDetails = null;
 
         //this loop processes each of the entries in the Front Line Worker Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -103,8 +104,9 @@ public class FlwUploadHandler {
                 record = flwCsvRecordsDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
-                    frontLineWorker = null;
+                    FrontLineWorker frontLineWorker = null;
                     frontLineWorkerContent = null;
+
                     frontLineWorkerContent = validateFrontLineWorker(record);
                     frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
 
@@ -113,7 +115,7 @@ public class FlwUploadHandler {
                     if (dbRecord == null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             summary.incrementFailureCount();
-                            setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
@@ -127,10 +129,12 @@ public class FlwUploadHandler {
                         boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
                         if (dbRecord.getStatus() == Status.INVALID && valid) {
                             summary.incrementFailureCount();
-                            setErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             logger.warn("Status change try from invalid to valid for id : {}", id);
                         } else {
+
+                            frontLineWorker.setId(dbRecord.getId());
                             flwRecordDataService.update(frontLineWorker);
                             flwCsvRecordsDataService.delete(record);
                             summary.incrementSuccessCount();
@@ -139,7 +143,7 @@ public class FlwUploadHandler {
                     }
                 }
             } catch (DataValidationException dve) {
-                setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
+                errorDetails = populateErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 logger.warn("Record not found for uploaded ID: {}", id);
@@ -159,6 +163,8 @@ public class FlwUploadHandler {
      */
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_FAILED})
     public void flwDataHandlerFailure(MotechEvent motechEvent) {
+
+        BulkUploadError errorDetails = null;
         logger.info("Failure[flwDataHandlerFailure] method start for FrontLineWorkerCsv");
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
@@ -175,7 +181,7 @@ public class FlwUploadHandler {
                 FrontLineWorkerCsv record = flwCsvRecordsDataService.findById(id);
                 flwCsvRecordsDataService.delete(record);
                 summary.incrementFailureCount();
-                setErrorDetails(record.toString(), "Upload failure", "Front Line Worker Upload Failure");
+                errorDetails = populateErrorDetails(record.toString(), "Upload failure", "Front Line Worker Upload Failure");
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             } catch (Exception ex) {
                 summary.incrementFailureCount();
@@ -254,6 +260,10 @@ public class FlwUploadHandler {
      */
     private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent) throws DataValidationException {
 
+
+
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
         logger.info("mapFrontLineWorkerFrom process start");
         frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
 
@@ -281,6 +291,7 @@ public class FlwUploadHandler {
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
         frontLineWorker.setOwner(record.getOwner());
+
 
         logger.info("mapFrontLineWorkerFrom process end");
         return frontLineWorker;
@@ -445,10 +456,13 @@ public class FlwUploadHandler {
      * @param errorCategory    specifies error category
      * @param errorDescription specifies error descriotion
      */
-    private void setErrorDetails(String id, String errorCategory, String errorDescription) {
+    private BulkUploadError populateErrorDetails(String id, String errorCategory, String errorDescription) {
+
+        BulkUploadError errorDetails = new BulkUploadError();
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
         errorDetails.setErrorDescription(errorDescription);
+        return errorDetails;
     }
 
     /**
@@ -462,10 +476,12 @@ public class FlwUploadHandler {
      */
     private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {
         logger.debug("FLW state Code : {}", stateCode);
+
+
         FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
         if (dbRecord == null) {
             logger.debug("FLW Contact Number : {}", contactNo);
-            dbRecord = flwRecordDataService.getFlwByContactNo(frontLineWorker.getContactNo());
+            dbRecord = flwRecordDataService.getFlwByContactNo(contactNo);
         }
 
         return dbRecord;
