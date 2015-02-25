@@ -1,12 +1,12 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
+import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 import org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("contentUploadKKCsvService")
+@Service("contentUploadCsvService")
 public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
 
     @Autowired
@@ -18,7 +18,7 @@ public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
      * @param id primary key of the record
      */
     @Override
-    public ContentUploadKKCsv getRecord(Long id) {
+    public ContentUploadCsv getRecord(Long id) {
         return contentUploadCsvDataService.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
      * @param record object of type ContentUploadKKCsv
      */
     @Override
-    public void delete(ContentUploadKKCsv record) {
+    public void delete(ContentUploadCsv record) {
         contentUploadCsvDataService.delete(record);
     }
 

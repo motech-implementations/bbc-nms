@@ -7,8 +7,8 @@ import java.util.Map;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.ContentType;
-import org.motechproject.nms.kilkari.domain.ContentUploadKK;
-import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
+import org.motechproject.nms.kilkari.domain.ContentUpload;
+import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.domain.OperationType;
@@ -52,8 +52,8 @@ public class ContentUploadCsvHandler {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing ContentUploadKKCsv-import success for upload {}", params.toString());
 
-        ContentUploadKKCsv record = null;
-        ContentUploadKK persistentRecord = null;
+        ContentUploadCsv record = null;
+        ContentUpload persistentRecord = null;
         String userName = null;
         BulkUploadError errorDetail = new BulkUploadError();
         CsvProcessingSummary summary = new CsvProcessingSummary();
@@ -67,7 +67,7 @@ public class ContentUploadCsvHandler {
                 record = contentUploadKKCsvService.getRecord(id);
 
                 if (record != null) {
-                    ContentUploadKK newRecord = mapContentUploadKKFrom(record);
+                    ContentUpload newRecord = mapContentUploadKKFrom(record);
                     userName = record.getOwner();
 
                     persistentRecord = contentUploadKKService.getRecordByContentId(newRecord.getContentId());
@@ -131,7 +131,7 @@ public class ContentUploadCsvHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
-            ContentUploadKKCsv oldRecord = contentUploadKKCsvService.getRecord(id);
+            ContentUploadCsv oldRecord = contentUploadKKCsvService.getRecord(id);
             if (oldRecord != null) {
                 contentUploadKKCsvService.delete(oldRecord);
                 logger.info("Record deleted successfully from ContentUploadKKCsv table for id {}", id.toString());
@@ -140,8 +140,8 @@ public class ContentUploadCsvHandler {
         logger.info("Finished processing ContentUploadKKCsv-import failure");
     }
 
-    private ContentUploadKK mapContentUploadKKFrom(ContentUploadKKCsv record) throws DataValidationException {
-        ContentUploadKK newRecord = new ContentUploadKK();
+    private ContentUpload mapContentUploadKKFrom(ContentUploadCsv record) throws DataValidationException {
+        ContentUpload newRecord = new ContentUpload();
 
         newRecord.setCircleCode(ParseDataHelper.parseString("circleCode", record.getCircleCode(), true));
         newRecord.setContentDuration(ParseDataHelper.parseInt("contentDuration", record.getContentDuration(), true));

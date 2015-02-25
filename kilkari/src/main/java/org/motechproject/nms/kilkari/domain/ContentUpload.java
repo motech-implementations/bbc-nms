@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This entity represents the content upload record in kilkari module
  */
 @Entity(recordHistory = true)
-public class ContentUploadKK extends MdsEntity {
+public class ContentUpload extends MdsEntity {
 
     @Field(required = true)
     private Long contentId;

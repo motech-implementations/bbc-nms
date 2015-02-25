@@ -1,6 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.domain.ContentUploadKK;
+import org.motechproject.nms.kilkari.domain.ContentUpload;
 
 public interface ContentUploadService {
 
@@ -9,21 +9,21 @@ public interface ContentUploadService {
      *
      * @param record object of type ContentUploadKK
      */
-    void create(ContentUploadKK record);
+    void create(ContentUpload record);
 
     /**
      * This method update record in the database of type ContentUploadKK
      *
      * @param record object of type ContentUploadKK
      */
-    void update(ContentUploadKK record);
+    void update(ContentUpload record);
 
     /**
      * This method delete record in the database of type ContentUploadKK
      *
      * @param record object of type ContentUploadKK
      */
-    void delete(ContentUploadKK record);
+    void delete(ContentUpload record);
 
     /**
      * This method get ContentUploadKK type record based on content id
@@ -31,6 +31,6 @@ public interface ContentUploadService {
      * @param contentId Unique key for the record
      * @return ContentUploadKK object
      */
-    ContentUploadKK getRecordByContentId(Long contentId);
+    ContentUpload getRecordByContentId(Long contentId);
 
 }

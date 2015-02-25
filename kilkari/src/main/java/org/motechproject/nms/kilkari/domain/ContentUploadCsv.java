@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This entity represents the content uploadCSV record in kilkari module
  */
 @Entity
-public class ContentUploadKKCsv extends MdsEntity {
+public class ContentUploadCsv extends MdsEntity {
 
     @Field
     private String operation;

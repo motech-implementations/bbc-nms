@@ -1,6 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.domain.ContentUploadKKCsv;
+import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 
 public interface ContentUploadCsvService {
 
@@ -9,13 +9,13 @@ public interface ContentUploadCsvService {
      *
      * @param id primary key of the record
      */
-    ContentUploadKKCsv getRecord(Long id);
+    ContentUploadCsv getRecord(Long id);
 
     /**
      * This method delete record in the database of type ContentUploadKKCsv
      *
      * @param record object of type ContentUploadKKCsv
      */
-    void delete(ContentUploadKKCsv record);
+    void delete(ContentUploadCsv record);
 
 }
