@@ -1,6 +1,9 @@
 package org.motechproject.nms.mobileacademy.service;
 
-public interface FLWService {
+/**
+ * This is a place holder for Master data service. Will be removed later.
+ */
+public interface MasterDataService {
 
     public boolean isCircleValid(String circle);
 

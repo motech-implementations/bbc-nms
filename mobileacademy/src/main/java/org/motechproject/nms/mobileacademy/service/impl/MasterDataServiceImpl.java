@@ -1,10 +1,10 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
-import org.motechproject.nms.mobileacademy.service.FLWService;
+import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.springframework.stereotype.Service;
 
-@Service("FLWService")
-public class FLWServiceImpl implements FLWService {
+@Service("MasterDataService")
+public class MasterDataServiceImpl implements MasterDataService {
 
     @Override
     public boolean isCircleValid(String circle) {

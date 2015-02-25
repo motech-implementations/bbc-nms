@@ -29,7 +29,7 @@ import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
-import org.motechproject.nms.mobileacademy.service.FLWService;
+import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.util.Helper;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -62,7 +62,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private CoursePopulateService coursePopulateService;
 
     @Autowired
-    private FLWService flwService;
+    private MasterDataService flwService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CSVRecordProcessServiceImpl.class);

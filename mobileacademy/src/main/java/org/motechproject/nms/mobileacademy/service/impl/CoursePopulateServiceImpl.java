@@ -79,12 +79,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 
     @Override
     public CourseUnitState findCourseState() {
+    	CourseUnitState state = null;
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAUlT_COURSE_NAME);
         if (CollectionUtils.isNotEmpty(courses)) {
-            return courses.get(0).getState();
+        	state = courses.get(0).getState();
+            
         }
-        return null;
+        return state;
     }
 
     @Override
