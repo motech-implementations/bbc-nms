@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
@@ -10,8 +11,8 @@ import javax.validation.constraints.Min;
 /**
  * Models data for simple records in a portable manner.
  */
-@Entity
-public class Configuration {
+@Entity(recordHistory = true)
+public class Configuration extends MdsEntity {
 
     @Field(required = true)
     @Unique

@@ -2,14 +2,15 @@ package org.motechproject.nms.mobilekunji.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Unique;
 
 /**
  * This class Models data for Content Upload records
  */
-@Entity
-public class ContentUpload {
+@Entity(recordHistory = true)
+public class ContentUpload extends MdsEntity {
 
     @Field(required = true)
     @Unique

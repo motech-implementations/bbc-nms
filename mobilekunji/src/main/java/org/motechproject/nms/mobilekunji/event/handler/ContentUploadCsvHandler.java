@@ -81,9 +81,11 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
-                    ContentUpload newRecord = mapContentUploadFrom(record);
+                    ContentUpload newRecord = new ContentUpload();
+                    ContentUpload dbRecord = new ContentUpload();
 
-                    ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
+                    newRecord = mapContentUploadFrom(record);
+                    dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
@@ -161,6 +163,9 @@ public class ContentUploadCsvHandler {
         newRecord.setCardNumber(cardNumber);
         newRecord.setContentDuration(contentDuration);
         newRecord.setContentType(contentType);
+        newRecord.setCreator(record.getCreator());
+        newRecord.setModifiedBy(record.getModifiedBy());
+        newRecord.setOwner(record.getOwner());
         logger.info("mapContentUploadFrom process end");
         return newRecord;
 

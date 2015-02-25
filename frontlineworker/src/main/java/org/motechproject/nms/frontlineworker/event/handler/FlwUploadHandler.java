@@ -13,6 +13,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
@@ -91,7 +92,6 @@ public class FlwUploadHandler {
         logger.info("Processing Csv file");
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
-        FrontLineWorkerContent frontLineWorkerContent;
         FrontLineWorkerCsv record = null;
         BulkUploadError errorDetails = null;
 
@@ -104,11 +104,11 @@ public class FlwUploadHandler {
                 record = flwCsvRecordsDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
-                    FrontLineWorker frontLineWorker = null;
-                    frontLineWorkerContent = null;
+                    FrontLineWorker frontLineWorker = new FrontLineWorker();
+                    FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
-                    frontLineWorkerContent = validateFrontLineWorker(record);
-                    frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
+                    validateFrontLineWorker(record, frontLineWorkerContent);
+                    mapFrontLineWorkerFrom(record, frontLineWorkerContent, frontLineWorker);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
 
@@ -153,6 +153,7 @@ public class FlwUploadHandler {
             }
         }
         logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile,summary);
     }
 
 
@@ -200,16 +201,16 @@ public class FlwUploadHandler {
      * @return temporaryFrontLineWorker generated after applying validations.
      * @throws DataValidationException
      */
-    private FrontLineWorkerContent validateFrontLineWorker(FrontLineWorkerCsv record) throws DataValidationException {
+    private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent ) throws DataValidationException {
 
         String contactNo;
         String finalContactNo;
         String designation;
         int contactNoLength;
-        State state;
-        District district;
+        State state = null;
+        District district = null;
 
-        FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
+        //FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
         logger.info("validateFrontLineWorker process start");
         frontLineWorkerContent.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
@@ -240,12 +241,12 @@ public class FlwUploadHandler {
 
         designation = ParseDataHelper.parseString("Type", record.getType(), true);
 
-        if (Designation.of(designation) != Designation.ANM || Designation.of(designation) != Designation.AWW ||
-                Designation.of(designation) != Designation.ASHA || Designation.of(designation) != Designation.USHA) {
+        if (Designation.of(designation) != Designation.ANM && Designation.of(designation) != Designation.AWW &&
+                Designation.of(designation) != Designation.ASHA && Designation.of(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
         logger.info("validateFrontLineWorker process end");
-        return frontLineWorkerContent;
+       // return frontLineWorkerContent;
 
     }
 
@@ -258,12 +259,9 @@ public class FlwUploadHandler {
      * @return the Front Line Worker generated.
      * @throws DataValidationException
      */
-    private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent) throws DataValidationException {
+    private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent, FrontLineWorker frontLineWorker) throws DataValidationException {
 
 
-
-
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
         logger.info("mapFrontLineWorkerFrom process start");
         frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
 
@@ -283,18 +281,20 @@ public class FlwUploadHandler {
         frontLineWorker.setAshaNumber(ParseDataHelper.parseString("Asha Number", record.getAshaNumber(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.parseString("Adhaar Number", record.getAdhaarNo(), false));
 
-        frontLineWorker.setLanguageLocationCodeId(languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
-                frontLineWorker.getDistrictId().getDistrictCode()).getId());
+        LanguageLocationCode locationCode = languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
+                frontLineWorker.getDistrictId().getDistrictCode());
+        if (null != locationCode){
+
+            frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
+        }
 
         frontLineWorker.setStatus(Status.INACTIVE);
-        frontLineWorker.setOperatorId(null);
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
         frontLineWorker.setOwner(record.getOwner());
 
 
         logger.info("mapFrontLineWorkerFrom process end");
-        return frontLineWorker;
     }
 
 
@@ -310,7 +310,7 @@ public class FlwUploadHandler {
      */
     private Taluka talukaConsistencyCheck(Long districtId, String record) throws DataValidationException {
         String talukaCode;
-        Taluka taluka = new Taluka();
+        Taluka taluka = null;
         talukaCode = ParseDataHelper.parseString("TalukaCode", record, false);
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(districtId, talukaCode);
@@ -337,7 +337,7 @@ public class FlwUploadHandler {
     private Village villageConsistencyCheck(Taluka taluka, String record) throws DataValidationException {
 
         Long villageCode;
-        Village village = new Village();
+        Village village = null;
         villageCode = ParseDataHelper.parseLong("VillageCode", record, false);
         if (villageCode != null) {
             if (taluka != null) {
@@ -367,7 +367,7 @@ public class FlwUploadHandler {
     private HealthBlock healthBlockConsistencyCheck(Taluka taluka, String record) throws DataValidationException {
 
         Long healthclockCode;
-        HealthBlock healthBlock = new HealthBlock();
+        HealthBlock healthBlock = null;
 
         healthclockCode = ParseDataHelper.parseLong("HealthBlockCode", record, false);
         if (healthclockCode != null) {
@@ -399,7 +399,7 @@ public class FlwUploadHandler {
     private HealthFacility healthFacilityConsistencyCheck(HealthBlock healthBlock, String record) throws DataValidationException {
 
         Long healthFacilityCode;
-        HealthFacility healthFacility = new HealthFacility();
+        HealthFacility healthFacility = null;
 
         healthFacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record, false);
         if (healthFacilityCode != null) {
@@ -430,7 +430,7 @@ public class FlwUploadHandler {
      */
     private HealthSubFacility healthSubFacilityConsistencyCheck(HealthFacility healthFacility, String record) throws DataValidationException {
         Long healthSubFacilityCode;
-        HealthSubFacility healthSubFacility = new HealthSubFacility();
+        HealthSubFacility healthSubFacility = null;
 
         healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record, false);
         if (healthSubFacilityCode != null) {

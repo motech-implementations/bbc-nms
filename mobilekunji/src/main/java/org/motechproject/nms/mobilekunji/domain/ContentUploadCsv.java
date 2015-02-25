@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Unique;
 
@@ -9,8 +10,8 @@ import javax.jdo.annotations.Unique;
  * Created by abhishek on 26/1/15.
  * This class Models data records provided in the Content Csv Upload
  */
-@Entity
-public class ContentUploadCsv {
+@Entity(recordHistory = true)
+public class ContentUploadCsv extends MdsEntity {
 
     @Field(required = true)
     @Unique
