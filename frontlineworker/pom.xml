@@ -85,15 +85,11 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>frontlineworker/resources</Resource-Path>
                         <Context-Path>frontlineworker</Context-Path>
-                        <Export-Package>org.motechproject.nms.frontlineworker.service;version=${project.version},
+                        <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
                             org.motechproject.nms.frontlineworker.repository;version=${project.version},
-                            org.motechproject.nms.frontlineworker.domain;version=${project.version},
-                            org.motechproject.nms.frontlineworker.constants;version=${project.version},
-                            org.motechproject.nms.frontlineworker.event;version=${project.version},
-                        </Export-Package>
+                            org.motechproject.nms.frontlineworker.domain;version=${project.version},</Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
-                            *
-                        </Import-Package>
+                            *</Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

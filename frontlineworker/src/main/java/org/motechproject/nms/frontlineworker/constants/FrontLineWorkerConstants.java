@@ -23,7 +23,7 @@ public final class FrontLineWorkerConstants {
 
     public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success";
 
-    public static final String FLW_UPLOAD_FAILED = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failed";
+    public static final String FLW_UPLOAD_FAILED = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.failure";
 
     private FrontLineWorkerConstants() {
     }

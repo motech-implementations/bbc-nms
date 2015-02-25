@@ -130,19 +130,18 @@ public class CircleCsvHandler {
     @MotechListener(subjects = MasterDataConstants.CIRCLE_CSV_FAILED)
     public void circleCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info("Start processing CircleCsv-import failure for upload {}", params.toString());
-
+        logger.info("CIRCLE_CSV_FAILED event received");
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
             CircleCsv oldRecord = circleCsvService.getRecord(id);
             if (oldRecord != null) {
+                logger.debug("CIRCLE_CSV_FAILED event processing start for ID: {}", id);
                 circleCsvService.delete(oldRecord);
-                logger.info("Record deleted successfully from CircleCsv table for id {}", id.toString());
             }
         }
-        logger.info("Finished processing CircleCsv-import failure");
+        logger.info("CIRCLE_CSV_FAILED event processing finished");
     }
 
     private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
