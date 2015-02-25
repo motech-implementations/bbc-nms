@@ -37,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * This class provides Motech Listeners for Front Line Worker upload for both success and failure scenarios.
  * This class also provides methods used to validate csv data and save the data in Motech database in case of success
  * and raise exceptions in case of failure
@@ -45,7 +44,6 @@ import java.util.Map;
 
 @Component
 public class FlwUploadHandler {
-
 
 
     @Autowired
@@ -62,7 +60,6 @@ public class FlwUploadHandler {
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
-
 
 
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
@@ -104,11 +101,10 @@ public class FlwUploadHandler {
                 record = flwCsvRecordsDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
-                    FrontLineWorker frontLineWorker = new FrontLineWorker();
-                    FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
-                    validateFrontLineWorker(record, frontLineWorkerContent);
-                    mapFrontLineWorkerFrom(record, frontLineWorkerContent, frontLineWorker);
+
+                    FrontLineWorkerContent frontLineWorkerContent = validateFrontLineWorker(record);
+                    FrontLineWorker frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
 
@@ -119,43 +115,122 @@ public class FlwUploadHandler {
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
+
+                            logger.info("New front line worker creation starts");
                             flwRecordDataService.create(frontLineWorker);
-                            flwCsvRecordsDataService.delete(record);
                             summary.incrementSuccessCount();
                             logger.info("Successful creation of new front line worker");
                         }
 
                     } else {
-                        boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
-                        if (dbRecord.getStatus() == Status.INVALID && valid) {
-                            summary.incrementFailureCount();
-                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
-                            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                            logger.warn("Status change try from invalid to valid for id : {}", id);
-                        } else {
 
-                            frontLineWorker.setId(dbRecord.getId());
-                            flwRecordDataService.update(frontLineWorker);
-                            flwCsvRecordsDataService.delete(record);
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                            logger.info("Front line worker deletion starts");
+                            flwRecordDataService.delete(dbRecord);
                             summary.incrementSuccessCount();
-                            logger.info("Record updated successfully for Flw. Searched By: Contact number");
+                            logger.info("Successful creation of new front line worker");
+
+                        } else {
+                            Boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
+                            Status status = dbRecord.getStatus();
+                            if (valid == null) {
+                                frontLineWorker.setStatus(dbRecord.getStatus());
+                                updateDbRecord(frontLineWorker, dbRecord);
+                                summary.incrementSuccessCount();
+                                logger.info("Record updated successfully for Flw with valid = null");
+                            } else {
+                                if (valid == true) {
+                                    if (status == Status.INVALID) {
+                                        summary.incrementFailureCount();
+                                        errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                                        bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                        logger.warn("Status change try from invalid to valid for id : {}", id);
+                                    } else {
+                                        frontLineWorker.setStatus(dbRecord.getStatus());
+                                        updateDbRecord(frontLineWorker, dbRecord);
+                                        summary.incrementSuccessCount();
+                                        logger.info("Record updated successfully for Flw with valid = true");
+
+                                    }
+                                } else {
+                                    frontLineWorker.setStatus(Status.INVALID);
+                                    updateDbRecord(frontLineWorker, dbRecord);
+                                    summary.incrementSuccessCount();
+                                    logger.info("Record updated successfully for Flw with valid = false");
+                                }
+                            }
                         }
                     }
+
                 }
             } catch (DataValidationException dve) {
                 errorDetails = populateErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                logger.warn("Record not found for uploaded ID: {}", id);
+                if (record.getFlwId() != null) {
+                    logger.warn("Record not found for uploaded ID: {}", record.getFlwId());
+                } else {
+                    if (record.getContactNo() != null) {
+                        logger.warn("Record not found for uploaded Contact Number: {}", record.getContactNo());
+                    } else {
+                        logger.warn("Record not found for uploaded record(both Flw Id and Contact No are not present");
+                    }
+                }
+
             } catch (Exception e) {
                 summary.incrementFailureCount();
+                logger.error("Exception occur : {}", e.getStackTrace());
+                errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            } finally {
+                if (null != record) {
+                    flwCsvRecordsDataService.delete(record);
+                }
             }
         }
         logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile,summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile, summary);
+
     }
 
+
+    /**
+     * This method maps fields of generated front line worker to the db record
+     *
+     * @param frontLineWorker the Front Line Worker record genrated
+     * @param dbRecord        the record which will be updated in db
+     */
+    private void updateDbRecord(FrontLineWorker frontLineWorker, FrontLineWorker dbRecord) {
+
+        dbRecord.setName(frontLineWorker.getName());
+        dbRecord.setStatus(frontLineWorker.getStatus());
+        dbRecord.setContactNo(frontLineWorker.getContactNo());
+        dbRecord.setDesignation(frontLineWorker.getDesignation());
+
+
+        dbRecord.setStateCode(frontLineWorker.getStateCode());
+        dbRecord.setStateId(frontLineWorker.getStateId());
+        dbRecord.setDistrictId(frontLineWorker.getDistrictId());
+        dbRecord.setTalukaId(frontLineWorker.getTalukaId());
+        dbRecord.setVillageId(frontLineWorker.getVillageId());
+        dbRecord.setHealthBlockId(frontLineWorker.getHealthBlockId());
+        dbRecord.setHealthFacilityId(frontLineWorker.getHealthFacilityId());
+        dbRecord.setHealthSubFacilityId(frontLineWorker.getHealthSubFacilityId());
+        dbRecord.setLanguageLocationCodeId(frontLineWorker.getLanguageLocationCodeId());
+
+        dbRecord.setFlwId(frontLineWorker.getFlwId());
+        dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
+        dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
+        dbRecord.setValidated(frontLineWorker.isValidated());
+
+        dbRecord.setCreator(frontLineWorker.getCreator());
+        dbRecord.setModificationDate(frontLineWorker.getModificationDate());
+        dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
+        dbRecord.setCreationDate(frontLineWorker.getCreationDate());
+        dbRecord.setOwner(frontLineWorker.getOwner());
+        flwRecordDataService.update(dbRecord);
+
+    }
 
     /**
      * This method provides a listener to the Front Line Worker upload failure scenario.
@@ -201,7 +276,7 @@ public class FlwUploadHandler {
      * @return temporaryFrontLineWorker generated after applying validations.
      * @throws DataValidationException
      */
-    private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent ) throws DataValidationException {
+    private FrontLineWorkerContent validateFrontLineWorker(FrontLineWorkerCsv record) throws DataValidationException {
 
         String contactNo;
         String finalContactNo;
@@ -210,7 +285,8 @@ public class FlwUploadHandler {
         State state = null;
         District district = null;
 
-        //FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
+
+        FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
         logger.info("validateFrontLineWorker process start");
         frontLineWorkerContent.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
@@ -246,7 +322,7 @@ public class FlwUploadHandler {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
         logger.info("validateFrontLineWorker process end");
-       // return frontLineWorkerContent;
+        return frontLineWorkerContent;
 
     }
 
@@ -259,10 +335,12 @@ public class FlwUploadHandler {
      * @return the Front Line Worker generated.
      * @throws DataValidationException
      */
-    private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent, FrontLineWorker frontLineWorker) throws DataValidationException {
+    private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent) throws DataValidationException {
 
 
         logger.info("mapFrontLineWorkerFrom process start");
+
+        FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
 
         frontLineWorker.setName(ParseDataHelper.parseString("Name", record.getName(), true));
@@ -283,18 +361,22 @@ public class FlwUploadHandler {
 
         LanguageLocationCode locationCode = languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
                 frontLineWorker.getDistrictId().getDistrictCode());
-        if (null != locationCode){
+        if (null != locationCode) {
 
             frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
         }
 
         frontLineWorker.setStatus(Status.INACTIVE);
+
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
         frontLineWorker.setOwner(record.getOwner());
-
+        frontLineWorker.setModificationDate(record.getModificationDate());
+        frontLineWorker.setCreationDate(record.getCreationDate());
 
         logger.info("mapFrontLineWorkerFrom process end");
+
+        return frontLineWorker;
     }
 
 
@@ -328,8 +410,8 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param taluka  parent taluka
-     * @param record   value of Village code
+     * @param taluka parent taluka
+     * @param record value of Village code
      * @return null if optional Village is not provided and its value is null/empty, else Village which is generated
      * from the parameters
      * @throws DataValidationException
@@ -359,7 +441,7 @@ public class FlwUploadHandler {
      * mandatory field is empty/null or is invalid date format
      *
      * @param taluka parent taluka
-     * @param record   value of HealthBlock code
+     * @param record value of HealthBlock code
      * @return null if optional HealthBlock is not provided and its value is null/empty, else HealthBlock which is
      * generated from the parameters
      * @throws DataValidationException
@@ -391,7 +473,7 @@ public class FlwUploadHandler {
      * mandatory field is empty/null or is invalid date format
      *
      * @param healthBlock parent HelathBlock
-     * @param record        value of HealthFacility code
+     * @param record      value of HealthFacility code
      * @return null if optional HealthFacility is not provided and its value is null/empty, else HealthFacility which is
      * generated from the parameters
      * @throws DataValidationException
@@ -423,7 +505,7 @@ public class FlwUploadHandler {
      * mandatory field is empty/null or is invalid date format
      *
      * @param healthFacility parent HelathBlock
-     * @param record           value of HealthSubFacility code
+     * @param record         value of HealthSubFacility code
      * @return null if optional HealthSubFacility is not provided and its value is null/empty, else HealthSubFacility
      * which is generated from the parameters
      * @throws DataValidationException
