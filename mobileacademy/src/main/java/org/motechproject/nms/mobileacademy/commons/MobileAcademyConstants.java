@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.commons;
 
 /**
- * Class containing constants used in mobile academy.
+ * Class containing constants used in mobile academy module.
  *
  */
 public class MobileAcademyConstants {
@@ -48,19 +48,19 @@ public class MobileAcademyConstants {
 
     public static final String COURSE_DEL = "DEL";
 
-    public static final int minNoOfEntriesInCSVPerCourse = NUM_OF_CHAPTERS * (1 // For
-                                                                                // Chapter
-                                                                                // End
-                                                                                // Menu
+    public static final int MIN_FILES_PER_COURSE = NUM_OF_CHAPTERS * (1 // For
+                                                                        // Chapter
+                                                                        // End
+                                                                        // Menu
             + NUM_OF_LESSONS * 2 // For Lesson Content and Menu file
             + NUM_OF_QUESTIONS * 3 // For Question content,correct answer and
                                    // wrong Answer file
             + 1 // For Quiz Header in each Quiz
     + NUM_OF_SCORE_FILES);
 
-    public static final String COURSE_CSV_UPLOAD_SUCCESS = "mds.crud.MobileAcademy.CourseRawContent.csv-import.success";
+    public static final String COURSE_CSV_UPLOAD_SUCCESS = "mds.crud.mobileacademy.CourseRawContent.csv-import.success";
 
-    public static final String COURSE_CSV_UPLOAD_FAILED = "mds.crud.MobileAcademy.CourseRawContent.csv-import.failed";
+    public static final String COURSE_CSV_UPLOAD_FAILED = "mds.crud.mobileacademy.CourseRawContent.csv-import.failure";
 
     private MobileAcademyConstants() {
     }

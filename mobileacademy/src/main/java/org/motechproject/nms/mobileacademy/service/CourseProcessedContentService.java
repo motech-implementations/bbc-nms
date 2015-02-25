@@ -5,27 +5,70 @@ import java.util.List;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 
 /**
- * Created by nitin on 2/17/15.
+ * Service Interface for operations on CourseProcessedContent Table
+ * 
+ * @author YOGESH
+ *
  */
 public interface CourseProcessedContentService {
 
-    // Check if course for a particular LLC exists in CPC or not
+    /**
+     * This function is used to check if a course corresponding to LLC exists in
+     * system
+     * 
+     * @param LLC
+     *            Language Location Code
+     * @return returns true/false
+     */
     public boolean doesLLCExistsInCPC(int LLC);
 
-    // Provide list of distinct LLCs existing in CPC
+    /**
+     * To get the list of all LLCs for which the course exists in the system
+     * 
+     * @return List of distinct language location codes
+     */
     List<Integer> getListOfAllExistingLLcs();
 
-    // Provide the record having combination of below three in CPC
-    CourseProcessedContent getRecordforModification(String circle, int lLC,
+    /**
+     * This is used to get a courseProcessesContent Record based on content name
+     * for a LLC and circle
+     * 
+     * @param circle
+     *            String corresponding to a valid circle
+     * @param LLC
+     *            integer corresponding to a language location code
+     * @param contentName
+     *            contentName to uniquely identify different files of course
+     * @return CPC Record for the content name
+     */
+    CourseProcessedContent getRecordforModification(String circle, int LLC,
             String contentName);
 
-    // Already been implemented
+    /**
+     * this is used to create a new courseProcessedContent Record
+     * 
+     * @param courseProcessedContent
+     */
     void create(CourseProcessedContent courseProcessedContent);
 
+    /**
+     * This is used for deleting all the existing records in the system
+     */
     void deleteAll();
 
+    /**
+     * This is used to update an existing CourseProcessedContent Object
+     * 
+     * @param courseProcessedContent
+     *            new Object to be persisted in the system
+     */
     void update(CourseProcessedContent courseProcessedContent);
 
+    /**
+     * To delete all the CPC record by LanguageLocationCode
+     * 
+     * @param languageLocationCode
+     */
     public void deleteRecordsByLLC(int languageLocationCode);
 
 }

@@ -12,6 +12,8 @@ import org.motechproject.nms.mobileacademy.domain.Score;
 /**
  * Service interface contains APIs to perform course populate operations in
  * mtraining and content tables.
+ * 
+ * @author YOGESH
  *
  */
 public interface CoursePopulateService {
@@ -33,45 +35,150 @@ public interface CoursePopulateService {
     /**
      * update Course State
      * 
-     * @param courseUnitState Course state enum contain course state
+     * @param courseUnitState
+     *            Course state enum contain course state
      */
     public void updateCourseState(CourseUnitState courseUnitState);
 
     /**
      * update Correct Answer in mtraining
      * 
-     * @param chapterName refer to chapterIdentifier i.e Chapter01,Chapter02
-     * @param questionName refer to question identifier i.e
-     *            Question01,Question02
-     * @param answer refer to answer identifier i.e 1,2
+     * @param chapterName
+     *            refer to chapterIdentifier i.e Chapter01,Chapter02
+     * @param questionName
+     *            refer to question identifier i.e Question01,Question02
+     * @param answer
+     *            refer to answer identifier i.e 1,2
      */
     public void updateCorrectAnswer(String chapterName, String questionName,
             String answer);
 
+    /**
+     * This returns all the chapterContents saved for a course.
+     * 
+     * @return List having the chapter content Objects
+     */
     public List<ChapterContent> getAllChapterContents();
 
-    public LessonContent getLessonContent(int chapterId, int lessonId,
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param lessonNo
+     *            refers to index of lesson in a chapter.. 1,2..4
+     * @param type
+     *            refers to the type of lesson files: "Lesson" for lesson
+     *            content file or "menu" for end menu file of lesson
+     * @return LessonContent Object having the audio File
+     */
+    public LessonContent getLessonContent(int chapterNo, int lessonNo,
             String type);
 
-    public QuestionContent getQuestionContent(int chapterId, int questionId,
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param questionNo
+     *            refers to index of question in a chapter.. 1,2..4
+     * @param type
+     *            refers to type of file stored for questions: "question" for
+     *            question content file or "correctAnswer" for correct answer
+     *            audio file of question or "wrongAnswer" for wrong answer audio
+     *            file of question
+     * @return QuestionContent Object having the audio file
+     */
+    public QuestionContent getQuestionContent(int chapterNo, int questionNo,
             String type);
 
-    public Score getScore(int chapterId, int scoreId, String type);
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param scoreNo
+     *            refers to the score in a quiz.. 0,1,2..4
+     * @param type
+     *            refers to type of file stored for scores: "score"
+     * @return Score Object having the audio file to be played for a score
+     */
+    public Score getScore(int chapterNo, int scoreNo, String type);
 
-    public ChapterContent getChapterContent(int chapterId, String type);
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param type
+     *            refers to type of file stored for chapters: "menu"
+     * @return refers to ChapterContent Object having the audio file to be
+     *         played for end-menu of chapter
+     */
+    public ChapterContent getChapterContent(int chapterNo, String type);
 
-    public QuizContent getQuizContent(int chapterId, String type);
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param type
+     *            refers to type of file stored for quiz: "quizHeader"
+     * @return refers to QuizContent Object having the audio file to be played
+     *         for quiz header
+     */
+    public QuizContent getQuizContent(int chapterNo, String type);
 
-    public void setLessonContent(int chapterId, int lessonId, String type,
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param lessonNo
+     *            refers to index of lesson in a chapter.. 1,2..4
+     * @param type
+     *            refers to the type of lesson files: "Lesson" for lesson
+     *            content file or "menu" for end menu file of lesson
+     * @param fileName
+     *            name of audio file for lesson content to be updated
+     */
+    public void setLessonContent(int chapterNo, int lessonNo, String type,
             String fileName);
 
-    public void setQuestionContent(int chapterId, int questionId, String type,
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param questionNo
+     *            refers to index of question in a chapter.. 1,2..4
+     * @param type
+     *            refers to type of file stored for questions: "question" for
+     *            question content file or "correctAnswer" for correct answer
+     *            audio file of question or "wrongAnswer" for wrong answer audio
+     *            file of question
+     * @param fileName
+     *            name of audio file for lesson content to be updated
+     */
+    public void setQuestionContent(int chapterNo, int questionNo, String type,
             String fileName);
 
-    public void setScore(int chapterId, int scoreId, String type,
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param scoreNo
+     *            refers to the score in a quiz.. 0,1,2..4
+     * @param type
+     *            refers to type of file stored for scores: "score"
+     * @param fileName
+     *            name of audio file for lesson content to be updated
+     */
+    public void setScore(int chapterNo, int scoreNo, String type,
             String fileName);
 
-    public void setChapterContent(int chapterId, String type, String fileName);
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param type
+     *            refers to type of file stored for chapters: "menu"
+     * @param fileName
+     *            name of audio file for lesson content to be updated
+     */
+    public void setChapterContent(int chapterNo, String type, String fileName);
 
-    public void setQuizContent(int chapterId, String type, String fileName);
+    /**
+     * @param chapterNo
+     *            refers to index of chapter.. 1,2,3..11
+     * @param type
+     *            refers to type of file stored for quiz: "quizHeader"
+     * @param fileName
+     *            name of audio file for lesson content to be updated
+     */
+    public void setQuizContent(int chapterNo, String type, String fileName);
 }

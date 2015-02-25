@@ -2,6 +2,11 @@ package org.motechproject.nms.mobileacademy.commons;
 
 import java.util.Arrays;
 
+/**
+ * CourseFlags contains flags to determine whether files for complete course has
+ * arrived or not.
+ *
+ */
 public class CourseFlags {
 
     // This array is flag for LessonContent File and LessonEnd Menu file of a

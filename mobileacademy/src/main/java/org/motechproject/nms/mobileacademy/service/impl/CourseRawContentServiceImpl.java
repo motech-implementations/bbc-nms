@@ -7,20 +7,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by nitin on 2/9/15.
+ * This file contains the implementation for CourseRawContentService. It will be
+ * used to operate on CourseRawContent Tables
+ * 
+ * @author YOGESH
+ *
  */
-
 @Service("CourseRawContentService")
 public class CourseRawContentServiceImpl implements CourseRawContentService {
 
     @Autowired
     private CourseRawContentDataService courseRawContentDataService;
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.motechproject.nms.mobileacademy.service.CourseRawContentService#delete
+     * (org.motechproject.nms.mobileacademy.domain.CourseRawContent)
+     * 
+     * to delete the a CourseRawContent record
+     */
     @Override
     public void delete(CourseRawContent courseRawContent) {
         courseRawContentDataService.delete(courseRawContent);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.motechproject.nms.mobileacademy.service.CourseRawContentService#deleteAll
+     * ()
+     * 
+     * to delete all the CourseRawContent records existing in the system
+     */
     @Override
     public void deleteAll() {
         courseRawContentDataService.deleteAll();

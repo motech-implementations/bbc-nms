@@ -6,6 +6,7 @@ package org.motechproject.nms.mobileacademy.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -29,20 +30,24 @@ import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
 import org.motechproject.nms.mobileacademy.service.FLWService;
-import org.motechproject.nms.mobileacademy.service.RecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.util.Helper;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @author Yogesh
+ * This class contains the implementation for RecordProcessService to process
+ * CSV records
  * 
+ * @author Yogesh
  *
  */
-@Service("RecordProcessService")
-public class RecordProcessServiceImpl implements RecordProcessService {
+@Service("CSVRecordProcessService")
+public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
     @Autowired
     private CourseRawContentService courseRawContentService;
@@ -59,7 +64,8 @@ public class RecordProcessServiceImpl implements RecordProcessService {
     @Autowired
     private FLWService flwService;
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(CSVRecordProcessServiceImpl.class);
 
     @Override
     public String processRawRecords(List<CourseRawContent> courseRawContents) {
@@ -72,7 +78,14 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                 .getListOfAllExistingLLcs();
 
         for (CourseRawContent courseRawContent : courseRawContents) {
-            if (!(validateSchema(courseRawContent) && validateCircleAndLLC(courseRawContent))) {
+            try {
+                validateSchema(courseRawContent);
+            } catch (DataValidationException dataValidationException) {
+                LOGGER.error(dataValidationException.getMessage());
+                courseRawContentService.delete(courseRawContent);
+                continue;
+            }
+            if (!validateCircleAndLLC(courseRawContent)) {
                 courseRawContentService.delete(courseRawContent);
                 continue;
             }
@@ -109,20 +122,31 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
     }
 
+    /*
+     * This function validates if the CourseRawContent contains valid circle and
+     * LLC
+     */
     private boolean validateCircleAndLLC(CourseRawContent courseRawContent) {
         String circle = courseRawContent.getCircle();
         int llc = Integer.parseInt(courseRawContent.getLanguageLocationCode());
         if (!flwService.isCircleValid(circle)) {
             // log error circle not valid
+            LOGGER.error("circle is not valid");
             return false;
         }
         if (!flwService.isLLCValidInCircle(circle, llc)) {
             // log error: circle not valid in LLC
+            LOGGER.error("LLC provided doesn't reside in the circle");
             return false;
         }
         return true;
     }
 
+    /*
+     * This function adds the records into a Map having LLC of record as key
+     * 
+     * The map will be process afterwards for processing ADD Records
+     */
     private void putRecordInAddMap(
             Map<Integer, List<CourseRawContent>> mapForAddRecords,
             CourseRawContent courseRawContent) {
@@ -136,6 +160,12 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * This function adds the records into a Map having contentName of record as
+     * key
+     * 
+     * The map will be process afterwards for processing "MOD"ify Records
+     */
     private void putRecordInModifyMap(
             Map<String, List<CourseRawContent>> mapForModifyRecords,
             CourseRawContent courseRawContent) {
@@ -149,6 +179,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * This function adds the records into a Map having LLC of record as key
+     * 
+     * The map will be process afterwards for processing "DEL"ete Records
+     */
     private void putRecordInDeleteMap(
             Map<Integer, List<CourseRawContent>> mapForDeleteRecords,
             CourseRawContent courseRawContent) {
@@ -162,70 +197,51 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
-    private boolean validateSchema(CourseRawContent courseRawContent) {
+    /*
+     * This function does the schema level validation on a CourseRawContent
+     * Record. In case a erroneous field, throws DataValidationException
+     */
+    private void validateSchema(CourseRawContent courseRawContent)
+            throws DataValidationException {
 
-        if (StringUtils.isBlank(courseRawContent.getContentId())) {
-            logger.info("*****Error: ContentID missing*****");
-            return false;
-        }
-        try {
-            Integer.parseInt(courseRawContent.getContentId());
-        } catch (NumberFormatException exception) {
-            // log Error(incorrect format);
-            logger.info("*****Error: ContentID not Integer*****");
-            return false;
-        }
-        if (StringUtils.isBlank(courseRawContent.getLanguageLocationCode())) {
-            // log Error(Missing)
-            logger.info("*****Error: LLC missing*****");
-            return false;
-        }
-        try {
-            Integer.parseInt(courseRawContent.getLanguageLocationCode());
-        } catch (NumberFormatException exception) {
-            logger.info("*****Error: LLC not numeric*****");
-            return false;
-        }
-        if (StringUtils.isBlank(courseRawContent.getContentName())) {
-            logger.info("*****Error: ContentName Missing*****");
-            return false;
-        }
+        ParseDataHelper.parseInt("Content ID", courseRawContent.getContentId(),
+                true);
 
-        if (StringUtils.isBlank(courseRawContent.getContentDuration())) {
-            // log Error(Missing)
+        ParseDataHelper.parseInt("Language Location Code",
+                courseRawContent.getLanguageLocationCode(), true);
 
-            logger.info("*****Error: ContentDuration missing*****");
-            return false;
-        }
-        try {
-            Integer.parseInt(courseRawContent.getContentDuration());
-        } catch (NumberFormatException exception) {
-            // log Error(incorrect format);
-            logger.info("*****Error: ContentDuration not Numeric*****");
-            return false;
-        }
+        ParseDataHelper.parseString("Contet Name",
+                courseRawContent.getContentName(), true);
 
-        if (StringUtils.isBlank(courseRawContent.getContentFile())) {
-            // log Error(Missing)
-            logger.info("*****Error: ContentFile missing*****");
-            return false;
-        }
-        return true;
+        ParseDataHelper.parseInt("Content Duration",
+                courseRawContent.getContentDuration(), true);
+
+        ParseDataHelper.parseString("Content File",
+                courseRawContent.getContentFile(), true);
     }
 
+    /*
+     * This function takes The Map having CourserawContent Records for the
+     * modification and processes them
+     */
     private void processModificationRecords(
             Map<String, List<CourseRawContent>> mapForModifyRecords) {
 
         Map<String, List<CourseRawContent>> fileNameChangeRecords = new HashMap<String, List<CourseRawContent>>();
 
         if (!mapForModifyRecords.isEmpty()) {
-            for (String contentName : mapForModifyRecords.keySet()) {
-
+            Iterator<String> contentNamesIterator = mapForModifyRecords
+                    .keySet().iterator();
+            while (contentNamesIterator.hasNext()) {
+                String contentName = contentNamesIterator.next();
                 List<CourseRawContent> courseRawContents = mapForModifyRecords
                         .get(contentName);
                 if (CollectionUtils.isNotEmpty(courseRawContents)) {
-                    for (CourseRawContent courseRawContent : courseRawContents) {
-
+                    Iterator<CourseRawContent> courseRawContentsIterator = courseRawContents
+                            .iterator();
+                    while (courseRawContentsIterator.hasNext()) {
+                        CourseRawContent courseRawContent = courseRawContentsIterator
+                                .next();
                         Record record = validateRawContent(courseRawContent);
                         if (record == null) {
                             // logger.info("Record " + i++ +
@@ -268,8 +284,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
         // Start Processing the file change records:
         if (!mapForModifyRecords.isEmpty()) {
-            for (String contentName : fileNameChangeRecords.keySet()) {
-
+            Iterator<String> contentNameIterator = mapForModifyRecords.keySet()
+                    .iterator();
+            while (contentNameIterator.hasNext()) {
+                String contentName = contentNameIterator.next();
                 boolean updateContentFile = true;
                 List<Integer> listOfExistingLlc = courseProcessedContentService
                         .getListOfAllExistingLLcs();
@@ -287,8 +305,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                 String fileName = fileNameChangeRecords.get(contentName).get(0)
                         .getContentFile();
 
-                for (CourseRawContent courseRawContent : fileNameChangeRecords
-                        .get(contentName)) {
+                Iterator<CourseRawContent> fileNameIterator = courseRawContents
+                        .iterator();
+                while (fileNameIterator.hasNext()) {
+                    CourseRawContent courseRawContent = fileNameIterator.next();
                     int LLC = Integer.parseInt(courseRawContent
                             .getLanguageLocationCode());
                     if (!fileName.equals(courseRawContent.getContentFile())) {
@@ -315,9 +335,15 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                     if (record != null) {
                         determineTypeAndUpdateChapterContent(record);
                     }
+                    List<CourseRawContent> fileModifyingRecords = fileNameChangeRecords
+                            .get(contentName);
 
-                    for (CourseRawContent courseRawContent : fileNameChangeRecords
-                            .get(contentName)) {
+                    Iterator<CourseRawContent> fileModifyingRecordsIterator = fileModifyingRecords
+                            .iterator();
+
+                    while (fileModifyingRecordsIterator.hasNext()) {
+                        CourseRawContent courseRawContent = fileModifyingRecordsIterator
+                                .next();
                         int LLC = Integer.parseInt(courseRawContent
                                 .getLanguageLocationCode());
                         CourseProcessedContent CPC = courseProcessedContentService
@@ -343,6 +369,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * This function is used to update the filename on the basis of File-type in
+     * record object, into courseContent tables
+     */
     private void determineTypeAndUpdateChapterContent(Record record) {
         if (record.getType() == FileType.LessonContent) {
             coursePopulateService
@@ -383,6 +413,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * This checks if a modify record is also changing the name of the file
+     * currently existing the system. If yes, it returns true.
+     */
     private boolean isRecordChangingTheFileName(Record record) {
         if (record.getType() == FileType.LessonContent) {
             LessonContent lessonContent = coursePopulateService
@@ -448,6 +482,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return false;
     }
 
+    /*
+     * This function takes the list of CourseRawContent records against which
+     * the file need to be added into the course
+     */
     private void processAddRecords(
             Map<Integer, List<CourseRawContent>> mapForAddRecords) {
         boolean populateCourseStructure = false;
@@ -455,16 +493,19 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         List<Record> answerOptionRecordList = new ArrayList<Record>();
 
         if (!mapForAddRecords.isEmpty()) {
-            for (Integer LLC : mapForAddRecords.keySet()) {
+            Iterator<Integer> distictLLCIterator = mapForAddRecords.keySet()
+                    .iterator();
+            while (distictLLCIterator.hasNext()) {
+                Integer LLC = distictLLCIterator.next();
                 List<CourseRawContent> courseRawContents = mapForAddRecords
                         .get(LLC);
                 if (CollectionUtils.isNotEmpty(courseRawContents)) {
-                    if (courseRawContents.size() != MobileAcademyConstants.minNoOfEntriesInCSVPerCourse) {
+                    if (courseRawContents.size() != MobileAcademyConstants.MIN_FILES_PER_COURSE) {
                         mapForAddRecords.remove(LLC);
                         Helper.deleteCourseRawContentsByList(courseRawContents);
-                        logger.info(
+                        LOGGER.info(
                                 "There must be exact {} records to populate the course corresponding to LLC:{}.",
-                                MobileAcademyConstants.minNoOfEntriesInCSVPerCourse,
+                                MobileAcademyConstants.MIN_FILES_PER_COURSE,
                                 LLC);
                         continue;
                     }
@@ -489,7 +530,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                                 .getAllChapterContents();
                     }
 
-                    for (CourseRawContent courseRawContent : courseRawContents) {
+                    Iterator<CourseRawContent> courseRawContentsIterator = courseRawContents
+                            .iterator();
+                    while (courseRawContentsIterator.hasNext()) {
+                        CourseRawContent courseRawContent = courseRawContentsIterator
+                                .next();
                         Record record = validateRawContent(courseRawContent);
                         if (record == null) {
                             // Write Error in this record: Hence other cann't be
@@ -529,7 +574,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                         for (CourseRawContent courseRawContent : courseRawContents) {
                             updateRecordInContentProcessedTable(courseRawContent);
                             courseRawContentService.delete(courseRawContent);
-                            // logger.info("Record" + ++i
+                            // LOGGER.info("Record" + ++i
                             // + " has been processed successfully");
                         }
                         // Update Course;
@@ -553,24 +598,36 @@ public class RecordProcessServiceImpl implements RecordProcessService {
 
     }
 
+    /*
+     * This function takes the list of CourseRawContent records against which
+     * the file need to be deleted from the course
+     */
     public void processDeleteRecords(
             Map<Integer, List<CourseRawContent>> mapForDeleteRecords) {
 
         if (!mapForDeleteRecords.isEmpty()) {
-            for (Integer LLC : mapForDeleteRecords.keySet()) {
+            Iterator<Integer> distictLLCIterator = mapForDeleteRecords.keySet()
+                    .iterator();
+
+            while (distictLLCIterator.hasNext()) {
+                Integer LLC = distictLLCIterator.next();
                 CourseFlags courseFlags = new CourseFlags();
                 courseFlags.resetTheFlags();
 
                 List<CourseRawContent> courseRawContents = mapForDeleteRecords
                         .get(LLC);
 
-                if (courseRawContents.size() < MobileAcademyConstants.minNoOfEntriesInCSVPerCourse) {
+                if (courseRawContents.size() < MobileAcademyConstants.MIN_FILES_PER_COURSE) {
                     // log error: Size is less than minimum required
                     mapForDeleteRecords.remove(LLC);
                     Helper.deleteCourseRawContentsByList(courseRawContents);
                 }
 
-                for (CourseRawContent courseRawContent : courseRawContents) {
+                Iterator<CourseRawContent> courseRawContentsIterator = courseRawContents
+                        .iterator();
+                while (courseRawContentsIterator.hasNext()) {
+                    CourseRawContent courseRawContent = courseRawContentsIterator
+                            .next();
                     Record record = new Record();
                     if (!validateContentName(courseRawContent, record)) {
                         // error in particular record
@@ -593,7 +650,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                 } else {
                     // log error: complete records haven't arrived for deleting
                     // the course.
-                    logger.info("Error in deleting complete course");
+                    LOGGER.info("Error in deleting complete course");
                 }
                 mapForDeleteRecords.remove(LLC);
                 Helper.deleteCourseRawContentsByList(courseRawContents);
@@ -601,6 +658,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * this function checks the type of file to which record points to and based
+     * on that it sets the flag for successful arrival of that file
+     */
     private void checkRecordTypeAndMarkCourseFlag(Record record,
             CourseFlags courseFlags) {
         if (record.getType() == FileType.LessonContent) {
@@ -628,6 +689,10 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * this function updates the correct option for different questions in the
+     * mTraining module.
+     */
     private void processAnswerOptionRecordList(
             List<Record> answerOptionRecordList) {
         for (Record answerRecord : answerOptionRecordList) {
@@ -643,6 +708,12 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         }
     }
 
+    /*
+     * This function checks whether a ADD record is having the same file Name
+     * for a file which is currently existing in the system. In positive
+     * scenarios, it also marks for successful arrival of the file in the course
+     * flags
+     */
     private boolean checkRecordConsistencyAndMarkFlag(Record record,
             ChapterContent chapterContent, CourseFlags courseFlags) {
         if (record.getType() == FileType.LessonContent) {
@@ -761,13 +832,17 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return true;
     }
 
+    /*
+     * This function is used to create the static course data in the content
+     * tables.
+     */
     private List<ChapterContent> createChapterContentPrototype() {
         List<ChapterContent> listOfChapters = new ArrayList<ChapterContent>();
 
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
-            List<LessonContent> lessons = createLessonList();
-            List<QuestionContent> questions = createQuestionList();
-            List<Score> scores = createScoresList();
+            List<LessonContent> lessons = createListOfLesson();
+            List<QuestionContent> questions = createListOfQuestion();
+            List<Score> scores = createListOfScores();
             QuizContent quiz = new QuizContent(
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER, null, questions);
             ChapterContent chapterContent = new ChapterContent(chapterCount,
@@ -776,11 +851,15 @@ public class RecordProcessServiceImpl implements RecordProcessService {
             listOfChapters.add(chapterContent);
         }
 
-        logger.info("Course Prototype created in content table");
+        LOGGER.info("Course Prototype created in content table");
         return listOfChapters;
     }
 
-    private List<Score> createScoresList() {
+    /*
+     * This function creates theList of Score content files to be included in a
+     * chapter
+     */
+    private List<Score> createListOfScores() {
         List<Score> scoreList = new ArrayList<>();
         for (int scoreCount = 0; scoreCount <= MobileAcademyConstants.NUM_OF_SCORES; scoreCount++) {
             Score score = new Score(MobileAcademyConstants.SCORE
@@ -790,7 +869,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return scoreList;
     }
 
-    private List<QuestionContent> createQuestionList() {
+    /*
+     * This function creates the List of QuestionContent files to be included in
+     * a quiz of chapter
+     */
+    private List<QuestionContent> createListOfQuestion() {
         List<QuestionContent> questionList = new ArrayList<>();
         for (int questionCount = 1; questionCount <= MobileAcademyConstants.NUM_OF_QUESTIONS; questionCount++) {
             QuestionContent questionContent = new QuestionContent(
@@ -807,7 +890,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return questionList;
     }
 
-    private List<LessonContent> createLessonList() {
+    /*
+     * This function creates the List of LessonContent files to be included in a
+     * chapter
+     */
+    private List<LessonContent> createListOfLesson() {
         List<LessonContent> lessonList = new ArrayList<>();
         for (int lessonCount = 1; lessonCount <= MobileAcademyConstants.NUM_OF_LESSONS; lessonCount++) {
             LessonContent lessonContent = new LessonContent(lessonCount,
@@ -820,6 +907,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return lessonList;
     }
 
+    /*
+     * This function takes the CourserRawContent record as input and based on
+     * that It creates a CourseProcessedContent Record in CourseProcessedContent
+     * table chapter
+     */
     private void updateRecordInContentProcessedTable(
             CourseRawContent courseRawContent) {
         courseProcessedContentService.create(new CourseProcessedContent(Integer
@@ -832,6 +924,11 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                 courseRawContent.getMetaData().toUpperCase()));
     }
 
+    /*
+     * This function validates the CourseRawContent record and returns the
+     * record object, populated on the basis of contentName in the raw record.
+     * In case of error in the record, it returns null.
+     */
     private Record validateRawContent(CourseRawContent courseRawContent) {
         Record record = new Record();
 
@@ -842,13 +939,13 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         if (record.getType() == FileType.QuestionContent) {
             String metaData = courseRawContent.getMetaData();
             if (metaData.isEmpty()) {
-                logger.info("No MetaData found");
+                LOGGER.info("No MetaData found");
                 return null;
             }
             if (!metaData.substring(0, metaData.indexOf(":")).equalsIgnoreCase(
                     "CorrectAnswer")) {
                 // log correctAnswer in incorrect format
-                logger.info("*****Error: CorrectAnswer not found*****");
+                LOGGER.info("*****Error: CorrectAnswer not found*****");
                 return null;
             } else {
                 try {
@@ -856,7 +953,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                             .substring(metaData.indexOf(":") + 1)));
                 } catch (NumberFormatException exception) {
                     // log chapter-id NOT NUMERIC
-                    logger.info("*****Error: CorrectAnswerOption not Numeric*****");
+                    LOGGER.info("*****Error: CorrectAnswerOption not Numeric*****");
                     return null;
                 }
             }
@@ -866,11 +963,17 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return record;
     }
 
+    /*
+     * This function validates the content Name in a CourseRawContent Record. In
+     * case of Sunny Scenario, it sets the indices in the record object and
+     * return true. while in case of any error in the content name field, it
+     * returns false.
+     */
     private boolean validateContentName(CourseRawContent courseRawContent,
             Record record) {
         String contentName = courseRawContent.getContentName().trim();
         if (contentName.indexOf("_") == -1) {
-            logger.info("*****Error: ContentName not separated by _*****");
+            LOGGER.info("*****Error: ContentName not separated by _*****");
             return false;
         }
 
@@ -879,14 +982,14 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         String subString = contentName.substring(1 + contentName.indexOf("_"));
 
         if (StringUtils.isBlank(subString)) {
-            logger.info("*****Error: Unable to find complete content name*****");
+            LOGGER.info("*****Error: Unable to find complete content name*****");
             return false;
         }
 
         if (!chapterString.substring(0, chapterString.length() - 2)
                 .equalsIgnoreCase("Chapter")) {
             // log Chapter in incorrect format
-            logger.info("*****Error: Chapter not found*****");
+            LOGGER.info("*****Error: Chapter not found*****");
             return false;
         } else {
             try {
@@ -894,7 +997,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
                         .substring(chapterString.length() - 2)));
             } catch (NumberFormatException exception) {
                 // log CHAPTER-id NOT NUMERIC
-                logger.info("*****Error: ChapterID not Numeric*****");
+                LOGGER.info("*****Error: ChapterID not Numeric*****");
                 return false;
             }
         }
@@ -905,6 +1008,12 @@ public class RecordProcessServiceImpl implements RecordProcessService {
         return true;
     }
 
+    /*
+     * This function checks if the type of the file to which the records points
+     * to is determinable from the substring in content Name. in case of sunny
+     * Scenario, it sets the file-type in record object and returns true, while
+     * in case of any error, it returns false.
+     */
     private boolean isTypeDeterminable(Record record, String subString) {
 
         if (subString.equalsIgnoreCase("QuizHeader")) {
@@ -925,7 +1034,7 @@ public class RecordProcessServiceImpl implements RecordProcessService {
             index = Integer.parseInt(indexString);
         } catch (NumberFormatException exception) {
             // log unable to determine the index in content name
-            logger.info("*****Error: Second Index in content name not Numeric*****");
+            LOGGER.info("*****Error: Second Index in content name not Numeric*****");
 
             return false;
         }
@@ -956,11 +1065,16 @@ public class RecordProcessServiceImpl implements RecordProcessService {
             return true;
         } else {
             // Log.. Second String not correct
-            logger.info("*****Error: Unable to determine the type*****");
+            LOGGER.info("*****Error: Unable to determine the type*****");
             return false;
         }
     }
 
+    /*
+     * This function checks the file-type to which the record refers and on the
+     * basis of that, it populates the chapterContent Prototype Object and marks
+     * the flag in courseFlags for successful arrival of the file.
+     */
     private void checkTypeAndAddToChapterContent(Record record,
             ChapterContent chapterContent, CourseFlags courseFlags) {
 

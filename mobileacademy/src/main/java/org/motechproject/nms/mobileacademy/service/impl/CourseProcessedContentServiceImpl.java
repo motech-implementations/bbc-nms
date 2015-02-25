@@ -11,7 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by nitin on 2/17/15.
+ * Service implementation for CourseProcessedContent Records
+ * 
+ * @author YOGESH
+ *
  */
 @Service("CourseProcessedContentService")
 public class CourseProcessedContentServiceImpl implements

@@ -9,7 +9,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
 import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
-import org.motechproject.nms.mobileacademy.service.RecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -34,7 +34,7 @@ public class CourseUploadCsvHandler {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Autowired
-    RecordProcessService recordProcessService;
+    CSVRecordProcessService csvRecordProcessService;
 
     @Autowired
     CourseRawContentDataService courseRawContentDataService;
@@ -62,7 +62,7 @@ public class CourseUploadCsvHandler {
         System.out.println("Rows inserted---" + createdIds);
         // TODO yogesh success code
 
-        recordProcessService
+        csvRecordProcessService
                 .processRawRecords(getListOfCourseRawContents(createdIds));
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName,

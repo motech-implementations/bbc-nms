@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.commons;
 
 /**
- * Created by nitin on 2/9/15.
+ * Enum for different type of course content files.
  */
 
 public enum FileType {

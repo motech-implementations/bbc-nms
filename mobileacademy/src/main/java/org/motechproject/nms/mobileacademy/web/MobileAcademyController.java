@@ -2,10 +2,10 @@ package org.motechproject.nms.mobileacademy.web;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
-import org.motechproject.nms.mobileacademy.service.RecordProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MobileAcademyController {
     CoursePopulateService coursePopulateService;
 
     @Autowired
-    RecordProcessService recordProcessService;
+    CSVRecordProcessService csvRecordProcessService;
 
     @Autowired
     CourseRawContentDataService courseRawContentDataService;
@@ -47,7 +47,7 @@ public class MobileAcademyController {
     @RequestMapping(value = "/processData")
     @ResponseBody
     public String processData() {
-        return recordProcessService
+        return csvRecordProcessService
                 .processRawRecords(courseRawContentDataService.retrieveAll());
     }
 

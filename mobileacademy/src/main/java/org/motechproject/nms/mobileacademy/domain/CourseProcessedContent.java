@@ -4,7 +4,9 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.nms.mobileacademy.commons.ContentType;
 
 /**
- * Created by nitin on 2/9/15.
+ * CourseProcessedContent object to refer course data processed from uploaded
+ * CSV.
+ *
  */
 @Entity
 public class CourseProcessedContent {
@@ -25,6 +27,18 @@ public class CourseProcessedContent {
 
     private String metadata;
 
+    /**
+     * Constructor with all arguments.
+     * 
+     * @param contentID contentID
+     * @param circle circle
+     * @param languageLocationCode languageLocationCode
+     * @param contentName contentName
+     * @param contentType contentType
+     * @param contentFile contentFile
+     * @param contentDuration contentDuration
+     * @param metadata metadata
+     */
     public CourseProcessedContent(Integer contentID, String circle,
             Integer languageLocationCode, String contentName,
             ContentType contentType, String contentFile,

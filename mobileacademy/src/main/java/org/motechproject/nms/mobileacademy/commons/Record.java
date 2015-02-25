@@ -1,18 +1,24 @@
 package org.motechproject.nms.mobileacademy.commons;
 
-
-
 /**
- * Created by nitin on 2/13/15.
+ * Record class used as helper class for course record processing.
  */
 public class Record {
+
     private int chapterId;
+
     private int scoreID;
+
     private int lessonId;
+
     private FileType type;
+
     private int questionId;
+
     private int answerId;
+
     private CourseOperator operator;
+
     private String fileName;
 
     public int getChapterId() {
