@@ -26,7 +26,7 @@ public class ChapterContent extends MdsEntity {
     private List<LessonContent> lessons;
 
     @Field
-    private List<Score> scores;
+    private List<ScoreContent> scoreContents;
 
     @Field
     private QuizContent quiz;
@@ -45,16 +45,16 @@ public class ChapterContent extends MdsEntity {
      * @param name chapter meta data field i.e menu
      * @param audioFile name of the audio file
      * @param lessons list of lesson content
-     * @param scores list of score
+     * @param scoreContents list of score
      * @param quiz quiz object related to chapter
      */
     public ChapterContent(Integer chapterNumber, String name, String audioFile,
-            List<LessonContent> lessons, List<Score> scores, QuizContent quiz) {
+            List<LessonContent> lessons, List<ScoreContent> scoreContents, QuizContent quiz) {
         this.chapterNumber = chapterNumber;
         this.name = name;
         this.audioFile = audioFile;
         this.lessons = lessons;
-        this.scores = scores;
+        this.scoreContents = scoreContents;
         this.quiz = quiz;
     }
 
@@ -90,12 +90,12 @@ public class ChapterContent extends MdsEntity {
         this.lessons = lessons;
     }
 
-    public List<Score> getScores() {
-        return scores;
+    public List<ScoreContent> getScores() {
+        return scoreContents;
     }
 
-    public void setScores(List<Score> scores) {
-        this.scores = scores;
+    public void setScores(List<ScoreContent> scoreContents) {
+        this.scoreContents = scoreContents;
     }
 
     public QuizContent getQuiz() {

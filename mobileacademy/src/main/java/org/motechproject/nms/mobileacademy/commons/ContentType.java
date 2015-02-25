@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.commons;
 
 /**
- * Enum for course content type.
+ * Enumeration for course content type.
  */
 public enum ContentType {
     Content, Prompt;

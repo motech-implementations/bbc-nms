@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.commons;
 
 /**
- * Enum for course operation type.
+ * Enumeration for course operation type i.e add/modify/delete
  */
 public enum CourseOperator {
     ADD, MOD, DEL;

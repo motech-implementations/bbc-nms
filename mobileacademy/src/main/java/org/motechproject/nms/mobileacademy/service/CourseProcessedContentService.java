@@ -6,9 +6,6 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 
 /**
  * Service Interface for operations on CourseProcessedContent Table
- * 
- * @author YOGESH
- *
  */
 public interface CourseProcessedContentService {
 
@@ -16,8 +13,7 @@ public interface CourseProcessedContentService {
      * This function is used to check if a course corresponding to LLC exists in
      * system
      * 
-     * @param LLC
-     *            Language Location Code
+     * @param LLC Language Location Code
      * @return returns true/false
      */
     public boolean doesLLCExistsInCPC(int LLC);
@@ -33,12 +29,10 @@ public interface CourseProcessedContentService {
      * This is used to get a courseProcessesContent Record based on content name
      * for a LLC and circle
      * 
-     * @param circle
-     *            String corresponding to a valid circle
-     * @param LLC
-     *            integer corresponding to a language location code
-     * @param contentName
-     *            contentName to uniquely identify different files of course
+     * @param circle String corresponding to a valid circle
+     * @param LLC integer corresponding to a language location code
+     * @param contentName contentName to uniquely identify different files of
+     *            course
      * @return CPC Record for the content name
      */
     CourseProcessedContent getRecordforModification(String circle, int LLC,
@@ -59,8 +53,7 @@ public interface CourseProcessedContentService {
     /**
      * This is used to update an existing CourseProcessedContent Object
      * 
-     * @param courseProcessedContent
-     *            new Object to be persisted in the system
+     * @param courseProcessedContent new Object to be persisted in the system
      */
     void update(CourseProcessedContent courseProcessedContent);
 

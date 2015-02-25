@@ -45,29 +45,37 @@ public class CourseFlags {
     }
 
     public boolean hasCompleteCourseArrived() {
-        for (int i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
+        boolean status = true;
+        outer: for (int i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
             for (int j = 0; j < MobileAcademyConstants.NUM_OF_LESSONS; j++) {
                 if (!(flagForLessonFilesOfChapter[i][j][0] && flagForLessonFilesOfChapter[i][j][1])) {
-                    return false;
+                    status = false;
+                    break outer;
                 }
             }
             for (int j = 0; j < MobileAcademyConstants.NUM_OF_QUESTIONS; j++) {
                 if (!(flagForQuestionFilesOfChapter[i][j][0]
                         && flagForQuestionFilesOfChapter[i][j][1] && flagForQuestionFilesOfChapter[i][j][2])) {
-                    return false;
+                    status = false;
+                    break outer;
                 }
             }
-            if (!flagForQuizHeader[i])
-                return false;
+            if (!flagForQuizHeader[i]) {
+                status = false;
+                break outer;
+            }
             for (int j = 0; j < MobileAcademyConstants.NUM_OF_SCORE_FILES; j++) {
                 if (!(flagForScoreFilesOfChapter[i][j])) {
-                    return false;
+                    status = false;
+                    break outer;
                 }
             }
-            if (!flagForChapterEndMenu[i])
-                return false;
+            if (!flagForChapterEndMenu[i]) {
+                status = false;
+                break outer;
+            }
         }
-        return true;
+        return status;
     }
 
     public void markLessonContent(int chapterId, int lessonId) {

@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 /**
  * This file contains the implementation for CourseRawContentService. It will be
  * used to operate on CourseRawContent Tables
- * 
- * @author YOGESH
- *
  */
 @Service("CourseRawContentService")
 public class CourseRawContentServiceImpl implements CourseRawContentService {

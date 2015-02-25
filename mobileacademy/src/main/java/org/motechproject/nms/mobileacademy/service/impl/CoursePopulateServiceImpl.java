@@ -16,9 +16,8 @@ import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
-import org.motechproject.nms.mobileacademy.domain.Score;
+import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Service implementation for course population and querying in mtraining
- * 
- * @author YOGESH
+ * CoursePopulateServiceImpl class implements CoursePopulateService interface to
+ * perform course populate related operations in mtraining and content tables.
  *
  */
 @Service("CoursePopulateService")
@@ -38,61 +36,82 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     private MTrainingService mTrainingService;
 
     @Autowired
-    private CourseRawContentDataService courseRawContentDataService;
-
-    @Autowired
     private ChapterContentDataService chapterContentDataService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CoursePopulateServiceImpl.class);
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * populateMtrainingCourseData()
+     */
     @Override
     public void populateMtrainingCourseData() {
         List<Chapter> chapters = new ArrayList<>();
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
             List<Lesson> lessons = new ArrayList<>();
             for (int lessonCount = 1; lessonCount <= MobileAcademyConstants.NUM_OF_LESSONS; lessonCount++) {
-                Lesson lesson = new Lesson(MobileAcademyConstants.LESSON
-                        + String.format("%02d", lessonCount), null, null);
+                Lesson lesson = new Lesson(
+                        MobileAcademyConstants.LESSON
+                                + String.format(
+                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                        lessonCount), null, null);
                 lessons.add(lesson);
             }
             List<Question> questions = new ArrayList<>();
             for (int questionCount = 1; questionCount <= MobileAcademyConstants.NUM_OF_QUESTIONS; questionCount++) {
                 Question question = new Question(
                         MobileAcademyConstants.QUESTION
-                                + String.format("%02d", questionCount), null);
+                                + String.format(
+                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                        questionCount), null);
                 questions.add(question);
             }
             Quiz quiz = new Quiz(MobileAcademyConstants.QUIZ, null, null,
                     questions, 0.0);
             Chapter chapter = new Chapter(MobileAcademyConstants.CHAPTER
-                    + String.format("%02d", chapterCount), null, null, lessons,
-                    quiz);
+                    + String.format(
+                            MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                            chapterCount), null, null, lessons, quiz);
             chapters.add(chapter);
         }
 
-        Course course = new Course(MobileAcademyConstants.DEFAUlT_COURSE_NAME,
+        Course course = new Course(MobileAcademyConstants.DEFAULT_COURSE_NAME,
                 CourseUnitState.Inactive, null, chapters);
         mTrainingService.createCourse(course);
         LOGGER.info("Course Structure in Mtraining Populated");
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * findCourseState()
+     */
     @Override
     public CourseUnitState findCourseState() {
-    	CourseUnitState state = null;
+        CourseUnitState state = null;
         List<Course> courses = mTrainingService
-                .getCourseByName(MobileAcademyConstants.DEFAUlT_COURSE_NAME);
+                .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
         if (CollectionUtils.isNotEmpty(courses)) {
-        	state = courses.get(0).getState();
-            
+            state = courses.get(0).getState();
+
         }
         return state;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * updateCourseState(org.motechproject.mtraining.domain.CourseUnitState)
+     */
     @Override
     public void updateCourseState(CourseUnitState courseUnitState) {
         List<Course> courses = mTrainingService
-                .getCourseByName(MobileAcademyConstants.DEFAUlT_COURSE_NAME);
+                .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
         if (CollectionUtils.isNotEmpty(courses)) {
             Course course = courses.get(0);
             course.setState(courseUnitState);
@@ -100,6 +119,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * updateCorrectAnswer(java.lang.String, java.lang.String, java.lang.String)
+     */
     @Override
     public void updateCorrectAnswer(String chapterName, String questionName,
             String answer) {
@@ -118,12 +143,24 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * getAllChapterContents()
+     */
     @Override
     public List<ChapterContent> getAllChapterContents() {
         chapterContentDataService.retrieveAll();
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * getLessonContent(int, int, java.lang.String)
+     */
     @Override
     public LessonContent getLessonContent(int chapterId, int lessonId,
             String type) {
@@ -137,6 +174,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * setLessonContent(int, int, java.lang.String, java.lang.String)
+     */
+    @Override
     public void setLessonContent(int chapterId, int lessonId, String type,
             String fileName) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
@@ -151,6 +195,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * getQuestionContent(int, int, java.lang.String)
+     */
+    @Override
     public QuestionContent getQuestionContent(int chapterId, int questionId,
             String type) {
         for (QuestionContent questionContent : chapterContentDataService
@@ -163,6 +214,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * setQuestionContent(int, int, java.lang.String, java.lang.String)
+     */
+    @Override
     public void setQuestionContent(int chapterId, int questionId, String type,
             String fileName) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
@@ -178,31 +236,58 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    public Score getScore(int chapterId, int scoreId, String type) {
-        for (Score score : chapterContentDataService.retrieveAll()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.motechproject.nms.mobileacademy.service.CoursePopulateService#getScore
+     * (int, int, java.lang.String)
+     */
+    @Override
+    public ScoreContent getScore(int chapterId, int scoreId, String type) {
+        for (ScoreContent scoreContent : chapterContentDataService.retrieveAll()
                 .get(chapterId - 1).getScores()) {
-            if ((score.getName().equalsIgnoreCase(type
-                    + String.format("%02d", scoreId)))) {
-                return score;
+            if ((scoreContent.getName().equalsIgnoreCase(type
+                    + String.format(
+                            MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                            scoreId)))) {
+                return scoreContent;
             }
         }
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.motechproject.nms.mobileacademy.service.CoursePopulateService#setScore
+     * (int, int, java.lang.String, java.lang.String)
+     */
+    @Override
     public void setScore(int chapterId, int scoreId, String type,
             String fileName) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
                 .get(chapterId - 1);
-        for (Score score : chapterContent.getScores()) {
-            if ((score.getName().equalsIgnoreCase(type
-                    + String.format("%02d", scoreId)))) {
-                score.setAudioFile(fileName);
+        for (ScoreContent scoreContent : chapterContent.getScores()) {
+            if ((scoreContent.getName().equalsIgnoreCase(type
+                    + String.format(
+                            MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                            scoreId)))) {
+                scoreContent.setAudioFile(fileName);
                 chapterContentDataService.update(chapterContent);
                 return;
             }
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * getChapterContent(int, java.lang.String)
+     */
+    @Override
     public ChapterContent getChapterContent(int chapterId, String type) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
                 .get(chapterId - 1);
@@ -212,6 +297,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * setChapterContent(int, java.lang.String, java.lang.String)
+     */
+    @Override
     public void setChapterContent(int chapterId, String type, String fileName) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
                 .get(chapterId - 1);
@@ -222,6 +314,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * getQuizContent(int, java.lang.String)
+     */
+    @Override
     public QuizContent getQuizContent(int chapterId, String type) {
         QuizContent quizContent = chapterContentDataService.retrieveAll()
                 .get(chapterId - 1).getQuiz();
@@ -231,6 +330,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
+     * setQuizContent(int, java.lang.String, java.lang.String)
+     */
+    @Override
     public void setQuizContent(int chapterId, String type, String fileName) {
         ChapterContent chapterContent = chapterContentDataService.retrieveAll()
                 .get(chapterId - 1);

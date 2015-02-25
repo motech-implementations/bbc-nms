@@ -39,6 +39,6 @@
     <osgi:reference id="MTrainingService"
                     interface="org.motechproject.mtraining.service.MTrainingService" />
     
-    <!-- <osgi:reference id="bulkUploadErrLogService"
-                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>     -->
+    <osgi:reference id="bulkUploadErrLogService"
+                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 </beans>

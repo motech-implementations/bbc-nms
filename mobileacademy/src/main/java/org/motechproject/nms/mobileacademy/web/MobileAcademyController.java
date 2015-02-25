@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * Controller for MobileAcademy Module
+ * Controller for MobileAcademy Module, currently using it for testing services.
+ * Will be removed later.
  */
 @Controller
 public class MobileAcademyController {

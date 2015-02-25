@@ -5,7 +5,20 @@ package org.motechproject.nms.mobileacademy.service;
  */
 public interface MasterDataService {
 
+    /**
+     * check circle vaild or not
+     * 
+     * @param circle
+     * @return boolean
+     */
     public boolean isCircleValid(String circle);
 
+    /**
+     * check LLC valid in circle or not
+     * 
+     * @param Circle
+     * @param LLC
+     * @return boolean
+     */
     public boolean isLLCValidInCircle(String Circle, int LLC);
 }

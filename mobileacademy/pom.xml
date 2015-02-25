@@ -196,7 +196,6 @@
 						<Export-Package>org.motechproject.nms.mobileacademy.service;version=${project.version},
 							org.motechproject.nms.mobileacademy.repository;version=${project.version},
 							org.motechproject.nms.mobileacademy.commons;version=${project.version},
-							org.motechproject.nms.mobileacademy.util;version=${project.version},
 							org.motechproject.nms.mobileacademy.domain;version=${project.version},
 						</Export-Package>
 						<Import-Package>org.motechproject.osgi.web,

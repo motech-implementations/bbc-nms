@@ -30,14 +30,17 @@ public class CourseProcessedContent {
     /**
      * Constructor with all arguments.
      * 
-     * @param contentID contentID
-     * @param circle circle
-     * @param languageLocationCode languageLocationCode
-     * @param contentName contentName
-     * @param contentType contentType
-     * @param contentFile contentFile
-     * @param contentDuration contentDuration
-     * @param metadata metadata
+     * @param contentID Unique identifier of the content.
+     * @param circle Circle code.
+     * @param languageLocationCode Language location code for the content. One
+     *            circle may have multiple language location codes.
+     * @param contentName Name of the course content.
+     * @param contentType Type of the content – prompt or content.
+     * @param contentFile Name of the content audio file.
+     * @param contentDuration Duration of the content audio file.
+     * @param metaData Any additional information related to content. It can
+     *            contain name-value pairs separated by semicolon(;). The name
+     *            and value are separated by hyphen (-:).
      */
     public CourseProcessedContent(Integer contentID, String circle,
             Integer languageLocationCode, String contentName,

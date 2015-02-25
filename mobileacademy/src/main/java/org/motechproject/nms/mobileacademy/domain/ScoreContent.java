@@ -5,11 +5,11 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * Score object to refer scores of a chapter.
+ * Score content object to refer scores of a chapter.
  *
  */
 @Entity
-public class Score extends MdsEntity {
+public class ScoreContent extends MdsEntity {
 
     @Field
     private String name;
@@ -20,7 +20,7 @@ public class Score extends MdsEntity {
     /**
      * constructor with 0 arguments.
      */
-    public Score() {
+    public ScoreContent() {
     }
 
     /**
@@ -29,7 +29,7 @@ public class Score extends MdsEntity {
      * @param name name of the score i.e score01, score02, score03, score04
      * @param audioFile name of the audio file.
      */
-    public Score(String name, String audioFile) {
+    public ScoreContent(String name, String audioFile) {
         this.name = name;
         this.audioFile = audioFile;
     }

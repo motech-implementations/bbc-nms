@@ -5,11 +5,8 @@ import java.util.List;
 import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
 
 /**
- * @author YOGESH
- *
- *         This interface is used to process the CSV Records uploaded by users.
- *         It populates MTraining and course content tables based on the
- *         operations
+ * This interface is used to process the CSV Records uploaded by users. It
+ * populates MTraining and course content tables based on the operations
  */
 public interface CSVRecordProcessService {
 
