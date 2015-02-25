@@ -85,8 +85,7 @@ public class LanguageLocationCodeCsvHandler {
                             languageLocationCodeService.delete(oldRecord);
                             logger.info("Record deleted successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
                         } else {
-                            newRecord.setOwner(oldRecord.getOwner());
-                            newRecord.setModifiedBy(userName);
+                            newRecord.setId(oldRecord.getId());
                             languageLocationCodeService.update(newRecord);
                             logger.info("Record updated successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
                         }
@@ -114,6 +113,10 @@ public class LanguageLocationCodeCsvHandler {
                 result.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("LANGUAGE_LOCATION_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                errorDetail.setErrorCategory("");
+                errorDetail.setRecordDetails("");
+                errorDetail.setErrorDescription("");
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
             }
             finally{
