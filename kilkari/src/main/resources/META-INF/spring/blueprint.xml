@@ -23,10 +23,10 @@
 	<osgi:reference id="subscriptionPackDataService"
                     interface="org.motechproject.nms.kilkari.repository.SubscriptionPackDataService" />
 
-    <osgi:reference id="contentUploadKKDataService"
+    <osgi:reference id="contentUploadDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadDataService" />
 
-    <osgi:reference id="contentUploadKKCsvDataService"
+    <osgi:reference id="contentUploadCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService" />
 
     <osgi:reference id="locationService"

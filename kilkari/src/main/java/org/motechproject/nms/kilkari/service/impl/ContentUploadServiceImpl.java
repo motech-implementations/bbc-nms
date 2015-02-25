@@ -1,12 +1,12 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import org.motechproject.nms.kilkari.domain.ContentUploadKK;
+import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.repository.ContentUploadDataService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service("contentUploadKKService")
+@Service("contentUploadService")
 public class ContentUploadServiceImpl implements ContentUploadService {
 
     @Autowired
@@ -18,7 +18,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      * @param record object of type ContentUploadKK
      */
     @Override
-    public void create(ContentUploadKK record) {
+    public void create(ContentUpload record) {
         contentUploadKKCsvDataService.create(record);
     }
 
@@ -28,7 +28,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      * @param record object of type ContentUploadKK
      */
     @Override
-    public void update(ContentUploadKK record) {
+    public void update(ContentUpload record) {
         contentUploadKKCsvDataService.update(record);
     }
 
@@ -38,7 +38,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      * @param record object of type ContentUploadKK
      */
     @Override
-    public void delete(ContentUploadKK record) {
+    public void delete(ContentUpload record) {
         contentUploadKKCsvDataService.delete(record);
     }
 
@@ -49,7 +49,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      * @return ContentUploadKK object
      */
     @Override
-    public ContentUploadKK getRecordByContentId(Long contentId) {
+    public ContentUpload getRecordByContentId(Long contentId) {
         return contentUploadKKCsvDataService.findByContentId(contentId);
     }
 }
