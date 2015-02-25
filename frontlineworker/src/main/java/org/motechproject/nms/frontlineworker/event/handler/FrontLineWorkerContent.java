@@ -12,7 +12,7 @@ import org.motechproject.nms.masterdata.domain.Village;
 /**
  * This class Models data for Front Line Worker records that is to be stored temporarily
  */
-public class FrontLineWorkerContent {
+public final  class FrontLineWorkerContent {
 
 
     private Long stateCode;

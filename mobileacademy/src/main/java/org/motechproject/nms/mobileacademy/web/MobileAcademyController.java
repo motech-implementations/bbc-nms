@@ -6,8 +6,6 @@ import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,22 +17,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MobileAcademyController {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private CourseRawContentService courseRawContentService;
 
     @Autowired
-    CourseRawContentService courseRawContentService;
+    private CourseProcessedContentService courseProcessedContentService;
 
     @Autowired
-    CourseProcessedContentService courseProcessedContentService;
+    private CoursePopulateService coursePopulateService;
 
     @Autowired
-    CoursePopulateService coursePopulateService;
+    private CSVRecordProcessService csvRecordProcessService;
 
     @Autowired
-    CSVRecordProcessService csvRecordProcessService;
-
-    @Autowired
-    CourseRawContentDataService courseRawContentDataService;
+    private CourseRawContentDataService courseRawContentDataService;
 
     private static final String OK = "OK";
 
@@ -47,8 +43,8 @@ public class MobileAcademyController {
     @RequestMapping(value = "/processData")
     @ResponseBody
     public String processData() {
-        return csvRecordProcessService
-                .processRawRecords(courseRawContentDataService.retrieveAll());
+        return csvRecordProcessService.processRawRecords(
+                courseRawContentDataService.retrieveAll(), "csv name");
     }
 
     @RequestMapping(value = "/deleteData")

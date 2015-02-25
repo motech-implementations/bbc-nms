@@ -60,7 +60,7 @@ public class LanguageLocationCodeCsvHandler {
     @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info("Start processing LanguageLocationCodeCsv-import success for upload {}", params.toString());
+        logger.info("CIRCLE_CSV_SUCCESS event received");
         LanguageLocationCodeCsv record = null;
         String userName = null;
 
@@ -68,8 +68,9 @@ public class LanguageLocationCodeCsvHandler {
         CsvProcessingSummary result = new CsvProcessingSummary();
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        String csvImportFileName = (String) params.get("csv-import.filename");
-        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
+        String csvFileName = (String) params.get("csv-import.filename");
+        logger.debug("Csv file name received in event : {}", csvFileName);
+        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
         for (Long id : createdIds) {
             try {
@@ -126,7 +127,7 @@ public class LanguageLocationCodeCsvHandler {
             }
         }
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, errorFileName, result);
         logger.info("Finished processing LanguageLocationCodeCsv-import success");
     }
 
@@ -139,18 +140,18 @@ public class LanguageLocationCodeCsvHandler {
     @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_FAILED)
     public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-        logger.info("Start processing LanguageLocationCodeCsv-import failure for upload {}", params.toString());
+        logger.info("LANGUAGE_LOCATION_CSV_FAILED event received");
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         for (Long id : createdIds) {
             LanguageLocationCodeCsv oldRecord = languageLocationCodeServiceCsv.getRecord(id);
             if (oldRecord != null) {
+                logger.debug("LANGUAGE_LOCATION_CSV_FAILED event processing start for ID: {}", id);
                 languageLocationCodeServiceCsv.delete(oldRecord);
-                logger.info("Record deleted successfully from LanguageLocationCodeCsv table for id {}", id.toString());
             }
         }
-        logger.info("Finished processing LanguageLocationCodeCsv-import failure");
+        logger.info("CIRCLE_CSV_FAILED event processing finished");
     }
 
 

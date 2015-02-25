@@ -10,34 +10,24 @@ import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
 import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
-import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * This class provides Motech Listeners for course raw content csv handler for
- * both success and failure scenarios.
+ * This class handles success and failure events for CourseRawContent that
+ * contains course structure.
  */
 
 @Component
 public class CourseUploadCsvHandler {
 
-    public static Integer successCount = 0;
-
-    public static Integer failCount = 0;
+    @Autowired
+    private CSVRecordProcessService csvRecordProcessService;
 
     @Autowired
-    private BulkUploadErrLogService bulkUploadErrLogService;
-
-    @Autowired
-    CSVRecordProcessService csvRecordProcessService;
-
-    @Autowired
-    CourseRawContentDataService courseRawContentDataService;
+    private CourseRawContentDataService courseRawContentDataService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CourseUploadCsvHandler.class);
@@ -48,30 +38,27 @@ public class CourseUploadCsvHandler {
      * 
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = { MobileAcademyConstants.COURSE_CSV_UPLOAD_SUCCESS })
+    @MotechListener(subjects = { MobileAcademyConstants.COURSE_CSV_UPLOAD_SUCCESS_EVENT })
     public void courseCsvDataSuccessHandler(MotechEvent motechEvent) {
-        LOGGER.info("Entered into course Csv Data Success Handler");
-        String userName = null;
-        CsvProcessingSummary summary = new CsvProcessingSummary();
+        LOGGER.info("Entered into COURSE_CSV_UPLOAD_SUCCESS_EVENT Handler");
         Map<String, Object> params = motechEvent.getParameters();
         List<Long> createdIds = (ArrayList<Long>) params
                 .get("csv-import.created_ids");
-        String csvImportFileName = (String) params.get("csv-import.filename");
-        String errorFileName = BulkUploadError
-                .createBulkUploadErrLogFileName(csvImportFileName);
-        System.out.println("Rows inserted---" + createdIds);
-        // TODO yogesh success code
-
-        csvRecordProcessService
-                .processRawRecords(getListOfCourseRawContents(createdIds));
-
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName,
-                csvImportFileName, errorFileName, summary);
+        String csvFileName = (String) params.get("csv-import.filename");
+        LOGGER.info("Csv file name received in event : {}", csvFileName);
+        csvRecordProcessService.processRawRecords(
+                findListOfCourseRawContents(createdIds), csvFileName);
+        LOGGER.info("Finished processing COURSE_CSV_UPLOAD_SUCCESS_EVENT Handler");
     }
 
-    private List<CourseRawContent> getListOfCourseRawContents(
+    /**
+     * find List Of CourseRawContent on the basis of received Id
+     * 
+     * @param createdIds List of created id on csv upload
+     * @return List<CourseRawContent> List Of CourseRawContent
+     */
+    private List<CourseRawContent> findListOfCourseRawContents(
             List<Long> createdIds) {
-        // TODO Auto-generated method stub
         List<CourseRawContent> listOfCourseRawContents = new ArrayList<>();
         for (Long id : createdIds) {
             listOfCourseRawContents.add(courseRawContentDataService
@@ -86,13 +73,26 @@ public class CourseUploadCsvHandler {
      * 
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = { MobileAcademyConstants.COURSE_CSV_UPLOAD_FAILED })
+    @MotechListener(subjects = { MobileAcademyConstants.COURSE_CSV_UPLOAD_FAILURE_EVENT })
     public void courseCsvDataFailureHandler(MotechEvent motechEvent) {
-        LOGGER.info("Entered into course Csv Data Failure Handler");
+        LOGGER.info("Entered into COURSE_CSV_UPLOAD_FAILURE_EVENT Handler");
         Map<String, Object> params = motechEvent.getParameters();
+        LOGGER.info(
+                "Start processing CourseRawContent-import failure for upload {}",
+                params.toString());
         List<Long> createdIds = (ArrayList<Long>) params
                 .get("csv-import.created_ids");
-        // TODO yogesh error code
+        for (Long id : createdIds) {
+            CourseRawContent courseRawContent = courseRawContentDataService
+                    .findById(id);
+            if (courseRawContent != null) {
+                courseRawContentDataService.delete(courseRawContent);
+                LOGGER.info(
+                        "Record deleted successfully from CourseRawContent table for id {}",
+                        id.toString());
+            }
+        }
+        LOGGER.info("Finished processing COURSE_CSV_UPLOAD_FAILURE_EVENT Handler");
     }
 
 }
