@@ -46,9 +46,6 @@ public class ContentUploadCsvHandler {
     private ContentUploadRecordDataService contentUploadRecordDataService;
 
     @Autowired
-    private BulkUploadError errorDetails;
-
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
 
@@ -73,6 +70,7 @@ public class ContentUploadCsvHandler {
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
+        BulkUploadError errorDetails = null;
 
         //this loop processes each of the entries in the Content Upload Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -176,7 +174,7 @@ public class ContentUploadCsvHandler {
      */
     @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed"})
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
-
+        BulkUploadError errorDetails = null;
         logger.info("Failure[mobileKunjiContentUploadFailure] method start for mobileKunjiContentUploadCsv");
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
@@ -210,6 +208,7 @@ public class ContentUploadCsvHandler {
      * @param errorDescription specifies error descriotion
      */
     private void setErrorDetails(String id, String errorCategory, String errorDescription) {
+        BulkUploadError errorDetails = new BulkUploadError();
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
         errorDetails.setErrorDescription(errorDescription);

@@ -19,10 +19,4 @@
     <osgi:reference id="contentUploadCsv"
                     interface="org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService"/>
 
-
-    <osgi:reference id="stateCapMapping"
-                    interface="org.motechproject.nms.mobilekunji.repository.StateCapMappingRecordDataService"/>
-
-    <osgi:reference id="stateCapMappingCsv"
-                    interface="org.motechproject.nms.mobilekunji.repository.StateCapMappingCsvRecordDataService"/>
 </beans>

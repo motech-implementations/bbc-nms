@@ -83,7 +83,8 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
                         <Resource-Path>kunji/resources</Resource-Path>
                         <Context-Path>kunji</Context-Path>
-                        <Export-Package>org.motechproject.nms.mobilekunji.service;version=${project.version},
+                        <Export-Package>org.motechproject.nms.mobilekunji;version=${project.version},
+                            org.motechproject.nms.mobilekunji.service;version=${project.version},
                             org.motechproject.nms.mobilekunji.repository;version=${project.version},
                             org.motechproject.nms.mobilekunji.domain;version=${project.version},
                         </Export-Package>
