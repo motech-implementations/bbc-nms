@@ -10,7 +10,7 @@ import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.CONFIGURATION_INDEX;
+import static org.motechproject.nms.mobilekunji.constants.KunjiConstants.CONFIGURATION_INDEX;
 
 /**
  * This class provides the implementation of ConfigurationService

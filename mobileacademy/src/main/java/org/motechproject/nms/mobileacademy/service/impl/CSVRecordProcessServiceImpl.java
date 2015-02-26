@@ -8,7 +8,9 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.mtraining.domain.Question;
 import org.motechproject.nms.mobileacademy.commons.ContentType;
 import org.motechproject.nms.mobileacademy.commons.CourseFlags;
 import org.motechproject.nms.mobileacademy.commons.FileType;
@@ -638,9 +640,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						continue;
 					}
 
-					CourseUnitState courseState = coursePopulateService
-							.findCourseState();
-					if (courseState == null) {
+					Course course = coursePopulateService.getMtrainingCourse();
+					if (course == null) {
 						populateCourseStructure = true;
 						coursePopulateService.populateMtrainingCourseData();
 					}
@@ -824,8 +825,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 					// If this was the last LLC in CPC
 					if (courseProcessedContentService
 							.getListOfAllExistingLLcs().size() == 0) {
-						coursePopulateService
-								.updateCourseState(CourseUnitState.Inactive);
+						coursePopulateService.deleteMtrainingCourse();
 						chapterContentDataService.deleteAll();
 					}
 				} else {
@@ -952,7 +952,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						.getQuestionId())
 						&& (questionContent.getName()
 								.equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
-					if (questionContent.getAudioFile() != record.getFileName()) {
+					if ((questionContent.getAudioFile() != record.getFileName())
+							|| !answerOptionMatcher(record)) {
 						status = false;
 					} else {
 						break;
@@ -1024,6 +1025,27 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 					record.getScoreID());
 		}
 		return status;
+	}
+
+	private boolean answerOptionMatcher(Record record) {
+
+		Course currentCourse = coursePopulateService.getMtrainingCourse();
+		int questionNo = record.getQuestionId();
+		int answerNo = record.getAnswerId();
+		int chapterNo = record.getAnswerId();
+
+		if (currentCourse != null) {
+			Question question = currentCourse.getChapters().get(chapterNo - 1)
+					.getQuiz().getQuestions().get(questionNo - 1);
+			try {
+				if (Integer.parseInt(question.getAnswer()) != answerNo) {
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/*
@@ -1158,6 +1180,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 	private void validateContentName(CourseRawContent courseRawContent,
 			Record record) throws DataValidationException {
 		String contentName = courseRawContent.getContentName().trim();
+		boolean recordDataValidation = true;
 		if (contentName.indexOf('_') == -1) {
 			throw new DataValidationException(
 					MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
@@ -1189,7 +1212,12 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 					MobileAcademyConstants.CONTENT_NAME);
 		}
 
-		if (!isTypeDeterminable(record, subString)) {
+		if (!verifyRange(record.getChapterId(), 1,
+				MobileAcademyConstants.NUM_OF_CHAPTERS)) {
+			recordDataValidation = false;
+		}
+
+		if ((!recordDataValidation) || (!isTypeDeterminable(record, subString))) {
 			throw new DataValidationException(
 					MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
 					ErrorCategoryConstants.INCONSISTENT_DATA,
@@ -1227,26 +1255,60 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 		record.setType(fileType);
 
 		if (fileType == FileType.LESSON_CONTENT) {
+			if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_LESSONS)) {
+				return false;
+			}
 			record.setLessonId(index);
 			return true;
 		} else if (fileType == FileType.LESSON_END_MENU) {
+			if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_LESSONS)) {
+				return false;
+			}
 			record.setLessonId(index);
 			return true;
 		} else if (fileType == FileType.QUESTION_CONTENT) {
+			if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
+				return false;
+			}
 			record.setQuestionId(index);
 			return true;
 		} else if (fileType == FileType.CORRECT_ANSWER) {
+			if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
+				return false;
+			}
 			record.setQuestionId(index);
 			return true;
 		} else if (fileType == FileType.WRONG_ANSWER) {
+			if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
+				return false;
+			}
 			record.setQuestionId(index);
 			return true;
 		} else if (fileType == FileType.SCORE) {
+			if (!verifyRange(index, 0, MobileAcademyConstants.NUM_OF_SCORES)) {
+				return false;
+			}
 			record.setScoreID(index);
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @param value
+	 *            : CURRENT VALUE OF PARAM
+	 * @param minValue
+	 *            : The minimum possible value
+	 * @param maxValue
+	 *            : The maximum possible value
+	 * @return : true if the current value lies in range
+	 */
+	private boolean verifyRange(int value, int minValue, int maxValue) {
+		if (value < minValue || value > maxValue) {
+			return false;
+		}
+		return true;
 	}
 
 	/*

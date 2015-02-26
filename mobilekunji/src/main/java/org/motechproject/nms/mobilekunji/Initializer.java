@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.*;
+import static org.motechproject.nms.mobilekunji.constants.KunjiConstants.*;
 
 
 /**
