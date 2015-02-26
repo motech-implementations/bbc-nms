@@ -40,7 +40,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
     @Override
     public void delete(ChildMctsCsv record) {
-        // TODO Auto-generated method stub
+        childMctsCsvDataService.delete(record);
 
     }
 

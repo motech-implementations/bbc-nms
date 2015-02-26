@@ -1,7 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.Configuration;
-import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.CONFIGURATION_INDEX;
+//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.CONFIGURATION_INDEX;
 import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 
@@ -26,7 +26,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public Configuration getConfiguration() {
-        return configurationDataService.findConfigurationByIndex(CONFIGURATION_INDEX);
+        return configurationDataService.findConfigurationByIndex(1L);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
     @Override
     public void delete(MotherMctsCsv record) {
-        // TODO Auto-generated method stub
+        motherMctsCsvDataService.delete(record);
 
     }
 
@@ -54,7 +54,8 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     public MotherMctsCsv findRecordById(Long id) {
         return motherMctsCsvDataService.findById(id);
     }
-    
+
+    @Override
     public void deleteAll() {
         motherMctsCsvDataService.deleteAll();
     }

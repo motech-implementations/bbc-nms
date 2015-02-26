@@ -110,21 +110,25 @@ public class MotherMctsCsvHandler {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
+                logger.warn("DataValidationException ::::", dve);
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                logger.warn("DataValidationException ::::", dve);
+
                 summary.incrementFailureCount();
 
             } catch (Exception e) {
+                logger.error("Generic Exception caught ::::", e);
                 errorDetails.setRecordDetails("");
                 errorDetails.setErrorCategory("");
                 errorDetails.setErrorDescription("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 summary.incrementFailureCount();
-            }  finally {
+            }finally {
+                logger.debug("Inside finally");
                 if (motherMctsCsv != null) {
+                    logger.info("Deleting motherMctsCsv record id[{}]", motherMctsCsv.getId());
                     motherMctsCsvService.delete(motherMctsCsv);
                 }
             }
