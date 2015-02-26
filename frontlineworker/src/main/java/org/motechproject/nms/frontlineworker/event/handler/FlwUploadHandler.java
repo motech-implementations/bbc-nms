@@ -209,7 +209,7 @@ public class FlwUploadHandler {
         State state;
         District district;
 
-        FrontLineWorkerContent frontLineWorkerContent = null;
+        FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
         logger.info("validateFrontLineWorker process start");
         frontLineWorkerContent.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
@@ -228,10 +228,10 @@ public class FlwUploadHandler {
 
         frontLineWorkerContent.setDistrict(district);
         frontLineWorkerContent.setTaluka(talukaConsistencyCheck(frontLineWorkerContent.getDistrict().getId(), record.getTalukaCode()));
-        frontLineWorkerContent.setVillage(villageConsistencyCheck(frontLineWorkerContent.getTaluka().getId(), record.getVillageCode()));
-        frontLineWorkerContent.setHealthBlock(healthBlockConsistencyCheck(frontLineWorkerContent.getTaluka().getId(), record.getHealthBlockCode()));
-        frontLineWorkerContent.setHealthFacility(healthFacilityConsistencyCheck(frontLineWorkerContent.getHealthBlock().getId(), record.getPhcCode()));
-        frontLineWorkerContent.setHealthSubFacility(healthSubFacilityConsistencyCheck(frontLineWorkerContent.getHealthBlock().getId(), record.getSubCentreCode()));
+        frontLineWorkerContent.setVillage(villageConsistencyCheck(frontLineWorkerContent.getTaluka(), record.getVillageCode()));
+        frontLineWorkerContent.setHealthBlock(healthBlockConsistencyCheck(frontLineWorkerContent.getTaluka(), record.getHealthBlockCode()));
+        frontLineWorkerContent.setHealthFacility(healthFacilityConsistencyCheck(frontLineWorkerContent.getHealthBlock(), record.getPhcCode()));
+        frontLineWorkerContent.setHealthSubFacility(healthSubFacilityConsistencyCheck(frontLineWorkerContent.getHealthFacility(), record.getSubCentreCode()));
 
         contactNo = ParseDataHelper.parseString("Contact Number", record.getContactNo(), true);
         contactNoLength = contactNo.length();
@@ -310,7 +310,7 @@ public class FlwUploadHandler {
      */
     private Taluka talukaConsistencyCheck(Long districtId, String record) throws DataValidationException {
         String talukaCode;
-        Taluka taluka = null;
+        Taluka taluka = new Taluka();
         talukaCode = ParseDataHelper.parseString("TalukaCode", record, false);
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(districtId, talukaCode);
@@ -328,20 +328,20 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param talukaId Id of parent taluka
+     * @param taluka  parent taluka
      * @param record   value of Village code
      * @return null if optional Village is not provided and its value is null/empty, else Village which is generated
      * from the parameters
      * @throws DataValidationException
      */
-    private Village villageConsistencyCheck(Long talukaId, String record) throws DataValidationException {
+    private Village villageConsistencyCheck(Taluka taluka, String record) throws DataValidationException {
 
         Long villageCode;
-        Village village = null;
+        Village village = new Village();
         villageCode = ParseDataHelper.parseLong("VillageCode", record, false);
         if (villageCode != null) {
-            if (talukaId != null) {
-                village = locationService.getVillageByCode(talukaId, villageCode);
+            if (taluka != null) {
+                village = locationService.getVillageByCode(taluka.getId(), villageCode);
                 if (village == null) {
                     logger.warn("Record not found for Village ID[{}]", villageCode);
                     ParseDataHelper.raiseInvalidDataException("Village", record);
@@ -358,21 +358,21 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param talukaId Id of parent taluka
+     * @param taluka parent taluka
      * @param record   value of HealthBlock code
      * @return null if optional HealthBlock is not provided and its value is null/empty, else HealthBlock which is
      * generated from the parameters
      * @throws DataValidationException
      */
-    private HealthBlock healthBlockConsistencyCheck(Long talukaId, String record) throws DataValidationException {
+    private HealthBlock healthBlockConsistencyCheck(Taluka taluka, String record) throws DataValidationException {
 
         Long healthclockCode;
-        HealthBlock healthBlock = null;
+        HealthBlock healthBlock = new HealthBlock();
 
         healthclockCode = ParseDataHelper.parseLong("HealthBlockCode", record, false);
         if (healthclockCode != null) {
-            if (talukaId != null) {
-                healthBlock = locationService.getHealthBlockByCode(talukaId, healthclockCode);
+            if (taluka != null) {
+                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthclockCode);
                 if (healthBlock == null) {
                     logger.warn("Record not found for HealthBlock ID[{}]", healthclockCode);
                     ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
@@ -390,21 +390,21 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param healthBlockId Id of parent HelathBlock
+     * @param healthBlock parent HelathBlock
      * @param record        value of HealthFacility code
      * @return null if optional HealthFacility is not provided and its value is null/empty, else HealthFacility which is
      * generated from the parameters
      * @throws DataValidationException
      */
-    private HealthFacility healthFacilityConsistencyCheck(Long healthBlockId, String record) throws DataValidationException {
+    private HealthFacility healthFacilityConsistencyCheck(HealthBlock healthBlock, String record) throws DataValidationException {
 
         Long healthFacilityCode;
-        HealthFacility healthFacility = null;
+        HealthFacility healthFacility = new HealthFacility();
 
         healthFacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record, false);
         if (healthFacilityCode != null) {
-            if (healthBlockId != null) {
-                healthFacility = locationService.getHealthFacilityByCode(healthBlockId, healthFacilityCode);
+            if (healthBlock != null) {
+                healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), healthFacilityCode);
                 if (healthFacility == null) {
                     logger.warn("Record not found for HealthFacility ID[{}]", healthFacilityCode);
                     ParseDataHelper.raiseInvalidDataException("HealthFacility", record);
@@ -422,20 +422,20 @@ public class FlwUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param healthFacilityId Id of parent HelathBlock
+     * @param healthFacility parent HelathBlock
      * @param record           value of HealthSubFacility code
      * @return null if optional HealthSubFacility is not provided and its value is null/empty, else HealthSubFacility
      * which is generated from the parameters
      * @throws DataValidationException
      */
-    private HealthSubFacility healthSubFacilityConsistencyCheck(Long healthFacilityId, String record) throws DataValidationException {
+    private HealthSubFacility healthSubFacilityConsistencyCheck(HealthFacility healthFacility, String record) throws DataValidationException {
         Long healthSubFacilityCode;
-        HealthSubFacility healthSubFacility = null;
+        HealthSubFacility healthSubFacility = new HealthSubFacility();
 
         healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record, false);
         if (healthSubFacilityCode != null) {
-            if (healthFacilityId != null) {
-                healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacilityId, healthSubFacilityCode);
+            if (healthFacility != null) {
+                healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), healthSubFacilityCode);
                 if (healthSubFacility == null) {
                     logger.warn("Record not found for HealthSubFacility ID[{}]", healthSubFacilityCode);
                     ParseDataHelper.raiseInvalidDataException("HealthSubFacility", record);
