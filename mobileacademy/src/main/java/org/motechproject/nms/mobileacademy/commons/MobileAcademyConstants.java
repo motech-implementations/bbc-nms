@@ -78,6 +78,8 @@ public class MobileAcademyConstants {
 
     public static final String INCOMPLETE_RECORDS_FOR_DEL = "Incomplete Records for deleting the course for Language Location Code: {}. Hence Aborting the Course Deletion process for this Language location code.";
 
+    public static final String CONTENT_NAME = "Content Name";
+
     private MobileAcademyConstants() {
     }
 }

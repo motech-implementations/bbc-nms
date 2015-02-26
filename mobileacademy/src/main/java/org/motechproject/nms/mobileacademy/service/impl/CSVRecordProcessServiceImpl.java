@@ -478,39 +478,39 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * record object, into courseContent tables
      */
     private void determineTypeAndUpdateChapterContent(Record record) {
-        if (record.getType() == FileType.LessonContent) {
+        if (record.getType() == FileType.LESSON_CONTENT) {
             coursePopulateService
                     .setLessonContent(record.getChapterId(),
                             record.getLessonId(),
                             MobileAcademyConstants.CONTENT_LESSON,
                             record.getFileName());
-        } else if (record.getType() == FileType.LessonEndMenu) {
+        } else if (record.getType() == FileType.LESSON_END_MENU) {
             coursePopulateService.setLessonContent(record.getChapterId(),
                     record.getLessonId(), MobileAcademyConstants.CONTENT_MENU,
                     record.getFileName());
-        } else if (record.getType() == FileType.QuestionContent) {
+        } else if (record.getType() == FileType.QUESTION_CONTENT) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_QUESTION,
                     record.getFileName());
-        } else if (record.getType() == FileType.CorrectAnswer) {
+        } else if (record.getType() == FileType.CORRECT_ANSWER) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_CORRECT_ANSWER,
                     record.getFileName());
-        } else if (record.getType() == FileType.WrongAnswer) {
+        } else if (record.getType() == FileType.WRONG_ANSWER) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_WRONG_ANSWER,
                     record.getFileName());
-        } else if (record.getType() == FileType.ChapterEndMenu) {
+        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             coursePopulateService.setChapterContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_MENU, record.getFileName());
-        } else if (record.getType() == FileType.QuizHeader) {
+        } else if (record.getType() == FileType.QUIZ_HEADER) {
             coursePopulateService.setQuizContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER,
                     record.getFileName());
-        } else if (record.getType() == FileType.Score) {
+        } else if (record.getType() == FileType.SCORE) {
             coursePopulateService.setScore(record.getChapterId(),
                     record.getScoreID(), MobileAcademyConstants.SCORE,
                     record.getFileName());
@@ -523,7 +523,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private boolean isRecordChangingTheFileName(Record record) {
         boolean status = false;
-        if (record.getType() == FileType.LessonContent) {
+        if (record.getType() == FileType.LESSON_CONTENT) {
             LessonContent lessonContent = coursePopulateService
                     .getLessonContent(record.getChapterId(),
                             record.getLessonId(),
@@ -531,7 +531,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if (!lessonContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.LessonEndMenu) {
+        } else if (record.getType() == FileType.LESSON_END_MENU) {
             LessonContent lessonContent = coursePopulateService
                     .getLessonContent(record.getChapterId(),
                             record.getLessonId(),
@@ -539,7 +539,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if (!lessonContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.QuestionContent) {
+        } else if (record.getType() == FileType.QUESTION_CONTENT) {
             QuestionContent questionContent = coursePopulateService
                     .getQuestionContent(record.getChapterId(),
                             record.getQuestionId(),
@@ -547,7 +547,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.CorrectAnswer) {
+        } else if (record.getType() == FileType.CORRECT_ANSWER) {
             QuestionContent questionContent = coursePopulateService
                     .getQuestionContent(record.getChapterId(),
                             record.getQuestionId(),
@@ -555,7 +555,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.WrongAnswer) {
+        } else if (record.getType() == FileType.WRONG_ANSWER) {
             QuestionContent questionContent = coursePopulateService
                     .getQuestionContent(record.getChapterId(),
                             record.getQuestionId(),
@@ -563,21 +563,21 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.ChapterEndMenu) {
+        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             ChapterContent chapterContent = coursePopulateService
                     .getChapterContent(record.getChapterId(),
                             MobileAcademyConstants.CONTENT_MENU);
             if (!chapterContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.QuizHeader) {
+        } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quizContent = coursePopulateService.getQuizContent(
                     record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER);
             if (!quizContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
-        } else if (record.getType() == FileType.Score) {
+        } else if (record.getType() == FileType.SCORE) {
             ScoreContent scoreContent = coursePopulateService.getScore(
                     record.getChapterId(), record.getScoreID(),
                     MobileAcademyConstants.SCORE);
@@ -682,7 +682,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         }
 
                         if (populateCourseStructure) {
-                            if (record.getType() == FileType.QuestionContent) {
+                            if (record.getType() == FileType.QUESTION_CONTENT) {
                                 answerOptionRecordList.add(record);
                             }
                             checkTypeAndAddToChapterContent(
@@ -834,26 +834,26 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private void checkRecordTypeAndMarkCourseFlag(Record record,
             CourseFlags courseFlags) {
-        if (record.getType() == FileType.LessonContent) {
+        if (record.getType() == FileType.LESSON_CONTENT) {
             courseFlags.markLessonContent(record.getChapterId(),
                     record.getLessonId());
-        } else if (record.getType() == FileType.LessonEndMenu) {
+        } else if (record.getType() == FileType.LESSON_END_MENU) {
             courseFlags.markLessonEndMenu(record.getChapterId(),
                     record.getLessonId());
-        } else if (record.getType() == FileType.QuizHeader) {
+        } else if (record.getType() == FileType.QUIZ_HEADER) {
             courseFlags.markQuizHeader(record.getChapterId());
-        } else if (record.getType() == FileType.QuestionContent) {
+        } else if (record.getType() == FileType.QUESTION_CONTENT) {
             courseFlags.markQuestionContent(record.getChapterId(),
                     record.getQuestionId());
-        } else if (record.getType() == FileType.CorrectAnswer) {
+        } else if (record.getType() == FileType.CORRECT_ANSWER) {
             courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
                     record.getQuestionId());
-        } else if (record.getType() == FileType.WrongAnswer) {
+        } else if (record.getType() == FileType.WRONG_ANSWER) {
             courseFlags.markQuestionWrongAnswer(record.getChapterId(),
                     record.getQuestionId());
-        } else if (record.getType() == FileType.ChapterEndMenu) {
+        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             courseFlags.markChapterEndMenu(record.getChapterId());
-        } else if (record.getType() == FileType.Score) {
+        } else if (record.getType() == FileType.SCORE) {
             courseFlags.markScoreFile(record.getChapterId(),
                     record.getScoreID());
         }
@@ -889,7 +889,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private boolean checkRecordConsistencyAndMarkFlag(Record record,
             ChapterContent chapterContent, CourseFlags courseFlags) {
         boolean status = true;
-        if (record.getType() == FileType.LessonContent) {
+        if (record.getType() == FileType.LESSON_CONTENT) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
                 if (lessonContent.getLessonNumber() == record.getLessonId()
                         && lessonContent.getName().equalsIgnoreCase(
@@ -904,7 +904,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markLessonContent(record.getChapterId(),
                     record.getLessonId());
 
-        } else if (record.getType() == FileType.LessonEndMenu) {
+        } else if (record.getType() == FileType.LESSON_END_MENU) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
                 if ((lessonContent.getLessonNumber() == record.getLessonId())
                         && (lessonContent.getName()
@@ -919,7 +919,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markLessonEndMenu(record.getChapterId(),
                     record.getLessonId());
 
-        } else if (record.getType() == FileType.QuizHeader) {
+        } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quiz = chapterContent.getQuiz();
             if ((quiz.getName()
                     .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
@@ -927,7 +927,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
             courseFlags.markQuizHeader(record.getChapterId());
 
-        } else if (record.getType() == FileType.QuestionContent) {
+        } else if (record.getType() == FileType.QUESTION_CONTENT) {
             for (QuestionContent questionContent : chapterContent.getQuiz()
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
@@ -944,7 +944,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionContent(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.CorrectAnswer) {
+        } else if (record.getType() == FileType.CORRECT_ANSWER) {
             for (QuestionContent questionContent : chapterContent.getQuiz()
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
@@ -961,7 +961,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.WrongAnswer) {
+        } else if (record.getType() == FileType.WRONG_ANSWER) {
             for (QuestionContent questionContent : chapterContent.getQuiz()
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
@@ -978,7 +978,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionWrongAnswer(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.ChapterEndMenu) {
+        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             if (chapterContent.getName().equalsIgnoreCase(
                     MobileAcademyConstants.CONTENT_MENU)) {
                 if (chapterContent.getAudioFile() != record.getFileName()) {
@@ -986,7 +986,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 }
                 courseFlags.markChapterEndMenu(record.getChapterId());
             }
-        } else if (record.getType() == FileType.Score) {
+        } else if (record.getType() == FileType.SCORE) {
             for (ScoreContent scoreContent : chapterContent.getScores()) {
                 if (scoreContent
                         .getName()
@@ -1113,7 +1113,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
         validateContentName(courseRawContent, record);
 
-        if (record.getType() == FileType.QuestionContent) {
+        if (record.getType() == FileType.QUESTION_CONTENT) {
             String metaData = ParseDataHelper.parseString("METADETA",
                     courseRawContent.getMetaData(), true);
 
@@ -1143,7 +1143,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (contentName.indexOf('_') == -1) {
             throw new DataValidationException(
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, "CONTENT NAME");
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.CONTENT_NAME);
         }
 
         String chapterString = contentName.substring(0,
@@ -1155,22 +1156,26 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         .equalsIgnoreCase("Chapter")) {
             throw new DataValidationException(
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, "CONTENT NAME");
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.CONTENT_NAME);
         }
 
         try {
             record.setChapterId(Integer.parseInt(chapterString
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
+            LOGGER.info(exception.getMessage());
             throw new DataValidationException(
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, "CONTENT NAME");
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.CONTENT_NAME);
         }
 
         if (!isTypeDeterminable(record, subString)) {
             throw new DataValidationException(
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, "CONTENT NAME");
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.CONTENT_NAME);
         }
 
     }
@@ -1183,13 +1188,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private boolean isTypeDeterminable(Record record, String subString) {
 
-        if (subString.equalsIgnoreCase("QuizHeader")) {
-            record.setType(FileType.QuizHeader);
-            return true;
-        }
-
-        if (subString.equalsIgnoreCase("EndMenu")) {
-            record.setType(FileType.ChapterEndMenu);
+        // If the substring is "QuizHeader" or "EndMenu", it will be determined.
+        FileType fileType = FileType.getFor(subString);
+        if (fileType != null) {
+            record.setType(fileType);
             return true;
         }
 
@@ -1202,30 +1204,27 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         } catch (NumberFormatException exception) {
             return false;
         }
+        fileType = FileType.getFor(type);
 
-        if (type.equalsIgnoreCase("Lesson")) {
-            record.setType(FileType.LessonContent);
+        record.setType(fileType);
+
+        if (fileType == FileType.LESSON_CONTENT) {
             record.setLessonId(index);
             return true;
-        } else if (type.equalsIgnoreCase("LessonEndMenu")) {
-            record.setType(FileType.LessonEndMenu);
+        } else if (fileType == FileType.LESSON_END_MENU) {
             record.setLessonId(index);
             return true;
-        } else if (type.equalsIgnoreCase("Question")) {
+        } else if (fileType == FileType.QUESTION_CONTENT) {
             record.setQuestionId(index);
-            record.setType(FileType.QuestionContent);
             return true;
-        } else if (type.equalsIgnoreCase("CorrectAnswer")) {
+        } else if (fileType == FileType.CORRECT_ANSWER) {
             record.setQuestionId(index);
-            record.setType(FileType.CorrectAnswer);
             return true;
-        } else if (type.equalsIgnoreCase("WrongAnswer")) {
+        } else if (fileType == FileType.WRONG_ANSWER) {
             record.setQuestionId(index);
-            record.setType(FileType.WrongAnswer);
             return true;
-        } else if (type.equalsIgnoreCase("Score")) {
+        } else if (fileType == FileType.SCORE) {
             record.setScoreID(index);
-            record.setType(FileType.Score);
             return true;
         } else {
             return false;
@@ -1240,7 +1239,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private void checkTypeAndAddToChapterContent(Record record,
             ChapterContent chapterContent, CourseFlags courseFlags) {
 
-        if (record.getType() == FileType.LessonContent) {
+        if (record.getType() == FileType.LESSON_CONTENT) {
             List<LessonContent> lessons = chapterContent.getLessons();
             for (LessonContent lesson : lessons) {
                 if ((lesson.getLessonNumber() == record.getLessonId())
@@ -1252,7 +1251,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markLessonContent(record.getChapterId(),
                     record.getLessonId());
 
-        } else if (record.getType() == FileType.LessonEndMenu) {
+        } else if (record.getType() == FileType.LESSON_END_MENU) {
             List<LessonContent> lessons = chapterContent.getLessons();
             for (LessonContent lesson : lessons) {
                 if ((lesson.getLessonNumber() == record.getLessonId())
@@ -1264,7 +1263,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markLessonEndMenu(record.getChapterId(),
                     record.getLessonId());
 
-        } else if (record.getType() == FileType.QuizHeader) {
+        } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quiz = chapterContent.getQuiz();
             if ((quiz.getName()
                     .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
@@ -1272,7 +1271,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
             courseFlags.markQuizHeader(record.getChapterId());
 
-        } else if (record.getType() == FileType.QuestionContent) {
+        } else if (record.getType() == FileType.QUESTION_CONTENT) {
             List<QuestionContent> questions = chapterContent.getQuiz()
                     .getQuestions();
             for (QuestionContent question : questions) {
@@ -1285,7 +1284,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionContent(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.CorrectAnswer) {
+        } else if (record.getType() == FileType.CORRECT_ANSWER) {
             List<QuestionContent> questions = chapterContent.getQuiz()
                     .getQuestions();
             for (QuestionContent question : questions) {
@@ -1298,7 +1297,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.WrongAnswer) {
+        } else if (record.getType() == FileType.WRONG_ANSWER) {
             List<QuestionContent> questions = chapterContent.getQuiz()
                     .getQuestions();
             for (QuestionContent question : questions) {
@@ -1311,13 +1310,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             courseFlags.markQuestionWrongAnswer(record.getChapterId(),
                     record.getQuestionId());
 
-        } else if (record.getType() == FileType.ChapterEndMenu) {
+        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             if (chapterContent.getName().equalsIgnoreCase(
                     MobileAcademyConstants.CONTENT_MENU)) {
                 chapterContent.setAudioFile(record.getFileName());
             }
             courseFlags.markChapterEndMenu(record.getChapterId());
-        } else if (record.getType() == FileType.Score) {
+        } else if (record.getType() == FileType.SCORE) {
             List<ScoreContent> scoreContents = chapterContent.getScores();
             for (ScoreContent scoreContent : scoreContents) {
                 if (scoreContent
