@@ -1097,7 +1097,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 .parseInt(courseRawContent.getContentId()), courseRawContent
                 .getCircle().toUpperCase(), Integer.parseInt(courseRawContent
                 .getLanguageLocationCode()), courseRawContent.getContentName()
-                .toUpperCase(), ContentType.getFor(courseRawContent
+                .toUpperCase(), ContentType.findByName(courseRawContent
                 .getContentType()), courseRawContent.getContentFile(), Integer
                 .parseInt(courseRawContent.getContentDuration()),
                 courseRawContent.getMetaData().toUpperCase()));
