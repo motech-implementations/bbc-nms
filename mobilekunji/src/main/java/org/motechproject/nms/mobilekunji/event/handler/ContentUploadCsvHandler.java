@@ -186,7 +186,7 @@ public class ContentUploadCsvHandler {
         content = ParseDataHelper.parseString("Content Type", record.getContentType(), true);
 
 
-        if (ContentType.of(content) != ContentType.CONTENT || ContentType.of(content) != ContentType.PROMPT) {
+        if (ContentType.of(content) != ContentType.CONTENT && ContentType.of(content) != ContentType.PROMPT) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
 
@@ -197,7 +197,7 @@ public class ContentUploadCsvHandler {
         newRecord.setContentFile(contentFile);
         newRecord.setCardNumber(cardNumber);
         newRecord.setContentDuration(contentDuration);
-        newRecord.setContentType(contentType);
+        newRecord.setContentType(ContentType.of(content));
         newRecord.setCreator(record.getCreator());
         newRecord.setModifiedBy(record.getModifiedBy());
         newRecord.setOwner(record.getOwner());
