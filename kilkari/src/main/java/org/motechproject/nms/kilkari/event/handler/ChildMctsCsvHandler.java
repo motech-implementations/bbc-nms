@@ -13,6 +13,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.District;
@@ -62,7 +63,7 @@ public class ChildMctsCsvHandler {
     private SubscriptionService subscriptionService;
 
     @Autowired
-    private LocationValidator locationValidator;
+    private LocationValidatorService locationValidator;
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
@@ -99,7 +100,6 @@ public class ChildMctsCsvHandler {
         String userName = null;
         
         for (Long id : uploadedIDs) {
-
             try {
                 logger.info("Processing record id[{}]", id);
                 childMctsCsv = childMctsCsvService.findRecordById(id);
