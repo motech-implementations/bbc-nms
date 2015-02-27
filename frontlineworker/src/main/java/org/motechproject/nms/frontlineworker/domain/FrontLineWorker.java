@@ -75,7 +75,7 @@ public class FrontLineWorker extends MdsEntity {
     private Status status;
 
     @Field
-    private Long languageLocationCodeId;
+    private Long languageLocationCodeId = null;
 
     public Long getFlwId() {
         return flwId;
