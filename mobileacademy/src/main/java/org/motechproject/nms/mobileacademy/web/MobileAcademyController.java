@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobileacademy.web;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
@@ -33,6 +34,9 @@ public class MobileAcademyController {
 	@Autowired
 	private CourseRawContentDataService courseRawContentDataService;
 
+	@Autowired
+	private ChapterContentDataService chapterContentDataService;
+
 	private static final String OK = "OK";
 
 	@RequestMapping("/web-api/status")
@@ -53,7 +57,7 @@ public class MobileAcademyController {
 	public String deleteData() {
 		courseRawContentService.deleteAll();
 		courseProcessedContentService.deleteAll();
-
+		chapterContentDataService.deleteAll();
 		return "Data Deleted";
 	}
 
