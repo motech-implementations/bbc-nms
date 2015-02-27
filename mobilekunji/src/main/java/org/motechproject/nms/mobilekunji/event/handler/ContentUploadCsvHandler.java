@@ -100,7 +100,6 @@ public class ContentUploadCsvHandler {
                             logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
                             contentUploadRecordDataService.create(newRecord);
-                            contentUploadCsvRecordDataService.delete(record);
                             summary.incrementSuccessCount();
                         }
 
@@ -108,13 +107,11 @@ public class ContentUploadCsvHandler {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
 
                             contentUploadRecordDataService.delete(dbRecord);
-                            contentUploadCsvRecordDataService.delete(record);
                             summary.incrementSuccessCount();
                         } else {
 
                             mappDbRecordWithCsvrecord(newRecord, dbRecord);
                             contentUploadRecordDataService.update(dbRecord);
-                            contentUploadCsvRecordDataService.delete(record);
                             summary.incrementSuccessCount();
                         }
 
@@ -131,6 +128,10 @@ public class ContentUploadCsvHandler {
                 errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+            } finally {
+                if (null != record) {
+                    contentUploadCsvRecordDataService.delete(record);
+                }
             }
         }
 
