@@ -18,49 +18,50 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MobileAcademyController {
 
-    @Autowired
-    private CourseRawContentService courseRawContentService;
+	@Autowired
+	private CourseRawContentService courseRawContentService;
 
-    @Autowired
-    private CourseProcessedContentService courseProcessedContentService;
+	@Autowired
+	private CourseProcessedContentService courseProcessedContentService;
 
-    @Autowired
-    private CoursePopulateService coursePopulateService;
+	@Autowired
+	private CoursePopulateService coursePopulateService;
 
-    @Autowired
-    private CSVRecordProcessService csvRecordProcessService;
+	@Autowired
+	private CSVRecordProcessService csvRecordProcessService;
 
-    @Autowired
-    private CourseRawContentDataService courseRawContentDataService;
+	@Autowired
+	private CourseRawContentDataService courseRawContentDataService;
 
-    private static final String OK = "OK";
+	private static final String OK = "OK";
 
-    @RequestMapping("/web-api/status")
-    @ResponseBody
-    public String status() {
-        return OK;
-    }
+	@RequestMapping("/web-api/status")
+	@ResponseBody
+	public String status() {
+		return OK;
+	}
 
-    @RequestMapping(value = "/processData")
-    @ResponseBody
-    public String processData() {
-        return csvRecordProcessService.processRawRecords(
-                courseRawContentDataService.retrieveAll(), "csv name");
-    }
+	@RequestMapping(value = "/processData")
+	@ResponseBody
+	public String processData() {
+		return csvRecordProcessService.processRawRecords(
+				courseRawContentDataService.retrieveAll(), "ccontroller-csv");
+	}
 
-    @RequestMapping(value = "/deleteData")
-    @ResponseBody
-    public String deleteData() {
-        courseRawContentService.deleteAll();
-        courseProcessedContentService.deleteAll();
-        return "Data Deleted";
-    }
+	@RequestMapping(value = "/deleteData")
+	@ResponseBody
+	public String deleteData() {
+		courseRawContentService.deleteAll();
+		courseProcessedContentService.deleteAll();
 
-    @RequestMapping(value = "/resetState")
-    @ResponseBody
-    public String resetState() {
-        coursePopulateService.updateCourseState(CourseUnitState.Inactive);
-        return "Course Unit State is reset";
-    }
+		return "Data Deleted";
+	}
+
+	@RequestMapping(value = "/resetState")
+	@ResponseBody
+	public String resetState() {
+		coursePopulateService.updateCourseState(CourseUnitState.Inactive);
+		return "Course Unit State is reset";
+	}
 
 }

@@ -124,7 +124,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         }
 
         //Determining the full path of log file including the file name
-        Path logFileLocation = Paths.get(System.getProperty("user.dir"), "utils", logFileName.toString());
+        Path logFileLocation = Paths.get(System.getProperty("user.dir"), logFileName.toString());
 
         //Creating bulk upload status record
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
