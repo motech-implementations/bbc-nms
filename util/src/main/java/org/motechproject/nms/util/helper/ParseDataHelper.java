@@ -163,7 +163,7 @@ public final class ParseDataHelper {
 
     public static void raiseInvalidDataException(String fieldName, String fieldValue, Exception e)
             throws DataValidationException {
-        String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldValue);
+        String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, fieldName);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName, e);
     }
@@ -171,14 +171,14 @@ public final class ParseDataHelper {
 
     public static void raiseInvalidDataException(String fieldName, String fieldValue)
             throws DataValidationException {
-        String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldValue);
+        String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, fieldName);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName);
     }
 
     public static void raiseMissingDataException(String fieldName, String fieldValue)
             throws DataValidationException {
-        String errMessage = String.format(DataValidationException.MANDATORY_MISSING_MESSAGE, fieldValue);
+        String errMessage = String.format(DataValidationException.MANDATORY_MISSING_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, fieldName);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING,
                 errDesc, fieldName);

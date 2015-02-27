@@ -6,8 +6,8 @@ package org.motechproject.nms.util.helper;
  */
 public class DataValidationException extends Exception {
 
-    public static final String MANDATORY_MISSING_MESSAGE = "Missing mandatory data for [ %s ]";
-    public static final String INVALID_FORMAT_MESSAGE = "Invalid Format for [ %s ]";
+    public static final String MANDATORY_MISSING_MESSAGE = "Missing mandatory data [ %s ], value is [ %s ]";
+    public static final String INVALID_FORMAT_MESSAGE = "Invalid Format data [ %s ], value is [%s]";
 
     private String errorCode;
     private String errorDesc;

@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.domain;
 
+import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.*;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import javax.jdo.annotations.Unique;
@@ -59,7 +60,7 @@ public class Configuration {
 
     /* Hardcoded to ConfigurationConstants.CONFIGURATION_INDEX */
     public void setIndex(Long index) {
-        this.index = 1L;
+        this.index = CONFIGURATION_INDEX;
     }
 
     public Integer getNmsKk72WeeksPackMsgsPerWeek() {
