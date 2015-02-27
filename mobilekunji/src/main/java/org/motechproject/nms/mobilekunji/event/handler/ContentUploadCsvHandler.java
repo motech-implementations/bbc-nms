@@ -3,6 +3,7 @@ package org.motechproject.nms.mobilekunji.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.domain.OperationType;
+import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
@@ -33,12 +34,7 @@ import java.util.Map;
 @Component
 public class ContentUploadCsvHandler {
 
-    private static final String CSV_IMPORT_PREFIX = "csv-import.";
-    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    private Integer successCount = 0;
-    private Integer failCount = 0;
     @Autowired
     private ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
 
@@ -49,6 +45,16 @@ public class ContentUploadCsvHandler {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
 
+    private Integer successCount = 0;
+    private Integer failCount = 0;
+    private static final String CSV_IMPORT_PREFIX = "csv-import.";
+    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
+    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
+
+
+
+
+
     private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
 
 
@@ -57,7 +63,7 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.success"})
+    @MotechListener(subjects = {KunjiConstants.CONTENT_UPLOAD_CSV_SUCCESS})
     public void mobileKunjiContentUploadSuccess(MotechEvent motechEvent) {
         logger.info("Success[mobileKunjiContentUploadSuccess] method start for mobileKunjiContentUploadCsv");
         ContentUploadCsv record = null;
@@ -177,7 +183,7 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {"mds.crud.mobilekunji.ContentUploadCsv.csv-import.failed"})
+    @MotechListener(subjects = {KunjiConstants.CONTENT_UPLOAD_CSV_FAILED})
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
         BulkUploadError errorDetails = null;
         logger.info("Failure[mobileKunjiContentUploadFailure] method start for mobileKunjiContentUploadCsv");

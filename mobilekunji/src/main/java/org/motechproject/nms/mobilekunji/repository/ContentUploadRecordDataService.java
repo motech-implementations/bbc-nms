@@ -14,5 +14,5 @@ import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 public interface ContentUploadRecordDataService extends MotechDataService<ContentUpload> {
 
     @Lookup
-    ContentUpload findRecordByContentId(@LookupField(name = "contentId") int id);
+    ContentUpload findRecordByContentId(@LookupField(name = "contentId") Integer id);
 }
