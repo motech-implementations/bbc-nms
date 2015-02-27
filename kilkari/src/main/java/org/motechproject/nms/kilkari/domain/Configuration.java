@@ -1,8 +1,9 @@
 package org.motechproject.nms.kilkari.domain;
 
-import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.*;
+
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -13,6 +14,8 @@ import javax.validation.constraints.NotNull;
  */
 @Entity(recordHistory = true)
 public class Configuration {
+    
+    public static final Long CONFIGURATION_INDEX = 1L;
 
     @Unique
     @Field(required = true)

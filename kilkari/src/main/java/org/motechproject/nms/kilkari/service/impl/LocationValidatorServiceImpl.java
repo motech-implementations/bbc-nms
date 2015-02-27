@@ -1,5 +1,6 @@
-package org.motechproject.nms.kilkari.event.handler;
+package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -14,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Component
-public class LocationValidator {
+@Service("locationValidatorService")
+public class LocationValidatorServiceImpl implements LocationValidatorService{
     
     @Autowired
     private LocationService locationService;
