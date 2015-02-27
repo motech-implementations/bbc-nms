@@ -136,6 +136,7 @@ public class ContentUploadCsvHandler {
         }
 
         logger.info("Success[mobileKunjiContentUploadSuccess] method finished for mobileKunjiContentUploadCsv");
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile, summary);
 
 
     }
