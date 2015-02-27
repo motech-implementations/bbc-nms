@@ -87,16 +87,15 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
-                    ContentUpload newRecord = new ContentUpload();
-                    ContentUpload dbRecord = new ContentUpload();
 
-                    newRecord = mapContentUploadFrom(record);
-                    dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
+                    ContentUpload newRecord = mapContentUploadFrom(record);
+
+                    ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             summary.incrementFailureCount();
-                            setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                            errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
@@ -106,24 +105,52 @@ public class ContentUploadCsvHandler {
                         }
 
                     } else {
-                        contentUploadRecordDataService.update(dbRecord);
-                        contentUploadCsvRecordDataService.delete(record);
-                        summary.incrementSuccessCount();
+                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+
+                            contentUploadRecordDataService.delete(dbRecord);
+                            contentUploadCsvRecordDataService.delete(record);
+                            summary.incrementSuccessCount();
+                        } else {
+
+                            mappDbRecordWithCsvrecord(newRecord, dbRecord);
+                            contentUploadRecordDataService.update(dbRecord);
+                            contentUploadCsvRecordDataService.delete(record);
+                            summary.incrementSuccessCount();
+                        }
+
                     }
                 }
 
             } catch (DataValidationException dve) {
-                setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
+                errorDetails = setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 logger.warn("Record not found for uploaded ID: {}", id);
             } catch (Exception ex) {
+
+                errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                 summary.incrementFailureCount();
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
         }
 
         logger.info("Success[mobileKunjiContentUploadSuccess] method finished for mobileKunjiContentUploadCsv");
+
+
+    }
+
+
+    private void mappDbRecordWithCsvrecord(ContentUpload newRecord,ContentUpload dbRecord){
+
+        dbRecord.setCircleCode(newRecord.getCircleCode());
+        dbRecord.setCardNumber(newRecord.getCardNumber());
+        dbRecord.setContentDuration(newRecord.getContentDuration());
+        dbRecord.setContentFile(newRecord.getContentFile());
+        dbRecord.setCircleCode(newRecord.getCircleCode());
+        dbRecord.setContentId(newRecord.getContentId());
+        dbRecord.setContentName(newRecord.getContentName());
+        dbRecord.setContentType(newRecord.getContentType());
+        dbRecord.setLanguageLocationCode(newRecord.getLanguageLocationCode());
     }
 
 
@@ -137,6 +164,8 @@ public class ContentUploadCsvHandler {
      */
     private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
         logger.info("mapContentUploadFrom process start");
+
+        ContentUpload newRecord = new ContentUpload();
         int contentId;
         String circleCode;
         Integer languageLocationCode;
@@ -156,7 +185,7 @@ public class ContentUploadCsvHandler {
         contentDuration = ParseDataHelper.parseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.parseString("Content Type", record.getContentType(), true);
 
-        ContentUpload newRecord = new ContentUpload();
+
         if (ContentType.of(content) != ContentType.CONTENT || ContentType.of(content) != ContentType.PROMPT) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
@@ -186,7 +215,10 @@ public class ContentUploadCsvHandler {
     @MotechListener(subjects = {KunjiConstants.CONTENT_UPLOAD_CSV_FAILED})
     public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
         BulkUploadError errorDetails = null;
+        ContentUploadCsv record = null;
+
         logger.info("Failure[mobileKunjiContentUploadFailure] method start for mobileKunjiContentUploadCsv");
+
         Map<String, Object> params = motechEvent.getParameters();
         CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
@@ -198,13 +230,14 @@ public class ContentUploadCsvHandler {
         //from the Csv.If some error occurs in any of the records, it is reported.
         for (Long id : createdIds) {
             try {
-                ContentUploadCsv record = contentUploadCsvRecordDataService.findById(id);
+                record = contentUploadCsvRecordDataService.findById(id);
                 contentUploadCsvRecordDataService.delete(record);
                 summary.incrementFailureCount();
-                setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
+                errorDetails = setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             } catch (Exception ex) {
                 summary.incrementFailureCount();
+                errorDetails = setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             }
         }
@@ -218,11 +251,14 @@ public class ContentUploadCsvHandler {
      * @param errorCategory    specifies error category
      * @param errorDescription specifies error descriotion
      */
-    private void setErrorDetails(String id, String errorCategory, String errorDescription) {
+    private BulkUploadError setErrorDetails(String id, String errorCategory, String errorDescription) {
+
         BulkUploadError errorDetails = new BulkUploadError();
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
         errorDetails.setErrorDescription(errorDescription);
+
+        return errorDetails;
     }
 
     public Integer getFailCount() {

@@ -18,8 +18,8 @@ public class KunjiConstants {
     public static final Integer DEFAULT_MAX_END_OF_USAGE_MESSAGE = 2;
 
 
-    public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.masterdata.StateCsv.csv-import.success";
+    public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 
-    public static final String CONTENT_UPLOAD_CSV_FAILED = "mds.crud.masterdata.StateCsv.csv-import.failure";
+    public static final String CONTENT_UPLOAD_CSV_FAILED = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.failure";
 
 }
