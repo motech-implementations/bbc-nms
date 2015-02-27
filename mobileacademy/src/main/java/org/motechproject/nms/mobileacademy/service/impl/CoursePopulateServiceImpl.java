@@ -45,26 +45,10 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-	 * deleteMtrainingCourse()
-	 * 
-	 * Deletes the course in MTraining tables
-	 */
-	@Override
-	public void deleteMtrainingCourse() {
-		Course course = getMtrainingCourse();
-		if (course != null) {
-			mTrainingService.deleteCourse(course.getId());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
 	 * populateMtrainingCourseData()
 	 */
 	@Override
-	public void populateMtrainingCourseData() {
+	public Course populateMtrainingCourseData() {
 		List<Chapter> chapters = new ArrayList<>();
 		for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
 			List<Lesson> lessons = new ArrayList<>();
@@ -98,6 +82,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 				CourseUnitState.Inactive, null, chapters);
 		mTrainingService.createCourse(course);
 		LOGGER.info("Course Structure in Mtraining Populated");
+		return course;
 	}
 
 	/*

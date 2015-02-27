@@ -313,6 +313,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						}
 					}
 				}
+				courseRawContents = mapForModifyRecords.get(contentName);
+				if (CollectionUtils.isEmpty(courseRawContents)) {
+					contentNamesIterator.remove();
+				}
 			}
 		}
 
@@ -614,6 +618,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 			Iterator<Integer> distictLLCIterator = mapForAddRecords.keySet()
 					.iterator();
 			while (distictLLCIterator.hasNext()) {
+				populateCourseStructure = false;
 				Integer LLC = distictLLCIterator.next();
 				List<CourseRawContent> courseRawContents = mapForAddRecords
 						.get(LLC);
@@ -642,8 +647,11 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
 					Course course = coursePopulateService.getMtrainingCourse();
 					if (course == null) {
+						course = coursePopulateService
+								.populateMtrainingCourseData();
 						populateCourseStructure = true;
-						coursePopulateService.populateMtrainingCourseData();
+					} else if (coursePopulateService.findCourseState() == CourseUnitState.Inactive) {
+						populateCourseStructure = true;
 					}
 
 					courseFlags.resetTheFlags();
@@ -825,8 +833,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 					// If this was the last LLC in CPC
 					if (courseProcessedContentService
 							.getListOfAllExistingLLcs().size() == 0) {
-						coursePopulateService.deleteMtrainingCourse();
-						chapterContentDataService.deleteAll();
+						coursePopulateService
+								.updateCourseState(CourseUnitState.Inactive);
+						deleteChapterContentTable();
 					}
 				} else {
 					bulkUploadErrLogService
@@ -843,6 +852,16 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 				distictLLCIterator.remove();
 				deleteCourseRawContentsByList(courseRawContents, false, result);
 			}
+		}
+	}
+
+	private void deleteChapterContentTable() {
+		List<ChapterContent> chapterContents = chapterContentDataService
+				.retrieveAll();
+		Iterator<ChapterContent> chapterContentsIterator = chapterContents
+				.iterator();
+		while (chapterContentsIterator.hasNext()) {
+			chapterContentDataService.delete(chapterContentsIterator.next());
 		}
 	}
 

@@ -19,16 +19,11 @@ public interface CoursePopulateService {
 	/**
 	 *
 	 * populate course static Data in mtraining.
+	 * 
+	 * @return
 	 *
 	 */
-	public void populateMtrainingCourseData();
-
-	/**
-	 *
-	 * To delete course static Data in mtraining.
-	 *
-	 */
-	public void deleteMtrainingCourse();
+	public Course populateMtrainingCourseData();
 
 	/**
 	 *
