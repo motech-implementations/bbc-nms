@@ -171,8 +171,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 	 */
 	@Override
 	public List<ChapterContent> getAllChapterContents() {
-		chapterContentDataService.retrieveAll();
-		return null;
+		return chapterContentDataService.retrieveAll();
 	}
 
 	/*

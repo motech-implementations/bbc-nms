@@ -657,14 +657,11 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 					courseFlags.resetTheFlags();
 					answerOptionRecordList.clear();
 
-					List<ChapterContent> chapterContents;
-					if (populateCourseStructure) {
-						// Get a new Course instance
+					List<ChapterContent> chapterContents = coursePopulateService
+							.getAllChapterContents();
+
+					if (CollectionUtils.isEmpty(chapterContents)) {
 						chapterContents = createChapterContentPrototype();
-					} else {
-						// Get the current Course instance
-						chapterContents = coursePopulateService
-								.getAllChapterContents();
 					}
 
 					Iterator<CourseRawContent> courseRawContentsIterator = courseRawContents
