@@ -328,8 +328,11 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 			while (contentNamesIterator.hasNext()) {
 				String contentName = contentNamesIterator.next();
 				boolean updateContentFile = true;
-				List<Integer> listOfExistingLlc = courseProcessedContentService
-						.getListOfAllExistingLLcs();
+
+				// Getting new List as the list return is unmodifiable
+				List<Integer> listOfExistingLlc = new ArrayList<Integer>(
+						courseProcessedContentService
+								.getListOfAllExistingLLcs());
 
 				List<CourseRawContent> courseRawContents = mapForModifyRecords
 						.get(contentName);
@@ -386,7 +389,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						updateContentFile = false;
 						break;
 					}
-					listOfExistingLlc.remove(LLC);
+					listOfExistingLlc.remove(new Integer(LLC));
 				}
 
 				if (!updateContentFile) {
@@ -613,11 +616,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 		CourseFlags courseFlags = new CourseFlags();
 		List<Record> answerOptionRecordList = new ArrayList<Record>();
 		BulkUploadError errorDetail = new BulkUploadError();
+		boolean abortAdditionProcess = false;
 
 		if (!mapForAddRecords.isEmpty()) {
 			Iterator<Integer> distictLLCIterator = mapForAddRecords.keySet()
 					.iterator();
 			while (distictLLCIterator.hasNext()) {
+				abortAdditionProcess = false;
 				populateCourseStructure = false;
 				Integer LLC = distictLLCIterator.next();
 				List<CourseRawContent> courseRawContents = mapForAddRecords
@@ -674,6 +679,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 							validateRawContent(courseRawContent, record);
 						} catch (DataValidationException exc) {
 
+							abortAdditionProcess = true;
+
 							processError(errorDetail, exc,
 									courseRawContent.getContentId());
 
@@ -729,6 +736,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 							}
 						}
 					}
+					if (abortAdditionProcess) {
+						continue;
+					}
 
 					if (courseFlags.hasCompleteCourseArrived()) {
 						courseRawContentsIterator = courseRawContents
@@ -754,6 +764,18 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 							coursePopulateService
 									.updateCourseState(CourseUnitState.Active);
 						}
+					} else {
+						bulkUploadErrLogService
+								.writeBulkUploadErrLog(
+										errorFileName,
+										new BulkUploadError(
+												"",
+												ErrorCategoryConstants.INCONSISTENT_DATA,
+												String.format(
+														MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
+														LLC)));
+						deleteCourseRawContentsByList(courseRawContents, true,
+								result);
 					}
 
 				}
