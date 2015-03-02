@@ -85,7 +85,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         flwDetail.setMsisdn(userProfileData.getMsisdn());
         flwDetail.setLastAccessDate(DateTime.now());
         flwDetail.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
-        flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
+        flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_PROMPT);
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
     }
 
@@ -129,6 +129,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
+            userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
             if (userProfile.isDefaultLanguageLocationCode()) {
                 if (userProfile.getLanguageLocationCode() == null) {
                     setNationalDefaultLlc(userDetailApiResponse);

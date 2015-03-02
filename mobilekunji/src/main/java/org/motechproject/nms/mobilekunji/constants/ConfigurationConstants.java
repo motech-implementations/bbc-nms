@@ -15,7 +15,7 @@ public class ConfigurationConstants {
 
     public static final Boolean DEFAULT_WELCOME_PROMPT = false;
 
-    public static final Integer DEFAULT_END_OF_USAGE_MESSAGE = 0;
+    public static final Integer DEFAULT_END_OF_USAGE_PROMPT = 0;
 
     public static final Integer DEFAULT_CURRENT_USAGE_IN_PULSES = 0;
 
