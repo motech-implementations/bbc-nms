@@ -30,16 +30,20 @@ import java.util.Map;
 @Component
 public class CircleCsvHandler {
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    @Autowired
     private CircleService circleService;
 
-    @Autowired
     private CircleCsvService circleCsvService;
 
     private static Logger logger = LoggerFactory.getLogger(CircleCsvHandler.class);
+
+    @Autowired
+    public CircleCsvHandler(BulkUploadErrLogService bulkUploadErrLogService, CircleService circleService, CircleCsvService circleCsvService) {
+       this.circleCsvService = circleCsvService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.circleService = circleService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -50,7 +54,7 @@ public class CircleCsvHandler {
     @MotechListener(subjects = MasterDataConstants.CIRCLE_CSV_SUCCESS)
     public void circleCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
-         logger.info("CIRCLE_CSV_SUCCESS event received");
+        logger.info("CIRCLE_CSV_SUCCESS event received");
 
         CircleCsv record = null;
         Circle persistentRecord = null;
@@ -78,7 +82,7 @@ public class CircleCsvHandler {
                             circleService.delete(persistentRecord);
                             logger.info("Record deleted successfully for circlecode {}", newRecord.getCode());
                         } else {
-                            persistentRecord = copyLanguageLocationCodeForUpdate(newRecord, persistentRecord);
+                            persistentRecord = copyCircleForUpdate(newRecord, persistentRecord);
                             circleService.update(persistentRecord);
                             logger.info("Record updated successfully for circlecode {}", newRecord.getCode());
                         }
@@ -177,8 +181,8 @@ public class CircleCsvHandler {
      * @param persistentRecord to be updated in DB
      * @return oldRecord after copied values
      */
-    private  Circle copyLanguageLocationCodeForUpdate(Circle newRecord,
-                                                      Circle persistentRecord) {
+    private  Circle copyCircleForUpdate(Circle newRecord,
+                                        Circle persistentRecord) {
 
         persistentRecord.setName(newRecord.getName());
         persistentRecord.setCode(newRecord.getCode());

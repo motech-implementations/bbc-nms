@@ -30,16 +30,20 @@ import java.util.Map;
 @Component
 public class OperatorCsvHandler {
 
-    @Autowired
     private OperatorService operatorService;
 
-    @Autowired
     private OperatorCsvService operatorCsvService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(OperatorCsvHandler.class);
+
+    @Autowired
+    public OperatorCsvHandler(OperatorService operatorService, OperatorCsvService operatorCsvService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.operatorService = operatorService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.operatorCsvService = operatorCsvService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -76,7 +80,7 @@ public class OperatorCsvHandler {
                             operatorService.delete(persistentRecord);
                             logger.info("Record deleted successfully for operatorcode {}", newRecord.getCode());
                         } else {
-                            persistentRecord = copyLanguageLocationCodeForUpdate(newRecord, persistentRecord);
+                            persistentRecord = copyOperatorForUpdate(newRecord, persistentRecord);
                             operatorService.update(persistentRecord);
                             logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
                         }
@@ -174,7 +178,7 @@ public class OperatorCsvHandler {
      * @param persistentRecord to be updated in DB
      * @return oldRecord after copied values
      */
-    private  Operator copyLanguageLocationCodeForUpdate(Operator newRecord,
+    private  Operator copyOperatorForUpdate(Operator newRecord,
                                                         Operator persistentRecord) {
 
         persistentRecord.setName(newRecord.getName());

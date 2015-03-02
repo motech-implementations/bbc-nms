@@ -53,4 +53,9 @@ public class OperatorServiceImpl implements OperatorService {
         return operatorDataService.findByCode(code);
 
     }
+
+    @Override
+    public Operator findById(Long id) {
+        return operatorDataService.findById(id);
+    }
 }

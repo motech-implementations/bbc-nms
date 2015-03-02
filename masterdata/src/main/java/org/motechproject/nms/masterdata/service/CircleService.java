@@ -32,4 +32,6 @@ public interface CircleService {
      * @return State object corresponding to the census code
      */
     Circle getRecordByCode(String circleCode);
+
+    Circle findById(Long id);
 }
