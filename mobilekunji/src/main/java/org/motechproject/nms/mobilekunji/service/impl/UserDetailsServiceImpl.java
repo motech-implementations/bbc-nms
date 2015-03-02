@@ -217,6 +217,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return flag;
     }
 
+    /**
+     * set the Current Usage in Pulses to its Default Value
+     * @param flwDetail
+     */
     private void resetCurrentUsage(FlwDetail flwDetail) {
 
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
