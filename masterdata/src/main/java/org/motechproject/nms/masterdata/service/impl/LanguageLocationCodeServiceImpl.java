@@ -1,7 +1,9 @@
 package org.motechproject.nms.masterdata.service.impl;
 
+import org.datanucleus.query.evaluator.memory.IntervalGetEndMethodEvaluator;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
@@ -112,7 +114,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     /**
-     * This method returns the value of  MA language location code for a location (state, district)
+     * This method returns the value of language location code for a location (state, district)
      *
      * @param stateCode    code of the state
      * @param districtCode code of the district
@@ -120,8 +122,16 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined languageLocationCode value
      */
     @Override
-    public Integer getLanguageLocationCodeMAByLocationCode(Long stateCode, Long districtCode) {
-        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeMA();
+    public Integer getLanguageLocationCodeByLocationCode(Long stateCode, Long districtCode) {
+
+        Integer llc = null;
+
+        LanguageLocationCode langLocCode = languageLocationCodeDataService.findByLocationCode(stateCode, districtCode);
+        if (langLocCode != null) {
+            llc = langLocCode.getLanguageLocationCode();
+        }
+
+        return llc;
     }
 
     /**
@@ -132,7 +142,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined languageLocationCode value
      */
     @Override
-    public Integer getLanguageLocationCodeMAByCircleCode(final String circleCode) {
+    public Integer getLanguageLocationCodeByCircleCode(final String circleCode) {
         LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCodeMA");
         return executeUniqueLanguageLocationCodeQuery(query);
     }
@@ -145,85 +155,15 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined value of default Language Location Code.
      */
     @Override
-    public Integer getDefaultLanguageLocationCodeMAByCircleCode(String circleCode) {
-        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeMA();
-    }
+    public Integer getDefaultLanguageLocationCodeByCircleCode(String circleCode) {
 
-    /**
-     * This method returns the value of  MK language location code for a location (state, district)
-     *
-     * @param stateCode    code of the state
-     * @param districtCode code of the district
-     * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
-     * else returns the determined languageLocationCode value
-     */
-    @Override
-    public Integer getLanguageLocationCodeMKByLocationCode(Long stateCode, Long districtCode) {
-        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeMK();
-    }
+        Integer llc = null;
+        Circle circle = circleService.getRecordByCode(circleCode);
 
-    /**
-     * This method returns the value of MK language location code for a circle
-     *
-     * @param circleCode code of the circle for which language location code is to determined
-     * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
-     * else returns the determined languageLocationCode value
-     */
-    @Override
-    public Integer getLanguageLocationCodeMKByCircleCode(String circleCode) {
-        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCodeMA");
-        return executeUniqueLanguageLocationCodeQuery(query);
+        if (circle != null) {
+            llc =  circle.getDefaultLanguageLocationCode();
+        }
+        return  llc;
     }
-
-    /**
-     * This method returns the value of default MK language location code for a circle
-     *
-     * @param circleCode code of the circle for which default language location code is to determined
-     * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
-     * else returns the determined value of default Language Location Code.
-     */
-    @Override
-    public Integer getDefaultLanguageLocationCodeMKByCircleCode(String circleCode) {
-        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeMK();
-    }
-
-    /**
-     * This method returns the value of  KK language location code for a location (state, district)
-     *
-     * @param stateCode    code of the state
-     * @param districtCode code of the district
-     * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
-     * else returns the determined languageLocationCode value
-     */
-    @Override
-    public Integer getLanguageLocationCodeKKByLocationCode(Long stateCode, Long districtCode) {
-        return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode).getLanguageLocationCodeKK();
-    }
-
-    /**
-     * This method returns the value of KK language location code for a circle
-     *
-     * @param circleCode code of the circle for which language location code is to determined
-     * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
-     * else returns the determined languageLocationCode value
-     */
-    @Override
-    public Integer getLanguageLocationCodeKKByCircleCode(String circleCode) {
-        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCodeMA");
-        return executeUniqueLanguageLocationCodeQuery(query);
-    }
-
-    /**
-     * This method returns the value of default KK language location code for a circle
-     *
-     * @param circleCode code of the circle for which default language location code is to determined
-     * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
-     * else returns the determined value of default Language Location Code.
-     */
-    @Override
-    public Integer getDefaultLanguageLocationCodeKKByCircleCode(String circleCode) {
-        return circleService.getRecordByCode(circleCode).getDefaultLanguageLocationCodeKK();
-    }
-
 
 }

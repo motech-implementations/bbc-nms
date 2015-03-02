@@ -128,7 +128,7 @@ public class MotherMctsCsvHandler {
                     logger.info("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
-                    if(motherMctsCsv.getOperation().equalsIgnoreCase("Delete")) {
+                    if(motherMctsCsv.getOperation().equalsIgnoreCase("DEL")) {
                         deactivateSubscription(subscriber);
                     } else {
                         insertSubscriptionSubccriber(subscriber);
@@ -226,7 +226,6 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
         motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-        motherSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeKKByLocationCode(stateCode, districtCode));
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());

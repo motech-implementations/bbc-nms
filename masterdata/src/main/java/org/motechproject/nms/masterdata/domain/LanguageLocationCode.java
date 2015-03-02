@@ -29,20 +29,13 @@ public class LanguageLocationCode extends MdsEntity {
     private String circleCode;
 
     @Field(required = true)
-    private Integer languageLocationCodeMA;
+    private Integer languageLocationCode;
 
     @Field(required = true)
     private String languageMA;
 
-
-    @Field(required = true)
-    private Integer languageLocationCodeMK;
-
     @Field(required = true)
     private String languageMK;
-
-    @Field(required = true)
-    private Integer languageLocationCodeKK;
 
     @Field(required = true)
     private String languageKK;
@@ -74,12 +67,12 @@ public class LanguageLocationCode extends MdsEntity {
         this.circle = circle;
     }
 
-    public Integer getLanguageLocationCodeMA() {
-        return languageLocationCodeMA;
+    public Integer getLanguageLocationCode() {
+        return languageLocationCode;
     }
 
-    public void setLanguageLocationCodeMA(Integer languageLocationCodeMA) {
-        this.languageLocationCodeMA = languageLocationCodeMA;
+    public void setLanguageLocationCode(Integer languageLocationCode) {
+        this.languageLocationCode = languageLocationCode;
     }
 
     public String getLanguageMA() {
@@ -90,28 +83,12 @@ public class LanguageLocationCode extends MdsEntity {
         this.languageMA = languageMA;
     }
 
-    public Integer getLanguageLocationCodeMK() {
-        return languageLocationCodeMK;
-    }
-
-    public void setLanguageLocationCodeMK(Integer languageLocationCodeMK) {
-        this.languageLocationCodeMK = languageLocationCodeMK;
-    }
-
     public String getLanguageMK() {
         return languageMK;
     }
 
     public void setLanguageMK(String languageMK) {
         this.languageMK = languageMK;
-    }
-
-    public Integer getLanguageLocationCodeKK() {
-        return languageLocationCodeKK;
-    }
-
-    public void setLanguageLocationCodeKK(Integer languageLocationCodeKK) {
-        this.languageLocationCodeKK = languageLocationCodeKK;
     }
 
     public String getLanguageKK() {

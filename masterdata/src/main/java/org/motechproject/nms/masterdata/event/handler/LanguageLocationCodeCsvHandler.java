@@ -193,17 +193,6 @@ public class LanguageLocationCodeCsvHandler {
             ParseDataHelper.raiseInvalidDataException("circleCode", record.getCircleCode());
         }
 
-
-        /* Update the Default Language Location Codes in Circle entity */
-        circle.setDefaultLanguageLocationCodeMK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMK",
-                record.getDefaultLanguageLocationCodeMK(), true));
-        circle.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("DefaultLanguageLocationCodeMA",
-                record.getDefaultLanguageLocationCodeMA(), true));
-        circle.setDefaultLanguageLocationCodeKK(ParseDataHelper.parseInt("defaultLanguageLocationCodeKK",
-                record.getDefaultLanguageLocationCodeKK(), true));
-
-        circleService.update(circle);
-
         newRecord = new LanguageLocationCode();
 
         /* Fill newRecord with values from CSV */
@@ -218,14 +207,23 @@ public class LanguageLocationCodeCsvHandler {
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
 
-        newRecord.setLanguageLocationCodeKK(ParseDataHelper.parseInt("LanguageLocationCodeKK", record.getLanguageLocationCodeKK(), true));
+        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode",
+                record.getLanguageLocationCode(), true));
         newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));
-
-        newRecord.setLanguageLocationCodeMK(ParseDataHelper.parseInt("LanguageLocationCodeMK", record.getLanguageLocationCodeMK(), true));
         newRecord.setLanguageMK(ParseDataHelper.parseString("LanguageMK", record.getLanguageMK(), true));
-
-        newRecord.setLanguageLocationCodeMA(ParseDataHelper.parseInt("LanguageLocationCodeMA", record.getLanguageLocationCodeMA(), true));
         newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));
+
+
+        /* Update the Default Language Location Codes in Circle entity */
+        String valueOfIsDefLangLocCode = ParseDataHelper.parseString("isDefaultLanguageLocationCode",
+                record.getIsDefaultLanguageLocationCode(), true);
+        Boolean isDefaultLangLocCode = (
+                MasterDataConstants.YES_FOR_DEFAULT_LANG_LOC_CODE.equalsIgnoreCase(valueOfIsDefLangLocCode));
+
+        if (isDefaultLangLocCode) {
+            circle.setDefaultLanguageLocationCode(newRecord.getLanguageLocationCode());
+            circleService.update(circle);
+        }
 
         return newRecord;
     }
@@ -248,13 +246,10 @@ public class LanguageLocationCodeCsvHandler {
         oldRecord.setDistrict(newRecord.getDistrict());
         oldRecord.setModifiedBy(newRecord.getModifiedBy());
 
-        oldRecord.setLanguageLocationCodeMA(newRecord.getLanguageLocationCodeMA());
+        oldRecord.setLanguageLocationCode(newRecord.getLanguageLocationCode());
+
         oldRecord.setLanguageMA(newRecord.getLanguageMA());
-
-        oldRecord.setLanguageLocationCodeMK(newRecord.getLanguageLocationCodeMK());
         oldRecord.setLanguageMK(newRecord.getLanguageMK());
-
-        oldRecord.setLanguageLocationCodeKK(newRecord.getLanguageLocationCodeKK());
         oldRecord.setLanguageKK(newRecord.getLanguageKK());
 
         return oldRecord;

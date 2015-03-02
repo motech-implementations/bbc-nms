@@ -9,9 +9,9 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
+import org.motechproject.nms.kilkari.domain.Operation;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
-import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -73,15 +73,19 @@ public class ContentUploadCsvHandler {
                     persistentRecord = contentUploadKKService.getRecordByContentId(newRecord.getContentId());
                     if (persistentRecord != null) {
                         
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        if (Operation.DEL.toString().equals(record.getOperation())) {
                             contentUploadKKService.delete(persistentRecord);
                             logger.info("Record deleted successfully for contentid : {}", newRecord.getContentId());
                         } else {
-                            newRecord.setId(persistentRecord.getId());
+                            persistentRecord = copyContentUploadForUpdate(newRecord, persistentRecord);
                             contentUploadKKService.update(newRecord);
                             logger.info("Record updated successfully for contentid : {}", newRecord.getContentId());
                         }
-                    } else {
+                    } else if (Operation.DEL.toString().equals(record.getOperation())) {
+                        logger.error("Record for deletion not found in the Content table with code {}",
+                                newRecord.getContentId());
+                        ParseDataHelper.raiseInvalidDataException("Content Id", newRecord.getContentId().toString());
+                    }else {
                         contentUploadKKService.create(newRecord);
                         logger.info("Record created successfully for contentid : {}", newRecord.getContentId());
                     }
@@ -107,6 +111,7 @@ public class ContentUploadCsvHandler {
                 errorDetail.setErrorDescription("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 summary.incrementFailureCount();
+                throw e;
             } finally {
                 if (record != null) {
                     contentUploadKKCsvService.delete(record);
@@ -140,6 +145,14 @@ public class ContentUploadCsvHandler {
         logger.info("Finished processing ContentUploadKKCsv-import failure");
     }
 
+    /**
+     *  This method is used to validate csv uploaded record
+     *  and map ContentUploadCsv to ContentUpload
+     *
+     * @param record of ContentUploadCsv type
+     * @return ContentUpload record after the mapping
+     * @throws DataValidationException
+     */
     private ContentUpload mapContentUploadKKFrom(ContentUploadCsv record) throws DataValidationException {
         ContentUpload newRecord = new ContentUpload();
 
@@ -148,6 +161,8 @@ public class ContentUploadCsvHandler {
         newRecord.setContentFile(ParseDataHelper.parseString("contentFile", record.getContentFile(), true));
         newRecord.setContentId(ParseDataHelper.parseLong("contentId", record.getContentId(), true));
         newRecord.setContentName(ParseDataHelper.parseString("contentName", record.getContentName(), true));
+        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode",
+                record.getLanguageLocationCode(), true));
 
         String contentType = ParseDataHelper.parseString("contentType", record.getContentType(), true);
         if (contentType.equals(ContentType.CONTENT.toString())) {
@@ -158,8 +173,31 @@ public class ContentUploadCsvHandler {
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
-        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode", record.getLanguageLocationCode(), true));
+
 
         return newRecord;
     }
+
+    /**
+     * Copies the field values from new Record to oldRecord for update in DB
+     * @param newRecord mapped from CSV values
+     * @param persistentRecord to be updated in DB
+     * @return oldRecord after copied values
+     */
+    private  ContentUpload copyContentUploadForUpdate(ContentUpload newRecord,
+                                                             ContentUpload persistentRecord) {
+
+        persistentRecord.setCircleCode(newRecord.getCircleCode());
+        persistentRecord.setContentDuration(newRecord.getContentDuration());
+        persistentRecord.setContentFile(newRecord.getContentFile());
+        persistentRecord.setContentId(newRecord.getContentId());
+        persistentRecord.setContentName(newRecord.getContentName());
+        persistentRecord.setContentType(newRecord.getContentType());
+        persistentRecord.setLanguageLocationCode(newRecord.getLanguageLocationCode());
+
+        persistentRecord.setModifiedBy(newRecord.getModifiedBy());
+
+        return persistentRecord;
+    }
+
 }

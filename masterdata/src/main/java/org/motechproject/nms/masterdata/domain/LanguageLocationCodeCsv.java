@@ -24,31 +24,19 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     private String circleCode;
 
     @Field
-    private String languageLocationCodeMA;
+    private String languageLocationCode;
+
+    @Field
+    private String isDefaultLanguageLocationCode;
 
     @Field
     private String languageMA;
 
     @Field
-    private String defaultLanguageLocationCodeMA;
-
-    @Field
-    private String languageLocationCodeMK;
-
-    @Field
     private String languageMK;
 
     @Field
-    private String defaultLanguageLocationCodeMK;
-
-    @Field
-    private String languageLocationCodeKK;
-
-    @Field
     private String languageKK;
-
-    @Field
-    private String defaultLanguageLocationCodeKK;
 
     public String getOperation() {
         return operation;
@@ -82,28 +70,12 @@ public class LanguageLocationCodeCsv extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public String getLanguageLocationCodeMA() {
-        return languageLocationCodeMA;
-    }
-
-    public void setLanguageLocationCodeMA(String languageLocationCodeMA) {
-        this.languageLocationCodeMA = languageLocationCodeMA;
-    }
-
     public String getLanguageMA() {
         return languageMA;
     }
 
     public void setLanguageMA(String languageMA) {
         this.languageMA = languageMA;
-    }
-
-    public String getLanguageLocationCodeMK() {
-        return languageLocationCodeMK;
-    }
-
-    public void setLanguageLocationCodeMK(String languageLocationCodeMK) {
-        this.languageLocationCodeMK = languageLocationCodeMK;
     }
 
     public String getLanguageMK() {
@@ -114,61 +86,39 @@ public class LanguageLocationCodeCsv extends MdsEntity {
         this.languageMK = languageMK;
     }
 
-    public String getLanguageLocationCodeKK() {
-        return languageLocationCodeKK;
-    }
-
-    public void setLanguageLocationCodeKK(String languageLocationCodeKK) {
-        this.languageLocationCodeKK = languageLocationCodeKK;
-    }
-
     public String getLanguageKK() {
         return languageKK;
     }
-
     public void setLanguageKK(String languageKK) {
         this.languageKK = languageKK;
     }
 
-    public String getDefaultLanguageLocationCodeMK() {
-        return defaultLanguageLocationCodeMK;
+    public String getLanguageLocationCode() {
+        return languageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCodeMK(String defaultLanguageLocationCodeMK) {
-        this.defaultLanguageLocationCodeMK = defaultLanguageLocationCodeMK;
+    public void setLanguageLocationCode(String languageLocationCode) {
+        this.languageLocationCode = languageLocationCode;
     }
 
-    public String getDefaultLanguageLocationCodeMA() {
-        return defaultLanguageLocationCodeMA;
+    public String getIsDefaultLanguageLocationCode() {
+        return isDefaultLanguageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCodeMA(String defaultLanguageLocationCodeMA) {
-        this.defaultLanguageLocationCodeMA = defaultLanguageLocationCodeMA;
+    public void setIsDefaultLanguageLocationCode(String isDefaultLanguageLocationCode) {
+        this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
-
-    public String getDefaultLanguageLocationCodeKK() {
-        return defaultLanguageLocationCodeKK;
-    }
-
-    public void setDefaultLanguageLocationCodeKK(String defaultLanguageLocationCodeKK) {
-        this.defaultLanguageLocationCodeKK = defaultLanguageLocationCodeKK;
-    }
-
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();
         recordStr.append("stateCode" + this.stateCode);
-
         recordStr.append(",districtCode" + this.districtCode);
         recordStr.append(",circleCode" + this.circleCode);
-        recordStr.append(",languageLocationCodeMA" + this.languageLocationCodeMA);
+        recordStr.append(",languageLocationCode" + this.languageLocationCode);
         recordStr.append(",languageMA" + this.languageMA);
-        recordStr.append(",isDefaultLanguageLocationCodeMA" + this.defaultLanguageLocationCodeMA);
-        recordStr.append(",languageLocationCodeMK" + this.languageLocationCodeMK);
         recordStr.append(",languageMK" + this.languageMK);
-        recordStr.append(",isDefaultLanguageLocationCodeMK" + this.defaultLanguageLocationCodeMK);
-        recordStr.append(",languageLocationCodeKK" + this.languageLocationCodeKK);
-        recordStr.append(",isDefaultLanguageLocationCodeKK" + this.defaultLanguageLocationCodeKK);
+        recordStr.append(",languageKK" + this.languageKK);
+        recordStr.append(",isDefaultLanguageLocationCode" + this.isDefaultLanguageLocationCode);
         return recordStr.toString();
 
     }

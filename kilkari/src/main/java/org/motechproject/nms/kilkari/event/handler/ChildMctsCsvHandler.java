@@ -5,12 +5,7 @@ import java.util.Map;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
@@ -108,7 +103,7 @@ public class ChildMctsCsvHandler {
                     logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
-                    if(childMctsCsv.getOperation().equalsIgnoreCase("Delete")) {
+                    if(childMctsCsv.getOperation().equalsIgnoreCase(Operation.DEL.toString())) {
                         deactivateSubscription(subscriber);
                     } else {
                         insertSubscriptionSubccriber(subscriber);
@@ -199,7 +194,6 @@ public class ChildMctsCsvHandler {
         childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(childMctsCsv.getEntryType(), "Entry Type", true)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         childSubscriber.setName(ParseDataHelper.parseString(childMctsCsv.getMotherName(), "Mother Name", false));
-        childSubscriber.setLanguageLocationCode(languageLocationCodeService.getLanguageLocationCodeKKByLocationCode(stateCode, districtCode));
         childSubscriber.setDob(ParseDataHelper.parseDate(childMctsCsv.getBirthdate(), "Birth Date", true));
 
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
@@ -362,7 +356,6 @@ public class ChildMctsCsvHandler {
      *  This method is used to deactivate subscription based on csv operation
      * 
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
      */
     private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getId());

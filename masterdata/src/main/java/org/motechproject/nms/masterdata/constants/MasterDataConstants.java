@@ -46,4 +46,6 @@ public final class MasterDataConstants {
     public static final String LANGUAGE_LOCATION_CODE_CSV_FAILED = "mds.crud.masterdata.LanguageLocationCodeCsv.csv-import.failure";
 
     public static final String DELETE_OPERATION = "DEL";
+
+    public static final String YES_FOR_DEFAULT_LANG_LOC_CODE = "Y";
 }
