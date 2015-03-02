@@ -209,7 +209,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * Check Next Month and Year and return boolean on that basis
+     * Check For Next Month and Year and return true if lastAccessTime
+     * is greater than current date else return false.
      *
      * @param lastAccessTime
      */
