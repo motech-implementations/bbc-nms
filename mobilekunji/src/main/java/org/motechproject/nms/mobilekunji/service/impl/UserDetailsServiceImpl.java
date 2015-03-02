@@ -53,6 +53,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws DataValidationException {
 
+        logger.info("Get UserDetails Entered successfully.");
+
         UserDetailApiResponse userDetailApiResponse = null;
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
@@ -60,6 +62,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         populateFlwDetail(userProfileData);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
+
+        logger.info("Get UserDetails executed successfully.");
 
         return userDetailApiResponse;
     }
@@ -70,7 +74,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
 
+        logger.info("Update LanguageLocationCode Entered successfully.");
+
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
+
+        logger.info("LanguageLocationCode executed successfully.");
     }
 
     /**
