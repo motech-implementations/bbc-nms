@@ -187,7 +187,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         switch (configurationService.getConfiguration().getCappingType()) {
 
             case ConfigurationConstants.DEFAULT_CAPPING_TYPE:
-                userDetailApiResponse.setMaxAllowedUsageInPulses(-1);
+                userDetailApiResponse.setMaxAllowedUsageInPulses(ConfigurationConstants.DEFAULT_CAPPING_VALUE);
                 break;
 
             case ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE:
