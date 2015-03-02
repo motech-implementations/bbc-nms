@@ -3,19 +3,13 @@ package org.motechproject.nms.mobilekunji.event.handler.ut;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import java.lang.Long;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
-import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
+import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
+
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 /**
@@ -44,6 +38,7 @@ public class ContentUploadCsvHandlerUnitTest {
                 "4", "30");
         uploadCsv.setId(dbIndex);
         contentUploadCsvRecordDataService.create(uploadCsv);
+        MotechEvent motechEvent = new MotechEvent();
 
 
     }
