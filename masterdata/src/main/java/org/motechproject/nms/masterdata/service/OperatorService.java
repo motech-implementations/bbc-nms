@@ -32,4 +32,6 @@ public interface OperatorService {
      * @return Operator object corresponding to the census code
      */
     Operator getRecordByCode(String operatorCode);
+
+    Operator findById(Long id);
 }

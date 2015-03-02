@@ -35,4 +35,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public Boolean isConfigurationPresent() {
         return (getConfiguration() != null);
     }
+
+    public ConfigurationServiceImpl(ConfigurationDataService configurationDataService) {
+        this.configurationDataService = configurationDataService;
+    }
 }

@@ -53,4 +53,9 @@ public class CircleServiceImpl implements CircleService {
         return circleDataService.findByCode(circleCode);
 
     }
+
+    @Override
+    public Circle findById(Long id) {
+        return circleDataService.findById(id);
+    }
 }
