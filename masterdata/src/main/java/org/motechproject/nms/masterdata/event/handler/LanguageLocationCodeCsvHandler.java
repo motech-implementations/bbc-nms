@@ -3,12 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.OperationType;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
@@ -86,18 +81,28 @@ public class LanguageLocationCodeCsvHandler {
                             languageLocationCodeService.delete(oldRecord);
                             logger.info("Record deleted successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
                         } else {
-                            newRecord.setId(oldRecord.getId());
-                            languageLocationCodeService.update(newRecord);
+                            oldRecord = copyLanguageLocationCodeForUpdate(newRecord, oldRecord);
+                            languageLocationCodeService.update(oldRecord);
                             logger.info("Record updated successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
                         }
+                        result.incrementSuccessCount();
+
+                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        logger.error("Record for deletion not found in the LanguageLocation table with state code " +
+                                        "{} and district code", newRecord.getStateCode(), newRecord.getDistrictCode());
+                        errorDetail.setErrorDescription(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                        errorDetail.setErrorCategory(ErrorCategoryConstants.INVALID_DATA);
+                        errorDetail.setRecordDetails("State and District Code combination invalid");
+                        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
+
+                        result.incrementFailureCount();
+
                     } else {
-                        newRecord.setOwner(userName);
-                        newRecord.setModifiedBy(userName);
                         languageLocationCodeService.create(newRecord);
                         logger.info("Record created successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
+                        result.incrementSuccessCount();
                     }
-                    languageLocationCodeServiceCsv.delete(record);
-                    result.incrementSuccessCount();
+
                 } else {
                     logger.error("Record not found in the LanguageLocationCodeCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
@@ -119,6 +124,7 @@ public class LanguageLocationCodeCsvHandler {
                 errorDetail.setErrorDescription("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
+                throw e;
             }
             finally{
                 if(null != record){
@@ -155,7 +161,17 @@ public class LanguageLocationCodeCsvHandler {
     }
 
 
-    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record) throws DataValidationException {
+    /**
+     *  This method is used to validate csv uploaded record
+     *  and map LanguageLocationCodeCsv to LanguageLocationCode
+     *
+     * @param record of LanguageLocationCodeCsv type
+     * @return Operator record after the mapping
+     * @throws DataValidationException
+     */
+    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record)
+            throws DataValidationException {
+
         LanguageLocationCode newRecord = null;
 
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
@@ -188,9 +204,9 @@ public class LanguageLocationCodeCsvHandler {
 
         circleService.update(circle);
 
-        /* Create a new object of LanguageLocationCode and fill it with values from CSV */
         newRecord = new LanguageLocationCode();
 
+        /* Fill newRecord with values from CSV */
         newRecord.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
         newRecord.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
         newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
@@ -212,6 +228,36 @@ public class LanguageLocationCodeCsvHandler {
         newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));
 
         return newRecord;
+    }
+
+    /**
+     * Copies the field values from new Record to oldRecord for update in DB
+     * @param newRecord mapped from CSV values
+     * @param oldRecord to be updated in DB
+     * @return oldRecord after copied values
+     */
+    private  LanguageLocationCode copyLanguageLocationCodeForUpdate(LanguageLocationCode newRecord,
+                                                              LanguageLocationCode oldRecord) {
+
+        oldRecord.setStateCode(newRecord.getStateCode());
+        oldRecord.setDistrictCode(newRecord.getDistrictCode());
+        oldRecord.setCircleCode(newRecord.getCircleCode());
+
+        oldRecord.setCircle(newRecord.getCircle());
+        oldRecord.setState(newRecord.getState());
+        oldRecord.setDistrict(newRecord.getDistrict());
+        oldRecord.setModifiedBy(newRecord.getModifiedBy());
+
+        oldRecord.setLanguageLocationCodeMA(newRecord.getLanguageLocationCodeMA());
+        oldRecord.setLanguageMA(newRecord.getLanguageMA());
+
+        oldRecord.setLanguageLocationCodeMK(newRecord.getLanguageLocationCodeMK());
+        oldRecord.setLanguageMK(newRecord.getLanguageMK());
+
+        oldRecord.setLanguageLocationCodeKK(newRecord.getLanguageLocationCodeKK());
+        oldRecord.setLanguageKK(newRecord.getLanguageKK());
+
+        return oldRecord;
     }
 
 }

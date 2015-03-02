@@ -71,21 +71,26 @@ public class OperatorCsvHandler {
                     Operator newRecord = mapOperatorFrom(record);
 
                     persistentRecord = operatorService.getRecordByCode(newRecord.getCode());
-
                     if (persistentRecord != null) {
                         if (OperationType.DEL.toString().equals(record.getOperation())) {
                             operatorService.delete(persistentRecord);
                             logger.info("Record deleted successfully for operatorcode {}", newRecord.getCode());
                         } else {
-                            newRecord.setId(persistentRecord.getId());
-                            operatorService.update(newRecord);
+                            persistentRecord = copyLanguageLocationCodeForUpdate(newRecord, persistentRecord);
+                            operatorService.update(persistentRecord);
                             logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
                         }
+
+                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        logger.error("Record for deletion not found in the Operator table with code {}",
+                                newRecord.getCode());
+                        ParseDataHelper.raiseInvalidDataException("Operator Code", newRecord.getCode());
                     } else {
                         operatorService.create(newRecord);
                         logger.info("Record created successfully for operatorcode {}", newRecord.getCode());
                     }
                     result.incrementSuccessCount();
+
                 } else {
                     logger.error("Record not found in the OperatorCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
@@ -107,6 +112,7 @@ public class OperatorCsvHandler {
                 errorDetail.setErrorDescription("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
+                throw e;
             }
             finally {
                 if(null != record){
@@ -142,8 +148,17 @@ public class OperatorCsvHandler {
         logger.info("OPERATOR_CSV_FAILED event processing finished");
     }
 
+    /**
+     *  This method is used to validate csv uploaded record
+     *  and map OperatorCsv to Operator
+     *
+     * @param record of OperatorCsv type
+     * @return Operator record after the mapping
+     * @throws DataValidationException
+     */
     private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
         Operator newRecord = new Operator();
+
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
         newRecord.setCreator(record.getCreator());
@@ -151,6 +166,22 @@ public class OperatorCsvHandler {
         newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
+    }
+
+    /**
+     * Copies the field values from new Record to oldRecord for update in DB
+     * @param newRecord mapped from CSV values
+     * @param persistentRecord to be updated in DB
+     * @return oldRecord after copied values
+     */
+    private  Operator copyLanguageLocationCodeForUpdate(Operator newRecord,
+                                                        Operator persistentRecord) {
+
+        persistentRecord.setName(newRecord.getName());
+        persistentRecord.setCode(newRecord.getCode());
+        persistentRecord.setModifiedBy(newRecord.getModifiedBy());
+
+        return persistentRecord;
     }
 }
 

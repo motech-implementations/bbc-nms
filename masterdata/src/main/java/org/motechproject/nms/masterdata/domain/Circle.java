@@ -3,6 +3,9 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
+
+import javax.jdo.annotations.Unique;
+
 /**
  * This class Models data for Circle location records
  */
@@ -13,6 +16,7 @@ public class Circle extends MdsEntity {
     @Field(required = true)
     private String name;
 
+    @Unique
     @Field(required = true)
     private String code;
 

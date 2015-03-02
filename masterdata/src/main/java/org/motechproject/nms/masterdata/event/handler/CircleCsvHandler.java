@@ -78,14 +78,19 @@ public class CircleCsvHandler {
                             circleService.delete(persistentRecord);
                             logger.info("Record deleted successfully for circlecode {}", newRecord.getCode());
                         } else {
-                            newRecord.setId(persistentRecord.getId());
-                            circleService.update(newRecord);
+                            persistentRecord = copyLanguageLocationCodeForUpdate(newRecord, persistentRecord);
+                            circleService.update(persistentRecord);
                             logger.info("Record updated successfully for circlecode {}", newRecord.getCode());
                         }
 
+                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        logger.error("Record for deletion not found in the Circle table with code {}",
+                                newRecord.getCode());
+                        ParseDataHelper.raiseInvalidDataException("Circle Code", newRecord.getCode());
                     } else {
                         circleService.create(newRecord);
                         logger.info("Record created successfully for circlecode {}", newRecord.getCode());
+
                     }
                     result.incrementSuccessCount();
                 } else {
@@ -109,6 +114,7 @@ public class CircleCsvHandler {
                 errorDetail.setErrorDescription("");
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
+                throw e;
             }
             finally {
                 if(null != record){
@@ -144,8 +150,18 @@ public class CircleCsvHandler {
         logger.info("CIRCLE_CSV_FAILED event processing finished");
     }
 
+    /**
+     *  This method is used to validate csv uploaded record
+     *  and map CircleCsv to Circle
+     *
+     * @param record of CircleCsv type
+     * @return Circle record after the mapping
+     * @throws DataValidationException
+     */
     private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
+
         Circle newRecord = new Circle();
+
         newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
         newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
         newRecord.setCreator(record.getCreator());
@@ -153,5 +169,21 @@ public class CircleCsvHandler {
         newRecord.setModifiedBy(record.getModifiedBy());
 
         return newRecord;
+    }
+
+    /**
+     * Copies the field values from new Record to oldRecord for update in DB
+     * @param newRecord mapped from CSV values
+     * @param persistentRecord to be updated in DB
+     * @return oldRecord after copied values
+     */
+    private  Circle copyLanguageLocationCodeForUpdate(Circle newRecord,
+                                                      Circle persistentRecord) {
+
+        persistentRecord.setName(newRecord.getName());
+        persistentRecord.setCode(newRecord.getCode());
+        persistentRecord.setModifiedBy(newRecord.getModifiedBy());
+
+        return persistentRecord;
     }
 }

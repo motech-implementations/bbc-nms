@@ -4,10 +4,28 @@ import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 
 public interface LanguageLocationCodeService {
 
+
+
+    /**
+     * creates LanguageLocationCode in database
+     *
+     * @param record of LanguageLocationCode
+     */
     void create(LanguageLocationCode record);
 
+    /**
+     * updates LanguageLocationCode in database
+     *
+     * @param record of LanguageLocationCode
+     */
     void update(LanguageLocationCode record);
 
+
+    /**
+     * deletes LanguageLocationCode from database
+     *
+     * @param record of LanguageLocationCode
+     */
     void delete(LanguageLocationCode record);
 
     /**
