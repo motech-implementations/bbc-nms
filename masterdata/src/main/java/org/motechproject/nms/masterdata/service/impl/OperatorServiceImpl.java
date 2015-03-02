@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 @Service("operatorService")
 public class OperatorServiceImpl implements OperatorService {
 
-    @Autowired
+
     private OperatorDataService operatorDataService;
 
+    @Autowired
     public OperatorServiceImpl(OperatorDataService operatorDataService) {
         this.operatorDataService = operatorDataService;
     }

@@ -9,28 +9,22 @@ import org.springframework.stereotype.Service;
 @Service("locationService")
 public class LocationServiceImpl implements LocationService {
 
-    @Autowired
+
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private TalukaRecordsDataService talukaRecordsDataService;
 
-    @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
-    @Autowired
     private VillageRecordsDataService villageRecordsDataService;
 
-    @Autowired
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
-    @Autowired
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
-
+    @Autowired
     public LocationServiceImpl(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
         this.stateRecordsDataService = stateRecordsDataService;
         this.districtRecordsDataService = districtRecordsDataService;
