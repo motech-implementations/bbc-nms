@@ -170,6 +170,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void fillCurrentUsageInPulses(UserDetailApiResponse userDetailApiResponse, FlwDetail flwDetail) {
         if (checkNextTime(flwDetail.getLastAccessDate())) {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+            resetCurrentUsage(flwDetail);
         } else {
             userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
         }
@@ -207,13 +208,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public boolean checkNextTime(DateTime lastAccessTime) {
         DateTime now = DateTime.now();
         boolean flag = false;
-
+        logger.debug("LastAccessTime: {} " + lastAccessTime);
         if (lastAccessTime != null) {
             lastAccessTime = lastAccessTime.withZone(DateTimeZone.getDefault());
             flag = lastAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                     lastAccessTime.getYear() != now.getYear();
         }
         return flag;
+    }
+
+    private void resetCurrentUsage(FlwDetail flwDetail) {
+
+        flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+        flwDetailService.update(flwDetail);
+        logger.info("FlwDetail: Current Usage is updated successfully.");
     }
 
 }
