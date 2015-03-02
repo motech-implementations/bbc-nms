@@ -20,17 +20,17 @@ public class ServiceConfigParam extends MdsEntity {
     @Unique
     private Long index;
 
-    private Integer nmsMaCappingType;
+    private Integer cappingType;
 
-    private Integer nmsMaNationalCapValue;
+    private Integer nationalCapValue;
 
-    private Integer nmsMaMaxEndOfUsuageMessage;
+    private Integer maxEndOfUsuageMessage;
 
-    private Integer nmsMaCourseQualifyingScore;
+    private Integer courseQualifyingScore;
 
-    private Integer nmsMaDefaultLanguageLocationCode;
+    private Integer defaultLanguageLocationCode;
 
-    private String nmsMaSmsSenderAddress;
+    private String smsSenderAddress;
 
     /**
      * constructor with 0 arguments.
@@ -43,31 +43,30 @@ public class ServiceConfigParam extends MdsEntity {
      * constructor with all arguments.
      * 
      * @param index unique record identifier
-     * @param nmsMaCappingType specify capping type: 0-No capping 1-National
-     *            Capping 2-State wise capping
-     * @param nmsMaNationalCapValue specify national cap value.
-     * @param nmsMaMaxEndOfUsuageMessage Maximum no. of times end of usage
-     *            message can be played to the user on usage unavailability.
-     *            After the expiry of this value, call will be simply dropped.
-     * @param nmsMaCourseQualifyingScore Minimum score a user should achieve in
-     *            order to qualify the MA course.
-     * @param nmsMaDefaultLanguageLocationCode language Location Code value in
-     *            case circle for a user could not be determined.
-     * @param nmsMaSmsSenderAddress Address to be populated in from field of SMS
+     * @param CappingType specify capping type: 0-No capping 1-National Capping
+     *            2-State wise capping
+     * @param NationalCapValue specify national cap value.
+     * @param MaxEndOfUsuageMessage Maximum no. of times end of usage message
+     *            can be played to the user on usage unavailability. After the
+     *            expiry of this value, call will be simply dropped.
+     * @param CourseQualifyingScore Minimum score a user should achieve in order
+     *            to qualify the MA course.
+     * @param DefaultLanguageLocationCode language Location Code value in case
+     *            circle for a user could not be determined.
+     * @param SmsSenderAddress Address to be populated in from field of SMS
      *            which will be sent on successful completion of course.
      */
-    public ServiceConfigParam(Long index, Integer nmsMaCappingType,
-            Integer nmsMaNationalCapValue, Integer nmsMaMaxEndOfUsuageMessage,
-            Integer nmsMaCourseQualifyingScore,
-            Integer nmsMaDefaultLanguageLocationCode,
-            String nmsMaSmsSenderAddress) {
+    public ServiceConfigParam(Long index, Integer cappingType,
+            Integer nationalCapValue, Integer maxEndOfUsuageMessage,
+            Integer courseQualifyingScore, Integer defaultLanguageLocationCode,
+            String smsSenderAddress) {
         this.index = index;
-        this.nmsMaCappingType = nmsMaCappingType;
-        this.nmsMaNationalCapValue = nmsMaNationalCapValue;
-        this.nmsMaMaxEndOfUsuageMessage = nmsMaMaxEndOfUsuageMessage;
-        this.nmsMaCourseQualifyingScore = nmsMaCourseQualifyingScore;
-        this.nmsMaDefaultLanguageLocationCode = nmsMaDefaultLanguageLocationCode;
-        this.nmsMaSmsSenderAddress = nmsMaSmsSenderAddress;
+        this.cappingType = cappingType;
+        this.nationalCapValue = nationalCapValue;
+        this.maxEndOfUsuageMessage = maxEndOfUsuageMessage;
+        this.courseQualifyingScore = courseQualifyingScore;
+        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
+        this.smsSenderAddress = smsSenderAddress;
     }
 
     public Long getIndex() {
@@ -78,53 +77,53 @@ public class ServiceConfigParam extends MdsEntity {
         this.index = index;
     }
 
-    public Integer getNmsMaCappingType() {
-        return nmsMaCappingType;
+    public Integer getCappingType() {
+        return cappingType;
     }
 
-    public void setNmsMaCappingType(Integer nmsMaCappingType) {
-        this.nmsMaCappingType = nmsMaCappingType;
+    public void setCappingType(Integer cappingType) {
+        this.cappingType = cappingType;
     }
 
-    public Integer getNmsMaNationalCapValue() {
-        return nmsMaNationalCapValue;
+    public Integer getNationalCapValue() {
+        return nationalCapValue;
     }
 
-    public void setNmsMaNationalCapValue(Integer nmsMaNationalCapValue) {
-        this.nmsMaNationalCapValue = nmsMaNationalCapValue;
+    public void setNationalCapValue(Integer nationalCapValue) {
+        this.nationalCapValue = nationalCapValue;
     }
 
-    public Integer getNmsMaMaxEndOfUsuageMessage() {
-        return nmsMaMaxEndOfUsuageMessage;
+    public Integer getMaxEndOfUsuageMessage() {
+        return maxEndOfUsuageMessage;
     }
 
-    public void setNmsMaMaxEndOfUsuageMessage(Integer nmsMaMaxEndOfUsuageMessage) {
-        this.nmsMaMaxEndOfUsuageMessage = nmsMaMaxEndOfUsuageMessage;
+    public void setMaxEndOfUsuageMessage(Integer maxEndOfUsuageMessage) {
+        this.maxEndOfUsuageMessage = maxEndOfUsuageMessage;
     }
 
-    public Integer getNmsMaCourseQualifyingScore() {
-        return nmsMaCourseQualifyingScore;
+    public Integer getCourseQualifyingScore() {
+        return courseQualifyingScore;
     }
 
-    public void setNmsMaCourseQualifyingScore(Integer nmsMaCourseQualifyingScore) {
-        this.nmsMaCourseQualifyingScore = nmsMaCourseQualifyingScore;
+    public void setCourseQualifyingScore(Integer courseQualifyingScore) {
+        this.courseQualifyingScore = courseQualifyingScore;
     }
 
-    public Integer getNmsMaDefaultLanguageLocationCode() {
-        return nmsMaDefaultLanguageLocationCode;
+    public Integer getDefaultLanguageLocationCode() {
+        return defaultLanguageLocationCode;
     }
 
-    public void setNmsMaDefaultLanguageLocationCode(
-            Integer nmsMaDefaultLanguageLocationCode) {
-        this.nmsMaDefaultLanguageLocationCode = nmsMaDefaultLanguageLocationCode;
+    public void setDefaultLanguageLocationCode(
+            Integer defaultLanguageLocationCode) {
+        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
-    public String getNmsMaSmsSenderAddress() {
-        return nmsMaSmsSenderAddress;
+    public String getSmsSenderAddress() {
+        return smsSenderAddress;
     }
 
-    public void setNmsMaSmsSenderAddress(String nmsMaSmsSenderAddress) {
-        this.nmsMaSmsSenderAddress = nmsMaSmsSenderAddress;
+    public void setSmsSenderAddress(String smsSenderAddress) {
+        this.smsSenderAddress = smsSenderAddress;
     }
 
 }

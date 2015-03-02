@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobileacademy.service.it;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
@@ -41,9 +40,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Inject
     private CourseRawContentDataService courseRawContentDataService;
 
-    private static final org.apache.log4j.Logger LOGGER = Logger
-            .getLogger(CSVRecordProcessServiceIT.class);
-
     @Test
     public void testCoursePopulateServiceInstance() throws Exception {
 
@@ -54,18 +50,9 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Transactional
     @Rollback(value = true)
     public void testProcessRawRecords() throws Exception {
-        ClassLoader old = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(
-                    this.getClass().getClassLoader());
-            csvRecordProcessService.processRawRecords(
-                    findCourseRawContentList(), "CourseRawContent.csv");
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            assertFalse(true);
-        } finally {
-            Thread.currentThread().setContextClassLoader(old);
-        }
+        String output = csvRecordProcessService.processRawRecords(
+                findCourseRawContentList(), "CourseRawContent.csv");
+        assertEquals("Records Processed Successfully", output);
     }
 
     private List<CourseRawContent> findCourseRawContentList() {
