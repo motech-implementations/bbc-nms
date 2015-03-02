@@ -124,23 +124,40 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
         FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfile.getNmsFlwId());
+
         if (null != flwDetail) {
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
             if (userProfile.isDefaultLanguageLocationCode()) {
-                userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
+                if (userProfile.getLanguageLocationCode() == null) {
+                    setNationalDefaultLlc(userDetailApiResponse);
+                } else {
+                    userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
+                }
             } else {
-                userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
+                if (userProfile.getLanguageLocationCode() == null) {
+                    setNationalDefaultLlc(userDetailApiResponse);
+                } else {
+                    userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
+                }
             }
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
             fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
         } else {
             ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
         }
-
-
         return userDetailApiResponse;
+    }
+
+    /**
+     * fill National Default LLC
+     *
+     * @param userDetailApiResponse
+     */
+    private void setNationalDefaultLlc(UserDetailApiResponse userDetailApiResponse) {
+        userDetailApiResponse.setDefaultLanguageLocationCode(configurationService.getConfiguration().
+                getNationalDefaultLanguageLocationCode());
     }
 
     /**
