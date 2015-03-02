@@ -12,6 +12,7 @@ import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.nms.util.service.BulkUploadStatusService;
+import org.motechproject.nms.util.service.impl.BulkUploadErrLogServiceImpl;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
