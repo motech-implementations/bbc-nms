@@ -47,7 +47,7 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.kilkarimodule.ContentUploadKKCsv.csv-import.success")
+    @MotechListener(subjects = "mds.crud.kilkari.ContentUploadKKCsv.csv-import.success")
     public void contentUploadCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing ContentUploadKKCsv-import success for upload {}", params.toString());
@@ -124,7 +124,7 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = "mds.crud.kilkarimodule.ContentUploadKKCsv.csv-import.failure")
+    @MotechListener(subjects = "mds.crud.kilkari.ContentUploadKKCsv.csv-import.failure")
     public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing ContentUploadKKCsv-import failure for upload {}", params.toString());
