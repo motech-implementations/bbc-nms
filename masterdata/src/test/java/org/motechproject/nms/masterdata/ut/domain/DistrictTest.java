@@ -38,6 +38,14 @@ public class DistrictTest {
     }
 
     @Test
+    public void testEqualsWithSameDistrictCode()
+    {
+        District district = TestHelper.getDistrictData();
+
+        assertTrue(TestHelper.getDistrictData().equals(district));
+    }
+
+    @Test
     public void testEqualsWithDifferentStateCode() {
 
         District district = TestHelper.getDistrictData();
