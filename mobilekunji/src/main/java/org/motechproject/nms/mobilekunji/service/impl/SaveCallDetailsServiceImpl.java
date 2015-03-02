@@ -127,7 +127,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         flwDetail.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flwDetail.getEndOfUsagePrompt());
         flwDetail.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flwDetail.getCurrentUsageInPulses());
         flwDetail.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
-        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
+        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()*1000));
         flwDetailService.update(flwDetail);
 
         logger.info("FlwDetail updated successfully.");
