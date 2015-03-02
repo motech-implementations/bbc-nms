@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Persistent;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.joda.time.DateTime;
@@ -64,7 +66,8 @@ public class Subscriber extends MdsEntity {
     private Village village;
     
     @Field
-    @Size(max=2)
+    @Min(value=1)
+    @Max(value=99)
     private Integer languageLocationCode;
     
     @Field

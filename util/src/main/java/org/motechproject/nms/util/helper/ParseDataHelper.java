@@ -72,7 +72,7 @@ public final class ParseDataHelper {
 
         try {
             if (parseString(fieldName, fieldValue, isMandatory) != null) {
-                DateFormat dateFormat = new SimpleDateFormat("");
+                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
                 Date date = dateFormat.parse(fieldValue);
                 parsedDateTime = new DateTime(date);

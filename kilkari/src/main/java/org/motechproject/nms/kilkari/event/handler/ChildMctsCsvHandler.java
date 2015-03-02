@@ -9,6 +9,7 @@ import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
+import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.District;
@@ -51,28 +52,46 @@ public class ChildMctsCsvHandler {
     public static final String PACK_72 = "72WEEK";
 
 
-    @Autowired
+    //@Autowired
     private ChildMctsCsvService childMctsCsvService;
 
-    @Autowired
+    //@Autowired
     private SubscriptionService subscriptionService;
 
-    @Autowired
+    //@Autowired
     private LocationValidatorService locationValidator;
 
-    @Autowired
+    //@Autowired
     private LanguageLocationCodeService languageLocationCodeService;
 
-    @Autowired
+    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    @Autowired
+    //@Autowired
     private SubscriberService subscriberService;
     
-    @Autowired
+    //@Autowired
     private ConfigurationService configurationService;
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandler.class);
+    
+    @Autowired
+    public ChildMctsCsvHandler(ChildMctsCsvService childMctsCsvService, 
+            SubscriptionService subscriptionService,
+            SubscriberService subscriberService,
+            LocationValidatorService locationValidator,
+            LanguageLocationCodeService languageLocationCodeService,
+            BulkUploadErrLogService bulkUploadErrLogService,
+            ConfigurationService configurationService){
+        this.childMctsCsvService = childMctsCsvService;
+        this.subscriptionService = subscriptionService;
+        this.locationValidator = locationValidator;
+        this.subscriberService = subscriberService;
+        this.languageLocationCodeService = languageLocationCodeService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.configurationService = configurationService;
+
+    }
 
     /**
      * This method is used to process record when ChildMctsCsv upload is successful.
@@ -103,7 +122,7 @@ public class ChildMctsCsvHandler {
                     logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
-                    if(childMctsCsv.getOperation().equalsIgnoreCase(Operation.DEL.toString())) {
+                    if(childMctsCsv.getOperation() != null && childMctsCsv.getOperation().equalsIgnoreCase(Operation.DEL.toString())) {
                         deactivateSubscription(subscriber);
                     } else {
                         insertSubscriptionSubccriber(subscriber);

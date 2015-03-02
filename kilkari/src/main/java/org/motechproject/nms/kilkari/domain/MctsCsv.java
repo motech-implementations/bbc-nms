@@ -103,7 +103,7 @@ public class MctsCsv extends MdsEntity {
         return villageCode;
     }
 
-    public void setVillageId(String villageCode) {
+    public void setVillageCode(String villageCode) {
         this.villageCode = villageCode;
     }
 

@@ -1,0 +1,2 @@
+operation,stateId,districtId,talukaId,healthBlockId,phcId,subCentreId,villageId,idNo,motherName,whomPhoneNo,birthDate,entryType
+ADD,1,1,,,,,,123,test,9876543210,10-12-2014,Birth

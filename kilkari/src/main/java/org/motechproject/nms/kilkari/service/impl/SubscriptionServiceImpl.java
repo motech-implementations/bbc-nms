@@ -2,8 +2,12 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
+import javax.jdo.Query;
+
 import org.motechproject.mds.filter.Filter;
 import org.motechproject.mds.filter.FilterType;
+import org.motechproject.mds.query.QueryExecution;
+import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -80,13 +84,30 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public long getActiveUserCount() {
-        Filter filter = new Filter();
-        filter.setField("status");
-        filter.setType(FilterType.fromString("Active"));
-        long activeRecord = subscriptionDataService.countForFilter(filter);
-        filter.setType(FilterType.fromString("PendingActivation"));
-        long pendingRecord = subscriptionDataService.countForFilter(filter);
-        return activeRecord + pendingRecord;
+        
+        List<Subscription> activeRecord = subscriptionDataService.getSubscriptionByStatus(Status.Active);
+        List<Subscription> pendingRecord = subscriptionDataService.getSubscriptionByStatus(Status.PendingActivation);
+        return activeRecord.size() + pendingRecord.size();
+        
+        
+        //Filter filter = new Filter();
+        //filter.setField("status");
+        //filter.setType(FilterType.fromString("Active"));
+        //long activeRecord = subscriptionDataService.countForFilter(filter);
+        //filter.setType(FilterType.fromString("PendingActivation"));
+        //long pendingRecord = subscriptionDataService.countForFilter(filter);
+        //return activeRecord + pendingRecord;
+    }
+    
+    public class LlcListQueryExecutionImpl implements
+    QueryExecution<Integer> {
+
+        @Override
+        public Integer execute(Query query,
+                InstanceSecurityRestriction restriction) {
+            query.setResult("COUNT() ");
+            return (Integer) query.execute();
+        }
     }
     
     public Subscription getSubscriptionByMctsIdState(String mctsId, Long stateCode){

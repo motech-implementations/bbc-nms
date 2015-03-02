@@ -20,7 +20,7 @@ public class Subscription extends MdsEntity {
     @Persistent
     private Subscriber subscriber;
 
-    @Field(required = true)
+    @Field
     private Integer operatorCode;  
     
     @Field(required = true)
@@ -44,16 +44,16 @@ public class Subscription extends MdsEntity {
     @Field
     private Boolean isDeactivatedBySystem;
 
-    @Field(required = true)
+    @Field
     private Integer weekNumber;
     
-    @Field(required = true)
+    @Field
     private Integer messageNumber;
 
-    @Field(required = true)
+    @Field
     private DateTime startDate;
 
-    @Field(required = true)
+    @Field
     private DateTime nextObdDate;
 
     @Field

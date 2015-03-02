@@ -16,7 +16,6 @@ import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.kilkari.service.impl.LocationValidatorServiceImpl;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -128,7 +127,8 @@ public class MotherMctsCsvHandler {
                     logger.info("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
-                    if(motherMctsCsv.getOperation().equalsIgnoreCase("DEL")) {
+
+                    if(motherMctsCsv.getOperation() != null && motherMctsCsv.getOperation().equalsIgnoreCase("DEL")) {
                         deactivateSubscription(subscriber);
                     } else {
                         insertSubscriptionSubccriber(subscriber);
@@ -144,7 +144,7 @@ public class MotherMctsCsvHandler {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
-                logger.warn("DataValidationException ::::", dve);
+                logger.error("DataValidationException ::::", dve);
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
@@ -215,22 +215,21 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
 
-        motherSubscriber.setMsisdn(ParseDataHelper.parseString(motherMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true));
-        motherSubscriber.setMotherMctsId(ParseDataHelper.parseString(motherMctsCsv.getIdNo(), "idNo", true));
-        motherSubscriber.setAge(ParseDataHelper.parseInt(motherMctsCsv.getAge(), "Age", false));
-        motherSubscriber.setAadharNumber(ParseDataHelper.parseString(motherMctsCsv.getAadharNo(), "AAdhar Num", true));
-        motherSubscriber.setName(ParseDataHelper.parseString(motherMctsCsv.getName(), "Name", false));
+        motherSubscriber.setMsisdn(ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true));
+        motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
+        motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
+        motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
+        motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
 
-        motherSubscriber.setLmp(ParseDataHelper.parseDate(motherMctsCsv.getLmpDate(), "Lmp Date", true));
+        motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
         motherSubscriber.setStillBirth("0".equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
-        motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getAbortion(), "Abortion", true)));
-        motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(motherMctsCsv.getEntryType(), "Entry Type", true)));
+        motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), true)));
+        motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), true)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
-        motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
 
         logger.info("Validation and map to entity process finished");
         return motherSubscriber;
@@ -265,11 +264,11 @@ public class MotherMctsCsvHandler {
         /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72);
         if (dbSubscription == null) {
-            logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
+            logger.error("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
             /* Find subscription from database based on mctsid, packName, status */
             dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getId());
             if (dbSubscription == null) {
-                logger.info("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
+                logger.error("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                 Configuration configuration = configurationService.getConfiguration();
                 long activeUserCount = subscriptionService.getActiveUserCount();
                 /* check for maximum allowed beneficiary */
@@ -277,16 +276,16 @@ public class MotherMctsCsvHandler {
                     Subscriber dbSubscriber = subscriberService.create(subscriber); /* CREATE new subscriber */
                     createSubscription(subscriber, null, dbSubscriber); /* create subscription for above created subscriber */
                 } else {
-                    logger.info("Reached maximum beneficery count can't add any more");
+                    logger.error("Reached maximum beneficery count can't add any more");
                     throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
                 }
             } else { /* Record found based on mctsid than update subscriber and subscription */
-                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
+                logger.error("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         } else {
-            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
+            logger.error("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);

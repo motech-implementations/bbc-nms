@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkari.repository;
 
+import java.util.List;
+
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
@@ -24,7 +26,12 @@ public interface SubscriptionDataService extends MotechDataService<Subscription>
             @LookupField(name = "stateCode") Long stateCode);
 
     @Lookup
-    Subscription getSubscriptionByMctsIdState(@LookupField(name = "mctsId") String mctsId, 
+    Subscription getSubscriptionByMctsIdState(
+            @LookupField(name = "mctsId") String mctsId, 
             @LookupField(name = "stateCode") Long stateCode);
+
+    @Lookup
+    List<Subscription> getSubscriptionByStatus(
+            @LookupField(name = "status") Status active);
 
 }

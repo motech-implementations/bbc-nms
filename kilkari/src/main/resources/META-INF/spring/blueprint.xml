@@ -8,6 +8,9 @@
 	<osgi:service ref="motherMctsCsvService"
                   interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />
                   
+	<osgi:service ref="childMctsCsvService"
+                  interface="org.motechproject.nms.kilkari.service.ChildMctsCsvService" />                  
+                  
 	<osgi:service ref="subscriptionService"
                   interface="org.motechproject.nms.kilkari.service.SubscriptionService" />
                   
