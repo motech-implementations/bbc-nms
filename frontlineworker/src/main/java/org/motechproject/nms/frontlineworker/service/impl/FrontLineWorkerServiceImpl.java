@@ -1,10 +1,13 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
+import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * This class acts as implementation class for the interface FrontLineWorkerService.
@@ -40,12 +43,55 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
 
     @Override
     public FrontLineWorker getFlwBycontactNo(String contactNo) {
-        return frontLineWorkerRecordDataService.getFlwByContactNo(contactNo);
+
+        FrontLineWorker validFrontLineWorker = null;
+        FrontLineWorker firstFrontLineWorker = null;
+        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.getFlwByContactNo(contactNo);
+        if (frontLineWorkerList.size() >= 1) {
+            firstFrontLineWorker = frontLineWorkerList.get(0);
+            for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
+                if (frontLineWorker.getStatus() != Status.INVALID) {
+                    validFrontLineWorker = frontLineWorker;
+                    break;
+                }
+            }
+
+            if (validFrontLineWorker != null) {
+                return validFrontLineWorker;
+            } else {
+                return firstFrontLineWorker;
+            }
+        }
+
+        return validFrontLineWorker;
+
     }
 
     @Override
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode) {
-        return frontLineWorkerRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
+
+        FrontLineWorker validFrontLineWorker = null;
+        FrontLineWorker firstFrontLineWorker = null;
+
+        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
+        if (frontLineWorkerList.size() >= 1) {
+            firstFrontLineWorker = frontLineWorkerList.get(0);
+            for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
+                if (frontLineWorker.getStatus() != Status.INVALID) {
+                    validFrontLineWorker = frontLineWorker;
+                    break;
+                }
+            }
+
+            if (validFrontLineWorker != null) {
+                return validFrontLineWorker;
+            } else {
+                return firstFrontLineWorker;
+            }
+        }
+
+        return validFrontLineWorker;
+
     }
 
     @Override

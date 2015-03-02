@@ -6,11 +6,10 @@ import org.motechproject.nms.masterdata.domain.State;
 import java.util.Set;
 
 public class LocationBuilder {
-    public State buildState(Long stateCode, Set<District> districts) {
+    public State buildState(Long stateCode) {
         State state = new State();
         state.setStateCode(stateCode);
         state.setName("testState");
-        state.setDistrict(districts);
         return state;
     }
 

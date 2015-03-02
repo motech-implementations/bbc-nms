@@ -111,7 +111,7 @@ public class UserDetailsServiceImplTest {
         districts.add(district);
 
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), district ,BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), district ,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
@@ -149,7 +149,7 @@ public class UserDetailsServiceImplTest {
         districts.add(district);
 
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), null, BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
@@ -498,7 +498,7 @@ public class UserDetailsServiceImplTest {
         districts.add(district);
 
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), district ,BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), district ,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);

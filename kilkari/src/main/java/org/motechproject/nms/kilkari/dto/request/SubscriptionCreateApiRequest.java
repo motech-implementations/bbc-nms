@@ -93,8 +93,7 @@ public class SubscriptionCreateApiRequest {
         if (this.subscriptionPack.equals(SubscriptionPack.PACK_48_WEEKS.toString())) {
             subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
             subscriber.setDob(new DateTime());
-        }
-        if (this.subscriptionPack.equals(SubscriptionPack.PACK_72_WEEKS.toString())) {
+        }else if (this.subscriptionPack.equals(SubscriptionPack.PACK_72_WEEKS.toString())) {
             subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
             subscriber.setLmp(new DateTime().minusMonths(3));
         }
