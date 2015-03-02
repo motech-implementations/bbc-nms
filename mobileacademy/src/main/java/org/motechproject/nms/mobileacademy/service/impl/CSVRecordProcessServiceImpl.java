@@ -950,39 +950,41 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 				if (lessonContent.getLessonNumber() == record.getLessonId()
 						&& lessonContent.getName().equalsIgnoreCase(
 								MobileAcademyConstants.CONTENT_LESSON)) {
-					if (lessonContent.getAudioFile() != record.getFileName()) {
+					if (!lessonContent.getAudioFile().equals(
+							record.getFileName())) {
 						status = false;
 					} else {
+						courseFlags.markLessonContent(record.getChapterId(),
+								record.getLessonId());
 						break;
 					}
 				}
 			}
-			courseFlags.markLessonContent(record.getChapterId(),
-					record.getLessonId());
-
 		} else if (record.getType() == FileType.LESSON_END_MENU) {
 			for (LessonContent lessonContent : chapterContent.getLessons()) {
 				if ((lessonContent.getLessonNumber() == record.getLessonId())
 						&& (lessonContent.getName()
 								.equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))) {
-					if (lessonContent.getAudioFile() != record.getFileName()) {
+					if (!lessonContent.getAudioFile().equals(
+							record.getFileName())) {
 						status = false;
 					} else {
+						courseFlags.markLessonEndMenu(record.getChapterId(),
+								record.getLessonId());
 						break;
 					}
 				}
 			}
-			courseFlags.markLessonEndMenu(record.getChapterId(),
-					record.getLessonId());
-
 		} else if (record.getType() == FileType.QUIZ_HEADER) {
-			QuizContent quiz = chapterContent.getQuiz();
-			if ((quiz.getName()
+			QuizContent quizContent = chapterContent.getQuiz();
+			if ((quizContent.getName()
 					.equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
-				quiz.setAudioFile(record.getFileName());
+				if (!quizContent.getAudioFile().equals(record.getFileName())) {
+					status = false;
+				} else {
+					courseFlags.markQuizHeader(record.getChapterId());
+				}
 			}
-			courseFlags.markQuizHeader(record.getChapterId());
-
 		} else if (record.getType() == FileType.QUESTION_CONTENT) {
 			for (QuestionContent questionContent : chapterContent.getQuiz()
 					.getQuestions()) {
@@ -990,17 +992,17 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						.getQuestionId())
 						&& (questionContent.getName()
 								.equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
-					if ((questionContent.getAudioFile() != record.getFileName())
+					if ((!questionContent.getAudioFile().equals(
+							record.getFileName()))
 							|| !answerOptionMatcher(record)) {
 						status = false;
 					} else {
+						courseFlags.markQuestionContent(record.getChapterId(),
+								record.getQuestionId());
 						break;
 					}
 				}
 			}
-			courseFlags.markQuestionContent(record.getChapterId(),
-					record.getQuestionId());
-
 		} else if (record.getType() == FileType.CORRECT_ANSWER) {
 			for (QuestionContent questionContent : chapterContent.getQuiz()
 					.getQuestions()) {
@@ -1008,16 +1010,16 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						.getQuestionId())
 						&& (questionContent.getName()
 								.equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER))) {
-					if (questionContent.getAudioFile() != record.getFileName()) {
+					if (!questionContent.getAudioFile().equals(
+							record.getFileName())) {
 						status = false;
 					} else {
+						courseFlags.markQuestionCorrectAnswer(
+								record.getChapterId(), record.getQuestionId());
 						break;
 					}
 				}
 			}
-			courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
-					record.getQuestionId());
-
 		} else if (record.getType() == FileType.WRONG_ANSWER) {
 			for (QuestionContent questionContent : chapterContent.getQuiz()
 					.getQuestions()) {
@@ -1025,23 +1027,24 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 						.getQuestionId())
 						&& (questionContent.getName()
 								.equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER))) {
-					if (questionContent.getAudioFile() != record.getFileName()) {
+					if (!questionContent.getAudioFile().equals(
+							record.getFileName())) {
 						status = false;
 					} else {
+						courseFlags.markQuestionWrongAnswer(
+								record.getChapterId(), record.getQuestionId());
 						break;
 					}
 				}
 			}
-			courseFlags.markQuestionWrongAnswer(record.getChapterId(),
-					record.getQuestionId());
-
 		} else if (record.getType() == FileType.CHAPTER_END_MENU) {
 			if (chapterContent.getName().equalsIgnoreCase(
 					MobileAcademyConstants.CONTENT_MENU)) {
-				if (chapterContent.getAudioFile() != record.getFileName()) {
+				if (!chapterContent.getAudioFile().equals(record.getFileName())) {
 					status = false;
+				} else {
+					courseFlags.markChapterEndMenu(record.getChapterId());
 				}
-				courseFlags.markChapterEndMenu(record.getChapterId());
 			}
 		} else if (record.getType() == FileType.SCORE) {
 			for (ScoreContent scoreContent : chapterContent.getScores()) {
@@ -1052,15 +1055,16 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 										+ String.format(
 												MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
 												record.getScoreID()))) {
-					if (scoreContent.getAudioFile() != record.getFileName()) {
+					if (!scoreContent.getAudioFile().equals(
+							record.getFileName())) {
 						status = false;
 					} else {
+						courseFlags.markScoreFile(record.getChapterId(),
+								record.getScoreID());
 						break;
 					}
 				}
 			}
-			courseFlags.markScoreFile(record.getChapterId(),
-					record.getScoreID());
 		}
 		return status;
 	}
