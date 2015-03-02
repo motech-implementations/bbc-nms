@@ -25,6 +25,11 @@ public class Initializer {
     @Autowired
     private ConfigurationService configurationService;
 
+
+    public Initializer(ConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
+
     @PostConstruct
     public void initializeConfiguration() {
 
