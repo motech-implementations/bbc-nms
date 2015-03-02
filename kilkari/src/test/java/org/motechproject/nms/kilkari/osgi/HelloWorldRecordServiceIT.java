@@ -32,7 +32,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-
+import java.io.InputStreamReader;
+import java.io.File;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -90,19 +91,22 @@ public class HelloWorldRecordServiceIT extends BasePaxIT {
         assertNotNull(motherMctsCsvDataService);
     }
     
-    public List<Long> uploadCsv() {
+    public List<Long> uploadCsv() throws Exception {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = null;
         int i = 0;
         
-        String csvFileToRead = "/home/nms/Deepak/csv/MotherMctsCsv.csv";  
+        String csvFileToRead = "MotherMctsCsv.csv";  
         BufferedReader br = null;  
         String line = "";  
         String [] columns;
         String splitBy = ",";  
         
         try{
-            br = new BufferedReader(new FileReader(csvFileToRead));  
+            
+            br = new BufferedReader(new InputStreamReader(
+                            getClass().getClassLoader().getResourceAsStream(csvFileToRead)));
+            //br = new BufferedReader(new FileReader(csvFileToRead));  
             while ((line = br.readLine()) != null) { 
                 i = 0;
                 try {
