@@ -56,6 +56,7 @@ public class VillageCsvUploadHandler {
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
      * this method also populates the records in Village table after checking its validity.
+     *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = {LocationConstants.VILLAGE_CSV_SUCCESS})
@@ -74,7 +75,7 @@ public class VillageCsvUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
 
-        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.VILLAGE);
+        ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.VILLAGE);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         VillageCsv villageCsvRecord = null;

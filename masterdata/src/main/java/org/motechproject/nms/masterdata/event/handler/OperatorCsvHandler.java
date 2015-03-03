@@ -70,7 +70,7 @@ public class OperatorCsvHandler {
 
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
 
-        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.OPERATOR);
+        ErrorLog.setErrorDetails(errorDetail, uploadStatus, csvFileName, timeStamp, RecordType.OPERATOR);
 
         for (Long id : createdIds) {
             try {

@@ -2,8 +2,6 @@ package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 
-import java.util.List;
-
 /**
  * This interface is used for crud operations on LanguageLocationCode
  */

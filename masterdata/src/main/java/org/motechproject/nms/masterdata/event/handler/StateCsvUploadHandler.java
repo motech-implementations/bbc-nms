@@ -68,7 +68,7 @@ public class StateCsvUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
 
-        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.STATE);
+        ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.STATE);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         StateCsv stateCsvRecord = null;

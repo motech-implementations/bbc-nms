@@ -73,7 +73,7 @@ public class DistrictCsvUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
 
-        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.DISTRICT);
+        ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.DISTRICT);
 
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");

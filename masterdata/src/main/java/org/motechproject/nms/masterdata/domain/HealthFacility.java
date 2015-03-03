@@ -12,7 +12,6 @@ import java.util.Set;
  * This class Models data for HealthFacility location records.
  * StateCode,DistrictCode,TalukaCode, HealthBlockCode and HealthFacilityCode forms a unique
  * combination of this Class.
- *
  */
 @Entity(recordHistory = true)
 public class HealthFacility extends MdsEntity {

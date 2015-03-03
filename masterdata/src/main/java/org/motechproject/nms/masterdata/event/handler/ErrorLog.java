@@ -13,6 +13,7 @@ public class ErrorLog {
 
     /**
      * Saves the Error Logs and Updates the uploadStatus
+     *
      * @param errorDetail
      * @param uploadStatus
      * @param bulkUploadErrLogService
@@ -20,8 +21,7 @@ public class ErrorLog {
      * @param errorCategory
      * @param recordDetails
      */
-    static void errorLog(BulkUploadError errorDetail,BulkUploadStatus uploadStatus,BulkUploadErrLogService bulkUploadErrLogService,String errorDescription,String errorCategory,String recordDetails)
-    {
+    static void errorLog(BulkUploadError errorDetail, BulkUploadStatus uploadStatus, BulkUploadErrLogService bulkUploadErrLogService, String errorDescription, String errorCategory, String recordDetails) {
         errorDetail.setErrorDescription(errorDescription);
         errorDetail.setErrorCategory(errorCategory);
         errorDetail.setRecordDetails(recordDetails);
@@ -31,14 +31,14 @@ public class ErrorLog {
 
     /**
      * Sets the values for error log and upload status
+     *
      * @param errorDetail
      * @param uploadStatus
      * @param csvFileName
      * @param timeStamp
      * @param recordType
      */
-    static void setErrorDetails(BulkUploadError errorDetail,BulkUploadStatus uploadStatus,String csvFileName,DateTime timeStamp,RecordType recordType)
-    {
+    static void setErrorDetails(BulkUploadError errorDetail, BulkUploadStatus uploadStatus, String csvFileName, DateTime timeStamp, RecordType recordType) {
         errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);
         errorDetail.setRecordType(recordType);

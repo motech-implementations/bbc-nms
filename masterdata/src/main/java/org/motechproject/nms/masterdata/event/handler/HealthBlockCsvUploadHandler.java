@@ -74,7 +74,7 @@ public class HealthBlockCsvUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
 
-        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.HEALTH_BLOCK);
+        ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.HEALTH_BLOCK);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         HealthBlockCsv healthBlockCsvRecord = null;

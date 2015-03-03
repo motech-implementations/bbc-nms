@@ -73,8 +73,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEqualsWithSameTalukaCode()
-    {
+    public void testEqualsWithSameTalukaCode() {
         HealthBlock healthBlock = getHealthBlockDataWithDifferentHealthBlockCode();
 
         assertTrue(getHealthBlockDataWithDifferentHealthBlockCode().equals(healthBlock));

@@ -78,7 +78,7 @@ public class LanguageLocationCodeCsvHandler {
 
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
 
-        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.LANGUAGE_LOCATION_CODE);
+        ErrorLog.setErrorDetails(errorDetail, uploadStatus, csvFileName, timeStamp, RecordType.LANGUAGE_LOCATION_CODE);
 
         for (Long id : createdIds) {
             try {

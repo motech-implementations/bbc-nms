@@ -64,8 +64,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithSameTalukaCode()
-    {
+    public void testEqualsWithSameTalukaCode() {
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
         assertTrue(getHealthSubFacilityData().equals(healthSubFacility));

@@ -78,7 +78,7 @@ public class TalukaCsvUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
 
-        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.TALUKA);
+        ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.TALUKA);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         TalukaCsv talukaCsvRecord = null;

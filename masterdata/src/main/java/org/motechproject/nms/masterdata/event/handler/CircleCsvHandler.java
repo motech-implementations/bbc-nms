@@ -69,7 +69,7 @@ public class CircleCsvHandler {
 
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
 
-        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.CIRCLE);
+        ErrorLog.setErrorDetails(errorDetail, uploadStatus, csvFileName, timeStamp, RecordType.CIRCLE);
         for (Long id : createdIds) {
             try {
                 record = circleCsvService.getRecord(id);

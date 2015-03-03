@@ -64,8 +64,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testEqualsWithSameTalukaCode()
-    {
+    public void testEqualsWithSameTalukaCode() {
         Taluka taluka = getTalukaDataWithDifferentTalukaCode();
 
         assertTrue(getTalukaDataWithDifferentTalukaCode().equals(taluka));
