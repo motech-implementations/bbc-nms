@@ -190,4 +190,17 @@ public interface CoursePopulateService {
 	 *            name of audio file for lesson content to be updated
 	 */
 	public void setQuizContent(int chapterNo, String type, String fileName);
+
+	/**
+	 * @param chapterNo
+	 *            refers to index of chapter.. 1,2,3..11
+	 * @param questionNo
+	 *            refers to index of question in a chapter.. 1,2..4
+	 * @param optionNo
+	 *            refers to correct answer option of the question
+	 * @return returns true, if the corresponding question has the same answer
+	 *         option as provided, else false
+	 */
+	public boolean matchAnswerOption(Integer chapterNo, Integer questionNo,
+			Integer optionNo);
 }

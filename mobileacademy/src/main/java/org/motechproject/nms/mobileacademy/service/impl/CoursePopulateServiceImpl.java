@@ -117,9 +117,47 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 				.getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
 		if (CollectionUtils.isNotEmpty(courses)) {
 			state = courses.get(0).getState();
-
 		}
 		return state;
+	}
+
+	public boolean matchAnswerOption(Integer chapterNo, Integer questionNo,
+			Integer optionNo) {
+
+		List<Chapter> chapters = mTrainingService
+				.getChapterByName(MobileAcademyConstants.CHAPTER
+						+ String.format(
+								MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+								chapterNo));
+
+		Chapter chapter;
+		Quiz quiz;
+		if (CollectionUtils.isNotEmpty(chapters)) {
+			chapter = chapters.get(0);
+			quiz = chapter.getQuiz();
+			for (Question question : quiz.getQuestions()) {
+				if (question
+						.getQuestion()
+						.equalsIgnoreCase(
+								MobileAcademyConstants.QUESTION
+										+ String.format(
+												MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+												questionNo))) {
+					String answer = question.getAnswer();
+					try {
+						if (Integer.parseInt(answer) == optionNo) {
+							return true;
+						} else {
+							return false;
+						}
+					} catch (NumberFormatException e) {
+
+					}
+				}
+			}
+
+		}
+		return false;
 	}
 
 	/*
@@ -160,7 +198,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 				}
 			}
 		}
-
 	}
 
 	/*
@@ -186,11 +223,16 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			for (LessonContent lessonContent : chapterContents.get(
-					chapterId - 1).getLessons()) {
-				if ((lessonContent.getLessonNumber() == lessonId)
-						&& (lessonContent.getName().equalsIgnoreCase(type))) {
-					return lessonContent;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (LessonContent lessonContent : chapterContent
+							.getLessons()) {
+						if ((lessonContent.getLessonNumber() == lessonId)
+								&& (lessonContent.getName()
+										.equalsIgnoreCase(type))) {
+							return lessonContent;
+						}
+					}
 				}
 			}
 		}
@@ -209,13 +251,18 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			for (LessonContent lessonContent : chapterContent.getLessons()) {
-				if ((lessonContent.getLessonNumber() == lessonId)
-						&& (lessonContent.getName().equalsIgnoreCase(type))) {
-					lessonContent.setAudioFile(fileName);
-					chapterContentDataService.update(chapterContent);
-					return;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (LessonContent lessonContent : chapterContent
+							.getLessons()) {
+						if ((lessonContent.getLessonNumber() == lessonId)
+								&& (lessonContent.getName()
+										.equalsIgnoreCase(type))) {
+							lessonContent.setAudioFile(fileName);
+							chapterContentDataService.update(chapterContent);
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -233,11 +280,16 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			for (QuestionContent questionContent : chapterContents
-					.get(chapterId - 1).getQuiz().getQuestions()) {
-				if ((questionContent.getQuestionNumber() == questionId)
-						&& (questionContent.getName().equalsIgnoreCase(type))) {
-					return questionContent;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (QuestionContent questionContent : chapterContent
+							.getQuiz().getQuestions()) {
+						if ((questionContent.getQuestionNumber() == questionId)
+								&& (questionContent.getName()
+										.equalsIgnoreCase(type))) {
+							return questionContent;
+						}
+					}
 				}
 			}
 		}
@@ -256,14 +308,18 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			for (QuestionContent questionContent : chapterContent.getQuiz()
-					.getQuestions()) {
-				if ((questionContent.getQuestionNumber() == questionId)
-						&& (questionContent.getName().equalsIgnoreCase(type))) {
-					questionContent.setAudioFile(fileName);
-					chapterContentDataService.update(chapterContent);
-					return;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (QuestionContent questionContent : chapterContent
+							.getQuiz().getQuestions()) {
+						if ((questionContent.getQuestionNumber() == questionId)
+								&& (questionContent.getName()
+										.equalsIgnoreCase(type))) {
+							questionContent.setAudioFile(fileName);
+							chapterContentDataService.update(chapterContent);
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -281,14 +337,17 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			for (ScoreContent scoreContent : chapterContents.get(chapterId - 1)
-					.getScores()) {
-				if ((scoreContent.getName()
-						.equalsIgnoreCase(type
-								+ String.format(
-										MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-										scoreId)))) {
-					return scoreContent;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (ScoreContent scoreContent : chapterContent.getScores()) {
+						if ((scoreContent.getName()
+								.equalsIgnoreCase(type
+										+ String.format(
+												MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+												scoreId)))) {
+							return scoreContent;
+						}
+					}
 				}
 			}
 		}
@@ -308,16 +367,19 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			for (ScoreContent scoreContent : chapterContent.getScores()) {
-				if ((scoreContent.getName()
-						.equalsIgnoreCase(type
-								+ String.format(
-										MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-										scoreId)))) {
-					scoreContent.setAudioFile(fileName);
-					chapterContentDataService.update(chapterContent);
-					return;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					for (ScoreContent scoreContent : chapterContent.getScores()) {
+						if ((scoreContent.getName()
+								.equalsIgnoreCase(type
+										+ String.format(
+												MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+												scoreId)))) {
+							scoreContent.setAudioFile(fileName);
+							chapterContentDataService.update(chapterContent);
+							return;
+						}
+					}
 				}
 			}
 		}
@@ -334,9 +396,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			if (chapterContent.getName().equalsIgnoreCase(type)) {
-				return chapterContent;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					if (chapterContent.getName().equalsIgnoreCase(type)) {
+						return chapterContent;
+					}
+				}
 			}
 		}
 		return null;
@@ -353,11 +418,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			if (chapterContent.getName().equalsIgnoreCase(type)) {
-				chapterContent.setAudioFile(fileName);
-				chapterContentDataService.update(chapterContent);
-				return;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					if (chapterContent.getName().equalsIgnoreCase(type)) {
+						chapterContent.setAudioFile(fileName);
+						chapterContentDataService.update(chapterContent);
+						return;
+					}
+				}
 			}
 		}
 	}
@@ -373,10 +441,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			QuizContent quizContent = chapterContents.get(chapterId - 1)
-					.getQuiz();
-			if (quizContent.getName().equalsIgnoreCase(type)) {
-				return quizContent;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					QuizContent quizContent = chapterContent.getQuiz();
+					if (quizContent.getName().equalsIgnoreCase(type)) {
+						return quizContent;
+					}
+				}
 			}
 		}
 		return null;
@@ -393,12 +464,15 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 		List<ChapterContent> chapterContents = chapterContentDataService
 				.retrieveAll();
 		if (CollectionUtils.isNotEmpty(chapterContents)) {
-			ChapterContent chapterContent = chapterContents.get(chapterId - 1);
-			QuizContent quizContent = chapterContent.getQuiz();
-			if (quizContent.getName().equalsIgnoreCase(type)) {
-				quizContent.setAudioFile(fileName);
-				chapterContentDataService.update(chapterContent);
-				return;
+			for (ChapterContent chapterContent : chapterContents) {
+				if (chapterContent.getChapterNumber() == chapterId) {
+					QuizContent quizContent = chapterContent.getQuiz();
+					if (quizContent.getName().equalsIgnoreCase(type)) {
+						quizContent.setAudioFile(fileName);
+						chapterContentDataService.update(chapterContent);
+						return;
+					}
+				}
 			}
 		}
 	}

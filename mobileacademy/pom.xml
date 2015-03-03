@@ -109,7 +109,6 @@
 					<instructions>
 						<Blueprint-Enabled>true</Blueprint-Enabled>
 						<Resource-Path>mobileacademy/resources</Resource-Path>
-						<Context-File>META-INF/motech/applicationContext.xml</Context-File>
 						<Context-Path>mobileacademy</Context-Path>
 						<Export-Package>org.motechproject.nms.mobileacademy.service;version=${project.version},
 							org.motechproject.nms.mobileacademy.repository;version=${project.version},
