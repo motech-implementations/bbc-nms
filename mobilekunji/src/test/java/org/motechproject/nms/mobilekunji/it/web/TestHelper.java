@@ -131,4 +131,11 @@ public class TestHelper {
 
         return cardDetailList;
     }
+
+    public static HttpRequest getHttpRequest() {
+        HttpRequest request = new HttpRequest();
+
+        return request;
+    }
+
 }

@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
@@ -16,19 +17,23 @@ import java.util.Set;
 public class CallDetail extends MdsEntity {
 
     @Field
+    @UIDisplayable(position = 0)
     private String callId;
 
     @Field
-    private Long nmsFlwId;
-
-    @Field
+    @UIDisplayable(position = 1)
     private String circleCode;
 
     @Field
+    @UIDisplayable(position = 2)
     private Long startTime;
 
     @Field
+    @UIDisplayable(position = 3)
     private Long endTime;
+
+    @Field
+    private Long nmsFlwId;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
