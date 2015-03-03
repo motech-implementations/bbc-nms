@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.domain;
 
 import java.util.List;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -23,11 +24,14 @@ public class ChapterContent extends MdsEntity {
     private String audioFile;
 
     @Field
+    @Cascade(delete = true)
     private List<LessonContent> lessons;
 
     @Field
+    @Cascade(delete = true)
     private List<ScoreContent> scoreContents;
 
+    @Cascade(delete = true)
     @Field
     private QuizContent quiz;
 
@@ -49,7 +53,8 @@ public class ChapterContent extends MdsEntity {
      * @param quiz quiz object related to chapter
      */
     public ChapterContent(Integer chapterNumber, String name, String audioFile,
-            List<LessonContent> lessons, List<ScoreContent> scoreContents, QuizContent quiz) {
+            List<LessonContent> lessons, List<ScoreContent> scoreContents,
+            QuizContent quiz) {
         this.chapterNumber = chapterNumber;
         this.name = name;
         this.audioFile = audioFile;

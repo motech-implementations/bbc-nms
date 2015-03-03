@@ -1,6 +1,7 @@
 package org.motechproject.nms.frontlineworker.event.handler;
 
 
+import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -34,6 +35,8 @@ public final class FrontLineWorkerContent {
     private HealthFacility healthFacility;
 
     private HealthSubFacility healthSubFacility;
+
+    private Designation designation;
 
     public Long getStateCode() {
         return stateCode;
@@ -113,5 +116,13 @@ public final class FrontLineWorkerContent {
 
     public void setHealthSubFacility(HealthSubFacility healthSubFacility) {
         this.healthSubFacility = healthSubFacility;
+    }
+
+    public Designation getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(Designation designation) {
+        this.designation = designation;
     }
 }
