@@ -56,10 +56,6 @@ public class Subscription extends MdsEntity {
     @Field
     private DateTime nextObdDate;
 
-    @Field
-    @Column(name = "oldSubscritption_Id")
-    private Subscription oldSubscritptionId;
-
     public SubscriptionPack getSubscriptionPack() {
         return subscriptionPack;
     }
@@ -172,12 +168,5 @@ public class Subscription extends MdsEntity {
         this.nextObdDate = nextObdDate;
     }
 
-    public Subscription getOldSubscritptionId() {
-        return oldSubscritptionId;
-    }
-
-    public void setOldSubscritptionId(Subscription oldSubscritptionId) {
-        this.oldSubscritptionId = oldSubscritptionId;
-    }
 }
 
