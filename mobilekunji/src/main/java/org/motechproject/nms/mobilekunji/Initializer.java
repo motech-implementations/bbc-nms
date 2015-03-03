@@ -26,9 +26,9 @@ public class Initializer {
     private ConfigurationService configurationService;
 
 
-    public Initializer(ConfigurationService configurationService) {
-        this.configurationService = configurationService;
+    public Initializer() {
     }
+
 
     @PostConstruct
     public void initializeConfiguration() {
