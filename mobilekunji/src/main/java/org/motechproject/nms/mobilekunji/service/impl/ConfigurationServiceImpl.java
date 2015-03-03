@@ -22,6 +22,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     private ConfigurationDataService configurationDataService;
 
 
+    public ConfigurationServiceImpl() {
+    }
 
 
     @Override
