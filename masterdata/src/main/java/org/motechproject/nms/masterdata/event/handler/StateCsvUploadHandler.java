@@ -112,36 +112,19 @@ public class StateCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
-    /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = {MasterDataConstants.STATE_CSV_FAILED})
-    public void stateCsvFailed(MotechEvent motechEvent) {
-
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("STATE_CSV_FAILED event received");
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            logger.debug("STATE_CSV_FAILED event processing start for ID: {}", id);
-            StateCsv stateCsv = stateCsvRecordsDataService.findById(id);
-            stateCsvRecordsDataService.delete(stateCsv);
-        }
-        logger.info("STATE_CSV_FAILED event processing finished");
-    }
-
     private State mapStateCsv(StateCsv record) throws DataValidationException {
 
         State newRecord = new State();
 
         String stateName = ParseDataHelper.parseString("StateName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
+        Integer maCapping = ParseDataHelper.parseInt("maCapping", record.getMaCapping(), false);
+        Integer mkCapping = ParseDataHelper.parseInt("mkCapping", record.getMkCapping(), false);
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);
+        newRecord.setMaCapping(maCapping);
+        newRecord.setMkCapping(mkCapping);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
@@ -173,6 +156,9 @@ public class StateCsvUploadHandler {
     private void updateState(State stateExistData,State stateData){
 
         stateExistData.setName(stateData.getName());
+        stateExistData.setMaCapping(stateData.getMaCapping());
+        stateExistData.setMkCapping(stateData.getMkCapping());
+
         stateRecordsDataService.update(stateExistData);
     }
 
