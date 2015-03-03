@@ -142,6 +142,23 @@ public class SaveCallDetailApiRequest {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "SaveCallDetailApiRequest{" +
+                "callingNumber='" + callingNumber + '\'' +
+                ", callId='" + callId + '\'' +
+                ", operator='" + operator + '\'' +
+                ", circle='" + circle + '\'' +
+                ", callStartTime=" + callStartTime +
+                ", callEndTime=" + callEndTime +
+                ", callDurationInPulses=" + callDurationInPulses +
+                ", endOfUsagePromptCounter=" + endOfUsagePromptCounter +
+                ", callStatus=" + callStatus +
+                ", welcomeMessagePromptFlag=" + welcomeMessagePromptFlag +
+                ", callDisconnectReason='" + callDisconnectReason + '\'' +
+                ", content=" + content +
+                '}';
+    }
 }
 
 

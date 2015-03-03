@@ -12,7 +12,7 @@ import java.util.Set;
  * This class Models data records provided in the CallDetail
  */
 
-@Entity(recordHistory = true)
+@Entity
 public class CallDetail extends MdsEntity {
 
     @Field

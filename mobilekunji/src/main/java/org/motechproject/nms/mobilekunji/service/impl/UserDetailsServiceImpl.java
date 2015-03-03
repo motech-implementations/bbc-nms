@@ -127,7 +127,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * fill User Detail Response
      *
-     * @param userProfile
+     * @param userProfile throws DataValidationException
      */
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) throws DataValidationException {
 
@@ -140,25 +140,51 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
             userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+
             if (userProfile.isDefaultLanguageLocationCode()) {
-                if (userProfile.getLanguageLocationCode() == null) {
-                    setNationalDefaultLlc(userDetailApiResponse);
-                } else {
-                    userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
-                }
+                setLanguageLocationCode(ConfigurationConstants.TRUE, userDetailApiResponse, userProfile);
             } else {
-                if (userProfile.getLanguageLocationCode() == null) {
-                    setNationalDefaultLlc(userDetailApiResponse);
-                } else {
-                    userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
-                }
+                setLanguageLocationCode(ConfigurationConstants.FALSE, userDetailApiResponse, userProfile);
             }
+
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
             fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
         } else {
             ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
         }
         return userDetailApiResponse;
+    }
+
+    /**
+     * fill National Default LLC in UserDetailResponse if Llc is null else
+     * fill Default Llc if defaultLlc boolean is true else fill Llc
+     *
+     * @param defaultLlc
+     * @param userProfile
+     * @param userDetailApiResponse
+     */
+    private void setLanguageLocationCode(Boolean defaultLlc, UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
+        if (userProfile.getLanguageLocationCode() == null) {
+            setNationalDefaultLlc(userDetailApiResponse);
+        } else {
+            setLlcWithBoolean(defaultLlc, userDetailApiResponse, userProfile);
+        }
+    }
+
+    /**
+     * fill Default LLC in UserDetailResponse if boolean is true else fill Llc
+     *
+     * @param defaultLlc
+     * @param userProfile
+     * @param userDetailApiResponse
+     */
+    private void setLlcWithBoolean(Boolean defaultLlc, UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
+
+        if (defaultLlc) {
+            userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
+        } else {
+            userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
+        }
     }
 
     /**
@@ -205,8 +231,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 break;
 
             case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
-                userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
+                setStateCappingValue(userDetailApiResponse, stateLevelCappingValue);
                 break;
+        }
+    }
+
+    /**
+     * set State Capping Value
+     *
+     * @param stateLevelCappingValue
+     * @param userDetailApiResponse
+     */
+    private void setStateCappingValue(UserDetailApiResponse userDetailApiResponse, Integer stateLevelCappingValue) {
+
+        if (stateLevelCappingValue == null) {
+            userDetailApiResponse.setMaxAllowedUsageInPulses(ConfigurationConstants.DEFAULT_CAPPING_VALUE);
+        } else {
+            userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
         }
     }
 

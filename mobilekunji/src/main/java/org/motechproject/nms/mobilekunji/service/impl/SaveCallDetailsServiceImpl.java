@@ -43,7 +43,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      * Saves Call details of the user
      *
      * @param saveCallDetailApiRequest
-     * @throws org.motechproject.nms.util.helper.DataValidationException
+     * @throws DataValidationException
      */
     @Override
     public void saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
@@ -81,7 +81,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      *
      * @param callDetail
      * @param saveCallDetailApiRequest
-     * @throws org.motechproject.nms.util.helper.DataValidationException
+     * @throws DataValidationException
      */
     private void setCardDetail(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
@@ -95,7 +95,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      * Update FlwDetail
      *
      * @param saveCallDetailApiRequest
-     * @throws org.motechproject.nms.util.helper.DataValidationException
+     * @throws DataValidationException
      */
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 

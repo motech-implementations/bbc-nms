@@ -2,11 +2,15 @@ package org.motechproject.nms.mobilekunji.web;
 
 import org.apache.log4j.Logger;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * BaseController class contain handlers for exceptions that occur in
@@ -27,11 +31,15 @@ public class BaseController {
     @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     protected ResponseEntity<String> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException exception,
-            final WebRequest request) {
-        LOGGER.error(exception.getMessage(), exception);
+            final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage());
         String responseJson = "{\"failureReason\":\""
                 + exception.getParameterName() + ":Not Present\"}";
-        return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -44,11 +52,16 @@ public class BaseController {
      */
     @ExceptionHandler(value = {DataValidationException.class})
     public ResponseEntity<String> handleDataValidationException(
-            final DataValidationException exception, final WebRequest request) {
+            final DataValidationException exception,
+            final HttpServletRequest request) {
+        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\""
                 + exception.getErroneousField() + ":Invalid Value\"}";
-        return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -60,10 +73,55 @@ public class BaseController {
      */
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<String> handleGeneralExceptions(
-            final Exception exception, final WebRequest request) {
+            final Exception exception, final HttpServletRequest request) {
+        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"Internal Error\"}";
-        return new ResponseEntity<String>(responseJson,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /**
+     * handle exception if request JSON Parameter is missing
+     *
+     * @param parameterName name of the parameter
+     * @throws MissingServletRequestParameterException
+     */
+    public void handleMissingJsonParamException(String parameterName)
+            throws MissingServletRequestParameterException {
+        throw new MissingServletRequestParameterException(parameterName, null);
+    }
+
+    /**
+     * Log incoming Request Details in case exception occur.
+     *
+     * @param request
+     */
+    private void logRequestDetails(final HttpServletRequest request) {
+        try {
+            StringBuilder details = new StringBuilder("Request Details:\n");
+            details.append("URL: " + request.getRequestURL() + "\n");
+            details.append("Method Type: " + request.getMethod() + "  ");
+            details.append("Content Type: " + request.getContentType() + "\n");
+            // Log request parameters for get request
+            if ("GET".equalsIgnoreCase(request.getMethod())) {
+                details.append("Query Parameters:\n");
+                Enumeration<?> params = request.getParameterNames();
+                while (params.hasMoreElements()) {
+                    String paramName = (String) params.nextElement();
+                    details.append(paramName + ":"
+                            + request.getParameter(paramName) + " ");
+                }
+                details.append("\n");
+            }
+            LOGGER.error(details.toString());
+        } catch (Exception e) {
+            LOGGER.error(
+                    "Error occured while finding Input Request details for logging",
+                    e);
+        }
+    }
+
 }

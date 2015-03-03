@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This class Models data records provided in the FlwDetails
  */
 
-@Entity(recordHistory = true)
+@Entity
 public class FlwDetail extends MdsEntity {
 
     @Field

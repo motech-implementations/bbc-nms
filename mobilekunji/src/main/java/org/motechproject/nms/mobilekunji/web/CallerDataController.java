@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
@@ -14,13 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This class register the controller methods for creation of user and update its details.
  */
 @Controller
 public class CallerDataController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
+    private static Logger logger = LoggerFactory.getLogger(CallerDataController.class);
 
     private UserDetailsService userDetailsService;
 
@@ -49,21 +52,26 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "callingNumber") String callingNumber,
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
-            @RequestParam(value = "callId") String callId)
+            @RequestParam(value = "callId") String callId, final HttpServletRequest request)
             throws DataValidationException {
 
-        log.info("getUserDetails: Started");
+        long startTime = System.currentTimeMillis();
 
-        log.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
+        logger.info("getUserDetails: Started");
+
+        logger.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
 
         validateCallId(callId);
 
-        validateInputDataForGetUserDetails(callingNumber, operator, circle, callId);
+        validateInputDataForGetUserDetails(operator, circle, callId);
 
         UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(
                 ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber), circle, operator, callId);
 
-        log.trace("getUserDetails:Ended");
+        logger.trace("getUserDetails:Ended");
+        long endTime = System.currentTimeMillis();
+
+        IvrInteractionLogger.logIvrInteraction(startTime, endTime, request.getRequestURI(), HttpStatus.SC_OK);
 
         return userDetailApiResponse;
     }
@@ -76,15 +84,20 @@ public class CallerDataController extends BaseController {
      */
     @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
+    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest saveCallDetailApiRequest, final HttpServletRequest request) throws DataValidationException {
 
-        log.info("SaveCallDetails: Started");
+        logger.debug("SaveCallDetails: started");
+        logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
+        long startTime = System.currentTimeMillis();
 
         validateCallId(saveCallDetailApiRequest.getCallId());
 
         saveCallDetailsService.saveCallDetails(saveCallDetailApiRequest);
 
-        log.trace("Save CallDetails:Ended");
+        long endTime = System.currentTimeMillis();
+
+        IvrInteractionLogger.logIvrInteraction(startTime, endTime, request.getRequestURI(), HttpStatus.SC_OK);
+        logger.debug("Save CallDetails:Ended");
     }
 
     /**
@@ -96,28 +109,33 @@ public class CallerDataController extends BaseController {
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public
     @ResponseBody
-    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest) throws DataValidationException {
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException {
 
-        log.info("Update Language Location Code: Started");
+        logger.debug("SetLanguageLocationCode: started");
+        logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());
+
+        long startTime = System.currentTimeMillis();
 
         validateCallId(languageLocationCodeApiRequest.getCallId());
 
         userDetailsService.setLanguageLocationCode(languageLocationCodeApiRequest);
 
-        log.trace("Update LanguageLocationCode:Ended");
+        long endTime = System.currentTimeMillis();
+
+        IvrInteractionLogger.logIvrInteraction(startTime, endTime, request.getRequestURI(), HttpStatus.SC_OK);
+
+        logger.debug("Save CallDetails:Ended");
     }
 
     /**
      * validate Input Data For Get User Details API
      *
-     * @param callingNumber
      * @param operator
      * @param circle
      * @param callId
      * @throws DataValidationException
      */
-    private void validateInputDataForGetUserDetails(String callingNumber,
-                                                    String operator, String circle, String callId)
+    private void validateInputDataForGetUserDetails(String operator, String circle, String callId)
             throws DataValidationException {
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
