@@ -59,6 +59,16 @@ public class TestHelper {
         return circleData;
     }
 
+    public static Circle getInvalidCircleData() {
+
+        Circle circleData = new Circle();
+
+        circleData.setName("Meerut");
+        circleData.setCode("99");
+
+        return circleData;
+    }
+
     public static LanguageLocationCode getLanguageLocationCode() {
 
         LanguageLocationCode languageLocationCode = new LanguageLocationCode();

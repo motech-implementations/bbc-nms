@@ -27,6 +27,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
+import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
@@ -146,6 +147,16 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+
+        //For LanguageLocationCode is Null
+        circleService.create(TestHelper.getInvalidCircleData());
+        userDetailApiResponse = controller.getUserDetails("9837241545","AL","99", "111111111111111",TestHelper.getHttpRequest());
+
+        assertNotNull(userDetailApiResponse.getCircle().equals("99"));
+        assertNull(userDetailApiResponse.getLanguageLocationCode());
+        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode() == 1);
+        assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
 
 
         //Update Language Location Code
