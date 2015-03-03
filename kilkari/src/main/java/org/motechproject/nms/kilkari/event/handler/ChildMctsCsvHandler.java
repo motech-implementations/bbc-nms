@@ -223,28 +223,6 @@ public class ChildMctsCsvHandler {
         return childSubscriber;
     }
 
-
-    /**
-     * This method is used to process record when ChildMctscsv upload fails.
-     * 
-     * @param uploadEvent This is motechEvent having uploaded record details
-     */
-    @MotechListener(subjects = "mds.crud.kilkari.ChildMctsCsv.csv-import.failure")
-    public void childMctsCsvFailure(MotechEvent uploadEvent) {
-        logger.info("Failure[childMctsCsvFailure] method start for MotherMctsCsv");
-        Map<String, Object> params = uploadEvent.getParameters();
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-        List<Long> updatedIds = (List<Long>) params.get("csv-import.updated_ids");
-
-        for (Long id : createdIds) {
-            logger.info("Processing uploaded id[{}]", id);
-            ChildMctsCsv childMctsCsv = childMctsCsvService.findById(id);
-            childMctsCsvService.delete(childMctsCsv);
-        }
-
-        logger.info("Failure[childMctsCsvFailure] method finished for MotherMctsCsv");
-    }
-
     /**
      *  This method is used to insert/update subscription and subscriber
      * 

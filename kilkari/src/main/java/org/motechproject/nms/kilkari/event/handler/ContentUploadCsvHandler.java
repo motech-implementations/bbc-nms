@@ -124,28 +124,6 @@ public class ContentUploadCsvHandler {
     }
 
     /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = "mds.crud.kilkari.ContentUploadKKCsv.csv-import.failure")
-    public void contentUploadKKCsvFailure(MotechEvent motechEvent) {
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("Start processing ContentUploadKKCsv-import failure for upload {}", params.toString());
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            ContentUploadCsv oldRecord = contentUploadKKCsvService.getRecord(id);
-            if (oldRecord != null) {
-                contentUploadKKCsvService.delete(oldRecord);
-                logger.info("Record deleted successfully from ContentUploadKKCsv table for id {}", id.toString());
-            }
-        }
-        logger.info("Finished processing ContentUploadKKCsv-import failure");
-    }
-
-    /**
      *  This method is used to validate csv uploaded record
      *  and map ContentUploadCsv to ContentUpload
      *
