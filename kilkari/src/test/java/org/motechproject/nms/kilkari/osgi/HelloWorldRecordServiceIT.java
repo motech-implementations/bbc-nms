@@ -140,7 +140,7 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         csv1.setWhomPhoneNo("4");
         csv1.setIdNo("4");
         csv1.setName("testing");
-        csv1.setLmpDate("2015-01-20 08:30:30");
+        csv1.setLmpDate("2015-01-20 08:08:08");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
@@ -174,7 +174,7 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         csv1.setWhomPhoneNo("6");
         csv1.setIdNo("5");
         csv1.setName("testDifferentName");
-        csv1.setLmpDate("2015-01-22 08:30:30");
+        csv1.setLmpDate("2015-01-22 08:08:08");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
@@ -247,7 +247,7 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
         csv.setName("test");
-        csv.setLmpDate("10-12-2014 08:00:00");
+        csv.setLmpDate("2014-12-01 08:08:08");
         csv.setAbortion("Abortion");
         csv.setOutcomeNos("0");
         csv.setAge("30");
