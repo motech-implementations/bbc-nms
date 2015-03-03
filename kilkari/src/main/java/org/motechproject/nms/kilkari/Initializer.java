@@ -13,14 +13,14 @@ package org.motechproject.nms.kilkari;
 //import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_PRIORITY;
 //import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID;
 
-import javax.annotation.PostConstruct;
-
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 
 
@@ -60,9 +60,13 @@ public class Initializer {
 
     public static final String DEFAULT_RETRY_DAY3_OBD_PRIORITY = "1";
 
-    
-    @Autowired
     private ConfigurationService configurationService;
+
+
+    @Autowired
+    public Initializer(ConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
 
     @PostConstruct
     public void initializeConfiguration() {
