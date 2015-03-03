@@ -72,11 +72,10 @@ public final class ParseDataHelper {
 
         try {
             if (parseString(fieldName, fieldValue, isMandatory) != null) {
-                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dateFormat.setLenient(false);
                 Date date = dateFormat.parse(fieldValue);
                 parsedDateTime = new DateTime(date);
-
             }
 
         } catch (NumberFormatException | ParseException e) {
@@ -150,12 +149,13 @@ public final class ParseDataHelper {
     public static Boolean parseBoolean(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
         Boolean parsedValue = null;
-        try {
-            if (parseString(fieldName, fieldValue, isMandatory) != null) {
+        if (parseString(fieldName, fieldValue, isMandatory) != null) {
+            if (fieldValue.equalsIgnoreCase("true") || fieldValue.equalsIgnoreCase(("false"))) {
                 parsedValue = Boolean.parseBoolean(fieldValue);
             }
-        } catch (NumberFormatException e) {
-            raiseInvalidDataException(fieldName, fieldValue, e);
+            else {
+                raiseInvalidDataException(fieldName, fieldValue);
+            }
         }
 
         return parsedValue;
