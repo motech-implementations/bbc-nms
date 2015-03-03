@@ -6,8 +6,6 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -153,13 +151,11 @@ public class HealthFacility extends MdsEntity {
      */
     @Override
     public int hashCode() {
-        List<Long> list1=new ArrayList<Long>();
         int result = stateCode.hashCode();
-        list1.add(districtCode);
-        list1.add(talukaCode);
-        list1.add(healthBlockCode);
-        list1.add(healthFacilityCode);
-        result=HashCode.hashCode(list1,result);
+        result = 31 * result + districtCode.hashCode();
+        result = 31 * result + healthBlockCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
+        result = 31 * result + healthFacilityCode.hashCode();
         return result;
     }
 
