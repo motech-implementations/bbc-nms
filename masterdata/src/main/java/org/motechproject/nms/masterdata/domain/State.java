@@ -20,10 +20,10 @@ public class State extends LocationUnitMetaData {
     @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
-    @Field
+    @Field(defaultValue = "-1")
     private Integer mkCapping;
 
-    @Field
+    @Field (defaultValue = "-1")
     private Integer maCapping;
 
     public State() {

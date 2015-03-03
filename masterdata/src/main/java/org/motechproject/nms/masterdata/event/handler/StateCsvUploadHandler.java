@@ -27,14 +27,18 @@ import java.util.Map;
 @Component
 public class StateCsvUploadHandler {
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private StateCsvRecordsDataService stateCsvRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    @Autowired
+    public StateCsvUploadHandler(StateRecordsDataService stateRecordsDataService, StateCsvRecordsDataService stateCsvRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.stateCsvRecordsDataService = stateCsvRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
