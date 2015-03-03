@@ -110,11 +110,23 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      *
      * @param stateCode    code of the state
      * @param districtCode code of the district
-     * @return returns null if record not found, else return the languagelocationCode object.
+     * @return returns null if record not found, else return the languageLocationCode object.
      */
     @Override
     public LanguageLocationCode getRecordByLocationCode(Long stateCode, Long districtCode) {
         return languageLocationCodeDataService.findByLocationCode(stateCode, districtCode);
+    }
+
+
+    /**
+     * This method returns the language location code record for a given circle and LanguageLocationCode
+     *
+     * @param circleCode    code of the circle
+     * @param langLocCode languageLocationCode
+     * @return returns null if record not found, else return the languageLocationCode object.
+     */
+    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode){
+        return languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
     }
 
     /**

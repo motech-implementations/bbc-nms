@@ -16,7 +16,7 @@ public class TestHelper {
 
     public static StateCsv getStateCsvData(){
 
-        StateCsv stateCsvData = new StateCsv("Add","MotechEventCreateTest","123");
+        StateCsv stateCsvData = new StateCsv("Add","MotechEventCreateTest","123",null, null);
 
         return stateCsvData;
     }

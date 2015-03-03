@@ -38,6 +38,15 @@ public interface LanguageLocationCodeService {
     LanguageLocationCode getRecordByLocationCode(Long stateCode, Long districtCode);
 
     /**
+     * This method returns the language location code record for a given circle and LanguageLocationCode
+     *
+     * @param circleCode    code of the circle
+     * @param langLocCode languageLocationCode
+     * @return returns null if record not found, else return the languagelocationCode object.
+     */
+    LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode);
+
+    /**
      * This method returns the value of  language location code for a location (state, district)
      *
      * @param stateCode    code of the state
