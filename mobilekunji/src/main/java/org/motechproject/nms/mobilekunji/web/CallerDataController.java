@@ -60,7 +60,8 @@ public class CallerDataController extends BaseController {
 
         validateInputDataForGetUserDetails(callingNumber, operator, circle, callId);
 
-        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator, callId);
+        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(
+                ParseDataHelper.validateAndTrimMsisdn(callingNumber,callingNumber), circle, operator, callId);
 
         log.trace("getUserDetails:Ended");
 
@@ -118,7 +119,6 @@ public class CallerDataController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
                                                     String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber);
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
         ParseDataHelper.validateAndParseLong(callId, callId, true);
