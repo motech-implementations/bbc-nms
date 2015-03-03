@@ -1,6 +1,9 @@
 package org.motechproject.nms.kilkari.osgi;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +15,10 @@ import javax.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -59,26 +65,162 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
     @Inject
     private LocationValidatorService locationValidatorService;
     
+    
     @Test
     public void createSubscriptionSubscriberTest() throws Exception {
-        System.out.println("Mother Mcts");
+        System.out.println("Inside createSubscriptionSubscriberTest");
         setUp();
-        setUp(uploadedMotherMctsIds()); //create new record
         
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> uploadedMotherMctsIds() {
         List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1");
+        csv.setIdNo("1");
+        
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
+        
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        Subscriber dbSubscriber = dbSubscription.getSubscriber();
+        assertNotNull(dbSubscription);
+        assertNotNull(dbSubscriber);
+        assertTrue(dbSubscription.getChannel().equals(Channel.MCTS));
+        assertTrue(dbSubscriber.getName().equals(csv.getName()));
+        assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
+    } 
+    
+    @Test
+    public void createSameMsisdnDifferentMcts() throws Exception {
+        System.out.println("Inside createSameMsisdnDifferentMcts");
+        setUp();
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("2");
+        csv.setIdNo("2");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("2");
+        csv1.setIdNo("3");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record_Already Exist
+        
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        assertNotNull(dbSubscription);
+        dbSubscription = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        assertNull(dbSubscription);
     }
     
-    private void setUp(List<Long> uploadedIds){
+    @Test
+    public void createSameMsisdnSameMcts() throws Exception {
+        System.out.println("Inside createSameMsisdnSameMcts");
+        setUp();
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("4");
+        csv.setIdNo("4");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("4");
+        csv1.setIdNo("4");
+        csv1.setName("testing");
+        csv1.setLmpDate("2015-01-20 08:30:30");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        
+        assertNotNull(subscription);
+        assertNotNull(updateSubs);
+        assertNotNull(subscription.getSubscriber());
+        assertNotNull(updateSubs.getSubscriber());
+        assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+        assertFalse(subscription.getSubscriber().getLmp().equals(updateSubs.getSubscriber().getLmp()));
+    }
+    
+    @Test
+    public void createDifferentMsisdnSameMcts() throws Exception {
+        System.out.println("Inside createDifferentMsisdnSameMcts");
+        setUp();
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("5");
+        csv.setIdNo("5");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("6");
+        csv1.setIdNo("5");
+        csv1.setName("testDifferentName");
+        csv1.setLmpDate("2015-01-22 08:30:30");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+
+        
+        assertNotNull(subscription);
+        assertNotNull(updateSubs);
+        assertNotNull(subscription.getSubscriber());
+        assertNotNull(updateSubs.getSubscriber());
+        assertTrue(!subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+        assertTrue(!subscription.getSubscriber().getLmp().equals(updateSubs.getSubscriber().getLmp()));
+    }
+    
+    @Test
+    public void createDeleteOperation() throws Exception {
+        System.out.println("Inside  createDeleteOperation");
+        setUp();
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("12");
+        csv.setIdNo("7");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("13");
+        csv1.setIdNo("7");
+        csv1.setOperation("Delete");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode())); //Operation Delete, Deactivate Subscription
+        
+        assertFalse(subscription.getStatus().equals(updateSubs.getStatus()));
+        assertTrue(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+    }
+    
+    private void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
+        System.out.println("Inside  callMotherMctsCsvHandlerSuccessEvent");
         Map<String, Object> parameters = new HashMap<>();
         System.out.println("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
         parameters.put("csv-import.created_ids", uploadedIds);
@@ -96,110 +238,7 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         motherMctsCsvHandler.motherMctsCsvSuccess(motechEvent);
     }
     
-    @Test
-    public void createSameMsisdnDifferentMcts() throws Exception {
-        System.out.println("Mother Mcts");
-        setUp(createSameMsisdnDifferentMctsIds()); // Record_Already_Exist
-        
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> createSameMsisdnDifferentMctsIds() {
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
-        csv.setIdNo("1234"); 
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
-    }
-    
-    @Test
-    public void createSameMsisdnSameMcts() throws Exception {
-        System.out.println("Mother Mcts");
-        setUp(createSameMsisdnSameMctsIds()); // Record update when matching Msisdn and Mctsid
-        
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> createSameMsisdnSameMctsIds() {
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
-        csv.setName("testing");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
-    }
-    
-    @Test
-    public void createDifferentMsisdnSameMcts() throws Exception {
-        System.out.println("Mother Mcts");
-        setUp(createDifferentMsisdnSameMctsIds()); // Record update when different Msisdn and matching Mctsid
-        
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> createDifferentMsisdnSameMctsIds() {
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
-        csv.setWhomPhoneNo("1234567890");
-        csv.setName("testing234");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
-    }
-    
-    @Test
-    public void createDifferentMsisdnDifferentMcts() throws Exception {
-        System.out.println("Mother Mcts");
-        setUp(createDifferentMsisdnDifferentMctsIds()); // create New Record
-        
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> createDifferentMsisdnDifferentMctsIds() {
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
-        csv.setWhomPhoneNo("9876543576");
-        csv.setIdNo("9876543576");
-        csv.setName("testing234");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
-    }
-    
-    @Test
-    public void createDeleteOperation() throws Exception {
-        System.out.println("Mother Mcts");
-        setUp(createDeleteOperationIds()); // Operation Delete, Deactivate Subscription
-        
-        assertNotNull(subscriberService);
-        System.out.println("Hello");
-        assertNotNull(motherMctsCsvDataService);
-    }
-    
-    private List<Long> createDeleteOperationIds() {
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = createMotherMcts();
-        csv.setWhomPhoneNo("9876543576");
-        csv.setIdNo("9876543576");
-        csv.setName("testing234");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        return uploadedIds;
-    }
-    
-    
-    
-    private MotherMctsCsv createMotherMcts() {
-        MotherMctsCsv csv = new MotherMctsCsv();
+    private MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
@@ -207,10 +246,8 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         csv.setPhcCode("1");
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
-        csv.setIdNo("123");
         csv.setName("test");
-        csv.setWhomPhoneNo("9876543456");
-        csv.setLmpDate("10-12-2014");
+        csv.setLmpDate("10-12-2014 08:00:00");
         csv.setAbortion("Abortion");
         csv.setOutcomeNos("0");
         csv.setAge("30");

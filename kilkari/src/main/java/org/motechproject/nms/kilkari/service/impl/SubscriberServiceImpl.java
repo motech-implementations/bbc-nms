@@ -46,7 +46,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public void update(Subscriber record) {
-        // TODO Auto-generated method stub
+        subscriberDataService.update(record);
 
     }
     

@@ -38,8 +38,7 @@ public class CommonStructure extends BasePaxIT {
     
     @Before
     public void setUp() {
-        if (setUpIsDone) {
-            System.out.println("");
+        if (!setUpIsDone) {
             createState();
             createDistrict();
             createTaluka();
@@ -80,16 +79,18 @@ public class CommonStructure extends BasePaxIT {
         State stateData = stateRecordsDataService.findRecordByStateCode(district.getStateCode());
         stateData.getDistrict().add(district);
         stateRecordsDataService.update(stateData);
+        System.out.println("District data is successfully inserted.");
     }
 
-    private State createState() {
+    private void createState() {
         State state = new State();
         state.setName("HR");
         state.setStateCode(1L);
         state.setCreator("Deepak");
         state.setOwner("Deepak");
         state.setModifiedBy("Deepak");
-        return stateRecordsDataService.create(state);
+        stateRecordsDataService.create(state);
+        System.out.println("State data is successfully inserted.");
         
     }
     
