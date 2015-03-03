@@ -73,7 +73,7 @@ public class FrontLineWorker extends MdsEntity {
     private String ashaNumber;
 
     @Field
-    private boolean isValidated;
+    private Boolean isValidated;
 
     @UIDisplayable(position = 8)
     @Field
