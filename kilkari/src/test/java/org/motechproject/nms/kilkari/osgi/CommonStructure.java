@@ -157,7 +157,7 @@ public class CommonStructure extends BasePaxIT {
 
         HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode(), newRecord.getHealthBlockCode());
-        healthBlockData.getHealthBlock().add(newRecord);
+        healthBlockData.getHealthFacility().add(newRecord);
         healthBlockRecordsDataService.update(healthBlockData);
         System.out.println("HealthFacility data is successfully inserted.");
     }
