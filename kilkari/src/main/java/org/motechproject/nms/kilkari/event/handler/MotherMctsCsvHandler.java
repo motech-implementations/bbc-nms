@@ -144,7 +144,7 @@ public class MotherMctsCsvHandler {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
-                logger.error("DataValidationException ::::", dve);
+                logger.warn("DataValidationException ::::", dve);
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
@@ -236,26 +236,6 @@ public class MotherMctsCsvHandler {
     }
 
     /**
-     * This method is used to process record when csv upload fails.
-     * 
-     * @param motechEvent This is motechEvent having uploaded record details 
-     */
-    @MotechListener(subjects = "mds.crud.kilkari.MotherMctsCsv.csv-import.failure")
-    public void motherMctsCsvFailure(MotechEvent motechEvent) {
-        logger.info("Failure[motherMctsCsvFailure] method start for MotherMctsCsv");
-        Map<String, Object> params = motechEvent.getParameters();
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            MotherMctsCsv motherMctsCsv = motherMctsCsvService.findById(id);
-            motherMctsCsvService.delete(motherMctsCsv);
-        }
-
-        logger.info("Failure[motherMctsCsvFailure] method finished for MotherMctsCsv");
-
-    }
-
-    /**
      *  This method is used to insert/update subscription and subscriber
      * 
      *  @param subscriber csv uploaded subscriber
@@ -264,11 +244,11 @@ public class MotherMctsCsvHandler {
         /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72);
         if (dbSubscription == null) {
-            logger.error("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
+            logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
             /* Find subscription from database based on mctsid, packName, status */
             dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getId());
             if (dbSubscription == null) {
-                logger.error("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
+                logger.info("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                 Configuration configuration = configurationService.getConfiguration();
                 long activeUserCount = subscriptionService.getActiveUserCount();
                 /* check for maximum allowed beneficiary */
@@ -276,17 +256,18 @@ public class MotherMctsCsvHandler {
                     Subscriber dbSubscriber = subscriberService.create(subscriber); /* CREATE new subscriber */
                     createSubscription(subscriber, null, dbSubscriber); /* create subscription for above created subscriber */
                 } else {
-                    logger.error("Reached maximum beneficery count can't add any more");
+                    logger.info("Reached maximum beneficery count can't add any more");
                     throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
                 }
             } else { /* Record found based on mctsid than update subscriber and subscription */
-                logger.error("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
+                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         } else {
-            logger.error("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
+            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId() == subscriber.getMotherMctsId()) {
+                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
 
@@ -330,6 +311,7 @@ public class MotherMctsCsvHandler {
     private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
         MctsCsvHelper.populateSubscription(subscriber, dbSubscription, statusFlag);
         dbSubscription.setMctsId(subscriber.getMotherMctsId());
+        dbSubscription.setPackName(PACK_72);
         subscriptionService.update(dbSubscription);
     }
 

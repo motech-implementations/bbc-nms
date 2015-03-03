@@ -138,6 +138,7 @@ public class ChildMctsCsvHandler {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
+                logger.error("DataValidationException ::::", dve);
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErroneousField());
@@ -202,18 +203,18 @@ public class ChildMctsCsvHandler {
         childSubscriber.setSubCentre(healthSubFacility);
         childSubscriber.setVillage(village);
 
-        String msisdn = ParseDataHelper.parseString(childMctsCsv.getWhomPhoneNo(), "Whom Phone Num", true);
+        String msisdn = ParseDataHelper.parseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
         int msisdnCsvLength = msisdn.length();
         if(msisdnCsvLength > 10){
             msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
         }
         childSubscriber.setMsisdn(msisdn);
-        childSubscriber.setChildMctsId(ParseDataHelper.parseString(childMctsCsv.getIdNo(), "idNo", true));
-        childSubscriber.setMotherMctsId(ParseDataHelper.parseString(childMctsCsv.getMotherId(), "Mother Id", false));
-        childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString(childMctsCsv.getEntryType(), "Entry Type", true)));
-        childSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-        childSubscriber.setName(ParseDataHelper.parseString(childMctsCsv.getMotherName(), "Mother Name", false));
-        childSubscriber.setDob(ParseDataHelper.parseDate(childMctsCsv.getBirthdate(), "Birth Date", true));
+        childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
+        childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
+        childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), true)));
+        childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
+        childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));
 
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
         childSubscriber.setCreator(childMctsCsv.getCreator());
@@ -312,6 +313,7 @@ public class ChildMctsCsvHandler {
     private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
         MctsCsvHelper.populateSubscription(subscriber, dbSubscription, statusFlag);
         dbSubscription.setMctsId(subscriber.getChildMctsId());
+        dbSubscription.setPackName(PACK_48);;
         subscriptionService.update(dbSubscription);
         
     }
@@ -345,6 +347,7 @@ public class ChildMctsCsvHandler {
         dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setDob(subscriber.getDob());
+        dbSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
 
         subscriberService.update(dbSubscriber);
     }
