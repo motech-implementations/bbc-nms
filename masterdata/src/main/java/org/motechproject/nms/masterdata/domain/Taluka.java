@@ -14,7 +14,7 @@ import java.util.Set;
 public class Taluka extends LocationUnitMetaData {
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = 3)
     private Long stateCode;
 
     @Field
@@ -22,7 +22,7 @@ public class Taluka extends LocationUnitMetaData {
     private Long districtCode;
 
     @Field
-    @UIDisplayable(position = 3)
+    @UIDisplayable(position = 1)
     private String talukaCode;
 
     @Field

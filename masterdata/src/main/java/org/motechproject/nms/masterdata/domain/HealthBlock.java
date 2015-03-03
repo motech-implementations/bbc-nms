@@ -18,19 +18,19 @@ public class HealthBlock extends LocationUnitMetaData {
     private Set<HealthFacility> healthFacility;
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = 4)
     private Long stateCode;
 
     @Field
-    @UIDisplayable(position = 2)
+    @UIDisplayable(position = 3)
     private Long districtCode;
 
     @Field
-    @UIDisplayable(position = 3)
+    @UIDisplayable(position = 2)
     private String talukaCode;
 
     @Field
-    @UIDisplayable(position = 4)
+    @UIDisplayable(position = 1)
     private Long healthBlockCode;
 
 

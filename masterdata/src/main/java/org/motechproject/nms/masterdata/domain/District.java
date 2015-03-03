@@ -20,11 +20,11 @@ public class District extends LocationUnitMetaData {
     private Set<Taluka> taluka;
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = 2)
     private Long stateCode;
 
     @Field
-    @UIDisplayable(position = 2)
+    @UIDisplayable(position = 1)
     private Long districtCode;
 
 

@@ -12,27 +12,27 @@ import org.motechproject.mds.annotations.UIDisplayable;
 public class HealthSubFacility extends LocationUnitMetaData {
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = 6)
     private Long stateCode;
 
     @Field
-    @UIDisplayable(position = 2)
+    @UIDisplayable(position = 5)
     private Long districtCode;
 
     @Field
-    @UIDisplayable(position = 3)
+    @UIDisplayable(position = 4)
     private String talukaCode;
 
     @Field
-    @UIDisplayable(position = 4)
+    @UIDisplayable(position = 3)
     private Long healthBlockCode;
 
     @Field
-    @UIDisplayable(position = 5)
+    @UIDisplayable(position = 2)
     private Long healthFacilityCode;
 
     @Field
-    @UIDisplayable(position = 6)
+    @UIDisplayable(position = 1)
     private Long healthSubFacilityCode;
 
     public Long getHealthFacilityCode() {

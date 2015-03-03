@@ -18,11 +18,11 @@ public class HealthFacility extends LocationUnitMetaData {
     private Set<HealthSubFacility> healthSubFacility;
 
     @Field
-    @UIDisplayable(position = 1)
+    @UIDisplayable(position = 5)
     private Long stateCode;
 
     @Field
-    @UIDisplayable(position = 2)
+    @UIDisplayable(position = 4)
     private Long districtCode;
 
     @Field
@@ -30,11 +30,11 @@ public class HealthFacility extends LocationUnitMetaData {
     private String talukaCode;
 
     @Field
-    @UIDisplayable(position = 4)
+    @UIDisplayable(position = 2)
     private Long healthBlockCode;
 
     @Field
-    @UIDisplayable(position = 5)
+    @UIDisplayable(position = 1)
     private Long healthFacilityCode;
 
     public Long getHealthFacilityCode() {
