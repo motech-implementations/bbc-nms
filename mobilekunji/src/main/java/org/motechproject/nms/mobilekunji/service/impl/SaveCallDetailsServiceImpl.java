@@ -85,7 +85,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      */
     private void setCardDetail(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        for(CardDetail element: saveCallDetailApiRequest.getContent()) {
+        for (CardDetail element : saveCallDetailApiRequest.getContent()) {
             callDetail.getCardDetail().add(element);
         }
         logger.info("CardDetail added successfully.");
@@ -100,7 +100,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
         FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(ParseDataHelper.validateAndTrimMsisdn(
-               "CallingNumber", saveCallDetailApiRequest.getCallingNumber()));
+                "CallingNumber", saveCallDetailApiRequest.getCallingNumber()));
 
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
@@ -121,7 +121,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         flwDetail.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flwDetail.getEndOfUsagePrompt());
         flwDetail.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flwDetail.getCurrentUsageInPulses());
         flwDetail.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
-        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()*1000));
+        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime() * 1000));
         flwDetailService.update(flwDetail);
 
         logger.info("FlwDetail updated successfully.");

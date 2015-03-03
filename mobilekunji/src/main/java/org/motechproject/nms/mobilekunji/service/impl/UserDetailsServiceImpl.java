@@ -230,6 +230,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * set the Current Usage in Pulses to its Default Value
+     *
      * @param flwDetail
      */
     private void resetCurrentUsage(FlwDetail flwDetail) {

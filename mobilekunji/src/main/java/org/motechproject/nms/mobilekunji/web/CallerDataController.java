@@ -61,7 +61,7 @@ public class CallerDataController extends BaseController {
         validateInputDataForGetUserDetails(callingNumber, operator, circle, callId);
 
         UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(
-                ParseDataHelper.validateAndTrimMsisdn(callingNumber,callingNumber), circle, operator, callId);
+                ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber), circle, operator, callId);
 
         log.trace("getUserDetails:Ended");
 

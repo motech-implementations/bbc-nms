@@ -16,6 +16,7 @@ public interface FlwDetailRecordDataService extends MotechDataService<FlwDetail>
 
     /**
      * Finds the FlwDetail record by its nmsFlwId
+     *
      * @param nmsFlwId
      * @return FlwDetail
      */
@@ -24,6 +25,7 @@ public interface FlwDetailRecordDataService extends MotechDataService<FlwDetail>
 
     /**
      * Finds the FlwDetail record by its msisdn
+     *
      * @param msisdn
      * @return FlwDetail
      */

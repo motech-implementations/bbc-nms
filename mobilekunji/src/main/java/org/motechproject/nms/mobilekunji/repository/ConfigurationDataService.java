@@ -15,6 +15,7 @@ public interface ConfigurationDataService extends MotechDataService<Configuratio
 
     /**
      * Finds the configuration details by its index
+     *
      * @param index
      * @return Configuration
      */

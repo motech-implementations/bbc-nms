@@ -8,6 +8,7 @@ import org.motechproject.nms.mobilekunji.domain.CallDetail;
 /**
  * Purpose of this Interface is to find call details of user by nmsFlwId.
  */
+
 /**
  * Interface for repository that persists simple records and allows CRUD.
  * MotechDataService base class will provide the implementation of this class as well
@@ -18,6 +19,7 @@ public interface CallDetailRecordDataService extends MotechDataService<CallDetai
 
     /**
      * Finds call details by its nmsFlwId
+     *
      * @param nmsFlwId
      * @return CallDetail
      */

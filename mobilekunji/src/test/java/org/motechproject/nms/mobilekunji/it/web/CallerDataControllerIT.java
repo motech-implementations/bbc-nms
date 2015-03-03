@@ -147,7 +147,6 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
 
-
         //Update Language Location Code
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         flwWorker.setLanguageLocationCodeId(33);
