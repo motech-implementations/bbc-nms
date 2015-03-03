@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Created by abhishek on 25/3/15.
+ * This class is used to test the CallDetail Domain Class.
  */
 public class CallDetailTest {
 

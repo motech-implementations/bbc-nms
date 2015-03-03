@@ -6,7 +6,7 @@ import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class is used to test the ContentUploadCsv Domain Class.
  */
 public class ContentUploadCsvTest {
 
