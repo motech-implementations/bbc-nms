@@ -9,14 +9,14 @@ public interface OperatorService {
      *
      * @param record of Operator to create
      */
-    void create(Operator record);
+    Operator create(Operator record);
 
     /**
      * updates Operator in database
      *
      * @param record of Operator to update
      */
-    void update(Operator record);
+    Operator update(Operator record);
 
     /**
      * deletes Operator from database
@@ -32,6 +32,4 @@ public interface OperatorService {
      * @return Operator object corresponding to the census code
      */
     Operator getRecordByCode(String operatorCode);
-
-    Operator findById(Long id);
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service("operatorCsvService")
 public class OperatorCsvServiceImpl implements OperatorCsvService {
 
-
     private OperatorCsvDataService operatorCsvDataService;
 
     @Autowired

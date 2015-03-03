@@ -22,8 +22,8 @@ public class CircleServiceImpl implements CircleService {
      * @param record of the Circle
      */
     @Override
-    public void create(Circle record) {
-        circleDataService.create(record);
+    public Circle create(Circle record) {
+        return circleDataService.create(record);
     }
 
     /**
@@ -56,10 +56,5 @@ public class CircleServiceImpl implements CircleService {
     public Circle getRecordByCode(String circleCode) {
         return circleDataService.findByCode(circleCode);
 
-    }
-
-    @Override
-    public Circle findById(Long id) {
-        return circleDataService.findById(id);
     }
 }

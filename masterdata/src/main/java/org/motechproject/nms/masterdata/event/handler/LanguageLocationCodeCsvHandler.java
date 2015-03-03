@@ -29,22 +29,31 @@ import java.util.Map;
  */
 @Component
 public class LanguageLocationCodeCsvHandler {
-    @Autowired
+
     private LanguageLocationCodeService languageLocationCodeService;
 
-    @Autowired
     private LanguageLocationCodeServiceCsv languageLocationCodeServiceCsv;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    @Autowired
     private CircleService circleService;
 
-    @Autowired
     private LocationService locationService;
 
     private static Logger logger = LoggerFactory.getLogger(LanguageLocationCodeCsvHandler.class);
+
+    @Autowired
+    public LanguageLocationCodeCsvHandler(LanguageLocationCodeService languageLocationCodeService,
+                                          LanguageLocationCodeServiceCsv languageLocationCodeServiceCsv,
+                                          BulkUploadErrLogService bulkUploadErrLogService,
+                                          CircleService circleService,
+                                          LocationService locationService) {
+        this.languageLocationCodeService = languageLocationCodeService;
+        this.languageLocationCodeServiceCsv = languageLocationCodeServiceCsv;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.circleService = circleService;
+        this.locationService = locationService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
@@ -138,30 +147,6 @@ public class LanguageLocationCodeCsvHandler {
     }
 
     /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_FAILED)
-    public void languageLocationCodeCsvFailure(MotechEvent motechEvent) {
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("LANGUAGE_LOCATION_CSV_FAILED event received");
-
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            LanguageLocationCodeCsv oldRecord = languageLocationCodeServiceCsv.getRecord(id);
-            if (oldRecord != null) {
-                logger.debug("LANGUAGE_LOCATION_CSV_FAILED event processing start for ID: {}", id);
-                languageLocationCodeServiceCsv.delete(oldRecord);
-            }
-        }
-        logger.info("CIRCLE_CSV_FAILED event processing finished");
-    }
-
-
-    /**
      *  This method is used to validate csv uploaded record
      *  and map LanguageLocationCodeCsv to LanguageLocationCode
      *
@@ -193,12 +178,13 @@ public class LanguageLocationCodeCsvHandler {
             ParseDataHelper.raiseInvalidDataException("circleCode", record.getCircleCode());
         }
 
+
         newRecord = new LanguageLocationCode();
 
         /* Fill newRecord with values from CSV */
-        newRecord.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
-        newRecord.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
-        newRecord.setCircleCode(ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true));
+        newRecord.setStateCode(stateCode);
+        newRecord.setDistrictCode(districtCode);
+        newRecord.setCircleCode(circleCode);
 
         newRecord.setCircle(circle);
         newRecord.setState(state);
@@ -209,6 +195,7 @@ public class LanguageLocationCodeCsvHandler {
 
         newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode",
                 record.getLanguageLocationCode(), true));
+        circle.setDefaultLanguageLocationCode(newRecord.getLanguageLocationCode());
         newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));
         newRecord.setLanguageMK(ParseDataHelper.parseString("LanguageMK", record.getLanguageMK(), true));
         newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));

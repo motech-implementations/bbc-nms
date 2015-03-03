@@ -130,29 +130,6 @@ public class OperatorCsvHandler {
     }
 
     /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = MasterDataConstants.OPERATOR_CSV_FAILED)
-    public void operatorCsvFailure(MotechEvent motechEvent) {
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("OPERATOR_CSV_FAILED event received");
-
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            OperatorCsv oldRecord = operatorCsvService.getRecord(id);
-            if (oldRecord != null) {
-                logger.debug("OPERATOR_CSV_FAILED event processing start for ID: {}", id);
-                operatorCsvService.delete(oldRecord);
-            }
-        }
-        logger.info("OPERATOR_CSV_FAILED event processing finished");
-    }
-
-    /**
      *  This method is used to validate csv uploaded record
      *  and map OperatorCsv to Operator
      *

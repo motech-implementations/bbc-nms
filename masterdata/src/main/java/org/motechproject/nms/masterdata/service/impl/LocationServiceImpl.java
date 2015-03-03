@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service("locationService")
 public class LocationServiceImpl implements LocationService {
 
-
     private StateRecordsDataService stateRecordsDataService;
 
     private DistrictRecordsDataService districtRecordsDataService;

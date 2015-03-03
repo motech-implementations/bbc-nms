@@ -11,14 +11,14 @@ public interface LanguageLocationCodeService {
      *
      * @param record of LanguageLocationCode
      */
-    void create(LanguageLocationCode record);
+    LanguageLocationCode create(LanguageLocationCode record);
 
     /**
      * updates LanguageLocationCode in database
      *
      * @param record of LanguageLocationCode
      */
-    void update(LanguageLocationCode record);
+    LanguageLocationCode update(LanguageLocationCode record);
 
 
     /**

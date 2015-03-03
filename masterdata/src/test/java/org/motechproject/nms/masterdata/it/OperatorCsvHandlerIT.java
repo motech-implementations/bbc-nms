@@ -10,6 +10,7 @@ import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.event.handler.OperatorCsvHandler;
 import org.motechproject.nms.masterdata.repository.OperatorCsvDataService;
+import org.motechproject.nms.masterdata.repository.OperatorDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -27,13 +28,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Verify that HelloWorldService present, functional.
- */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class OperatorCsvHandlerIt extends BasePaxIT {
+public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @Inject
     private OperatorService operatorService;
@@ -46,6 +44,9 @@ public class OperatorCsvHandlerIt extends BasePaxIT {
 
     @Inject
     private OperatorCsvDataService operatorCsvDataService;
+
+    @Inject
+    private OperatorDataService operatorDataService;
 
     List<Long> createdIds = new ArrayList<Long>();
 
@@ -120,7 +121,7 @@ public class OperatorCsvHandlerIt extends BasePaxIT {
     @After
     public void tearDown() {
         for(Long id : createdIds) {
-            Operator operator = operatorService.findById(id);
+            Operator operator = operatorDataService.findById(id);
             if(operator !=null) {
                 operatorService.delete(operator);
             }

@@ -10,6 +10,7 @@ import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -27,9 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Verify that HelloWorldService present, functional.
- */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -46,6 +44,9 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @Inject
     private CircleCsvDataService circleCsvDataService;
+
+    @Inject
+    private CircleDataService circleDataService;
 
     List<Long> createdIds = new ArrayList<Long>();
 
@@ -120,7 +121,7 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     @After
     public void tearDown() {
         for(Long id : createdIds) {
-            Circle circle = circleService.findById(id);
+            Circle circle = circleDataService.findById(id);
             if(circle !=null) {
                 circleService.delete(circle);
             }

@@ -9,7 +9,7 @@ public interface CircleService {
      *
      * @param record of the Circle
      */
-    void create(Circle record);
+    Circle create(Circle record);
 
     /**
      * update Circle type object
@@ -32,6 +32,4 @@ public interface CircleService {
      * @return State object corresponding to the census code
      */
     Circle getRecordByCode(String circleCode);
-
-    Circle findById(Long id);
 }

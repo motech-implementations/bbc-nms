@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
+import org.datanucleus.query.evaluator.memory.IntervalGetEndMethodEvaluator;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -21,7 +22,8 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     private CircleService circleService;
 
     @Autowired
-    public LanguageLocationCodeServiceImpl(LanguageLocationCodeDataService languageLocationCodeDataService, CircleService circleService) {
+    public LanguageLocationCodeServiceImpl(LanguageLocationCodeDataService languageLocationCodeDataService,
+                                           CircleService circleService) {
         this.languageLocationCodeDataService = languageLocationCodeDataService;
         this.circleService = circleService;
     }
@@ -79,8 +81,8 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @param record of LanguageLocationCode
      */
     @Override
-    public void create(LanguageLocationCode record) {
-        languageLocationCodeDataService.create(record);
+    public LanguageLocationCode create(LanguageLocationCode record) {
+        return languageLocationCodeDataService.create(record);
     }
 
     /**
@@ -89,8 +91,8 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @param record of LanguageLocationCode
      */
     @Override
-    public void update(LanguageLocationCode record) {
-        languageLocationCodeDataService.update(record);
+    public LanguageLocationCode update(LanguageLocationCode record) {
+        return languageLocationCodeDataService.update(record);
     }
 
     /**
@@ -145,7 +147,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      */
     @Override
     public Integer getLanguageLocationCodeByCircleCode(final String circleCode) {
-        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCodeMA");
+        LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCode");
         return executeUniqueLanguageLocationCodeQuery(query);
     }
 

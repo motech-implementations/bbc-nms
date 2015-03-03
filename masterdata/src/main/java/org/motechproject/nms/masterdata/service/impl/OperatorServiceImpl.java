@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service("operatorService")
 public class OperatorServiceImpl implements OperatorService {
 
-
     private OperatorDataService operatorDataService;
 
     @Autowired
@@ -23,8 +22,8 @@ public class OperatorServiceImpl implements OperatorService {
      * @param record Operator from database
      */
     @Override
-    public void create(Operator record) {
-        operatorDataService.create(record);
+    public Operator create(Operator record) {
+        return operatorDataService.create(record);
     }
 
     /**
@@ -33,8 +32,8 @@ public class OperatorServiceImpl implements OperatorService {
      * @param record Operator from database
      */
     @Override
-    public void update(Operator record) {
-        operatorDataService.update(record);
+    public Operator update(Operator record) {
+        return operatorDataService.update(record);
     }
 
     /**
@@ -57,10 +56,5 @@ public class OperatorServiceImpl implements OperatorService {
     public Operator getRecordByCode(String code) {
         return operatorDataService.findByCode(code);
 
-    }
-
-    @Override
-    public Operator findById(Long id) {
-        return operatorDataService.findById(id);
     }
 }

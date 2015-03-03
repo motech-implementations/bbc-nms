@@ -1,28 +1,35 @@
 package org.motechproject.nms.masterdata.domain;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
+
+import javax.jdo.annotations.Unique;
 
 /**
  * This class Models data for LanguageLocationCode records
  */
 @Entity(recordHistory = true)
+@Unique(name = "state_district_id", members = {"state_id", "district_id"})
 public class LanguageLocationCode extends MdsEntity {
 
     @Field(required = true, name = "state_id")
+    @Cascade(persist = false, update = false)
     private State state;
 
     @Field(required = true)
     private Long stateCode;
 
     @Field(required = true, name = "district_id")
+    @Cascade(persist = false, update = false)
     private District district;
 
     @Field(required = true)
     private Long districtCode;
 
     @Field(required = true, name = "circle_id")
+    @Cascade(persist = false, update = false)
     private Circle circle;
 
     @Field(required = true)
