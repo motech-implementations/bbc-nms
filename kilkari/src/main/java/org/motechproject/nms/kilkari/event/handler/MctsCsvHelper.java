@@ -32,6 +32,7 @@ public final class MctsCsvHelper {
         newSubscription.setStatus(Status.PendingActivation);
         newSubscription.setChannel(Channel.MCTS);
         newSubscription.setMsisdn(subscriber.getMsisdn());
+        newSubscription.setStateCode(subscriber.getState().getStateCode());
         newSubscription.setModifiedBy(subscriber.getModifiedBy());
         newSubscription.setCreator(subscriber.getCreator());
         newSubscription.setOwner(subscriber.getOwner());
