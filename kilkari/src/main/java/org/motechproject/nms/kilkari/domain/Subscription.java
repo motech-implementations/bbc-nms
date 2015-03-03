@@ -13,7 +13,7 @@ import javax.jdo.annotations.Persistent;
 @Entity(recordHistory=true)
 public class Subscription extends MdsEntity {
 
-    @Persistent
+    @Persistent(defaultFetchGroup = "true")
     private Subscriber subscriber;
 
     @Field

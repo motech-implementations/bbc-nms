@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.it;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
     @Inject
     private CircleDataService circleDataService;
 
+    @After
     @Before
     public void setUp() {
         languageLocationCodeDataService.deleteAll();

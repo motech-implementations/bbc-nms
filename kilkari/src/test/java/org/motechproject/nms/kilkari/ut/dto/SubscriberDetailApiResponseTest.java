@@ -16,9 +16,9 @@ public class SubscriberDetailApiResponseTest {
 
         SubscriberDetailApiResponse subscriberDetailApiResponse = new SubscriberDetailApiResponse();
 
-        List<SubscriptionPack> subscriptionPacks = new ArrayList<SubscriptionPack>(2);
-        subscriptionPacks.add(SubscriptionPack.PACK_48_WEEKS);
-        subscriptionPacks.add(SubscriptionPack.PACK_72_WEEKS);
+        List<String> subscriptionPacks = new ArrayList<String>(2);
+        subscriptionPacks.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        subscriptionPacks.add(SubscriptionPack.PACK_72_WEEKS.getValue());
 
         subscriberDetailApiResponse.setCircle("circle");
         Assert.assertEquals("circle", subscriberDetailApiResponse.getCircle());

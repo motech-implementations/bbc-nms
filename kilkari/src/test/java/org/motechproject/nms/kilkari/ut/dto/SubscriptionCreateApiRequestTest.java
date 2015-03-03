@@ -44,7 +44,7 @@ public class SubscriptionCreateApiRequestTest {
         BeneficiaryType beneficiaryType = BeneficiaryType.CHILD;
         DeactivationReason deactivationReason = DeactivationReason.NONE;
 
-        subscriptionApiRequest.setSubscriptionPack("PACK_48_WEEKS");
+        subscriptionApiRequest.setSubscriptionPack("48WeeksPack");
         subscriber = subscriptionApiRequest.toSubscriber();
 
         Assert.assertEquals(beneficiaryType, subscriber.getBeneficiaryType());
@@ -63,7 +63,7 @@ public class SubscriptionCreateApiRequestTest {
         DeactivationReason deactivationReason = DeactivationReason.NONE;
         DateTime dateTime = new DateTime();
 
-        subscriptionApiRequest.setSubscriptionPack("PACK_72_WEEKS");
+        subscriptionApiRequest.setSubscriptionPack("72WeeksPack");
         subscriber = subscriptionApiRequest.toSubscriber();
 
         Assert.assertEquals(beneficiaryType, subscriber.getBeneficiaryType());

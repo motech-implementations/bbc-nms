@@ -109,6 +109,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             maxAllowedUsageInPulses = userProfile
                     .getMaxStateLevelCappingValue();
         }
+        // maxAllowedUsageInPulses to no capped i.e -1 in case no value found
+        if (maxAllowedUsageInPulses == null) {
+            maxAllowedUsageInPulses = MobileAcademyConstants.MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED;
+        }
         return maxAllowedUsageInPulses;
 
     }

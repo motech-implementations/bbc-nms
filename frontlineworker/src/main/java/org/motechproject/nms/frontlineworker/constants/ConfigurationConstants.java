@@ -11,6 +11,8 @@ public final class ConfigurationConstants {
 
     public static final int CAPPING_NOT_FOUND_BY_STATE = -1;
 
+    public static final String UNKNOWN_CIRCLE = "UNKNOWN";
+
     private ConfigurationConstants() {
     }
 }

@@ -37,24 +37,31 @@ public class Subscriber extends MdsEntity {
     private Integer age;
     
     @Field(name = "stateId")
+    @Persistent(defaultFetchGroup = "true")
     private State state;
     
     @Field(name = "districtId")
+    @Persistent(defaultFetchGroup = "true")
     private District district;
     
     @Field(name = "talukaId")
+    @Persistent(defaultFetchGroup = "true")
     private Taluka taluka;
     
     @Field(name = "healthBlockId")
+    @Persistent(defaultFetchGroup = "true")
     private HealthBlock healthBlock;
     
     @Field(name = "phcId")
+    @Persistent(defaultFetchGroup = "true")
     private HealthFacility phc;
     
     @Field(name = "subCentreId")
+    @Persistent(defaultFetchGroup = "true")
     private HealthSubFacility subCentre;
     
     @Field(name = "villageId")
+    @Persistent(defaultFetchGroup = "true")
     private Village village;
     
     @Field
@@ -71,7 +78,7 @@ public class Subscriber extends MdsEntity {
     @Field
     private DateTime dob;
     
-    @Persistent(mappedBy = "subscriber")
+    @Persistent(mappedBy = "subscriber", defaultFetchGroup = "true")
     private Set<Subscription> subscriptionList;
 
     /* Ignoring this field in entity, so that it is not created as a column,

@@ -12,6 +12,7 @@ import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,10 +55,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Subscriber subscriber = subscriberService.getSubscriberByMsisdn(msisdn);
 
         if (subscriber != null) {
+            List<String> activePackNameList = null;
             //get list of subscription packs for the subscriber.
             List<SubscriptionPack> activePackList = subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn);
-            response.setSubscriptionPackList(activePackList);
-
+            if (activePackList != null) {
+                activePackNameList = new ArrayList<String>();
+                for (SubscriptionPack activePack : activePackList) {
+                    activePackNameList.add(activePack.getValue());
+                }
+            }
+            response.setSubscriptionPackList(activePackNameList);
             getLanguageLocationCodeForSubscriber(subscriber, response);
         }
         else {

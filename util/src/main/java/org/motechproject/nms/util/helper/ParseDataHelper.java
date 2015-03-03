@@ -184,8 +184,9 @@ public final class ParseDataHelper {
     }
 
     /**
-     * This method validates that CallId is of the given length and
-     * throws DataValidationException with error cause INVALID_DATA.
+     * This method validates CallId for length and being numeric and
+     * throws DataValidationException with error cause INVALID_DATA
+     * in case of validation failure.
      *
      * @param fieldName Name of the field
      * @param callId value of callId
@@ -196,7 +197,7 @@ public final class ParseDataHelper {
 
         if (null != callId) {
 
-            if (callId.trim().length() == Constants.CALL_ID_LENGTH) {
+            if (StringUtils.isNumeric(callId.trim()) && callId.trim().length() == Constants.CALL_ID_LENGTH) {
                 return true;
             } else {
                 ParseDataHelper.raiseInvalidDataException(fieldName,callId);

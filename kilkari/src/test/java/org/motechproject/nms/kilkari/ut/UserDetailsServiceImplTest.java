@@ -62,6 +62,7 @@ public class UserDetailsServiceImplTest {
     private String msisdn = "1234567890";
     private Subscriber subscriber;
     private List<SubscriptionPack> activePackList = new ArrayList<>();
+    private List<String> activePackNameList = new ArrayList<>();
     SubscriptionBuilder builder = new SubscriptionBuilder();
     LocationBuilder locationBuilder = new LocationBuilder();
     LanguageLocationCodeBuilder llcBuilder = new LanguageLocationCodeBuilder();
@@ -74,6 +75,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         subscriber = builder.buildSubscriber(msisdn, 123, null, null,BeneficiaryType.CHILD);
 
         //Stub the service methods
@@ -87,7 +90,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertTrue(response.getLanguageLocationCode() == 123);
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -105,7 +108,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         District district = locationBuilder.buildDistrict(1L, 1L);
         Set<District> districts = new LinkedHashSet<>();
         districts.add(district);
@@ -125,7 +129,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertTrue(response.getLanguageLocationCode() == 789);
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -143,7 +147,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         District district = locationBuilder.buildDistrict(1L, 1L);
         Set<District> districts = new LinkedHashSet<>();
         districts.add(district);
@@ -163,7 +168,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertNull(response.getDefaultLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -181,7 +186,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         //create a subscriber with languageLocationCode.
         subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
@@ -198,7 +204,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertNull(response.getDefaultLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -216,7 +222,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         //create a subscriber with languageLocationCode.
         subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
@@ -232,7 +239,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertNull(response.getLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -250,7 +257,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         //create a subscriber with languageLocationCode.
         subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
@@ -269,7 +277,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertNull(response.getLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -397,6 +405,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         subscriber = builder.buildSubscriber(msisdn, 123, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
@@ -411,7 +421,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertTrue(response.getLanguageLocationCode() == 123);
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
@@ -492,7 +502,8 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
         District district = locationBuilder.buildDistrict(1L, 1L);
         Set<District> districts = new LinkedHashSet<>();
         districts.add(district);
@@ -512,7 +523,7 @@ public class UserDetailsServiceImplTest {
 
             //Do Assertions.
             Assert.assertNull(response.getLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
