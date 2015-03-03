@@ -165,6 +165,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         frontLineWorker.setCircleCode(userProfile.getCircle());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+        userProfile.setCreated(true);
 
         userProfile.setNmsFlwId(frontLineWorker.getId());
         return userProfile;
@@ -254,7 +255,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             }
         }
 
-        userProfile.setCreated(true);
         userProfile.setMsisdn(msisdn);
 
         return userProfile;

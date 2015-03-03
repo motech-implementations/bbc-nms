@@ -61,7 +61,6 @@ public class SubscriptionCreateApiRequestTest {
         Subscriber subscriber = new Subscriber();
         BeneficiaryType beneficiaryType = BeneficiaryType.MOTHER;
         DeactivationReason deactivationReason = DeactivationReason.NONE;
-        DateTime dateTime = new DateTime();
 
         subscriptionApiRequest.setSubscriptionPack("72WeeksPack");
         subscriber = subscriptionApiRequest.toSubscriber();
@@ -89,6 +88,21 @@ public class SubscriptionCreateApiRequestTest {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
+    }
+
+    @Test
+    public void shouldReturnSubscriberWithInvalidValueForSubscriptionPack() {
+
+        Subscriber subscriber = new Subscriber();
+        subscriptionApiRequest.setSubscriptionPack("49WeeksPack");
+        subscriber = subscriptionApiRequest.toSubscriber();
+
+        Assert.assertNull(subscriber.getBeneficiaryType());
+        Assert.assertNull(subscriber.getLmp());
+        Assert.assertNull(subscriber.getDob());
+        Assert.assertEquals(DeactivationReason.NONE, subscriber.getDeactivationReason());
+        Assert.assertEquals(subscriptionApiRequest.getCallingNumber(), subscriber.getMsisdn());
+        Assert.assertEquals(subscriptionApiRequest.getLanguageLocationCode(), subscriber.getLanguageLocationCode());
     }
 
 }

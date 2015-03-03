@@ -101,6 +101,74 @@ public class UserDetailsServiceImplTest {
     }
 
     @Test
+    public void shouldGetSubscriberDetailsWhenLlcCodeIsPresentInSubscriberAndCircleCodeIsUpdatedInResponse() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //set the subscriber details
+        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
+        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null,BeneficiaryType.CHILD);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
+        when(llcService.findLLCByCode(123)).thenReturn(llcBuilder.buildLLCCode(1L,1L,123,"test"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
+
+            //Do Assertions.
+            Assert.assertTrue(response.getLanguageLocationCode() == 123);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+            Assert.assertEquals(response.getCircle(), "test");
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
+        }
+    }
+
+    @Test
+    public void shouldGetSubscriberDetailsWhenLlcCodeIsPresentInSubscriberAndCircleCodeIsNotUpdatedInResponse() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //set the subscriber details
+        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
+        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
+        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null,BeneficiaryType.CHILD);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
+        when(llcService.findLLCByCode(123)).thenReturn(null);
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
+
+            //Do Assertions.
+            Assert.assertTrue(response.getLanguageLocationCode() == 123);
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
+            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
+        }
+    }
+
+    @Test
     public void shouldGetAllSubscriberDetailsWhenLlcCodeIsDeterminedByStateAndDistrict() {
         initMocks(this);
         SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
@@ -536,7 +604,36 @@ public class UserDetailsServiceImplTest {
         }
     }
 
+    @Test
+    public void shouldGetSubscriberDetailsWhenActivePackListIsEmpty() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
 
+        List<SubscriptionPack> emptyList = new ArrayList<>();
+
+        //set the subscriber details
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null, BeneficiaryType.CHILD);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(emptyList);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
+
+            //Do Assertions.
+            Assert.assertTrue(response.getLanguageLocationCode() == 123);
+            Assert.assertNull(response.getSubscriptionPackList());
+            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
+        }
+    }
 
     private Configuration createConfiguration(Integer nationLLCCode) {
         Configuration conf = new Configuration();

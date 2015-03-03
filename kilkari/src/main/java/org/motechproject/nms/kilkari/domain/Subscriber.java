@@ -82,6 +82,9 @@ public class Subscriber extends MdsEntity {
     @Persistent(mappedBy = "subscriber", defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private Set<Subscription> subscriptionList;
 
+    @Field
+    private Long stateCode;
+
     /* Ignoring this field in entity, so that it is not created as a column,
     This field is used in mapping deactivation reason from Mother/Child Csv.
     And it will further be used to update deactivationReason in Subscription Entity.
@@ -268,4 +271,11 @@ public class Subscriber extends MdsEntity {
         }
     }
 
+    public Long getStateCode() {
+        return stateCode;
+    }
+
+    public void setStateCode(Long stateCode) {
+        this.stateCode = stateCode;
+    }
 }

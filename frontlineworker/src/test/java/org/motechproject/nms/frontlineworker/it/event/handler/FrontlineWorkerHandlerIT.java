@@ -1,7 +1,6 @@
 package org.motechproject.nms.frontlineworker.it.event.handler;
 
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,22 +12,8 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.HealthBlockService;
-import org.motechproject.nms.masterdata.service.HealthFacilityService;
-import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
-import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
-import org.motechproject.nms.masterdata.service.VillageService;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -194,10 +179,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             talukaRecordVillage.getVillage().add(village);
             talukaService.update(talukaRecordVillage);
             assertNotNull(village);
-
+            // do the setup
+            setUpIsDone = true;
         }
-        // do the setup
-        setUpIsDone = true;
 
         FrontLineWorkerCsv frontLineWorkerCsv;
         FrontLineWorkerCsv frontLineWorkerCsvdb;
@@ -600,6 +584,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
         // test Front Line Worker flw id doesnt exist, Contact No already present. hence failure case
+
         frontLineWorkerCsv = new FrontLineWorkerCsv("25", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
                 "9876", "1234", "True", null);
@@ -631,12 +616,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
-        
-    }
+        }
+
+
     
     
     @Test
@@ -657,7 +642,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals("9990545494", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
-        
+
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
         assertTrue(1L == flw.getTalukaId().getTalukaCode());
@@ -941,16 +926,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorker flw2 = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
         assertNotNull(flw2);
         assertNotEquals(flw, flw2);
-        
+
+
         List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
         
         
     }
 
-    @After
-    public void tearDown() {
-        frontLineWorkerService.deleteAll();
-    }
 }
 

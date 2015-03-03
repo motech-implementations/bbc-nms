@@ -106,7 +106,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             if (subscriber.getDistrict() != null) {
                 //if llcCode is null then get it by state and district
-                getLLCCodeByStateDistrict(subscriber.getDistrict().getStateCode(),
+                getLLCCodeByStateDistrict(subscriber.getStateCode(),
                         subscriber.getDistrict().getDistrictCode(), response);
                 subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
                 subscriberService.update(subscriber);

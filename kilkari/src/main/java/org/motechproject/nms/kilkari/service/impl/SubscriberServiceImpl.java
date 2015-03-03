@@ -61,8 +61,8 @@ public class SubscriberServiceImpl implements SubscriberService {
      * @return Subscriber type object
      */
     @Override
-    public Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId) {
-        return subscriberDataService.findRecordByMsisdnAndChildMctsId(msisdn, childMctsId);
+    public Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId, Long stateCode) {
+        return subscriberDataService.findRecordByMsisdnAndChildMctsId(msisdn, childMctsId, stateCode);
     }
     
     /**
@@ -72,8 +72,8 @@ public class SubscriberServiceImpl implements SubscriberService {
      * @return Subscriber type object
      */
     @Override
-    public Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId) {
-        return subscriberDataService.findRecordByMsisdnAndMotherMctsId(msisdn, motherMctsId);
+    public Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId, Long stateCode) {
+        return subscriberDataService.findRecordByMsisdnAndMotherMctsId(msisdn, motherMctsId, stateCode);
     }
     
     /**

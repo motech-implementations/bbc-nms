@@ -16,6 +16,9 @@ public class SubscriptionBuilder {
         subscriber.setLanguageLocationCode(llcCode);
         subscriber.setDistrict(district);
         subscriber.setState(state);
+        if (state != null) {
+            subscriber.setStateCode(state.getStateCode());
+        }
         return subscriber;
     }
 
