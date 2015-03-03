@@ -440,6 +440,45 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
+    public void testContentUploadInvalidCardNumber() throws DataValidationException {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("13");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setCardNumber("222");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        thrown.expect(DataValidationException.class);
+
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
+        assertNull(contentUpload);
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
+        assertTrue(listContentUploadCsv.size() == 0);
+        throw new DataValidationException();
+
+    }
+
+    @Test
     public void testContentUploadNoContentDuration() throws DataValidationException {
 
         ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
