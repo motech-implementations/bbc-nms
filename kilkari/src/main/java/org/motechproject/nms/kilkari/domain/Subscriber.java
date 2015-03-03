@@ -5,6 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.domain.MdsEntity;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.masterdata.domain.*;
 
 import javax.jdo.annotations.Persistent;
@@ -37,31 +38,31 @@ public class Subscriber extends MdsEntity {
     private Integer age;
     
     @Field(name = "stateId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private State state;
     
     @Field(name = "districtId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private District district;
     
     @Field(name = "talukaId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private Taluka taluka;
     
     @Field(name = "healthBlockId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private HealthBlock healthBlock;
     
     @Field(name = "phcId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private HealthFacility phc;
     
     @Field(name = "subCentreId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private HealthSubFacility subCentre;
     
     @Field(name = "villageId")
-    @Persistent(defaultFetchGroup = "true")
+    @Persistent(defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private Village village;
     
     @Field
@@ -78,7 +79,7 @@ public class Subscriber extends MdsEntity {
     @Field
     private DateTime dob;
     
-    @Persistent(mappedBy = "subscriber", defaultFetchGroup = "true")
+    @Persistent(mappedBy = "subscriber", defaultFetchGroup = Constants.DEFAULT_FETCH_GROUP)
     private Set<Subscription> subscriptionList;
 
     /* Ignoring this field in entity, so that it is not created as a column,

@@ -98,7 +98,7 @@ public class CommonStructure extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
     
-    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandlerIT.class);
+    private static Logger logger = LoggerFactory.getLogger(CommonStructure.class);
     
     @Before
     public void setUp() {

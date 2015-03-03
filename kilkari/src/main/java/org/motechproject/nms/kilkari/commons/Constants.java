@@ -99,4 +99,6 @@ public final class Constants {
     public static final String SUBSCRIPTION_PACK = "Subscription Pack";
 
     public static final String CALLING_NUMBER = "Calling Number";
+
+    public static final String DEFAULT_FETCH_GROUP = "true";
 }
