@@ -211,7 +211,7 @@ public class ChildMctsCsvHandler {
         childSubscriber.setMsisdn(msisdn);
         childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
-        childSubscriber.setChildDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), true)));
+        childSubscriber.setChildDeath("9".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
         childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));

@@ -26,9 +26,6 @@ public final class MctsCsvHelper {
         
         Subscription newSubscription;
         newSubscription = new Subscription();
-        if (dbSubscription != null) {
-            newSubscription.setOldSubscritptionId(dbSubscription);
-        }
         newSubscription.setStatus(Status.PendingActivation);
         newSubscription.setChannel(Channel.MCTS);
         newSubscription.setMsisdn(subscriber.getMsisdn());

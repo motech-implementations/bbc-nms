@@ -223,8 +223,8 @@ public class MotherMctsCsvHandler {
 
         motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
         motherSubscriber.setStillBirth("0".equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
-        motherSubscriber.setAbortion(!"NONE".equalsIgnoreCase(ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), true)));
-        motherSubscriber.setMotherDeath("Death".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), true)));
+        motherSubscriber.setAbortion(!"".equalsIgnoreCase(ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false)));
+        motherSubscriber.setMotherDeath("9".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());

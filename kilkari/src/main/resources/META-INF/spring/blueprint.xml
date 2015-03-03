@@ -54,6 +54,8 @@
                     interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
                     
     <osgi:reference id="bulkUploadErrLogService"
-                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>                        
+                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
+    <osgi:reference id="circleService"
+                    interface="org.motechproject.nms.masterdata.service.CircleService"/>
 </beans>
