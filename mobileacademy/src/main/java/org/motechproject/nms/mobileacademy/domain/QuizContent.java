@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.domain;
 
 import java.util.List;
 
+import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -20,6 +21,7 @@ public class QuizContent extends MdsEntity {
     private String audioFile;
 
     @Field
+    @Cascade(delete = true)
     private List<QuestionContent> questions;
 
     /**
