@@ -140,13 +140,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
             userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
-
-            if (userProfile.isDefaultLanguageLocationCode()) {
-                setLanguageLocationCode(ConfigurationConstants.TRUE, userDetailApiResponse, userProfile);
-            } else {
-                setLanguageLocationCode(ConfigurationConstants.FALSE, userDetailApiResponse, userProfile);
-            }
-
+            setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
             fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
         } else {
