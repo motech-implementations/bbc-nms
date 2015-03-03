@@ -179,6 +179,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             talukaRecordVillage.getVillage().add(village);
             talukaService.update(talukaRecordVillage);
             assertNotNull(village);
+
             // do the setup
             setUpIsDone = true;
         }
@@ -190,7 +191,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -205,7 +206,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "9990545495", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -215,7 +216,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "99905454950", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -225,7 +226,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("4", "12", "99905", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -396,7 +397,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -406,7 +407,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("", "12", "1234567890", "Jyoti",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -416,7 +417,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -426,7 +427,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti2",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
-                "1234", "1234", "True", null);
+                "1234", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -446,7 +447,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "5555555555", "Jaya2",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
-                "1234", "1234", "True", null);
+                "1234", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -456,7 +457,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "3333333333", "Sushma",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -476,7 +477,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -486,7 +487,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
-                "1234", "1234", "True", null);
+                "1234", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -506,7 +507,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv(null, "12", "1234500000", "Jyoti2",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
-                "1234", "1234", "True", null);
+                "1234", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -516,7 +517,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Anjali",
                 "USHA", "123", null, "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -527,7 +528,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                 "USHA", "123", null, "1234", "12345", "123456", null,
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -537,7 +538,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", null, "12345", "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -548,7 +549,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -558,15 +559,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         //nms generated id is null in update record
         frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", null);
-
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
-
-        frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
-                "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "True", "0001");
+                "9876", "1234", "true", null);
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
@@ -587,7 +580,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("25", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -609,12 +602,23 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "4444444444", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
-                "9876", "1234", "True", null);
+                "9876", "1234", "true", null);
 
 
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+        // testvalid  is null contactNo  and FlwId exist
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545494", "Etasha",
+                "USHA", "123", "1", "1234", null, "123456", "1234",
+                "9876", "1234", null, null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
 
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
@@ -718,7 +722,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerNoDistrict
         
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -926,6 +930,15 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorker flw2 = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
         assertNotNull(flw2);
         assertNotEquals(flw, flw2);
+
+
+        // testvalid  is null contactNo and FlwId exist
+
+        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(1L,12L);
+        assertNotNull(flw);
+        assertEquals(Designation.USHA, flw.getDesignation());
+        assertEquals(Status.INACTIVE, flw.getStatus());
+        assertEquals("9990545494",flw.getContactNo());
 
 
         List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
