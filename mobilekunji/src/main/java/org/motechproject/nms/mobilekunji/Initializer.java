@@ -21,14 +21,16 @@ public class Initializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);
 
-
-    @Autowired
     private ConfigurationService configurationService;
 
 
     public Initializer() {
     }
 
+    @Autowired
+    public Initializer(ConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
 
     @PostConstruct
     public void initializeConfiguration() {
@@ -44,7 +46,6 @@ public class Initializer {
             LOG.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
             configuration.setNmsMkCappingType(DEFAULT_CAPPING_TYPE);
-            configuration.setNmsMkMaxHealthCards(DEFAULT_MAX_HEALTH_CARDS);
             configuration.setNmsMkMaxWelcomeMessage(DEFAULT_MAX_WELCOME_MESSAGE);
             configuration.setNmsMkMaxEndofusageMessage(DEFAULT_MAX_END_OF_USAGE_MESSAGE);
             configuration.setNmsMkNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);

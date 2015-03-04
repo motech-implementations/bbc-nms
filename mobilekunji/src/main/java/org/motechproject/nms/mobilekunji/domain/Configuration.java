@@ -21,16 +21,16 @@ public class Configuration extends MdsEntity {
     private Long index;
 
     @Field(required = true)
-    private int nmsMkCappingType;
+    private Integer nmsMkCappingType;
 
     @Field(required = true)
-    private int nmsMkNationalCapValue;
+    private Integer nmsMkNationalCapValue;
+
     @Field(required = true)
-    private int nmsMkMaxHealthCards;
+    private Integer nmsMkMaxWelcomeMessage;
+
     @Field(required = true)
-    private int nmsMkMaxWelcomeMessage;
-    @Field(required = true)
-    private int nmsMkMaxEndofusageMessage;
+    private Integer nmsMkMaxEndofusageMessage;
 
     public Long getIndex() {
         return index;
@@ -40,45 +40,36 @@ public class Configuration extends MdsEntity {
         this.index = index;
     }
 
-    public int getNmsMkCappingType() {
+    public Integer getNmsMkCappingType() {
         return nmsMkCappingType;
     }
 
-    public void setNmsMkCappingType(int nmsMkCappingType) {
+    public void setNmsMkCappingType(Integer nmsMkCappingType) {
         this.nmsMkCappingType = nmsMkCappingType;
     }
 
-    public int getNmsMkNationalCapValue() {
+    public Integer getNmsMkNationalCapValue() {
         return nmsMkNationalCapValue;
     }
 
-    public void setNmsMkNationalCapValue(int nmsMkNationalCapValue) {
+    public void setNmsMkNationalCapValue(Integer nmsMkNationalCapValue) {
         this.nmsMkNationalCapValue = nmsMkNationalCapValue;
     }
 
-    public int getNmsMkMaxHealthCards() {
-        return nmsMkMaxHealthCards;
-    }
-
-    public void setNmsMkMaxHealthCards(int nmsMkMaxHealthCards) {
-        this.nmsMkMaxHealthCards = nmsMkMaxHealthCards;
-    }
-
-    public int getNmsMkMaxWelcomeMessage() {
+    public Integer getNmsMkMaxWelcomeMessage() {
         return nmsMkMaxWelcomeMessage;
     }
 
-    public void setNmsMkMaxWelcomeMessage(int nmsMkMaxWelcomeMessage) {
+    public void setNmsMkMaxWelcomeMessage(Integer nmsMkMaxWelcomeMessage) {
         this.nmsMkMaxWelcomeMessage = nmsMkMaxWelcomeMessage;
     }
 
-    public int getNmsMkMaxEndofusageMessage() {
+    public Integer getNmsMkMaxEndofusageMessage() {
         return nmsMkMaxEndofusageMessage;
     }
 
-    public void setNmsMkMaxEndofusageMessage(int nmsMkMaxEndofusageMessage) {
+    public void setNmsMkMaxEndofusageMessage(Integer nmsMkMaxEndofusageMessage) {
         this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
     }
-
 }
 
