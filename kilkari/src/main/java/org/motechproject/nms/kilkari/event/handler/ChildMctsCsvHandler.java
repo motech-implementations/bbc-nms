@@ -50,6 +50,11 @@ public class ChildMctsCsvHandler {
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
     public static final String PACK_48 = "48WEEK";
     public static final String PACK_72 = "72WEEK";
+    public static final String CHILD_DEATH_NINE = "9";
+    public static final String SUBSCRIPTION_EXIST_ERR_DESC =
+            "Upload Unsuccessful as Subscription to MSISDN already Exist";
+    public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
+            "Subscription to MSISDN already Exist";
 
 
     //@Autowired
@@ -211,7 +216,7 @@ public class ChildMctsCsvHandler {
         childSubscriber.setMsisdn(msisdn);
         childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
-        childSubscriber.setChildDeath("9".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false)));
+        childSubscriber.setChildDeath(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
         childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));
@@ -240,7 +245,7 @@ public class ChildMctsCsvHandler {
             if (dbSubscription == null) {
                 logger.info("Not found active subscription from database based on Childmctsid[{}], packName[{}]", subscriber.getChildMctsId(), PACK_48);
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
-                dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getId());
+                dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
                 if (dbSubscription == null) {
                     logger.info("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_48);
                     Configuration configuration = configurationService.getConfiguration();
@@ -257,9 +262,12 @@ public class ChildMctsCsvHandler {
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
                     logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.Active);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    updateSubscription(subscriber, dbSubscription, true);  /* Deactivate mother subscription */
+                    dbSubscription.setStatus(Status.Deactivated);
+                    subscriptionService.update(dbSubscription); /* Deactivate mother subscription */
                     if (!subscriber.getChildDeath()) {
-                        createSubscription(subscriber, dbSubscription, dbSubscriber); /* add new subscription for child */
+                        /* add new subscription for child */
+                        Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
+                        dbSubscriber.getSubscriptionList().add(newSubscription);
                     }
                     updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
                 
@@ -275,7 +283,8 @@ public class ChildMctsCsvHandler {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
-                throw new DataValidationException("RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "");
+                throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
+                        ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
         }
     }
@@ -295,7 +304,8 @@ public class ChildMctsCsvHandler {
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
                 updateSubscription(subscriber, dbSubscription, true);
-                createSubscription(subscriber, dbSubscription, dbSubscriber);
+                Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
+                dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateSubscription(subscriber, dbSubscription, false);
             }
@@ -325,14 +335,14 @@ public class ChildMctsCsvHandler {
      *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private void createSubscription(Subscriber subscriber,
+    private Subscription createSubscription(Subscriber subscriber,
             Subscription dbSubscription, Subscriber dbSubscriber) {
         
         Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscription, dbSubscriber);
         newSubscription.setMctsId(subscriber.getChildMctsId());
         newSubscription.setPackName(PACK_48);
         
-        subscriptionService.create(newSubscription);
+        return subscriptionService.create(newSubscription);
     }
 
     /**
@@ -358,7 +368,7 @@ public class ChildMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
-        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getId());
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getStateCode());
         if(dbSubscription != null) {
             dbSubscription.setStatus(Status.Deactivated);
             subscriptionService.update(dbSubscription);

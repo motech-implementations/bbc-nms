@@ -52,8 +52,14 @@ public class MotherMctsCsvHandler {
     public static final String CSV_IMPORT_FAILURE_MSG = CSV_IMPORT_PREFIX + "failure_message";
     public static final String CSV_IMPORT_FAILURE_STACKTRACE = CSV_IMPORT_PREFIX + "failure_stacktrace";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
-    public static final String PACK_48 = "48WEEK";
     public static final String PACK_72 = "72WEEK";
+    public static final String STILL_BIRTH_ZERO = "0";
+    public static final String MOTHER_DEATH_NINE = "9";
+    public static final String ABORTION_NONE = "none";
+    public static final String SUBSCRIPTION_EXIST_ERR_DESC =
+            "Upload Unsuccessful as Subscription to MSISDN already Exist";
+    public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
+            "Subscription to MSISDN already Exist";
 
     //@Autowired
     private MotherMctsCsvService motherMctsCsvService;
@@ -222,9 +228,11 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
 
         motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
-        motherSubscriber.setStillBirth("0".equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
-        motherSubscriber.setAbortion(!"".equalsIgnoreCase(ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false)));
-        motherSubscriber.setMotherDeath("9".equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false)));
+        motherSubscriber.setStillBirth(STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
+
+        String abortion = ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false);
+        motherSubscriber.setAbortion(!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion)));
+        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
@@ -272,7 +280,8 @@ public class MotherMctsCsvHandler {
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
 
             } else {
-                throw new DataValidationException("RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "RECORD_ALREADY_EXIST", "");
+                throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
+                        ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
         }
     }
@@ -292,7 +301,8 @@ public class MotherMctsCsvHandler {
         } else {
             if (!dbSubscriber.getLmp().equals(subscriber.getLmp())) {
                 updateSubscription(subscriber, dbSubscription, true);
-                createSubscription(subscriber, dbSubscription, dbSubscriber);
+                Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
+                dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateSubscription(subscriber, dbSubscription, false);
             }
@@ -322,13 +332,13 @@ public class MotherMctsCsvHandler {
      *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private void createSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+    private Subscription createSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
 
         Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscription, dbSubscriber);
         newSubscription.setMctsId(subscriber.getMotherMctsId());
         newSubscription.setPackName(PACK_72);
 
-        subscriptionService.create(newSubscription);
+        return subscriptionService.create(newSubscription);
     }
 
     /**
@@ -354,8 +364,9 @@ public class MotherMctsCsvHandler {
      * 
      *  @param subscriber csv uploaded subscriber
      */
-    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
-        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(), subscriber.getState().getId());
+    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException {
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(),
+                subscriber.getState().getStateCode());
         if(dbSubscription != null) {
             dbSubscription.setStatus(Status.Deactivated);
             subscriptionService.update(dbSubscription);
