@@ -111,27 +111,6 @@ public class TalukaCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
-    /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_FAILED})
-    public void talukaCsvFailed(MotechEvent motechEvent) {
-
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("TALUKA_CSV_FAILED event received");
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            logger.debug("TALUKA_CSV_FAILED event processing start for ID: {}", id);
-            TalukaCsv talukaCsv = talukaCsvRecordsDataService.findById(id);
-            talukaCsvRecordsDataService.delete(talukaCsv);
-        }
-        logger.info("TALUKA_CSV_FAILED event processing finished");
-    }
-
     private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
         Taluka newRecord = new Taluka();
 

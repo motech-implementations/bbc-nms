@@ -122,27 +122,6 @@ public class HealthSubFacilityCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
     }
 
-    /**
-     * This method handle the event which is raised after csv upload is failed.
-     * This method also deletes all the csv records which get inserted in this upload..
-     *
-     * @param motechEvent This is the object from which required parameters are fetched.
-     */
-    @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_FAILED})
-    public void healthSubFacilityCsvFailed(MotechEvent motechEvent) {
-
-        Map<String, Object> params = motechEvent.getParameters();
-        logger.info("HEALTH_SUB_FACILITY_CSV_FAILED event received");
-        List<Long> createdIds = (List<Long>) params.get("csv-import.created_ids");
-
-        for (Long id : createdIds) {
-            logger.debug("HEALTH_SUB_FACILITY_CSV_FAILED event processing start for ID: {}", id);
-            HealthSubFacilityCsv healthSubFacilityCsv = healthSubFacilityCsvRecordsDataService.findById(id);
-            healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsv);
-        }
-        logger.info("HEALTH_SUB_FACILITY_CSV_FAILED event processing finished");
-    }
-
     private HealthSubFacility mapHealthSubFacilityCsv(HealthSubFacilityCsv record) throws DataValidationException {
         HealthSubFacility newRecord = new HealthSubFacility();
 
