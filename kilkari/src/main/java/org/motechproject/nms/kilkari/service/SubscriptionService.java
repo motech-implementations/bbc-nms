@@ -31,4 +31,6 @@ public interface SubscriptionService {
 
     Subscription getSubscriptionByMctsIdState(String mctsId, Long id);
 
+    void deleteAll();
+
 }

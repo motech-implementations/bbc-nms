@@ -8,22 +8,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
-import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -180,13 +170,13 @@ public class HelloWorldRecordServiceIT extends CommonStructure {
         csv1 = createMotherMcts(csv1);
         csv1.setWhomPhoneNo("13");
         csv1.setIdNo("7");
-        csv1.setOperation("Delete");
+        csv1.setOperation("Del");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode())); //Operation Delete, Deactivate Subscription
         
-        assertFalse(subscription.getStatus().equals(updateSubs.getStatus()));
+        assertFalse(subscription.getStatus()==updateSubs.getStatus());
         assertTrue(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
     }
     

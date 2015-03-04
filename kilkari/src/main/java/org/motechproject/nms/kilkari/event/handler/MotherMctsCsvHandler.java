@@ -254,7 +254,7 @@ public class MotherMctsCsvHandler {
         if (dbSubscription == null) {
             logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
             /* Find subscription from database based on mctsid, packName, status */
-            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getId());
+            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
                 logger.info("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                 Configuration configuration = configurationService.getConfiguration();
@@ -364,7 +364,10 @@ public class MotherMctsCsvHandler {
      * 
      *  @param subscriber csv uploaded subscriber
      */
-    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException {
+    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
+        logger.info("Going to perform deactivate process.");
+        logger.info("Finding subscription based on MotherMctsId{} and stateCode{}", subscriber.getMotherMctsId(), subscriber.getState().getStateCode());
+        
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(),
                 subscriber.getState().getStateCode());
         if(dbSubscription != null) {

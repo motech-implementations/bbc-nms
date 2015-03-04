@@ -22,8 +22,7 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public void add(Subscriber record) {
-        
-
+        subscriberDataService.create(record);
     }
 
     @Override
@@ -34,13 +33,18 @@ public class SubscriberServiceImpl implements SubscriberService {
 
     @Override
     public List<Subscriber> getRecords() {
-        // TODO Auto-generated method stub
-        return null;
+        return subscriberDataService.retrieveAll();
     }
 
     @Override
     public void delete(Subscriber record) {
-        // TODO Auto-generated method stub
+        subscriberDataService.delete(record);
+
+    }
+    
+    @Override
+    public void deleteAll() {
+        subscriberDataService.deleteAll();
 
     }
 

@@ -29,7 +29,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public void add(Subscription record) {
-        // TODO Auto-generated method stub
+        subscriptionDataService.create(record);
 
     }
 
@@ -41,13 +41,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<Subscription> getRecords() {
+        subscriptionDataService.retrieveAll();
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public void delete(Subscription record) {
-        // TODO Auto-generated method stub
+        subscriptionDataService.delete(record);
+
+    }
+    
+    @Override
+    public void deleteAll() {
+        subscriptionDataService.deleteAll();
 
     }
 

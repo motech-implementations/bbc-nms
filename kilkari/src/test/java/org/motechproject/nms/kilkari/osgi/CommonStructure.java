@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.jdo.JDOObjectNotFoundException;
 
 import org.junit.Before;
 import org.motechproject.event.MotechEvent;
@@ -30,8 +31,10 @@ import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -52,6 +55,12 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    
+    @Inject
+    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    
+    @Inject
+    private VillageCsvRecordsDataService villageCsvRecordsDataService;
     
     @Inject
     protected SubscriberService subscriberService;
@@ -88,6 +97,7 @@ public class CommonStructure extends BasePaxIT {
     @Before
     public void setUp() {
         if (!setUpIsDone) {
+            deleteAll();
             createState();
             createDistrict();
             createTaluka();
@@ -98,6 +108,39 @@ public class CommonStructure extends BasePaxIT {
         }
         // do the setup
         setUpIsDone = true;
+    }
+
+    private void deleteAll() {
+        try {
+            subscriberService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            subscriptionService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            villageCsvRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            healthSubFacilityRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            healthFacilityRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            healthBlockRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            talukaRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            districtRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        try {
+            stateRecordsDataService.deleteAll();
+        } catch(JDOObjectNotFoundException e){}
+        
+        System.out.println("Deleted all location data.");
+        
     }
 
     private void createTaluka() {
@@ -138,7 +181,10 @@ public class CommonStructure extends BasePaxIT {
         state.setCreator("Deepak");
         state.setOwner("Deepak");
         state.setModifiedBy("Deepak");
-        stateRecordsDataService.create(state);
+        State dbState = stateRecordsDataService.findRecordByStateCode(state.getStateCode());
+        if(dbState==null) {
+            stateRecordsDataService.create(state);
+        }
         System.out.println("State data is successfully inserted.");
         
     }

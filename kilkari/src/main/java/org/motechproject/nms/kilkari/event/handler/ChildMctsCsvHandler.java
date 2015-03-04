@@ -241,7 +241,7 @@ public class ChildMctsCsvHandler {
             
             logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_48);
             /* Find subscription from database based on mctsid(ChildMcts), packName, status */
-            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, subscriber.getState().getId());
+            dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
                 logger.info("Not found active subscription from database based on Childmctsid[{}], packName[{}]", subscriber.getChildMctsId(), PACK_48);
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
@@ -368,6 +368,9 @@ public class ChildMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
+        logger.info("Going to perform deactivate process.");
+        logger.info("Finding subscription based on MctsId{} and stateCode{}", subscriber.getChildMctsId(), subscriber.getState().getStateCode());
+
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getStateCode());
         if(dbSubscription != null) {
             dbSubscription.setStatus(Status.Deactivated);

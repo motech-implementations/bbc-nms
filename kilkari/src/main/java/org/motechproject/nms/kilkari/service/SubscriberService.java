@@ -21,5 +21,7 @@ public interface SubscriberService {
     List<Subscriber> findRecordByMsisdn(String msisdn);
     
     Subscriber create(Subscriber subscriber);
+
+    void deleteAll();
     
 }
