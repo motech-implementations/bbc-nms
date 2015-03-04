@@ -7,7 +7,13 @@
 	
 	<osgi:service ref="motherMctsCsvService"
                   interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />
-                  
+
+    <osgi:service ref="contentUploadCsvService"
+                  interface="org.motechproject.nms.kilkari.service.ContentUploadCsvService" />
+
+    <osgi:service ref="contentUploadService"
+                  interface="org.motechproject.nms.kilkari.service.ContentUploadService" />
+
 	<osgi:service ref="childMctsCsvService"
                   interface="org.motechproject.nms.kilkari.service.ChildMctsCsvService" />                  
                   

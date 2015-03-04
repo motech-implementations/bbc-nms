@@ -170,8 +170,8 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
-        params.put("csv-import.filename", "");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        params.put("csv-import.filename", "languageLocationCode");
+        return new MotechEvent(MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS, params);
     }
 
     public void preSetUp() {

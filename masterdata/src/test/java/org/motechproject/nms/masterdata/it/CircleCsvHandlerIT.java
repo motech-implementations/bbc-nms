@@ -114,7 +114,7 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
-        params.put("csv-import.filename", "");
+        params.put("csv-import.filename", "circle");
         return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
     }
 

@@ -114,8 +114,8 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
-        params.put("csv-import.filename", "");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        params.put("csv-import.filename", "operator");
+        return new MotechEvent(MasterDataConstants.OPERATOR_CSV_SUCCESS, params);
     }
 
     @After

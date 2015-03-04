@@ -57,6 +57,7 @@ public class ContentUploadCsvHandler {
         this.languageLocationCodeService = languageLocationCodeService;
     }
 
+
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
      * this method also populates the records in ContentUploadtable after checking its validity.
@@ -94,7 +95,7 @@ public class ContentUploadCsvHandler {
                             logger.info("Record deleted successfully for contentid : {}", newRecord.getContentId());
                         } else {
                             persistentRecord = copyContentUploadForUpdate(newRecord, persistentRecord);
-                            contentUploadService.update(newRecord);
+                            contentUploadService.update(persistentRecord);
                             logger.info("Record updated successfully for contentid : {}", newRecord.getContentId());
                         }
                     } else if (Operation.DEL.toString().equals(record.getOperation())) {
