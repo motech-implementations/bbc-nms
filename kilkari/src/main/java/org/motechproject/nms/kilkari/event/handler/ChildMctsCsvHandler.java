@@ -146,9 +146,9 @@ public class ChildMctsCsvHandler {
                 summary.incrementFailureCount();
 
             } catch (Exception e) {
-                errorDetails.setRecordDetails("");
-                errorDetails.setErrorCategory("");
-                errorDetails.setErrorDescription("");
+                errorDetails.setRecordDetails("Some Error Occurred");
+                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 summary.incrementFailureCount();
                 

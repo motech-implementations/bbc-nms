@@ -154,9 +154,9 @@ public class MotherMctsCsvHandler {
 
             } catch (Exception e) {
                 logger.error("Generic Exception caught ::::", e);
-                errorDetails.setRecordDetails("");
-                errorDetails.setErrorCategory("");
-                errorDetails.setErrorDescription("");
+                errorDetails.setRecordDetails("Some Error Occurred");
+                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                 summary.incrementFailureCount();
             }finally {

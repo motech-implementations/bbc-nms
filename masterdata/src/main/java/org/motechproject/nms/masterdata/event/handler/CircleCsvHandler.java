@@ -113,9 +113,9 @@ public class CircleCsvHandler {
                 result.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                errorDetail.setErrorCategory("");
-                errorDetail.setRecordDetails("");
-                errorDetail.setErrorDescription("");
+                errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetail.setRecordDetails("Exception occurred");
+                errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
                 throw e;

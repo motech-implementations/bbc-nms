@@ -111,9 +111,9 @@ public class OperatorCsvHandler {
                 result.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                errorDetail.setErrorCategory("");
-                errorDetail.setRecordDetails("");
-                errorDetail.setErrorDescription("");
+                errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetail.setRecordDetails("Some Error Occurred");
+                errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
                 throw e;
