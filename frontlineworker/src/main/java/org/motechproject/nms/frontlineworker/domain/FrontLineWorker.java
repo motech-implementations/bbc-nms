@@ -72,6 +72,7 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private String ashaNumber;
 
+    //Bug 7
     @Field
     private Boolean isValidated;
 
@@ -230,11 +231,11 @@ public class FrontLineWorker extends MdsEntity {
         this.ashaNumber = ashaNumber;
     }
 
-    public boolean isValidated() {
+    public Boolean getIsValidated() {
         return isValidated;
     }
 
-    public void setValidated(boolean isValidated) {
+    public void setIsValidated(Boolean isValidated) {
         this.isValidated = isValidated;
     }
 
