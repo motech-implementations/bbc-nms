@@ -152,8 +152,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         state.setModifiedBy("Etasha");
         stateRecordsDataService.create(state);
         assertNotNull(state);
-        System.out.println("State data is successfully inserted.");
-
     }
 
     private void createDistrict() {
@@ -168,7 +166,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(district);
         stateRecordsDataService.update(stateData);
         assertNotNull(district);
-        System.out.println("District data is successfully inserted.");
     }
 
     private void createTaluka() {
@@ -184,7 +181,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         districtData.getTaluka().add(taluka);
         districtRecordsDataService.update(districtData);
         assertNotNull(taluka);
-        System.out.println("Taluka data is successfully inserted.");
     }
 
     private void createVillage(){
@@ -203,8 +199,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         talukaRecord.getVillage().add(village);
         talukaRecordsDataService.update(talukaRecord);
         assertNotNull(village);
-        System.out.println("Village data is successfully inserted.");
-
     }
 
     private void createHealthBlock(){
@@ -223,7 +217,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         talukaRecordsDataService.update(talukaRecord);
 
         assertNotNull(healthBlock);
-        System.out.println("HealthBlock data is successfully inserted.");
     }
 
 
@@ -245,9 +238,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthBlockData.getHealthFacility().add(healthFacility);
         healthBlockRecordsDataService.update(healthBlockData);
         assertNotNull(healthFacility);
-        System.out.println("HealthFacility data is successfully inserted.");
-
-
     }
 
 
@@ -272,8 +262,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthFacilityData.getHealthSubFacility().add(healthSubFacility);
         healthFacilityRecordsDataService.update(healthFacilityData);
         assertNotNull(healthSubFacility);
-        System.out.println("HealthSubFacility Permanent data is successfully inserted.");
-
     }
 
 
@@ -282,57 +270,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
- /*   @Before
-    public void testFrontLineWorkerServicepresent() throws Exception {
-
-        System.out.println("Front Line Worker Setup start");
-
-        flwUploadHandler = new FlwUploadHandler(flwRecordDataService,
-                flwCsvRecordsDataService,
-                bulkUploadErrLogService,
-                locationService,
-                languageLocationCodeService);
-
-        assertNotNull(flwRecordDataService);
-        assertNotNull(flwCsvRecordsDataService);
-        assertNotNull(bulkUploadErrLogService);
-        assertNotNull(locationService);
-        assertNotNull(languageLocationCodeService);
-
-        State state = new State();
-        state.setStateCode(12L);
-
-        District district = new District();
-        district.setStateCode(12L);
-        district.setDistrictCode(123L);
-        Set<District> districtSet = new HashSet<District>();
-        districtSet.add(district);
-
-*//*
-        Taluka taluka = new Taluka();
-        taluka.setStateCode(12L);
-        taluka.setDistrictCode(123L);
-        taluka.setTalukaCode(1234L);
-        Set<Taluka> talukaSet = new HashSet<Taluka>();
-        talukaSet.add(taluka);
-
-
-        Village village*//*
-
-        state = stateRecordsDataService.create(state);
-
-        stateData = stateRecordsDataService.findRecordByStateCode(district.getStateCode());
-        stateData.getDistrict().add(district);
-        stateRecordsDataService.update(stateData);
-
-        System.out.println("Front Line Worker Setup end");
-    }*/
-
 
     @Test
     public void testFrontLineWorkerValidDataGetByPhnNo() {
 
-        System.out.println("case 1 testFrontLineWorkerValidDataGetByPhnNo start");
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("1");
@@ -394,8 +335,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
-
-        System.out.println("testFrontLineWorkerValidDataGetByPhnNo end");
     }
 
 
@@ -403,7 +342,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Test
     public void testFrontLineWorkerValidDataGetById() {
 
-        System.out.println("case 2 testFrontLineWorkerValidDataGetById start");
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("2");
@@ -466,14 +404,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
-
-        System.out.println("testFrontLineWorkerValidDataGetById end");
     }
 
     @Test
     public void testFrontLineWorkerValidDataLargerphnNo() {
 
-        System.out.println("case 3 testFrontLineWorkerValidDataLargerphnNo start");
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("3");
@@ -536,14 +471,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
-
-        System.out.println("testFrontLineWorkerValidDataLargerphnNo end");
     }
 
     @Test
     public void testFrontLineWorkerValidDatasmallPhnNo() {
 
-        System.out.println("case 4 testFrontLineWorkerValidDatasmallPhnNo start");
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("4");
@@ -607,12 +539,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerValidDatasmallPhnNo end");
     }
 
     @Test
     public void testFrontLineWorkerNoState()  throws DataValidationException{
-        System.out.println("case 5 testFrontLineWorkerNoState starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -646,7 +576,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNull(frontLineWorker);
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
-        System.out.println("testFrontLineWorkerNoState ends");
         throw new DataValidationException();
 
     }
@@ -654,7 +583,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     @Test
     public void testFrontLineWorkerNoDistrict() throws DataValidationException {
-        System.out.println("case 6 testFrontLineWorkerNoDistrict starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -688,7 +616,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerNoDistrict ends");
         throw new DataValidationException();
 
     }
@@ -696,9 +623,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     @Test
     public void testFrontLineWorkerInvalidTaluka() throws  DataValidationException {
-
-
-        System.out.println("case 7 testFrontLineWorkerInvalidTaluka starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -733,16 +657,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidTaluka ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerInvalidVillage() throws  DataValidationException {
-
-
-        System.out.println("case 8 testFrontLineWorkerInvalidVillage starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -778,16 +698,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidVillage ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerInvalidHealthBlock() throws  DataValidationException {
-
-
-        System.out.println("case 9 testFrontLineWorkerInvalidHealthBlock starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -824,16 +740,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidHealthBlock ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerInvalidHealthFacility() throws  DataValidationException {
-
-
-        System.out.println("case 10 testFrontLineWorkerInvalidHealthFacility starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -871,16 +783,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidHealthFacility ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerInvalidHealthSubFacility() throws  DataValidationException {
-
-
-        System.out.println("case 11 testFrontLineWorkerInvalidHealthSubFacility starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -919,16 +827,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidHealthSubFacility ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerInvalidDesignation() throws  DataValidationException {
-
-
-        System.out.println("case 12 testFrontLineWorkerInvalidDesignation starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -967,7 +871,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerInvalidDesignation ends");
         throw new DataValidationException();
 
     }
@@ -975,9 +878,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Test
     public void testFrontLineWorkerContactNoAbsent() throws  DataValidationException {
 
-
-        System.out.println("case 13 testFrontLineWorkerContactNoAbsent starts");
-
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("1");
@@ -1014,7 +914,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerContactNoAbsent ends");
         throw new DataValidationException();
 
     }
@@ -1022,9 +921,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Test
     public void testFrontLineWorkerStateCodeAbsent() throws  DataValidationException {
 
-
-        System.out.println("case 14 testFrontLineWorkerStateCodeAbsent starts");
-
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("1");
@@ -1060,7 +956,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerStateCodeAbsent ends");
         throw new DataValidationException();
 
     }
@@ -1068,9 +963,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Test
     public void testFrontLineWorkerDistrictCodeAbsent() throws  DataValidationException {
 
-
-        System.out.println("case 15 testFrontLineWorkerDistrictCodeAbsent starts");
-
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("1");
@@ -1107,16 +999,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerDistrictCodeAbsent ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerDesignationAbsent() throws  DataValidationException {
-
-
-        System.out.println("case 16 testFrontLineWorkerDesignationAbsent starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1154,7 +1042,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerDesignationAbsent ends");
         throw new DataValidationException();
 
     }
@@ -1163,9 +1050,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Test
     public void testFrontLineWorkerTalukaAbsentVillagePresent() throws  DataValidationException {
 
-
-        System.out.println("case 17 testFrontLineWorkerTalukaAbsentVillagePresent starts");
-
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("1");
@@ -1199,16 +1083,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerTalukaAbsentVillagePresent ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerTalukaAbsentHealthBlockPresent() throws  DataValidationException {
-
-
-        System.out.println("case 18 testFrontLineWorkerTalukaAbsentHealthBlockPresent starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1243,16 +1123,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerTalukaAbsentHealthBlockPresent ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerHBAbsentPHCPresent() throws  DataValidationException {
-
-
-        System.out.println("case 19 testFrontLineWorkerHBAbsentPHCPresent starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1289,16 +1165,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerHBAbsentPHCPresent ends");
         throw new DataValidationException();
 
     }
 
     @Test
     public void testFrontLineWorkerPHCAbsentSSCPresent() throws  DataValidationException {
-
-
-        System.out.println("case 20 testFrontLineWorkerPHCAbsentSSCPresent starts");
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1336,7 +1208,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
-        System.out.println("testFrontLineWorkerPHCAbsentSSCPresent ends");
         throw new DataValidationException();
 
     }
