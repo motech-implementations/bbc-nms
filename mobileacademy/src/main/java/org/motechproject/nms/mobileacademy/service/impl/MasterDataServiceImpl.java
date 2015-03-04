@@ -30,7 +30,7 @@ public class MasterDataServiceImpl implements MasterDataService {
      * isLLCValidInCircle(java.lang.String, int)
      */
     @Override
-    public boolean isLLCValidInCircle(String Circle, int LLC) {
+    public boolean isLlcValidInCircle(String Circle, int LLC) {
         // TODO Auto-generated method stub
         return true;
     }

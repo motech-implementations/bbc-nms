@@ -16,14 +16,14 @@ public interface CourseProcessedContentService {
      * @param LLC Language Location Code
      * @return returns true/false
      */
-    public boolean doesLLCExistsInCPC(int LLC);
+    public boolean doesLlcExistsInCpc(int LLC);
 
     /**
      * To get the list of all LLCs for which the course exists in the system
      * 
      * @return List of distinct language location codes
      */
-    List<Integer> getListOfAllExistingLLcs();
+    List<Integer> getListOfAllExistingLlcs();
 
     /**
      * This is used to get a courseProcessesContent Record based on content name
@@ -62,6 +62,6 @@ public interface CourseProcessedContentService {
      * 
      * @param languageLocationCode
      */
-    public void deleteRecordsByLLC(int languageLocationCode);
+    public void deleteRecordsByLlc(int languageLocationCode);
 
 }

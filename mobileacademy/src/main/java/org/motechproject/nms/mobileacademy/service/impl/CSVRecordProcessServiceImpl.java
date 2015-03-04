@@ -85,8 +85,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         Map<String, List<CourseRawContent>> mapForModifyRecords = new HashMap<String, List<CourseRawContent>>();
         Map<Integer, List<CourseRawContent>> mapForDeleteRecords = new HashMap<Integer, List<CourseRawContent>>();
 
-        List<Integer> listOfExistingLLCinCPC = courseProcessedContentService
-                .getListOfAllExistingLLcs();
+        List<Integer> listOfExistingLlc = courseProcessedContentService
+                .getListOfAllExistingLlcs();
 
         if (CollectionUtils.isNotEmpty(courseRawContents)) {
             userName = courseRawContents.get(0).getOwner();
@@ -115,25 +115,25 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 if (MobileAcademyConstants.COURSE_DEL
                         .equalsIgnoreCase(courseRawContent.getOperation())) {
                     putRecordInDeleteMap(mapForDeleteRecords, courseRawContent);
-                    LOGGER.info(
+                    LOGGER.debug(
                             "Record moved to Delete Map for Content ID: {}",
                             courseRawContent.getContentId());
                 } else {
-                    int LLC = Integer.parseInt(courseRawContent
+                    int languageLocCode = Integer.parseInt(courseRawContent
                             .getLanguageLocationCode());
-                    if (listOfExistingLLCinCPC.contains(LLC)) {
+                    if (listOfExistingLlc.contains(languageLocCode)) {
                         courseRawContent
                                 .setOperation(MobileAcademyConstants.COURSE_MOD);
                         putRecordInModifyMap(mapForModifyRecords,
                                 courseRawContent);
-                        LOGGER.info(
+                        LOGGER.debug(
                                 "Record moved to Modify Map for Content ID: {}",
                                 courseRawContent.getContentId());
                     } else {
                         courseRawContent
                                 .setOperation(MobileAcademyConstants.COURSE_ADD);
                         putRecordInAddMap(mapForAddRecords, courseRawContent);
-                        LOGGER.info(
+                        LOGGER.debug(
                                 "Record moved to Addition Map for Content ID: {}",
                                 courseRawContent.getContentId());
                     }
@@ -160,16 +160,17 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private boolean validateCircleAndLLC(CourseRawContent courseRawContent)
             throws DataValidationException {
         String circle = courseRawContent.getCircle();
-        int llc = Integer.parseInt(courseRawContent.getLanguageLocationCode());
+        int languageLocCode = Integer.parseInt(courseRawContent
+                .getLanguageLocationCode());
         if (!masterDataService.isCircleValid(circle)) {
-            LOGGER.info("circle is not valid for content ID: {}",
+            LOGGER.debug("circle is not valid for content ID: {}",
                     courseRawContent.getContentId());
             throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE, "Circle");
         }
-        if (!masterDataService.isLLCValidInCircle(circle, llc)) {
-            LOGGER.info("LLC doesn't exist in circle for content ID: {}",
+        if (!masterDataService.isLlcValidInCircle(circle, languageLocCode)) {
+            LOGGER.debug("LLC doesn't exist in circle for content ID: {}",
                     courseRawContent.getContentId());
             throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
@@ -187,13 +188,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private void putRecordInAddMap(
             Map<Integer, List<CourseRawContent>> mapForAddRecords,
             CourseRawContent courseRawContent) {
-        int LLC = Integer.parseInt(courseRawContent.getLanguageLocationCode());
-        if (mapForAddRecords.containsKey(LLC)) {
-            mapForAddRecords.get(LLC).add(courseRawContent);
+        int languageLocCode = Integer.parseInt(courseRawContent
+                .getLanguageLocationCode());
+        if (mapForAddRecords.containsKey(languageLocCode)) {
+            mapForAddRecords.get(languageLocCode).add(courseRawContent);
         } else {
-            ArrayList<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
+            List<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
             listOfRecords.add(courseRawContent);
-            mapForAddRecords.put(LLC, listOfRecords);
+            mapForAddRecords.put(languageLocCode, listOfRecords);
         }
     }
 
@@ -210,7 +212,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (mapForModifyRecords.containsKey(key)) {
             mapForModifyRecords.get(key).add(courseRawContent);
         } else {
-            ArrayList<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
+            List<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
             listOfRecords.add(courseRawContent);
             mapForModifyRecords.put(key, listOfRecords);
         }
@@ -224,13 +226,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private void putRecordInDeleteMap(
             Map<Integer, List<CourseRawContent>> mapForDeleteRecords,
             CourseRawContent courseRawContent) {
-        int LLC = Integer.parseInt(courseRawContent.getLanguageLocationCode());
-        if (mapForDeleteRecords.containsKey(LLC)) {
-            mapForDeleteRecords.get(LLC).add(courseRawContent);
+        int languageLocCode = Integer.parseInt(courseRawContent
+                .getLanguageLocationCode());
+        if (mapForDeleteRecords.containsKey(languageLocCode)) {
+            mapForDeleteRecords.get(languageLocCode).add(courseRawContent);
         } else {
-            ArrayList<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
+            List<CourseRawContent> listOfRecords = new ArrayList<CourseRawContent>();
             listOfRecords.add(courseRawContent);
-            mapForDeleteRecords.put(LLC, listOfRecords);
+            mapForDeleteRecords.put(languageLocCode, listOfRecords);
         }
     }
 
@@ -266,9 +269,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             String errorFileName, CsvProcessingSummary result) {
 
         BulkUploadError errorDetail = new BulkUploadError();
-
-        // Map<String, List<CourseRawContent>> fileNameChangeRecords = new
-        // HashMap<String, List<CourseRawContent>>();
 
         if (!mapForModifyRecords.isEmpty()) {
             Iterator<String> contentNamesIterator = mapForModifyRecords
@@ -307,26 +307,30 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         if (isRecordChangingTheFileName(record)) {
                             continue;
                         } else {
-                            int LLC = Integer.parseInt(courseRawContent
-                                    .getLanguageLocationCode());
-                            CourseProcessedContent CPC = courseProcessedContentService
+                            int languageLocCode = Integer
+                                    .parseInt(courseRawContent
+                                            .getLanguageLocationCode());
+                            CourseProcessedContent courseProcessedContent = courseProcessedContentService
                                     .getRecordforModification(courseRawContent
-                                            .getCircle(), LLC, courseRawContent
-                                            .getContentName().toUpperCase());
+                                            .getCircle(), languageLocCode,
+                                            courseRawContent.getContentName()
+                                                    .toUpperCase());
 
-                            if (CPC != null) {
+                            if (courseProcessedContent != null) {
                                 LOGGER.info(
                                         "ContentID and duration updated for content name: {}, LLC: {}",
                                         courseRawContent.getContentName(),
                                         courseRawContent
                                                 .getLanguageLocationCode());
-                                CPC.setContentDuration(Integer
-                                        .parseInt(courseRawContent
-                                                .getContentDuration()));
-                                CPC.setContentID(Integer
+                                courseProcessedContent
+                                        .setContentDuration(Integer
+                                                .parseInt(courseRawContent
+                                                        .getContentDuration()));
+                                courseProcessedContent.setContentID(Integer
                                         .parseInt(courseRawContent
                                                 .getContentId()));
-                                courseProcessedContentService.update(CPC);
+                                courseProcessedContentService
+                                        .update(courseProcessedContent);
 
                             }
                             result.incrementSuccessCount();
@@ -354,7 +358,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 // Getting new List as the list return is unmodifiable
                 List<Integer> listOfExistingLlc = new ArrayList<Integer>(
                         courseProcessedContentService
-                                .getListOfAllExistingLLcs());
+                                .getListOfAllExistingLlcs());
 
                 List<CourseRawContent> courseRawContents = mapForModifyRecords
                         .get(contentName);
@@ -388,7 +392,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 while (courseRawContentsIterator.hasNext()) {
                     CourseRawContent courseRawContent = courseRawContentsIterator
                             .next();
-                    int LLC = Integer.parseInt(courseRawContent
+                    int languageLocCode = Integer.parseInt(courseRawContent
                             .getLanguageLocationCode());
                     if (!fileName.equals(courseRawContent.getContentFile())) {
                         LOGGER.warn(
@@ -413,7 +417,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         updateContentFile = false;
                         break;
                     }
-                    listOfExistingLlc.remove(new Integer(LLC));
+                    listOfExistingLlc.remove(new Integer(languageLocCode));
                 }
 
                 if (!updateContentFile) {
@@ -451,21 +455,23 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     while (fileModifyingRecordsIterator.hasNext()) {
                         CourseRawContent courseRawContent = fileModifyingRecordsIterator
                                 .next();
-                        int LLC = Integer.parseInt(courseRawContent
+                        int languageLocCode = Integer.parseInt(courseRawContent
                                 .getLanguageLocationCode());
-                        CourseProcessedContent CPC = courseProcessedContentService
+                        CourseProcessedContent courseProcessedContent = courseProcessedContentService
                                 .getRecordforModification(courseRawContent
-                                        .getCircle().toUpperCase(), LLC,
-                                        contentName.toUpperCase());
-                        if (CPC != null) {
-                            CPC.setContentFile(fileName);
-                            CPC.setContentDuration(Integer
+                                        .getCircle().toUpperCase(),
+                                        languageLocCode, contentName
+                                                .toUpperCase());
+                        if (courseProcessedContent != null) {
+                            courseProcessedContent.setContentFile(fileName);
+                            courseProcessedContent.setContentDuration(Integer
                                     .parseInt(courseRawContent
                                             .getContentDuration()));
-                            CPC.setContentID(Integer.parseInt(courseRawContent
-                                    .getContentId()));
+                            courseProcessedContent.setContentID(Integer
+                                    .parseInt(courseRawContent.getContentId()));
 
-                            courseProcessedContentService.update(CPC);
+                            courseProcessedContentService
+                                    .update(courseProcessedContent);
                         }
 
                         result.incrementSuccessCount();
@@ -653,15 +659,15 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             while (distictLLCIterator.hasNext()) {
                 abortAdditionProcess = false;
                 populateCourseStructure = false;
-                Integer LLC = distictLLCIterator.next();
+                Integer languageLocCode = distictLLCIterator.next();
                 List<CourseRawContent> courseRawContents = mapForAddRecords
-                        .get(LLC);
+                        .get(languageLocCode);
                 if (CollectionUtils.isNotEmpty(courseRawContents)) {
                     if (courseRawContents.size() != MobileAcademyConstants.MIN_FILES_PER_COURSE) {
                         LOGGER.warn(
                                 "There must be exact {} records to populate the course corresponding to LLC:{}.",
                                 MobileAcademyConstants.MIN_FILES_PER_COURSE,
-                                LLC);
+                                languageLocCode);
 
                         deleteCourseRawContentsByList(courseRawContents, true,
                                 result);
@@ -674,7 +680,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                                 ErrorCategoryConstants.INCONSISTENT_DATA,
                                                 String.format(
                                                         MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
-                                                        LLC)));
+                                                        languageLocCode)));
 
                         distictLLCIterator.remove();
                         continue;
@@ -730,7 +736,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                                     ErrorCategoryConstants.INCONSISTENT_DATA,
                                                     String.format(
                                                             MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
-                                                            LLC)));
+                                                            languageLocCode)));
 
                             deleteCourseRawContentsByList(courseRawContents,
                                     true, result);
@@ -760,7 +766,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                                         ErrorCategoryConstants.INCONSISTENT_DATA,
                                                         String.format(
                                                                 MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
-                                                                LLC)));
+                                                                languageLocCode)));
 
                                 distictLLCIterator.remove();
                                 deleteCourseRawContentsByList(
@@ -799,7 +805,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     .updateCourseState(CourseUnitState.Active);
                             LOGGER.info(
                                     "Course Added successfully for LLC: {}",
-                                    LLC);
+                                    languageLocCode);
                         }
                     } else {
                         bulkUploadErrLogService
@@ -810,10 +816,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                                 ErrorCategoryConstants.INCONSISTENT_DATA,
                                                 String.format(
                                                         MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
-                                                        LLC)));
+                                                        languageLocCode)));
                         LOGGER.warn(
                                 "Record for complete course haven't arrived to add the course for LLC: {}",
-                                LLC);
+                                languageLocCode);
                         deleteCourseRawContentsByList(courseRawContents, true,
                                 result);
                     }
@@ -834,7 +840,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
         BulkUploadError errorDetail = new BulkUploadError();
         List<Integer> listOfExistingtLLC = courseProcessedContentService
-                .getListOfAllExistingLLcs();
+                .getListOfAllExistingLlcs();
 
         if (!mapForDeleteRecords.isEmpty()) {
             Iterator<Integer> distictLLCIterator = mapForDeleteRecords.keySet()
@@ -842,20 +848,20 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
             while (distictLLCIterator.hasNext()) {
 
-                Integer LLC = distictLLCIterator.next();
+                Integer languageLocCode = distictLLCIterator.next();
                 CourseFlags courseFlags = new CourseFlags();
                 courseFlags.resetTheFlags();
 
                 List<CourseRawContent> courseRawContents = mapForDeleteRecords
-                        .get(LLC);
+                        .get(languageLocCode);
 
                 if (CollectionUtils.isNotEmpty(listOfExistingtLLC)) {
-                    if (!listOfExistingtLLC.contains(LLC)) {
+                    if (!listOfExistingtLLC.contains(languageLocCode)) {
                         deleteCourseRawContentsByList(courseRawContents, false,
                                 result);
                         LOGGER.info(
                                 "No record exists in content processed table for LLC: {}",
-                                LLC);
+                                languageLocCode);
                         continue;
                     }
                 }
@@ -863,7 +869,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 if (courseRawContents.size() < MobileAcademyConstants.MIN_FILES_PER_COURSE) {
                     LOGGER.warn(
                             "Sufficient records not recieved to delete the course for LLC: {}",
-                            LLC);
+                            languageLocCode);
                     bulkUploadErrLogService
                             .writeBulkUploadErrLog(
                                     errorFileName,
@@ -872,7 +878,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                             ErrorCategoryConstants.INCONSISTENT_DATA,
                                             String.format(
                                                     MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_DEL,
-                                                    LLC)));
+                                                    languageLocCode)));
                     distictLLCIterator.remove();
                     deleteCourseRawContentsByList(courseRawContents, true,
                             result);
@@ -890,7 +896,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     } catch (DataValidationException exc) {
                         LOGGER.warn(
                                 "No record exists in content processed table for LLC: {}",
-                                LLC);
+                                languageLocCode);
                         processError(errorDetail, exc,
                                 courseRawContent.getContentId());
 
@@ -906,21 +912,23 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 }
 
                 if (courseFlags.hasCompleteCourseArrived()) {
-                    courseProcessedContentService.deleteRecordsByLLC(LLC);
+                    courseProcessedContentService
+                            .deleteRecordsByLlc(languageLocCode);
                     // If this was the last LLC in CPC
-                    if (courseProcessedContentService
-                            .getListOfAllExistingLLcs().size() == 0) {
+                    if (CollectionUtils.isEmpty(courseProcessedContentService
+                            .getListOfAllExistingLlcs())) {
                         coursePopulateService
                                 .updateCourseState(CourseUnitState.Inactive);
                         deleteChapterContentTable();
                     }
-                    LOGGER.info("Course Deleted successfully for LLC: {}", LLC);
+                    LOGGER.info("Course Deleted successfully for LLC: {}",
+                            languageLocCode);
                     deleteCourseRawContentsByList(courseRawContents, false,
                             result);
                 } else {
                     LOGGER.warn(
                             "Not all the records found to delete the course for LLC: {}",
-                            LLC);
+                            languageLocCode);
                     bulkUploadErrLogService
                             .writeBulkUploadErrLog(
                                     errorFileName,
@@ -929,7 +937,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                             ErrorCategoryConstants.INCONSISTENT_DATA,
                                             String.format(
                                                     MobileAcademyConstants.INCOMPLETE_RECORDS_FOR_DEL,
-                                                    LLC)));
+                                                    languageLocCode)));
                     deleteCourseRawContentsByList(courseRawContents, true,
                             result);
                 }
@@ -1344,7 +1352,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             record.setChapterId(Integer.parseInt(chapterString
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
-            LOGGER.info(exception.getMessage());
+            LOGGER.debug(exception.getMessage());
             throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
