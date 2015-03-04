@@ -116,7 +116,6 @@ public class OperatorCsvHandler {
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
-                throw e;
             }
             finally {
                 if(null != record){

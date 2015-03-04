@@ -101,13 +101,13 @@ public class ContentUploadCsv extends MdsEntity {
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("name" + this.contentId);
-        recordStr.append(",circleCode" + this.circleCode);
-        recordStr.append(",languageLocationCode" + this.languageLocationCode);
-        recordStr.append(",contentName" + this.contentName);
-        recordStr.append(",contentType" + this.contentType);
-        recordStr.append(",contentFile" + this.contentFile);
-        recordStr.append(",contentDuration" + this.contentDuration);
+        recordStr.append("contentId [" + this.contentId);
+        recordStr.append("] circleCode [" + this.circleCode);
+        recordStr.append("] languageLocationCode [" + this.languageLocationCode);
+        recordStr.append("] contentName [" + this.contentName);
+        recordStr.append("] contentType [" + this.contentType);
+        recordStr.append("] contentFile [" + this.contentFile);
+        recordStr.append("] contentDuration [" + this.contentDuration);
         return recordStr.toString();
 
     }

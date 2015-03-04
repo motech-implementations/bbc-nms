@@ -52,7 +52,7 @@ public class CircleCsv extends MdsEntity {
      */
     public String toString() {
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("name" + this.name).append(",code" + this.code);
+        recordStr.append("name [" + this.name).append("] code [" + this.code);
 
         return recordStr.toString();
 

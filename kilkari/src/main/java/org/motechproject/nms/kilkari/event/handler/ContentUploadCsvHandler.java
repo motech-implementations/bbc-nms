@@ -128,7 +128,6 @@ public class ContentUploadCsvHandler {
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 summary.incrementFailureCount();
-                throw e;
             } finally {
                 if (record != null) {
                     contentUploadCsvService.delete(record);

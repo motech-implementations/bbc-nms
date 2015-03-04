@@ -48,9 +48,9 @@ public class OperatorCsv extends MdsEntity {
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("name" + this.name);
+        recordStr.append("name [" + this.name);
 
-        recordStr.append(",code" + this.code);
+        recordStr.append("] code" + this.code);
         return recordStr.toString();
 
     }

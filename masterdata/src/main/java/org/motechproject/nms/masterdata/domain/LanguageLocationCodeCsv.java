@@ -111,14 +111,14 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();
-        recordStr.append("stateCode" + this.stateCode);
-        recordStr.append(",districtCode" + this.districtCode);
-        recordStr.append(",circleCode" + this.circleCode);
-        recordStr.append(",languageLocationCode" + this.languageLocationCode);
-        recordStr.append(",languageMA" + this.languageMA);
-        recordStr.append(",languageMK" + this.languageMK);
-        recordStr.append(",languageKK" + this.languageKK);
-        recordStr.append(",isDefaultLanguageLocationCode" + this.isDefaultLanguageLocationCode);
+        recordStr.append("stateCode [" + this.stateCode);
+        recordStr.append("] districtCode [" + this.districtCode);
+        recordStr.append("] circleCode [" + this.circleCode);
+        recordStr.append("]languageLocationCode [" + this.languageLocationCode);
+        recordStr.append("] languageMA [" + this.languageMA);
+        recordStr.append("] languageMK [" + this.languageMK);
+        recordStr.append("] languageKK [" + this.languageKK);
+        recordStr.append("] isDefaultLanguageLocationCode [" + this.isDefaultLanguageLocationCode);
         return recordStr.toString();
 
     }
