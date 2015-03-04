@@ -14,7 +14,7 @@ public class ContentUpload extends MdsEntity {
 
     @Field(required = true)
     @Unique
-    private int contentId;
+    private Integer contentId;
 
     @Field(required = true)
     private String circleCode;
@@ -32,10 +32,10 @@ public class ContentUpload extends MdsEntity {
     private String contentFile;
 
     @Field(required = true)
-    private int cardNumber;
+    private Integer cardNumber;
 
     @Field(required = true)
-    private int contentDuration;
+    private Integer contentDuration;
 
     public ContentUpload() {
 
@@ -52,11 +52,11 @@ public class ContentUpload extends MdsEntity {
         this.contentDuration = contentDuration;
     }
 
-    public int getContentId() {
+    public Integer getContentId() {
         return contentId;
     }
 
-    public void setContentId(int contentId) {
+    public void setContentId(Integer contentId) {
         this.contentId = contentId;
     }
 
@@ -68,11 +68,11 @@ public class ContentUpload extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public int getLanguageLocationCode() {
+    public Integer getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(int languageLocationCode) {
+    public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -100,21 +100,19 @@ public class ContentUpload extends MdsEntity {
         this.contentFile = contentFile;
     }
 
-    public int getCardNumber() {
+    public Integer getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(Integer cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public int getContentDuration() {
+    public Integer getContentDuration() {
         return contentDuration;
     }
 
-    public void setContentDuration(int contentDuration) {
+    public void setContentDuration(Integer contentDuration) {
         this.contentDuration = contentDuration;
     }
-
-
 }

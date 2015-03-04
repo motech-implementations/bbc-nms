@@ -85,8 +85,10 @@
                         <Context-Path>mobilekunji</Context-Path>
                         <Export-Package>org.motechproject.nms.mobilekunji;version=${project.version},
                             org.motechproject.nms.mobilekunji.service;version=${project.version},
+                            org.motechproject.nms.mobilekunji.service.impl;version=${project.version},
                             org.motechproject.nms.mobilekunji.repository;version=${project.version},
                             org.motechproject.nms.mobilekunji.constants;version=${project.version},
+                            org.motechproject.nms.mobilekunji.event.handler;version=${project.version},
                             org.motechproject.nms.mobilekunji.domain;version=${project.version},
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,

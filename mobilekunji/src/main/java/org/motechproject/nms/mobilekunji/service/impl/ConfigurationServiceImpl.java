@@ -18,9 +18,13 @@ import static org.motechproject.nms.mobilekunji.constants.KunjiConstants.CONFIGU
 @Service("configurationService")
 public class ConfigurationServiceImpl implements ConfigurationService {
 
-    @Autowired
+
     private ConfigurationDataService configurationDataService;
 
+    @Autowired
+    public ConfigurationServiceImpl(ConfigurationDataService configurationDataService) {
+        this.configurationDataService = configurationDataService;
+    }
 
     public ConfigurationServiceImpl() {
     }
@@ -41,7 +45,5 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return (getConfiguration() != null);
     }
 
-    public ConfigurationServiceImpl(ConfigurationDataService configurationDataService) {
-        this.configurationDataService = configurationDataService;
-    }
+
 }

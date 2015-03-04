@@ -112,8 +112,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     continue;
                 }
 
-                if (courseRawContent.getOperation().equalsIgnoreCase(
-                        MobileAcademyConstants.COURSE_DEL)) {
+                if (MobileAcademyConstants.COURSE_DEL
+                        .equalsIgnoreCase(courseRawContent.getOperation())) {
                     putRecordInDeleteMap(mapForDeleteRecords, courseRawContent);
                     LOGGER.info(
                             "Record moved to Delete Map for Content ID: {}",
@@ -1024,8 +1024,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (record.getType() == FileType.LESSON_CONTENT) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
                 if (lessonContent.getLessonNumber() == record.getLessonId()
-                        && lessonContent.getName().equalsIgnoreCase(
-                                MobileAcademyConstants.CONTENT_LESSON)) {
+                        && MobileAcademyConstants.CONTENT_LESSON
+                                .equalsIgnoreCase(lessonContent.getName())) {
                     if (!lessonContent.getAudioFile().equals(
                             record.getFileName())) {
                         LOGGER.debug("original file name: {}",
@@ -1035,15 +1035,15 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     } else {
                         courseFlags.markLessonContent(record.getChapterId(),
                                 record.getLessonId());
-                        break;
                     }
+                    break;
                 }
             }
         } else if (record.getType() == FileType.LESSON_END_MENU) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
                 if ((lessonContent.getLessonNumber() == record.getLessonId())
-                        && (lessonContent.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))) {
+                        && (MobileAcademyConstants.CONTENT_MENU
+                                .equalsIgnoreCase(lessonContent.getName()))) {
                     if (!lessonContent.getAudioFile().equals(
                             record.getFileName())) {
                         LOGGER.debug("original file name: {}",
@@ -1053,14 +1053,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     } else {
                         courseFlags.markLessonEndMenu(record.getChapterId(),
                                 record.getLessonId());
-                        break;
                     }
+                    break;
                 }
             }
         } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quizContent = chapterContent.getQuiz();
-            if ((quizContent.getName()
-                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
+            if ((MobileAcademyConstants.CONTENT_QUIZ_HEADER
+                    .equalsIgnoreCase(quizContent.getName()))) {
                 if (!quizContent.getAudioFile().equals(record.getFileName())) {
                     LOGGER.debug("original file name: {}",
                             quizContent.getAudioFile());
@@ -1075,8 +1075,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
                         .getQuestionId())
-                        && (questionContent.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
+                        && (MobileAcademyConstants.CONTENT_QUESTION
+                                .equalsIgnoreCase(questionContent.getName()))) {
                     if ((!questionContent.getAudioFile().equals(
                             record.getFileName()))
                             || !answerOptionMatcher(record)) {
@@ -1097,8 +1097,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
                         .getQuestionId())
-                        && (questionContent.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER))) {
+                        && (MobileAcademyConstants.CONTENT_CORRECT_ANSWER
+                                .equalsIgnoreCase(questionContent.getName()))) {
                     if (!questionContent.getAudioFile().equals(
                             record.getFileName())) {
                         LOGGER.debug("original file name: {}",
@@ -1117,8 +1117,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions()) {
                 if ((questionContent.getQuestionNumber() == record
                         .getQuestionId())
-                        && (questionContent.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER))) {
+                        && (MobileAcademyConstants.CONTENT_WRONG_ANSWER
+                                .equalsIgnoreCase(questionContent.getName()))) {
                     if (!questionContent.getAudioFile().equals(
                             record.getFileName())) {
                         LOGGER.debug("original file name: {}",
@@ -1133,8 +1133,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 }
             }
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            if (chapterContent.getName().equalsIgnoreCase(
-                    MobileAcademyConstants.CONTENT_MENU)) {
+            if (MobileAcademyConstants.CONTENT_MENU
+                    .equalsIgnoreCase(chapterContent.getName())) {
                 if (!chapterContent.getAudioFile().equals(record.getFileName())) {
                     LOGGER.debug("original file name: {}",
                             chapterContent.getAudioFile());
@@ -1146,13 +1146,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.SCORE) {
             for (ScoreContent scoreContent : chapterContent.getScores()) {
-                if (scoreContent
-                        .getName()
-                        .equalsIgnoreCase(
-                                MobileAcademyConstants.SCORE
-                                        + String.format(
-                                                MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-                                                record.getScoreID()))) {
+                if ((MobileAcademyConstants.SCORE + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        record.getScoreID())).equalsIgnoreCase(scoreContent
+                        .getName())) {
                     if (!scoreContent.getAudioFile().equals(
                             record.getFileName())) {
                         LOGGER.debug("original file name: {}",
@@ -1298,8 +1295,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             String metaData = ParseDataHelper.parseString("METADETA",
                     courseRawContent.getMetaData(), true);
 
-            if (!metaData.substring(0, metaData.indexOf(':')).equalsIgnoreCase(
-                    "CorrectAnswer")) {
+            if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
+                    metaData.indexOf(':')))) {
                 throw new DataValidationException(
                         MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                         ErrorCategoryConstants.INCONSISTENT_DATA, "METADETA");
@@ -1334,8 +1331,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         String subString = contentName.substring(1 + contentName.indexOf('_'));
 
         if (StringUtils.isBlank(subString)
-                || !chapterString.substring(0, chapterString.length() - 2)
-                        .equalsIgnoreCase("Chapter")) {
+                || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
+                        chapterString.length() - 2))) {
             throw new DataValidationException(
                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
@@ -1470,9 +1467,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             List<LessonContent> lessons = chapterContent.getLessons();
             for (LessonContent lesson : lessons) {
                 if ((lesson.getLessonNumber() == record.getLessonId())
-                        && (lesson.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_LESSON))) {
+                        && (MobileAcademyConstants.CONTENT_LESSON
+                                .equalsIgnoreCase(lesson.getName()))) {
                     lesson.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markLessonContent(record.getChapterId(),
@@ -1482,9 +1480,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             List<LessonContent> lessons = chapterContent.getLessons();
             for (LessonContent lesson : lessons) {
                 if ((lesson.getLessonNumber() == record.getLessonId())
-                        && (lesson.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU))) {
+                        && (MobileAcademyConstants.CONTENT_MENU
+                                .equalsIgnoreCase(lesson.getName()))) {
                     lesson.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markLessonEndMenu(record.getChapterId(),
@@ -1492,8 +1491,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
         } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quiz = chapterContent.getQuiz();
-            if ((quiz.getName()
-                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUIZ_HEADER))) {
+            if ((MobileAcademyConstants.CONTENT_QUIZ_HEADER
+                    .equalsIgnoreCase(quiz.getName()))) {
                 quiz.setAudioFile(record.getFileName());
             }
             courseFlags.markQuizHeader(record.getChapterId());
@@ -1503,9 +1502,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions();
             for (QuestionContent question : questions) {
                 if ((question.getQuestionNumber() == record.getQuestionId())
-                        && (question.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION))) {
+                        && (MobileAcademyConstants.CONTENT_QUESTION
+                                .equalsIgnoreCase(question.getName()))) {
                     question.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markQuestionContent(record.getChapterId(),
@@ -1516,9 +1516,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions();
             for (QuestionContent question : questions) {
                 if ((question.getQuestionNumber() == record.getQuestionId())
-                        && (question.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER))) {
+                        && (MobileAcademyConstants.CONTENT_CORRECT_ANSWER
+                                .equalsIgnoreCase(question.getName()))) {
                     question.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
@@ -1529,31 +1530,30 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .getQuestions();
             for (QuestionContent question : questions) {
                 if ((question.getQuestionNumber() == record.getQuestionId())
-                        && (question.getName()
-                                .equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER))) {
+                        && (MobileAcademyConstants.CONTENT_WRONG_ANSWER
+                                .equalsIgnoreCase(question.getName()))) {
                     question.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markQuestionWrongAnswer(record.getChapterId(),
                     record.getQuestionId());
 
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            if (chapterContent.getName().equalsIgnoreCase(
-                    MobileAcademyConstants.CONTENT_MENU)) {
+            if (MobileAcademyConstants.CONTENT_MENU
+                    .equalsIgnoreCase(chapterContent.getName())) {
                 chapterContent.setAudioFile(record.getFileName());
             }
             courseFlags.markChapterEndMenu(record.getChapterId());
         } else if (record.getType() == FileType.SCORE) {
             List<ScoreContent> scoreContents = chapterContent.getScores();
             for (ScoreContent scoreContent : scoreContents) {
-                if (scoreContent
-                        .getName()
-                        .equalsIgnoreCase(
-                                MobileAcademyConstants.SCORE
-                                        + String.format(
-                                                MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-                                                record.getScoreID()))) {
+                if ((MobileAcademyConstants.SCORE + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        record.getScoreID())).equalsIgnoreCase(scoreContent
+                        .getName())) {
                     scoreContent.setAudioFile(record.getFileName());
+                    break;
                 }
             }
             courseFlags.markScoreFile(record.getChapterId(),

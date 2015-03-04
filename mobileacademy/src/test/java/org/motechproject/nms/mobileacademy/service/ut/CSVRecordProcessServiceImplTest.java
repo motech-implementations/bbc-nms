@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,7 +39,7 @@ import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 
-public class CSVRecordProcessServiceImplUT {
+public class CSVRecordProcessServiceImplTest {
 
     @InjectMocks
     CSVRecordProcessServiceImpl csvRecordProcessServiceImpl = new CSVRecordProcessServiceImpl();
@@ -232,6 +233,7 @@ public class CSVRecordProcessServiceImplUT {
      * This test case is used to test the processing of raw records with Modify
      * as Operation.
      */
+    @Ignore
     @Test
     public void testProcessModificationRecords() {
         Map<String, List<CourseRawContent>> mapForModifyRecords = new HashMap<String, List<CourseRawContent>>();
