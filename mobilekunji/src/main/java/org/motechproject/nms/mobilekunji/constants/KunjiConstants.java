@@ -11,12 +11,9 @@ public class KunjiConstants {
 
     public static final Integer DEFAULT_MAX_NATIONAL_CAPITAL_VALUE = 0;
 
-    public static final Integer DEFAULT_MAX_HEALTH_CARDS = 99;
-
     public static final Integer DEFAULT_MAX_WELCOME_MESSAGE = 1;
 
     public static final Integer DEFAULT_MAX_END_OF_USAGE_MESSAGE = 2;
-
 
     public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 

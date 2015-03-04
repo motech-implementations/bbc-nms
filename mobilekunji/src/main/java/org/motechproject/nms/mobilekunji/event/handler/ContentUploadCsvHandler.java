@@ -35,13 +35,13 @@ import java.util.Map;
 public class ContentUploadCsvHandler {
 
 
-    @Autowired
+    //@Autowired
     private ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
 
-    @Autowired
+    //@Autowired
     private ContentUploadRecordDataService contentUploadRecordDataService;
 
-    @Autowired
+    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
 
@@ -51,11 +51,34 @@ public class ContentUploadCsvHandler {
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-
-
-
-
     private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
+
+
+    @Autowired
+    public ContentUploadCsvHandler(ContentUploadCsvRecordDataService contentUploadCsvRecordDataService,
+                                   ContentUploadRecordDataService contentUploadRecordDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.contentUploadCsvRecordDataService = contentUploadCsvRecordDataService;
+        this.contentUploadRecordDataService = contentUploadRecordDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
+
+
+    public Integer getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    public Integer getSuccessCount() {
+        return successCount;
+    }
+
+    public void setSuccessCount(Integer successCount) {
+        this.successCount = successCount;
+    }
+
 
 
     /**
@@ -168,15 +191,15 @@ public class ContentUploadCsvHandler {
         logger.info("mapContentUploadFrom process start");
 
         ContentUpload newRecord = new ContentUpload();
-        int contentId;
-        String circleCode;
+        Integer contentId = null;
+        String circleCode = null;
         Integer languageLocationCode;
-        String contentName;
+        String contentName = null;
         ContentType contentType = null;
-        String content;
-        String contentFile;
-        int cardNumber;
-        int contentDuration;
+        String content = null;
+        String contentFile = null;
+        Integer cardNumber = null;
+        Integer contentDuration = null;
 
         contentId = ParseDataHelper.parseInt("Content Id", record.getContentId(), true);
         circleCode = ParseDataHelper.parseString("Circle Code", record.getCircleCode(), true);
@@ -208,44 +231,6 @@ public class ContentUploadCsvHandler {
 
     }
 
-
-    /**
-     * This method provides a listener to the Content Upload failure scenario.
-     *
-     * @param motechEvent name of the event raised during upload
-     */
-    @MotechListener(subjects = {KunjiConstants.CONTENT_UPLOAD_CSV_FAILED})
-    public void mobileKunjiContentUploadCsvFailure(MotechEvent motechEvent) {
-        BulkUploadError errorDetails = null;
-        ContentUploadCsv record = null;
-
-        logger.info("Failure[mobileKunjiContentUploadFailure] method start for mobileKunjiContentUploadCsv");
-
-        Map<String, Object> params = motechEvent.getParameters();
-        CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
-        String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
-
-        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-
-        //This loop processes each of the entries in the Content Upload Csv and performs the deletion of the record
-        //from the Csv.If some error occurs in any of the records, it is reported.
-        for (Long id : createdIds) {
-            try {
-                record = contentUploadCsvRecordDataService.findById(id);
-                contentUploadCsvRecordDataService.delete(record);
-                summary.incrementFailureCount();
-                errorDetails = setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-            } catch (Exception ex) {
-                summary.incrementFailureCount();
-                errorDetails = setErrorDetails(record.toString(), "Upload failure", "Content Upload failure");
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-            }
-        }
-        logger.info("Failure[mobileKunjiContentUploadFailure] method finished for mobileKunjiContentUploadCsv");
-    }
-
     /**
      * This method is used to set error record details
      *
@@ -263,19 +248,6 @@ public class ContentUploadCsvHandler {
         return errorDetails;
     }
 
-    public Integer getFailCount() {
-        return failCount;
-    }
 
-    public void setFailCount(Integer failCount) {
-        this.failCount = failCount;
-    }
 
-    public Integer getSuccessCount() {
-        return successCount;
-    }
-
-    public void setSuccessCount(Integer successCount) {
-        this.successCount = successCount;
-    }
 }

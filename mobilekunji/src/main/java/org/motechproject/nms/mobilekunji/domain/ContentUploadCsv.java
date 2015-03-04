@@ -60,6 +60,9 @@ public class ContentUploadCsv extends MdsEntity {
         this.contentDuration = contentDuration;
     }
 
+    public ContentUploadCsv() {
+    }
+
     public String getOperation() {
         return operation;
     }
