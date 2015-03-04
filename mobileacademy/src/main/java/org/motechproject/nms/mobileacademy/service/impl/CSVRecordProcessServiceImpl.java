@@ -164,16 +164,16 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (!masterDataService.isCircleValid(circle)) {
             LOGGER.info("circle is not valid for content ID: {}",
                     courseRawContent.getContentId());
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, "Circle");
+            throw new DataValidationException(null,
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE, "Circle");
         }
         if (!masterDataService.isLLCValidInCircle(circle, llc)) {
             LOGGER.info("LLC doesn't exist in circle for content ID: {}",
                     courseRawContent.getContentId());
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+            throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     "Language Location Code");
         }
         return true;
@@ -1297,9 +1297,10 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
-                throw new DataValidationException(
+                throw new DataValidationException(null,
+                        ErrorCategoryConstants.INCONSISTENT_DATA,
                         MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                        ErrorCategoryConstants.INCONSISTENT_DATA, "METADETA");
+                        "METADETA");
             } else {
                 record.setAnswerId(ParseDataHelper.parseInt("",
                         metaData.substring(metaData.indexOf(':') + 1), true));
@@ -1320,9 +1321,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         String contentName = courseRawContent.getContentName().trim();
         boolean recordDataValidation = true;
         if (contentName.indexOf('_') == -1) {
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+            throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1333,9 +1334,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (StringUtils.isBlank(subString)
                 || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
                         chapterString.length() - 2))) {
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+            throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1344,9 +1345,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
             LOGGER.info(exception.getMessage());
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+            throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1356,9 +1357,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         }
 
         if ((!recordDataValidation) || (!isTypeDeterminable(record, subString))) {
-            throw new DataValidationException(
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+            throw new DataValidationException(null,
                     ErrorCategoryConstants.INCONSISTENT_DATA,
+                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
