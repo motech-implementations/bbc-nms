@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -35,7 +34,6 @@ import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
 import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
 import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.motechproject.nms.mobileacademy.service.impl.CSVRecordProcessServiceImpl;
-import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 
@@ -99,7 +97,7 @@ public class CSVRecordProcessServiceImplTest {
     @Test
     public void testValidateCircleAndLLC() {
         Mockito.when(masterDataService.isCircleValid("AP")).thenReturn(true);
-        Mockito.when(masterDataService.isLLCValidInCircle("AP", 14))
+        Mockito.when(masterDataService.isLlcValidInCircle("AP", 14))
                 .thenReturn(true);
         Method method = null;
         Boolean status = false;
@@ -227,41 +225,6 @@ public class CSVRecordProcessServiceImplTest {
                 | IllegalAccessException | IllegalArgumentException e) {
         }
         assertFalse(flag);
-    }
-
-    /*
-     * This test case is used to test the processing of raw records with Modify
-     * as Operation.
-     */
-    @Ignore
-    @Test
-    public void testProcessModificationRecords() {
-        Map<String, List<CourseRawContent>> mapForModifyRecords = new HashMap<String, List<CourseRawContent>>();
-        List<CourseRawContent> listCourseRecords = new ArrayList<>();
-        listCourseRecords.add(new CourseRawContent("MOD", "100014", "AP", "14",
-                "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("MOD", "100015", "AP", "14",
-                "Chapter01_Lesson03", "Content", "ch1_l3.wav", "250", ""));
-        listCourseRecords.add(new CourseRawContent("MOD", "100016", "AP", "14",
-                "Chapter01_Lesson04", "Content", "ch1_l4.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("MOD", "100017", "AP", "14",
-                "Chapter01_Lesson02", "Content", "ch1_l2.wav", "450", ""));
-        mapForModifyRecords.put("Chapter01_Lesson01", listCourseRecords);
-        String errorFileName = null;
-        CsvProcessingSummary result = new CsvProcessingSummary();
-        Method method;
-        try {
-            method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "processModificationRecords", new Class[] { Map.class,
-                            String.class, CsvProcessingSummary.class });
-            method.setAccessible(true);
-            method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    mapForModifyRecords, errorFileName, result });
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-        }
-        assertTrue(mapForModifyRecords.isEmpty());
     }
 
     /*

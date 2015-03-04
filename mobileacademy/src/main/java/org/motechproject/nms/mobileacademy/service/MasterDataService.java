@@ -20,5 +20,5 @@ public interface MasterDataService {
      * @param LLC
      * @return boolean
      */
-    public boolean isLLCValidInCircle(String Circle, int LLC);
+    public boolean isLlcValidInCircle(String Circle, int LLC);
 }

@@ -66,7 +66,7 @@ public class CourseProcessedContentServiceImpl implements
      * #doesLLCExistsInCPC(int)
      */
     @Override
-    public boolean doesLLCExistsInCPC(int languageLocationCode) {
+    public boolean doesLlcExistsInCpc(int languageLocationCode) {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(languageLocationCode);
         if (CollectionUtils.isNotEmpty(courseProcessedContents)) {
@@ -83,7 +83,7 @@ public class CourseProcessedContentServiceImpl implements
      * #getListOfAllExistingLLcs()
      */
     @Override
-    public List<Integer> getListOfAllExistingLLcs() {
+    public List<Integer> getListOfAllExistingLlcs() {
         List<Integer> llcIdsList = courseProcessedContentDataService
                 .executeQuery(new CourseProcessedContentCustomQuery().new LlcListQueryExecutionImpl());
         return llcIdsList;
@@ -111,7 +111,7 @@ public class CourseProcessedContentServiceImpl implements
      * #deleteRecordsByLLC(int)
      */
     @Override
-    public void deleteRecordsByLLC(int languageLocationCode) {
+    public void deleteRecordsByLlc(int languageLocationCode) {
         courseProcessedContentDataService
                 .executeQuery(new CourseProcessedContentCustomQuery().new DeleteProcessedContentQueryExecutionImpl(
                         languageLocationCode));
