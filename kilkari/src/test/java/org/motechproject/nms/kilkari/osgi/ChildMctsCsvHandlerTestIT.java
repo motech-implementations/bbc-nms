@@ -15,6 +15,7 @@ import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -52,7 +53,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
     } 
     
-    @Test
+    @Test(expected=DataValidationException.class)
     public void createSameMsisdnDifferentMcts() throws Exception {
         System.out.println("Inside createSameMsisdnDifferentMcts");
         setUp();
@@ -129,6 +130,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
         ChildMctsCsv csv1 = new ChildMctsCsv();
         csv1 = createChildMcts(csv1);
@@ -139,17 +141,50 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
-        
-        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
         
         assertNotNull(subscription);
         assertNotNull(updateSubs);
         assertNotNull(subscription.getSubscriber());
         assertNotNull(updateSubs.getSubscriber());
-        assertTrue(!subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
-        assertTrue(!subscription.getSubscriber().getDob().equals(updateSubs.getSubscriber().getDob()));
+        assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+        assertFalse(subscription.getSubscriber().getDob().equals(updateSubs.getSubscriber().getDob()));
     }
+    
+    @Test
+    public void testChildDeath() throws Exception {
+        System.out.println("Inside createDifferentMsisdnSameMcts");
+        setUp();
+        List<Long> uploadedIds = new ArrayList<Long>();
+        ChildMctsCsv csv = new ChildMctsCsv();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("51");
+        csv.setIdNo("51");
+        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        ChildMctsCsv csv1 = new ChildMctsCsv();
+        csv1 = createChildMcts(csv1);
+        csv1.setWhomPhoneNo("52");
+        csv1.setIdNo("51");
+        csv1.setMotherName("testDifferentName");
+        csv1.setEntryType("9");
+        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        
+        assertNotNull(subscription);
+        assertNotNull(updateSubs);
+        assertNotNull(subscription.getSubscriber());
+        assertNotNull(updateSubs.getSubscriber());
+        assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+        assertFalse(subscription.getStatus()==updateSubs.getStatus());
+    }
+    
     
     @Test
     public void createDeleteOperation() throws Exception {
@@ -213,7 +248,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(updateSubs);
         assertFalse(subscription.getStatus()==updateSubs.getStatus());
         assertFalse(subscription.getPackName().equals(updateSubs.getPackName()));
-        assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
     }
     
    

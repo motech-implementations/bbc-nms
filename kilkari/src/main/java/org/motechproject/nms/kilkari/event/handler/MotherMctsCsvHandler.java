@@ -214,7 +214,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setState(state);
         motherSubscriber.setDistrict(district);
         motherSubscriber.setTaluka(taluka);
-        motherSubscriber.setHealthBlockCode(healthBlock);
+        motherSubscriber.setHealthBlock(healthBlock);
         motherSubscriber.setPhc(healthFacility);
         motherSubscriber.setSubCentre(healthSubFacility);
         motherSubscriber.setVillage(village);

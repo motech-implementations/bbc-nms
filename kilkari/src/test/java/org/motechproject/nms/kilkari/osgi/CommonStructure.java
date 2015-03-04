@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
 
+import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.Before;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
@@ -113,31 +114,31 @@ public class CommonStructure extends BasePaxIT {
     private void deleteAll() {
         try {
             subscriberService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             subscriptionService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             villageCsvRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             healthSubFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             healthFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             healthBlockRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             talukaRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             districtRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             stateRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException e){}
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         
         System.out.println("Deleted all location data.");
         

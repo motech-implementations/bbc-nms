@@ -1,12 +1,10 @@
 package org.motechproject.nms.kilkari.domain;
 
-import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.Persistent;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
@@ -101,7 +99,7 @@ public class Subscriber extends MdsEntity {
     public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
-    
+
     public String getChildMctsId() {
         return childMctsId;
     }
@@ -170,7 +168,7 @@ public class Subscriber extends MdsEntity {
         return healthBlock;
     }
 
-    public void setHealthBlockCode(HealthBlock healthBlock) {
+    public void setHealthBlock(HealthBlock healthBlock) {
         this.healthBlock = healthBlock;
     }
 

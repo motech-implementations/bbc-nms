@@ -15,7 +15,7 @@ public final class MctsCsvHelper {
         dbSubscriber.setState(subscriber.getState());
         dbSubscriber.setDistrict(subscriber.getDistrict());
         dbSubscriber.setTaluka(subscriber.getTaluka());
-        dbSubscriber.setHealthBlockCode(subscriber.getHealthBlock());
+        dbSubscriber.setHealthBlock(subscriber.getHealthBlock());
         dbSubscriber.setPhc(subscriber.getPhc());
         dbSubscriber.setSubCentre(subscriber.getSubCentre());
         dbSubscriber.setVillage(subscriber.getVillage());

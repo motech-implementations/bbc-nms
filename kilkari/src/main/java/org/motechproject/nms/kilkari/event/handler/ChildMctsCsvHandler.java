@@ -203,7 +203,7 @@ public class ChildMctsCsvHandler {
         childSubscriber.setState(state);
         childSubscriber.setDistrict(district);
         childSubscriber.setTaluka(taluka);
-        childSubscriber.setHealthBlockCode(healthBlock);
+        childSubscriber.setHealthBlock(healthBlock);
         childSubscriber.setPhc(healthFacility);
         childSubscriber.setSubCentre(healthSubFacility);
         childSubscriber.setVillage(village);
@@ -303,7 +303,8 @@ public class ChildMctsCsvHandler {
             
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                updateSubscription(subscriber, dbSubscription, true);
+                dbSubscription.setStatus(Status.Deactivated);
+                subscriptionService.update(dbSubscription);
                 Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
