@@ -116,7 +116,7 @@ public class ContentUploadCsvHandler {
                     ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
                             summary.incrementFailureCount();
                             errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
@@ -127,7 +127,7 @@ public class ContentUploadCsvHandler {
                         }
 
                     } else {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
+                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
 
                             contentUploadRecordDataService.delete(dbRecord);
                             summary.incrementSuccessCount();
@@ -210,7 +210,7 @@ public class ContentUploadCsvHandler {
         contentDuration = ParseDataHelper.parseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.parseString("Content Type", record.getContentType(), true);
 
-
+        //Bug24
         if (ContentType.of(content) != ContentType.CONTENT && ContentType.of(content) != ContentType.PROMPT) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }

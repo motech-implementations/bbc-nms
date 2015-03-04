@@ -238,7 +238,7 @@ public class FlwUploadHandler {
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
-        dbRecord.setValidated(frontLineWorker.isValidated());
+        dbRecord.setIsValidated(frontLineWorker.getIsValidated());
 
         dbRecord.setCreator(frontLineWorker.getCreator());
         dbRecord.setModificationDate(frontLineWorker.getModificationDate());
@@ -299,11 +299,13 @@ public class FlwUploadHandler {
 
         designation = ParseDataHelper.parseString("Type", record.getType(), true);
 
+        //Bug 21
         if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
                 Designation.getEnum(designation) != Designation.ASHA && Designation.getEnum(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
         else {
+            //Bug 16
             frontLineWorkerContent.setDesignation(Designation.getEnum(designation));
         }
         logger.info("validateFrontLineWorker process end");
@@ -358,7 +360,8 @@ public class FlwUploadHandler {
         frontLineWorker.setModificationDate(record.getModificationDate());
         frontLineWorker.setCreationDate(record.getCreationDate());
 
-        frontLineWorker.setValidated(ParseDataHelper.parseBoolean("Is Validated", record.getIsValidated(), false));
+        //Bug 15
+        frontLineWorker.setIsValidated(ParseDataHelper.parseBoolean("Is Validated", record.getIsValidated(), false));
         logger.info("mapFrontLineWorkerFrom process end");
 
         return frontLineWorker;

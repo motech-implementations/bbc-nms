@@ -110,7 +110,8 @@
 						<Blueprint-Enabled>true</Blueprint-Enabled>
 						<Resource-Path>mobileacademy/resources</Resource-Path>
 						<Context-Path>mobileacademy</Context-Path>
-						<Export-Package>org.motechproject.nms.mobileacademy.service;version=${project.version},
+						<Export-Package>org.motechproject.nms.mobileacademy.event.handler;version=${project.version},
+							org.motechproject.nms.mobileacademy.service;version=${project.version},
 							org.motechproject.nms.mobileacademy.repository;version=${project.version},
 							org.motechproject.nms.mobileacademy.commons;version=${project.version},
 							org.motechproject.nms.mobileacademy.domain;version=${project.version},

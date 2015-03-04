@@ -327,7 +327,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -396,7 +396,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -463,7 +463,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -530,7 +530,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -1289,7 +1289,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -1359,7 +1359,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("5678", flw.getAdhaarNumber());
         assertEquals("1234", flw.getAshaNumber());
-        assertEquals(true, flw.isValidated());
+        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha_new", flw.getCreator());
         assertEquals("Etasha_new", flw.getModifiedBy());
         assertEquals("Etasha_new", flw.getOwner());

@@ -87,6 +87,7 @@
                         <Context-Path>frontlineworker</Context-Path>
                         <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
                             org.motechproject.nms.frontlineworker.repository;version=${project.version},
+                            <!-- Bug 17 -->
                             org.motechproject.nms.frontlineworker.event.handler;version=${project.version},
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
                         </Export-Package>
