@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.it.initializer;
 
 import org.junit.After;
 import org.junit.Assert;

@@ -1,18 +1,5 @@
 package org.motechproject.nms.kilkari;
 
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.CONFIGURATION_INDEX;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_ALLOWED_BENEFICIARY_COUNT;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_FRESH_OBD_PRIORITY;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_FRESH_OBD_SERVICE_ID;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY1_OBD_PRIORITY;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY1_OBD_SERVICE_ID;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY2_OBD_PRIORITY;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY2_OBD_SERVICE_ID;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_PRIORITY;
-//import static org.motechproject.nms.kilkari.constants.ConfigurationConstants.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID;
-
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.slf4j.Logger;
@@ -23,8 +10,6 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 
-
-
 /**
  * The purpose of this class is to perform initialization for Kilkari Service.
  * It creates and initializes the configuration parameters with default values, if not created already
@@ -33,8 +18,7 @@ import javax.annotation.PostConstruct;
 @Component
 public class Initializer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);
-
+    private Logger logger = LoggerFactory.getLogger(Initializer.class);
     
     public static final Long CONFIGURATION_INDEX = 1L;
 
@@ -79,7 +63,7 @@ public class Initializer {
 
             Configuration configuration = new Configuration();
 
-            LOG.info("Creating Configuration with default values");
+            logger.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
             configuration.setNmsKk48WeeksPackMsgsPerWeek(DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK);
             configuration.setNmsKk72WeeksPackMsgsPerWeek(DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK);

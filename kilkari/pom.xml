@@ -92,7 +92,8 @@
 						<Blueprint-Enabled>true</Blueprint-Enabled>
 						<Resource-Path>kilkari/resources</Resource-Path>
 						<Context-Path>kilkari</Context-Path>
-						<Export-Package>org.motechproject.nms.kilkari.event.handler;version=${project.version},
+						<Export-Package>org.motechproject.nms.kilkari;version=${project.version},
+							org.motechproject.nms.kilkari.event.handler;version=${project.version},
                             org.motechproject.nms.kilkari.service;version=${project.version},
 							org.motechproject.nms.kilkari.repository;version=${project.version},
 							org.motechproject.nms.kilkari.domain;version=${project.version},</Export-Package>
