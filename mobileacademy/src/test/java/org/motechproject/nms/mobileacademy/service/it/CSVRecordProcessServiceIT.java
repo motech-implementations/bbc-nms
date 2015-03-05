@@ -453,4 +453,121 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         courseContentCsv.setMetaData(courseRawContentParam.getMetaData());
         return courseContentCsvDataService.create(courseContentCsv);
     }
+
+    /**
+     * test Update For All Records Of One Chapter
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testUpdateForAllRecordsOfOneChapter() throws Exception {
+        clearMobileAcademyData();
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        // Update process
+
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs = findCourseRawContentUpdateListFromCsv();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
+                .findByCircleLlcContentName("AP", 14, "CHAPTER01_LESSON01");
+        CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
+                .findByCircleLlcContentName("AP", 14, "CHAPTER01_QUIZHEADER");
+        CourseProcessedContent courseProcessedContent3 = courseProcessedContentDataService
+                .findByCircleLlcContentName("AP", 14, "CHAPTER01_QUESTION02");
+        CourseProcessedContent courseProcessedContent4 = courseProcessedContentDataService
+                .findByCircleLlcContentName("AP", 14, "CHAPTER01_SCORE02");
+        assertEquals(222, courseProcessedContent1.getContentID().longValue());
+        assertEquals(333, courseProcessedContent1.getContentDuration()
+                .longValue());
+        assertEquals("ch_test_update.wav",
+                courseProcessedContent1.getContentFile());
+
+        assertEquals(222, courseProcessedContent2.getContentID().longValue());
+        assertEquals(333, courseProcessedContent2.getContentDuration()
+                .longValue());
+        assertEquals("ch_test_update.wav",
+                courseProcessedContent2.getContentFile());
+
+        assertEquals(222, courseProcessedContent3.getContentID().longValue());
+        assertEquals(333, courseProcessedContent3.getContentDuration()
+                .longValue());
+        assertEquals("ch_test_update.wav",
+                courseProcessedContent3.getContentFile());
+
+        assertEquals(222, courseProcessedContent4.getContentID().longValue());
+        assertEquals(333, courseProcessedContent4.getContentDuration()
+                .longValue());
+        assertEquals("ch_test_update.wav",
+                courseProcessedContent4.getContentFile());
+
+    }
+
+    /**
+     * find CourseContentCsv List From Csv having updated records for chapter 1.
+     * Updating contentId, duration and audio file name .
+     * 
+     * @return List<CourseContentCsv>
+     */
+    private List<CourseContentCsv> findCourseRawContentUpdateListFromCsv() {
+        List<CourseContentCsv> courseContentCsvs = new ArrayList<>();
+        // Input file which needs to be parsed
+        String fileToParse = "src//test//resources//CourseContentCsv.csv";
+        BufferedReader fileReader = null;
+        // Delimiter used in CSV file
+        final String DELIMITER = ",";
+        try {
+            String line = "";
+            // Create the file reader
+            fileReader = new BufferedReader(new FileReader(fileToParse));
+            // Read the file line by line
+            int rowCount = 0;
+            while ((line = fileReader.readLine()) != null && rowCount < 28) {
+                if (rowCount == 0) {
+                    rowCount++;
+                    continue;
+                }
+                rowCount++;
+                // Get all tokens available in line
+                int arrayIndex = 0;
+                String[] tokens = line.split(DELIMITER);
+                CourseContentCsv courseContentCsv = new CourseContentCsv();
+                courseContentCsv.setOperation(tokens[arrayIndex++]);
+                courseContentCsv.setContentId("222");
+                arrayIndex = arrayIndex + 1;
+                courseContentCsv.setCircle(tokens[arrayIndex++]);
+                courseContentCsv.setLanguageLocationCode(tokens[arrayIndex++]);
+                courseContentCsv.setContentName(tokens[arrayIndex++]);
+                courseContentCsv.setContentType(tokens[arrayIndex++]);
+                courseContentCsv.setContentFile("ch_test_update.wav");
+                arrayIndex = arrayIndex + 1;
+                courseContentCsv.setContentDuration("333");
+                arrayIndex = arrayIndex + 1;
+                if (tokens.length > arrayIndex) {
+                    courseContentCsv.setMetaData(tokens[arrayIndex]);
+                }
+                courseContentCsvs.add(courseContentCsvDataService
+                        .create(courseContentCsv));
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fileReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return courseContentCsvs;
+    }
 }

@@ -24,13 +24,15 @@ import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
+import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.event.handler.CourseUploadCsvHandler;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
+import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -63,6 +65,12 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     private MTrainingService mTrainingService;
 
     private CourseUploadCsvHandler courseUploadCsvHandler;
+
+    @Inject
+    private CourseContentCsvService courseContentCsvService;
+
+    @Inject
+    private CourseProcessedContentService courseProcessedContentService;
 
     /**
      * setUp method called before each test case
@@ -118,8 +126,8 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
      * clear MobileAcademy Data
      */
     private void clearMobileAcademyData() {
-        courseContentCsvDataService.deleteAll();
-        courseProcessedContentDataService.deleteAll();
+        courseContentCsvService.deleteAll();
+        courseProcessedContentService.deleteAll();
         chapterContentDataService.deleteAll();
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);

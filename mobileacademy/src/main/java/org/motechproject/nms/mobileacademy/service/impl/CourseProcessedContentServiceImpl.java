@@ -63,23 +63,6 @@ public class CourseProcessedContentServiceImpl implements
      * 
      * @see
      * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #doesLLCExistsInCPC(int)
-     */
-    @Override
-    public boolean doesLlcExistsInCpc(int languageLocationCode) {
-        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
-                .findContentByLlc(languageLocationCode);
-        if (CollectionUtils.isNotEmpty(courseProcessedContents)) {
-            return true;
-        }
-        return false;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
      * #getListOfAllExistingLLcs()
      */
     @Override

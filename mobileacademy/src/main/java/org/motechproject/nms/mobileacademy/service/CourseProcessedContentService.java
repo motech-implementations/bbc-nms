@@ -10,15 +10,6 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 public interface CourseProcessedContentService {
 
     /**
-     * This function is used to check if a course corresponding to LLC exists in
-     * system
-     * 
-     * @param LLC Language Location Code
-     * @return returns true/false
-     */
-    public boolean doesLlcExistsInCpc(int LLC);
-
-    /**
      * To get the list of all LLCs for which the course exists in the system
      * 
      * @return List of distinct language location codes
