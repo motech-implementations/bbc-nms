@@ -21,10 +21,10 @@ import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
-import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
+import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -46,7 +46,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     private CSVRecordProcessService csvRecordProcessService;
 
     @Inject
-    private CourseRawContentDataService courseRawContentDataService;
+    private CourseContentCsvDataService courseContentCsvDataService;
 
     @Inject
     private CourseProcessedContentDataService courseProcessedContentDataService;
@@ -70,7 +70,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
      * clear Mobile Academy and mtraining data related to course
      */
     private void clearMobileAcademyData() {
-        courseRawContentDataService.deleteAll();
+        courseContentCsvDataService.deleteAll();
         courseProcessedContentDataService.deleteAll();
         chapterContentDataService.deleteAll();
         List<Course> courses = mTrainingService
@@ -101,12 +101,12 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateSuccess() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        long rawContentSize = courseRawContents.size();
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
@@ -120,13 +120,13 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateForMoreRecords() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         // Added one more record
-        courseRawContents.add(addNewRecord(courseRawContents.get(0)));
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        courseContentCsvs.add(addNewRecord(courseContentCsvs.get(0)));
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(0, courseProcessedContents.size());
@@ -140,14 +140,14 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateForLessRecords() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         // Removed one record
-        courseRawContentDataService.delete(courseRawContents.get(1));
-        courseRawContents.remove(1);
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        courseContentCsvDataService.delete(courseContentCsvs.get(1));
+        courseContentCsvs.remove(1);
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(0, courseProcessedContents.size());
@@ -161,22 +161,22 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseDeleteSuccess() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
+        List<CourseContentCsv> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseRawContentsForAdd.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseRawContentsForAdd.size();
         csvRecordProcessService.processRawRecords(courseRawContentsForAdd,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
         // Records Processed for DEL Begin
-        List<CourseRawContent> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
-        for (CourseRawContent courseRawContent : courseRawContentsForDel) {
-            courseRawContent.setOperation("DEL");
+        List<CourseContentCsv> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
+        for (CourseContentCsv courseContentCsv : courseRawContentsForDel) {
+            courseContentCsv.setOperation("DEL");
         }
         csvRecordProcessService.processRawRecords(courseRawContentsForDel,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContentsDel = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(0, courseProcessedContentsDel.size());
@@ -191,25 +191,25 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseDeleteForLessRecords() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
+        List<CourseContentCsv> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseRawContentsForAdd.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseRawContentsForAdd.size();
         csvRecordProcessService.processRawRecords(courseRawContentsForAdd,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
         // Records Processed for DEL Begin
-        List<CourseRawContent> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
-        for (CourseRawContent courseRawContent : courseRawContentsForDel) {
-            courseRawContent.setOperation("DEL");
+        List<CourseContentCsv> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
+        for (CourseContentCsv courseContentCsv : courseRawContentsForDel) {
+            courseContentCsv.setOperation("DEL");
         }
         // Removed one record
-        courseRawContentDataService.delete(courseRawContentsForDel.get(1));
+        courseContentCsvDataService.delete(courseRawContentsForDel.get(1));
         courseRawContentsForDel.remove(1);
         csvRecordProcessService.processRawRecords(courseRawContentsForDel,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContentsDel = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContentsDel.size());// No
@@ -219,14 +219,14 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     }
 
     /**
-     * find CourseRawContent List From Csv
+     * find CourseContentCsv List From Csv
      * 
-     * @return List<CourseRawContent>
+     * @return List<CourseContentCsv>
      */
-    private List<CourseRawContent> findCourseRawContentListFromCsv(String llc) {
-        List<CourseRawContent> courseRawContents = new ArrayList<>();
+    private List<CourseContentCsv> findCourseRawContentListFromCsv(String llc) {
+        List<CourseContentCsv> courseContentCsvs = new ArrayList<>();
         // Input file which needs to be parsed
-        String fileToParse = "src//test//resources//CourseRawContent.csv";
+        String fileToParse = "src//test//resources//CourseContentCsv.csv";
         BufferedReader fileReader = null;
         // Delimiter used in CSV file
         final String DELIMITER = ",";
@@ -244,26 +244,26 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 // Get all tokens available in line
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
-                CourseRawContent courseRawContent = new CourseRawContent();
-                courseRawContent.setOperation(tokens[arrayIndex++]);
-                courseRawContent.setContentId(tokens[arrayIndex++]);
-                courseRawContent.setCircle(tokens[arrayIndex++]);
+                CourseContentCsv courseContentCsv = new CourseContentCsv();
+                courseContentCsv.setOperation(tokens[arrayIndex++]);
+                courseContentCsv.setContentId(tokens[arrayIndex++]);
+                courseContentCsv.setCircle(tokens[arrayIndex++]);
                 if (StringUtils.isNotBlank(llc)) {
-                    courseRawContent.setLanguageLocationCode(llc);
+                    courseContentCsv.setLanguageLocationCode(llc);
                     arrayIndex = arrayIndex + 1;
                 } else {
-                    courseRawContent
+                    courseContentCsv
                             .setLanguageLocationCode(tokens[arrayIndex++]);
                 }
-                courseRawContent.setContentName(tokens[arrayIndex++]);
-                courseRawContent.setContentType(tokens[arrayIndex++]);
-                courseRawContent.setContentFile(tokens[arrayIndex++]);
-                courseRawContent.setContentDuration(tokens[arrayIndex++]);
+                courseContentCsv.setContentName(tokens[arrayIndex++]);
+                courseContentCsv.setContentType(tokens[arrayIndex++]);
+                courseContentCsv.setContentFile(tokens[arrayIndex++]);
+                courseContentCsv.setContentDuration(tokens[arrayIndex++]);
                 if (tokens.length > arrayIndex) {
-                    courseRawContent.setMetaData(tokens[arrayIndex]);
+                    courseContentCsv.setMetaData(tokens[arrayIndex]);
                 }
-                courseRawContents.add(courseRawContentDataService
-                        .create(courseRawContent));
+                courseContentCsvs.add(courseContentCsvDataService
+                        .create(courseContentCsv));
 
             }
         } catch (Exception e) {
@@ -275,7 +275,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 e.printStackTrace();
             }
         }
-        return courseRawContents;
+        return courseContentCsvs;
     }
 
     /**
@@ -286,14 +286,14 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateSuccessForOneLlc() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
-        CourseRawContent courseRawContentUpdateRecord = courseRawContents
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        long rawContentSize = courseRawContents.size();
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
@@ -306,10 +306,10 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         String contentName = courseRawContentUpdateRecord.getContentName();
         courseRawContentUpdateRecord.setContentId("222");
         courseRawContentUpdateRecord.setContentDuration("333");
-        courseRawContents = new ArrayList<>();
-        courseRawContents.add(addNewRecord(courseRawContentUpdateRecord));
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord));
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
                         languageLocationCode, contentName.toUpperCase());
@@ -328,25 +328,25 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateWhenOneLlcDataPresent() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
-        CourseRawContent courseRawContentUpdateRecord1 = courseRawContents
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        long rawContentSize = courseRawContents.size();
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
 
         // add other LLC records i.e 20
-        List<CourseRawContent> courseRawContents2 = findCourseRawContentListFromCsv("20");
+        List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
         csvRecordProcessService.processRawRecords(courseRawContents2,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
@@ -361,10 +361,10 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         String contentFileOriginal = courseRawContentUpdateRecord1
                 .getContentFile();
         courseRawContentUpdateRecord1.setContentFile("ch_test_update.wav");
-        courseRawContents = new ArrayList<>();
-        courseRawContents.add(addNewRecord(courseRawContentUpdateRecord1));
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
                         languageLocationCode, contentName.toUpperCase());
@@ -382,25 +382,25 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateWhenTwoLlcDataPresent() throws Exception {
         clearMobileAcademyData();
-        List<CourseRawContent> courseRawContents = findCourseRawContentListFromCsv(null);
-        CourseRawContent courseRawContentUpdateRecord1 = courseRawContents
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
-        Integer llc = Integer.parseInt(courseRawContents.get(0)
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        long rawContentSize = courseRawContents.size();
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
 
         // add other LLC records i.e 20
-        List<CourseRawContent> courseRawContents2 = findCourseRawContentListFromCsv("20");
+        List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
         csvRecordProcessService.processRawRecords(courseRawContents2,
-                "CourseRawContent.csv");
+                "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
@@ -412,13 +412,13 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                         .getLanguageLocationCode());
         String contentName = courseRawContentUpdateRecord1.getContentName();
         courseRawContentUpdateRecord1.setContentFile("ch_test_update.wav");
-        courseRawContents = new ArrayList<>();
-        courseRawContents.add(addNewRecord(courseRawContentUpdateRecord1));
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
         // add another update record for new llc
         courseRawContentUpdateRecord1.setLanguageLocationCode("20");
-        courseRawContents.add(addNewRecord(courseRawContentUpdateRecord1));
-        csvRecordProcessService.processRawRecords(courseRawContents,
-                "CourseRawContent.csv");
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
                         languageLocationCode, contentName.toUpperCase());
@@ -436,21 +436,21 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
      * add New Record in course raw content table.
      * 
      * @param courseRawContentParam
-     * @return CourseRawContent
+     * @return CourseContentCsv
      */
-    private CourseRawContent addNewRecord(CourseRawContent courseRawContentParam) {
-        CourseRawContent courseRawContent = new CourseRawContent();
-        courseRawContent.setOperation(courseRawContentParam.getOperation());
-        courseRawContent.setContentId(courseRawContentParam.getContentId());
-        courseRawContent.setCircle(courseRawContentParam.getCircle());
-        courseRawContent.setLanguageLocationCode(courseRawContentParam
+    private CourseContentCsv addNewRecord(CourseContentCsv courseRawContentParam) {
+        CourseContentCsv courseContentCsv = new CourseContentCsv();
+        courseContentCsv.setOperation(courseRawContentParam.getOperation());
+        courseContentCsv.setContentId(courseRawContentParam.getContentId());
+        courseContentCsv.setCircle(courseRawContentParam.getCircle());
+        courseContentCsv.setLanguageLocationCode(courseRawContentParam
                 .getLanguageLocationCode());
-        courseRawContent.setContentName(courseRawContentParam.getContentName());
-        courseRawContent.setContentType(courseRawContentParam.getContentType());
-        courseRawContent.setContentFile(courseRawContentParam.getContentFile());
-        courseRawContent.setContentDuration(courseRawContentParam
+        courseContentCsv.setContentName(courseRawContentParam.getContentName());
+        courseContentCsv.setContentType(courseRawContentParam.getContentType());
+        courseContentCsv.setContentFile(courseRawContentParam.getContentFile());
+        courseContentCsv.setContentDuration(courseRawContentParam
                 .getContentDuration());
-        courseRawContent.setMetaData(courseRawContentParam.getMetaData());
-        return courseRawContentDataService.create(courseRawContent);
+        courseContentCsv.setMetaData(courseRawContentParam.getMetaData());
+        return courseContentCsvDataService.create(courseContentCsv);
     }
 }

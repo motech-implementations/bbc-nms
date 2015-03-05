@@ -5,12 +5,12 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * CourseRawContent object to refer Course raw Content(mobile academy course
- * related data) which populate using CSV import from Motech GUI.
+ * CourseContentCsv object to refer Course Content csv table (mobile academy
+ * course related data) which populate using CSV import from Motech GUI.
  *
  */
 @Entity
-public class CourseRawContent extends MdsEntity {
+public class CourseContentCsv extends MdsEntity {
 
     @Field
     private String operation;
@@ -42,7 +42,7 @@ public class CourseRawContent extends MdsEntity {
     /**
      * constructor with 0 arguments.
      */
-    public CourseRawContent() {
+    public CourseContentCsv() {
 
     }
 
@@ -62,7 +62,7 @@ public class CourseRawContent extends MdsEntity {
      *            contain name-value pairs separated by semicolon(;). The name
      *            and value are separated by hyphen (-:).
      */
-    public CourseRawContent(String operation, String contentId, String circle,
+    public CourseContentCsv(String operation, String contentId, String circle,
             String languageLocationCode, String contentName,
             String contentType, String contentFile, String contentDuration,
             String metaData) {

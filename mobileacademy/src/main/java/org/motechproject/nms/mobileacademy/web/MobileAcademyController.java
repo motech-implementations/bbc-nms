@@ -2,11 +2,11 @@ package org.motechproject.nms.mobileacademy.web;
 
 import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
-import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MobileAcademyController {
 
 	@Autowired
-	private CourseRawContentService courseRawContentService;
+	private CourseContentCsvService courseContentCsvService;
 
 	@Autowired
 	private CourseProcessedContentService courseProcessedContentService;
@@ -32,7 +32,7 @@ public class MobileAcademyController {
 	private CSVRecordProcessService csvRecordProcessService;
 
 	@Autowired
-	private CourseRawContentDataService courseRawContentDataService;
+	private CourseContentCsvDataService courseContentCsvDataService;
 
 	@Autowired
 	private ChapterContentDataService chapterContentDataService;
@@ -49,13 +49,13 @@ public class MobileAcademyController {
 	@ResponseBody
 	public String processData() {
 		return csvRecordProcessService.processRawRecords(
-				courseRawContentDataService.retrieveAll(), "ccontroller-csv");
+				courseContentCsvDataService.retrieveAll(), "ccontroller-csv");
 	}
 
 	@RequestMapping(value = "/deleteData")
 	@ResponseBody
 	public String deleteData() {
-		courseRawContentService.deleteAll();
+		courseContentCsvService.deleteAll();
 		courseProcessedContentService.deleteAll();
 		chapterContentDataService.deleteAll();
 		return "Data Deleted";

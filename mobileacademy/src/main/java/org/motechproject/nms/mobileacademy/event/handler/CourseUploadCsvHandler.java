@@ -7,8 +7,8 @@ import java.util.Map;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
+import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * This class handles success and failure events for CourseRawContent that
+ * This class handles success and failure events for CourseContentCsv that
  * contains course structure.
  */
 
@@ -25,7 +25,7 @@ public class CourseUploadCsvHandler {
 
     private CSVRecordProcessService csvRecordProcessService;
 
-    private CourseRawContentDataService courseRawContentDataService;
+    private CourseContentCsvDataService courseContentCsvDataService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CourseUploadCsvHandler.class);
@@ -33,9 +33,9 @@ public class CourseUploadCsvHandler {
     @Autowired
     public CourseUploadCsvHandler(
             CSVRecordProcessService csvRecordProcessService,
-            CourseRawContentDataService courseRawContentDataService) {
+            CourseContentCsvDataService courseContentCsvDataService) {
         this.csvRecordProcessService = csvRecordProcessService;
-        this.courseRawContentDataService = courseRawContentDataService;
+        this.courseContentCsvDataService = courseContentCsvDataService;
     }
 
     /**
@@ -60,16 +60,16 @@ public class CourseUploadCsvHandler {
     }
 
     /**
-     * find List Of CourseRawContent on the basis of received Id
+     * find List Of CourseContentCsv on the basis of received Id
      * 
      * @param createdIds List of created id on csv upload
-     * @return List<CourseRawContent> List Of CourseRawContent
+     * @return List<CourseContentCsv> List Of CourseContentCsv
      */
-    private List<CourseRawContent> findListOfCourseRawContents(
+    private List<CourseContentCsv> findListOfCourseRawContents(
             List<Long> createdIds) {
-        List<CourseRawContent> listOfCourseRawContents = new ArrayList<>();
+        List<CourseContentCsv> listOfCourseRawContents = new ArrayList<>();
         for (Long id : createdIds) {
-            listOfCourseRawContents.add(courseRawContentDataService
+            listOfCourseRawContents.add(courseContentCsvDataService
                     .findById(id));
         }
         return listOfCourseRawContents;
