@@ -53,7 +53,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
     } 
     
-    @Test(expected=DataValidationException.class)
+    @Test
     public void createSameMsisdnDifferentMcts() throws Exception {
         System.out.println("Inside createSameMsisdnDifferentMcts");
         setUp();
