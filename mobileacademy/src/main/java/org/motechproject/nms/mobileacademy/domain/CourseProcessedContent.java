@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobileacademy.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.mobileacademy.commons.ContentType;
 
 /**
@@ -9,7 +10,7 @@ import org.motechproject.nms.mobileacademy.commons.ContentType;
  *
  */
 @Entity
-public class CourseProcessedContent {
+public class CourseProcessedContent extends MdsEntity {
 
     private Integer contentID;
 

@@ -794,7 +794,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                             }
                             // Update AnswerOptionList
                             // Change the state to Active
-                            processAnswerOptionRecordList(answerOptionRecordList);
+                            processListOfAnswerOptionRecords(answerOptionRecordList);
                             coursePopulateService
                                     .updateCourseState(CourseUnitState.Active);
                             LOGGER.info(
@@ -985,7 +985,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * this function updates the correct option for different questions in the
      * mTraining module.
      */
-    private void processAnswerOptionRecordList(
+    private void processListOfAnswerOptionRecords(
             List<Record> answerOptionRecordList) {
         for (Record answerRecord : answerOptionRecordList) {
             coursePopulateService
@@ -1187,8 +1187,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         List<ChapterContent> listOfChapters = new ArrayList<ChapterContent>();
 
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
-            List<LessonContent> lessons = createListOfLesson();
-            List<QuestionContent> questions = createListOfQuestion();
+            List<LessonContent> lessons = createListOfLessons();
+            List<QuestionContent> questions = createListOfQuestions();
             List<ScoreContent> scoreContents = createListOfScores();
             QuizContent quiz = new QuizContent(
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER, null, questions);
@@ -1223,7 +1223,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * This function creates the List of QuestionContent files to be included in
      * a quiz of chapter
      */
-    private List<QuestionContent> createListOfQuestion() {
+    private List<QuestionContent> createListOfQuestions() {
         List<QuestionContent> questionList = new ArrayList<>();
         for (int questionCount = 1; questionCount <= MobileAcademyConstants.NUM_OF_QUESTIONS; questionCount++) {
             QuestionContent questionContent = new QuestionContent(
@@ -1244,7 +1244,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * This function creates the List of LessonContent files to be included in a
      * chapter
      */
-    private List<LessonContent> createListOfLesson() {
+    private List<LessonContent> createListOfLessons() {
         List<LessonContent> lessonList = new ArrayList<>();
         for (int lessonCount = 1; lessonCount <= MobileAcademyConstants.NUM_OF_LESSONS; lessonCount++) {
             LessonContent lessonContent = new LessonContent(lessonCount,
