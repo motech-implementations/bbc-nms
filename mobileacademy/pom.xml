@@ -14,7 +14,7 @@
 	<artifactId>mobileacademy</artifactId>
 	<version>0.1-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>Mobile Academy</name>
+	<name>mobileacademy</name>
 
 	<properties>
 		<modules.root.dir>${basedir}/..</modules.root.dir>
