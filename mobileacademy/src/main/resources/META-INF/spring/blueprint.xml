@@ -15,8 +15,8 @@
     <osgi:service ref="CourseProcessedContentService"
                     interface="org.motechproject.nms.mobileacademy.service.CourseProcessedContentService" />
 
-    <osgi:service ref="CourseRawContentService"
-                    interface="org.motechproject.nms.mobileacademy.service.CourseRawContentService" />
+    <osgi:service ref="CourseContentCsvService"
+                    interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
 
     <osgi:service ref="CoursePopulateService"
                     interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
@@ -27,8 +27,8 @@
     <osgi:reference id="CourseProcessedContentDataService"
                     interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
 
-    <osgi:reference id="CourseRawContentDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService" />
+    <osgi:reference id="CourseContentCsvDataService"
+                    interface="org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService" />
 
     <osgi:reference id="ChapterContentDataService"
                     interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />

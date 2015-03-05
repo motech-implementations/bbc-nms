@@ -124,6 +124,11 @@ public class FlwUploadHandler {
                     FrontLineWorker frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
+                    Long flw = ParseDataHelper.parseLong("flwId", record.getFlwId(), false);
+
+                    if (flw == null && dbRecord.getFlwId() != null) {
+                        ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
+                    }
 
                     if (dbRecord == null) {
                         if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
@@ -209,7 +214,6 @@ public class FlwUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile, summary);
 
     }
-
 
     /**
      * This method maps fields of generated front line worker to the db record
@@ -297,12 +301,13 @@ public class FlwUploadHandler {
         finalContactNo = (contactNoLength > FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
         frontLineWorkerContent.setContactNo(finalContactNo);
 
-        designation = ParseDataHelper.parseString("Type", record.getType(), true);
+        //Bug 28
+        designation = ParseDataHelper.parseString("Flw Type", record.getType(), true);
 
         //Bug 21
         if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
                 Designation.getEnum(designation) != Designation.ASHA && Designation.getEnum(designation) != Designation.USHA) {
-            ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
+            ParseDataHelper.raiseInvalidDataException("Flw Type", "Invalid");
         }
         else {
             //Bug 16
@@ -448,7 +453,7 @@ public class FlwUploadHandler {
                     ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
                 }
             } else {
-                logger.warn("HealthBlock ID[{}] present withour Taluka", healthclockCode);
+                logger.warn("HealthBlock ID[{}] present without Taluka", healthclockCode);
                 ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
             }
         }
@@ -480,7 +485,7 @@ public class FlwUploadHandler {
                     ParseDataHelper.raiseInvalidDataException("HealthFacility", record);
                 }
             } else {
-                logger.warn("HealthFacility ID[{}] present withour HealthBlock", healthFacilityCode);
+                logger.warn("HealthFacility ID[{}] present without HealthBlock", healthFacilityCode);
                 ParseDataHelper.raiseInvalidDataException("HealthFacility", record);
             }
         }
@@ -511,7 +516,7 @@ public class FlwUploadHandler {
                     ParseDataHelper.raiseInvalidDataException("HealthSubFacility", record);
                 }
             } else {
-                logger.warn("HealthSubFacility ID[{}] present withour HealthFacility", healthSubFacilityCode);
+                logger.warn("HealthSubFacility ID[{}] present without HealthFacility", healthSubFacilityCode);
                 ParseDataHelper.raiseInvalidDataException("HealthSubFacility", record);
             }
         }
@@ -524,7 +529,7 @@ public class FlwUploadHandler {
      *
      * @param id               record for which error is generated
      * @param errorCategory    specifies error category
-     * @param errorDescription specifies error descriotion
+     * @param errorDescription specifies error description
      */
     private BulkUploadError populateErrorDetails(String id, String errorCategory, String errorDescription) {
 
@@ -541,7 +546,7 @@ public class FlwUploadHandler {
      * @param flwId     FlwId for which db record is to be found
      * @param stateCode specifies the state code from the Csv record
      * @param contactNo specifies the contact no from the Csv record
-     * @return null if thier is no db record for given FlwId else the record generated from db
+     * @return null if there is no db record for given FlwId else the record generated from db
      * @throws DataValidationException
      */
     private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {

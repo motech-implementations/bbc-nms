@@ -24,13 +24,15 @@ import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
-import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
 import org.motechproject.nms.mobileacademy.event.handler.CourseUploadCsvHandler;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
+import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -51,7 +53,7 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     private CSVRecordProcessService csvRecordProcessService;
 
     @Inject
-    private CourseRawContentDataService courseRawContentDataService;
+    private CourseContentCsvDataService courseContentCsvDataService;
 
     @Inject
     private CourseProcessedContentDataService courseProcessedContentDataService;
@@ -64,15 +66,21 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
 
     private CourseUploadCsvHandler courseUploadCsvHandler;
 
+    @Inject
+    private CourseContentCsvService courseContentCsvService;
+
+    @Inject
+    private CourseProcessedContentService courseProcessedContentService;
+
     /**
      * setUp method called before each test case
      */
     @Before
     public void setUp() {
         assertNotNull(csvRecordProcessService);
-        assertNotNull(courseRawContentDataService);
+        assertNotNull(courseContentCsvDataService);
         courseUploadCsvHandler = new CourseUploadCsvHandler(
-                csvRecordProcessService, courseRawContentDataService);
+                csvRecordProcessService, courseContentCsvDataService);
         assertNotNull(courseUploadCsvHandler);
         clearMobileAcademyData();
 
@@ -109,7 +117,7 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
-        params.put("csv-import.filename", "CourseRawContent");
+        params.put("csv-import.filename", "CourseContentCsv");
         return new MotechEvent(
                 MobileAcademyConstants.COURSE_CSV_UPLOAD_SUCCESS_EVENT, params);
     }
@@ -118,8 +126,8 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
      * clear MobileAcademy Data
      */
     private void clearMobileAcademyData() {
-        courseRawContentDataService.deleteAll();
-        courseProcessedContentDataService.deleteAll();
+        courseContentCsvService.deleteAll();
+        courseProcessedContentService.deleteAll();
         chapterContentDataService.deleteAll();
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
@@ -142,14 +150,14 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     }
 
     /**
-     * find CourseRawContent Ids List From Csv
+     * find CourseContentCsv Ids List From Csv
      * 
      * @return List<Long>
      */
     private List<Long> findCourseRawContentIdsListFromCsv() {
         List<Long> courseRawContentIds = new ArrayList<>();
         // Input file which needs to be parsed
-        String fileToParse = "src//test//resources//CourseRawContent.csv";
+        String fileToParse = "src//test//resources//CourseContentCsv.csv";
         BufferedReader fileReader = null;
         // Delimiter used in CSV file
         final String DELIMITER = ",";
@@ -167,21 +175,21 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
                 // Get all tokens available in line
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
-                CourseRawContent courseRawContent = new CourseRawContent();
-                courseRawContent.setOperation(tokens[arrayIndex++]);
-                courseRawContent.setContentId(tokens[arrayIndex++]);
-                courseRawContent.setCircle(tokens[arrayIndex++]);
+                CourseContentCsv courseContentCsv = new CourseContentCsv();
+                courseContentCsv.setOperation(tokens[arrayIndex++]);
+                courseContentCsv.setContentId(tokens[arrayIndex++]);
+                courseContentCsv.setCircle(tokens[arrayIndex++]);
 
-                courseRawContent.setLanguageLocationCode(tokens[arrayIndex++]);
-                courseRawContent.setContentName(tokens[arrayIndex++]);
-                courseRawContent.setContentType(tokens[arrayIndex++]);
-                courseRawContent.setContentFile(tokens[arrayIndex++]);
-                courseRawContent.setContentDuration(tokens[arrayIndex++]);
+                courseContentCsv.setLanguageLocationCode(tokens[arrayIndex++]);
+                courseContentCsv.setContentName(tokens[arrayIndex++]);
+                courseContentCsv.setContentType(tokens[arrayIndex++]);
+                courseContentCsv.setContentFile(tokens[arrayIndex++]);
+                courseContentCsv.setContentDuration(tokens[arrayIndex++]);
                 if (tokens.length > arrayIndex) {
-                    courseRawContent.setMetaData(tokens[arrayIndex]);
+                    courseContentCsv.setMetaData(tokens[arrayIndex]);
                 }
-                CourseRawContent courseRawContentReturn = courseRawContentDataService
-                        .create(courseRawContent);
+                CourseContentCsv courseRawContentReturn = courseContentCsvDataService
+                        .create(courseContentCsv);
                 courseRawContentIds.add(courseRawContentReturn.getId());
 
             }

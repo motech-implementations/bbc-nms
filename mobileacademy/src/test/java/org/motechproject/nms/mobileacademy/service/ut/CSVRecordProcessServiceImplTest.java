@@ -22,16 +22,16 @@ import org.motechproject.nms.mobileacademy.commons.CourseFlags;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.Record;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
-import org.motechproject.nms.mobileacademy.domain.CourseRawContent;
+import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseRawContentDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
-import org.motechproject.nms.mobileacademy.service.CourseRawContentService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.motechproject.nms.mobileacademy.service.impl.CSVRecordProcessServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -43,7 +43,7 @@ public class CSVRecordProcessServiceImplTest {
     CSVRecordProcessServiceImpl csvRecordProcessServiceImpl = new CSVRecordProcessServiceImpl();
 
     @Mock
-    private CourseRawContentService courseRawContentService;
+    private CourseContentCsvService courseContentCsvService;
 
     @Mock
     private CourseProcessedContentService courseProcessedContentService;
@@ -52,7 +52,7 @@ public class CSVRecordProcessServiceImplTest {
     private ChapterContentDataService chapterContentDataService;
 
     @Mock
-    public CourseRawContentDataService courseRawContentDataService;
+    public CourseContentCsvDataService courseContentCsvDataService;
 
     @Mock
     private CoursePopulateService coursePopulateService;
@@ -75,18 +75,18 @@ public class CSVRecordProcessServiceImplTest {
     @SuppressWarnings("serial")
     @Test
     public void testProcessRawRecords() {
-        List<CourseRawContent> courseRawContents = new ArrayList<CourseRawContent>() {
+        List<CourseContentCsv> courseContentCsvRecords = new ArrayList<CourseContentCsv>() {
         };
-        courseRawContents.add(new CourseRawContent("ADD", "100014", "AP", "14",
+        courseContentCsvRecords.add(new CourseContentCsv("ADD", "100014", "AP", "14",
                 "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseRawContents.add(new CourseRawContent("DEL", "100015", "AP", "14",
+        courseContentCsvRecords.add(new CourseContentCsv("DEL", "100015", "AP", "14",
                 "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseRawContents.add(new CourseRawContent("MOD", "100016", "AP", "14",
+        courseContentCsvRecords.add(new CourseContentCsv("MOD", "100016", "AP", "14",
                 "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        courseRawContents.add(new CourseRawContent("ADD", "100017", "AP", "14",
+        courseContentCsvRecords.add(new CourseContentCsv("ADD", "100017", "AP", "14",
                 "Chapter01_Lesson02", "Content", "ch1_l2.wav", "150", ""));
         assertEquals(csvRecordProcessServiceImpl.processRawRecords(
-                courseRawContents, "Book1.csv"),
+                courseContentCsvRecords, "Book1.csv"),
                 "Records Processed Successfully");
     }
 
@@ -101,16 +101,16 @@ public class CSVRecordProcessServiceImplTest {
                 .thenReturn(true);
         Method method = null;
         Boolean status = false;
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "14", "Chapter01_Lesson01", "Content",
                 "ch1_l1.wav", "150", "");
         try {
             method = csvRecordProcessServiceImpl.getClass().getDeclaredMethod(
                     "validateCircleAndLLC",
-                    new Class[] { CourseRawContent.class });
+                    new Class[] { CourseContentCsv.class });
             method.setAccessible(true);
             status = (Boolean) method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseRawContent });
+                    new Object[] { courseContentCsv });
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -126,15 +126,15 @@ public class CSVRecordProcessServiceImplTest {
     public void testValidateSchemaForInvalidContentId() {
         Method method = null;
         Boolean flag = true;
-        CourseRawContent courseRawContent = new CourseRawContent("ADD", "CI14",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD", "CI14",
                 "AP", "14", "Chapter01_Lesson01", "Content", "ch1_l1.wav",
                 "150", "");
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateSchema", new Class[] { CourseRawContent.class });
+                    "validateSchema", new Class[] { CourseContentCsv.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseRawContent });
+                    new Object[] { courseContentCsv });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
@@ -153,15 +153,15 @@ public class CSVRecordProcessServiceImplTest {
     public void testValidateSchemaForInvalidLLC() {
         Method method = null;
         Boolean flag = true;
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "XX", "Chapter01_Lesson01", "Content",
                 "ch1_l1.wav", "150", "");
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateSchema", new Class[] { CourseRawContent.class });
+                    "validateSchema", new Class[] { CourseContentCsv.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseRawContent });
+                    new Object[] { courseContentCsv });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
@@ -181,14 +181,14 @@ public class CSVRecordProcessServiceImplTest {
     public void testValidateSchemaForEmptyContentName() {
         Method method = null;
         Boolean flag = true;
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "14", "", "Content", "ch1_l1.wav", "150", "");
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateSchema", new Class[] { CourseRawContent.class });
+                    "validateSchema", new Class[] { CourseContentCsv.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseRawContent });
+                    new Object[] { courseContentCsv });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
@@ -208,14 +208,14 @@ public class CSVRecordProcessServiceImplTest {
     public void testValidateSchemaForNullContentName() {
         Method method = null;
         Boolean flag = true;
-        CourseRawContent courseRawContent = new CourseRawContent("ADD", "14",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD", "14",
                 "AP", "14", "null", "Content", "ch1_l1.wav", "150", "");
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateSchema", new Class[] { CourseRawContent.class });
+                    "validateSchema", new Class[] { CourseContentCsv.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl,
-                    new Object[] { courseRawContent });
+                    new Object[] { courseContentCsv });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
@@ -257,15 +257,15 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testProcessAddRecords() {
-        Map<Integer, List<CourseRawContent>> mapForAddRecords = new HashMap<Integer, List<CourseRawContent>>();
-        List<CourseRawContent> listCourseRecords = new ArrayList<>();
-        listCourseRecords.add(new CourseRawContent("ADD", "100014", "AP", "14",
+        Map<Integer, List<CourseContentCsv>> mapForAddRecords = new HashMap<Integer, List<CourseContentCsv>>();
+        List<CourseContentCsv> listCourseRecords = new ArrayList<>();
+        listCourseRecords.add(new CourseContentCsv("ADD", "100014", "AP", "14",
                 "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("ADD", "100015", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("ADD", "100015", "AP", "14",
                 "Chapter01_Lesson03", "Content", "ch1_l3.wav", "250", ""));
-        listCourseRecords.add(new CourseRawContent("ADD", "100016", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("ADD", "100016", "AP", "14",
                 "Chapter01_Lesson04", "Content", "ch1_l4.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("ADD", "100017", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("ADD", "100017", "AP", "14",
                 "Chapter01_Lesson02", "Content", "ch1_l2.wav", "450", ""));
         mapForAddRecords.put(14, listCourseRecords);
         Method method;
@@ -288,15 +288,15 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testProcessDeleteRecords() {
-        Map<Integer, List<CourseRawContent>> mapForDeleteRecords = new HashMap<Integer, List<CourseRawContent>>();
-        List<CourseRawContent> listCourseRecords = new ArrayList<>();
-        listCourseRecords.add(new CourseRawContent("DEL", "100014", "AP", "14",
+        Map<Integer, List<CourseContentCsv>> mapForDeleteRecords = new HashMap<Integer, List<CourseContentCsv>>();
+        List<CourseContentCsv> listCourseRecords = new ArrayList<>();
+        listCourseRecords.add(new CourseContentCsv("DEL", "100014", "AP", "14",
                 "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("DEL", "100015", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("DEL", "100015", "AP", "14",
                 "Chapter01_Lesson03", "Content", "ch1_l3.wav", "250", ""));
-        listCourseRecords.add(new CourseRawContent("DEL", "100016", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("DEL", "100016", "AP", "14",
                 "Chapter01_Lesson04", "Content", "ch1_l4.wav", "150", ""));
-        listCourseRecords.add(new CourseRawContent("DEL", "100017", "AP", "14",
+        listCourseRecords.add(new CourseContentCsv("DEL", "100017", "AP", "14",
                 "Chapter01_Lesson02", "Content", "ch1_l2.wav", "450", ""));
         mapForDeleteRecords.put(14, listCourseRecords);
         Method method;
@@ -397,7 +397,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testValidateRawContent() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "14", "Chapter01_Lesson01", "Content",
                 "ch1_l1.wav", "150", "");
         Record record = new Record();
@@ -409,11 +409,11 @@ public class CSVRecordProcessServiceImplTest {
         Boolean flag = true;
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseRawContent.class,
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
                             Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -428,7 +428,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testValidateRawContentForEmptyMetaData() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100023", "AP", "14", "Chapter01_Question01", "Content",
                 "ch1_q1.wav", "20", "");
         Record record = new Record();
@@ -440,11 +440,11 @@ public class CSVRecordProcessServiceImplTest {
         Boolean flag = true;
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseRawContent.class,
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
                             Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -459,7 +459,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testValidateRawContentForEmptyCorrectAnswer() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100023", "AP", "14", "Chapter01_Question01", "Content",
                 "ch1_q1.wav", "20", "CorrectAnswer:");
         Record record = new Record();
@@ -471,11 +471,11 @@ public class CSVRecordProcessServiceImplTest {
         Boolean flag = true;
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseRawContent.class,
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
                             Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -490,7 +490,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testValidateRawContentForInvalidCorrectAnswer() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100023", "AP", "14", "Chapter01_Question01", "Content",
                 "ch1_q1.wav", "20", "CorrectAnswer:X");
         Record record = new Record();
@@ -502,11 +502,11 @@ public class CSVRecordProcessServiceImplTest {
         Boolean flag = true;
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseRawContent.class,
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
                             Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -521,7 +521,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testPartialValidateContentName() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "14", "Chapter01_", "Content", "ch1_l1.wav",
                 "150", "");
         Record record = new Record();
@@ -534,10 +534,10 @@ public class CSVRecordProcessServiceImplTest {
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
                     "validateContentName", new Class[] {
-                            CourseRawContent.class, Record.class });
+                            CourseContentCsv.class, Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
@@ -556,7 +556,7 @@ public class CSVRecordProcessServiceImplTest {
      */
     @Test
     public void testValidateContentNameWithMissingDelimeter() {
-        CourseRawContent courseRawContent = new CourseRawContent("ADD",
+        CourseContentCsv courseContentCsv = new CourseContentCsv("ADD",
                 "100014", "AP", "14", "Chapter01Lesson01", "Content",
                 "ch1_l1.wav", "150", "");
         Record record = new Record();
@@ -569,10 +569,10 @@ public class CSVRecordProcessServiceImplTest {
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
                     "validateContentName", new Class[] {
-                            CourseRawContent.class, Record.class });
+                            CourseContentCsv.class, Record.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] {
-                    courseRawContent, record });
+                    courseContentCsv, record });
         } catch (InvocationTargetException e) {
             if (e.getCause() instanceof DataValidationException) {
                 System.out.println(e.getCause());
