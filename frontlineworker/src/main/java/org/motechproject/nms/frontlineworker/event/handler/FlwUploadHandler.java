@@ -301,12 +301,13 @@ public class FlwUploadHandler {
         finalContactNo = (contactNoLength > FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
         frontLineWorkerContent.setContactNo(finalContactNo);
 
-        designation = ParseDataHelper.parseString("Type", record.getType(), true);
+        //Bug 28
+        designation = ParseDataHelper.parseString("Flw Type", record.getType(), true);
 
         //Bug 21
         if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
                 Designation.getEnum(designation) != Designation.ASHA && Designation.getEnum(designation) != Designation.USHA) {
-            ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
+            ParseDataHelper.raiseInvalidDataException("Flw Type", "Invalid");
         }
         else {
             //Bug 16
