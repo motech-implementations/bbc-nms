@@ -39,6 +39,8 @@ import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommonStructure extends BasePaxIT {
     
@@ -95,6 +97,8 @@ public class CommonStructure extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
     
+    private static Logger logger = LoggerFactory.getLogger(HelloWorldRecordServiceIT.class);
+    
     @Before
     public void setUp() {
         if (!setUpIsDone) {
@@ -140,7 +144,7 @@ public class CommonStructure extends BasePaxIT {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         
-        System.out.println("Deleted all location data.");
+        logger.info("Deleted all location data.");
         
     }
 
@@ -156,7 +160,7 @@ public class CommonStructure extends BasePaxIT {
         District districtData = districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode());
         districtData.getTaluka().add(newRecord);
         districtRecordsDataService.update(districtData);
-        System.out.println("Taluka data is successfully inserted.");
+        logger.info("Taluka data is successfully inserted.");
     }
     
     
@@ -172,7 +176,7 @@ public class CommonStructure extends BasePaxIT {
         State stateData = stateRecordsDataService.findRecordByStateCode(district.getStateCode());
         stateData.getDistrict().add(district);
         stateRecordsDataService.update(stateData);
-        System.out.println("District data is successfully inserted.");
+        logger.info("District data is successfully inserted.");
     }
 
     private void createState() {
@@ -186,7 +190,7 @@ public class CommonStructure extends BasePaxIT {
         if(dbState==null) {
             stateRecordsDataService.create(state);
         }
-        System.out.println("State data is successfully inserted.");
+        logger.info("State data is successfully inserted.");
         
     }
     
@@ -206,7 +210,7 @@ public class CommonStructure extends BasePaxIT {
                 newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode(), newRecord.getHealthBlockCode());
         healthBlockData.getHealthFacility().add(newRecord);
         healthBlockRecordsDataService.update(healthBlockData);
-        System.out.println("HealthFacility data is successfully inserted.");
+        logger.info("HealthFacility data is successfully inserted.");
     }
     
     private void createHealthBlock(){
@@ -222,7 +226,7 @@ public class CommonStructure extends BasePaxIT {
         Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
         talukaRecord.getHealthBlock().add(newRecord);
         talukaRecordsDataService.update(talukaRecord);
-        System.out.println("HealthBlock data is successfully inserted.");
+        logger.info("HealthBlock data is successfully inserted.");
     }
     
     private void createHealthSubFacility(){
@@ -245,7 +249,7 @@ public class CommonStructure extends BasePaxIT {
 
         healthFacilityData.getHealthSubFacility().add(newRecord);
         healthFacilityRecordsDataService.update(healthFacilityData);
-        System.out.println("HealthSubFacility Permanent data is successfully inserted.");
+        logger.info("HealthSubFacility Permanent data is successfully inserted.");
     }
     
     private void createVillage(){
@@ -262,7 +266,7 @@ public class CommonStructure extends BasePaxIT {
         Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(newRecord.getStateCode(), newRecord.getDistrictCode(), newRecord.getTalukaCode());
         talukaRecord.getVillage().add(newRecord);
         talukaRecordsDataService.update(talukaRecord);
-        System.out.println("Village data is successfully inserted.");
+        logger.info("Village data is successfully inserted.");
     }
     
     protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
@@ -284,9 +288,9 @@ public class CommonStructure extends BasePaxIT {
     }
     
     protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        System.out.println("Inside  callMotherMctsCsvHandlerSuccessEvent");
+        logger.info("Inside  callMotherMctsCsvHandlerSuccessEvent");
         Map<String, Object> parameters = new HashMap<>();
-        System.out.println("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
+        logger.info("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "MotherMctsCsv.csv");
         
@@ -303,9 +307,9 @@ public class CommonStructure extends BasePaxIT {
     }
     
     protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        System.out.println("Inside  callChildMctsCsvHandlerSuccessEvent");
+        logger.info("Inside  callChildMctsCsvHandlerSuccessEvent");
         Map<String, Object> parameters = new HashMap<>();
-        System.out.println("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
+        logger.info("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "ChildMctsCsv.csv");
         

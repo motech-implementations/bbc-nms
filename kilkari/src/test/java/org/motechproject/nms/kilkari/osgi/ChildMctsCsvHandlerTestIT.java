@@ -15,12 +15,15 @@ import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -29,9 +32,10 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
+    private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandlerTestIT.class);
     @Test
-    public void createSubscriptionSubscriberTest() throws Exception {
-        System.out.println("Inside createSubscriptionSubscriberTest");
+    public void shouldCreateSubscriptionSubscriberTest() throws Exception {
+        logger.info("Inside createSubscriptionSubscriberTest");
         setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -54,8 +58,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     } 
     
     @Test
-    public void createSameMsisdnDifferentMcts() throws Exception {
-        System.out.println("Inside createSameMsisdnDifferentMcts");
+    public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
+        logger.info("Inside createSameMsisdnDifferentMcts");
         setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -83,8 +87,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     }
     
     @Test
-    public void createSameMsisdnSameMcts() throws Exception {
-        System.out.println("Inside createSameMsisdnSameMcts");
+    public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
+        logger.info("Inside createSameMsisdnSameMcts");
         setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -118,8 +122,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     }
     
     @Test
-    public void createDifferentMsisdnSameMcts() throws Exception {
-        System.out.println("Inside createDifferentMsisdnSameMcts");
+    public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
+        logger.info("Inside createDifferentMsisdnSameMcts");
         setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -152,8 +156,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     }
     
     @Test
-    public void testChildDeath() throws Exception {
-        System.out.println("Inside createDifferentMsisdnSameMcts");
+    public void shouldUpdateBasedChildDeath() throws Exception {
+        logger.info("Inside createDifferentMsisdnSameMcts");
         setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -187,8 +191,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     
     @Test
-    public void createDeleteOperation() throws Exception {
-        System.out.println("Inside  createDeleteOperation");
+    public void shouldUpdateBasedDeleteOperation() throws Exception {
+        logger.info("Inside  createDeleteOperation");
         setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -217,8 +221,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     }
     
     @Test
-    public void createDiffMsisdnDiffChildMctsSameMotherMcts() throws Exception {
-        System.out.println("Inside  createDeleteOperation");
+    public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts() throws Exception {
+        logger.info("Inside  createDeleteOperation");
         setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
