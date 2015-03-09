@@ -1,24 +1,24 @@
 package org.motechproject.nms.mobileacademy.service;
 
 /**
- * This is a place holder for Master data service. Will be removed later.
+ * This interface contains services from Master data module.
  */
 public interface MasterDataService {
 
     /**
-     * check circle vaild or not
+     * check circle valid or not
      * 
-     * @param circle
-     * @return boolean
+     * @param circle circle Code
+     * @return boolean status - true for valid
      */
-    public boolean isCircleValid(String circle);
+    public boolean isCircleValid(String circleCode);
 
     /**
-     * check LLC valid in circle or not
+     * check whether LLC valid in circle or not
      * 
-     * @param Circle
-     * @param LLC
-     * @return boolean
+     * @param Circle circle code
+     * @param LLC language Location Code
+     * @return boolean status -true for valid
      */
-    public boolean isLlcValidInCircle(String Circle, int LLC);
+    public boolean isLlcValidInCircle(String circleCode, Integer languageLocCode);
 }

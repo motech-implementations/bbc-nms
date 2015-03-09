@@ -69,10 +69,10 @@ public class Village extends LocationUnitMetaData {
 
         Village village = (Village) o;
 
-        if (!districtCode.equals(village.districtCode)) return false;
-        if (!stateCode.equals(village.stateCode)) return false;
-        if (!talukaCode.equals(village.talukaCode)) return false;
-        if (!villageCode.equals(village.villageCode)) return false;
+        if (!this.getDistrictCode().equals(village.getDistrictCode())) return false;
+        if (!this.getStateCode().equals(village.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(village.getTalukaCode())) return false;
+        if (!this.getVillageCode().equals(village.getVillageCode())) return false;
 
         return true;
     }
