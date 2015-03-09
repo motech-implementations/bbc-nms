@@ -27,14 +27,18 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
     @Field
     private String healthBlockCode;
 
+    @Field
+    private String healthFacilityType;
 
-    public HealthFacilityCsv(String operation, String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode) {
+
+    public HealthFacilityCsv(String operation, String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode, String healthFacilityType) {
         super(operation, name);
         this.healthFacilityCode = healthFacilityCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;
         this.talukaCode = talukaCode;
         this.healthBlockCode = healthBlockCode;
+        this.healthFacilityType = healthFacilityType;
     }
 
     public String getHealthFacilityCode() {
@@ -77,16 +81,23 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
         this.healthBlockCode = healthBlockCode;
     }
 
+    public String getHealthFacilityType() {
+        return healthFacilityType;
+    }
+
+    public void setHealthFacilityType(String healthFacilityType) {
+        this.healthFacilityType = healthFacilityType;
+    }
 
     @Override
     public String toString() {
         return "HealthFacilityCsv{" +
-
-                ", stateCode=" + stateCode +
-                ", districtCode=" + districtCode +
-                ", talukaCode=" + talukaCode +
-                ", healthBlockCode=" + healthBlockCode +
-                ", facilityCode=" + healthFacilityCode +
+                "healthFacilityCode='" + healthFacilityCode + '\'' +
+                ", stateCode='" + stateCode + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", healthBlockCode='" + healthBlockCode + '\'' +
+                ", healthFacilityType='" + healthFacilityType + '\'' +
                 '}';
     }
 }

@@ -127,6 +127,7 @@ public class HealthFacilityCsvUploadHandler {
         String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
         Long facilityCode = ParseDataHelper.parseLong("FacilityCode", record.getHealthFacilityCode(), true);
+        Integer facilityType = ParseDataHelper.parseInt("FacilityType", record.getHealthFacilityType(), true);
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -155,6 +156,7 @@ public class HealthFacilityCsvUploadHandler {
         newRecord.setTalukaCode(talukaCode);
         newRecord.setHealthBlockCode(healthBlockCode);
         newRecord.setHealthFacilityCode(facilityCode);
+        newRecord.setHealthFacilityType(facilityType);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
