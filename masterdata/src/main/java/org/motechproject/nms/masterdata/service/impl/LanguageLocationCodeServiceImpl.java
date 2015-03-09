@@ -1,6 +1,5 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.datanucleus.query.evaluator.memory.IntervalGetEndMethodEvaluator;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.masterdata.domain.Circle;
