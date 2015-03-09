@@ -54,10 +54,9 @@
     <osgi:reference id="userProfileDetailsService"
                     interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
 
-
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-            <property name="defaultURL" value="/mobilekunji"/>
+        <property name="defaultURL" value="/mobilekunji"/>
+        <property name="moduleName" value="mobilekunji"/>
     </bean>
-
 
 </beans>
