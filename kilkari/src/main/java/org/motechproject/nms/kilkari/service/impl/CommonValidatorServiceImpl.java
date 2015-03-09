@@ -284,7 +284,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
                 throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.CIRCLE_CODE);
             }
         }
-    }l
+    }
 
     /**
      * This method validate the languageLocationCode from database

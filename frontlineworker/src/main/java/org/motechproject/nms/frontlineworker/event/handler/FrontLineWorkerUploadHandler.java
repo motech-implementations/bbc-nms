@@ -129,7 +129,7 @@ public class FrontLineWorkerUploadHandler {
 
                     //in case of update, if flwId was present earlier and absent in latest record, exception is
                     // to be thrown
-                    if (flw == null && dbRecord.getFlwId() != null) {
+                    if (flw == null && dbRecord != null && dbRecord.getFlwId() != null) {
                         ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
                     }
 
@@ -154,15 +154,22 @@ public class FrontLineWorkerUploadHandler {
                             ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
                         } else {
                             Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
-                            if (valid == null || valid == true) {
+                            if (valid == null) {
                                 frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
-                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = " + valid.toString());
+                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = null ");
 
                             } else {
-                                frontLineWorker.setStatus(Status.INVALID);
-                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = false");
+                                if (valid == true) {
+                                    frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
+                                    successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = true ");
 
+                                } else {
+                                    frontLineWorker.setStatus(Status.INVALID);
+                                    successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = false");
+
+                                }
                             }
+
 
                         }
 
