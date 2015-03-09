@@ -15,38 +15,8 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     private MotherMctsCsvDataService motherMctsCsvDataService;
 
     @Override
-    public void create(String name, String message) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void add(MotherMctsCsv record) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public MotherMctsCsv findRecordByName(String recordName) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public List<MotherMctsCsv> getRecords() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void delete(MotherMctsCsv record) {
         motherMctsCsvDataService.delete(record);
-
-    }
-
-    @Override
-    public void update(MotherMctsCsv record) {
-        // TODO Auto-generated method stub
 
     }
 

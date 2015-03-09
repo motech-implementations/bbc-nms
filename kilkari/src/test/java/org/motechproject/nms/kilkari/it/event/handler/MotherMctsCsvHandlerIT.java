@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.it.event.handler;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class HelloWorldRecordServiceIT extends CommonStructure {
+public class MotherMctsCsvHandlerIT extends CommonStructure {
 
-    private static Logger logger = LoggerFactory.getLogger(HelloWorldRecordServiceIT.class);
+    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandlerIT.class);
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");

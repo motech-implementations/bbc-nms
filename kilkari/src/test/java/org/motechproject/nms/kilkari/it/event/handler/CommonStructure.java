@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.osgi;
+package org.motechproject.nms.kilkari.it.event.handler;
 
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +97,7 @@ public class CommonStructure extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
     
-    private static Logger logger = LoggerFactory.getLogger(HelloWorldRecordServiceIT.class);
+    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandlerIT.class);
     
     @Before
     public void setUp() {

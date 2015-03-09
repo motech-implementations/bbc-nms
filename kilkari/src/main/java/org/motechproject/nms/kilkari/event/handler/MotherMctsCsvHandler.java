@@ -84,9 +84,6 @@ public class MotherMctsCsvHandler {
 
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
 
-    /*public MotherMctsCsvHandler(){
-
-    }*/
     @Autowired
     public MotherMctsCsvHandler(MotherMctsCsvService motherMctsCsvService, 
             SubscriptionService subscriptionService,
@@ -249,14 +246,35 @@ public class MotherMctsCsvHandler {
      *  @param subscriber csv uploaded subscriber
      */
     public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
+
+        /*
+        Create a new Subscriber and Subscription record in NMS database, if
+           - there is no existing subscription record with MSISDN and MCTSId (having status as
+             Active/PendingActivation) matching the ones in motherMctsCsv Record. Also check that number of existing
+             active subscribers is not exceeding the value of Max Allowed Active Kilkari Subscribers.
+
+        Update the existing subscriber record (with MSISDN, motherMCTSId, Location, name , age and LMP), if a
+           subscription record ((having status as Active/PendingActivation ) exists in NMS database
+            - Having MCTS Id same as the one in motherMctsCsv Record.
+            - Having null or empty MCTS Id and MSISDN matching the one in motherMctsCsv Record.
+
+        Update an existing subscription’s status as Deactivated if in  motherMctsCsv Record
+            - Number of outcome is 0 i.e. stillbirth is reported
+            - EntryType is Death i.e. mother death is reported.
+            - Abortion is not “none” i.e. abortion is reported.
+            - LMP is modified (also create a new subscription in this case)
+
+         */
+
+
         /* Find subscription from database based on msisdn, packName, status */
         Subscription dbSubscription = subscriptionService.getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72);
         if (dbSubscription == null) {
-            logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
+            logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
             /* Find subscription from database based on mctsid, packName, status */
             dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
-                logger.info("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
+                logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                 Configuration configuration = configurationService.getConfiguration();
                 long activeUserCount = subscriptionService.getActiveUserCount();
                 /* check for maximum allowed beneficiary */
@@ -264,7 +282,7 @@ public class MotherMctsCsvHandler {
                     Subscriber dbSubscriber = subscriberService.create(subscriber); /* CREATE new subscriber */
                     createSubscription(subscriber, null, dbSubscriber); /* create subscription for above created subscriber */
                 } else {
-                    logger.info("Reached maximum beneficery count can't add any more");
+                    logger.warn("Reached maximum beneficery, count can't add any more");
                     throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
                 }
             } else { /* Record found based on mctsid than update subscriber and subscription */

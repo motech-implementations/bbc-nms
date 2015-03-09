@@ -6,11 +6,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 
 public interface SubscriberService {
 
-    void create(String name, String message);
-
     void add(Subscriber record);
-
-    Subscriber findRecordByName(String recordName);
 
     List<Subscriber> getRecords();
 
