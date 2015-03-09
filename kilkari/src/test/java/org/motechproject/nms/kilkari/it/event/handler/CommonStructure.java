@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
 
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
+import org.junit.After;
 import org.junit.Before;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
@@ -340,5 +341,13 @@ public class CommonStructure extends BasePaxIT {
         csv.setOwner("Deepak");
         csv.setModifiedBy("Deepak");
         return csv;
+    }
+
+
+    @After
+    public void tearDown() {
+                    deleteAll();
+
+        setUpIsDone = false;
     }
 }

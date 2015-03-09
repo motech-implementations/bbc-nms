@@ -33,7 +33,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");
-        setUp();
+       // setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -57,7 +57,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
         logger.info("Inside createSameMsisdnDifferentMcts");
-        setUp();
+       // setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -86,7 +86,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        setUp();
+        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -122,7 +122,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedChangedLmpDate() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        setUp();
+        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -160,7 +160,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        setUp();
+       // setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
@@ -195,7 +195,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDeleteOperation() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        setUp();
+       // setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
