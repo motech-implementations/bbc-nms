@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     http://www.eclipse.org/gemini/blueprint/schema/blueprint
     http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
 
-    <import resource="classpath*:META-INF/motech/*.xml" />
+	<import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="CSVRecordProcessService"
-                    interface="org.motechproject.nms.mobileacademy.service.CSVRecordProcessService" />
+	<osgi:service ref="CSVRecordProcessService"
+		interface="org.motechproject.nms.mobileacademy.service.CSVRecordProcessService" />
 
-    <osgi:service ref="CourseProcessedContentService"
-                    interface="org.motechproject.nms.mobileacademy.service.CourseProcessedContentService" />
+	<osgi:service ref="CourseProcessedContentService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseProcessedContentService" />
 
-    <osgi:service ref="CourseContentCsvService"
-                    interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
+	<osgi:service ref="CourseContentCsvService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
 
-    <osgi:service ref="CoursePopulateService"
-                    interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
-    
-    <osgi:service ref="MasterDataService"
-                    interface="org.motechproject.nms.mobileacademy.service.MasterDataService" />
+	<osgi:service ref="CoursePopulateService"
+		interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
 
-    <osgi:reference id="CourseProcessedContentDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
+	<osgi:reference id="CourseProcessedContentDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
 
-    <osgi:reference id="CourseContentCsvDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService" />
+	<osgi:reference id="CourseContentCsvDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService" />
 
-    <osgi:reference id="ChapterContentDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />
+	<osgi:reference id="ChapterContentDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />
 
-    <osgi:reference id="ServiceConfigParamDataService"
-                    interface="org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService" />
+	<osgi:reference id="ServiceConfigParamDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService" />
 
-    <osgi:reference id="MTrainingService"
-                    interface="org.motechproject.mtraining.service.MTrainingService" />
-    
-    <osgi:reference id="bulkUploadErrLogService"
-                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
-     
-    <osgi:reference id="circleService"
-                  interface="org.motechproject.nms.masterdata.service.CircleService"/>
+	<osgi:reference id="MTrainingService"
+		interface="org.motechproject.mtraining.service.MTrainingService" />
 
-    <osgi:reference id="languageLocationCodeService"
-                  interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
+	<osgi:reference id="bulkUploadErrLogService"
+		interface="org.motechproject.nms.util.service.BulkUploadErrLogService" />
+
 </beans>

@@ -16,18 +16,17 @@ import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.commons.Record;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
-import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
+import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
-import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
-import org.motechproject.nms.mobileacademy.service.MasterDataService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -62,9 +61,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private CoursePopulateService coursePopulateService;
 
     @Autowired
-    private MasterDataService masterDataService;
-
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static final Logger LOGGER = LoggerFactory
@@ -97,7 +93,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 CourseContentCsv courseContentCsv = recordIterator.next();
                 try {
                     validateSchema(courseContentCsv);
-                    validateCircleAndLLC(courseContentCsv);
                 } catch (DataValidationException ex) {
                     processError(errorDetail, ex,
                             courseContentCsv.getContentId());
@@ -151,33 +146,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         LOGGER.info("Finished processing CircleCsv-import success");
 
         return "Records Processed Successfully";
-    }
-
-    /*
-     * This function validates if the CourseContentCsv contains valid circle and
-     * LLC
-     */
-    private boolean validateCircleAndLLC(CourseContentCsv courseContentCsv)
-            throws DataValidationException {
-        String circle = courseContentCsv.getCircle();
-        int languageLocCode = Integer.parseInt(courseContentCsv
-                .getLanguageLocationCode());
-        if (!masterDataService.isCircleValid(circle)) {
-            LOGGER.debug("circle is not valid for content ID: {}",
-                    courseContentCsv.getContentId());
-            throw new DataValidationException(courseContentCsv.getContentId(),
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE, "Circle");
-        }
-        if (!masterDataService.isLlcValidInCircle(circle, languageLocCode)) {
-            LOGGER.debug("LLC doesn't exist in circle for content ID: {}",
-                    courseContentCsv.getContentId());
-            throw new DataValidationException(courseContentCsv.getContentId(),
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                    "Language Location Code");
-        }
-        return true;
     }
 
     /*
