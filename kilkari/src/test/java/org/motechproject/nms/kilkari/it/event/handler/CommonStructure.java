@@ -103,7 +103,7 @@ public class CommonStructure extends BasePaxIT {
     @Before
     public void setUp() {
         if (!setUpIsDone) {
-            deleteAll();
+            //deleteAll();
             createState();
             createDistrict();
             createTaluka();
