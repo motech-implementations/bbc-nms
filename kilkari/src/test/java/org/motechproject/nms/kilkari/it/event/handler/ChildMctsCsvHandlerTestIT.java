@@ -34,7 +34,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");
-        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -52,13 +51,11 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(dbSubscriber);
         assertTrue(dbSubscription.getChannel().equals(Channel.MCTS));
         assertTrue(dbSubscriber.getName().equals(csv.getMotherName()));
-        assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
     } 
     
     @Test
     public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
         logger.info("Inside createSameMsisdnDifferentMcts");
-        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -87,7 +84,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
         logger.info("Inside createSameMsisdnSameMcts");
-        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -122,7 +118,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        //setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -156,7 +151,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedChildDeath() throws Exception {
         logger.info("Inside createDifferentMsisdnSameMcts");
-        //setUp();
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -191,7 +185,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDeleteOperation() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -221,7 +214,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     @Test
     public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts() throws Exception {
         logger.info("Inside  createDeleteOperation");
-        //setUp();
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();

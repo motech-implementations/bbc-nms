@@ -103,7 +103,6 @@ public class CommonStructure extends BasePaxIT {
     @Before
     public void setUp() {
         if (!setUpIsDone) {
-            //deleteAll();
             createState();
             createDistrict();
             createTaluka();
@@ -122,24 +121,6 @@ public class CommonStructure extends BasePaxIT {
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             subscriptionService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            villageCsvRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthSubFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthBlockRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            talukaRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            districtRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             stateRecordsDataService.deleteAll();
@@ -199,10 +180,10 @@ public class CommonStructure extends BasePaxIT {
         HealthFacility newRecord = new HealthFacility();
         newRecord.setName("healthFacilityName");
         newRecord.setStateCode(1L);
-        newRecord.setDistrictCode(1l);
+        newRecord.setDistrictCode(1L);
         newRecord.setTalukaCode("1");
-        newRecord.setHealthBlockCode(1l);
-        newRecord.setHealthFacilityCode(1l);
+        newRecord.setHealthBlockCode(1L);
+        newRecord.setHealthFacilityCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
         newRecord.setModifiedBy("Deepak");
@@ -234,11 +215,11 @@ public class CommonStructure extends BasePaxIT {
         HealthSubFacility newRecord = new HealthSubFacility();
         newRecord.setName("healthSubFacilityName");
         newRecord.setStateCode(1L);
-        newRecord.setDistrictCode(1l);
+        newRecord.setDistrictCode(1L);
         newRecord.setTalukaCode("1");
-        newRecord.setHealthBlockCode(1l);
-        newRecord.setHealthFacilityCode(1l);
-        newRecord.setHealthSubFacilityCode(1l);
+        newRecord.setHealthBlockCode(1L);
+        newRecord.setHealthFacilityCode(1L);
+        newRecord.setHealthSubFacilityCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
         newRecord.setModifiedBy("Deepak");
@@ -257,9 +238,9 @@ public class CommonStructure extends BasePaxIT {
         Village newRecord = new Village();
         newRecord.setName("villageName");
         newRecord.setStateCode(1L);
-        newRecord.setDistrictCode(1l);
+        newRecord.setDistrictCode(1L);
         newRecord.setTalukaCode("1");
-        newRecord.setVillageCode(1l);
+        newRecord.setVillageCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
         newRecord.setModifiedBy("Deepak");
