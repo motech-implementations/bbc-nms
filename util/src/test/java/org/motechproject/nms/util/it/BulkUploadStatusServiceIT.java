@@ -36,24 +36,35 @@ public class BulkUploadStatusServiceIT extends BasePaxIT {
     public void shouldAddBulkUploadStatus() throws Exception {
                assertNotNull(bulkUploadStatusDataService);
 
-        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-        bulkUploadStatus.setLogFileServerIp("10.203.3.63");
         BulkUploadError bulkUploadError = new BulkUploadError();
         String logFileName = bulkUploadError.createBulkUploadErrLogFileName("CircleCsv");
+        String bulkUploadFileName = "csv-import.someFileName";
+        Integer numberOfFailedRecords = 82;
+        Integer numberOfSuccessfulRecords = 3;
+        String logFileServerIP = "10.203.3.63";
+
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        bulkUploadStatus.setLogFileServerIp(logFileServerIP);
         bulkUploadStatus.setLogFileName(logFileName);
-        bulkUploadStatus.setBulkUploadFileName("csv-import.someFileName");
-        bulkUploadStatus.setNumberOfFailedRecords(82);
-        bulkUploadStatus.setNumberOfSuccessfulRecords(3);
+        bulkUploadStatus.setBulkUploadFileName(bulkUploadFileName);
+        bulkUploadStatus.setNumberOfFailedRecords(numberOfFailedRecords);
+        bulkUploadStatus.setNumberOfSuccessfulRecords(numberOfSuccessfulRecords);
         bulkUploadStatusService.add(bulkUploadStatus);
 
         List<BulkUploadStatus> list = bulkUploadStatusDataService.retrieveAll();
         assertNotNull(list);
         for(BulkUploadStatus status : list) {
-            if(status.getLogFileName().equalsIgnoreCase(logFileName)) {
-                Assert.assertEquals(bulkUploadStatus.getBulkUploadFileName(), status.getBulkUploadFileName());
-                Assert.assertEquals(bulkUploadStatus.getLogFileServerIp(), status.getLogFileServerIp());
-                Assert.assertEquals(bulkUploadStatus.getNumberOfFailedRecords(), status.getNumberOfFailedRecords());
-                Assert.assertEquals(bulkUploadStatus.getNumberOfSuccessfulRecords(), status.getNumberOfSuccessfulRecords());
+            String retrievedLogFileName = status.getLogFileName();
+            if(retrievedLogFileName.equalsIgnoreCase(logFileName)) {
+                String retrievedBulkUploadFileName = status.getBulkUploadFileName();
+                String retrievedLogFileServerIP = status.getLogFileServerIp();
+                Integer retrievedCountOfFailedRecords = status.getNumberOfFailedRecords();
+                Integer retrievedCountOfSuccessfulRecords = status.getNumberOfSuccessfulRecords();
+
+                Assert.assertEquals(bulkUploadFileName, retrievedBulkUploadFileName);
+                Assert.assertEquals(logFileServerIP, retrievedLogFileServerIP);
+                Assert.assertEquals(numberOfFailedRecords, retrievedCountOfFailedRecords);
+                Assert.assertEquals(numberOfSuccessfulRecords, retrievedCountOfSuccessfulRecords);
 
                 bulkUploadStatusDataService.delete(bulkUploadStatus);
             }

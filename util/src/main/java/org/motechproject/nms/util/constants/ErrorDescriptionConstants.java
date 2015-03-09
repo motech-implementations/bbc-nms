@@ -9,7 +9,7 @@ package org.motechproject.nms.util.constants;
 public final class ErrorDescriptionConstants {
 
     public static final String MANDATORY_PARAMETER_MISSING_DESCRIPTION = "Upload unsuccessful as %s is missing.";
-    public static final String INVALID_DATA_DESCRIPTION = "Upload unsuccessful as %s invalid.";
+    public static final String INVALID_DATA_DESCRIPTION = "Upload unsuccessful as %s is invalid.";
     public static final String CSV_RECORD_MISSING_DESCRIPTION = "Upload unsuccessful as record is missing in CSV.";
     public static final String GENERAL_EXCEPTION_DESCRIPTION = "Upload unsuccessful as some general exception occurred";
 
