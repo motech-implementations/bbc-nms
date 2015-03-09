@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;

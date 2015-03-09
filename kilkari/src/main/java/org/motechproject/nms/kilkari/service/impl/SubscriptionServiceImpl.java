@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.motechproject.mds.filter.Filter;
-import org.motechproject.mds.filter.FilterType;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
