@@ -2,7 +2,6 @@ package org.motechproject.nms.mobileacademy.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentCustomQuery;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;

@@ -262,6 +262,9 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 if (tokens.length > arrayIndex) {
                     courseContentCsv.setMetaData(tokens[arrayIndex]);
                 }
+                courseContentCsv.setCreator("Test creator");
+                courseContentCsv.setOwner("Test owner");
+                courseContentCsv.setModifiedBy("Test modifier");
                 courseContentCsvs.add(courseContentCsvDataService
                         .create(courseContentCsv));
 
@@ -555,6 +558,9 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 if (tokens.length > arrayIndex) {
                     courseContentCsv.setMetaData(tokens[arrayIndex]);
                 }
+                courseContentCsv.setCreator("Test creator");
+                courseContentCsv.setOwner("Test owner");
+                courseContentCsv.setModifiedBy("Test modifier");
                 courseContentCsvs.add(courseContentCsvDataService
                         .create(courseContentCsv));
 
