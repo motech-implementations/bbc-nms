@@ -161,6 +161,58 @@ public class TestHelper {
         return villageCsvData;
     }
 
+    public static HealthFacility getHealthFacilityData(){
+
+        Set<HealthSubFacility> healthSubFacilitySet = new HashSet<HealthSubFacility>();
+
+        HealthFacility healthFacilityData = new HealthFacility();
+        healthFacilityData.setName("Gangiri");
+        healthFacilityData.setStateCode(123L);
+        healthFacilityData.setDistrictCode(456L);
+        healthFacilityData.setTalukaCode("8");
+        healthFacilityData.setHealthBlockCode(1002L);
+        healthFacilityData.setHealthFacilityCode(1111L);
+        healthFacilityData.setHealthSubFacility(healthSubFacilitySet);
+
+        return healthFacilityData;
+    }
+
+    public static HealthFacilityCsv getHealthFacilityCsvData(){
+
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF1","1111","123","456","8","1002","9999");
+        return healthFacilityCsvData;
+    }
+
+    public static HealthFacilityCsv getUpdateHealthFacilityCsvData(){
+
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF2","1111","123","456","8","1002","9999");
+        return healthFacilityCsvData;
+    }
+
+    public static HealthFacilityCsv getDeleteHealthFacilityCsvData(){
+
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Del","HF2","1111","123","456","8","1002","9999");
+        return healthFacilityCsvData;
+    }
+
+    public static HealthSubFacilityCsv getHealthSubFacilityCsvData(){
+
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","123","456","8","1002");
+        return healthSubFacilityCsvData;
+    }
+
+    public static HealthSubFacilityCsv getUpdateHealthSubFacilityCsvData(){
+
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF2","1111","9001","123","456","8","1002");
+        return healthSubFacilityCsvData;
+    }
+
+    public static HealthSubFacilityCsv getDeleteHealthSubFacilityCsvData(){
+
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Del","HSF2","1111","9001","123","456","8","1002");
+        return healthSubFacilityCsvData;
+    }
+
     public static MotechEvent createMotechEvent(List<Long> ids,String event) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);

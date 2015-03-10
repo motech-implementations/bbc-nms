@@ -1,0 +1,154 @@
+package org.motechproject.nms.masterdata.it;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.event.handler.HealthSubFacilityCsvUploadHandler;
+import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.util.service.BulkUploadErrLogService;
+import org.motechproject.testing.osgi.BasePaxIT;
+import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
+import org.ops4j.pax.exam.ExamFactory;
+import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
+import org.ops4j.pax.exam.spi.reactors.PerSuite;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertNull;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+/**
+ * Created by abhishek on 11/3/15.
+ */
+
+@RunWith(PaxExam.class)
+@ExamReactorStrategy(PerSuite.class)
+@ExamFactory(MotechNativeTestContainerFactory.class)
+public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
+
+    private HealthSubFacilityCsvUploadHandler healthSubFacilityCsvHandler;
+
+    List<Long> createdIds = new ArrayList<Long>();
+
+    @Inject
+    private StateRecordsDataService stateRecordsDataService;
+
+    @Inject
+    private DistrictRecordsDataService districtRecordsDataService;
+
+    @Inject
+    private TalukaRecordsDataService talukaRecordsDataService;
+
+    @Inject
+    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+
+    @Inject
+    private HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService;
+
+    @Inject
+    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+
+    @Inject
+    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+
+    @Inject
+    private BulkUploadErrLogService bulkUploadErrLogService;
+
+    @Before
+    public void setUp() {
+        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateRecordsDataService,
+                districtRecordsDataService, talukaRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
+                healthSubFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
+    }
+
+    @Test
+    public void testDataServiceInstance() throws Exception {
+        assertNotNull(healthFacilityRecordsDataService);
+        assertNotNull(healthSubFacilityCsvRecordsDataService);
+        assertNotNull(healthSubFacilityRecordsDataService);
+        assertNotNull(talukaRecordsDataService);
+        assertNotNull(talukaRecordsDataService);
+        assertNotNull(districtRecordsDataService);
+        assertNotNull(stateRecordsDataService);
+        assertNotNull(bulkUploadErrLogService);
+        assertNotNull(healthSubFacilityCsvHandler);
+    }
+
+    @Test
+    public void testHealthSubFacilityCsvHandler() {
+
+        State stateData = TestHelper.getStateData();
+        District districtData = TestHelper.getDistrictData();
+        Taluka talukaData = TestHelper.getTalukaData();
+        HealthBlock healthBlockData = TestHelper.getHealthBlockData();
+        HealthFacility healthFacilityData = TestHelper.getHealthFacilityData();
+
+        stateData.getDistrict().add(districtData);
+        districtData.getTaluka().add(talukaData);
+        talukaData.getHealthBlock().add(healthBlockData);
+        healthBlockData.getHealthFacility().add(healthFacilityData);
+
+        stateRecordsDataService.create(stateData);
+
+        HealthSubFacilityCsv csvData = TestHelper.getHealthSubFacilityCsvData();
+        createHealthSubFacilityCsvData(csvData);
+
+        clearId();
+        createdIds.add(csvData.getId());
+
+        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
+        HealthSubFacility healthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(123L, 456L, "8", 1002L, 1111L,9001L);
+
+        assertNotNull(healthSubFacilityData);
+        assertTrue(123L == healthSubFacilityData.getStateCode());
+        assertTrue(456L == healthSubFacilityData.getDistrictCode());
+        assertTrue("8".equals(healthSubFacilityData.getTalukaCode()));
+        assertTrue(1002L == healthSubFacilityData.getHealthBlockCode());
+        assertTrue(1111L == healthSubFacilityData.getHealthFacilityCode());
+        assertTrue(9001L == healthSubFacilityData.getHealthSubFacilityCode());
+        assertTrue("HSF1".equals(healthSubFacilityData.getName()));
+
+        csvData = TestHelper.getUpdateHealthSubFacilityCsvData();
+        createHealthSubFacilityCsvData(csvData);
+
+        clearId();
+        createdIds.add(csvData.getId());
+
+        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
+        HealthSubFacility healthSubFacilityUpdateData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(123L, 456L, "8", 1002L, 1111L,9001L);
+
+        assertNotNull(healthSubFacilityUpdateData);
+        assertTrue(123L == healthSubFacilityUpdateData.getStateCode());
+        assertTrue(456L == healthSubFacilityUpdateData.getDistrictCode());
+        assertTrue("8".equals(healthSubFacilityUpdateData.getTalukaCode()));
+        assertTrue(1002L == healthSubFacilityUpdateData.getHealthBlockCode());
+        assertTrue(1111L == healthSubFacilityUpdateData.getHealthFacilityCode());
+        assertTrue(9001L == healthSubFacilityUpdateData.getHealthSubFacilityCode());
+        assertTrue("HSF2".equals(healthSubFacilityUpdateData.getName()));
+
+        csvData = TestHelper.getDeleteHealthSubFacilityCsvData();
+        createHealthSubFacilityCsvData(csvData);
+
+        clearId();
+        createdIds.add(csvData.getId());
+
+        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
+        HealthSubFacility healthSubFacilityDeletedData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(123L, 456L, "8", 1002L, 1111L,9001L);
+
+        assertNull(healthSubFacilityDeletedData);
+    }
+
+    private void clearId() {
+        createdIds.clear();
+    }
+
+    private void createHealthSubFacilityCsvData(HealthSubFacilityCsv csvData) {
+        healthSubFacilityCsvRecordsDataService.create(csvData);
+    }
+}

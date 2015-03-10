@@ -26,31 +26,35 @@ import java.util.Map;
 @Component
 public class HealthSubFacilityCsvUploadHandler {
 
-    @Autowired
     private StateRecordsDataService stateRecordsDataService;
 
-    @Autowired
     private DistrictRecordsDataService districtRecordsDataService;
 
-    @Autowired
     private TalukaRecordsDataService talukaRecordsDataService;
 
-    @Autowired
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
-    @Autowired
     private HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService;
 
-    @Autowired
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
-    @Autowired
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
+
+    @Autowired
+    public HealthSubFacilityCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+        this.districtRecordsDataService = districtRecordsDataService;
+        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
+        this.healthSubFacilityCsvRecordsDataService = healthSubFacilityCsvRecordsDataService;
+        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
+        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.bulkUploadErrLogService = bulkUploadErrLogService;
+    }
 
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
