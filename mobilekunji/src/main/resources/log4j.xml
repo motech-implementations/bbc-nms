@@ -11,11 +11,11 @@
     </appender>
 
     <logger name="org.motechproject.nms.mobilekunji">
-        <level value="ERROR" />
+        <level value="INFO" />
     </logger>
 
     <root>
-        <priority value="ERROR" />
+        <priority value="INFO" />
         <appender-ref ref="CONSOLE" />
     </root>
 
