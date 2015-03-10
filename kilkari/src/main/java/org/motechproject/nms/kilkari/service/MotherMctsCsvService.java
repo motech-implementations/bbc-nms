@@ -10,6 +10,4 @@ public interface MotherMctsCsvService {
     void delete(MotherMctsCsv record);
     
     void deleteAll();
-    
-    MotherMctsCsv findById(Long id);
 }

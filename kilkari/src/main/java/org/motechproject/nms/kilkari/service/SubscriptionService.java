@@ -4,10 +4,6 @@ import org.motechproject.nms.kilkari.domain.Subscription;
 
 public interface SubscriptionService {
 
-    void add(Subscription record);
-
-    void delete(Subscription record);
-
     void update(Subscription record);
     
     Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem);

@@ -4,14 +4,9 @@ import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 
 public interface ChildMctsCsvService {
 
-
     void delete(ChildMctsCsv record);
     
     ChildMctsCsv findRecordById(Long id);
     
     void deleteAll();
-    
-    ChildMctsCsv findById(Long id);
-    
-    
 }

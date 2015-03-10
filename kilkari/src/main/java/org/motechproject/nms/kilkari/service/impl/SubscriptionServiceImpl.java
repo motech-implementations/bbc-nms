@@ -18,21 +18,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Autowired
     private SubscriptionDataService subscriptionDataService;
-    
 
-    @Override
-    public void add(Subscription record) {
-        subscriptionDataService.create(record);
-
-    }
-
-
-    @Override
-    public void delete(Subscription record) {
-        subscriptionDataService.delete(record);
-
-    }
-    
     @Override
     public void deleteAll() {
         subscriptionDataService.deleteAll();

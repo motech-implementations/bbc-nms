@@ -27,10 +27,4 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     public void deleteAll() {
         childMctsCsvDataService.deleteAll();
     }
-
-    @Override
-    public ChildMctsCsv findById(Long id) {
-        return childMctsCsvDataService.findById(id);
-    }
-
 }
