@@ -195,7 +195,6 @@ public class ContentUploadCsvHandler {
         String circleCode = null;
         Integer languageLocationCode;
         String contentName = null;
-        ContentType contentType = null;
         String content = null;
         String contentFile = null;
         Integer cardNumber = null;
