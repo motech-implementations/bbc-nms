@@ -1427,18 +1427,15 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * in case of any error, it returns false.
      */
     private boolean isTypeDeterminable(Record record, String subString) {
-
         // If the substring is "QuizHeader" or "EndMenu", it will be determined.
         FileType fileType = FileType.getFor(subString);
         if (fileType != null) {
             record.setType(fileType);
             return true;
         }
-
         String type = subString.substring(0, subString.length() - 2);
         String indexString = subString.substring(subString.length() - 2);
         int index;
-
         try {
             index = Integer.parseInt(indexString);
         } catch (NumberFormatException exception) {
@@ -1446,34 +1443,17 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             return false;
         }
         fileType = FileType.getFor(type);
-
         record.setType(fileType);
-
-        if (fileType == FileType.LESSON_CONTENT) {
+        if ((fileType == FileType.LESSON_CONTENT)
+                || (fileType == FileType.LESSON_END_MENU)) {
             if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_LESSONS)) {
                 return false;
             }
             record.setLessonId(index);
             return true;
-        } else if (fileType == FileType.LESSON_END_MENU) {
-            if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_LESSONS)) {
-                return false;
-            }
-            record.setLessonId(index);
-            return true;
-        } else if (fileType == FileType.QUESTION_CONTENT) {
-            if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
-                return false;
-            }
-            record.setQuestionId(index);
-            return true;
-        } else if (fileType == FileType.CORRECT_ANSWER) {
-            if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
-                return false;
-            }
-            record.setQuestionId(index);
-            return true;
-        } else if (fileType == FileType.WRONG_ANSWER) {
+        } else if ((fileType == FileType.QUESTION_CONTENT)
+                || (fileType == FileType.CORRECT_ANSWER)
+                || (fileType == FileType.WRONG_ANSWER)) {
             if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_QUESTIONS)) {
                 return false;
             }
