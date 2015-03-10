@@ -182,6 +182,18 @@ public class ParseDataHelperTest {
 
         Assert.assertNull(dateTimeValue);
 
+        //Changing isMandatory to false
+        isMandatory = false;
+
+        try {
+            dateTimeValue = ParseDataHelper.parseDate(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+        }
+
+        Assert.assertNull(dateTimeValue);
+
     }
 
     /**
@@ -264,6 +276,18 @@ public class ParseDataHelperTest {
         Integer intValue = null;
 
         //Testing with null
+        try {
+            intValue = ParseDataHelper.parseInt(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+        }
+
+        Assert.assertNull(intValue);
+
+        //Testing with null and isMandatory false
+        isMandatory = false;
+
         try {
             intValue = ParseDataHelper.parseInt(field, value, isMandatory);
         } catch (Exception e) {
@@ -363,7 +387,7 @@ public class ParseDataHelperTest {
         boolean isMandatory = true;
         Long longValue = null;
 
-        //Testing with null
+        //Testing with null and isMandatory = true
         String value = null;
 
         try {
@@ -374,6 +398,19 @@ public class ParseDataHelperTest {
         }
 
         Assert.assertNull(longValue);
+
+        //Testing with null and isMandatory = false
+        isMandatory = false;
+
+        try {
+            longValue = ParseDataHelper.parseLong(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+        }
+
+        Assert.assertNull(longValue);
+
 
         //Testing with empty string
         value = Constants.EMPTY_STRING;
@@ -466,7 +503,7 @@ public class ParseDataHelperTest {
         boolean isMandatory = true;
         Boolean boolValue = null;
 
-        //Testing with null
+        //Testing with null and isMandatory = true
         String value = null;
         try {
             boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
@@ -476,6 +513,20 @@ public class ParseDataHelperTest {
         }
 
         Assert.assertNull(boolValue);
+
+        //Testing with null and isMandatory = false
+        value = null;
+        isMandatory = false;
+
+        try {
+            boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+        }
+
+        Assert.assertNull(boolValue);
+
 
         //Testing with empty string
         value = Constants.EMPTY_STRING;
@@ -545,9 +596,9 @@ public class ParseDataHelperTest {
     @Test
     public void shouldParseBooleanValueFromString() {
         String field = "isDeactivatedBySystem";
-        String value = "TRuE"; //This value should not be case sensitive
         boolean isMandatory = true;
         Boolean boolValue = null;
+        String value = "true"; //This value should not be case sensitive
 
         try {
             boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
@@ -557,5 +608,39 @@ public class ParseDataHelperTest {
 
         Assert.assertNotNull(boolValue);
         Assert.assertEquals(true, boolValue);
+
+        value = "TRUE"; //This value should not be case sensitive
+
+        try {
+            boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertNotNull(boolValue);
+        Assert.assertEquals(true, boolValue);
+
+        value = "false"; //This value should not be case sensitive
+
+        try {
+            boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertNotNull(boolValue);
+        Assert.assertEquals(false, boolValue);
+
+        value = "FALSE"; //This value should not be case sensitive
+
+        try {
+            boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertNotNull(boolValue);
+        Assert.assertEquals(false, boolValue);
+
     }
 }
