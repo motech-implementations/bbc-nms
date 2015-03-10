@@ -148,9 +148,9 @@ public class ContentUploadCsvHandler {
                 logger.warn("Record not found for uploaded ID: {}", id);
             } catch (Exception ex) {
 
+                logger.error("Exception Occur : {}", ex);
                 errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                 summary.incrementFailureCount();
-                logger.error("Exception Occur : {}", ex.getStackTrace());
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             } finally {
                 if (null != record) {
