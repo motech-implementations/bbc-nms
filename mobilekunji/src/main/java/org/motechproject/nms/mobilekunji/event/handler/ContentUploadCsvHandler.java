@@ -160,15 +160,15 @@ public class ContentUploadCsvHandler {
         String contentName = null;
         String content = null;
         String contentFile = null;
-        String cardNumber = null;
+        Integer cardNumber = null;
         Integer contentDuration = null;
 
         contentId = ParseDataHelper.validateAndParseInt("Content Id", record.getContentId(), true);
         circleCode = ParseDataHelper.validateAndParseString("Circle Code", record.getCircleCode(), true);
         languageLocationCode = ParseDataHelper.validateAndParseInt("Language Location Code", record.getLanguageLocationCode(), true);
-        contentName = ParseDataHelper.validateAndParseString("Conteny name", record.getContentName(), true);
+        contentName = ParseDataHelper.validateAndParseString("Content name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
-        cardNumber = ParseDataHelper.validateAndParseString("Card number", record.getCardNumber(), true);
+        cardNumber = ParseDataHelper.validateAndParseInt("Card number", record.getCardNumber(), true);
         validateCardNumber(record.getCardNumber());
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
