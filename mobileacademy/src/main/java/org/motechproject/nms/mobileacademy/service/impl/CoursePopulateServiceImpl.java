@@ -109,13 +109,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      */
     @Override
     public Course getMtrainingCourse() {
+        Course course = null;
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
 
         if (CollectionUtils.isNotEmpty(courses)) {
-            return courses.get(0);
+            course = courses.get(0);
         }
-        return null;
+        return course;
     }
 
     /*
@@ -237,6 +238,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     @Override
     public LessonContent getLessonContent(int chapterId, int lessonId,
             String type) {
+        LessonContent lessonContentReturn = null;
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -247,13 +249,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                         if ((lessonContent.getLessonNumber() == lessonId)
                                 && (lessonContent.getName()
                                         .equalsIgnoreCase(type))) {
-                            return lessonContent;
+                            lessonContentReturn = lessonContent;
+                            return lessonContentReturn;
                         }
                     }
                 }
             }
         }
-        return null;
+        return lessonContentReturn;
     }
 
     /*
@@ -298,6 +301,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     @Override
     public QuestionContent getQuestionContent(int chapterId, int questionId,
             String type) {
+        QuestionContent questionContentReturn = null;
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -308,13 +312,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                         if ((questionContent.getQuestionNumber() == questionId)
                                 && (questionContent.getName()
                                         .equalsIgnoreCase(type))) {
-                            return questionContent;
+                            questionContentReturn = questionContent;
+                            return questionContentReturn;
                         }
                     }
                 }
             }
         }
-        return null;
+        return questionContentReturn;
     }
 
     /*
@@ -359,6 +364,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      */
     @Override
     public ScoreContent getScore(int chapterId, int scoreId, String type) {
+        ScoreContent scoreContentReturn = null;
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -370,13 +376,14 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                         + String.format(
                                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                                 scoreId)))) {
-                            return scoreContent;
+                            scoreContentReturn = scoreContent;
+                            return scoreContentReturn;
                         }
                     }
                 }
             }
         }
-        return null;
+        return scoreContentReturn;
     }
 
     /*
@@ -422,18 +429,20 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      */
     @Override
     public ChapterContent getChapterContent(int chapterId, String type) {
+        ChapterContent chapterContentReturn = null;
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     if (chapterContent.getName().equalsIgnoreCase(type)) {
-                        return chapterContent;
+                        chapterContentReturn = chapterContent;
+                        return chapterContentReturn;
                     }
                 }
             }
         }
-        return null;
+        return chapterContentReturn;
     }
 
     /*
@@ -470,6 +479,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
      */
     @Override
     public QuizContent getQuizContent(int chapterId, String type) {
+        QuizContent quizContentReturn = null;
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
@@ -477,12 +487,13 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     QuizContent quizContent = chapterContent.getQuiz();
                     if (quizContent.getName().equalsIgnoreCase(type)) {
-                        return quizContent;
+                        quizContentReturn = quizContent;
+                        return quizContentReturn;
                     }
                 }
             }
         }
-        return null;
+        return quizContentReturn;
     }
 
     /*

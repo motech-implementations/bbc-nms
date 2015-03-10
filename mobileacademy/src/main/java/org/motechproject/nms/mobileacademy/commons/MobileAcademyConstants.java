@@ -80,6 +80,10 @@ public class MobileAcademyConstants {
 
     public static final String CONTENT_NAME = "Content Name";
 
+    public static final String LOG_MSG_ORIGINAL_FILE_NAME = "original file name: {}";
+
+    public static final String LOG_MSG_NEW_FILE_NAME = "new file name: {}";
+
     private MobileAcademyConstants() {
     }
 }
