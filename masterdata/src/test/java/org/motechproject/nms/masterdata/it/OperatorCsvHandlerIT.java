@@ -111,6 +111,27 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         Assert.assertEquals(record.getName(), "MotechEventChanged");
     }
 
+    @Test
+    public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
+        createdIds.add(1L);
+
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
+    }
+
+    @Test
+    public void shouldRaiseDataValidationException() throws Exception {
+        OperatorCsv csv = new OperatorCsv();
+        csv.setName("MotechEventCreateTest");
+        csv.setCode("");
+        csv.setOperation("ADD");
+        OperatorCsv dbCsv = operatorCsvDataService.create(csv);
+        createdIds.add(dbCsv.getId());
+
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
+    }
+
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);

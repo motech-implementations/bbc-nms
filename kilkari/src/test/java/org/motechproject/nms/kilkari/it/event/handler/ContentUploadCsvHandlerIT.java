@@ -156,6 +156,66 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         Assert.assertEquals(record.getContentFile(), "contentFileChanged");
     }
 
+    @Test
+    public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
+        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+                contentUploadCsvService, circleService, languageLocationCodeService);
+
+        createdIds.add(1L);
+        csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
+    }
+
+    @Test
+    public void shouldRaiseDataValidationException() throws Exception {
+        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+                contentUploadCsvService, circleService, languageLocationCodeService);
+        Circle circle = new Circle();
+        circle.setName("MotechEventCreateTest");
+        circle.setCode("circleCode");
+        circleDataService.create(circle);
+
+        //create State with statecode "1"
+        State state = new State();
+        state.setName("testState");
+        state.setStateCode(1L);
+        stateService.create(state);
+
+        //create district with districtCode "1" and stateCode "1"
+        District district = new District();
+        district.setStateCode(1L);
+        district.setName("testDistrict");
+        district.setDistrictCode(1L);
+        district.setStateCode(1L);
+        districtService.create(district);
+
+        LanguageLocationCode llc = new LanguageLocationCode();
+        llc.setCircleCode("circleCode");
+        llc.setDistrictCode(1L);
+        llc.setStateCode(1L);
+        llc.setLanguageLocationCode(123);
+        llc.setLanguageKK("LanguageKK");
+        llc.setLanguageMA("LanguageMA");
+        llc.setLanguageMK("LanguageMK");
+        llc.setCircle(circle);
+        llc.setDistrict(district);
+        llc.setState(state);
+        languageLocationCodeService.create(llc);
+
+        ContentUploadCsv contentCsv = new ContentUploadCsv();
+        contentCsv.setLanguageLocationCode("123@@@@");
+        contentCsv.setContentType("contentType");
+        contentCsv.setContentFile("contentFile");
+        contentCsv.setCircleCode("circleCode");
+        contentCsv.setContentName("contentName");
+        contentCsv.setContentDuration("10");
+        contentCsv.setContentId("1");
+        ContentUploadCsv dbCsv = contentUploadCsvDataService.create(contentCsv);
+        createdIds.add(dbCsv.getId());
+
+
+        csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
+    }
+
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);

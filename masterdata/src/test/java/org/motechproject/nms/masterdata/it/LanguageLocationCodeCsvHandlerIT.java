@@ -94,7 +94,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMK"));
         Assert.assertTrue(record.getLanguageLocationCode().equals(123));
     }
-    
+
     @Test
     @Ignore
     public void shouldDeleteLanguageLocationCodeRecordsAfterCsvUpload() throws Exception {
@@ -167,6 +167,58 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageMA().equals("LanguageMAChanged"));
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMKChanged"));
         Assert.assertTrue(record.getLanguageLocationCode().equals(321));
+    }
+
+    @Test
+    public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
+        LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
+                languageLocationCodeServiceCsv, bulkUploadErrLogService, circleService, locationService);
+        createdIds.add(1L);
+
+        llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
+    }
+
+    @Test
+    public void shouldRaiseDataValidationException() throws Exception {
+        LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
+                languageLocationCodeServiceCsv, bulkUploadErrLogService, circleService, locationService);
+        //create circle with code "testCode"
+        Circle circle = new Circle();
+        circle.setName("name");
+        circle.setCode("testCode");
+        circle.setDefaultLanguageLocationCode(123);
+        circleService.create(circle);
+
+        //create State with statecode "1"
+        State state = new State();
+        state.setName("testState");
+        state.setStateCode(1L);
+        stateService.create(state);
+
+        //create district with districtCode "1" and stateCode "1"
+        District district = new District();
+        district.setStateCode(1L);
+        district.setName("testDistrict");
+        district.setDistrictCode(1L);
+        district.setStateCode(1L);
+        districtService.create(district);
+
+        //create LanguageLocationCodeCsv record with circleCode "testCode",
+        // districtCode "1" and stateCode "1"
+        LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
+        csvRecord.setCircleCode("testCode");
+        csvRecord.setOperation("ADD");
+        csvRecord.setDistrictCode("1");
+        csvRecord.setStateCode("@");
+        csvRecord.setIsDefaultLanguageLocationCode("Y");
+        csvRecord.setLanguageKK("LanguageKK");
+        csvRecord.setLanguageMA("LanguageMA");
+        csvRecord.setLanguageMK("LanguageMK");
+        csvRecord.setLanguageLocationCode("123");
+        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        createdIds.add(dbCsv.getId());
+
+        llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
     }
 
     public MotechEvent createMotechEvent(List<Long> ids) {

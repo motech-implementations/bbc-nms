@@ -52,13 +52,7 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldCreateCircleRecordsAfterCsvUpload() throws Exception {
-        CircleCsv csv = new CircleCsv();
-        csv.setName("MotechEventCreateTest");
-        csv.setCode("12345");
-        csv.setOperation("ADD");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
-        createdIds.add(dbCsv.getId());
-
+        preSetup();
         CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
         circleCsvHandler.circleCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(circleCsvService.getRecord(createdIds.get(0)));
@@ -68,18 +62,13 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldDeleteCircleRecordsAfterCsvUpload() throws Exception {
-        CircleCsv csv = new CircleCsv();
-        csv.setName("MotechEventCreateTest");
-        csv.setCode("12345");
-        csv.setOperation("ADD");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
-        createdIds.add(dbCsv.getId());
+        preSetup();
 
         CircleCsv csv2 = new CircleCsv();
         csv2.setName("MotechEventCreateTest");
         csv2.setCode("12345");
         csv2.setOperation("DEL");
-        dbCsv = circleCsvDataService.create(csv2);
+        CircleCsv dbCsv = circleCsvDataService.create(csv2);
         createdIds.add(dbCsv.getId());
 
         CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
@@ -91,16 +80,11 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldUpdateCircleRecordsAfterCsvUpload() throws Exception {
-        CircleCsv csv = new CircleCsv();
-        csv.setName("MotechEventCreateTest");
-        csv.setCode("12345");
-        csv.setOperation("ADD");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
-        createdIds.add(dbCsv.getId());
+        preSetup();
         CircleCsv csv2 = new CircleCsv();
         csv2.setName("MotechEventChanged");
         csv2.setCode("12345");
-        dbCsv = circleCsvDataService.create(csv2);
+        CircleCsv dbCsv = circleCsvDataService.create(csv2);
         createdIds.add(dbCsv.getId());
 
         CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
@@ -110,6 +94,40 @@ public class CircleCsvHandlerIT extends BasePaxIT {
         Circle record = circleService.getRecordByCode("12345");
         Assert.assertEquals(record.getName(), "MotechEventChanged");
     }
+
+    @Test
+    public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
+        createdIds.add(1L);
+
+        CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
+        circleCsvHandler.circleCsvSuccess(createMotechEvent(createdIds));
+    }
+
+    @Test
+    public void shouldRaiseDataValidationException() throws Exception {
+        CircleCsv csv = new CircleCsv();
+        csv.setName("MotechEventCreateTest");
+        csv.setCode("");
+        csv.setOperation("ADD");
+        CircleCsv dbCsv = circleCsvDataService.create(csv);
+        createdIds.add(dbCsv.getId());
+
+        CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
+        circleCsvHandler.circleCsvSuccess(createMotechEvent(createdIds));
+    }
+
+
+
+    public void preSetup() {
+        CircleCsv csv = new CircleCsv();
+        csv.setName("MotechEventCreateTest");
+        csv.setCode("12345");
+        csv.setOperation("ADD");
+        CircleCsv dbCsv = circleCsvDataService.create(csv);
+        createdIds.add(dbCsv.getId());
+
+    }
+
 
     public MotechEvent createMotechEvent(List<Long> ids) {
         Map<String, Object> params = new HashMap<>();
