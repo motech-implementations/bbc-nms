@@ -59,6 +59,31 @@ public class FrontLineWorkerCsv extends MdsEntity {
     @Field
     private String isValid;
 
+    public FrontLineWorkerCsv() {
+    }
+
+    public FrontLineWorkerCsv(String villageCode, String flwId, String stateCode, String contactNo, String name,
+                              String type, String districtCode, String talukaCode, String healthBlockCode,
+                              String phcCode, String subCentreCode, String ashaNumber, String isValidated,
+                              String adhaarNo, String operation, String isValid) {
+        this.villageCode = villageCode;
+        this.flwId = flwId;
+        this.stateCode = stateCode;
+        this.contactNo = contactNo;
+        this.name = name;
+        this.type = type;
+        this.districtCode = districtCode;
+        this.talukaCode = talukaCode;
+        this.healthBlockCode = healthBlockCode;
+        this.phcCode = phcCode;
+        this.subCentreCode = subCentreCode;
+        this.ashaNumber = ashaNumber;
+        this.isValidated = isValidated;
+        this.adhaarNo = adhaarNo;
+        this.operation = operation;
+        this.isValid = isValid;
+    }
+
     public String getFlwId() {
         return flwId;
     }
@@ -198,28 +223,5 @@ public class FrontLineWorkerCsv extends MdsEntity {
 
     }
 
-    public FrontLineWorkerCsv() {
-    }
 
-    public FrontLineWorkerCsv(String villageCode, String flwId, String stateCode, String contactNo, String name,
-                              String type, String districtCode, String talukaCode, String healthBlockCode,
-                              String phcCode, String subCentreCode, String ashaNumber, String isValidated,
-                              String adhaarNo, String operation, String isValid) {
-        this.villageCode = villageCode;
-        this.flwId = flwId;
-        this.stateCode = stateCode;
-        this.contactNo = contactNo;
-        this.name = name;
-        this.type = type;
-        this.districtCode = districtCode;
-        this.talukaCode = talukaCode;
-        this.healthBlockCode = healthBlockCode;
-        this.phcCode = phcCode;
-        this.subCentreCode = subCentreCode;
-        this.ashaNumber = ashaNumber;
-        this.isValidated = isValidated;
-        this.adhaarNo = adhaarNo;
-        this.operation = operation;
-        this.isValid = isValid;
-    }
 }

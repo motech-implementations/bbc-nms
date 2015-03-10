@@ -7,15 +7,6 @@ public enum Designation {
 
     ANM, AWW, ASHA, USHA;
 
-    /*public static Designation of(String str) {
-        for (Designation designation : values()) {
-            if (designation.toString().equals(str)) {
-                return designation;
-            }
-        }
-        return null;
-    }*/
-
     public static Designation getEnum (String s){
         if( ANM.name().equals(s) )
         {
