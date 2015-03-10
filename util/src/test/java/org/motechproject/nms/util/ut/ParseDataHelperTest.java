@@ -529,7 +529,7 @@ public class ParseDataHelperTest {
 
 
         //Testing with empty string
-        value = Constants.EMPTY_STRING;
+        value = "  ";
 
         try {
             boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
@@ -641,6 +641,16 @@ public class ParseDataHelperTest {
 
         Assert.assertNotNull(boolValue);
         Assert.assertEquals(false, boolValue);
+
+        value = "TRuE"; //This value should not be case sensitive
+
+        try {
+            boolValue = ParseDataHelper.parseBoolean(field, value, isMandatory);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertNotNull(boolValue);
 
     }
 }
