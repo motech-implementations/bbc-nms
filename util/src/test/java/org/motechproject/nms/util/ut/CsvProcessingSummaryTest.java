@@ -5,10 +5,14 @@ import org.junit.Test;
 import org.motechproject.nms.util.CsvProcessingSummary;
 
 /**
- * Created by root on 9/3/15.
+ * Test class to test CsvProcessingSummary
  */
 public class CsvProcessingSummaryTest {
 
+    /**
+     * Test case to test that failure count and success count
+     * are correctly being set in CsvProcessingSummary
+     */
     @Test
     public void shouldSetValuesInCsvProcessingSummary() {
 

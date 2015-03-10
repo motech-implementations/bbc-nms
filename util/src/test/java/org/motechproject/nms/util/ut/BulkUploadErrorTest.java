@@ -7,10 +7,14 @@ import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 
 /**
- * Created by root on 9/3/15.
+ * Test class to test the BulkUploadError.
  */
 public class BulkUploadErrorTest {
 
+    /**
+     * Test case to test that error category, description and record details
+     * are correctly being set in the BulkUploadError object.
+     */
     @Test
     public void shouldSetValuesInBulkUploadError() {
 

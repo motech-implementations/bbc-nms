@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 /**
- * Verify that HelloWorldRecordService present, functional.
+ * Test class to test functionality exposed by BulkUploadStatusService
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -32,6 +32,11 @@ public class BulkUploadStatusServiceIT extends BasePaxIT {
     @Inject
     private BulkUploadStatusDataService bulkUploadStatusDataService;
 
+    /**
+     * This test case tests the add method of BulkUploadStatusService for
+     * successfully adding a record in db after a bulk upload is complete.
+     * @throws Exception
+     */
     @Test
     public void shouldAddBulkUploadStatus() throws Exception {
                assertNotNull(bulkUploadStatusDataService);

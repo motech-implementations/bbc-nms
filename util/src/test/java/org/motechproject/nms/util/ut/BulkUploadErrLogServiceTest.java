@@ -26,7 +26,10 @@ import java.util.List;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- *
+ * This class contains test cases to verify that an error log is
+ * written to log file for every failed record in csv and
+ * a summary containing the count of passed and failed records is
+ * written after bulk upload completion.
  */
 public class BulkUploadErrLogServiceTest {
 
@@ -42,7 +45,10 @@ public class BulkUploadErrLogServiceTest {
         initMocks(this);
     }
 
-
+    /**
+     * This test case tests that a Bulk upload error log is
+     * written to the log file if a csv record contains invalid data.
+     */
     @Test
     public void shouldWriteBulkUploadErrLog() {
 
@@ -68,6 +74,10 @@ public class BulkUploadErrLogServiceTest {
         }
     }
 
+    /**
+     * This test case tests that a Bulk upload error log is
+     * written to the log file if a csv record contains invalid data.
+     */
     @Test
     public void shouldWriteBulkUploadErrLogForInvalidData() {
 
@@ -93,6 +103,10 @@ public class BulkUploadErrLogServiceTest {
         }
     }
 
+    /**
+     * This test case tests that a Bulk upload error log is
+     * written to the log file if a csv record is missing.
+     */
     @Test
     public void shouldWriteBulkUploadErrLogForCsvRecordMissing() {
 
@@ -118,6 +132,10 @@ public class BulkUploadErrLogServiceTest {
         }
     }
 
+    /**
+     * This test case tests that the Summary is written in
+     * the log file after every bulk upload.
+     */
     @Test
     public void shouldWriteBulkUploadProcessingSummary() {
         String userName = "Aricent";

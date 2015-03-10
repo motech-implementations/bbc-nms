@@ -9,10 +9,14 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 /**
- * Created by root on 5/3/15.
+ * Test class to test DataValidationException
  */
 public class DataValidationExceptionUT {
 
+    /**
+     * Test case to test that fields are correctly set
+     * in DataValidationException Object
+     */
     @Test
     public void shouldSetValuesInDataValidationException() {
 
