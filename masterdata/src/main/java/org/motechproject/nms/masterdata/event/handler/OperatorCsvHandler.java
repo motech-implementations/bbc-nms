@@ -3,7 +3,6 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
-import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;

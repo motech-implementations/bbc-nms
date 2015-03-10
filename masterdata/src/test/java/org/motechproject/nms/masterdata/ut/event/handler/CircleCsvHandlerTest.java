@@ -1,9 +1,11 @@
 package org.motechproject.nms.masterdata.ut.event.handler;
 
 import junit.framework.TestCase;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
