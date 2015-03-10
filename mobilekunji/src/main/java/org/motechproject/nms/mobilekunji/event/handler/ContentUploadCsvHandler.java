@@ -150,6 +150,7 @@ public class ContentUploadCsvHandler {
 
                 errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
                 summary.incrementFailureCount();
+                logger.error("Exception Occur : {}", ex.getStackTrace);
                 bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
             } finally {
                 if (null != record) {
