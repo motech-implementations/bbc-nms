@@ -76,9 +76,9 @@ public class DistrictCsvUploadHandler {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
                 districtCsvRecord = districtCsvRecordsDataService.findById(id);
-                District record = mapDistrictCsv(districtCsvRecord);
-
+                
                 if (districtCsvRecord != null) {
+                    District record = mapDistrictCsv(districtCsvRecord);
                     userName = districtCsvRecord.getOwner();
                     logger.info("Id exist in District Temporary Entity");
                     processDistrictData(record,districtCsvRecord.getOperation());
