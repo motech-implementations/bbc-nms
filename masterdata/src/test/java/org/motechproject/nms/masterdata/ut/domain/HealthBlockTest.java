@@ -2,10 +2,12 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -69,6 +71,28 @@ public class HealthBlockTest {
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
         assertFalse(getHealthBlockDataWithDifferentHealthBlockCode().equals(healthBlock));
+    }
+
+    @Test
+    public void testToString() {
+        HealthBlock healthBlock = TestHelper.getHealthBlockData();
+        assertNotNull(healthBlock.toString());
+    }
+
+    @Test
+    public void testHashCodeWithoutNull() {
+        HealthBlock healthBlock = TestHelper.getHealthBlockData();
+        assertNotNull(healthBlock.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNull() {
+        HealthBlock healthBlock = TestHelper.getHealthBlockData();
+        healthBlock.setStateCode(0L);
+        healthBlock.setDistrictCode(0L);
+        healthBlock.setTalukaCode(MasterDataConstants.EMPTY_STRING);
+        healthBlock.setHealthBlockCode(0L);
+        assertTrue(0 == healthBlock.hashCode());
     }
 
     private HealthBlock getHealthBlockDataWithDifferentStateCode() {

@@ -2,10 +2,12 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.it.TestHelper;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -70,6 +72,28 @@ public class VillageTest {
         assertFalse(getVillageDataWithDifferentVillageCode().equals(village));
     }
 
+    @Test
+    public void testToString() {
+        Village village = getVillageData();
+        assertNotNull(village.toString());
+    }
+
+    @Test
+    public void testHashCodeWithoutNull() {
+        Village village = getVillageData();
+        assertNotNull(village.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNull() {
+        Village village = getVillageData();
+        village.setStateCode(0L);
+        village.setDistrictCode(0L);
+        village.setTalukaCode(MasterDataConstants.EMPTY_STRING);
+        village.setVillageCode(0L);
+        assertTrue(0 == village.hashCode());
+    }
+
     private Village getVillageData() {
 
         Village villageData = new Village();
@@ -122,4 +146,5 @@ public class VillageTest {
 
         return village;
     }
+
 }

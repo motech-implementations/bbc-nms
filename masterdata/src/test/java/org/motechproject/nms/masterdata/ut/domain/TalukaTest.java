@@ -2,10 +2,12 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.it.TestHelper;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -62,6 +64,27 @@ public class TalukaTest {
         assertFalse(getTalukaDataWithDifferentTalukaCode().equals(taluka));
     }
 
+    @Test
+    public void testToString() {
+        Taluka taluka = TestHelper.getTalukaData();
+        assertNotNull(taluka.toString());
+    }
+
+    @Test
+    public void testHashCodeWithoutNull() {
+        Taluka taluka = TestHelper.getTalukaData();
+        assertNotNull(taluka.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNull() {
+        Taluka taluka = TestHelper.getTalukaData();
+        taluka.setStateCode(0L);
+        taluka.setDistrictCode(0L);
+        taluka.setTalukaCode(MasterDataConstants.EMPTY_STRING);
+        assertTrue(0 == taluka.hashCode());
+    }
+
     private Taluka getTalukaDataWithDifferentStateCode() {
 
         Taluka taluka = new Taluka();
@@ -90,5 +113,4 @@ public class TalukaTest {
 
         return taluka;
     }
-
 }
