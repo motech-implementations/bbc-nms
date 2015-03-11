@@ -111,7 +111,7 @@ public class TestHelper {
         talukaData.setName("Gabhana");
         talukaData.setStateCode(123L);
         talukaData.setDistrictCode(456L);
-        talukaData.setTalukaCode(8);
+        talukaData.setTalukaCode("8");
         talukaData.setHealthBlock(healthBlockSet);
         talukaData.setVillage(villageSet);
 
@@ -144,7 +144,7 @@ public class TestHelper {
         healthBlockData.setName("Gangiri");
         healthBlockData.setStateCode(123L);
         healthBlockData.setDistrictCode(456L);
-        healthBlockData.setTalukaCode(8);
+        healthBlockData.setTalukaCode("8");
         healthBlockData.setHealthBlockCode(1002L);
         healthBlockData.setHealthFacility(healthFacilitySet);
 
@@ -178,7 +178,7 @@ public class TestHelper {
         healthFacilityData.setName("Gangiri");
         healthFacilityData.setStateCode(123L);
         healthFacilityData.setDistrictCode(456L);
-        healthFacilityData.setTalukaCode(8);
+        healthFacilityData.setTalukaCode("8");
         healthFacilityData.setHealthBlockCode(1002L);
         healthFacilityData.setHealthFacilityCode(1111L);
         healthFacilityData.setHealthSubFacility(healthSubFacilitySet);
