@@ -99,6 +99,7 @@ public class ContentUploadCsvHandler {
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         BulkUploadError errorDetails = null;
+        String userName = null;
 
         //this loop processes each of the entries in the Content Upload Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -109,6 +110,7 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvRecordDataService.findById(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
+                    userName = record.getOwner();
 
                     ContentUpload newRecord = mapContentUploadFrom(record);
 
@@ -149,7 +151,7 @@ public class ContentUploadCsvHandler {
         }
 
         logger.info("Success[mobileKunjiContentUploadSuccess] method finished for mobileKunjiContentUploadCsv");
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFile, summary);
 
 
     }
@@ -166,6 +168,9 @@ public class ContentUploadCsvHandler {
         dbRecord.setContentName(newRecord.getContentName());
         dbRecord.setContentType(newRecord.getContentType());
         dbRecord.setLanguageLocationCode(newRecord.getLanguageLocationCode());
+        dbRecord.setCreator(newRecord.getCreator());
+        dbRecord.setOwner(newRecord.getOwner());
+        dbRecord.setModifiedBy(newRecord.getModifiedBy());
     }
 
 

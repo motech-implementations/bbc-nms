@@ -150,7 +150,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         assertTrue(12 == contentUpload.getContentId());
         assertEquals("CircleCode", contentUpload.getCircleCode());
-        assertTrue(123 == contentUpload.getLanguageLocationCode());
+        assertTrue(124 == contentUpload.getLanguageLocationCode());
         assertEquals("Content", contentUpload.getContentName());
         assertEquals(ContentType.PROMPT, contentUpload.getContentType());
         assertEquals("NewFile", contentUpload.getContentFile());
