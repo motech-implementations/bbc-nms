@@ -586,7 +586,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
      * @throws Exception
      */
     @Test
-    @Ignore
     public void testCourseUpdateWhenTwoLlcDataPresentAndFails()
             throws Exception {
         clearMobileAcademyData();
@@ -661,7 +660,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
      * @throws Exception
      */
     @Test
-    @Ignore
     public void testCourseAddWhenOneLlcDataPresentAndFails() throws Exception {
         clearMobileAcademyData();
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
