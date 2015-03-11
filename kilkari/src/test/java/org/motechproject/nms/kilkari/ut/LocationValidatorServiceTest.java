@@ -105,7 +105,6 @@ public class LocationValidatorServiceTest {
                 subscriptionService,
                 subscriberService,
                 locationValidatorService,
-                languageLocationCodeService,
                 bulkUploadErrLogService,
                 configurationService);
 

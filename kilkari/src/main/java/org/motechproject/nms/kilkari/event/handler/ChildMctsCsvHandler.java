@@ -18,7 +18,6 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -56,25 +55,16 @@ public class ChildMctsCsvHandler {
             "Subscription to MSISDN already Exist";
 
 
-    //@Autowired
     private ChildMctsCsvService childMctsCsvService;
 
-    //@Autowired
     private SubscriptionService subscriptionService;
 
-    //@Autowired
     private LocationValidatorService locationValidator;
 
-    //@Autowired
-    private LanguageLocationCodeService languageLocationCodeService;
-
-    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    //@Autowired
     private SubscriberService subscriberService;
     
-    //@Autowired
     private ConfigurationService configurationService;
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandler.class);
@@ -84,14 +74,12 @@ public class ChildMctsCsvHandler {
             SubscriptionService subscriptionService,
             SubscriberService subscriberService,
             LocationValidatorService locationValidator,
-            LanguageLocationCodeService languageLocationCodeService,
             BulkUploadErrLogService bulkUploadErrLogService,
             ConfigurationService configurationService){
         this.childMctsCsvService = childMctsCsvService;
         this.subscriptionService = subscriptionService;
         this.locationValidator = locationValidator;
         this.subscriberService = subscriberService;
-        this.languageLocationCodeService = languageLocationCodeService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.configurationService = configurationService;
 
@@ -126,11 +114,7 @@ public class ChildMctsCsvHandler {
                     logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
-                    if(childMctsCsv.getOperation() != null && childMctsCsv.getOperation().equalsIgnoreCase(Operation.DEL.toString())) {
-                        deactivateSubscription(subscriber);
-                    } else {
-                        insertSubscriptionSubccriber(subscriber);
-                    }
+                    insertSubscriptionSubccriber(subscriber);
                     summary.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
@@ -277,9 +261,9 @@ public class ChildMctsCsvHandler {
                     }
                     
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
-                    logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.Active);
+                    logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    dbSubscription.setStatus(Status.Deactivated);
+                    dbSubscription.setStatus(Status.DEACTIVATED);
                     subscriptionService.update(dbSubscription); /* Deactivate mother subscription */
                     if (!subscriber.getChildDeath()) {
                         /* add new subscription for child */
@@ -290,12 +274,12 @@ public class ChildMctsCsvHandler {
                 
                 }
             } else { /* Record found based on mctsid(ChildMcts) than */
-                logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.Active);
+                logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
-            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.Active);
+            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getChildMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
@@ -320,7 +304,7 @@ public class ChildMctsCsvHandler {
             
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                dbSubscription.setStatus(Status.Deactivated);
+                dbSubscription.setStatus(Status.DEACTIVATED);
                 subscriptionService.update(dbSubscription);
                 Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
@@ -391,7 +375,7 @@ public class ChildMctsCsvHandler {
 
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getStateCode());
         if(dbSubscription != null) {
-            dbSubscription.setStatus(Status.Deactivated);
+            dbSubscription.setStatus(Status.DEACTIVATED);
             subscriptionService.update(dbSubscription);
         }else {
             throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");

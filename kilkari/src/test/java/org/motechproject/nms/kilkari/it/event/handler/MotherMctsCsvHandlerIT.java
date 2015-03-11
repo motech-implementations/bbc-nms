@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
@@ -187,7 +188,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertTrue(!subscription.getSubscriber().getLmp().equals(updateSubs.getSubscriber().getLmp()));
     }
     
-    @Test
+    @Ignore
     public void shouldUpdateBasedDeleteOperation() throws Exception {
         logger.info("Inside  createDeleteOperation");
         

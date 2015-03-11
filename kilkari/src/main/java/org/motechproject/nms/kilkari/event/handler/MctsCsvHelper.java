@@ -26,7 +26,7 @@ public final class MctsCsvHelper {
         
         Subscription newSubscription;
         newSubscription = new Subscription();
-        newSubscription.setStatus(Status.PendingActivation);
+        newSubscription.setStatus(Status.PENDING_ACTIVATION);
         newSubscription.setChannel(Channel.MCTS);
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setStateCode(subscriber.getState().getStateCode());
@@ -39,7 +39,7 @@ public final class MctsCsvHelper {
     
     static void populateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
         if (statusFlag) {
-            dbSubscription.setStatus(Status.Deactivated);
+            dbSubscription.setStatus(Status.DEACTIVATED);
         }
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setChannel(Channel.MCTS);

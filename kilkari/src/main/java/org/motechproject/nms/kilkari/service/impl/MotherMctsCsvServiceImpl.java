@@ -23,9 +23,4 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         return motherMctsCsvDataService.findById(id);
     }
 
-    @Override
-    public void deleteAll() {
-        motherMctsCsvDataService.deleteAll();
-    }
-
 }

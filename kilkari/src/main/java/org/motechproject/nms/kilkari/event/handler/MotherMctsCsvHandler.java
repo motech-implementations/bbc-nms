@@ -23,7 +23,6 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -61,25 +60,16 @@ public class MotherMctsCsvHandler {
     public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
             "Subscription to MSISDN already Exist";
 
-    //@Autowired
     private MotherMctsCsvService motherMctsCsvService;
 
-    //@Autowired
     private SubscriptionService subscriptionService;
 
-    //@Autowired
     private SubscriberService subscriberService;
 
-    //@Autowired
     private LocationValidatorService locationValidator;
 
-    //@Autowired
-    private LanguageLocationCodeService languageLocationCodeService;
-
-    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    //@Autowired
     private ConfigurationService configurationService;
 
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
@@ -89,14 +79,12 @@ public class MotherMctsCsvHandler {
             SubscriptionService subscriptionService,
             SubscriberService subscriberService,
             LocationValidatorService locationValidator,
-            LanguageLocationCodeService languageLocationCodeService,
             BulkUploadErrLogService bulkUploadErrLogService,
             ConfigurationService configurationService){
         this.motherMctsCsvService = motherMctsCsvService;
         this.subscriptionService = subscriptionService;
         this.locationValidator = locationValidator;
         this.subscriberService = subscriberService;
-        this.languageLocationCodeService = languageLocationCodeService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.configurationService = configurationService;
 
@@ -130,12 +118,7 @@ public class MotherMctsCsvHandler {
                     logger.info("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = motherMctsToSubscriberMapper(motherMctsCsv);
-
-                    if(motherMctsCsv.getOperation() != null && motherMctsCsv.getOperation().equalsIgnoreCase("DEL")) {
-                        deactivateSubscription(subscriber);
-                    } else {
-                        insertSubscriptionSubccriber(subscriber);
-                    }
+                    insertSubscriptionSubccriber(subscriber);
                     summary.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
@@ -286,14 +269,14 @@ public class MotherMctsCsvHandler {
                     throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
                 }
             } else { /* Record found based on mctsid than update subscriber and subscription */
-                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.Active);
+                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         } else {
-            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
+            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getMotherMctsId())) {
-                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.Active);
+                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber);
 
@@ -389,7 +372,7 @@ public class MotherMctsCsvHandler {
         Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(),
                 subscriber.getState().getStateCode());
         if(dbSubscription != null) {
-            dbSubscription.setStatus(Status.Deactivated);
+            dbSubscription.setStatus(Status.DEACTIVATED);
             subscriptionService.update(dbSubscription);
         }else {
             throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");

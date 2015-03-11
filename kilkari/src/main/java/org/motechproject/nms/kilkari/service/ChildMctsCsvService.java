@@ -8,5 +8,4 @@ public interface ChildMctsCsvService {
     
     ChildMctsCsv findRecordById(Long id);
     
-    void deleteAll();
 }

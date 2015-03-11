@@ -44,10 +44,7 @@
 	<osgi:reference id="subscriberDataService"
                     interface="org.motechproject.nms.kilkari.repository.SubscriberDataService" />   
                     
-	<osgi:reference id="subscriptionPackDataService"
-                    interface="org.motechproject.nms.kilkari.repository.SubscriptionPackDataService" />
-
-    <osgi:reference id="contentUploadDataService"
+	<osgi:reference id="contentUploadDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadDataService" />
 
     <osgi:reference id="contentUploadCsvDataService"

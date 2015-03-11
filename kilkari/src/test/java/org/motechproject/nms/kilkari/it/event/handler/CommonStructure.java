@@ -61,12 +61,6 @@ public class CommonStructure extends BasePaxIT {
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
     
     @Inject
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
-    
-    @Inject
-    private VillageCsvRecordsDataService villageCsvRecordsDataService;
-    
-    @Inject
     protected SubscriberService subscriberService;
     
     @Inject
@@ -280,7 +274,6 @@ public class CommonStructure extends BasePaxIT {
                 subscriptionService, 
                 subscriberService, 
                 locationValidatorService, 
-                languageLocationCodeService, 
                 bulkUploadErrLogService, 
                 configurationService);
         
@@ -299,7 +292,6 @@ public class CommonStructure extends BasePaxIT {
                 subscriptionService, 
                 subscriberService, 
                 locationValidatorService, 
-                languageLocationCodeService, 
                 bulkUploadErrLogService, 
                 configurationService);
         

@@ -6,8 +6,6 @@ public interface SubscriptionService {
 
     void update(Subscription record);
     
-    Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem);
-    
     Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName);
     
     Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode);
