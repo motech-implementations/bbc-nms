@@ -141,7 +141,7 @@ public class VillageTest {
         Village village = new Village();
         village.setStateCode(123L);
         village.setDistrictCode(456L);
-        village.setTalukaCode("9");
+        village.setTalukaCode("8");
         village.setVillageCode(1003L);
 
         return village;
