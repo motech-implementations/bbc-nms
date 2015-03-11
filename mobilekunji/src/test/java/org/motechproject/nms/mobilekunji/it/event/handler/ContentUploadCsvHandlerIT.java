@@ -137,7 +137,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         uploadedIds.add(contentUploadCsvDb2.getId());
         uploadedIds.add(contentUploadCsvDb3.getId());
         uploadedIds.add(contentUploadCsvDb4.getId());
-        uploadedIds.add(100L);
+
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "ContentUpload.csv");
 
