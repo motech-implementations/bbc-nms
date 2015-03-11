@@ -428,4 +428,230 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     }
 
+/*
+
+    @Ignore
+    public void testContentUploadUpdation() {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("14");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(14);
+
+        assertNotNull(contentUpload);
+
+        //Updation
+        contentUploadCsv.setIndex(2L);
+        contentUploadCsv.setContentId("15");
+        contentUploadCsv.setCircleCode("CircleCodeNew");
+        contentUploadCsv.setLanguageLocationCode("1234");
+        contentUploadCsv.setContentName("ContentNew");
+        contentUploadCsv.setContentType("CONTENT");
+        contentUploadCsv.setContentFile("NewFile2");
+        contentUploadCsv.setCardNumber("11");
+        contentUploadCsv.setContentDuration("240");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        contentUploadCsvDb = contentUploadCsvRecordDataService.update(contentUploadCsv);
+
+
+        Map<String, Object> parametersNew = new HashMap<>();
+        List<Long> uploadedIdsNew = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parametersNew.put("csv-import.created_ids", uploadedIdsNew);
+        parametersNew.put("csv-import.filename", "ContentUpload.csv");
+
+        motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        contentUpload = contentUploadRecordDataService.findRecordByContentId(15);
+
+
+        assertTrue(12 == contentUpload.getContentId());
+        assertEquals("CircleCode", contentUpload.getCircleCode());
+        assertTrue(123 == contentUpload.getLanguageLocationCode());
+        assertEquals("Content", contentUpload.getContentName());
+        assertEquals(ContentType.PROMPT, contentUpload.getContentType());
+        assertEquals("NewFile", contentUpload.getContentFile());
+        assertTrue(10 == contentUpload.getCardNumber());
+        assertTrue(120 == contentUpload.getContentDuration());
+        assertEquals("Etasha", contentUpload.getCreator());
+        assertEquals("Etasha", contentUpload.getModifiedBy());
+        assertEquals("Etasha", contentUpload.getOwner());
+
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        assertTrue(listContentUploadCsv.size() == 0);
+    }
+
+
+    @Ignore
+    public void testContentUploadDeletionWhenPresentInDb() {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("16");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(16);
+
+        assertNotNull(contentUpload);
+
+
+
+        //Deletion
+
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("16");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+        contentUploadCsv.setOperation("DEL");
+
+        contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        contentUploadCsvDb = contentUploadCsvRecordDataService.delete(contentUploadCsvDb);
+
+
+        Map<String, Object> parametersNew = new HashMap<>();
+        List<Long> uploadedIdsNew = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parametersNew.put("csv-import.created_ids", uploadedIdsNew);
+        parametersNew.put("csv-import.filename", "ContentUpload.csv");
+
+        motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        contentUpload = contentUploadRecordDataService.findRecordByContentId(15);
+
+        assertNull(contentUpload);
+
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        assertTrue(listContentUploadCsv.size() == 0);
+    }*/
+
+/*
+
+    @Ignore
+    public void testContentUploadDeletionWhenPresentInDb() {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("16");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(16);
+
+        assertNotNull(contentUpload);
+
+
+
+        //Deletion
+
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("17");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        contentUploadCsvDb = contentUploadCsvRecordDataService.delete(contentUploadCsvDb);
+
+
+        Map<String, Object> parametersNew = new HashMap<>();
+        List<Long> uploadedIdsNew = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parametersNew.put("csv-import.created_ids", uploadedIdsNew);
+        parametersNew.put("csv-import.filename", "ContentUpload.csv");
+
+        motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        contentUpload = contentUploadRecordDataService.findRecordByContentId(15);
+
+        assertNull(contentUpload);
+
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        assertTrue(listContentUploadCsv.size() == 0);
+    }
+
+*/
 }
