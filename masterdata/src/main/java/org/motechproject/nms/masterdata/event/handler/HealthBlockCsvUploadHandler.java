@@ -173,10 +173,6 @@ public class HealthBlockCsvUploadHandler {
             }
         } else {
 
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
-
             Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
             talukaRecord.getHealthBlock().add(healthBlockData);
             talukaRecordsDataService.update(talukaRecord);

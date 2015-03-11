@@ -174,10 +174,6 @@ public class VillageCsvUploadHandler {
             }
         } else {
 
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
-
             Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
                     villageData.getDistrictCode(), villageData.getTalukaCode());
             talukaRecord.getVillage().add(villageData);

@@ -162,10 +162,6 @@ public class TalukaCsvUploadHandler {
                 logger.info("Taluka data is successfully updated.");
             }
         } else {
-
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
             District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
             districtData.getTaluka().add(talukaData);
             districtRecordsDataService.update(districtData);

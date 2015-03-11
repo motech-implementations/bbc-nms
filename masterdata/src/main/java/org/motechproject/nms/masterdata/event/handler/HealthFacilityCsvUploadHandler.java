@@ -191,10 +191,6 @@ public class HealthFacilityCsvUploadHandler {
             }
         } else {
 
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
-
             HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                     healthFacilityData.getStateCode(), healthFacilityData.getDistrictCode(),
                     healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode());

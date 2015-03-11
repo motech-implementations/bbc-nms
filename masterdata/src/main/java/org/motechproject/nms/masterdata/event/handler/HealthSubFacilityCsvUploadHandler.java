@@ -201,10 +201,6 @@ public class HealthSubFacilityCsvUploadHandler {
             }
         } else {
 
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
-
             HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                     healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
                     healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),

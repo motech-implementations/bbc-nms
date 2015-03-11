@@ -149,11 +149,7 @@ public class DistrictCsvUploadHandler {
                 logger.info("District data is successfully updated.");
             }
         } else {
-
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)){
-                ParseDataHelper.raiseInvalidDataException("operation",MasterDataConstants.DELETE_OPERATION);
-            }
-
+            
             State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
             stateRecordsDataService.update(stateData);
