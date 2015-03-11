@@ -37,6 +37,8 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public boolean validateLocation(Long stateId, Long districtId) {
 
+        boolean flag = false;
+
         State state = stateRecordsDataService.findById(stateId);
         District district = districtRecordsDataService.findById(districtId);
 
@@ -45,10 +47,11 @@ public class LocationServiceImpl implements LocationService {
             District districtData = districtRecordsDataService.findDistrictByParentCode(district.getStateCode(), district.getDistrictCode());
 
             if (null != districtData) {
-                return true;
+                flag = true;
+                return flag;
             }
         }
-        return false;
+        return flag;
     }
 
     /**
@@ -73,15 +76,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public District getDistrictByCode(Long stateId, Long districtCode) {
 
+        District district = null;
+
         if (null != stateId && null != districtCode) {
             State state = stateRecordsDataService.findById(stateId);
 
             if (null != state) {
-                    return districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
+                district = districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
+                return district;
             }
-
         }
-        return null;
+        return district;
     }
 
     /**
@@ -94,14 +99,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Taluka getTalukaByCode(Long districtId, String talukaCode) {
 
+        Taluka taluka = null;
+
         if (null != districtId && null != talukaCode) {
             District district = districtRecordsDataService.findById(districtId);
             if (null != district) {
-                return talukaRecordsDataService.findTalukaByParentCode(district.getStateCode(),
+                taluka = talukaRecordsDataService.findTalukaByParentCode(district.getStateCode(),
                         district.getDistrictCode(), talukaCode);
+                return taluka;
             }
         }
-        return null;
+        return taluka;
     }
 
     /**
@@ -114,13 +122,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public HealthBlock getHealthBlockByCode(Long talukaId, Long healthBlockCode) {
 
+        HealthBlock healthBlock = null;
+
         if (null != talukaId && null != healthBlockCode) {
             Taluka taluka = talukaRecordsDataService.findById(talukaId);
             if (null != taluka) {
-                return healthBlockRecordsDataService.findHealthBlockByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), healthBlockCode);
+
+                healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), healthBlockCode);
+                return healthBlock;
             }
         }
-        return null;
+        return healthBlock;
     }
 
     /**
@@ -133,16 +145,20 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public HealthFacility getHealthFacilityByCode(Long healthBlockId, Long healthFacilityCode) {
 
+        HealthFacility healthFacility = null;
+
         if (null != healthBlockId && null != healthFacilityCode) {
             HealthBlock healthBlock = healthBlockRecordsDataService.findById(healthBlockId);
 
             if (null != healthBlock) {
-                return healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
+
+                healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
                         healthBlock.getDistrictCode(), healthBlock.getTalukaCode(), healthBlock.getHealthBlockCode(),
                         healthFacilityCode);
+                return healthFacility;
             }
         }
-        return null;
+        return healthFacility;
     }
 
     /**
@@ -155,16 +171,20 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public HealthSubFacility getHealthSubFacilityByCode(Long healthFacilityId, Long healthSubFacilityCode) {
 
+        HealthSubFacility healthSubFacility = null;
+
         if (null != healthFacilityId && null != healthSubFacilityCode) {
             HealthFacility healthFacility = healthFacilityRecordsDataService.findById(healthFacilityId);
 
             if (null != healthFacility) {
-                return healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
+
+                healthSubFacility = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
                         healthFacility.getDistrictCode(), healthFacility.getTalukaCode(), healthFacility.getHealthBlockCode(),
                         healthFacility.getHealthFacilityCode(), healthSubFacilityCode);
+                return healthSubFacility;
             }
         }
-        return null;
+        return healthSubFacility;
     }
 
     /**
@@ -177,14 +197,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Village getVillageByCode(Long talukaId, Long villageCode) {
 
+        Village village = null;
+
         if (null != talukaId && null != villageCode) {
             Taluka taluka = talukaRecordsDataService.findById(talukaId);
 
             if (null != taluka) {
-                return villageRecordsDataService.findVillageByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), villageCode);
+                village = villageRecordsDataService.findVillageByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), villageCode);
+                return village;
             }
         }
-        return null;
+        return village;
     }
 
     /**
