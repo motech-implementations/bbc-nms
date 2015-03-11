@@ -115,6 +115,24 @@ public class LocationValidatorServiceTest {
     }
 
     @Test
+    public void shouldReturnNullForValidStatecode() {
+        State state = new State();
+        state.setStateCode(1L);
+        state.setId(1L);
+        Mockito.when(locationService.getStateByCode(1L)).thenReturn(state);
+
+        State returnedState = null;
+
+        try {
+            returnedState = locationValidtorService.stateConsistencyCheck(1L);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertEquals(state,returnedState);
+    }
+
+    @Test
     public void shouldReturnNullForInvalidStatecode() {
         State state = null;
         Mockito.when(locationService.getStateByCode(1L)).thenReturn(null);
