@@ -5,7 +5,12 @@ import java.util.Map;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
@@ -362,23 +367,5 @@ public class ChildMctsCsvHandler {
         dbSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
 
         subscriberService.update(dbSubscriber);
-    }
-    
-    /**
-     *  This method is used to deactivate subscription based on csv operation
-     * 
-     *  @param subscriber csv uploaded subscriber
-     */
-    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
-        logger.info("Going to perform deactivate process.");
-        logger.info("Finding subscription based on MctsId{} and stateCode{}", subscriber.getChildMctsId(), subscriber.getState().getStateCode());
-
-        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getChildMctsId(), subscriber.getState().getStateCode());
-        if(dbSubscription != null) {
-            dbSubscription.setStatus(Status.DEACTIVATED);
-            subscriptionService.update(dbSubscription);
-        }else {
-            throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");
-        }
     }
 }

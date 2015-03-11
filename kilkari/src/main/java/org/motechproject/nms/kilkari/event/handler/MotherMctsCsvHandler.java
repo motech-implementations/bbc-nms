@@ -360,23 +360,4 @@ public class MotherMctsCsvHandler {
         subscriberService.update(dbSubscriber);
     }
 
-    /**
-     *  This method is used to deactivate subscription based on csv operation
-     * 
-     *  @param subscriber csv uploaded subscriber
-     */
-    private void deactivateSubscription(Subscriber subscriber) throws DataValidationException{
-        logger.info("Going to perform deactivate process.");
-        logger.info("Finding subscription based on MotherMctsId{} and stateCode{}", subscriber.getMotherMctsId(), subscriber.getState().getStateCode());
-        
-        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(subscriber.getMotherMctsId(),
-                subscriber.getState().getStateCode());
-        if(dbSubscription != null) {
-            dbSubscription.setStatus(Status.DEACTIVATED);
-            subscriptionService.update(dbSubscription);
-        }else {
-            throw new DataValidationException("RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "RECORD_NOT_FOUND", "");
-        }
-    }
-
 }
