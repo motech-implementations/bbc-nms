@@ -76,6 +76,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createDistrictCsvData(csvData);
 
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
 
 

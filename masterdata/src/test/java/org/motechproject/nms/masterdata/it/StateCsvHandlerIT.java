@@ -68,6 +68,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
 
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
 

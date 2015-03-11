@@ -86,8 +86,8 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         VillageCsv csvData = TestHelper.getVillageCsvData();
         createVillageCsvData(csvData);
 
-        clearId();
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
         Village villageData = villageRecordsDataService.findVillageByParentCode(123L, 456L, "8", 122656L);

@@ -83,8 +83,8 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         TalukaCsv csvData = TestHelper.getTalukaCsvData();
         createTalukaCsvData(csvData);
 
-        clearId();
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
 
 

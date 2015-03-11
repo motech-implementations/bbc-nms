@@ -92,8 +92,8 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         HealthFacilityCsv csvData = TestHelper.getHealthFacilityCsvData();
         createHealthFacilityCsvData(csvData);
 
-        clearId();
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
 
         healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
         HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, "8", 1002L,1111L);

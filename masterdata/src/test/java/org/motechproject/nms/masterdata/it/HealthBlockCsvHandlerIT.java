@@ -87,8 +87,8 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         HealthBlockCsv csvData = TestHelper.getHealthBlockCsvData();
         createHealthBlockCsvData(csvData);
 
-        clearId();
         createdIds.add(csvData.getId());
+        createdIds.add(csvData.getId()+1);
 
         healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
         HealthBlock healthBlockeData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, "8", 1002L);
