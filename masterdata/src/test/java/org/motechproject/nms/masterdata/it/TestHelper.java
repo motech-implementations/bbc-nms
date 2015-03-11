@@ -69,7 +69,7 @@ public class TestHelper {
 
     public static DistrictCsv getInvalidDistrictCsvData(){
 
-        DistrictCsv districtCsvData = new DistrictCsv("Add","Agra","abc456","123");
+        DistrictCsv districtCsvData = new DistrictCsv("Add","Agra","456","456");
         return districtCsvData;
     }
 

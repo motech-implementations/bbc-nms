@@ -80,6 +80,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
         createdIds.add(csvData.getId()+1);
         createdIds.add(invalidCsvData.getId());
+
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
         District districtData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
 
