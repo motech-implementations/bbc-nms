@@ -358,7 +358,12 @@ public class FlwUploadHandler {
             frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
         }
 
-        frontLineWorker.setStatus(Status.INACTIVE);
+        if(record.getIsValid().equalsIgnoreCase("false")) {
+            frontLineWorker.setStatus(Status.INVALID);
+        }
+        else {
+            frontLineWorker.setStatus(Status.INACTIVE);
+        }
 
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
