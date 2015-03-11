@@ -1656,5 +1656,283 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(listFlwCsv.size() == 0);
     }
 
+    @Test
+    public void testFrontLineWorkerUpdationWithNoFlwId() throws DataValidationException {
+
+        FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
+
+        frontLineWorkerCsv.setFlwId("14");
+        frontLineWorkerCsv.setContactNo("12345");
+        frontLineWorkerCsv.setType("ANM");
+        frontLineWorkerCsv.setName("Jyoti");
+        frontLineWorkerCsv.setOperation("ADD");
+
+        frontLineWorkerCsv.setStateCode("12");
+        frontLineWorkerCsv.setDistrictCode("123");
+        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setVillageCode("1234");
+        frontLineWorkerCsv.setHealthBlockCode("1234");
+        frontLineWorkerCsv.setPhcCode("12345");
+        frontLineWorkerCsv.setSubCentreCode("123456");
+
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        frontLineWorkerCsv.setAshaNumber("9876");
+        frontLineWorkerCsv.setIsValid("True");
+        frontLineWorkerCsv.setIsValidated("true");
+        frontLineWorkerCsv.setOwner("Etasha");
+        frontLineWorkerCsv.setCreator("Etasha");
+        frontLineWorkerCsv.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("12345");
+
+        assertNotNull(flw);
+        assertTrue(14L == flw.getFlwId());
+
+        //Updation
+        FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
+        frontLineWorkerCsvNew.setContactNo("12345");
+        frontLineWorkerCsvNew.setType("ANM");
+        frontLineWorkerCsvNew.setName("Jyoti2");//changed from Jyoti to Jyoti2
+
+        frontLineWorkerCsvNew.setStateCode("12");
+        frontLineWorkerCsvNew.setDistrictCode("123");
+        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setVillageCode("1234");
+        frontLineWorkerCsvNew.setHealthBlockCode("1234");
+        frontLineWorkerCsvNew.setPhcCode("12345");
+        frontLineWorkerCsvNew.setSubCentreCode("123456");
+
+        frontLineWorkerCsvNew.setAdhaarNo("1234");
+        frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
+        frontLineWorkerCsvNew.setIsValid("True");
+        frontLineWorkerCsvNew.setIsValidated("true");
+        frontLineWorkerCsvNew.setOwner("Etasha");
+        frontLineWorkerCsvNew.setCreator("Etasha");
+        frontLineWorkerCsvNew.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+
+        Map<String, Object> parameters_new = new HashMap<>();
+        List<Long> uploadedIds_new = new ArrayList<Long>();
+
+        uploadedIds_new.add(frontLineWorkerCsvdb2.getId());
+        parameters_new.put("csv-import.created_ids", uploadedIds_new);
+        parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
+        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        thrown.expect(DataValidationException.class);
+
+        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("12345");
+        assertNotNull(frontLineWorker);
+        assertEquals("9876", frontLineWorker.getAshaNumber());
+        assertEquals("Jyoti", frontLineWorker.getName());
+        assertTrue(14L == frontLineWorker.getFlwId());
+
+        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        assertTrue(listFlwCsv.size() == 0);
+        throw new DataValidationException();
+    }
+
+    @Test
+    public void testFrontLineWorkerVillageWithoutTaluka() throws DataValidationException {
+
+        FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
+
+        frontLineWorkerCsv.setFlwId("20");
+        frontLineWorkerCsv.setContactNo("9990");
+        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setName("Anjali");
+        frontLineWorkerCsv.setOperation("ADD");
+
+        frontLineWorkerCsv.setStateCode("12");
+        frontLineWorkerCsv.setDistrictCode("123");
+        frontLineWorkerCsv.setVillageCode("1234");
+        frontLineWorkerCsv.setHealthBlockCode("1234");
+        frontLineWorkerCsv.setPhcCode("12345");
+        frontLineWorkerCsv.setSubCentreCode("123456");
+
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        frontLineWorkerCsv.setAshaNumber("9876");
+        frontLineWorkerCsv.setIsValid("True");
+        frontLineWorkerCsv.setIsValidated("true");
+        frontLineWorkerCsv.setOwner("Etasha");
+        frontLineWorkerCsv.setCreator("Etasha");
+        frontLineWorkerCsv.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        thrown.expect(DataValidationException.class);
+
+
+        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+
+        assertNull(flw);
+
+        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        assertTrue(listFlwCsv.size() == 0);
+        throw new DataValidationException();
+    }
+
+
+    @Test
+    public void testFrontLineWorkerHealthBlockWithoutTaluka() throws DataValidationException {
+
+        FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
+
+        frontLineWorkerCsv.setFlwId("20");
+        frontLineWorkerCsv.setContactNo("9990");
+        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setName("Etasha");
+        frontLineWorkerCsv.setOperation("ADD");
+
+        frontLineWorkerCsv.setStateCode("12");
+        frontLineWorkerCsv.setDistrictCode("123");
+        frontLineWorkerCsv.setHealthBlockCode("1234");
+        frontLineWorkerCsv.setPhcCode("12345");
+        frontLineWorkerCsv.setSubCentreCode("123456");
+
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        frontLineWorkerCsv.setAshaNumber("9876");
+        frontLineWorkerCsv.setIsValid("True");
+        frontLineWorkerCsv.setIsValidated("true");
+        frontLineWorkerCsv.setOwner("Etasha");
+        frontLineWorkerCsv.setCreator("Etasha");
+        frontLineWorkerCsv.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        thrown.expect(DataValidationException.class);
+        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+
+        assertNull(flw);
+
+        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        assertTrue(listFlwCsv.size() == 0);
+        throw new DataValidationException();
+    }
+
+    @Test
+    public void testFrontLineWorkerPhcWithoutHealthBlock() throws DataValidationException  {
+
+        FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
+
+        frontLineWorkerCsv.setFlwId("20");
+        frontLineWorkerCsv.setContactNo("9990");
+        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setName("Etasha");
+        frontLineWorkerCsv.setOperation("ADD");
+
+        frontLineWorkerCsv.setStateCode("12");
+        frontLineWorkerCsv.setDistrictCode("123");
+        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setVillageCode("1234");
+        frontLineWorkerCsv.setPhcCode("12345");
+        frontLineWorkerCsv.setSubCentreCode("123456");
+
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        frontLineWorkerCsv.setAshaNumber("9876");
+        frontLineWorkerCsv.setIsValid("True");
+        frontLineWorkerCsv.setIsValidated("true");
+        frontLineWorkerCsv.setOwner("Etasha");
+        frontLineWorkerCsv.setCreator("Etasha");
+        frontLineWorkerCsv.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        thrown.expect(DataValidationException.class);
+
+        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+        assertNull(flw);
+
+        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        assertTrue(listFlwCsv.size() == 0);
+        throw new DataValidationException();
+    }
+
+    @Test
+    public void testFrontLineWorkerSubCentreWithoutPhc() throws DataValidationException  {
+
+        FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
+
+        frontLineWorkerCsv.setFlwId("20");
+        frontLineWorkerCsv.setContactNo("9990");
+        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setName("Etasha");
+        frontLineWorkerCsv.setOperation("ADD");
+
+        frontLineWorkerCsv.setStateCode("12");
+        frontLineWorkerCsv.setDistrictCode("123");
+        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setVillageCode("1234");
+        frontLineWorkerCsv.setHealthBlockCode("1234");
+        frontLineWorkerCsv.setSubCentreCode("123456");
+
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        frontLineWorkerCsv.setAshaNumber("9876");
+        frontLineWorkerCsv.setIsValid("True");
+        frontLineWorkerCsv.setIsValidated("true");
+        frontLineWorkerCsv.setOwner("Etasha");
+        frontLineWorkerCsv.setCreator("Etasha");
+        frontLineWorkerCsv.setModifiedBy("Etasha");
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        thrown.expect(DataValidationException.class);
+        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+
+        assertNull(flw);
+
+        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        assertTrue(listFlwCsv.size() == 0);
+        throw new DataValidationException();
+    }
 }
 
