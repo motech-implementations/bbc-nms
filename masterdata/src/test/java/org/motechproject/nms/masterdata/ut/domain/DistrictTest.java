@@ -15,27 +15,9 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class DistrictTest {
 
-    private District districtData;
-
     @Before
     public void init() {
         initMocks(this);
-    }
-
-    @Test
-    public void testEqualsForStateCode(){
-
-        District district = TestHelper.getDistrictData();
-
-        assertFalse(getDistrictDataWithSameDistrictCode().equals(district));
-    }
-
-    @Test
-    public void testEqualsForDistrictCode(){
-
-        District district = TestHelper.getDistrictData();
-
-        assertFalse(getDistrictData().equals(district));
     }
 
     @Test
@@ -56,16 +38,23 @@ public class DistrictTest {
         assertFalse(district.equals(state));
     }
 
-    private District getDistrictData() {
+    @Test
+    public void testEqualsWithDifferentStateCode(){
 
-        District district = new District();
-        district.setStateCode(1L);
-        district.setDistrictCode(2L);
+        District district = TestHelper.getDistrictData();
 
-        return district;
+        assertFalse(getDistrictDataWithDifferentStateCode().equals(district));
     }
 
-    private District getDistrictDataWithSameDistrictCode() {
+    @Test
+    public void testEqualsForDistrictCode(){
+
+        District district = TestHelper.getDistrictData();
+
+        assertFalse(getDistrictDataWithDifferentDistrictCode().equals(district));
+    }
+
+    private District getDistrictDataWithDifferentStateCode() {
 
         District district = new District();
         district.setStateCode(1L);
@@ -73,4 +62,14 @@ public class DistrictTest {
 
         return district;
     }
+
+    private District getDistrictDataWithDifferentDistrictCode() {
+
+        District district = new District();
+        district.setStateCode(123L);
+        district.setDistrictCode(4L);
+
+        return district;
+    }
+
 }

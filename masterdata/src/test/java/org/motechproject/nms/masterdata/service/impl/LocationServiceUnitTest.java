@@ -9,9 +9,7 @@ import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LocationService;
 
 import static junit.framework.Assert.assertNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -110,7 +108,7 @@ public class LocationServiceUnitTest {
 
     @Test
     public void testFindDistrictByCodeWIthNullValue() {
-        assertNull(locationService.getDistrictByCode(null,null));
+        assertNull(locationService.getDistrictByCode(null, null));
     }
 
     @Test
