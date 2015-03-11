@@ -42,13 +42,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CoursePopulateServiceImpl.class);
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * populateMtrainingCourseData
-     * (org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public Course populateMtrainingCourseData(UserDetailsDTO userDetailsDTO) {
         List<Chapter> chapters = new ArrayList<>();
@@ -99,14 +92,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return course;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getMtrainingCourse()
-     * 
-     * To get the current course in MTraining
-     */
     @Override
     public Course getMtrainingCourse() {
         Course course = null;
@@ -119,12 +104,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return course;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * findCourseState()
-     */
     @Override
     public CourseUnitState findCourseState() {
         CourseUnitState state = null;
@@ -173,13 +152,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * updateCourseState(org.motechproject.mtraining.domain.CourseUnitState,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void updateCourseState(CourseUnitState courseUnitState,
             UserDetailsDTO userDetailsDTO) {
@@ -193,13 +165,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * updateCorrectAnswer(java.lang.String, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void updateCorrectAnswer(String chapterName, String questionName,
             String answer, UserDetailsDTO userDetailsDTO) {
@@ -218,23 +183,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getAllChapterContents()
-     */
     @Override
     public List<ChapterContent> getAllChapterContents() {
         return chapterContentDataService.retrieveAll();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getLessonContent(int, int, java.lang.String)
-     */
     @Override
     public LessonContent getLessonContent(int chapterId, int lessonId,
             String type) {
@@ -259,13 +212,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return lessonContentReturn;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setLessonContent(int, int, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void setLessonContent(int chapterId, int lessonId, String type,
             String fileName, UserDetailsDTO userDetailsDTO) {
@@ -292,12 +238,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getQuestionContent(int, int, java.lang.String)
-     */
     @Override
     public QuestionContent getQuestionContent(int chapterId, int questionId,
             String type) {
@@ -322,13 +262,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return questionContentReturn;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setQuestionContent(int, int, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void setQuestionContent(int chapterId, int questionId, String type,
             String fileName, UserDetailsDTO userDetailsDTO) {
@@ -355,13 +288,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CoursePopulateService#getScore
-     * (int, int, java.lang.String)
-     */
     @Override
     public ScoreContent getScore(int chapterId, int scoreId, String type) {
         ScoreContent scoreContentReturn = null;
@@ -386,14 +312,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return scoreContentReturn;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CoursePopulateService#setScore
-     * (int, int, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void setScore(int chapterId, int scoreId, String type,
             String fileName, UserDetailsDTO userDetailsDTO) {
@@ -421,12 +339,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getChapterContent(int, java.lang.String)
-     */
     @Override
     public ChapterContent getChapterContent(int chapterId, String type) {
         ChapterContent chapterContentReturn = null;
@@ -445,13 +357,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return chapterContentReturn;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setChapterContent(int, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void setChapterContent(int chapterId, String type, String fileName,
             UserDetailsDTO userDetailsDTO) {
@@ -471,12 +376,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * getQuizContent(int, java.lang.String)
-     */
     @Override
     public QuizContent getQuizContent(int chapterId, String type) {
         QuizContent quizContentReturn = null;
@@ -496,13 +395,6 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return quizContentReturn;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.CoursePopulateService#
-     * setQuizContent(int, java.lang.String, java.lang.String,
-     * org.motechproject.nms.mobileacademy.commons.UserDetailsDTO)
-     */
     @Override
     public void setQuizContent(int chapterId, String type, String fileName,
             UserDetailsDTO userDetailsDTO) {

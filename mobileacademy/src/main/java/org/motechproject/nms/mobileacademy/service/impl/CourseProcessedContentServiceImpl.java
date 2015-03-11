@@ -19,51 +19,21 @@ public class CourseProcessedContentServiceImpl implements
     @Autowired
     private CourseProcessedContentDataService courseProcessedContentDataService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #
-     * create(org.motechproject.nms.mobileacademy.domain.CourseProcessedContent)
-     */
     @Override
     public void create(CourseProcessedContent courseProcessedContent) {
         courseProcessedContentDataService.create(courseProcessedContent);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #deleteAll()
-     */
     @Override
     public void deleteAll() {
         courseProcessedContentDataService.deleteAll();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #
-     * update(org.motechproject.nms.mobileacademy.domain.CourseProcessedContent)
-     */
     @Override
     public void update(CourseProcessedContent courseProcessedContent) {
         courseProcessedContentDataService.update(courseProcessedContent);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #getListOfAllExistingLLcs()
-     */
     @Override
     public List<Integer> getListOfAllExistingLlcs() {
         List<Integer> llcIdsList = courseProcessedContentDataService
@@ -71,13 +41,6 @@ public class CourseProcessedContentServiceImpl implements
         return llcIdsList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #getRecordforModification(java.lang.String, int, java.lang.String)
-     */
     @Override
     public CourseProcessedContent getRecordforModification(String circle,
             int languageLocationCode, String contentName) {
@@ -85,19 +48,11 @@ public class CourseProcessedContentServiceImpl implements
                 circle, languageLocationCode, contentName);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.motechproject.nms.mobileacademy.service.CourseProcessedContentService
-     * #deleteRecordsByLLC(int)
-     */
     @Override
     public void deleteRecordsByLlc(int languageLocationCode) {
         courseProcessedContentDataService
                 .executeQuery(new CourseProcessedContentCustomQuery().new DeleteProcessedContentQueryExecutionImpl(
                         languageLocationCode));
-
     }
 
 }
