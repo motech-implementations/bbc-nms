@@ -13,16 +13,6 @@ public enum ContentType {
     }
 
     /**
-     * Get contentType name i.e ContentType.CONTENT.getName() return Content
-     * string
-     * 
-     * @return String name of content type i.e Content
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
      * find ContentType object By contentName
      * 
      * @param contentTypeName name of the content type i.e Content, Prompt

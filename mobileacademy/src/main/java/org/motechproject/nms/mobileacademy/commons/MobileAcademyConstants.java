@@ -84,6 +84,4 @@ public class MobileAcademyConstants {
 
     public static final String LOG_MSG_NEW_FILE_NAME = "new file name: {}";
 
-    private MobileAcademyConstants() {
-    }
 }

@@ -117,13 +117,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
 
     public boolean matchAnswerOption(Integer chapterNo, Integer questionNo,
             Integer optionNo) {
-
+        boolean status = false;
         List<Chapter> chapters = mTrainingService
                 .getChapterByName(MobileAcademyConstants.CHAPTER
                         + String.format(
                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                 chapterNo));
-
         Chapter chapter;
         Quiz quiz;
         if (CollectionUtils.isNotEmpty(chapters)) {
@@ -138,18 +137,18 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                                 questionNo))) {
                     String answer = question.getAnswer();
-                    try {
-                        return (Integer.parseInt(answer) == optionNo);
-                    } catch (NumberFormatException e) {
+                    status = Integer.valueOf(answer) == optionNo;
+                    if (!status) {
                         LOGGER.info(
                                 "Answer Option not matching for Chapter {}, Question {}",
                                 chapterNo, questionNo);
                     }
+                    break;
                 }
             }
 
         }
-        return false;
+        return status;
     }
 
     @Override
@@ -195,7 +194,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (LessonContent lessonContent : chapterContent
                             .getLessons()) {
@@ -203,7 +202,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                 && (lessonContent.getName()
                                         .equalsIgnoreCase(type))) {
                             lessonContentReturn = lessonContent;
-                            return lessonContentReturn;
+                            break outer;
                         }
                     }
                 }
@@ -245,7 +244,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (QuestionContent questionContent : chapterContent
                             .getQuiz().getQuestions()) {
@@ -253,7 +252,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                 && (questionContent.getName()
                                         .equalsIgnoreCase(type))) {
                             questionContentReturn = questionContent;
-                            return questionContentReturn;
+                            break outer;
                         }
                     }
                 }
@@ -294,7 +293,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (ScoreContent scoreContent : chapterContent.getScores()) {
                         if ((scoreContent.getName()
@@ -303,7 +302,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                                 scoreId)))) {
                             scoreContentReturn = scoreContent;
-                            return scoreContentReturn;
+                            break outer;
                         }
                     }
                 }
@@ -345,11 +344,11 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     if (chapterContent.getName().equalsIgnoreCase(type)) {
                         chapterContentReturn = chapterContent;
-                        return chapterContentReturn;
+                        break outer;
                     }
                 }
             }
@@ -382,12 +381,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     QuizContent quizContent = chapterContent.getQuiz();
                     if (quizContent.getName().equalsIgnoreCase(type)) {
                         quizContentReturn = quizContent;
-                        return quizContentReturn;
+                        break outer;
                     }
                 }
             }
