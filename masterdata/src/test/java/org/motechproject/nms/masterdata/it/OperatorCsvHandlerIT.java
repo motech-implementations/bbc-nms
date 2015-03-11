@@ -67,29 +67,6 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldDeleteOperatorRecordsAfterCsvUpload() throws Exception {
-        OperatorCsv csv = new OperatorCsv();
-        csv.setName("MotechEventCreateTest");
-        csv.setCode("12345");
-        csv.setOperation("ADD");
-        OperatorCsv dbCsv = operatorCsvDataService.create(csv);
-        createdIds.add(dbCsv.getId());
-
-        OperatorCsv csv2 = new OperatorCsv();
-        csv2.setName("MotechEventCreateTest");
-        csv2.setCode("12345");
-        csv2.setOperation("DEL");
-        dbCsv = operatorCsvDataService.create(csv2);
-        createdIds.add(dbCsv.getId());
-
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
-        operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
-        Assert.assertNull(operatorCsvService.getRecord(createdIds.get(0)));
-        Assert.assertNull(operatorCsvService.getRecord(createdIds.get(1)));
-        Assert.assertNull(operatorService.getRecordByCode("12345"));
-    }
-
-    @Test
     public void shouldUpdateOperatorRecordsAfterCsvUpload() throws Exception {
         OperatorCsv csv = new OperatorCsv();
         csv.setName("MotechEventCreateTest");

@@ -89,20 +89,10 @@ public class ContentUploadCsvHandler {
 
                     persistentRecord = contentUploadService.getRecordByContentId(newRecord.getContentId());
                     if (persistentRecord != null) {
-                        
-                        if (Operation.DEL.toString().equals(record.getOperation())) {
-                            contentUploadService.delete(persistentRecord);
-                            logger.info("Record deleted successfully for contentid : {}", newRecord.getContentId());
-                        } else {
-                            persistentRecord = copyContentUploadForUpdate(newRecord, persistentRecord);
-                            contentUploadService.update(persistentRecord);
-                            logger.info("Record updated successfully for contentid : {}", newRecord.getContentId());
-                        }
-                    } else if (Operation.DEL.toString().equals(record.getOperation())) {
-                        logger.error("Record for deletion not found in the Content table with code {}",
-                                newRecord.getContentId());
-                        ParseDataHelper.raiseInvalidDataException("Content Id", newRecord.getContentId().toString());
-                    }else {
+                        persistentRecord = copyContentUploadForUpdate(newRecord, persistentRecord);
+                        contentUploadService.update(persistentRecord);
+                        logger.info("Record updated successfully for contentid : {}", newRecord.getContentId());
+                    } else {
                         contentUploadService.create(newRecord);
                         logger.info("Record created successfully for contentid : {}", newRecord.getContentId());
                     }

@@ -76,20 +76,10 @@ public class OperatorCsvHandler {
 
                     persistentRecord = operatorService.getRecordByCode(newRecord.getCode());
                     if (persistentRecord != null) {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
-                            operatorService.delete(persistentRecord);
-                            logger.info("Record deleted successfully for operatorcode {}", newRecord.getCode());
-                        } else {
-                            persistentRecord = copyOperatorForUpdate(newRecord, persistentRecord);
-                            operatorService.update(persistentRecord);
-                            logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
-                        }
-
-                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
-                        logger.error("Record for deletion not found in the Operator table with code {}",
-                                newRecord.getCode());
-                        ParseDataHelper.raiseInvalidDataException("Operator Code", newRecord.getCode());
-                    } else {
+                        persistentRecord = copyOperatorForUpdate(newRecord, persistentRecord);
+                        operatorService.update(persistentRecord);
+                        logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
+                    } else  {
                         operatorService.create(newRecord);
                         logger.info("Record created successfully for operatorcode {}", newRecord.getCode());
                     }

@@ -61,24 +61,6 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldDeleteCircleRecordsAfterCsvUpload() throws Exception {
-        preSetup();
-
-        CircleCsv csv2 = new CircleCsv();
-        csv2.setName("MotechEventCreateTest");
-        csv2.setCode("12345");
-        csv2.setOperation("DEL");
-        CircleCsv dbCsv = circleCsvDataService.create(csv2);
-        createdIds.add(dbCsv.getId());
-
-        CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
-        circleCsvHandler.circleCsvSuccess(createMotechEvent(createdIds));
-        Assert.assertNull(circleCsvService.getRecord(createdIds.get(0)));
-        Assert.assertNull(circleCsvService.getRecord(createdIds.get(1)));
-        Assert.assertNull(circleService.getRecordByCode("12345"));
-    }
-
-    @Test
     public void shouldUpdateCircleRecordsAfterCsvUpload() throws Exception {
         preSetup();
         CircleCsv csv2 = new CircleCsv();

@@ -78,23 +78,13 @@ public class CircleCsvHandler {
 
                     persistentRecord = circleService.getRecordByCode(newRecord.getCode());
                     if (persistentRecord != null) {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
-                            circleService.delete(persistentRecord);
-                            logger.info("Record deleted successfully for circlecode {}", newRecord.getCode());
-                        } else {
-                            persistentRecord = copyCircleForUpdate(newRecord, persistentRecord);
-                            circleService.update(persistentRecord);
-                            logger.info("Record updated successfully for circlecode {}", newRecord.getCode());
-                        }
+                        persistentRecord = copyCircleForUpdate(newRecord, persistentRecord);
+                        circleService.update(persistentRecord);
+                        logger.info("Record updated successfully for circlecode {}", newRecord.getCode());
 
-                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
-                        logger.error("Record for deletion not found in the Circle table with code {}",
-                                newRecord.getCode());
-                        ParseDataHelper.raiseInvalidDataException("Circle Code", newRecord.getCode());
                     } else {
                         circleService.create(newRecord);
                         logger.info("Record created successfully for circlecode {}", newRecord.getCode());
-
                     }
                     result.incrementSuccessCount();
                 } else {
@@ -157,8 +147,7 @@ public class CircleCsvHandler {
      * @param persistentRecord to be updated in DB
      * @return oldRecord after copied values
      */
-    private  Circle copyCircleForUpdate(Circle newRecord,
-                                        Circle persistentRecord) {
+private  Circle copyCircleForUpdate(Circle newRecord, Circle persistentRecord) {
 
         persistentRecord.setName(newRecord.getName());
         persistentRecord.setCode(newRecord.getCode());

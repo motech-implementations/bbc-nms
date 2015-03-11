@@ -96,42 +96,6 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
-    @Ignore
-    public void shouldDeleteLanguageLocationCodeRecordsAfterCsvUpload() throws Exception {
-        LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
-                languageLocationCodeServiceCsv, bulkUploadErrLogService,
-                circleService, locationService);
-        preSetUp();
-
-        //create LanguageLocationCodeCsv record with circleCode "testCode",
-        // districtCode "1" and stateCode "1"
-        LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
-        csvRecord.setCircleCode("testCode");
-        csvRecord.setOperation("ADD");
-        csvRecord.setDistrictCode("1");
-        csvRecord.setStateCode("1");
-        csvRecord.setIsDefaultLanguageLocationCode("Y");
-        csvRecord.setLanguageKK("LanguageKK");
-        csvRecord.setLanguageMA("LanguageMA");
-        csvRecord.setLanguageMK("LanguageMK");
-        csvRecord.setLanguageLocationCode("123");
-        csvRecord.setOperation("DEL");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
-        createdIds.add(dbCsv.getId());
-
-        llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
-
-        //Do Assertions
-        csvRecord = languageLocationCodeServiceCsv.getRecord(createdIds.get(0));
-        LanguageLocationCodeCsv  csvRecord2 = languageLocationCodeServiceCsv.getRecord(createdIds.get(1));
-        Assert.assertNull(csvRecord);
-        Assert.assertNull(csvRecord2);
-
-        LanguageLocationCode record = languageLocationCodeService.getRecordByLocationCode(1L, 1L);
-        Assert.assertNull(record);
-    }
-
-    @Test
     public void shouldUpdateLanguageLocationCodeRecordsAfterCsvUpload() throws Exception {
         LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
                 languageLocationCodeServiceCsv, bulkUploadErrLogService,

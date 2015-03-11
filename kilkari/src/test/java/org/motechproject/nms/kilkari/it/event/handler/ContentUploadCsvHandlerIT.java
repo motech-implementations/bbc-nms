@@ -101,31 +101,6 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void shouldDeleteContentUploadRecordsAfterCsvUpload() throws Exception {
-        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
-                contentUploadCsvService, circleService, languageLocationCodeService);
-
-        preSetup();
-
-        ContentUploadCsv csv = new ContentUploadCsv();
-        csv.setLanguageLocationCode("123");
-        csv.setContentType("contentType");
-        csv.setContentFile("contentFile");
-        csv.setCircleCode("circleCode");
-        csv.setContentName("contentName");
-        csv.setContentDuration("100");
-        csv.setOperation("DEL");
-        csv.setContentId("1");
-        ContentUploadCsv dbCsv = contentUploadCsvDataService.create(csv);
-        createdIds.add(dbCsv.getId());
-
-        csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
-        Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(0)));
-        Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(1)));
-        Assert.assertNull(contentUploadService.getRecordByContentId(1L));
-    }
-
-    @Test
     public void shouldUpdateContentUploadRecordsAfterCsvUpload() throws Exception {
         ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);

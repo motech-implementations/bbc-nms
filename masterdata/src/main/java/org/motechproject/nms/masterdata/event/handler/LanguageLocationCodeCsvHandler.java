@@ -86,32 +86,16 @@ public class LanguageLocationCodeCsvHandler {
                     LanguageLocationCode oldRecord = languageLocationCodeService.getRecordByLocationCode(
                             newRecord.getStateCode(), newRecord.getDistrictCode());
                     if (oldRecord != null) {
-                        if (OperationType.DEL.toString().equals(record.getOperation())) {
-                            languageLocationCodeService.delete(oldRecord);
-                            logger.info("Record deleted successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
-                        } else {
-                            oldRecord = copyLanguageLocationCodeForUpdate(newRecord, oldRecord);
-                            languageLocationCodeService.update(oldRecord);
-                            logger.info("Record updated successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
-                        }
-                        result.incrementSuccessCount();
-
-                    } else if (OperationType.DEL.toString().equals(record.getOperation())) {
-                        logger.error("Record for deletion not found in the LanguageLocation table with state code " +
-                                        "{} and district code", newRecord.getStateCode(), newRecord.getDistrictCode());
-                        errorDetail.setErrorDescription(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
-                        errorDetail.setErrorCategory(ErrorCategoryConstants.INVALID_DATA);
-                        errorDetail.setRecordDetails("State and District Code combination invalid");
-                        bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-
-                        result.incrementFailureCount();
+                        oldRecord = copyLanguageLocationCodeForUpdate(newRecord, oldRecord);
+                        languageLocationCodeService.update(oldRecord);
+                        logger.info("Record updated successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
 
                     } else {
                         languageLocationCodeService.create(newRecord);
                         logger.info("Record created successfully for statecode : {} and districtcode : {}", newRecord.getStateCode(), newRecord.getDistrictCode());
-                        result.incrementSuccessCount();
-                    }
 
+                    }
+                    result.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the LanguageLocationCodeCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
