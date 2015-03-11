@@ -1,5 +1,9 @@
 package org.motechproject.nms.masterdata.event.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
@@ -18,10 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class handles the csv upload for success and failure events for OperatorCsv.

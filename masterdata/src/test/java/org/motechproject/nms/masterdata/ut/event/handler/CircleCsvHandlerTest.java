@@ -1,6 +1,15 @@
 package org.motechproject.nms.masterdata.ut.event.handler;
 
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import junit.framework.TestCase;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,14 +26,6 @@ import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class CircleCsvHandlerTest extends TestCase {
     @Mock

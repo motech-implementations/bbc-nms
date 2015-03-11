@@ -10,8 +10,10 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
@@ -31,6 +33,8 @@ import org.slf4j.LoggerFactory;
 public class MotherMctsCsvHandlerIT extends CommonStructure {
 
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandlerIT.class);
+    
+    
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside createSubscriptionSubscriberTest");
@@ -160,7 +164,8 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("5");
+        csv.setWhomPhoneNo("5111111111111");
+        csv.setAbortion(null);
         csv.setIdNo("5");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -216,5 +221,6 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertFalse(subscription.getStatus()==updateSubs.getStatus());
         assertTrue(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
     }
+    
     
 }

@@ -200,8 +200,13 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setVillage(village);
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
-
-        motherSubscriber.setMsisdn(ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true));
+        
+        String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
+        int msisdnCsvLength = msisdn.length();
+        if(msisdnCsvLength > 10){
+            msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
+        }
+        motherSubscriber.setMsisdn(msisdn);
         motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
         motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
         motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));

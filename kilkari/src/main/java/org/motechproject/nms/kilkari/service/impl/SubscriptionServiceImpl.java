@@ -2,10 +2,6 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
-import javax.jdo.Query;
-
-import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -31,10 +27,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
     
-    public Subscription findRecordIsDeactivatedBySystem(boolean isDeactivatedBySystem) {
-        return subscriptionDataService.findRecordIsDeactivatedBySystem(isDeactivatedBySystem);
-    }
-    
+    @Override
     public Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.ACTIVE);
         if(subscription == null) {
@@ -43,6 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscription;
     }
 
+    @Override
     public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.ACTIVE, stateCode);
         if(subscription == null) {
@@ -64,17 +58,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return activeRecord.size() + pendingRecord.size();
     }
     
-    public class LlcListQueryExecutionImpl implements
-    QueryExecution<Integer> {
-
-        @Override
-        public Integer execute(Query query,
-                InstanceSecurityRestriction restriction) {
-            query.setResult("COUNT() ");
-            return (Integer) query.execute();
-        }
-    }
-    
+    @Override
     public Subscription getSubscriptionByMctsIdState(String mctsId, Long stateCode){
         return subscriptionDataService.getSubscriptionByMctsIdState(mctsId, stateCode);
     }

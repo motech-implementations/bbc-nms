@@ -102,7 +102,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         csv1.setWhomPhoneNo("34");
         csv1.setIdNo("34");
         csv1.setMotherName("testing");
-        csv1.setBirthdate("2015-01-20 08:08:08");
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
@@ -113,7 +112,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(subscription.getSubscriber());
         assertNotNull(updateSubs.getSubscriber());
         assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
-        assertFalse(subscription.getSubscriber().getDob().equals(updateSubs.getSubscriber().getDob()));
     }
     
     @Test
@@ -122,7 +120,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
-        csv.setWhomPhoneNo("35");
+        csv.setWhomPhoneNo("544444444444444444");
         csv.setIdNo("35");
         ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());

@@ -9,8 +9,6 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
 public interface SubscriptionDataService extends MotechDataService<Subscription> {
-    @Lookup
-    Subscription findRecordIsDeactivatedBySystem(@LookupField(name = "isDeactivatedBySystem") Boolean isDeactivatedBySystem);
     
     @Lookup
     Subscription getSubscriptionByMsisdnPackStatus(

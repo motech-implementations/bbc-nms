@@ -9,7 +9,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
-import org.motechproject.nms.kilkari.domain.Operation;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.service.CircleService;

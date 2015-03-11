@@ -1,8 +1,12 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import static org.junit.Assert.assertNull;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
@@ -10,6 +14,8 @@ import javax.jdo.JDOObjectNotFoundException;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
@@ -33,10 +39,8 @@ import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
-import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -86,7 +90,7 @@ public class CommonStructure extends BasePaxIT {
 
     @Inject
     protected ConfigurationService configurationService;
-
+    
     @Inject
     protected LocationValidatorService locationValidatorService;
 
@@ -323,4 +327,17 @@ public class CommonStructure extends BasePaxIT {
 
         setUpIsDone = false;
     }
+    
+    @Test
+    public void testUploadedIdNotInDatabase() throws Exception {
+        logger.info("Inside  createDeleteOperation");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        Long uploadedId = new Random().nextLong();
+        uploadedIds.add(uploadedId);
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds);
+        assertNull(motherMctsCsvDataService.findById(uploadedId));
+        
+    }
+    
 }
