@@ -78,8 +78,8 @@ public interface CoursePopulateService {
      *            content file or "menu" for end menu file of lesson
      * @return LessonContent Object having the audio File
      */
-    public LessonContent getLessonContent(int chapterNo, int lessonNo,
-            String type);
+    public LessonContent getLessonContent(List<ChapterContent> chapterContents,
+            int chapterNo, int lessonNo, String type);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
@@ -90,8 +90,9 @@ public interface CoursePopulateService {
      *            file of question
      * @return QuestionContent Object having the audio file
      */
-    public QuestionContent getQuestionContent(int chapterNo, int questionNo,
-            String type);
+    public QuestionContent getQuestionContent(
+            List<ChapterContent> chapterContents, int chapterNo,
+            int questionNo, String type);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
@@ -99,7 +100,8 @@ public interface CoursePopulateService {
      * @param type refers to type of file stored for scores: "score"
      * @return Score Object having the audio file to be played for a score
      */
-    public ScoreContent getScore(int chapterNo, int scoreNo, String type);
+    public ScoreContent getScore(List<ChapterContent> chapterContents,
+            int chapterNo, int scoreNo, String type);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
@@ -107,7 +109,8 @@ public interface CoursePopulateService {
      * @return refers to ChapterContent Object having the audio file to be
      *         played for end-menu of chapter
      */
-    public ChapterContent getChapterContent(int chapterNo, String type);
+    public ChapterContent getChapterContent(
+            List<ChapterContent> chapterContents, int chapterNo, String type);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
@@ -115,7 +118,8 @@ public interface CoursePopulateService {
      * @return refers to QuizContent Object having the audio file to be played
      *         for quiz header
      */
-    public QuizContent getQuizContent(int chapterNo, String type);
+    public QuizContent getQuizContent(List<ChapterContent> chapterContents,
+            int chapterNo, String type);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11

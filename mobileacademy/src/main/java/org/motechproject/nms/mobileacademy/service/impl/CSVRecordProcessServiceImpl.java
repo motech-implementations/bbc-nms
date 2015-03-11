@@ -554,9 +554,12 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private boolean isRecordChangingTheFileName(Record record) {
         boolean status = false;
+        List<ChapterContent> chapterContents = coursePopulateService
+                .getAllChapterContents();
+
         if (record.getType() == FileType.LESSON_CONTENT) {
             LessonContent lessonContent = coursePopulateService
-                    .getLessonContent(record.getChapterId(),
+                    .getLessonContent(chapterContents, record.getChapterId(),
                             record.getLessonId(),
                             MobileAcademyConstants.CONTENT_LESSON);
             if (!lessonContent.getAudioFile().equals(record.getFileName())) {
@@ -564,7 +567,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.LESSON_END_MENU) {
             LessonContent lessonContent = coursePopulateService
-                    .getLessonContent(record.getChapterId(),
+                    .getLessonContent(chapterContents, record.getChapterId(),
                             record.getLessonId(),
                             MobileAcademyConstants.CONTENT_MENU);
             if (!lessonContent.getAudioFile().equals(record.getFileName())) {
@@ -572,7 +575,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.QUESTION_CONTENT) {
             QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(record.getChapterId(),
+                    .getQuestionContent(chapterContents, record.getChapterId(),
                             record.getQuestionId(),
                             MobileAcademyConstants.CONTENT_QUESTION);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
@@ -580,7 +583,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.CORRECT_ANSWER) {
             QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(record.getChapterId(),
+                    .getQuestionContent(chapterContents, record.getChapterId(),
                             record.getQuestionId(),
                             MobileAcademyConstants.CONTENT_CORRECT_ANSWER);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
@@ -588,7 +591,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.WRONG_ANSWER) {
             QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(record.getChapterId(),
+                    .getQuestionContent(chapterContents, record.getChapterId(),
                             record.getQuestionId(),
                             MobileAcademyConstants.CONTENT_WRONG_ANSWER);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
@@ -596,22 +599,22 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             }
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             ChapterContent chapterContent = coursePopulateService
-                    .getChapterContent(record.getChapterId(),
+                    .getChapterContent(chapterContents, record.getChapterId(),
                             MobileAcademyConstants.CONTENT_MENU);
             if (!chapterContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.QUIZ_HEADER) {
             QuizContent quizContent = coursePopulateService.getQuizContent(
-                    record.getChapterId(),
+                    chapterContents, record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER);
             if (!quizContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.SCORE) {
             ScoreContent scoreContent = coursePopulateService.getScore(
-                    record.getChapterId(), record.getScoreID(),
-                    MobileAcademyConstants.SCORE);
+                    chapterContents, record.getChapterId(),
+                    record.getScoreID(), MobileAcademyConstants.SCORE);
             if (!scoreContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }

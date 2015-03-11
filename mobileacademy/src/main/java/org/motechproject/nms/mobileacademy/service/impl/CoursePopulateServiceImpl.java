@@ -188,11 +188,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public LessonContent getLessonContent(int chapterId, int lessonId,
-            String type) {
+    public LessonContent getLessonContent(List<ChapterContent> chapterContents,
+            int chapterId, int lessonId, String type) {
         LessonContent lessonContentReturn = null;
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
@@ -238,11 +236,10 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public QuestionContent getQuestionContent(int chapterId, int questionId,
-            String type) {
+    public QuestionContent getQuestionContent(
+            List<ChapterContent> chapterContents, int chapterId,
+            int questionId, String type) {
         QuestionContent questionContentReturn = null;
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
@@ -288,10 +285,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public ScoreContent getScore(int chapterId, int scoreId, String type) {
+    public ScoreContent getScore(List<ChapterContent> chapterContents,
+            int chapterId, int scoreId, String type) {
         ScoreContent scoreContentReturn = null;
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
@@ -339,10 +335,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public ChapterContent getChapterContent(int chapterId, String type) {
+    public ChapterContent getChapterContent(
+            List<ChapterContent> chapterContents, int chapterId, String type) {
         ChapterContent chapterContentReturn = null;
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
@@ -376,10 +371,9 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     }
 
     @Override
-    public QuizContent getQuizContent(int chapterId, String type) {
+    public QuizContent getQuizContent(List<ChapterContent> chapterContents,
+            int chapterId, String type) {
         QuizContent quizContentReturn = null;
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
             outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
