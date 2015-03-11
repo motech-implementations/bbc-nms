@@ -4,9 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.it.TestHelper;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LocationService;
 
+import static junit.framework.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -50,11 +53,13 @@ public class LocationServiceUnitTest {
     }
 
     @Test
-    public void testValidationSuccess() {
+    public void testValidationLocationSuccess() {
 
-        State stateData = getStateData();
+        State stateData = TestHelper.getStateData();
+        stateData.setId(1L);
 
-        District districtData = getDistrictData();
+        District districtData = TestHelper.getDistrictData();
+        districtData.setId(1L);
 
         when(stateRecordsDataService.findById(stateData.getId())).thenReturn(stateData);
         when(districtRecordsDataService.findById(districtData.getId())).thenReturn(districtData);
@@ -62,6 +67,21 @@ public class LocationServiceUnitTest {
 
         assertNotNull(locationService.validateLocation(1L, 1L));
         assertTrue(locationService.validateLocation(1L, 1L));
+    }
+
+    @Test
+    public void testValidationLocationSuccessWithNullValue() {
+
+        State stateData = TestHelper.getStateData();
+        stateData.setId(1L);
+
+        District districtData = TestHelper.getDistrictData();
+        districtData.setId(1L);
+
+        when(stateRecordsDataService.findById(stateData.getId())).thenReturn(null);
+        when(districtRecordsDataService.findById(districtData.getId())).thenReturn(null);
+
+        assertFalse(locationService.validateLocation(1L, 1L));
     }
 
     @Test
@@ -143,6 +163,10 @@ public class LocationServiceUnitTest {
         assertTrue(789L == locationService.getVillageByCode(talukaData.getId(), 789L).getVillageCode());
     }
 
+    @Test
+    public void testVillageByCodeWithNullValue() {
+        assertNull(locationService.getVillageByCode(null, null));
+    }
 
     @Test
     public void testGetHealthFacilityByCode() {
@@ -177,6 +201,11 @@ public class LocationServiceUnitTest {
     }
 
     @Test
+    public void testGetHealthFacilityByCodeWithNullValue() {
+        assertNull(locationService.getHealthFacilityByCode(null, null));
+    }
+
+    @Test
     public void testGetHealthSubFacilityByCode(){
 
         HealthSubFacility healthSubFacilityData = new HealthSubFacility();
@@ -207,6 +236,11 @@ public class LocationServiceUnitTest {
         assertTrue("t123".equals(locationService.getHealthSubFacilityByCode(1L, 987L).getTalukaCode()));
         assertTrue(789L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthBlockCode());
         assertTrue(321L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthFacilityCode());
+    }
+
+    @Test
+    public void testGetHealthSubFacilityByCodeWithNullValue() {
+        assertNull(locationService.getHealthSubFacilityByCode(null,null));
     }
 
     @Test

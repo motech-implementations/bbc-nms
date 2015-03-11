@@ -15,24 +15,36 @@ public class TestHelper {
     public static StateCsv getStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Add","UP","123",null, null);
+        stateCsvData.setOwner("balvinder");
+        stateCsvData.setCreator("balvinder");
+        stateCsvData.setModifiedBy("balvinder");
         return stateCsvData;
     }
 
     public static StateCsv getInvalidStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Del","Bihar","abc123",null, null);
+        stateCsvData.setOwner("balvinder");
+        stateCsvData.setCreator("balvinder");
+        stateCsvData.setModifiedBy("balvinder");
         return stateCsvData;
     }
 
     public static StateCsv getUpdatedStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Add","UK","123",null, null);
+        stateCsvData.setOwner("balvinder");
+        stateCsvData.setCreator("balvinder");
+        stateCsvData.setModifiedBy("balvinder");
         return stateCsvData;
     }
 
     public static StateCsv getDeleteStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Del","UK","123",null, null);
+        stateCsvData.setOwner("balvinder");
+        stateCsvData.setCreator("balvinder");
+        stateCsvData.setModifiedBy("balvinder");
         return stateCsvData;
     }
 
