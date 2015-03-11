@@ -133,6 +133,12 @@ public class TestHelper {
         return healthBlockCsvData;
     }
 
+    public static HealthBlockCsv getInvalidHealthBlockCsvData(){
+
+        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Add","Gangiri","1002","abc123","456","8");
+        return healthBlockCsvData;
+    }
+
     public static HealthBlockCsv getUpdateHealthBlockCsvData(){
 
         HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Add","Ganiri","1002","123","456","8");
@@ -164,6 +170,12 @@ public class TestHelper {
     public static VillageCsv getVillageCsvData() {
 
         VillageCsv villageCsvData = new VillageCsv("Add","Alampur","122656","123","456","8");
+        return villageCsvData;
+    }
+
+    public static VillageCsv getInvalidVillageCsvData() {
+
+        VillageCsv villageCsvData = new VillageCsv("Add","Alampur","122656","abc123","456","8");
         return villageCsvData;
     }
 
@@ -201,6 +213,12 @@ public class TestHelper {
         return healthFacilityCsvData;
     }
 
+    public static HealthFacilityCsv getInvalidHealthFacilityCsvData(){
+
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF1","1111","abc123","456","8","1002","9999");
+        return healthFacilityCsvData;
+    }
+
     public static HealthFacilityCsv getUpdateHealthFacilityCsvData(){
 
         HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF2","1111","123","456","8","1002","9999");
@@ -216,6 +234,12 @@ public class TestHelper {
     public static HealthSubFacilityCsv getHealthSubFacilityCsvData(){
 
         HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","123","456","8","1002");
+        return healthSubFacilityCsvData;
+    }
+
+    public static HealthSubFacilityCsv getInvalidHealthSubFacilityCsvData(){
+
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","abc123","456","8","1002");
         return healthSubFacilityCsvData;
     }
 

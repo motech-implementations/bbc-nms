@@ -97,9 +97,12 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         stateRecordsDataService.create(stateData);
 
         HealthSubFacilityCsv csvData = TestHelper.getHealthSubFacilityCsvData();
+        HealthSubFacilityCsv invalidCsvData = TestHelper.getInvalidHealthSubFacilityCsvData();
         createHealthSubFacilityCsvData(csvData);
+        createHealthSubFacilityCsvData(invalidCsvData);
 
         createdIds.add(csvData.getId());
+        createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId()+1);
 
         healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));

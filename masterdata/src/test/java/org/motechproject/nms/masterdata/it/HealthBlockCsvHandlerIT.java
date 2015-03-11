@@ -85,9 +85,12 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         stateRecordsDataService.create(stateData);
 
         HealthBlockCsv csvData = TestHelper.getHealthBlockCsvData();
+        HealthBlockCsv invalidCsvData = TestHelper.getInvalidHealthBlockCsvData();
         createHealthBlockCsvData(csvData);
+        createHealthBlockCsvData(invalidCsvData);
 
         createdIds.add(csvData.getId());
+        createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId()+1);
 
         healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
