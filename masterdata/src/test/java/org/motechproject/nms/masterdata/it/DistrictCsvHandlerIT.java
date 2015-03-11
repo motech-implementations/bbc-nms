@@ -73,13 +73,14 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         stateRecordsDataService.create(stateData);
 
         DistrictCsv csvData = TestHelper.getDistrictCsvData();
-        createDistrictCsvData(csvData);
+        DistrictCsv invalidCsvData = TestHelper.getInvalidDistrictCsvData();
 
+        createDistrictCsvData(csvData);
+        createDistrictCsvData(invalidCsvData);
         createdIds.add(csvData.getId());
         createdIds.add(csvData.getId()+1);
+        createdIds.add(invalidCsvData.getId());
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-
-
         District districtData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtData);

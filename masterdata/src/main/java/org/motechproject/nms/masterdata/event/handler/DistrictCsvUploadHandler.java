@@ -76,7 +76,7 @@ public class DistrictCsvUploadHandler {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
                 districtCsvRecord = districtCsvRecordsDataService.findById(id);
-                
+
                 if (districtCsvRecord != null) {
                     District record = mapDistrictCsv(districtCsvRecord);
                     userName = districtCsvRecord.getOwner();

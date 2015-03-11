@@ -18,6 +18,12 @@ public class TestHelper {
         return stateCsvData;
     }
 
+    public static StateCsv getInvalidStateCsvData(){
+
+        StateCsv stateCsvData = new StateCsv("Del","Bihar","abc123",null, null);
+        return stateCsvData;
+    }
+
     public static StateCsv getUpdatedStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Add","UK","123",null, null);
@@ -49,6 +55,12 @@ public class TestHelper {
         return districtCsvData;
     }
 
+    public static DistrictCsv getInvalidDistrictCsvData(){
+
+        DistrictCsv districtCsvData = new DistrictCsv("Add","Agra","abc456","123");
+        return districtCsvData;
+    }
+
     public static DistrictCsv getUpdatedDistrictCsvData(){
 
         DistrictCsv districtCsvData = new DistrictCsv("Add","Aligarh","456","123");
@@ -77,6 +89,12 @@ public class TestHelper {
     public static TalukaCsv getTalukaCsvData(){
 
         TalukaCsv talukaCsvData = new TalukaCsv("Add","Gabhana","456","123","8");
+        return talukaCsvData;
+    }
+
+    public static TalukaCsv getInvalidTalukaCsvData(){
+
+        TalukaCsv talukaCsvData = new TalukaCsv("Add","Gabhana","456","abc123","8");
         return talukaCsvData;
 
     }

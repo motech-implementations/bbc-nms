@@ -81,9 +81,13 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         stateRecordsDataService.create(stateData);
 
         TalukaCsv csvData = TestHelper.getTalukaCsvData();
+        TalukaCsv invalidCsvData = TestHelper.getInvalidTalukaCsvData();
+
         createTalukaCsvData(csvData);
+        createTalukaCsvData(invalidCsvData);
 
         createdIds.add(csvData.getId());
+        createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId()+1);
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
 
