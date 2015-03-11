@@ -1568,7 +1568,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(listFlwCsv.size() == 0);
     }
 
-    @Ignore
+    @Test
     public void testFrontLineWorkerUpdationWithIsValidNull(){
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
@@ -1614,6 +1614,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         //Updation
         FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
+
         frontLineWorkerCsvNew.setFlwId("13");
         frontLineWorkerCsvNew.setContactNo("44444");
         frontLineWorkerCsvNew.setType("USHA");
@@ -1628,7 +1629,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setSubCentreCode("123456");
 
         frontLineWorkerCsvNew.setAdhaarNo("1234");
-        frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
+        frontLineWorkerCsvNew.setAshaNumber("1234");
+        frontLineWorkerCsvNew.setIsValid("True");
         frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
