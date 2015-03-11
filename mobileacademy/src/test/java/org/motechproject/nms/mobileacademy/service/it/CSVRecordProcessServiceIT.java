@@ -2,7 +2,7 @@ package org.motechproject.nms.mobileacademy.service.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -22,11 +22,11 @@ import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
+import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
+import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -604,8 +604,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
 
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
-        CourseContentCsv courseRawContentUpdateRecord2 = courseRawContents2
-                .get(0);
+
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
@@ -623,23 +622,74 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         String contentName = courseRawContentUpdateRecord1.getContentName();
         courseRawContentUpdateRecord1.setContentFile("ch_test_update.wav");
         courseContentCsvs = new ArrayList<>();
-        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+        courseContentCsvs.add(courseRawContentUpdateRecord1);
 
         // add another update record for new llc
-        courseRawContentUpdateRecord2.setContentFile("ch_test_update1.wav");
-        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord2));
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
-                "CourseContentCsv.csv");
+        courseRawContentUpdateRecord1.setLanguageLocationCode(llc2.toString());
+        courseRawContentUpdateRecord1.setContentFile("ch_test_update1.wav");
+        courseContentCsvs.add(courseRawContentUpdateRecord1);
+
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
                         languageLocationCode, contentName.toUpperCase());
+
+        String originalFileName = courseProcessedContent1.getContentFile();
+
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+
+        courseProcessedContent1 = courseProcessedContentDataService
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
+
         CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(), 20,
-                        contentName.toUpperCase());// For LLC 20
-        assertNotEquals("ch_test_update.wav",
-                courseProcessedContent1.getContentFile());
-        assertNotEquals("ch_test_update1.wav",
-                courseProcessedContent2.getContentFile());
+                        contentName.toUpperCase());
+
+        String newFileName1 = courseProcessedContent1.getContentFile();
+        String newFileName2 = courseProcessedContent2.getContentFile();
+
+        assertEquals(newFileName1, originalFileName);
+        assertEquals(newFileName2, originalFileName);
+
+    }
+
+    /**
+     * test Course Add when add for new LLc comes with different file names than
+     * the course already existing in CPC for a LLC
+     * 
+     * @throws Exception
+     */
+    @Test
+    @Ignore
+    public void testCourseAddWhenOneLlcDataPresentAndFails() throws Exception {
+        clearMobileAcademyData();
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+
+        /*
+         * CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
+         * .get(0);
+         */
+
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        // add other LLC records i.e 20
+        List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
+        courseRawContents2.get((int) (rawContentSize - 2)).setContentFile(
+                "Dummy Test Case File");
+
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(20);
+        assertTrue(CollectionUtils.isEmpty(courseProcessedContents));
 
     }
 
