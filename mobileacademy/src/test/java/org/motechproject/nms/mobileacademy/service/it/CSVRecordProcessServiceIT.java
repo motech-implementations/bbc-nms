@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.service.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mtraining.domain.Chapter;
@@ -688,6 +688,53 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(20);
         assertTrue(CollectionUtils.isEmpty(courseProcessedContents));
+    }
+
+    @Test
+    public void testCoursePopulateFailForInvalidData() throws Exception {
+        clearMobileAcademyData();
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        courseContentCsvs.get(0).setLanguageLocationCode("sw");// LLC as string
+        courseContentCsvs.get(1).setContentName("Test");// no underscore in
+                                                        // content name
+        courseContentCsvs.get(2).setContentName("Chapter12_Lesson02");
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(14);
+        assertEquals(0, courseProcessedContents.size());
+    }
+
+    @Test
+    public void testCourseUpdateFailForInvalidData() throws Exception {
+        clearMobileAcademyData();
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
+                .get(0);
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        // Update process
+        String circle = courseRawContentUpdateRecord.getCircle();
+        Integer languageLocationCode = Integer
+                .parseInt(courseRawContentUpdateRecord
+                        .getLanguageLocationCode());
+        String contentNameUpdate = "Chapter01Lesson01";
+        courseRawContentUpdateRecord.setContentName(contentNameUpdate);
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord));
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentNameUpdate.toUpperCase());
+        assertNull(courseProcessedContent);
 
     }
 
