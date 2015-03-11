@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.it.TestHelper;
@@ -88,7 +89,7 @@ public class VillageTest {
         Village village = getVillageData();
         village.setStateCode(0L);
         village.setDistrictCode(0L);
-        village.setTalukaCode(0);
+        village.setTalukaCode(MasterDataConstants.EMPTY_STRING);
         village.setVillageCode(0L);
         assertTrue(0 == village.hashCode());
     }
@@ -98,7 +99,7 @@ public class VillageTest {
         Village villageData = new Village();
         villageData.setStateCode(123L);
         villageData.setDistrictCode(456L);
-        villageData.setTalukaCode(8);
+        villageData.setTalukaCode("8");
         villageData.setVillageCode(1002L);
         return villageData;
     }
@@ -108,7 +109,7 @@ public class VillageTest {
         Village village = new Village();
         village.setStateCode(1L);
         village.setDistrictCode(456L);
-        village.setTalukaCode(8);
+        village.setTalukaCode("8");
         village.setVillageCode(1002L);
 
         return village;
@@ -118,7 +119,7 @@ public class VillageTest {
         Village village = new Village();
         village.setStateCode(123L);
         village.setDistrictCode(4L);
-        village.setTalukaCode(8);
+        village.setTalukaCode("8");
         village.setVillageCode(1002L);
 
         return village;
@@ -129,7 +130,7 @@ public class VillageTest {
         Village village = new Village();
         village.setStateCode(123L);
         village.setDistrictCode(456L);
-        village.setTalukaCode(9);
+        village.setTalukaCode("9");
         village.setVillageCode(1002L);
 
         return village;
@@ -140,7 +141,7 @@ public class VillageTest {
         Village village = new Village();
         village.setStateCode(123L);
         village.setDistrictCode(456L);
-        village.setTalukaCode(8);
+        village.setTalukaCode("8");
         village.setVillageCode(1003L);
 
         return village;

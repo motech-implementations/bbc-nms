@@ -11,6 +11,6 @@ import org.motechproject.nms.masterdata.domain.HealthBlock;
 public interface HealthBlockRecordsDataService extends MotechDataService<HealthBlock> {
     @Lookup
     HealthBlock findHealthBlockByParentCode(@LookupField(name = "stateCode") Long stateCode, @LookupField(name = "districtCode") Long districtCode,
-                                            @LookupField(name = "talukaCode") Integer talukaCode, @LookupField(name = "healthBlockCode") Long healthBlockCode);
+                                            @LookupField(name = "talukaCode") String talukaCode, @LookupField(name = "healthBlockCode") Long healthBlockCode);
 
 }

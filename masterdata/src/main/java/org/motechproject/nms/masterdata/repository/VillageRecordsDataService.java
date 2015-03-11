@@ -13,6 +13,6 @@ public interface VillageRecordsDataService extends MotechDataService<Village> {
 
     @Lookup
     Village findVillageByParentCode(@LookupField(name = "stateCode") Long stateCode, @LookupField(name = "districtCode") Long districtCode,
-                                    @LookupField(name = "talukaCode") Integer talukaCode, @LookupField(name = "villageCode") Long villageCode);
+                                    @LookupField(name = "talukaCode") String talukaCode, @LookupField(name = "villageCode") Long villageCode);
 
 }

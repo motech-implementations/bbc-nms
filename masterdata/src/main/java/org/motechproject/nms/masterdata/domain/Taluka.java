@@ -23,7 +23,7 @@ public class Taluka extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 1)
-    private Integer talukaCode;
+    private String talukaCode;
 
     @Field
     @Cascade(delete = true)
@@ -53,11 +53,11 @@ public class Taluka extends LocationUnitMetaData {
         this.village = village;
     }
 
-    public Integer getTalukaCode() {
+    public String getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(Integer talukaCode) {
+    public void setTalukaCode(String talukaCode) {
         this.talukaCode = talukaCode;
     }
 
@@ -84,9 +84,9 @@ public class Taluka extends LocationUnitMetaData {
 
         Taluka taluka = (Taluka) o;
 
-        if (!districtCode.equals(taluka.districtCode)) return false;
-        if (!stateCode.equals(taluka.stateCode)) return false;
-        if (!talukaCode.equals(taluka.talukaCode)) return false;
+        if (!this.getDistrictCode().equals(taluka.getDistrictCode())) return false;
+        if (!this.getStateCode().equals(taluka.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(taluka.getTalukaCode())) return false;
 
         return true;
     }
@@ -104,7 +104,7 @@ public class Taluka extends LocationUnitMetaData {
         return "Taluka{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode=" + talukaCode +
+                ", talukaCode='" + talukaCode + '\'' +
                 ", healthBlock=" + healthBlock +
                 ", village=" + village +
                 '}';

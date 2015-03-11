@@ -93,12 +93,12 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId()+1);
 
         healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
-        HealthBlock healthBlockeData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, 8, 1002L);
+        HealthBlock healthBlockeData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, "8", 1002L);
 
         assertNotNull(healthBlockeData);
         assertTrue(123L == healthBlockeData.getStateCode());
         assertTrue(456L == healthBlockeData.getDistrictCode());
-        assertTrue(8 == healthBlockeData.getTalukaCode());
+        assertTrue("8".equals(healthBlockeData.getTalukaCode()));
         assertTrue(1002L == healthBlockeData.getHealthBlockCode());
         assertTrue("Gangiri".equals(healthBlockeData.getName()));
 
@@ -109,12 +109,12 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
-        HealthBlock healthBlockUpdateData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, 8, 1002L);
+        HealthBlock healthBlockUpdateData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, "8", 1002L);
 
         assertNotNull(healthBlockUpdateData);
         assertTrue(123L == healthBlockUpdateData.getStateCode());
         assertTrue(456L == healthBlockUpdateData.getDistrictCode());
-        assertTrue(8 == healthBlockUpdateData.getTalukaCode());
+        assertTrue("8".equals(healthBlockUpdateData.getTalukaCode()));
         assertTrue(1002L == healthBlockUpdateData.getHealthBlockCode());
         assertTrue("Ganiri".equals(healthBlockUpdateData.getName()));
     }

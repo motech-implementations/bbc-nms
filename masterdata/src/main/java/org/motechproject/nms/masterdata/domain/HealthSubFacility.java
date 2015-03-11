@@ -21,7 +21,7 @@ public class HealthSubFacility extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 4)
-    private Integer talukaCode;
+    private String talukaCode;
 
     @Field
     @UIDisplayable(position = 3)
@@ -51,11 +51,11 @@ public class HealthSubFacility extends LocationUnitMetaData {
         this.healthSubFacilityCode = healthSubFacilityCode;
     }
 
-    public Integer getTalukaCode() {
+    public String getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(Integer talukaCode) {
+    public void setTalukaCode(String talukaCode) {
         this.talukaCode = talukaCode;
     }
 
@@ -90,12 +90,12 @@ public class HealthSubFacility extends LocationUnitMetaData {
 
         HealthSubFacility that = (HealthSubFacility) o;
 
-        if (!districtCode.equals(that.districtCode)) return false;
-        if (!healthBlockCode.equals(that.healthBlockCode)) return false;
-        if (!healthFacilityCode.equals(that.healthFacilityCode)) return false;
-        if (!healthSubFacilityCode.equals(that.healthSubFacilityCode)) return false;
-        if (!stateCode.equals(that.stateCode)) return false;
-        if (!talukaCode.equals(that.talukaCode)) return false;
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
+        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
+        if (!this.getHealthSubFacilityCode().equals(that.getHealthSubFacilityCode())) return false;
+        if (!this.getStateCode().equals(that.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
 
         return true;
     }

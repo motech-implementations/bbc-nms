@@ -20,7 +20,7 @@ public class Village extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private Integer talukaCode;
+    private String talukaCode;
 
     @Field
     @UIDisplayable(position = 1)
@@ -38,11 +38,12 @@ public class Village extends LocationUnitMetaData {
         this.villageCode = villageCode;
     }
 
-    public Integer getTalukaCode() {
+    public String getTalukaCode() {
+
         return talukaCode;
     }
 
-    public void setTalukaCode(Integer talukaCode) {
+    public void setTalukaCode(String talukaCode) {
         this.talukaCode = talukaCode;
     }
 
@@ -69,10 +70,10 @@ public class Village extends LocationUnitMetaData {
 
         Village village = (Village) o;
 
-        if (!districtCode.equals(village.districtCode)) return false;
-        if (!stateCode.equals(village.stateCode)) return false;
-        if (!talukaCode.equals(village.talukaCode)) return false;
-        if (!villageCode.equals(village.villageCode)) return false;
+        if (!this.getDistrictCode().equals(village.getDistrictCode())) return false;
+        if (!this.getStateCode().equals(village.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(village.getTalukaCode())) return false;
+        if (!this.getVillageCode().equals(village.getVillageCode())) return false;
 
         return true;
     }
@@ -91,7 +92,7 @@ public class Village extends LocationUnitMetaData {
         return "Village{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode=" + talukaCode +
+                ", talukaCode='" + talukaCode + '\'' +
                 ", villageCode=" + villageCode +
                 '}';
     }

@@ -135,7 +135,7 @@ public class VillageCsvUploadHandler {
         String villageName = ParseDataHelper.parseString("VillageName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Integer talukaCode = ParseDataHelper.parseInt("TalukaCode", record.getTalukaCode(), true);
+        String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
 
         State state = stateRecordsDataService.findRecordByStateCode(stateCode);

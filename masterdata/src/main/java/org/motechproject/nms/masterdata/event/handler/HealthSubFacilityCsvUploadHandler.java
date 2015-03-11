@@ -142,7 +142,7 @@ public class HealthSubFacilityCsvUploadHandler {
         String healthSubFacilityName = ParseDataHelper.parseString("HealthSubFacilityName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Integer talukaCode = ParseDataHelper.parseInt("TalukaCode", record.getTalukaCode(), true);
+        String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
         Long healthfacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);

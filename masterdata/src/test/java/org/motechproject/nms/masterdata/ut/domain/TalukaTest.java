@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.it.TestHelper;
@@ -80,7 +81,7 @@ public class TalukaTest {
         Taluka taluka = TestHelper.getTalukaData();
         taluka.setStateCode(0L);
         taluka.setDistrictCode(0L);
-        taluka.setTalukaCode(0);
+        taluka.setTalukaCode(MasterDataConstants.EMPTY_STRING);
         assertTrue(0 == taluka.hashCode());
     }
 
@@ -89,7 +90,7 @@ public class TalukaTest {
         Taluka taluka = new Taluka();
         taluka.setStateCode(1L);
         taluka.setDistrictCode(456L);
-        taluka.setTalukaCode(8);
+        taluka.setTalukaCode("8");
 
         return taluka;
     }
@@ -98,7 +99,7 @@ public class TalukaTest {
         Taluka taluka = new Taluka();
         taluka.setStateCode(123L);
         taluka.setDistrictCode(4L);
-        taluka.setTalukaCode(0);
+        taluka.setTalukaCode("8");
 
         return taluka;
     }
@@ -108,7 +109,7 @@ public class TalukaTest {
         Taluka taluka = new Taluka();
         taluka.setStateCode(123L);
         taluka.setDistrictCode(456L);
-        taluka.setTalukaCode(0);
+        taluka.setTalukaCode(MasterDataConstants.EMPTY_STRING);
 
         return taluka;
     }

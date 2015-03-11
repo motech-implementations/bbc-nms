@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
@@ -89,7 +90,7 @@ public class HealthBlockTest {
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
         healthBlock.setStateCode(0L);
         healthBlock.setDistrictCode(0L);
-        healthBlock.setTalukaCode(0);
+        healthBlock.setTalukaCode(MasterDataConstants.EMPTY_STRING);
         healthBlock.setHealthBlockCode(0L);
         assertTrue(0 == healthBlock.hashCode());
     }
@@ -99,7 +100,7 @@ public class HealthBlockTest {
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setStateCode(1L);
         healthBlock.setDistrictCode(456L);
-        healthBlock.setTalukaCode(8);
+        healthBlock.setTalukaCode("8");
         healthBlock.setHealthBlockCode(1002L);
 
         return healthBlock;
@@ -110,7 +111,7 @@ public class HealthBlockTest {
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setStateCode(123L);
         healthBlock.setDistrictCode(4L);
-        healthBlock.setTalukaCode(8);
+        healthBlock.setTalukaCode("8");
         healthBlock.setHealthBlockCode(1002L);
 
         return healthBlock;
@@ -121,7 +122,7 @@ public class HealthBlockTest {
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setStateCode(123L);
         healthBlock.setDistrictCode(456L);
-        healthBlock.setTalukaCode(9);
+        healthBlock.setTalukaCode("9");
         healthBlock.setHealthBlockCode(1002L);
 
         return healthBlock;
@@ -132,7 +133,7 @@ public class HealthBlockTest {
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setStateCode(123L);
         healthBlock.setDistrictCode(456L);
-        healthBlock.setTalukaCode(8);
+        healthBlock.setTalukaCode("8");
         healthBlock.setHealthBlockCode(1003L);
 
         return healthBlock;

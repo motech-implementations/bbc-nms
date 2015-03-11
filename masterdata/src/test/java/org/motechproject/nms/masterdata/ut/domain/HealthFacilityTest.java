@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
@@ -96,7 +97,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
         healthFacility.setStateCode(0L);
         healthFacility.setDistrictCode(0L);
-        healthFacility.setTalukaCode(0);
+        healthFacility.setTalukaCode(MasterDataConstants.EMPTY_STRING);
         healthFacility.setHealthBlockCode(0L);
         healthFacility.setHealthFacilityCode(0L);
         assertTrue(0 == healthFacility.hashCode());
@@ -107,7 +108,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setStateCode(1L);
         healthFacility.setDistrictCode(456L);
-        healthFacility.setTalukaCode(8);
+        healthFacility.setTalukaCode("8");
         healthFacility.setHealthBlockCode(1002L);
         healthFacility.setHealthFacilityCode(1111L);
 
@@ -119,7 +120,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setStateCode(123L);
         healthFacility.setDistrictCode(4L);
-        healthFacility.setTalukaCode(8);
+        healthFacility.setTalukaCode("8");
         healthFacility.setHealthBlockCode(1002L);
         healthFacility.setHealthFacilityCode(1111L);
 
@@ -131,7 +132,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setStateCode(123L);
         healthFacility.setDistrictCode(456L);
-        healthFacility.setTalukaCode(9);
+        healthFacility.setTalukaCode("9");
         healthFacility.setHealthBlockCode(1002L);
         healthFacility.setHealthFacilityCode(1111L);
 
@@ -143,7 +144,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setStateCode(123L);
         healthFacility.setDistrictCode(456L);
-        healthFacility.setTalukaCode(8);
+        healthFacility.setTalukaCode("8");
         healthFacility.setHealthBlockCode(1003L);
         healthFacility.setHealthFacilityCode(1112L);
 
@@ -155,7 +156,7 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setStateCode(123L);
         healthFacility.setDistrictCode(456L);
-        healthFacility.setTalukaCode(8);
+        healthFacility.setTalukaCode("8");
         healthFacility.setHealthBlockCode(1002L);
         healthFacility.setHealthFacilityCode(1112L);
 
