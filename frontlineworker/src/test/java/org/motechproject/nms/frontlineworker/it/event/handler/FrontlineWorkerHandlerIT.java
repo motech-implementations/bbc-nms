@@ -2,7 +2,6 @@ package org.motechproject.nms.frontlineworker.it.event.handler;
 
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -1310,7 +1309,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setFlwId("10");
         frontLineWorkerCsv.setContactNo("1234567890");
-        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setType("ANM");
         frontLineWorkerCsv.setName("Jyoti");
         frontLineWorkerCsv.setOperation("ADD");
 
@@ -1349,7 +1348,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
         frontLineWorkerCsvNew.setFlwId("10");
         frontLineWorkerCsvNew.setContactNo("1234567890");
-        frontLineWorkerCsvNew.setType("USHA");
+        frontLineWorkerCsvNew.setType("ANM");
         frontLineWorkerCsvNew.setName("Jyoti2");//changed from Jyoti to Jyoti2
 
         frontLineWorkerCsvNew.setStateCode("12");
@@ -1575,7 +1574,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setFlwId("13");
         frontLineWorkerCsv.setContactNo("44444");
-        frontLineWorkerCsv.setType("USHA");
+        frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setName("Rekha");
         frontLineWorkerCsv.setOperation("ADD");
 
@@ -1617,7 +1616,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setFlwId("13");
         frontLineWorkerCsvNew.setContactNo("44444");
-        frontLineWorkerCsvNew.setType("USHA");
+        frontLineWorkerCsvNew.setType("ASHA");
         frontLineWorkerCsvNew.setName("Rekha");
 
         frontLineWorkerCsvNew.setStateCode("12");
