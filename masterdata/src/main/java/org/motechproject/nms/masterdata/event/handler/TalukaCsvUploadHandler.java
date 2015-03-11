@@ -86,7 +86,7 @@ public class TalukaCsvUploadHandler {
                     logger.info("Id exist in Taluka Temporary Entity");
                     userName = talukaCsvRecord.getOwner();
                     Taluka record = mapTalukaCsv(talukaCsvRecord);
-                    processTalukaData(record, talukaCsvRecord.getOperation());
+                    processTalukaData(record);
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Taluka Temporary Entity");
@@ -144,7 +144,7 @@ public class TalukaCsvUploadHandler {
         return newRecord;
     }
 
-    private void processTalukaData(Taluka talukaData, String operation) throws DataValidationException {
+    private void processTalukaData(Taluka talukaData) throws DataValidationException {
 
         Taluka existTalukaData = talukaRecordsDataService.findTalukaByParentCode(
                 talukaData.getStateCode(),

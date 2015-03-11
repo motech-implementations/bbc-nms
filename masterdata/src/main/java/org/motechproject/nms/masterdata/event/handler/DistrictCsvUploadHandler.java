@@ -83,7 +83,7 @@ public class DistrictCsvUploadHandler {
                     District record = mapDistrictCsv(districtCsvRecord);
                     userName = districtCsvRecord.getOwner();
                     logger.info("Id exist in District Temporary Entity");
-                    processDistrictData(record, districtCsvRecord.getOperation());
+                    processDistrictData(record);
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in District Temporary Entity");
@@ -135,7 +135,7 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
-    private void processDistrictData(District districtData, String operation) throws DataValidationException {
+    private void processDistrictData(District districtData) throws DataValidationException {
 
         logger.debug("District data contains district code : {}", districtData.getDistrictCode());
         District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());

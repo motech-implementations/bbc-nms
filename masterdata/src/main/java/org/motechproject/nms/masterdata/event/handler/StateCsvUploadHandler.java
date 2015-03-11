@@ -78,7 +78,7 @@ public class StateCsvUploadHandler {
                     userName = stateCsvRecord.getOwner();
                     logger.info("Id exist in State Temporary Entity");
                     State newRecord = mapStateCsv(stateCsvRecord);
-                    processStateData(newRecord, stateCsvRecord.getOperation());
+                    processStateData(newRecord);
                     result.incrementSuccessCount();
 
                 } else {
@@ -131,7 +131,7 @@ public class StateCsvUploadHandler {
         return newRecord;
     }
 
-    private void processStateData(State stateData, String operation) throws DataValidationException {
+    private void processStateData(State stateData) throws DataValidationException {
 
         logger.debug("State data contains state code : {}", stateData.getStateCode());
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());

@@ -84,7 +84,7 @@ public class HealthBlockCsvUploadHandler {
                     logger.info("Id exist in HealthBlock Temporary Entity");
                     userName = healthBlockCsvRecord.getOwner();
                     HealthBlock record = mapHealthBlockCsv(healthBlockCsvRecord);
-                    processHealthBlockData(record, healthBlockCsvRecord.getOperation());
+                    processHealthBlockData(record);
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in HealthBlock Temporary Entity");
@@ -149,7 +149,7 @@ public class HealthBlockCsvUploadHandler {
         return newRecord;
     }
 
-    private void processHealthBlockData(HealthBlock healthBlockData, String operation) throws DataValidationException {
+    private void processHealthBlockData(HealthBlock healthBlockData) throws DataValidationException {
 
         logger.debug("Health Block data contains Health Block code : {}", healthBlockData.getHealthBlockCode());
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
