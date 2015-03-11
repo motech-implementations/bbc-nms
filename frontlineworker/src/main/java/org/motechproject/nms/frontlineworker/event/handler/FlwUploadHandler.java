@@ -61,9 +61,9 @@ public class FlwUploadHandler {
 
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    private Integer successCount = 0;
+    private Integer successCount;
 
-    private Integer failCount = 0;
+    private Integer failCount;
 
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
 
@@ -101,7 +101,9 @@ public class FlwUploadHandler {
         String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
 
         logger.info("Processing Csv file");
-        CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
+        setFailCount(0);
+        setSuccessCount(0);
+        CsvProcessingSummary summary = new CsvProcessingSummary(getSuccessCount(), getFailCount());
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         FrontLineWorkerCsv record = null;
         BulkUploadError errorDetails = null;
@@ -130,7 +132,8 @@ public class FlwUploadHandler {
                     if (dbRecord == null) {
                         if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
                             summary.incrementFailureCount();
-                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA,
+                                    String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Operation"));
                             bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                             logger.warn("Record to be deleted with ID : {} not present", id);
                         } else {
@@ -161,7 +164,9 @@ public class FlwUploadHandler {
                                 if (valid == true) {
                                     if (status == Status.INVALID) {
                                         summary.incrementFailureCount();
-                                        errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                                        //Bug 38
+                                        errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
+                                                String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
                                         bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
                                         logger.warn("Status change try from invalid to valid for id : {}", id);
                                     } else {
@@ -562,12 +567,12 @@ public class FlwUploadHandler {
         return failCount;
     }
 
-    public void setFailCount(Integer failCount) {
-        this.failCount = failCount;
-    }
-
     public Integer getSuccessCount() {
         return successCount;
+    }
+
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
     }
 
     public void setSuccessCount(Integer successCount) {
