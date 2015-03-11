@@ -50,6 +50,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
     public void setUp() {
        stateCsvUploadHandler = new StateCsvUploadHandler(stateRecordsDataService,
                stateCsvRecordsService,bulkUploadErrLogService);
+       stateRecordsDataService.deleteAll();
     }
 
     @Test
@@ -60,7 +61,24 @@ public class StateCsvHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void StateCsvSuccess() {
+    public void testStateCsvSucess(){
+
+        StateCsv csvData = TestHelper.getStateCsvData();
+        stateCsvRecordsService.create(csvData);
+
+        createdIds.add(csvData.getId());
+
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+
+        State stateData = stateRecordsDataService.findRecordByStateCode(123L);
+
+        assertNotNull(stateData);
+        assertTrue(123L == stateData.getStateCode());
+        assertTrue("UP".equals(stateData.getName()));
+    }
+
+    @Test
+    public void testStateCsvSuccessAndFailure() {
 
         StateCsv csvData = TestHelper.getStateCsvData();
         stateCsvRecordsService.create(csvData);
