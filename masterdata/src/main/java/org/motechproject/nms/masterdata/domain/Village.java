@@ -20,7 +20,7 @@ public class Village extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private String talukaCode;
+    private Integer talukaCode;
 
     @Field
     @UIDisplayable(position = 1)
@@ -38,11 +38,11 @@ public class Village extends LocationUnitMetaData {
         this.villageCode = villageCode;
     }
 
-    public String getTalukaCode() {
+    public Integer getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Integer talukaCode) {
         this.talukaCode = talukaCode;
     }
 
@@ -64,28 +64,15 @@ public class Village extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Village)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof Village)) return false;
 
         Village village = (Village) o;
 
-        if (!this.getDistrictCode().equals(village.getDistrictCode())) {
-            return false;
-        }
-        if (!this.getStateCode().equals(village.getStateCode())) {
-            return false;
-        }
-        if (!this.getTalukaCode().equals(village.getTalukaCode())) {
-            return false;
-        }
-        if (!this.getVillageCode().equals(village.getVillageCode())) {
-            return false;
-        }
+        if (!districtCode.equals(village.districtCode)) return false;
+        if (!stateCode.equals(village.stateCode)) return false;
+        if (!talukaCode.equals(village.talukaCode)) return false;
+        if (!villageCode.equals(village.villageCode)) return false;
 
         return true;
     }
@@ -104,7 +91,7 @@ public class Village extends LocationUnitMetaData {
         return "Village{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", villageCode=" + villageCode +
                 '}';
     }
