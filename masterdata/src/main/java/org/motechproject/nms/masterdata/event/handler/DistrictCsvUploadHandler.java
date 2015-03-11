@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class handles the csv upload for success and failure events for DistrictCsv.
@@ -81,7 +83,7 @@ public class DistrictCsvUploadHandler {
                     District record = mapDistrictCsv(districtCsvRecord);
                     userName = districtCsvRecord.getOwner();
                     logger.info("Id exist in District Temporary Entity");
-                    processDistrictData(record,districtCsvRecord.getOperation());
+                    processDistrictData(record, districtCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in District Temporary Entity");
@@ -101,9 +103,8 @@ public class DistrictCsvUploadHandler {
             } catch (Exception e) {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != districtCsvRecord){
+            } finally {
+                if (null != districtCsvRecord) {
                     districtCsvRecordsDataService.delete(districtCsvRecord);
                 }
             }
@@ -136,20 +137,13 @@ public class DistrictCsvUploadHandler {
 
     private void processDistrictData(District districtData, String operation) throws DataValidationException {
 
-        logger.debug("District data contains district code : {}",districtData.getDistrictCode());
+        logger.debug("District data contains district code : {}", districtData.getDistrictCode());
         District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                State stateDeleteRecord = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
-                stateDeleteRecord.getDistrict().remove(existDistrictData);
-                stateRecordsDataService.update(stateDeleteRecord);
-                logger.info("District data is successfully deleted.");
-            } else {
-                updateDistrict(existDistrictData, districtData);
-                logger.info("District data is successfully updated.");
-            }
+            updateDistrict(existDistrictData, districtData);
+            logger.info("District data is successfully updated.");
         } else {
-            
+
             State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
             stateRecordsDataService.update(stateData);

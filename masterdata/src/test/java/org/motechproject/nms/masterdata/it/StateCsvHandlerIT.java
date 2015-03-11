@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -95,17 +94,6 @@ public class StateCsvHandlerIT extends BasePaxIT {
         assertNotNull(updatedStateData);
         assertTrue(123L == updatedStateData.getStateCode());
         assertTrue("UK".equals(updatedStateData.getName()));
-
-        csvData = TestHelper.getDeleteStateCsvData();
-        stateCsvRecordsService.create(csvData);
-
-        clearId();
-        createdIds.add(csvData.getId());
-
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds,MasterDataConstants.STATE_CSV_SUCCESS));
-        State deletedStateData = stateRecordsDataService.findRecordByStateCode(123L);
-
-        assertNull(deletedStateData);
     }
 
     private void clearId(){

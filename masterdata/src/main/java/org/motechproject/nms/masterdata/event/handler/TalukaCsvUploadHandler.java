@@ -152,15 +152,9 @@ public class TalukaCsvUploadHandler {
                 talukaData.getTalukaCode());
 
         if (existTalukaData != null) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
-                districtData.getTaluka().remove(talukaData);
-                districtRecordsDataService.update(districtData);
-                logger.info("Taluka data is successfully deleted.");
-            } else {
-                updateTaluka(existTalukaData, talukaData);
-                logger.info("Taluka data is successfully updated.");
-            }
+            updateTaluka(existTalukaData, talukaData);
+            logger.info("Taluka data is successfully updated.");
+
         } else {
             District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
             districtData.getTaluka().add(talukaData);

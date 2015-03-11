@@ -1,9 +1,5 @@
 package org.motechproject.nms.masterdata.event.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
@@ -23,6 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * This class handles the csv upload for success and failure events for CircleCsv.
  */
@@ -39,7 +39,7 @@ public class CircleCsvHandler {
 
     @Autowired
     public CircleCsvHandler(BulkUploadErrLogService bulkUploadErrLogService, CircleService circleService, CircleCsvService circleCsvService) {
-       this.circleCsvService = circleCsvService;
+        this.circleCsvService = circleCsvService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.circleService = circleService;
     }
@@ -74,8 +74,8 @@ public class CircleCsvHandler {
                 if (record != null) {
                     userName = record.getOwner();
                     Circle newRecord = mapCircleFrom(record);
-
                     persistentRecord = circleService.getRecordByCode(newRecord.getCode());
+
                     if (persistentRecord != null) {
                         persistentRecord = copyCircleForUpdate(newRecord, persistentRecord);
                         circleService.update(persistentRecord);
@@ -107,9 +107,8 @@ public class CircleCsvHandler {
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != record){
+            } finally {
+                if (null != record) {
                     circleCsvService.delete(record);
                 }
             }
@@ -120,8 +119,8 @@ public class CircleCsvHandler {
     }
 
     /**
-     *  This method is used to validate csv uploaded record
-     *  and map CircleCsv to Circle
+     * This method is used to validate csv uploaded record
+     * and map CircleCsv to Circle
      *
      * @param record of CircleCsv type
      * @return Circle record after the mapping
@@ -142,11 +141,12 @@ public class CircleCsvHandler {
 
     /**
      * Copies the field values from new Record to oldRecord for update in DB
-     * @param newRecord mapped from CSV values
+     *
+     * @param newRecord        mapped from CSV values
      * @param persistentRecord to be updated in DB
      * @return oldRecord after copied values
      */
-private  Circle copyCircleForUpdate(Circle newRecord, Circle persistentRecord) {
+    private Circle copyCircleForUpdate(Circle newRecord, Circle persistentRecord) {
 
         persistentRecord.setName(newRecord.getName());
         persistentRecord.setCode(newRecord.getCode());

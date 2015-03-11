@@ -1,9 +1,5 @@
 package org.motechproject.nms.masterdata.event.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
@@ -22,6 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class handles the csv upload for success and failure events for OperatorCsv.
@@ -78,7 +78,7 @@ public class OperatorCsvHandler {
                         persistentRecord = copyOperatorForUpdate(newRecord, persistentRecord);
                         operatorService.update(persistentRecord);
                         logger.info("Record updated successfully for operatorcode {}", newRecord.getCode());
-                    } else  {
+                    } else {
                         operatorService.create(newRecord);
                         logger.info("Record created successfully for operatorcode {}", newRecord.getCode());
                     }
@@ -105,9 +105,8 @@ public class OperatorCsvHandler {
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != record){
+            } finally {
+                if (null != record) {
                     operatorCsvService.delete(record);
                 }
             }
@@ -118,8 +117,8 @@ public class OperatorCsvHandler {
     }
 
     /**
-     *  This method is used to validate csv uploaded record
-     *  and map OperatorCsv to Operator
+     * This method is used to validate csv uploaded record
+     * and map OperatorCsv to Operator
      *
      * @param record of OperatorCsv type
      * @return Operator record after the mapping
@@ -139,12 +138,13 @@ public class OperatorCsvHandler {
 
     /**
      * Copies the field values from new Record to oldRecord for update in DB
-     * @param newRecord mapped from CSV values
+     *
+     * @param newRecord        mapped from CSV values
      * @param persistentRecord to be updated in DB
      * @return oldRecord after copied values
      */
-    private  Operator copyOperatorForUpdate(Operator newRecord,
-                                                        Operator persistentRecord) {
+    private Operator copyOperatorForUpdate(Operator newRecord,
+                                           Operator persistentRecord) {
 
         persistentRecord.setName(newRecord.getName());
         persistentRecord.setCode(newRecord.getCode());

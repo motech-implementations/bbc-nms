@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -78,7 +77,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createDistrictCsvData(csvData);
         createDistrictCsvData(invalidCsvData);
         createdIds.add(csvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
         createdIds.add(invalidCsvData.getId());
 
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
@@ -102,17 +101,6 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         assertTrue(123L == districtUpdateData.getStateCode());
         assertTrue(456L == districtUpdateData.getDistrictCode());
         assertTrue("Aligarh".equals(districtUpdateData.getName()));
-
-        csvData = TestHelper.getDeleteDistrictCsvData();
-        createDistrictCsvData(csvData);
-
-        clearId();
-        createdIds.add(csvData.getId());
-
-        districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-        District districtDeletedData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
-
-        assertNull(districtDeletedData);
     }
 
     private void clearId() {

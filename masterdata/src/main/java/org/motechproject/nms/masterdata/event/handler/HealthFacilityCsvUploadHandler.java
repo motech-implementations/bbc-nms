@@ -108,9 +108,8 @@ public class HealthFacilityCsvUploadHandler {
             } catch (Exception e) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != healthFacilityCsvRecord){
+            } finally {
+                if (null != healthFacilityCsvRecord) {
                     healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
                 }
             }
@@ -167,7 +166,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private void processHealthFacilityData(HealthFacility healthFacilityData, String operation) throws DataValidationException {
 
-        logger.debug("Health Facility data contains facility code : {}",healthFacilityData.getHealthFacilityCode());
+        logger.debug("Health Facility data contains facility code : {}", healthFacilityData.getHealthFacilityCode());
         HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
                 healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(),
@@ -176,19 +175,8 @@ public class HealthFacilityCsvUploadHandler {
                 healthFacilityData.getHealthFacilityCode());
 
         if (existHealthFacilityData != null) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-
-            HealthBlock healthBlockRecord = healthBlockRecordsDataService.findHealthBlockByParentCode(healthFacilityData.getStateCode(),
-                        healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(),
-                        healthFacilityData.getHealthBlockCode());
-
-            healthBlockRecord.getHealthFacility().remove(existHealthFacilityData);
-            healthBlockRecordsDataService.update(healthBlockRecord);
-            logger.info("HealthFacility data is successfully deleted.");
-            } else {
             updateHealthFacilityDAta(existHealthFacilityData, healthFacilityData);
             logger.info("HealthFacility data is successfully updated.");
-            }
         } else {
 
             HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(

@@ -104,9 +104,8 @@ public class VillageCsvUploadHandler {
             } catch (Exception e) {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != villageCsvRecord){
+            } finally {
+                if (null != villageCsvRecord) {
                     villageCsvRecordsDataService.delete(villageCsvRecord);
                 }
             }
@@ -150,9 +149,9 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
-    private void processVillageData(Village villageData, String operation) throws DataValidationException{
+    private void processVillageData(Village villageData, String operation) throws DataValidationException {
 
-        logger.debug("Village data contains village code : {}",villageData.getVillageCode());
+        logger.debug("Village data contains village code : {}", villageData.getVillageCode());
         Village existVillageData = villageRecordsDataService.findVillageByParentCode(
                 villageData.getStateCode(),
                 villageData.getDistrictCode(),
@@ -160,18 +159,8 @@ public class VillageCsvUploadHandler {
                 villageData.getVillageCode());
 
         if (existVillageData != null) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-
-                Taluka talukaDeleteRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
-                        villageData.getDistrictCode(), villageData.getTalukaCode());
-
-                talukaDeleteRecord.getVillage().remove(existVillageData);
-                talukaRecordsDataService.update(talukaDeleteRecord);
-                logger.info("Village data is successfully deleted.");
-            } else {
-                updateVillage(existVillageData, villageData);
-                logger.info("Village data is successfully updated.");
-            }
+            updateVillage(existVillageData, villageData);
+            logger.info("Village data is successfully updated.");
         } else {
 
             Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),

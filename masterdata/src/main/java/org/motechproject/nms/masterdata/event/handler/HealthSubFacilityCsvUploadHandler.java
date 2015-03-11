@@ -90,7 +90,7 @@ public class HealthSubFacilityCsvUploadHandler {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
                     userName = healthSubFacilityCsvRecord.getOwner();
                     HealthSubFacility record = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
-                    processHealthSubFacilityData(record,healthSubFacilityCsvRecord.getOperation());
+                    processHealthSubFacilityData(record, healthSubFacilityCsvRecord.getOperation());
                     result.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
@@ -110,9 +110,8 @@ public class HealthSubFacilityCsvUploadHandler {
             } catch (Exception e) {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != healthSubFacilityCsvRecord){
+            } finally {
+                if (null != healthSubFacilityCsvRecord) {
                     healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
                 }
             }
@@ -173,7 +172,7 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData, String operation) throws DataValidationException {
 
-        logger.debug("Health Sub Facility data contains Sub Facility code : {}",healthSubFacilityData.getHealthSubFacilityCode());
+        logger.debug("Health Sub Facility data contains Sub Facility code : {}", healthSubFacilityData.getHealthSubFacilityCode());
 
         HealthSubFacility existHealthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),
@@ -185,20 +184,8 @@ public class HealthSubFacilityCsvUploadHandler {
         );
 
         if (existHealthSubFacilityData != null) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-
-                HealthFacility healthFacilityDeleteRecord = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
-                        healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
-                        healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
-                        healthSubFacilityData.getHealthFacilityCode());
-
-                healthFacilityDeleteRecord.getHealthSubFacility().remove(existHealthSubFacilityData);
-                healthFacilityRecordsDataService.update(healthFacilityDeleteRecord);
-                logger.info("HealthSubFacility data is successfully deleted.");
-            } else {
-                updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
-                logger.info("HealthSubFacility Permanent data is successfully updated.");
-            }
+            updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
+            logger.info("HealthSubFacility Permanent data is successfully updated.");
         } else {
 
             HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(

@@ -23,7 +23,7 @@ public class TestHelper {
 
     public static StateCsv getInvalidStateCsvData(){
 
-        StateCsv stateCsvData = new StateCsv("Del","Bihar","abc123",null, null);
+        StateCsv stateCsvData = new StateCsv("Add","Bihar","abc123",null, null);
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -33,15 +33,6 @@ public class TestHelper {
     public static StateCsv getUpdatedStateCsvData(){
 
         StateCsv stateCsvData = new StateCsv("Add","UK","123",null, null);
-        stateCsvData.setOwner("balvinder");
-        stateCsvData.setCreator("balvinder");
-        stateCsvData.setModifiedBy("balvinder");
-        return stateCsvData;
-    }
-
-    public static StateCsv getDeleteStateCsvData(){
-
-        StateCsv stateCsvData = new StateCsv("Del","UK","123",null, null);
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -79,12 +70,6 @@ public class TestHelper {
         return districtCsvData;
     }
 
-    public static DistrictCsv getDeleteDistrictCsvData(){
-
-        DistrictCsv districtCsvData = new DistrictCsv("Del","Aligarh","456","123");
-        return districtCsvData;
-    }
-
     public static District getDistrictData(){
 
         Set<Taluka> talukaSet = new HashSet<Taluka>();
@@ -114,12 +99,6 @@ public class TestHelper {
     public static TalukaCsv getUpdatedTalukaCsvData(){
 
         TalukaCsv talukaCsvData = new TalukaCsv("Add","Ghabhana","456","123","8");
-        return talukaCsvData;
-    }
-
-    public static TalukaCsv getDeleteTalukaCsvData(){
-
-        TalukaCsv talukaCsvData = new TalukaCsv("Del","Ghabhana","456","123","8");
         return talukaCsvData;
     }
 
@@ -157,12 +136,6 @@ public class TestHelper {
         return healthBlockCsvData;
     }
 
-    public static HealthBlockCsv getDeleteHealthBlockCsvData(){
-
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Del","Ganiri","1002","123","456","8");
-        return healthBlockCsvData;
-    }
-
     public static HealthBlock getHealthBlockData(){
 
         Set<HealthFacility> healthFacilitySet = new HashSet<HealthFacility>();
@@ -194,12 +167,6 @@ public class TestHelper {
     public static VillageCsv getUpdateVillageCsvData() {
 
         VillageCsv villageCsvData = new VillageCsv("Add","Ahamadabad","122656","123","456","8");
-        return villageCsvData;
-    }
-
-    public static VillageCsv getDeleteVillageCsvData() {
-
-        VillageCsv villageCsvData = new VillageCsv("Del","Ahamadabad","122656","123","456","8");
         return villageCsvData;
     }
 
@@ -237,12 +204,6 @@ public class TestHelper {
         return healthFacilityCsvData;
     }
 
-    public static HealthFacilityCsv getDeleteHealthFacilityCsvData(){
-
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Del","HF2","1111","123","456","8","1002","9999");
-        return healthFacilityCsvData;
-    }
-
     public static HealthSubFacilityCsv getHealthSubFacilityCsvData(){
 
         HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","123","456","8","1002");
@@ -258,12 +219,6 @@ public class TestHelper {
     public static HealthSubFacilityCsv getUpdateHealthSubFacilityCsvData(){
 
         HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF2","1111","9001","123","456","8","1002");
-        return healthSubFacilityCsvData;
-    }
-
-    public static HealthSubFacilityCsv getDeleteHealthSubFacilityCsvData(){
-
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Del","HSF2","1111","9001","123","456","8","1002");
         return healthSubFacilityCsvData;
     }
 

@@ -104,9 +104,8 @@ public class HealthBlockCsvUploadHandler {
             } catch (Exception e) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-            finally {
-                if(null != healthBlockCsvRecord){
+            } finally {
+                if (null != healthBlockCsvRecord) {
                     healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
                 }
             }
@@ -152,7 +151,7 @@ public class HealthBlockCsvUploadHandler {
 
     private void processHealthBlockData(HealthBlock healthBlockData, String operation) throws DataValidationException {
 
-        logger.debug("Health Block data contains Health Block code : {}",healthBlockData.getHealthBlockCode());
+        logger.debug("Health Block data contains Health Block code : {}", healthBlockData.getHealthBlockCode());
         HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
                 healthBlockData.getStateCode(),
                 healthBlockData.getDistrictCode(),
@@ -160,17 +159,9 @@ public class HealthBlockCsvUploadHandler {
                 healthBlockData.getHealthBlockCode());
 
         if (existHealthBlockData != null) {
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(),
-                        healthBlockData.getDistrictCode(),healthBlockData.getTalukaCode());
+            updateHealthBlock(existHealthBlockData, healthBlockData);
+            logger.info("HealthBlock data is successfully updated.");
 
-                talukaRecord.getHealthBlock().remove(existHealthBlockData);
-                talukaRecordsDataService.update(talukaRecord);
-                logger.info("HealthBlock data is successfully deleted.");
-            } else {
-                updateHealthBlock(existHealthBlockData, healthBlockData);
-                logger.info("HealthBlock data is successfully updated.");
-            }
         } else {
 
             Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());

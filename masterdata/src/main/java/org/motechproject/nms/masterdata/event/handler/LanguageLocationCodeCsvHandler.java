@@ -117,9 +117,8 @@ public class LanguageLocationCodeCsvHandler {
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
                 result.incrementFailureCount();
-            }
-            finally{
-                if(null != record){
+            } finally {
+                if (null != record) {
                     languageLocationCodeServiceCsv.delete(record);
                 }
             }
@@ -130,8 +129,8 @@ public class LanguageLocationCodeCsvHandler {
     }
 
     /**
-     *  This method is used to validate csv uploaded record
-     *  and map LanguageLocationCodeCsv to LanguageLocationCode
+     * This method is used to validate csv uploaded record
+     * and map LanguageLocationCodeCsv to LanguageLocationCode
      *
      * @param record of LanguageLocationCodeCsv type
      * @return Operator record after the mapping
@@ -200,12 +199,13 @@ public class LanguageLocationCodeCsvHandler {
 
     /**
      * Copies the field values from new Record to oldRecord for update in DB
+     *
      * @param newRecord mapped from CSV values
      * @param oldRecord to be updated in DB
      * @return oldRecord after copied values
      */
-    private  LanguageLocationCode copyLanguageLocationCodeForUpdate(LanguageLocationCode newRecord,
-                                                              LanguageLocationCode oldRecord) {
+    private LanguageLocationCode copyLanguageLocationCodeForUpdate(LanguageLocationCode newRecord,
+                                                                   LanguageLocationCode oldRecord) {
 
         oldRecord.setStateCode(newRecord.getStateCode());
         oldRecord.setDistrictCode(newRecord.getDistrictCode());

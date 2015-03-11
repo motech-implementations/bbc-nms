@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -112,17 +111,6 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         assertTrue(123L == talukaUpdateData.getStateCode());
         assertTrue(456L == talukaUpdateData.getDistrictCode());
         assertTrue("Ghabhana".equals(talukaUpdateData.getName()));
-
-        csvData = TestHelper.getDeleteTalukaCsvData();
-        createTalukaCsvData(csvData);
-
-        clearId();
-        createdIds.add(csvData.getId());
-
-        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
-        Taluka talukaDeletedData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L, "8");
-
-        assertNull(talukaDeletedData);
     }
 
     private void clearId() {

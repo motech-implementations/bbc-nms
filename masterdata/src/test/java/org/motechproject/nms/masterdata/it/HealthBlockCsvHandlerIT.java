@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -118,17 +117,6 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         assertTrue("8".equals(healthBlockUpdateData.getTalukaCode()));
         assertTrue(1002L == healthBlockUpdateData.getHealthBlockCode());
         assertTrue("Ganiri".equals(healthBlockUpdateData.getName()));
-
-        csvData = TestHelper.getDeleteHealthBlockCsvData();
-        createHealthBlockCsvData(csvData);
-
-        clearId();
-        createdIds.add(csvData.getId());
-
-        healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
-        HealthBlock healthBlockDeletedData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, "8", 1002L);
-
-        assertNull(healthBlockDeletedData);
     }
 
     private void clearId() {

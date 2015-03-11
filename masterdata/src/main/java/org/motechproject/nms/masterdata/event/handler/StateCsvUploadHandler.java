@@ -78,7 +78,7 @@ public class StateCsvUploadHandler {
                     userName = stateCsvRecord.getOwner();
                     logger.info("Id exist in State Temporary Entity");
                     State newRecord = mapStateCsv(stateCsvRecord);
-                    processStateData(newRecord,stateCsvRecord.getOperation());
+                    processStateData(newRecord, stateCsvRecord.getOperation());
                     result.incrementSuccessCount();
 
                 } else {
@@ -101,9 +101,8 @@ public class StateCsvUploadHandler {
 
                 logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 result.incrementFailureCount();
-            }
-              finally {
-                if(null != stateCsvRecord){
+            } finally {
+                if (null != stateCsvRecord) {
                     stateCsvRecordsDataService.delete(stateCsvRecord);
                 }
             }
@@ -132,28 +131,21 @@ public class StateCsvUploadHandler {
         return newRecord;
     }
 
-    private void processStateData(State stateData, String operation) throws DataValidationException{
+    private void processStateData(State stateData, String operation) throws DataValidationException {
 
-
-        logger.debug("State data contains state code : {}",stateData.getStateCode() );
+        logger.debug("State data contains state code : {}", stateData.getStateCode());
         State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
 
         if (null != stateExistData) {
-
-            if (null != operation && operation.toUpperCase().equals(MasterDataConstants.DELETE_OPERATION)) {
-                stateRecordsDataService.delete(stateExistData);
-                logger.info("State data is successfully deleted.");
-            } else {
-                updateState(stateExistData, stateData);
-                logger.info("State data is successfully updated.");
-            }
+            updateState(stateExistData, stateData);
+            logger.info("State data is successfully updated.");
         } else {
             stateRecordsDataService.create(stateData);
             logger.info("State data is successfully inserted.");
         }
     }
 
-    private void updateState(State stateExistData,State stateData){
+    private void updateState(State stateExistData, State stateData) {
 
         stateExistData.setName(stateData.getName());
         stateExistData.setMaCapping(stateData.getMaCapping());

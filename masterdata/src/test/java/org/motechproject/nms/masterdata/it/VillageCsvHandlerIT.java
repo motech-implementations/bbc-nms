@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertNull;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -118,17 +117,6 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertTrue("8".equals(villageUpdateData.getTalukaCode()));
         assertTrue(122656L == villageUpdateData.getVillageCode());
         assertTrue("Ahamadabad".equals(villageUpdateData.getName()));
-
-        csvData = TestHelper.getDeleteVillageCsvData();
-        createVillageCsvData(csvData);
-
-        clearId();
-        createdIds.add(csvData.getId());
-
-        villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageDeletedData = villageRecordsDataService.findVillageByParentCode(123L, 456L, "8", 122656L);
-
-        assertNull(villageDeletedData);
     }
 
     private void clearId() {
