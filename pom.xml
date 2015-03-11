@@ -833,6 +833,10 @@
                     <!-- bug in powermock on java7 -->
                     <forkMode>once</forkMode>
                     <!-- bug in surefire; won't pass argline for never -->
+                    <includes>
+                        <include>**/**/*Test.java</include>
+                        <include>**/**/*UT.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
