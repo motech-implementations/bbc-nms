@@ -42,6 +42,14 @@
     <osgi:service ref="talukaService"
                   interface="org.motechproject.nms.masterdata.service.TalukaService" />
 
+    <osgi:service ref="talukaService"
+                  interface="org.motechproject.nms.masterdata.service.TalukaService" />
+
+    <osgi:service ref="talukaCsvService"
+                  interface="org.motechproject.nms.masterdata.service.TalukaCsvService" />
+
+    <osgi:service ref="villageService"
+                  interface="org.motechproject.nms.masterdata.service.VillageService" />
 
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService"/>
