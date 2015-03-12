@@ -4,7 +4,7 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 
 /**
- * Created by abhishek on 27/1/15.
+ * This interface is used to operate on State Csv using Motech Data service
  */
 public interface StateCsvRecordsDataService extends MotechDataService<StateCsv> {
 }

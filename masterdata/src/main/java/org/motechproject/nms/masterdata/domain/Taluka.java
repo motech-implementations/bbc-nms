@@ -114,6 +114,12 @@ public class Taluka extends MdsEntity {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the District Code, State Code and
+     * Taluka code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -122,6 +128,13 @@ public class Taluka extends MdsEntity {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for name, state code
+     * District code, taluka code, health block and village for the instance variables
+     *
+     * @return The string of the name, state code
+     * District code, taluka code, health block and village for the instance variables
+     */
     @Override
     public String toString() {
         return "Taluka{" +

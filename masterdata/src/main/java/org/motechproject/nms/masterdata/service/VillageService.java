@@ -4,7 +4,7 @@ package org.motechproject.nms.masterdata.service;
 import org.motechproject.nms.masterdata.domain.Village;
 
 /**
- * Created by nms on 17/3/15.
+ * This interface is used for crud operations on Village
  */
 public interface VillageService {
     /**

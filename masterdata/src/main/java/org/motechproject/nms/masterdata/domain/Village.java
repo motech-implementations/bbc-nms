@@ -102,6 +102,13 @@ public class Village extends MdsEntity {
         return true;
     }
 
+
+    /**
+     * Calculates the hash code according to the District Code, State Code
+     * Taluka code and village Code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -110,7 +117,13 @@ public class Village extends MdsEntity {
         result = 31 * result + villageCode.hashCode();
         return result;
     }
-
+    /**
+     * This method override the toString method to create string for state code
+     * District code, taluka code, village code and name for the instance variables
+     *
+     * @return The string of the name, state code
+     * District code, taluka code, village code and name for the instance variables
+     */
     @Override
     public String toString() {
         return "Village{" +

@@ -51,6 +51,13 @@ public class StateCsv extends LocationUnitMetaDataCsv {
         this.mkCapping = mkCapping;
     }
 
+    /**
+     * This method override the toString method to create string for state code
+     * District, maCapping and mkCapping for the instance variables
+     *
+     * @return The string of the state code
+     * District, maCapping and mkCapping  for the instance variables
+     */
     @Override
     public String toString() {
         return "StateCsv{" +

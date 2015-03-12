@@ -87,6 +87,15 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
         this.healthFacilityType = healthFacilityType;
     }
 
+    /**
+     * This method override the toString method to create string for State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code for the instance variables
+     *
+     * @return The string of the State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthFacilityCsv{" +

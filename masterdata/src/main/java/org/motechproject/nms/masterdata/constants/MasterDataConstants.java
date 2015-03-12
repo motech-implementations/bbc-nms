@@ -1,7 +1,7 @@
 package org.motechproject.nms.masterdata.constants;
 
 /**
- * Created by abhishek on 27/1/15.
+ * This Class contains constants values for Master Data.
  */
 public final class MasterDataConstants {
 

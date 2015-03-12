@@ -5,6 +5,9 @@ import org.motechproject.nms.masterdata.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on Location
+ */
 @Service("locationService")
 public class LocationServiceImpl implements LocationService {
 

@@ -35,6 +35,11 @@ public class Operator extends MdsEntity {
         this.code = code;
     }
 
+    /**
+     * This method override the toString method to create string for name and code the instance variables
+     *
+     * @return The string of the name and code for the instance variables
+     */
     @Override
     public String toString() {
         return "Operator{" +

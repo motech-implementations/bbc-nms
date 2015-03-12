@@ -2,6 +2,9 @@ package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.*;
 
+/**
+ * This interface is used for crud operations on Location Details
+ */
 public interface LocationService {
 
     boolean validateLocation(Long stateId, Long districtId);

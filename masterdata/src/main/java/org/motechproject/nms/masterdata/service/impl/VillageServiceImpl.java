@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by nms on 17/3/15.
+ * This class is used for crud operations on Village
  */
 @Service("villageService")
 public class VillageServiceImpl implements VillageService {
@@ -19,17 +19,30 @@ public class VillageServiceImpl implements VillageService {
         this.villageRecordsDataService = villageRecordsDataService;
     }
 
+    /**
+     * creates a new record for the village
+     * @param record of the Village
+     * @return
+     */
     @Override
     public Village create(Village record) {
         return villageRecordsDataService.create(record);
     }
 
+    /**
+     * updates the record of the Village
+     * @param record of the Village
+     */
     @Override
     public void update(Village record) {
         villageRecordsDataService.update(record);
 
     }
 
+    /**
+     * deletes the record of the Village
+     * @param record of the Village
+     */
     @Override
     public void delete(Village record) {
         villageRecordsDataService.delete(record);
@@ -37,11 +50,12 @@ public class VillageServiceImpl implements VillageService {
     }
 
     /**
+     * Gets the village details according to the parent code
      * @param stateCode
      * @param districtCode
      * @param talukaCode
      * @param villageCode
-     * @return
+     * @return Village
      */
     @Override
     public Village findVillageByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long villageCode) {

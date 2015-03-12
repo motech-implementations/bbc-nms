@@ -79,6 +79,13 @@ public class State extends MdsEntity {
         this.maCapping = maCapping;
     }
 
+    /**
+     * This method override the toString method to create string for name, state code
+     * District, maCapping and mkCapping for the instance variables
+     *
+     * @return The string of the name, state code
+     * District, maCapping and mkCapping  for the instance variables
+     */
     @Override
     public String toString() {
         return "State{" +

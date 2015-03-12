@@ -4,7 +4,8 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 
 /**
- * Created by abhishek on 27/1/15.
+ * This interface is used to operate on District Csv using Motech Data service
  */
+
 public interface DistrictCsvRecordsDataService extends MotechDataService<DistrictCsv> {
 }

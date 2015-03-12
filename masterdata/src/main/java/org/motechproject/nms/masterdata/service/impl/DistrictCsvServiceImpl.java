@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class is used for crud operations on DistrictCsv
  */
 @Service("districtCsvService")
 public class DistrictCsvServiceImpl implements DistrictCsvService {
@@ -39,6 +39,11 @@ public class DistrictCsvServiceImpl implements DistrictCsvService {
         return districtCsvRecordsDataService.create(record);
     }
 
+    /**
+     * Gets the District Csv Details by its Id
+     * @param id
+     * @return DistrictCsv
+     */
     @Override
     public DistrictCsv findById(Long id) {
         return districtCsvRecordsDataService.findById(id);

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by root on 17/3/15.
+ * This class is used for crud operations on HealthSubFacility
  */
 @Service("healthSubFacilityService")
 public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
@@ -51,8 +51,9 @@ public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
     }
 
     /**
+     * Gets the Health Sub Facility Details by Id
      * @param id
-     * @return
+     * @return HealthSubFacility
      */
     @Override
     public HealthSubFacility findById(Long id) {
@@ -60,13 +61,14 @@ public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
     }
 
     /**
+     * Gets the Health Sub Facility Details by its parent code
      * @param stateCode
      * @param districtCode
      * @param talukaCode
      * @param healthBlockCode
      * @param healthFacilityCode
      * @param healthSubFacilityCode
-     * @return
+     * @return HealthSubFacility
      */
     @Override
     public HealthSubFacility findHealthSubFacilityByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode, Long healthSubFacilityCode) {

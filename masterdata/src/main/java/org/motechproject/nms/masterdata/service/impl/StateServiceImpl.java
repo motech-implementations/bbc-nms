@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class is used for crud operations on State
  */
 @Service("stateService")
 public class StateServiceImpl implements StateService {
@@ -57,11 +57,21 @@ public class StateServiceImpl implements StateService {
         stateRecordsDataService.deleteAll();
     }
 
+    /**
+     * Gets the State Details by State Code
+     * @param stateCode
+     * @return State
+     */
     @Override
     public State findRecordByStateCode(Long stateCode) {
         return stateRecordsDataService.findRecordByStateCode(stateCode);
     }
 
+    /**
+     * Gets the State details by Id
+     * @param stateId
+     * @return State
+     */
     @Override
     public State findById(Long stateId) {
         return stateRecordsDataService.findById(stateId);

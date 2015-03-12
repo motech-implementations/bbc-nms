@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.service;
 import org.motechproject.nms.masterdata.domain.VillageCsv;
 
 /**
- * Created by root on 17/3/15.
+ * This interface is used for crud operations on VillageCsv
  */
 public interface VillageCsvService {
 

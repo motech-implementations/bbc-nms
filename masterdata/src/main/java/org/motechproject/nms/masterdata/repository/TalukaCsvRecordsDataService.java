@@ -4,7 +4,7 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 
 /**
- * Created by abhishek on 29/1/15.
+ * This interface is used to operate on Taluka Csv using Motech Data service
  */
 public interface TalukaCsvRecordsDataService extends MotechDataService<TalukaCsv> {
 }

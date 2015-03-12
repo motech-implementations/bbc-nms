@@ -51,6 +51,12 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
             this.resultParamName = resultParamName;
         }
 
+        /**
+         * Executes the query
+         * @param query
+         * @param restriction
+         * @return List&lt;Integer&gt;
+         */
         @Override
         public List<Integer> execute(Query query,
                                      InstanceSecurityRestriction restriction) {

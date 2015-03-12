@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class is used for crud operations on HealthFacilityCsv
  */
 @Service("healthFacilityCsvService")
 public class HealthFacilityCsvServiceImpl implements HealthFacilityCsvService {
@@ -40,8 +40,9 @@ public class HealthFacilityCsvServiceImpl implements HealthFacilityCsvService {
     }
 
     /**
+     * Gets the Health Facility Csv Details by its Id
      * @param id
-     * @return
+     * @return HealthFacilityCsv
      */
     @Override
     public HealthFacilityCsv findById(Long id) {

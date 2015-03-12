@@ -61,6 +61,13 @@ public class VillageCsv extends LocationUnitMetaDataCsv {
         this.talukaCode = talukaCode;
     }
 
+    /**
+     * This method override the toString method to create string for state code
+     * District code, taluka code and village code for the instance variables
+     *
+     * @return The string of the name, state code
+     * District code, taluka code and village code for the instance variables
+     */
     @Override
     public String toString() {
         return "VillageCsv{" +

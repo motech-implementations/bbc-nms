@@ -26,6 +26,11 @@ public class LocationUnitMetaDataCsv extends MdsEntity {
         this.name = name;
     }
 
+    /**
+     * This method override the toString method to create string for name the instance variables
+     *
+     * @return The string of the name for the instance variables
+     */
     @Override
     public String toString() {
         return "LocationUnitMetaDataCsv{" +

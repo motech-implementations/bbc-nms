@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by root on 17/3/15.
+ * This class is used for crud operations on HealthBlockCsv
  */
 
 @Service("healthBlockCsvService")
@@ -41,6 +41,11 @@ public class HealthBlockCsvServiceImpl implements HealthBlockCsvService {
         return healthBlockCsvRecordsDataService.create(record);
     }
 
+    /**
+     * Gets the Health Block Csv Details by its Id
+     * @param id
+     * @return HealthBlockCsv
+     */
     @Override
     public HealthBlockCsv findById(Long id) {
         return healthBlockCsvRecordsDataService.findById(id);

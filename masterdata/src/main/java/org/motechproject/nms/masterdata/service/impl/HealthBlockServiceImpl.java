@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by root on 17/3/15.
+ * This class is used for crud operations on HealthBlock
  */
 @Service("healthBlockService")
 public class HealthBlockServiceImpl implements HealthBlockService {
@@ -51,11 +51,12 @@ public class HealthBlockServiceImpl implements HealthBlockService {
     }
 
     /**
+     * Gets the Health Block details by tis parents code
      * @param stateCode
      * @param districtCode
      * @param talukaCode
      * @param healthBlockCode
-     * @return
+     * @return HealthBlock
      */
     @Override
     public HealthBlock findHealthBlockByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) {
@@ -63,8 +64,9 @@ public class HealthBlockServiceImpl implements HealthBlockService {
     }
 
     /**
+     * Gets the Health Block Details by its Id
      * @param id
-     * @return
+     * @return HealthBlock
      */
     @Override
     public HealthBlock findById(Long id) {
