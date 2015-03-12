@@ -65,11 +65,10 @@ public class BulkUploadErrLogServiceTest {
         expectedLogs.add("Record Details, Mandatory Parameter Missing, Upload unsuccessful as Name is missing.");
         try {
             List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
-            Assert.assertEquals(lines.size(), expectedLogs.size());
-            Assert.assertEquals(lines.get(0), expectedLogs.get(0));
-            Assert.assertEquals(lines.get(1), expectedLogs.get(1));
+            Assert.assertTrue(lines.contains(expectedLogs.get(0)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(1)));
+            Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
             Assert.fail();
         }
     }
@@ -94,11 +93,10 @@ public class BulkUploadErrLogServiceTest {
         expectedLogs.add("Record Details, Invalid Data, Upload unsuccessful as Code is invalid.");
         try {
             List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
-            Assert.assertEquals(lines.size(), expectedLogs.size());
-            Assert.assertEquals(lines.get(0), expectedLogs.get(0));
-            Assert.assertEquals(lines.get(1), expectedLogs.get(1));
+            Assert.assertTrue(lines.contains(expectedLogs.get(0)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(1)));
+            Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
             Assert.fail();
         }
     }
@@ -123,11 +121,10 @@ public class BulkUploadErrLogServiceTest {
         expectedLogs.add("Record Details, CSV Record Not Found, Upload unsuccessful as record is missing in CSV.");
         try {
             List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
-            Assert.assertEquals(lines.size(), expectedLogs.size());
-            Assert.assertEquals(lines.get(0), expectedLogs.get(0));
-            Assert.assertEquals(lines.get(1), expectedLogs.get(1));
+            Assert.assertTrue(lines.contains(expectedLogs.get(0)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(1)));
+            Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
             Assert.fail();
         }
     }
@@ -161,14 +158,14 @@ public class BulkUploadErrLogServiceTest {
         try {
             List<String> lines = Files.readAllLines(path, Charset.defaultCharset());
             Assert.assertEquals(lines.size(), expectedLogs.size());
-            Assert.assertEquals(lines.get(1), expectedLogs.get(1));
-            Assert.assertEquals(lines.get(2), expectedLogs.get(2));
-            Assert.assertEquals(lines.get(3), expectedLogs.get(3));
-            Assert.assertEquals(lines.get(4), expectedLogs.get(4));
-            Assert.assertEquals(lines.get(5), expectedLogs.get(5));
-            Assert.assertEquals(lines.get(6), expectedLogs.get(6));
+            Assert.assertTrue(lines.contains(expectedLogs.get(1)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(2)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(3)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(4)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(5)));
+            Assert.assertTrue(lines.contains(expectedLogs.get(6)));
+            Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace();
             Assert.fail();
         }
     }
