@@ -67,9 +67,6 @@ public class HealthFacilityCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS})
     public void healthFacilityCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("HEALTH_FACILITY_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();

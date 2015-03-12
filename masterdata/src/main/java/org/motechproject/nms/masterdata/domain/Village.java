@@ -65,15 +65,27 @@ public class Village extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Village)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Village)) {
+            return false;
+        }
 
         Village village = (Village) o;
 
-        if (!this.getDistrictCode().equals(village.getDistrictCode())) return false;
-        if (!this.getStateCode().equals(village.getStateCode())) return false;
-        if (!this.getTalukaCode().equals(village.getTalukaCode())) return false;
-        if (!this.getVillageCode().equals(village.getVillageCode())) return false;
+        if (!this.getDistrictCode().equals(village.getDistrictCode())) {
+            return false;
+        }
+        if (!this.getStateCode().equals(village.getStateCode())) {
+            return false;
+        }
+        if (!this.getTalukaCode().equals(village.getTalukaCode())) {
+            return false;
+        }
+        if (!this.getVillageCode().equals(village.getVillageCode())) {
+            return false;
+        }
 
         return true;
     }
