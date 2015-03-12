@@ -152,10 +152,10 @@ public class ContentUploadCsv extends MdsEntity {
     @Override
     public String toString() {
 
-        return "Content Index[" + this.getIndex() + "] Operation[" + this.getOperation() + "] Content ID " +
-                "[" + this.getContentId() + "] Circle Code [" + this.getCircleCode() + "] Language Location Code [" +
+        return "Content Index[" + this.getIndex() + "] Operation[" + this.getOperation() + "] Content ID["
+                + this.getContentId() + "] Circle Code [" + this.getCircleCode() + "] Language Location Code [" +
                 this.getLanguageLocationCode() + "] Content Name [" + this.getContentName() + "] Content Type [" +
-                this.getContentType() + "Content File [" + this.contentFile + "] Content Duration [" +
+                this.getContentType() + "] Content File [" + this.contentFile + "] Content Duration [" +
                 this.getContentDuration() + "] Card Number [" + this.getCardNumber() + "]";
 
 
