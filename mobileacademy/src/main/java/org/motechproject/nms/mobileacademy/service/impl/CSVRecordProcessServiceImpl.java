@@ -250,7 +250,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                             continue;
                         }
 
-                        if (isRecordChangingTheFileName(record)) {
+                        if (isRecordChangingTheFileName(record)
+                                || isRecordChangingTheAnswerOption(record)) {
                             continue;
                         } else {
                             int languageLocCode = Integer
@@ -263,23 +264,32 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                                     .toUpperCase());
 
                             if (courseProcessedContent != null) {
-                                LOGGER.info(
-                                        "ContentID and duration updated for content name: {}, LLC: {}",
-                                        courseContentCsv.getContentName(),
-                                        courseContentCsv
-                                                .getLanguageLocationCode());
-                                courseProcessedContent
-                                        .setContentDuration(Integer
-                                                .parseInt(courseContentCsv
-                                                        .getContentDuration()));
-                                courseProcessedContent.setContentID(Integer
+                                int contentDuration = Integer
                                         .parseInt(courseContentCsv
-                                                .getContentId()));
-                                courseProcessedContent
-                                        .setModifiedBy(userDetailsDTO
-                                                .getModifiedBy());
-                                courseProcessedContentService
-                                        .update(courseProcessedContent);
+                                                .getContentDuration());
+                                int contentId = Integer
+                                        .parseInt(courseContentCsv
+                                                .getContentId());
+                                if ((courseProcessedContent
+                                        .getContentDuration() != contentDuration)
+                                        && (courseProcessedContent
+                                                .getContentID() != contentId)) {
+                                    LOGGER.info(
+                                            "ContentID and duration updated for content name: {}, LLC: {}",
+                                            courseContentCsv.getContentName(),
+                                            courseContentCsv
+                                                    .getLanguageLocationCode());
+                                    courseProcessedContent
+                                            .setContentDuration(contentDuration);
+                                    courseProcessedContent
+                                            .setContentID(contentId);
+                                    courseProcessedContent
+                                            .setModifiedBy(userDetailsDTO
+                                                    .getModifiedBy());
+                                    courseProcessedContentService
+                                            .update(courseProcessedContent);
+                                    break;
+                                }
 
                             }
                             bulkUploadStatus.incrementSuccessCount();
@@ -302,7 +312,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     .keySet().iterator();
             while (contentNamesIterator.hasNext()) {
                 String contentName = contentNamesIterator.next();
-                boolean updateContentFile = true;
+                boolean flagForUpdatingMetaData = false;
+                boolean flagForAbortingModification = false;
 
                 // Getting new List as the list return is unmodifiable
                 List<Integer> listOfExistingLlc = new ArrayList<Integer>(
@@ -313,7 +324,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         .get(contentName);
                 if (courseContentCsvs.size() < listOfExistingLlc.size()) {
                     LOGGER.warn(
-                            "Records corresponding to all the existing LLCs not received for modifying file with content name: {}",
+                            "Records corresponding to all the existing LLCs not received for modification against content name: {}",
                             contentName);
 
                     bulkUploadError.setRecordDetails(contentName);
@@ -337,6 +348,29 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 String fileName = mapForModifyRecords.get(contentName).get(0)
                         .getContentFile();
 
+                String metaData = "";
+
+                int correctAnswerOption = 0;
+
+                /*
+                 * This block of code is just being written for the purpose to
+                 * know whether this bunch of record refers to questionContent
+                 * type or not
+                 */
+                Record record = new Record();
+                try {
+                    validateContentName(mapForModifyRecords.get(contentName)
+                            .get(0), record);
+                } catch (DataValidationException e1) {
+                    e1.printStackTrace();
+                }
+
+                if (record.getType() == FileType.QUESTION_CONTENT) {
+                    metaData = mapForModifyRecords.get(contentName).get(0)
+                            .getMetaData();
+                    flagForUpdatingMetaData = true;
+                }
+
                 Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
                         .iterator();
                 while (courseRawContentsIterator.hasNext()) {
@@ -348,6 +382,23 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         LOGGER.warn(
                                 "Content file name does not match for content name: {}, contentID: {}",
                                 contentName, courseContentCsv.getContentId());
+                        flagForAbortingModification = true;
+                    }
+                    /*
+                     * Check for consistency of metaData only if record
+                     * corresponds to question content type
+                     */
+                    if (flagForUpdatingMetaData) {
+                        if (!metaData.equalsIgnoreCase(courseContentCsv
+                                .getMetaData())) {
+                            LOGGER.warn(
+                                    "Correct Answer Option(MetaData) does not match for content name: {}, contentID: {}",
+                                    contentName,
+                                    courseContentCsv.getContentId());
+                            flagForAbortingModification = true;
+                        }
+                    }
+                    if (flagForAbortingModification) {
 
                         bulkUploadError.setRecordDetails(courseContentCsv
                                 .getContentId());
@@ -363,27 +414,22 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         deleteCourseRawContentsByList(courseContentCsvs, true,
                                 bulkUploadStatus);
                         contentNamesIterator.remove();
-                        updateContentFile = false;
                         break;
                     }
                     listOfExistingLlc.remove(Integer.valueOf(languageLocCode));
                 }
 
-                if (!updateContentFile) {
+                if (flagForAbortingModification) {
                     contentNamesIterator.remove();
                     continue;
                 }
 
                 // If data has arrived for all the existing LLCS.
                 if (CollectionUtils.isEmpty(listOfExistingLlc)) {
-
-                    Record record = new Record();
-
                     /*
-                     * This is done just for setting up the record object. It
-                     * can never throw error
+                     * This is done just to know the type of file to which this
+                     * bunch of modification record refers to.
                      */
-
                     try {
                         if (mapForModifyRecords.get(contentName) != null) {
                             validateRawContent(
@@ -394,7 +440,33 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         LOGGER.debug(e.getMessage(), e);
                     }
 
-                    determineTypeAndUpdateChapterContent(record, userDetailsDTO);
+                    if (isRecordChangingTheFileName(record)) {
+                        determineTypeAndUpdateChapterContent(record,
+                                userDetailsDTO);
+                        LOGGER.info(
+                                "Audio file name has been changed for contentName: {}",
+                                contentName);
+                    }
+
+                    if (flagForUpdatingMetaData
+                            && isRecordChangingTheAnswerOption(record)) {
+                        correctAnswerOption = record.getAnswerId();
+                        coursePopulateService
+                                .updateCorrectAnswer(
+                                        MobileAcademyConstants.CHAPTER
+                                                + String.format(
+                                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                                        record.getChapterId()),
+                                        MobileAcademyConstants.QUESTION
+                                                + String.format(
+                                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                                        record.getChapterId()),
+                                        Integer.toString(correctAnswerOption),
+                                        userDetailsDTO);
+                        LOGGER.info(
+                                "Correct Answer Option for contentName: {} has been changed to :{}",
+                                contentName, correctAnswerOption);
+                    }
 
                     List<CourseContentCsv> fileModifyingRecords = mapForModifyRecords
                             .get(contentName);
@@ -421,6 +493,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     .parseInt(courseContentCsv.getContentId()));
                             courseProcessedContent.setModifiedBy(userDetailsDTO
                                     .getModifiedBy());
+                            if (flagForUpdatingMetaData) {
+                                courseProcessedContent
+                                        .setMetadata(MobileAcademyConstants.CONTENT_CORRECT_ANSWER
+                                                + ":"
+                                                + Integer
+                                                        .toString(correctAnswerOption));
+                            }
                             courseProcessedContentService
                                     .update(courseProcessedContent);
                         }
@@ -453,6 +532,19 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 }
             }
         }
+    }
+
+    private boolean isRecordChangingTheAnswerOption(Record record) {
+        if (record.getType() != FileType.QUESTION_CONTENT) {
+            return false;
+        } else {
+            if (coursePopulateService.getCorrectAnswerOption(
+                    record.getChapterId(), record.getQuestionId()) != record
+                    .getAnswerId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void deleteCourseRawContentsByList(
@@ -945,8 +1037,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     private boolean checkRecordConsistencyAndMarkFlagForLesson(Record record,
-            ChapterContent chapterContent, CourseFlag courseFlag,
-            boolean status) {
+            ChapterContent chapterContent, CourseFlag courseFlag, boolean status) {
         if (record.getType() == FileType.LESSON_CONTENT) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
                 if (lessonContent.getLessonNumber() == record.getLessonId()
@@ -994,8 +1085,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     private boolean checkRecordConsistencyAndMarkFlagForQuestion(Record record,
-            ChapterContent chapterContent, CourseFlag courseFlag,
-            boolean status) {
+            ChapterContent chapterContent, CourseFlag courseFlag, boolean status) {
         if (record.getType() == FileType.QUESTION_CONTENT) {
             for (QuestionContent questionContent : chapterContent.getQuiz()
                     .getQuestions()) {
