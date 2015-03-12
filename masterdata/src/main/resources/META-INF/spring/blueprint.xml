@@ -51,8 +51,8 @@
     <osgi:service ref="villageCsvService"
                   interface="org.motechproject.nms.masterdata.service.VillageCsvService" />
 
-    <osgi:service ref="villageCsvService"
-                  interface="org.motechproject.nms.masterdata.service.VillageCsvService" />
+    <osgi:service ref="healthBlockService"
+                  interface="org.motechproject.nms.masterdata.service.HealthBlockService" />
 
 
     <osgi:reference id="stateRecordsDataService"
