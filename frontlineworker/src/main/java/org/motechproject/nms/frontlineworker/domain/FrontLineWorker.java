@@ -89,7 +89,6 @@ public class FrontLineWorker extends MdsEntity {
     private Long languageLocationCodeId = null;
 
 
-
     public FrontLineWorker() {
     }
 

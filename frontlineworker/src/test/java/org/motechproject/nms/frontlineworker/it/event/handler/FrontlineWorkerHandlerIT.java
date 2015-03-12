@@ -14,6 +14,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FlwUploadHandler;
 import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
 import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -110,9 +111,14 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
 
+    private State state;
+
+    private District district;
+
+    private Circle circle;
+
     @Before
     public void setUp() {
-
 
 
         flwUploadHandler = new FlwUploadHandler(flwRecordDataService,
@@ -129,8 +135,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         if (!setUpIsDone) {
             System.out.println("");
-            createState();
-            createDistrict();
+            state = new State();
+            district = new District();
+            circle = new Circle();
+            state = createState();
+            district = createDistrict();
             createTaluka();
             createHealthBlock();
             createHealthFacility();
@@ -142,7 +151,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     }
 
-    private void createState() {
+    private State createState() {
         State state = new State();
         state.setName("Delhi");
         state.setStateCode(12L);
@@ -151,9 +160,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         state.setModifiedBy("Etasha");
         stateRecordsDataService.create(state);
         assertNotNull(state);
+        return state;
     }
 
-    private void createDistrict() {
+    private District createDistrict() {
         District district = new District();
         district.setName("East Delhi");
         district.setStateCode(12L);
@@ -165,6 +175,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(district);
         stateRecordsDataService.update(stateData);
         assertNotNull(district);
+        return district;
     }
 
     private void createTaluka() {
@@ -182,7 +193,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(taluka);
     }
 
-    private void createVillage(){
+    private void createVillage() {
         Village village = new Village();
         village.setName("villageName");
         village.setStateCode(12L);
@@ -200,7 +211,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(village);
     }
 
-    private void createHealthBlock(){
+    private void createHealthBlock() {
         HealthBlock healthBlock = new HealthBlock();
         healthBlock.setName("healthBlockName");
         healthBlock.setStateCode(12L);
@@ -219,7 +230,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
 
-    private void createHealthFacility(){
+    private void createHealthFacility() {
         HealthFacility healthFacility = new HealthFacility();
         healthFacility.setName("healthFacilityName");
         healthFacility.setStateCode(12L);
@@ -240,7 +251,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
 
-    private void createHealthSubFacility(){
+    private void createHealthSubFacility() {
         HealthSubFacility healthSubFacility = new HealthSubFacility();
         healthSubFacility.setName("healthSubFacilityName");
         healthSubFacility.setStateCode(12L);
@@ -262,9 +273,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthFacilityRecordsDataService.update(healthFacilityData);
         assertNotNull(healthSubFacility);
     }
-
-
-
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -335,7 +343,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
-
 
 
     @Test
@@ -541,7 +548,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerNoState()  throws DataValidationException{
+    public void testFrontLineWorkerNoState() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -621,7 +628,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
 
     @Test
-    public void testFrontLineWorkerInvalidTaluka() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidTaluka() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -661,7 +668,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerInvalidVillage() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidVillage() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -702,7 +709,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerInvalidHealthBlock() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidHealthBlock() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -744,7 +751,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerInvalidHealthFacility() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidHealthFacility() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -787,7 +794,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerInvalidHealthSubFacility() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidHealthSubFacility() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -831,7 +838,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerInvalidDesignation() throws  DataValidationException {
+    public void testFrontLineWorkerInvalidDesignation() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -875,7 +882,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerContactNoAbsent() throws  DataValidationException {
+    public void testFrontLineWorkerContactNoAbsent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -918,7 +925,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerStateCodeAbsent() throws  DataValidationException {
+    public void testFrontLineWorkerStateCodeAbsent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -960,7 +967,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerDistrictCodeAbsent() throws  DataValidationException {
+    public void testFrontLineWorkerDistrictCodeAbsent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1003,7 +1010,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerDesignationAbsent() throws  DataValidationException {
+    public void testFrontLineWorkerDesignationAbsent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1047,7 +1054,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
 
     @Test
-    public void testFrontLineWorkerTalukaAbsentVillagePresent() throws  DataValidationException {
+    public void testFrontLineWorkerTalukaAbsentVillagePresent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1087,7 +1094,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerTalukaAbsentHealthBlockPresent() throws  DataValidationException {
+    public void testFrontLineWorkerTalukaAbsentHealthBlockPresent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1127,7 +1134,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerHBAbsentPHCPresent() throws  DataValidationException {
+    public void testFrontLineWorkerHBAbsentPHCPresent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1169,7 +1176,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerPHCAbsentSSCPresent() throws  DataValidationException {
+    public void testFrontLineWorkerPHCAbsentSSCPresent() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1303,7 +1310,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerUpdation(){
+    public void testFrontLineWorkerUpdation() {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1568,7 +1575,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerUpdationWithIsValidNull(){
+    public void testFrontLineWorkerUpdationWithIsValidNull() {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1842,7 +1849,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerPhcWithoutHealthBlock() throws DataValidationException  {
+    public void testFrontLineWorkerPhcWithoutHealthBlock() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
@@ -1889,7 +1896,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     }
 
     @Test
-    public void testFrontLineWorkerSubCentreWithoutPhc() throws DataValidationException  {
+    public void testFrontLineWorkerSubCentreWithoutPhc() throws DataValidationException {
 
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 

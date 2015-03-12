@@ -14,7 +14,6 @@ import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
@@ -83,8 +82,6 @@ public class FlwUploadHandler {
     }
 
 
-
-
     /**
      * This method provides a listener to the Front Line Worker upload success scenario.
      *
@@ -130,58 +127,41 @@ public class FlwUploadHandler {
                     }
 
                     if (dbRecord == null) {
-                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
-                            summary.incrementFailureCount();
-                            errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA,
-                                    String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Operation"));
-                            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                            logger.warn("Record to be deleted with ID : {} not present", id);
-                        } else {
 
-                            logger.info("New front line worker creation starts");
-                            flwRecordDataService.create(frontLineWorker);
-                            summary.incrementSuccessCount();
-                            logger.info("Successful creation of new front line worker");
-                        }
+                        logger.info("New front line worker creation starts");
+                        flwRecordDataService.create(frontLineWorker);
+                        summary.incrementSuccessCount();
+                        logger.info("Successful creation of new front line worker");
 
                     } else {
-
-                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
-                            logger.info("Front line worker deletion starts");
-                            flwRecordDataService.delete(dbRecord);
+                        Boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
+                        Status status = dbRecord.getStatus();
+                        if (valid == null) {
+                            frontLineWorker.setStatus(dbRecord.getStatus());
+                            updateDbRecord(frontLineWorker, dbRecord);
                             summary.incrementSuccessCount();
-                            logger.info("Successful creation of new front line worker");
-
+                            logger.info("Record updated successfully for Flw with valid = null");
                         } else {
-                            Boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
-                            Status status = dbRecord.getStatus();
-                            if (valid == null) {
-                                frontLineWorker.setStatus(dbRecord.getStatus());
-                                updateDbRecord(frontLineWorker, dbRecord);
-                                summary.incrementSuccessCount();
-                                logger.info("Record updated successfully for Flw with valid = null");
-                            } else {
-                                if (valid == true) {
-                                    if (status == Status.INVALID) {
-                                        summary.incrementFailureCount();
-                                        //Bug 38
-                                        errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
-                                        bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                                        logger.warn("Status change try from invalid to valid for id : {}", id);
-                                    } else {
-                                        frontLineWorker.setStatus(dbRecord.getStatus());
-                                        updateDbRecord(frontLineWorker, dbRecord);
-                                        summary.incrementSuccessCount();
-                                        logger.info("Record updated successfully for Flw with valid = true");
-
-                                    }
+                            if (valid == true) {
+                                if (status == Status.INVALID) {
+                                    summary.incrementFailureCount();
+                                    //Bug 38
+                                    errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
+                                            String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
+                                    bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                    logger.warn("Status change try from invalid to valid for id : {}", id);
                                 } else {
-                                    frontLineWorker.setStatus(Status.INVALID);
+                                    frontLineWorker.setStatus(dbRecord.getStatus());
                                     updateDbRecord(frontLineWorker, dbRecord);
                                     summary.incrementSuccessCount();
-                                    logger.info("Record updated successfully for Flw with valid = false");
+                                    logger.info("Record updated successfully for Flw with valid = true");
+
                                 }
+                            } else {
+                                frontLineWorker.setStatus(Status.INVALID);
+                                updateDbRecord(frontLineWorker, dbRecord);
+                                summary.incrementSuccessCount();
+                                logger.info("Record updated successfully for Flw with valid = false");
                             }
                         }
                     }
@@ -310,8 +290,7 @@ public class FlwUploadHandler {
         if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
                 Designation.getEnum(designation) != Designation.ASHA && Designation.getEnum(designation) != Designation.USHA) {
             ParseDataHelper.raiseInvalidDataException("Flw Type", "Invalid");
-        }
-        else {
+        } else {
             //Bug 16
             frontLineWorkerContent.setDesignation(Designation.getEnum(designation));
         }
@@ -358,10 +337,9 @@ public class FlwUploadHandler {
             frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
         }
 
-        if(record.getIsValid().equalsIgnoreCase("false")) {
+        if (record.getIsValid().equalsIgnoreCase("false")) {
             frontLineWorker.setStatus(Status.INVALID);
-        }
-        else {
+        } else {
             frontLineWorker.setStatus(Status.INACTIVE);
         }
 
