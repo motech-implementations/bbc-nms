@@ -22,5 +22,10 @@ public interface TalukaCsvService {
      */
     TalukaCsv create(TalukaCsv record);
 
+    /**
+     * Finds the TalukaCsv details by its Id
+     * @param id
+     * @return TalukaCsv
+     */
     TalukaCsv findById(Long id);
 }

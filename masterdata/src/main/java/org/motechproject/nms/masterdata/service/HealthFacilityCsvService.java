@@ -22,9 +22,9 @@ public interface HealthFacilityCsvService {
     HealthFacilityCsv create(HealthFacilityCsv record);
 
     /**
-     *
+     *Finds the health facility details by its Id
      * @param id
-     * @return
+     * @return HealthFacility
      */
     HealthFacilityCsv findById(Long id);
 

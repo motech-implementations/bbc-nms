@@ -21,5 +21,10 @@ public interface VillageCsvService {
      */
     VillageCsv create(VillageCsv record);
 
+    /**
+     * Finds the VillageCsv details by its Id
+     * @param id
+     * @return VillageCsv
+     */
     VillageCsv findById(Long id);
 }

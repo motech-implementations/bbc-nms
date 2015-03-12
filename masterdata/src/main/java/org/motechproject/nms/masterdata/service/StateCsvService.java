@@ -21,6 +21,11 @@ public interface StateCsvService {
      */
     StateCsv create(StateCsv record);
 
+    /**
+     * Finds the State Csv details by its Id
+     * @param id
+     * @return StateCsv
+     */
     StateCsv findById(Long id);
 
 }

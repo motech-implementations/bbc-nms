@@ -19,7 +19,13 @@ public interface HealthBlockCsvService {
      *
      * @param record of the HealthBlockCsv
      */
+
     HealthBlockCsv create(HealthBlockCsv record);
 
+    /**
+     * Finds the health block details by its Id
+     * @param id
+     * @return HealthBlock
+     */
     HealthBlockCsv findById(Long id);
 }

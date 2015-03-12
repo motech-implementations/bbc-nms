@@ -21,5 +21,10 @@ public interface DistrictCsvService {
      */
     DistrictCsv create(DistrictCsv record);
 
+    /**
+     * Finds the district details by its Id
+     * @param id
+     * @return District
+     */
     DistrictCsv findById(Long id);
 }

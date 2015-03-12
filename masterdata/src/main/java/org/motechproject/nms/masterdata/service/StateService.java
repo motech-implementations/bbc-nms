@@ -33,8 +33,17 @@ public interface StateService {
      */
     void deleteAll();
 
-
+    /**
+     * Finds the State details by its Id
+     * @param stateCode
+     * @return State
+     */
     State findRecordByStateCode(Long stateCode);
 
+    /**
+     * Finds the State details by its Id
+     * @param id
+     * @return State
+     */
     State findById(Long id);
 }

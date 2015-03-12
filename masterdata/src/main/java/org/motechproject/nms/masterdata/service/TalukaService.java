@@ -33,10 +33,21 @@ public interface TalukaService {
      */
     void deleteAll();
 
-
+    /**
+     * Finds the Taluka details by its parent code
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @return Taluka
+     */
     Taluka findTalukaByParentCode(Long stateCode,
                                   Long districtCode,
                                   Long talukaCode);
 
+    /**
+     * Finds the Taluka details by its Id
+     * @param id
+     * @return Taluka
+     */
     Taluka findById(Long id);
 }

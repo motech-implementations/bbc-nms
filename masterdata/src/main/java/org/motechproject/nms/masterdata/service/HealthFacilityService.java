@@ -33,11 +33,21 @@ public interface HealthFacilityService {
     void deleteAll();
 
     /**
+     * Finds the Health Facility details by its Id
      * @param id
-     * @return
+     * @return Healthfacility
      */
     HealthFacility findById(Long id);
 
+    /**
+     * Finds the Health Facility details by its parent code
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @param healthBlockCode
+     * @param healthFacilityCode
+     * @return Healthfacility
+     */
     HealthFacility findHealthFacilityByParentCode(Long stateCode, Long districtCode,
                                                   Long talukaCode,Long healthBlockCode,
                                                   Long healthFacilityCode);

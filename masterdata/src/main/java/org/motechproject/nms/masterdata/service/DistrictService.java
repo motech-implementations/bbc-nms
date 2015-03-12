@@ -33,7 +33,18 @@ public interface DistrictService {
      */
     void deleteAll();
 
+    /**
+     *  Finds the district details by its parent code
+     * @param districtCode
+     * @param stateCode
+     * @return District
+     */
     District findDistrictByParentCode(Long districtCode, Long stateCode);
 
+    /**
+     * Finds the district details by its Id
+     * @param id
+     * @return District
+     */
     District findById(Long id);
 }

@@ -28,6 +28,14 @@ public interface VillageService {
      */
     void delete(Village record);
 
+    /**
+     * Finds the Village details by its parent code
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @param villageCode
+     * @return Village
+     */
     Village findVillageByParentCode(Long stateCode,
                                     Long districtCode,
                                     Long talukaCode,

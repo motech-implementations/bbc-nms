@@ -57,7 +57,7 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
      */
     @Override
     public void deleteAll() {
-        healthFacilityRecordsDataService.deleteAll();
+
     }
 
     /**
