@@ -2,7 +2,6 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
@@ -105,7 +104,7 @@ public class HealthSubFacilityTest {
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
         healthSubFacility.setStateCode(0L);
         healthSubFacility.setDistrictCode(0L);
-        healthSubFacility.setTalukaCode(MasterDataConstants.EMPTY_STRING);
+        healthSubFacility.setTalukaCode(0L);
         healthSubFacility.setHealthBlockCode(0L);
         healthSubFacility.setHealthFacilityCode(0L);
         healthSubFacility.setHealthSubFacilityCode(0L);
@@ -118,7 +117,7 @@ public class HealthSubFacilityTest {
 
         healthSubFacilityData.setStateCode(1L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
@@ -132,7 +131,7 @@ public class HealthSubFacilityTest {
 
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(2L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
@@ -145,7 +144,7 @@ public class HealthSubFacilityTest {
         HealthSubFacility healthSubFacilityData = new HealthSubFacility();
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("9");
+        healthSubFacilityData.setTalukaCode(9L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
@@ -159,7 +158,7 @@ public class HealthSubFacilityTest {
         healthSubFacilityData.setName("Gangiri");
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1003L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
@@ -173,7 +172,7 @@ public class HealthSubFacilityTest {
         healthSubFacilityData.setName("Gangiri");
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1112L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
@@ -187,7 +186,7 @@ public class HealthSubFacilityTest {
         healthSubFacilityData.setName("Gangiri");
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9L);
@@ -201,7 +200,7 @@ public class HealthSubFacilityTest {
         healthSubFacilityData.setName("Gangiri");
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("8");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(1002L);
         healthSubFacilityData.setHealthFacilityCode(1111L);
         healthSubFacilityData.setHealthSubFacilityCode(9999L);
