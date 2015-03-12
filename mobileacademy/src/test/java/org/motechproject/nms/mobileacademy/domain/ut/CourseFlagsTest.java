@@ -1,27 +1,20 @@
 package org.motechproject.nms.mobileacademy.domain.ut;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.motechproject.nms.mobileacademy.commons.CourseFlags;
-import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
+import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 
 public class CourseFlagsTest {
 
     @InjectMocks
-    CourseFlags courseFlag = new CourseFlags();
+    CourseFlag courseFlag = new CourseFlag();
 
-    @SuppressWarnings("unused")
     @Test
     public void testHasCompleteCourseArrived() {
 
-        boolean flagForLessonFilesOfChapter[][][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_LESSONS][2];
-        boolean flagForQuestionFilesOfChapter[][][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_QUESTIONS][3];
-        boolean flagForQuizHeader[] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS];
-        boolean flagForScoreFilesOfChapter[][] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS][MobileAcademyConstants.NUM_OF_SCORE_FILES];
-        boolean flagForChapterEndMenu[] = new boolean[MobileAcademyConstants.NUM_OF_CHAPTERS];
-        courseFlag.resetTheFlags();
         assertFalse(courseFlag.hasCompleteCourseArrived());
 
         for (int i = 1; i <= 11; i++) {
@@ -51,6 +44,10 @@ public class CourseFlagsTest {
                 courseFlag.markScoreFile(i, j);
         }
         assertFalse(courseFlag.hasCompleteCourseArrived());
+
+        for (int i = 1; i <= 11; i++)
+            courseFlag.markChapterEndMenu(i);
+        assertTrue(courseFlag.hasCompleteCourseArrived());
     }
 
 }
