@@ -215,7 +215,7 @@ public class FrontLineWorkerCsv extends MdsEntity {
     @Override
     public String toString() {
 
-        if (this.getFlwId() != null) {
+        if (this.getFlwId() != null && !this.getFlwId().isEmpty()) {
             return "Flw Id[" + this.getFlwId() + "]";
         } else {
             return "Contact No[" + this.getContactNo() + "]";

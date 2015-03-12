@@ -1095,7 +1095,7 @@
                         <configuration>
                             <driver>${motech.sql.driver}</driver>
                             <username>${motech.sql.user}</username>
-                            <password>${motech.sql.password}</password>
+                            <password>abhishek</password>
                             <url>${motech.sql.url}</url>
                         </configuration>
                         <!-- For each Bundle IT tests in modules migrated to MDS the 'motech_data_services' 
