@@ -5,7 +5,6 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -38,7 +37,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService;
+    private HealthFacilityCsvService healthFacilityCsvService;
 
     private HealthFacilityService healthFacilityService;
 
@@ -49,11 +48,11 @@ public class HealthFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService, HealthFacilityService healthFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvService healthFacilityCsvService, HealthFacilityService healthFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthFacilityCsvRecordsDataService = healthFacilityCsvRecordsDataService;
+        this.healthFacilityCsvService = healthFacilityCsvService;
         this.healthFacilityService = healthFacilityService;
         this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -91,7 +90,7 @@ public class HealthFacilityCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthFacilityCsvRecord = healthFacilityCsvRecordsDataService.findById(id);
+                healthFacilityCsvRecord = healthFacilityCsvService.findById(id);
 
                 if (null != healthFacilityCsvRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
@@ -123,7 +122,7 @@ public class HealthFacilityCsvUploadHandler {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthFacilityCsvRecord) {
-                    healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
+                    healthFacilityCsvService.delete(healthFacilityCsvRecord);
                 }
             }
         }
