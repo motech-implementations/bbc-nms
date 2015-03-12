@@ -69,26 +69,56 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     @Test
     public void testContentUploadValidData() {
 
-        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
-        contentUploadCsv.setIndex(1L);
-        contentUploadCsv.setContentId("12");
-        contentUploadCsv.setCircleCode("CircleCode");
-        contentUploadCsv.setLanguageLocationCode("123");
-        contentUploadCsv.setContentName("Content");
-        contentUploadCsv.setContentType("PROMPT");
-        contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
-        contentUploadCsv.setContentDuration("120");
-        contentUploadCsv.setModifiedBy("Etasha");
-        contentUploadCsv.setOwner("Etasha");
-        contentUploadCsv.setCreator("Etasha");
+        ContentUploadCsv contentUploadCsv1 = new ContentUploadCsv();
+        contentUploadCsv1.setIndex(1L);
+        contentUploadCsv1.setContentId("12");
+        contentUploadCsv1.setCircleCode("CircleCode");
+        contentUploadCsv1.setLanguageLocationCode("123");
+        contentUploadCsv1.setContentName("Content");
+        contentUploadCsv1.setContentType("PROMPT");
+        contentUploadCsv1.setContentFile("NewFile");
+        contentUploadCsv1.setCardNumber("10");
+        contentUploadCsv1.setContentDuration("120");
+        contentUploadCsv1.setModifiedBy("Etasha");
+        contentUploadCsv1.setOwner("Etasha");
+        contentUploadCsv1.setCreator("Etasha");
+        ContentUploadCsv contentUploadCsv2 = new ContentUploadCsv();
+        contentUploadCsv2.setIndex(2L);
+        contentUploadCsv2.setContentId("22");
+        contentUploadCsv2.setCircleCode("CircleCode");
+        contentUploadCsv2.setLanguageLocationCode("123");
+        contentUploadCsv2.setContentName("Content");
+        contentUploadCsv2.setContentType("CONTENT");
+        contentUploadCsv2.setContentFile("NewFile");
+        contentUploadCsv2.setCardNumber("11");
+        contentUploadCsv2.setContentDuration("120");
+        contentUploadCsv2.setModifiedBy("Etasha");
+        contentUploadCsv2.setOwner("Etasha");
+        contentUploadCsv2.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+        ContentUploadCsv contentUploadCsv3 = new ContentUploadCsv();
 
+        contentUploadCsv3.setIndex(3L);
+        contentUploadCsv3.setContentId("33");
+        contentUploadCsv3.setCircleCode("CircleCode");
+        contentUploadCsv3.setLanguageLocationCode("123");
+        contentUploadCsv3.setContentName("Content");
+        contentUploadCsv3.setContentType("CONTENTS");
+        contentUploadCsv3.setContentFile("NewFile");
+        contentUploadCsv3.setCardNumber("12");
+        contentUploadCsv3.setContentDuration("120");
+        contentUploadCsv3.setModifiedBy("Etasha");
+        contentUploadCsv3.setOwner("Etasha");
+        contentUploadCsv3.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb1 = contentUploadCsvRecordDataService.create(contentUploadCsv1);
+        ContentUploadCsv contentUploadCsvDb2 = contentUploadCsvRecordDataService.create(contentUploadCsv2);
+        ContentUploadCsv contentUploadCsvDb3 = contentUploadCsvRecordDataService.create(contentUploadCsv3);
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
 
-        uploadedIds.add(contentUploadCsvDb.getId());
+        uploadedIds.add(contentUploadCsvDb1.getId());
+        uploadedIds.add(contentUploadCsvDb2.getId());uploadedIds.add(contentUploadCsvDb3.getId());
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "ContentUpload.csv");
 
