@@ -97,7 +97,7 @@ public class LocationServiceImpl implements LocationService {
      * @return Taluka object corresponding to the Census (or Proposed Census)code
      */
     @Override
-    public Taluka getTalukaByCode(Long districtId, String talukaCode) {
+    public Taluka getTalukaByCode(Long districtId, Long talukaCode) {
 
         Taluka taluka = null;
 

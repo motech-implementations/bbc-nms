@@ -27,7 +27,7 @@ public class HealthBlock extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private String talukaCode;
+    private Long talukaCode;
 
     @Field
     @UIDisplayable(position = 1)
@@ -54,11 +54,11 @@ public class HealthBlock extends LocationUnitMetaData {
         this.healthFacility = healthFacility;
     }
 
-    public String getTalukaCode() {
+    public Long getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Long talukaCode) {
         this.talukaCode = talukaCode;
     }
 

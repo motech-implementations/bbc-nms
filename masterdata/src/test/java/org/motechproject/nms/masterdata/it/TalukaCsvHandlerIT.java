@@ -91,7 +91,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
 
 
-        Taluka talukaData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L,"8");
+        Taluka talukaData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaData);
         assertTrue(123L == talukaData.getStateCode());
@@ -105,7 +105,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
-        Taluka talukaUpdateData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L, "8");
+        Taluka talukaUpdateData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaUpdateData);
         assertTrue(123L == talukaUpdateData.getStateCode());

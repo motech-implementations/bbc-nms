@@ -21,7 +21,7 @@ public class HealthSubFacility extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 4)
-    private String talukaCode;
+    private Long talukaCode;
 
     @Field
     @UIDisplayable(position = 3)
@@ -51,11 +51,11 @@ public class HealthSubFacility extends LocationUnitMetaData {
         this.healthSubFacilityCode = healthSubFacilityCode;
     }
 
-    public String getTalukaCode() {
+    public Long getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Long talukaCode) {
         this.talukaCode = talukaCode;
     }
 
