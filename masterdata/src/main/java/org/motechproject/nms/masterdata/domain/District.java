@@ -77,6 +77,10 @@ public class District extends LocationUnitMetaData {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the District Code and State Code
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = districtCode != null ? districtCode.hashCode() : 0;
@@ -84,6 +88,11 @@ public class District extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     *This method override the toString method to create string for District code, Taluka and
+     * State Code for the instance variables
+     * @return The string of the District code, Taluka and State Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "District{" +

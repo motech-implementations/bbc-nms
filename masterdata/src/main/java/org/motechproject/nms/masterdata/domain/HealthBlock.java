@@ -105,6 +105,10 @@ public class HealthBlock extends LocationUnitMetaData {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the District Code Taluka Code and Health Block Code
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -114,6 +118,11 @@ public class HealthBlock extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     *This method override the toString method to create string for Health facility, State Code
+     * District Code, Taluka Code and Health Block Code for the instance variables
+     * @return The string of the Health facility, State Code District Code, Taluka Code and Health Block Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthBlock{" +

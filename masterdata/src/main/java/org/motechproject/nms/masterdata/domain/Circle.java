@@ -47,6 +47,12 @@ public class Circle extends MdsEntity {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
+    /**
+     * This method override the toString method to create string for Circle name, Circle code and
+     * Circle default language location code for the instance variables
+     *
+     * @return The string of the Circle name, Circle code and Circle default language location code of the instance variables.
+     */
     @Override
     public String toString() {
         return "Circle{" +

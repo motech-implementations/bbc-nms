@@ -7,10 +7,10 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.VillageService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -51,7 +51,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
     @Inject
-    private VillageRecordsDataService villageRecordsDataService;
+    private VillageService villageService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -60,12 +60,12 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     public void setUp() {
         villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
                 districtService, talukaService,villageCsvRecordsDataService,
-                villageRecordsDataService, bulkUploadErrLogService);
+                villageService, bulkUploadErrLogService);
     }
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(villageCsvRecordsDataService);
-        assertNotNull(villageRecordsDataService);
+        assertNotNull(villageService);
         assertNotNull(talukaService);
         assertNotNull(districtService);
         assertNotNull(stateService);
@@ -96,7 +96,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId()+1);
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageData = villageRecordsDataService.findVillageByParentCode(123L, 456L, 8L, 122656L);
+        Village villageData = villageService.findVillageByParentCode(123L, 456L, 8L, 122656L);
 
         assertNotNull(villageData);
         assertTrue(123L == villageData.getStateCode());
@@ -112,7 +112,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageUpdateData = villageRecordsDataService.findVillageByParentCode(123L, 456L,8L, 122656L);
+        Village villageUpdateData = villageService.findVillageByParentCode(123L, 456L,8L, 122656L);
 
         assertNotNull(villageUpdateData);
         assertTrue(123L == villageUpdateData.getStateCode());

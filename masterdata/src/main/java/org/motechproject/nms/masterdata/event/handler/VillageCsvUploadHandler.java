@@ -6,10 +6,10 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.VillageService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -42,19 +42,19 @@ public class VillageCsvUploadHandler {
 
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
-    private VillageRecordsDataService villageRecordsDataService;
+    private VillageService villageService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.villageCsvRecordsDataService = villageCsvRecordsDataService;
-        this.villageRecordsDataService = villageRecordsDataService;
+        this.villageService = villageService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -169,7 +169,7 @@ public class VillageCsvUploadHandler {
     private void processVillageData(Village villageData) throws DataValidationException {
 
         logger.debug("Village data contains village code : {}", villageData.getVillageCode());
-        Village existVillageData = villageRecordsDataService.findVillageByParentCode(
+        Village existVillageData = villageService.findVillageByParentCode(
                 villageData.getStateCode(),
                 villageData.getDistrictCode(),
                 villageData.getTalukaCode(),
@@ -190,6 +190,6 @@ public class VillageCsvUploadHandler {
 
     private void updateVillage(Village existVillageData, Village villageData) {
         existVillageData.setName(villageData.getName());
-        villageRecordsDataService.update(existVillageData);
+        villageService.update(existVillageData);
     }
 }

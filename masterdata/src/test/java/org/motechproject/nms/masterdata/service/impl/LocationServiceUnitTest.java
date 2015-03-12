@@ -8,11 +8,7 @@ import org.motechproject.nms.masterdata.it.TestHelper;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -37,7 +33,7 @@ public class LocationServiceUnitTest {
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
     @Mock
-    private VillageRecordsDataService villageRecordsDataService;
+    private VillageService villageService;
 
     @Mock
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
@@ -48,7 +44,7 @@ public class LocationServiceUnitTest {
     @Before
     public void setUp(){
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockRecordsDataService,villageService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -207,7 +203,7 @@ public class LocationServiceUnitTest {
 
         when(talukaService.findById(talukaData.getId())).thenReturn(talukaData);
 
-        when(villageRecordsDataService.findVillageByParentCode(talukaData.getStateCode(),
+        when(villageService.findVillageByParentCode(talukaData.getStateCode(),
                 talukaData.getDistrictCode(), talukaData.getTalukaCode(), 789L)).thenReturn(villageData);
 
         assertNotNull(locationService.getVillageByCode(talukaData.getId(),789L));
