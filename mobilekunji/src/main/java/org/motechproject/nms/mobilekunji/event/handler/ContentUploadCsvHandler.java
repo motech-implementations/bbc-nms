@@ -2,7 +2,6 @@ package org.motechproject.nms.mobilekunji.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.domain.OperationType;
 import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
@@ -116,27 +115,17 @@ public class ContentUploadCsvHandler {
                     ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
-                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
-                            summary.incrementFailureCount();
-                            errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
-                            bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                            logger.warn("Record to be deleted with ID : {} not present", id);
-                        } else {
+
                             contentUploadRecordDataService.create(newRecord);
                             summary.incrementSuccessCount();
-                        }
+
 
                     } else {
-                        if (OperationType.DEL.toString().equalsIgnoreCase(record.getOperation())) {
-
-                            contentUploadRecordDataService.delete(dbRecord);
-                            summary.incrementSuccessCount();
-                        } else {
 
                             mappDbRecordWithCsvrecord(newRecord, dbRecord);
                             contentUploadRecordDataService.update(dbRecord);
                             summary.incrementSuccessCount();
-                        }
+
 
                     }
                 }
