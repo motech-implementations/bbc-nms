@@ -191,19 +191,19 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     private void validateSchema(CourseContentCsv courseContentCsv)
             throws DataValidationException {
 
-        ParseDataHelper.parseInt("Content ID", courseContentCsv.getContentId(),
+        ParseDataHelper.validateAndParseInt("Content ID", courseContentCsv.getContentId(),
                 true);
 
-        ParseDataHelper.parseInt("Language Location Code",
+        ParseDataHelper.validateAndParseInt("Language Location Code",
                 courseContentCsv.getLanguageLocationCode(), true);
 
-        ParseDataHelper.parseString("Contet Name",
+        ParseDataHelper.validateAndParseString("Contet Name",
                 courseContentCsv.getContentName(), true);
 
-        ParseDataHelper.parseInt("Content Duration",
+        ParseDataHelper.validateAndParseInt("Content Duration",
                 courseContentCsv.getContentDuration(), true);
 
-        ParseDataHelper.parseString("Content File",
+        ParseDataHelper.validateAndParseString("Content File",
                 courseContentCsv.getContentFile(), true);
     }
 
@@ -1291,7 +1291,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         validateContentName(courseContentCsv, record);
 
         if (record.getType() == FileType.QUESTION_CONTENT) {
-            String metaData = ParseDataHelper.parseString("METADETA",
+            String metaData = ParseDataHelper.validateAndParseString("METADETA",
                     courseContentCsv.getMetaData(), true);
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
@@ -1303,7 +1303,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                                 courseContentCsv.getContentId()), "METADETA");
             } else {
-                int answerNo = ParseDataHelper.parseInt("",
+                int answerNo = ParseDataHelper.validateAndParseInt("",
                         metaData.substring(metaData.indexOf(':') + 1), true);
                 if (verifyRange(answerNo, 1, 2)) {
                     record.setAnswerId(answerNo);

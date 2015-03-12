@@ -126,9 +126,9 @@ public class DistrictCsvUploadHandler {
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
 
-        String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
+        String districtName = ParseDataHelper.validateAndParseString("District Name", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
