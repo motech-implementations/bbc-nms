@@ -2,10 +2,12 @@ package org.motechproject.nms.masterdata.ut.domain;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
 
+import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -76,6 +78,29 @@ public class HealthFacilityTest {
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
         assertFalse(getHealthFacilityDataWithDifferentHealthFacilityCode().equals(healthFacility));
+    }
+
+    @Test
+    public void testToString() {
+        HealthFacility healthFacility = TestHelper.getHealthFacilityData();
+        assertNotNull(healthFacility.toString());
+    }
+
+    @Test
+    public void testHashCodeWithoutNull() {
+        HealthFacility healthFacility = TestHelper.getHealthFacilityData();
+        assertNotNull(healthFacility.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNull() {
+        HealthFacility healthFacility = TestHelper.getHealthFacilityData();
+        healthFacility.setStateCode(0L);
+        healthFacility.setDistrictCode(0L);
+        healthFacility.setTalukaCode(MasterDataConstants.EMPTY_STRING);
+        healthFacility.setHealthBlockCode(0L);
+        healthFacility.setHealthFacilityCode(0L);
+        assertTrue(0 == healthFacility.hashCode());
     }
 
     private HealthFacility getHealthFacilityDataWithDifferentStateCode() {

@@ -6,8 +6,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.it.TestHelper;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
@@ -54,6 +53,26 @@ public class DistrictTest {
         assertFalse(getDistrictDataWithDifferentDistrictCode().equals(district));
     }
 
+    @Test
+    public void testToString() {
+        District district = TestHelper.getDistrictData();
+        assertNotNull(district.toString());
+    }
+
+    @Test
+    public void testHashCodeWithoutNull() {
+        District district = TestHelper.getDistrictData();
+        assertNotNull(district.hashCode());
+    }
+
+    @Test
+    public void testHashCodeWithNull() {
+        District district = TestHelper.getDistrictData();
+        district.setStateCode(null);
+        district.setDistrictCode(null);
+        assertTrue(0 == district.hashCode());
+    }
+
     private District getDistrictDataWithDifferentStateCode() {
 
         District district = new District();
@@ -71,5 +90,4 @@ public class DistrictTest {
 
         return district;
     }
-
 }
