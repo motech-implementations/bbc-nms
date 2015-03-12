@@ -134,7 +134,7 @@ public class HealthBlockCsvUploadHandler {
     private HealthBlock mapHealthBlockCsv(HealthBlockCsv record) throws DataValidationException {
         HealthBlock newRecord = new HealthBlock();
 
-        String healthBlockName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
+        String healthBlockName = ParseDataHelper.parseString("HealthBlockName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
         Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
