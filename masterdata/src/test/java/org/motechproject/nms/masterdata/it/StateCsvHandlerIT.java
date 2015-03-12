@@ -7,7 +7,7 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -37,7 +37,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Inject
-    private StateCsvRecordsDataService stateCsvRecordsService;
+    private StateCsvService stateCsvService;
 
     @Inject
     private StateService stateService;
@@ -49,12 +49,12 @@ public class StateCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
        stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
-               stateCsvRecordsService,bulkUploadErrLogService);
+               stateCsvService,bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(stateCsvRecordsService);
+        assertNotNull(stateCsvService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
@@ -63,10 +63,10 @@ public class StateCsvHandlerIT extends BasePaxIT {
     public void testStateCsvSuccessAndFailure() {
 
         StateCsv csvData = TestHelper.getStateCsvData();
-        stateCsvRecordsService.create(csvData);
+        stateCsvService.create(csvData);
 
         StateCsv invalidCsvData = TestHelper.getInvalidStateCsvData();
-        stateCsvRecordsService.create(invalidCsvData);
+        stateCsvService.create(invalidCsvData);
 
 
         createdIds.add(csvData.getId());
@@ -83,7 +83,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
         //Updated Name in State
         csvData = TestHelper.getUpdatedStateCsvData();
-        stateCsvRecordsService.create(csvData);
+        stateCsvService.create(csvData);
 
         clearId();
         createdIds.add(csvData.getId());

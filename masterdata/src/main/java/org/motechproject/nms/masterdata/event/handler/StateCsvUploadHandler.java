@@ -6,7 +6,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
-import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -34,16 +34,16 @@ public class StateCsvUploadHandler {
 
     private StateService stateService;
 
-    private StateCsvRecordsDataService stateCsvRecordsDataService;
+    private StateCsvService stateCsvService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
     @Autowired
-    public StateCsvUploadHandler(StateService stateService, StateCsvRecordsDataService stateCsvRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public StateCsvUploadHandler(StateService stateService, StateCsvService stateCsvService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
-        this.stateCsvRecordsDataService = stateCsvRecordsDataService;
+        this.stateCsvService = stateCsvService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -80,7 +80,7 @@ public class StateCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("STATE_CSV_SUCCESS event processing start for ID: {}", id);
-                stateCsvRecord = stateCsvRecordsDataService.findById(id);
+                stateCsvRecord = stateCsvService.findById(id);
 
                 if (stateCsvRecord != null) {
                     bulkUploadStatus.setUploadedBy(stateCsvRecord.getOwner());
@@ -114,7 +114,7 @@ public class StateCsvUploadHandler {
                 logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != stateCsvRecord) {
-                    stateCsvRecordsDataService.delete(stateCsvRecord);
+                    stateCsvService.delete(stateCsvRecord);
                 }
             }
         }
