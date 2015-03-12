@@ -131,6 +131,7 @@ public class HealthFacility extends LocationUnitMetaData {
     /**
      * Calculates the hash code according to the District Code Taluka Code,
      * Health Block Code and Health Facility code
+     *
      * @return An int hash value
      */
     @Override
@@ -147,6 +148,7 @@ public class HealthFacility extends LocationUnitMetaData {
      * This method override the toString method to create string for Health Sub facility, State Code
      * District Code, Taluka Code, Health Block Code, Health Facility Type and
      * Health Facility Code for the instance variables
+     *
      * @return The string of the Health Sub facility, State Code
      * District Code, Taluka Code, Health Block Code, Health Facility Type and
      * Health Facility Code of the instance variables.

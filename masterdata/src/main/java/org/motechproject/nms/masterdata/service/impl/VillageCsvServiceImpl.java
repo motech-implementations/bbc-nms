@@ -15,10 +15,10 @@ public class VillageCsvServiceImpl implements VillageCsvService {
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
     @Autowired
-    public VillageCsvServiceImpl(VillageCsvRecordsDataService villageCsvRecordsDataService)
-    {
-        this.villageCsvRecordsDataService=villageCsvRecordsDataService;
+    public VillageCsvServiceImpl(VillageCsvRecordsDataService villageCsvRecordsDataService) {
+        this.villageCsvRecordsDataService = villageCsvRecordsDataService;
     }
+
     /**
      * delete VillageCsv type object
      *
