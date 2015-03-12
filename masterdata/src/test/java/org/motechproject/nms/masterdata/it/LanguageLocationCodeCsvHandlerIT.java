@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.LanguageLocationCodeCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
@@ -187,7 +187,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "languageLocationCode");
-        return new MotechEvent(MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS, params);
     }
 
     public void preSetUp() {

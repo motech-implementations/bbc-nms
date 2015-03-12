@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -60,7 +60,7 @@ public class VillageCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.VILLAGE_CSV_SUCCESS})
     public void villageCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("VILLAGE_CSV_SUCCESS event received");

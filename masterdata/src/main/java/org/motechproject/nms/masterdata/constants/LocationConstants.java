@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.constants;
 /**
  * This Class contains constants values for Master Data.
  */
-public final class MasterDataConstants {
+public final class LocationConstants {
 
     public static final String STATE_CSV_SUCCESS = "mds.crud.masterdata.StateCsv.csv-import.success";
 

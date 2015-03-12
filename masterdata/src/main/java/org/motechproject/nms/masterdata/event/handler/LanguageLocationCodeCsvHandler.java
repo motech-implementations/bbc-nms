@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -64,7 +64,7 @@ public class LanguageLocationCodeCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
+    @MotechListener(subjects = LocationConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");

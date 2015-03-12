@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthFacilityCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.*;
@@ -97,7 +97,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId() + 1);
 
-        healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
+        healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_FACILITY_CSV_SUCCESS));
         HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(123L, 456L, 8L, 1002L, 1111L);
 
         assertNotNull(healthFacilityData);
@@ -115,7 +115,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
+        healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_FACILITY_CSV_SUCCESS));
         HealthFacility healthFacilityUpdateData = healthFacilityService.findHealthFacilityByParentCode(123L, 456L, 8L, 1002L, 1111L);
 
         assertNotNull(healthFacilityUpdateData);

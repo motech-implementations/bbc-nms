@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.*;
@@ -92,7 +92,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId() + 1);
 
-        villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
+        villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.VILLAGE_CSV_SUCCESS));
         Village villageData = villageService.findVillageByParentCode(123L, 456L, 8L, 122656L);
 
         assertNotNull(villageData);
@@ -108,7 +108,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
+        villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.VILLAGE_CSV_SUCCESS));
         Village villageUpdateData = villageService.findVillageByParentCode(123L, 456L, 8L, 122656L);
 
         assertNotNull(villageUpdateData);

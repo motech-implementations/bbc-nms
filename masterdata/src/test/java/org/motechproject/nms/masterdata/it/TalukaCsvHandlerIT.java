@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
@@ -88,7 +88,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId() + 1);
-        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
+        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.TALUKA_CSV_SUCCESS));
 
 
         Taluka talukaData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
@@ -104,7 +104,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
+        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.TALUKA_CSV_SUCCESS));
         Taluka talukaUpdateData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaUpdateData);

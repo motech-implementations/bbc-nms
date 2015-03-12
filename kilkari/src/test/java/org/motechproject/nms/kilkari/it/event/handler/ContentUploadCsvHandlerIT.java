@@ -13,7 +13,7 @@ import org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService;
 import org.motechproject.nms.kilkari.repository.ContentUploadDataService;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.CircleService;
@@ -195,7 +195,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "contentUpload");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
     public void preSetup() {

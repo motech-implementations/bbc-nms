@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
@@ -80,7 +80,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId() + 1);
         createdIds.add(invalidCsvData.getId());
 
-        districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
+        districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.DISTRICT_CSV_SUCCESS));
         District districtData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtData);
@@ -94,7 +94,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
+        districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.DISTRICT_CSV_SUCCESS));
         District districtUpdateData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtUpdateData);

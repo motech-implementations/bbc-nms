@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
@@ -86,7 +86,7 @@ public class CircleCsvHandlerTest extends TestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "circle");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
     public void preSetup() {

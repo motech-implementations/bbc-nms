@@ -3,10 +3,9 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthSubFacilityCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -104,7 +103,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         createdIds.add(invalidCsvData.getId());
         createdIds.add(csvData.getId() + 1);
 
-        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
+        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
         HealthSubFacility healthSubFacilityData = healthSubFacilityService.findHealthSubFacilityByParentCode(123L, 456L, 8L, 1002L, 1111L, 9001L);
 
         assertNotNull(healthSubFacilityData);
@@ -122,7 +121,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
+        healthSubFacilityCsvHandler.healthSubFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS));
         HealthSubFacility healthSubFacilityUpdateData = healthSubFacilityService.findHealthSubFacilityByParentCode(123L, 456L, 8L, 1002L, 1111L, 9001L);
 
         assertNotNull(healthSubFacilityUpdateData);

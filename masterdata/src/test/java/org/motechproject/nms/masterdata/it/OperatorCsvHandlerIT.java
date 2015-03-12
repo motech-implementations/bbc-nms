@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.event.handler.OperatorCsvHandler;
@@ -109,7 +109,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "operator");
-        return new MotechEvent(MasterDataConstants.OPERATOR_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.OPERATOR_CSV_SUCCESS, params);
     }
 
     @After

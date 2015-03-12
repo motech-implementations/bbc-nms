@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.service.StateCsvService;
@@ -53,7 +53,7 @@ public class StateCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.STATE_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.STATE_CSV_SUCCESS})
     public void stateCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("STATE_CSV_SUCCESS event received");

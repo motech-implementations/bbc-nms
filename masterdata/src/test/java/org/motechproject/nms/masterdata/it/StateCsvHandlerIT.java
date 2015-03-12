@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
@@ -73,7 +73,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId() + 1);
         createdIds.add(invalidCsvData.getId());
 
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.STATE_CSV_SUCCESS));
 
         State stateData = stateService.findRecordByStateCode(123L);
 
@@ -88,7 +88,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.STATE_CSV_SUCCESS));
         State updatedStateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(updatedStateData);

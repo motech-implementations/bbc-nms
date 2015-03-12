@@ -7,7 +7,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -67,7 +67,7 @@ public class HealthSubFacilityCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS})
     public void healthSubFacilityCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("HEALTH_SUB_FACILITY_CSV_SUCCESS event received");
