@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * Created by abhishek on 12/3/15.
  */
 @Service("districtCsvService")
-public class DistrictCsvServiceImpl implements DistrictCsvService{
+public class DistrictCsvServiceImpl implements DistrictCsvService {
 
     private DistrictCsvRecordsDataService districtCsvRecordsDataService;
 

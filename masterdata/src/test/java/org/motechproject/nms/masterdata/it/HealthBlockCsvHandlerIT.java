@@ -6,11 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthBlockCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.HealthBlockService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -49,7 +45,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     private TalukaService talukaService;
 
     @Inject
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
+    private HealthBlockCsvService healthBlockCsvService;
 
     @Inject
     private HealthBlockService healthBlockService;
@@ -60,12 +56,13 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateService,
-                districtService, talukaService,healthBlockCsvRecordsDataService,
+                districtService, talukaService, healthBlockCsvService,
                 healthBlockService, bulkUploadErrLogService);
     }
+
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(healthBlockCsvRecordsDataService);
+        assertNotNull(healthBlockCsvService);
         assertNotNull(healthBlockService);
         assertNotNull(talukaService);
         assertNotNull(districtService);
@@ -93,7 +90,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
 
         healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
         HealthBlock healthBlockeData = healthBlockService.findHealthBlockByParentCode(123L, 456L, 8L, 1002L);
@@ -128,6 +125,6 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
     private void createHealthBlockCsvData(HealthBlockCsv csvData) {
 
-        healthBlockCsvRecordsDataService.create(csvData);
+        healthBlockCsvService.create(csvData);
     }
 }

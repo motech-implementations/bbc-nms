@@ -14,7 +14,7 @@ public class HealthBlockServiceImpl implements HealthBlockService {
 
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
-   @Autowired
+    @Autowired
     public HealthBlockServiceImpl(HealthBlockRecordsDataService healthBlockRecordsDataService) {
         this.healthBlockRecordsDataService = healthBlockRecordsDataService;
     }
@@ -63,7 +63,6 @@ public class HealthBlockServiceImpl implements HealthBlockService {
     }
 
     /**
-     *
      * @param id
      * @return
      */

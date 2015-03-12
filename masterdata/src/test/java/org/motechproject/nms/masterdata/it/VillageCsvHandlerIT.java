@@ -55,9 +55,10 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtService, talukaService,villageCsvService,
+                districtService, talukaService, villageCsvService,
                 villageService, bulkUploadErrLogService);
     }
+
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(villageCsvService);
@@ -89,7 +90,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
         Village villageData = villageService.findVillageByParentCode(123L, 456L, 8L, 122656L);
@@ -108,7 +109,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageUpdateData = villageService.findVillageByParentCode(123L, 456L,8L, 122656L);
+        Village villageUpdateData = villageService.findVillageByParentCode(123L, 456L, 8L, 122656L);
 
         assertNotNull(villageUpdateData);
         assertTrue(123L == villageUpdateData.getStateCode());

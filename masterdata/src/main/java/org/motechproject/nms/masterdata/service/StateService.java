@@ -30,7 +30,6 @@ public interface StateService {
 
     /**
      * delete All State type object
-     *
      */
     void deleteAll();
 

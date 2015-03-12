@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class TalukaCsvHandlerIT extends BasePaxIT {
 
-    private TalukaCsvUploadHandler  talukaCsvUploadHandler;
+    private TalukaCsvUploadHandler talukaCsvUploadHandler;
 
     List<Long> createdIds = new ArrayList<Long>();
 
@@ -58,7 +58,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
-                districtService, talukaCsvService,talukaService, bulkUploadErrLogService);
+                districtService, talukaCsvService, talukaService, bulkUploadErrLogService);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
 
 

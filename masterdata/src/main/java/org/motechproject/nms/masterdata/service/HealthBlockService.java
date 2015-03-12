@@ -29,7 +29,6 @@ public interface HealthBlockService {
     void delete(HealthBlock record);
 
     /**
-     *
      * @return
      */
     HealthBlock findHealthBlockByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode);

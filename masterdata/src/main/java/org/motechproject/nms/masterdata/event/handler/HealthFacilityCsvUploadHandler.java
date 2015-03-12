@@ -6,11 +6,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.HealthBlockService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -44,7 +40,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService;
 
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
     private HealthBlockService healthBlockService;
 
@@ -53,12 +49,12 @@ public class HealthFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService, HealthFacilityService healthFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.healthFacilityCsvRecordsDataService = healthFacilityCsvRecordsDataService;
-        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
+        this.healthFacilityService = healthFacilityService;
         this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
@@ -184,7 +180,7 @@ public class HealthFacilityCsvUploadHandler {
     private void processHealthFacilityData(HealthFacility healthFacilityData) throws DataValidationException {
 
         logger.debug("Health Facility data contains facility code : {}", healthFacilityData.getHealthFacilityCode());
-        HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
+        HealthFacility existHealthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                 healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(),
                 healthFacilityData.getTalukaCode(),
@@ -208,6 +204,6 @@ public class HealthFacilityCsvUploadHandler {
 
     private void updateHealthFacilityDAta(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
-        healthFacilityRecordsDataService.update(existHealthFacilityData);
+        healthFacilityService.update(existHealthFacilityData);
     }
 }

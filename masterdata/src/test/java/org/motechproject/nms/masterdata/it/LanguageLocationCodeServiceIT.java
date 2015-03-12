@@ -111,7 +111,6 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
     }
 
 
-
     public void preSetUp() {
         //create circle with code "testCode"
         Circle circle = new Circle();

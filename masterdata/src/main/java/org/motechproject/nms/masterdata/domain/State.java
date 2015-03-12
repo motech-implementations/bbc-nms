@@ -7,6 +7,7 @@ import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
+
 /**
  * This class Models data for State location records
  */

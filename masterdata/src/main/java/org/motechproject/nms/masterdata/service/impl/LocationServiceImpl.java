@@ -1,7 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +19,18 @@ public class LocationServiceImpl implements LocationService {
 
     private VillageService villageService;
 
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
     @Autowired
-    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockService healthBlockService, VillageService villageService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockService healthBlockService, VillageService villageService, HealthFacilityService healthFacilityService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.healthBlockService = healthBlockService;
         this.villageService = villageService;
-        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
+        this.healthFacilityService = healthFacilityService;
         this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
     }
 
@@ -153,7 +152,7 @@ public class LocationServiceImpl implements LocationService {
 
             if (null != healthBlock) {
 
-                healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
+                healthFacility = healthFacilityService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
                         healthBlock.getDistrictCode(), healthBlock.getTalukaCode(), healthBlock.getHealthBlockCode(),
                         healthFacilityCode);
                 return healthFacility;
@@ -175,7 +174,7 @@ public class LocationServiceImpl implements LocationService {
         HealthSubFacility healthSubFacility = null;
 
         if (null != healthFacilityId && null != healthSubFacilityCode) {
-            HealthFacility healthFacility = healthFacilityRecordsDataService.findById(healthFacilityId);
+            HealthFacility healthFacility = healthFacilityService.findById(healthFacilityId);
 
             if (null != healthFacility) {
 

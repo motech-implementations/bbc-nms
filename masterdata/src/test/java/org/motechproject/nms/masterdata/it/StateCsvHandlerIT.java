@@ -48,8 +48,8 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-       stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
-               stateCsvService,bulkUploadErrLogService);
+        stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
+                stateCsvService, bulkUploadErrLogService);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
 
         createdIds.add(csvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
         createdIds.add(invalidCsvData.getId());
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
@@ -96,7 +96,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         assertTrue("UK".equals(updatedStateData.getName()));
     }
 
-    private void clearId(){
+    private void clearId() {
 
         createdIds.clear();
     }

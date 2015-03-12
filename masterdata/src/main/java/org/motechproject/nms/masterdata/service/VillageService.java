@@ -29,7 +29,7 @@ public interface VillageService {
     void delete(Village record);
 
     Village findVillageByParentCode(Long stateCode,
-                                  Long districtCode,
-                                  Long talukaCode,
-                                  Long villageCode);
+                                    Long districtCode,
+                                    Long talukaCode,
+                                    Long villageCode);
 }

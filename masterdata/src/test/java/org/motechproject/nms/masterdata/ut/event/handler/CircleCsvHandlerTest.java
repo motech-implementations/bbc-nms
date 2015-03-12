@@ -66,16 +66,16 @@ public class CircleCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapCircleFrom", CircleCsv.class);
             method.setAccessible(true);
-            circle = (Circle)method.invoke(handler, csv);
+            circle = (Circle) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
-            Assert.assertTrue(e.getCause() instanceof  DataValidationException);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
 
     }
 
-    public CircleCsv createCircleCsvRecord (String name, String code) {
+    public CircleCsv createCircleCsvRecord(String name, String code) {
         CircleCsv csv = new CircleCsv();
         csv.setName(name);
         csv.setCode(code);

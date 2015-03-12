@@ -31,13 +31,12 @@ public interface DistrictService {
 
     /**
      * delete All State type object
-     *
      */
     void deleteAll();
 
 
     @Lookup
-    District findDistrictByParentCode(Long districtCode,Long stateCode);
+    District findDistrictByParentCode(Long districtCode, Long stateCode);
 
     District findById(Long id);
 }

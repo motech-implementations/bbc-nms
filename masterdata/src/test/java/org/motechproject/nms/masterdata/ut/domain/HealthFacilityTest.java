@@ -22,7 +22,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -30,7 +30,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -40,7 +40,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -48,7 +48,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentDistrictCode(){
+    public void testEqualsWithDifferentDistrictCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -56,7 +56,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentTalukaCode(){
+    public void testEqualsWithDifferentTalukaCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -64,7 +64,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthBlockCode(){
+    public void testEqualsWithDifferentHealthBlockCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 
@@ -72,7 +72,7 @@ public class HealthFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthFacilityCode(){
+    public void testEqualsWithDifferentHealthFacilityCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();
 

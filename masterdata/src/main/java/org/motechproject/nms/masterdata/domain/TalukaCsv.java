@@ -25,7 +25,7 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     @Field
     private String talukaCode;
 
-    public TalukaCsv( String name, String districtCode, String stateCode, String talukaCode) {
+    public TalukaCsv(String name, String districtCode, String stateCode, String talukaCode) {
         super(name);
         this.districtCode = districtCode;
         this.stateCode = stateCode;

@@ -78,6 +78,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     public String getLanguageKK() {
         return languageKK;
     }
+
     public void setLanguageKK(String languageKK) {
         this.languageKK = languageKK;
     }
@@ -97,6 +98,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     public void setIsDefaultLanguageLocationCode(String isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
+
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();

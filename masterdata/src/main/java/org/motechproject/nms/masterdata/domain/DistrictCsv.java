@@ -40,8 +40,9 @@ public class DistrictCsv extends LocationUnitMetaDataCsv {
     }
 
     /**
-     *This method override the toString method to create string for District code and
+     * This method override the toString method to create string for District code and
      * State Code for the instance variables
+     *
      * @return The string of the District code and State Code of the instance variables.
      */
     @Override

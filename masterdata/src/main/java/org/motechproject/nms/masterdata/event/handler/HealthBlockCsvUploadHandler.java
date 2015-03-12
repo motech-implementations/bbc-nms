@@ -5,11 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.HealthBlockService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -40,7 +36,7 @@ public class HealthBlockCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
+    private HealthBlockCsvService healthBlockCsvService;
 
     private HealthBlockService healthBlockService;
 
@@ -49,11 +45,11 @@ public class HealthBlockCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @Autowired
-    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvService healthBlockCsvService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
+        this.healthBlockCsvService = healthBlockCsvService;
         this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
@@ -90,7 +86,7 @@ public class HealthBlockCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_BLOCK_CSV_SUCCESS event processing start for ID: {}", id);
-                healthBlockCsvRecord = healthBlockCsvRecordsDataService.findById(id);
+                healthBlockCsvRecord = healthBlockCsvService.findById(id);
 
                 if (healthBlockCsvRecord != null) {
                     logger.info("Id exist in HealthBlock Temporary Entity");
@@ -123,7 +119,7 @@ public class HealthBlockCsvUploadHandler {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthBlockCsvRecord) {
-                    healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
+                    healthBlockCsvService.delete(healthBlockCsvRecord);
                 }
             }
         }

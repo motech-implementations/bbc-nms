@@ -57,7 +57,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(0)));
         Operator record = operatorService.getRecordByCode("12345");
@@ -77,7 +77,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         dbCsv = operatorCsvDataService.create(csv2);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(0)));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(1)));
@@ -89,7 +89,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
     public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
         createdIds.add(1L);
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
     }
 
@@ -101,7 +101,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
     }
 
@@ -114,9 +114,9 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             Operator operator = operatorDataService.findById(id);
-            if(operator !=null) {
+            if (operator != null) {
                 operatorService.delete(operator);
             }
         }

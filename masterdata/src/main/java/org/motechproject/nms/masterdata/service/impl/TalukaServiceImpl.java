@@ -60,7 +60,7 @@ public class TalukaServiceImpl implements TalukaService {
 
     @Override
     public Taluka findTalukaByParentCode(Long stateCode, Long districtCode, Long talukaCode) {
-        return talukaRecordsDataService.findTalukaByParentCode(stateCode,districtCode,talukaCode);
+        return talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
     }
 
     @Override

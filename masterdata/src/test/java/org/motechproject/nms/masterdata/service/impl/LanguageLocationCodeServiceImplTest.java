@@ -31,7 +31,7 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
     @Before
     public void setUp() {
         initMocks(this);
-        this.languageLocationCodeService = new LanguageLocationCodeServiceImpl(languageLocationCodeDataService,circleService);
+        this.languageLocationCodeService = new LanguageLocationCodeServiceImpl(languageLocationCodeDataService, circleService);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
 
         assertNotNull(languageLocationCodeService.getRecordByLocationCode(123L, 345L));
         assertTrue(123L == languageLocationCodeService.getRecordByLocationCode(123L, 345L).getStateCode());
-        assertTrue(345L == languageLocationCodeService.getRecordByLocationCode(123L,345L).getDistrictCode());
+        assertTrue(345L == languageLocationCodeService.getRecordByLocationCode(123L, 345L).getDistrictCode());
     }
 
     @Test
@@ -59,10 +59,10 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
         languageLocationCodeData.setDistrictCode(345L);
         languageLocationCodeData.setLanguageLocationCode(100);
 
-        when(languageLocationCodeDataService.findByLocationCode(123L,345L )).thenReturn(languageLocationCodeData);
+        when(languageLocationCodeDataService.findByLocationCode(123L, 345L)).thenReturn(languageLocationCodeData);
 
-        assertNotNull(languageLocationCodeService.getRecordByLocationCode(123L,345L).getLanguageLocationCode());
-        assertTrue(100 == languageLocationCodeService.getRecordByLocationCode(123L,345L).getLanguageLocationCode());
+        assertNotNull(languageLocationCodeService.getRecordByLocationCode(123L, 345L).getLanguageLocationCode());
+        assertTrue(100 == languageLocationCodeService.getRecordByLocationCode(123L, 345L).getLanguageLocationCode());
 
     }
 

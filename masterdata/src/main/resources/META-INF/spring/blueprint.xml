@@ -25,35 +25,40 @@
                   interface="org.motechproject.nms.masterdata.service.OperatorService"/>
 
     <osgi:service ref="locationService"
-                  interface="org.motechproject.nms.masterdata.service.LocationService" />
+                  interface="org.motechproject.nms.masterdata.service.LocationService"/>
 
     <osgi:service ref="stateService"
-                  interface="org.motechproject.nms.masterdata.service.StateService" />
+                  interface="org.motechproject.nms.masterdata.service.StateService"/>
 
     <osgi:service ref="stateCsvService"
-                  interface="org.motechproject.nms.masterdata.service.StateCsvService" />
+                  interface="org.motechproject.nms.masterdata.service.StateCsvService"/>
 
     <osgi:service ref="districtService"
-                  interface="org.motechproject.nms.masterdata.service.DistrictService" />
+                  interface="org.motechproject.nms.masterdata.service.DistrictService"/>
 
     <osgi:service ref="districtCsvService"
-                  interface="org.motechproject.nms.masterdata.service.DistrictCsvService" />
+                  interface="org.motechproject.nms.masterdata.service.DistrictCsvService"/>
 
     <osgi:service ref="talukaService"
-                  interface="org.motechproject.nms.masterdata.service.TalukaService" />
+                  interface="org.motechproject.nms.masterdata.service.TalukaService"/>
 
     <osgi:service ref="talukaCsvService"
-                  interface="org.motechproject.nms.masterdata.service.TalukaCsvService" />
+                  interface="org.motechproject.nms.masterdata.service.TalukaCsvService"/>
 
     <osgi:service ref="villageService"
-                  interface="org.motechproject.nms.masterdata.service.VillageService" />
+                  interface="org.motechproject.nms.masterdata.service.VillageService"/>
 
     <osgi:service ref="villageCsvService"
-                  interface="org.motechproject.nms.masterdata.service.VillageCsvService" />
+                  interface="org.motechproject.nms.masterdata.service.VillageCsvService"/>
 
     <osgi:service ref="healthBlockService"
-                  interface="org.motechproject.nms.masterdata.service.HealthBlockService" />
+                  interface="org.motechproject.nms.masterdata.service.HealthBlockService"/>
 
+    <osgi:service ref="healthBlockCsvService"
+                  interface="org.motechproject.nms.masterdata.service.HealthBlockCsvService"/>
+
+    <osgi:service ref="healthFacilityService"
+                  interface="org.motechproject.nms.masterdata.service.HealthFacilityService"/>
 
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService"/>

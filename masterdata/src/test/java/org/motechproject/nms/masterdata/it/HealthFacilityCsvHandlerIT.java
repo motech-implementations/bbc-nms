@@ -64,9 +64,10 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthFacilityCsvHandler = new HealthFacilityCsvUploadHandler(stateService,
-                districtService, talukaService,healthFacilityCsvRecordsDataService,
-                healthFacilityRecordsDataService,healthBlockService, bulkUploadErrLogService);
+                districtService, talukaService, healthFacilityCsvRecordsDataService,
+                healthFacilityRecordsDataService, healthBlockService, bulkUploadErrLogService);
     }
+
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(healthFacilityRecordsDataService);
@@ -99,10 +100,10 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
 
         healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
-        HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L,8L, 1002L,1111L);
+        HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, 8L, 1002L, 1111L);
 
         assertNotNull(healthFacilityData);
         assertTrue(123L == healthFacilityData.getStateCode());

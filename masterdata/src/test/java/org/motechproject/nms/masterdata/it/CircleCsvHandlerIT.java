@@ -97,7 +97,6 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     }
 
 
-
     public void preSetup() {
         CircleCsv csv = new CircleCsv();
         csv.setName("MotechEventCreateTest");
@@ -117,9 +116,9 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             Circle circle = circleDataService.findById(id);
-            if(circle !=null) {
+            if (circle != null) {
                 circleService.delete(circle);
             }
         }

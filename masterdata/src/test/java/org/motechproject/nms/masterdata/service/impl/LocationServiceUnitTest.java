@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 
@@ -35,15 +34,15 @@ public class LocationServiceUnitTest {
     private VillageService villageService;
 
     @Mock
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
     @Mock
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockService,villageService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService, districtService, talukaService, healthBlockService, villageService, healthFacilityService, healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -109,7 +108,7 @@ public class LocationServiceUnitTest {
     }
 
     @Test
-    public void testFindStateByCode(){
+    public void testFindStateByCode() {
 
         State stateData = getStateData();
 
@@ -120,7 +119,7 @@ public class LocationServiceUnitTest {
     }
 
     @Test
-    public void testFindDistrictByCode(){
+    public void testFindDistrictByCode() {
 
         State stateData = getStateData();
         District districtData = getDistrictData();
@@ -138,7 +137,7 @@ public class LocationServiceUnitTest {
     }
 
     @Test
-    public void testGetTalukaByCodeSucess(){
+    public void testGetTalukaByCodeSucess() {
 
         District districtData = getDistrictData();
 
@@ -149,19 +148,19 @@ public class LocationServiceUnitTest {
         when(talukaService.findTalukaByParentCode(districtData.getStateCode(),
                 districtData.getDistrictCode(), 8L)).thenReturn(talukaData);
 
-        assertNotNull(locationService.getTalukaByCode(1L,8L));
+        assertNotNull(locationService.getTalukaByCode(1L, 8L));
         assertTrue(123L == locationService.getTalukaByCode(1L, 8L).getStateCode());
         assertTrue(456L == locationService.getTalukaByCode(1L, 8L).getDistrictCode());
         assertTrue(8L == locationService.getTalukaByCode(1L, 8L).getTalukaCode());
     }
 
     @Test
-    public void testGetTalukaByCodeWithNull(){
+    public void testGetTalukaByCodeWithNull() {
         assertNull(locationService.getTalukaByCode(null, null));
     }
 
     @Test
-    public void testGetHealthBlockByCode(){
+    public void testGetHealthBlockByCode() {
 
         Taluka talukaData = getTalukaData();
 
@@ -173,10 +172,10 @@ public class LocationServiceUnitTest {
                 456L, 8L, 789L)).thenReturn(healthBlockData);
 
         assertNotNull(locationService.getHealthBlockByCode(1L, 789L));
-        assertTrue(123L == locationService.getHealthBlockByCode(1L,789L).getStateCode());
-        assertTrue(456L == locationService.getHealthBlockByCode(1L,789L).getDistrictCode());
+        assertTrue(123L == locationService.getHealthBlockByCode(1L, 789L).getStateCode());
+        assertTrue(456L == locationService.getHealthBlockByCode(1L, 789L).getDistrictCode());
         assertTrue(8L == locationService.getHealthBlockByCode(1L, 789L).getTalukaCode());
-        assertTrue(789L == locationService.getHealthBlockByCode(1L,789L).getHealthBlockCode());
+        assertTrue(789L == locationService.getHealthBlockByCode(1L, 789L).getHealthBlockCode());
     }
 
     @Test
@@ -186,11 +185,11 @@ public class LocationServiceUnitTest {
 
     @Test
     public void testGetHealthByCodeWithHealthBlockCode() {
-        assertNull(locationService.getHealthBlockByCode(null,1L));
+        assertNull(locationService.getHealthBlockByCode(null, 1L));
     }
 
     @Test
-    public void testGetHealthBlockByCodeWithNull(){
+    public void testGetHealthBlockByCodeWithNull() {
         assertNull(locationService.getHealthBlockByCode(null, null));
     }
 
@@ -205,10 +204,10 @@ public class LocationServiceUnitTest {
         when(villageService.findVillageByParentCode(talukaData.getStateCode(),
                 talukaData.getDistrictCode(), talukaData.getTalukaCode(), 789L)).thenReturn(villageData);
 
-        assertNotNull(locationService.getVillageByCode(talukaData.getId(),789L));
+        assertNotNull(locationService.getVillageByCode(talukaData.getId(), 789L));
         assertTrue(123L == locationService.getVillageByCode(talukaData.getId(), 789L).getStateCode());
-        assertTrue(456L == locationService.getVillageByCode(talukaData.getId(),789L).getDistrictCode());
-        assertTrue(8L == locationService.getVillageByCode(talukaData.getId(),789L).getTalukaCode());
+        assertTrue(456L == locationService.getVillageByCode(talukaData.getId(), 789L).getDistrictCode());
+        assertTrue(8L == locationService.getVillageByCode(talukaData.getId(), 789L).getTalukaCode());
         assertTrue(789L == locationService.getVillageByCode(talukaData.getId(), 789L).getVillageCode());
     }
 
@@ -237,16 +236,16 @@ public class LocationServiceUnitTest {
 
         when(healthBlockService.findById(healthBlockData.getId())).thenReturn(healthBlockData);
 
-        when(healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlockData.getStateCode(),
+        when(healthFacilityService.findHealthFacilityByParentCode(healthBlockData.getStateCode(),
                 healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode(), healthBlockData.getHealthBlockCode()
                 , 321L)).thenReturn(healthFacilityData);
 
         assertNotNull(locationService.getHealthFacilityByCode(1L, 321l));
         assertTrue(123L == locationService.getHealthFacilityByCode(1L, 321l).getStateCode());
-        assertTrue(456L == locationService.getHealthFacilityByCode(1L,321l).getDistrictCode() );
+        assertTrue(456L == locationService.getHealthFacilityByCode(1L, 321l).getDistrictCode());
         assertTrue(8L == locationService.getHealthFacilityByCode(1L, 321l).getTalukaCode());
-        assertTrue(789L == locationService.getHealthFacilityByCode(1L,321l).getHealthBlockCode());
-        assertTrue(321L == locationService.getHealthFacilityByCode(1L,321l).getHealthFacilityCode());
+        assertTrue(789L == locationService.getHealthFacilityByCode(1L, 321l).getHealthBlockCode());
+        assertTrue(321L == locationService.getHealthFacilityByCode(1L, 321l).getHealthFacilityCode());
     }
 
     @Test
@@ -255,7 +254,7 @@ public class LocationServiceUnitTest {
     }
 
     @Test
-    public void testGetHealthSubFacilityByCode(){
+    public void testGetHealthSubFacilityByCode() {
 
         HealthSubFacility healthSubFacilityData = new HealthSubFacility();
         healthSubFacilityData.setId(1L);
@@ -273,15 +272,15 @@ public class LocationServiceUnitTest {
         healthFacilityData.setHealthBlockCode(789L);
         healthFacilityData.setHealthFacilityCode(321L);
 
-        when(healthFacilityRecordsDataService.findById(1L)).thenReturn(healthFacilityData);
+        when(healthFacilityService.findById(1L)).thenReturn(healthFacilityData);
 
         when(healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode()
-                , healthFacilityData.getHealthFacilityCode(),987L)).thenReturn(healthSubFacilityData);
+                , healthFacilityData.getHealthFacilityCode(), 987L)).thenReturn(healthSubFacilityData);
 
         assertNotNull(locationService.getHealthSubFacilityByCode(1L, 987L));
         assertTrue(123L == locationService.getHealthSubFacilityByCode(1L, 987L).getStateCode());
-        assertTrue(456L == locationService.getHealthSubFacilityByCode(1L, 987L).getDistrictCode() );
+        assertTrue(456L == locationService.getHealthSubFacilityByCode(1L, 987L).getDistrictCode());
         assertTrue(8L == locationService.getHealthSubFacilityByCode(1L, 987L).getTalukaCode());
         assertTrue(789L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthBlockCode());
         assertTrue(321L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthFacilityCode());
@@ -289,7 +288,7 @@ public class LocationServiceUnitTest {
 
     @Test
     public void testGetHealthSubFacilityByCodeWithNullValue() {
-        assertNull(locationService.getHealthSubFacilityByCode(null,null));
+        assertNull(locationService.getHealthSubFacilityByCode(null, null));
     }
 
     @Test
@@ -312,7 +311,7 @@ public class LocationServiceUnitTest {
         assertTrue(200 == locationService.getMkCappingByCode(stateData.getStateCode()).intValue());
     }
 
-    private State getStateData(){
+    private State getStateData() {
 
         State stateData = new State();
         stateData.setId(1L);
@@ -322,7 +321,7 @@ public class LocationServiceUnitTest {
         return stateData;
     }
 
-    private District getDistrictData(){
+    private District getDistrictData() {
         District districtData = new District();
         districtData.setId(1L);
         districtData.setStateCode(123L);
@@ -330,7 +329,7 @@ public class LocationServiceUnitTest {
         return districtData;
     }
 
-    private Taluka getTalukaData(){
+    private Taluka getTalukaData() {
         Taluka talukaData = new Taluka();
         talukaData.setId(1L);
         talukaData.setStateCode(123L);
@@ -339,7 +338,7 @@ public class LocationServiceUnitTest {
         return talukaData;
     }
 
-    private Village getVillageData(){
+    private Village getVillageData() {
         Village villageData = new Village();
         villageData.setStateCode(123L);
         villageData.setDistrictCode(456L);
@@ -349,7 +348,7 @@ public class LocationServiceUnitTest {
         return villageData;
     }
 
-    private HealthBlock getHealthBlockData(){
+    private HealthBlock getHealthBlockData() {
         HealthBlock healthBlockData = new HealthBlock();
         healthBlockData.setId(1L);
         healthBlockData.setStateCode(123L);

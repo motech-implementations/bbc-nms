@@ -23,7 +23,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
@@ -31,7 +31,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
@@ -41,7 +41,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
@@ -49,7 +49,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEqualsWithDifferentDistrictCode(){
+    public void testEqualsWithDifferentDistrictCode() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
@@ -57,7 +57,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEqualsWithDifferentTalukaCode(){
+    public void testEqualsWithDifferentTalukaCode() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 
@@ -65,7 +65,7 @@ public class HealthBlockTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthBlockCode(){
+    public void testEqualsWithDifferentHealthBlockCode() {
 
         HealthBlock healthBlock = TestHelper.getHealthBlockData();
 

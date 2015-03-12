@@ -22,7 +22,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         Taluka taluka = TestHelper.getTalukaData();
 
@@ -30,7 +30,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         Taluka taluka = TestHelper.getTalukaData();
 
@@ -40,7 +40,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         Taluka taluka = TestHelper.getTalukaData();
 
@@ -48,7 +48,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testEqualsWithDifferentDistrictCode(){
+    public void testEqualsWithDifferentDistrictCode() {
 
         Taluka taluka = TestHelper.getTalukaData();
 
@@ -56,7 +56,7 @@ public class TalukaTest {
     }
 
     @Test
-    public void testEqualsWithDifferentTalukaCode(){
+    public void testEqualsWithDifferentTalukaCode() {
 
         Taluka taluka = TestHelper.getTalukaData();
 

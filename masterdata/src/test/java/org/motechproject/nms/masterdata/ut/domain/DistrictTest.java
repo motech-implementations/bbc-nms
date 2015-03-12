@@ -20,7 +20,7 @@ public class DistrictTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         District district = TestHelper.getDistrictData();
 
@@ -28,7 +28,7 @@ public class DistrictTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         District district = TestHelper.getDistrictData();
 
@@ -38,7 +38,7 @@ public class DistrictTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         District district = TestHelper.getDistrictData();
 
@@ -46,7 +46,7 @@ public class DistrictTest {
     }
 
     @Test
-    public void testEqualsForDistrictCode(){
+    public void testEqualsForDistrictCode() {
 
         District district = TestHelper.getDistrictData();
 

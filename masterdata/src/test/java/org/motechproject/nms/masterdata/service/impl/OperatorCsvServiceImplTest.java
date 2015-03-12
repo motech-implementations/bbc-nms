@@ -19,8 +19,8 @@ public class OperatorCsvServiceImplTest extends TestCase {
 
     @Before
     public void setUp() {
-    initMocks(this);
-    this.operatorCsvService = new OperatorCsvServiceImpl(operatorCsvDataService);
+        initMocks(this);
+        this.operatorCsvService = new OperatorCsvServiceImpl(operatorCsvDataService);
     }
 
     public void testGetRecord() throws Exception {

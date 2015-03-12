@@ -37,7 +37,6 @@ public class VillageServiceImpl implements VillageService {
     }
 
     /**
-     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -45,7 +44,7 @@ public class VillageServiceImpl implements VillageService {
      * @return
      */
     @Override
-    public Village findVillageByParentCode(Long stateCode, Long districtCode,Long talukaCode, Long villageCode) {
-        return villageRecordsDataService.findVillageByParentCode(stateCode,districtCode,talukaCode,villageCode);
+    public Village findVillageByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long villageCode) {
+        return villageRecordsDataService.findVillageByParentCode(stateCode, districtCode, talukaCode, villageCode);
     }
 }

@@ -71,6 +71,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     }
 
     List<Long> createdIds = new ArrayList<Long>();
+
     @Test
     public void shouldCreateLanguageLocationCodeRecordsAfterCsvUpload() throws Exception {
         LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
@@ -112,7 +113,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMAChanged");
         csvRecord.setLanguageMK("LanguageMKChanged");
         csvRecord.setLanguageLocationCode("321");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -176,7 +177,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -222,16 +223,16 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
     }
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             LanguageLocationCode ll = llcDataService.findById(id);
 
-            if(ll !=null) {
+            if (ll != null) {
                 Circle circle = circleService.getRecordByCode(ll.getCircleCode());
                 State state = locationService.getStateByCode(ll.getStateCode());
                 District district = null;

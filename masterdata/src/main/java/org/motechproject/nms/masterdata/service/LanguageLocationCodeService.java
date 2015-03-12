@@ -5,7 +5,6 @@ import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 public interface LanguageLocationCodeService {
 
 
-
     /**
      * creates LanguageLocationCode in database
      *
@@ -40,7 +39,7 @@ public interface LanguageLocationCodeService {
     /**
      * This method returns the language location code record for a given circle and LanguageLocationCode
      *
-     * @param circleCode    code of the circle
+     * @param circleCode  code of the circle
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languagelocationCode object.
      */
