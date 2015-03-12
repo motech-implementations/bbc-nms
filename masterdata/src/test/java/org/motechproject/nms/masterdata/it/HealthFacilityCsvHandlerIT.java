@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthFacilityCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.HealthBlockService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -56,7 +56,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
     @Inject
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -65,7 +65,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     public void setUp() {
         healthFacilityCsvHandler = new HealthFacilityCsvUploadHandler(stateService,
                 districtService, talukaService,healthFacilityCsvRecordsDataService,
-                healthFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
+                healthFacilityRecordsDataService,healthBlockService, bulkUploadErrLogService);
     }
     @Test
     public void testDataServiceInstance() throws Exception {

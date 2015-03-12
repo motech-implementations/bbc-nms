@@ -6,8 +6,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.HealthBlockService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -42,19 +42,19 @@ public class HealthBlockCsvUploadHandler {
 
     private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
 
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @Autowired
-    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
-        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -170,7 +170,7 @@ public class HealthBlockCsvUploadHandler {
     private void processHealthBlockData(HealthBlock healthBlockData) throws DataValidationException {
 
         logger.debug("Health Block data contains Health Block code : {}", healthBlockData.getHealthBlockCode());
-        HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
+        HealthBlock existHealthBlockData = healthBlockService.findHealthBlockByParentCode(
                 healthBlockData.getStateCode(),
                 healthBlockData.getDistrictCode(),
                 healthBlockData.getTalukaCode(),
@@ -191,6 +191,6 @@ public class HealthBlockCsvUploadHandler {
 
     private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
         existHealthBlockData.setName(healthBlockData.getName());
-        healthBlockRecordsDataService.update(existHealthBlockData);
+        healthBlockService.update(existHealthBlockData);
     }
 }

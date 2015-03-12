@@ -5,11 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
-import org.motechproject.nms.masterdata.service.VillageService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -40,7 +36,7 @@ public class VillageCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private VillageCsvRecordsDataService villageCsvRecordsDataService;
+    private VillageCsvService villageCsvService;
 
     private VillageService villageService;
 
@@ -49,11 +45,11 @@ public class VillageCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvService villageCsvService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.villageCsvRecordsDataService = villageCsvRecordsDataService;
+        this.villageCsvService = villageCsvService;
         this.villageService = villageService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
@@ -91,7 +87,7 @@ public class VillageCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("VILLAGE_CSV_SUCCESS event processing start for ID: {}", id);
-                villageCsvRecord = villageCsvRecordsDataService.findById(id);
+                villageCsvRecord = villageCsvService.findById(id);
 
                 if (villageCsvRecord != null) {
                     logger.info("Id exist in Village Temporary Entity");
@@ -123,7 +119,7 @@ public class VillageCsvUploadHandler {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != villageCsvRecord) {
-                    villageCsvRecordsDataService.delete(villageCsvRecord);
+                    villageCsvService.delete(villageCsvRecord);
                 }
             }
         }

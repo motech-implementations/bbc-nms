@@ -6,11 +6,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
-import org.motechproject.nms.masterdata.service.VillageService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -48,10 +44,10 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     private TalukaService talukaService;
 
     @Inject
-    private VillageCsvRecordsDataService villageCsvRecordsDataService;
+    private VillageService villageService;
 
     @Inject
-    private VillageService villageService;
+    private VillageCsvService villageCsvService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -59,12 +55,12 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtService, talukaService,villageCsvRecordsDataService,
+                districtService, talukaService,villageCsvService,
                 villageService, bulkUploadErrLogService);
     }
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(villageCsvRecordsDataService);
+        assertNotNull(villageCsvService);
         assertNotNull(villageService);
         assertNotNull(talukaService);
         assertNotNull(districtService);
@@ -128,6 +124,6 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
     private void createVillageCsvData(VillageCsv csvData) {
 
-        villageCsvRecordsDataService.create(csvData);
+        villageCsvService.create(csvData);
     }
 }

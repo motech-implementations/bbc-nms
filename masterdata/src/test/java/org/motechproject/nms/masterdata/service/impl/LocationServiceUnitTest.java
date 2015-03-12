@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
@@ -30,7 +29,7 @@ public class LocationServiceUnitTest {
     private TalukaService talukaService;
 
     @Mock
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     @Mock
     private VillageService villageService;
@@ -44,7 +43,7 @@ public class LocationServiceUnitTest {
     @Before
     public void setUp(){
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockRecordsDataService,villageService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockService,villageService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -170,7 +169,7 @@ public class LocationServiceUnitTest {
 
         when(talukaService.findById(1L)).thenReturn(talukaData);
 
-        when(healthBlockRecordsDataService.findHealthBlockByParentCode(123L,
+        when(healthBlockService.findHealthBlockByParentCode(123L,
                 456L, 8L, 789L)).thenReturn(healthBlockData);
 
         assertNotNull(locationService.getHealthBlockByCode(1L, 789L));
@@ -236,7 +235,7 @@ public class LocationServiceUnitTest {
         healthFacilityData.setHealthBlockCode(789L);
         healthFacilityData.setHealthFacilityCode(321L);
 
-        when(healthBlockRecordsDataService.findById(healthBlockData.getId())).thenReturn(healthBlockData);
+        when(healthBlockService.findById(healthBlockData.getId())).thenReturn(healthBlockData);
 
         when(healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlockData.getStateCode(),
                 healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode(), healthBlockData.getHealthBlockCode()
