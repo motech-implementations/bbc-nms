@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.impl.SubscriptionServiceImpl;
 
@@ -37,7 +38,8 @@ public class SubscriptionServiceTest {
         String msisdn = "9876543210";
         String packName = "Pack1";
 
-        when(subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.PENDING_ACTIVATION)).thenReturn(null);
+        Subscription subscription = new Subscription();
+        when(subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.ACTIVE)).thenReturn(subscription);
         subscriptionService.getActiveSubscriptionByMsisdnPack(msisdn, packName);
     }
 
@@ -47,7 +49,8 @@ public class SubscriptionServiceTest {
         String packName = "Pack1";
         Long stateCode = 1L;
 
-        when(subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.PENDING_ACTIVATION, stateCode)).thenReturn(null);
+        Subscription subscription = new Subscription();
+        when(subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.ACTIVE, stateCode)).thenReturn(subscription);
         subscriptionService.getActiveSubscriptionByMctsIdPack(mctsId, packName, stateCode);
     }
 }
