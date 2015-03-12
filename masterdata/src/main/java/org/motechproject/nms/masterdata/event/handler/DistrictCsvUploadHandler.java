@@ -7,7 +7,7 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -35,7 +35,7 @@ import java.util.Map;
 @Component
 public class DistrictCsvUploadHandler {
 
-    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+    private DistrictCsvService districtCsvService;
 
     private DistrictService districtService;
 
@@ -46,8 +46,8 @@ public class DistrictCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     @Autowired
-    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.districtCsvRecordsDataService = districtCsvRecordsDataService;
+    public DistrictCsvUploadHandler(DistrictCsvService districtCsvService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.districtCsvService = districtCsvService;
         this.districtService = districtService;
         this.stateService = stateService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -85,7 +85,7 @@ public class DistrictCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
-                districtCsvRecord = districtCsvRecordsDataService.findById(id);
+                districtCsvRecord = districtCsvService.findById(id);
 
                 if (districtCsvRecord != null) {
                     logger.info("Id exist in District Temporary Entity");
@@ -117,7 +117,7 @@ public class DistrictCsvUploadHandler {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != districtCsvRecord) {
-                    districtCsvRecordsDataService.delete(districtCsvRecord);
+                    districtCsvService.delete(districtCsvRecord);
                 }
             }
         }

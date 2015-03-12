@@ -3,6 +3,7 @@ package org.motechproject.nms.masterdata.service.impl;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,6 +13,12 @@ import org.springframework.stereotype.Service;
 public class StateServiceImpl implements StateService {
 
     private StateRecordsDataService stateRecordsDataService;
+
+    @Autowired
+    public StateServiceImpl(StateRecordsDataService stateRecordsDataService) {
+        this.stateRecordsDataService = stateRecordsDataService;
+    }
+
     /**
      * create State type object
      *

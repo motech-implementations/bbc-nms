@@ -8,7 +8,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -47,19 +47,19 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     private DistrictService districtService;
 
     @Inject
-    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+    private DistrictCsvService districtCsvService;
 
     List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {
-        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvRecordsDataService,
+        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvService,
                 districtService, stateService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(districtCsvRecordsDataService);
+        assertNotNull(districtCsvService);
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
@@ -109,6 +109,6 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
 
     private void createDistrictCsvData(DistrictCsv csvData) {
 
-        districtCsvRecordsDataService.create(csvData);
+        districtCsvService.create(csvData);
     }
 }

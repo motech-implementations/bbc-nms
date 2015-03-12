@@ -4,10 +4,12 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by abhishek on 12/3/15.
  */
+@Service("districtService")
 public class DistrictServiceImpl implements DistrictService {
 
     private DistrictRecordsDataService districtRecordsDataService;
