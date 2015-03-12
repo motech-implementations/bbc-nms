@@ -12,6 +12,7 @@ import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -37,7 +38,7 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
@@ -52,10 +53,10 @@ public class HealthSubFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaRecordsDataService talukaRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.talukaService = talukaService;
         this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
         this.healthSubFacilityCsvRecordsDataService = healthSubFacilityCsvRecordsDataService;
         this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
@@ -156,7 +157,7 @@ public class HealthSubFacilityCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
-        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");

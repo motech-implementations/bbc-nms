@@ -5,10 +5,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -27,7 +31,7 @@ public class LocationServiceUnitTest {
     private DistrictService districtService;
 
     @Mock
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     @Mock
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
@@ -44,7 +48,7 @@ public class LocationServiceUnitTest {
     @Before
     public void setUp(){
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService,districtService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService,districtService,talukaService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -147,7 +151,7 @@ public class LocationServiceUnitTest {
 
         when(districtService.findById(1L)).thenReturn(districtData);
 
-        when(talukaRecordsDataService.findTalukaByParentCode(districtData.getStateCode(),
+        when(talukaService.findTalukaByParentCode(districtData.getStateCode(),
                 districtData.getDistrictCode(), 8L)).thenReturn(talukaData);
 
         assertNotNull(locationService.getTalukaByCode(1L,8L));
@@ -168,7 +172,7 @@ public class LocationServiceUnitTest {
 
         HealthBlock healthBlockData = getHealthBlockData();
 
-        when(talukaRecordsDataService.findById(1L)).thenReturn(talukaData);
+        when(talukaService.findById(1L)).thenReturn(talukaData);
 
         when(healthBlockRecordsDataService.findHealthBlockByParentCode(123L,
                 456L, 8L, 789L)).thenReturn(healthBlockData);
@@ -201,7 +205,7 @@ public class LocationServiceUnitTest {
 
         Village villageData = getVillageData();
 
-        when(talukaRecordsDataService.findById(talukaData.getId())).thenReturn(talukaData);
+        when(talukaService.findById(talukaData.getId())).thenReturn(talukaData);
 
         when(villageRecordsDataService.findVillageByParentCode(talukaData.getStateCode(),
                 talukaData.getDistrictCode(), talukaData.getTalukaCode(), 789L)).thenReturn(villageData);

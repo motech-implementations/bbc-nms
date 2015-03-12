@@ -5,11 +5,11 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -38,7 +38,7 @@ public class VillageCsvUploadHandler {
 
     private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
@@ -49,10 +49,10 @@ public class VillageCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaRecordsDataService talukaRecordsDataService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.talukaService = talukaService;
         this.villageCsvRecordsDataService = villageCsvRecordsDataService;
         this.villageRecordsDataService = villageRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -149,7 +149,7 @@ public class VillageCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
-        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
@@ -180,10 +180,10 @@ public class VillageCsvUploadHandler {
             logger.info("Village data is successfully updated.");
         } else {
 
-            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
+            Taluka talukaRecord = talukaService.findTalukaByParentCode(villageData.getStateCode(),
                     villageData.getDistrictCode(), villageData.getTalukaCode());
             talukaRecord.getVillage().add(villageData);
-            talukaRecordsDataService.update(talukaRecord);
+            talukaService.update(talukaRecord);
             logger.info("Village data is successfully inserted.");
         }
     }

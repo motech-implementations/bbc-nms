@@ -6,9 +6,13 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthSubFacilityCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -44,7 +48,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private DistrictService districtService;
 
     @Inject
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     @Inject
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
@@ -64,7 +68,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateService,
-                districtService, talukaRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
+                districtService, talukaService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
                 healthSubFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
     }
 
@@ -73,8 +77,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthFacilityRecordsDataService);
         assertNotNull(healthSubFacilityCsvRecordsDataService);
         assertNotNull(healthSubFacilityRecordsDataService);
-        assertNotNull(talukaRecordsDataService);
-        assertNotNull(talukaRecordsDataService);
+        assertNotNull(talukaService);
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);

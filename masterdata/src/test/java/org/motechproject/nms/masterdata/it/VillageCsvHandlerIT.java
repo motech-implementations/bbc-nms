@@ -6,11 +6,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -45,7 +45,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     private DistrictService districtService;
 
     @Inject
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     @Inject
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
@@ -59,15 +59,14 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtService, talukaRecordsDataService,villageCsvRecordsDataService,
+                districtService, talukaService,villageCsvRecordsDataService,
                 villageRecordsDataService, bulkUploadErrLogService);
     }
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(villageCsvRecordsDataService);
         assertNotNull(villageRecordsDataService);
-        assertNotNull(talukaRecordsDataService);
-        assertNotNull(talukaRecordsDataService);
+        assertNotNull(talukaService);
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);

@@ -7,9 +7,9 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -38,7 +38,7 @@ public class HealthBlockCsvUploadHandler {
 
     private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
 
@@ -49,10 +49,10 @@ public class HealthBlockCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @Autowired
-    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+        this.talukaService = talukaService;
         this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
         this.healthBlockRecordsDataService = healthBlockRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -150,7 +150,7 @@ public class HealthBlockCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
-        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
@@ -182,9 +182,9 @@ public class HealthBlockCsvUploadHandler {
 
         } else {
 
-            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
+            Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
             talukaRecord.getHealthBlock().add(healthBlockData);
-            talukaRecordsDataService.update(talukaRecord);
+            talukaService.update(talukaRecord);
             logger.info("HealthBlock data is successfully inserted.");
         }
     }
