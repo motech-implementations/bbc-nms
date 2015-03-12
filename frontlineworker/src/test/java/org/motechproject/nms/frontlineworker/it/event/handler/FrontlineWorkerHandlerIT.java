@@ -11,7 +11,7 @@ import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
-import org.motechproject.nms.frontlineworker.event.handler.FlwUploadHandler;
+import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -49,7 +49,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 /**
- * Created by abhishek on 27/2/15.
+ * This Class models the integration testing of FrontLineWorkerUploadHandler.
  */
 
 @RunWith(PaxExam.class)
@@ -93,7 +93,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Inject
     private FrontLineWorkerCsvService frontLineWorkerCsvService;
 
-    private FlwUploadHandler flwUploadHandler;
+    private FrontLineWorkerUploadHandler frontLineWorkerUploadHandler;
 
     private State stateData;
 
@@ -121,11 +121,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     public void setUp() {
 
 
-        flwUploadHandler = new FlwUploadHandler(bulkUploadErrLogService,
+        frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
                 languageLocationCodeService,
                 frontLineWorkerService, frontLineWorkerCsvService
-                );
+        );
 
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
@@ -290,7 +290,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -299,7 +299,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -316,7 +315,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
 
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990545494");
 
@@ -328,7 +327,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
-        assertEquals("taluka", flw.getTalukaId().getTalukaCode());
+        assertTrue(1L == flw.getTalukaId().getTalukaCode());
         assertTrue(1234L == flw.getVillageId().getVillageCode());
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
@@ -336,7 +335,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -358,7 +356,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setName("Etasha");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -367,7 +365,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -383,7 +380,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(2L, 12L);
 
         assertNotNull(flw);
@@ -395,7 +392,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
-        assertEquals("taluka", flw.getTalukaId().getTalukaCode());
+        assertTrue(1L == flw.getTalukaId().getTalukaCode());
         assertTrue(1234L == flw.getVillageId().getVillageCode());
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
@@ -403,7 +400,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -426,7 +422,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -435,7 +431,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -451,7 +446,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
 
         assertNotNull(flw);
@@ -463,7 +458,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
-        assertEquals("taluka", flw.getTalukaId().getTalukaCode());
+        assertTrue(1L == flw.getTalukaId().getTalukaCode());
         assertTrue(1234L == flw.getVillageId().getVillageCode());
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
@@ -471,7 +466,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -494,7 +488,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -503,7 +497,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -519,7 +512,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
 
         assertNotNull(flw);
@@ -531,7 +524,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
-        assertEquals("taluka", flw.getTalukaId().getTalukaCode());
+        assertTrue(1L == flw.getTalukaId().getTalukaCode());
         assertTrue(1234L == flw.getVillageId().getVillageCode());
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
@@ -539,7 +532,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        assertEquals(true, flw.getIsValidated());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
@@ -564,7 +556,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setStateCode("11");//Invalid
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -578,7 +569,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -604,7 +595,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("122");//Invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -618,7 +608,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -646,7 +636,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setTalukaCode("1233");//Invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -660,7 +649,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -685,10 +674,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1233");//invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -702,7 +690,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -727,11 +715,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1233");//invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -745,7 +732,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -770,12 +757,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12344");//Invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -789,7 +775,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -813,13 +799,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123455");//Invalid
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -833,7 +818,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -858,13 +843,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -878,7 +862,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -902,16 +886,15 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-       //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
@@ -922,7 +905,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -945,13 +928,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -965,7 +947,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -989,13 +971,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1009,7 +990,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1033,13 +1014,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1053,7 +1033,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1081,7 +1061,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1095,7 +1074,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1122,7 +1101,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1136,7 +1114,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1161,11 +1139,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1179,7 +1156,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1204,12 +1181,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545496");
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
-        frontLineWorkerCsv.setIsValidated("true");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
@@ -1223,7 +1199,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
@@ -1250,7 +1226,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1259,7 +1235,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
+
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1276,7 +1252,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
 
         assertNotNull(flw);
@@ -1290,7 +1266,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1299,7 +1275,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("9876");
         frontLineWorkerCsvNew.setIsValid("True");
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1316,7 +1291,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
@@ -1342,7 +1317,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1351,7 +1326,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1368,7 +1342,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
 
         assertNotNull(flw);
@@ -1382,7 +1356,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1391,7 +1365,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
         frontLineWorkerCsvNew.setIsValid("True");
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1409,7 +1382,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
@@ -1433,7 +1406,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1442,7 +1415,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("False");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1460,7 +1432,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("22222");
 
         assertNotNull(flw);
@@ -1475,7 +1447,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1484,7 +1456,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
         frontLineWorkerCsvNew.setIsValid("True");//Changed from false to true
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1502,7 +1473,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("22222");
@@ -1531,7 +1502,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1540,13 +1511,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-       // FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        // FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
 
         assertNotNull(frontLineWorkerCsvService);
 
@@ -1558,7 +1528,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("33333");
 
         assertNotNull(flw);
@@ -1573,7 +1543,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1582,7 +1552,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
         frontLineWorkerCsvNew.setIsValid("False");//Changed from true to false
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1600,7 +1569,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("33333");
         assertNotNull(frontLineWorker);
@@ -1624,7 +1593,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1633,7 +1602,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1652,7 +1620,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("44444");
 
         assertNotNull(flw);
@@ -1669,7 +1637,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1678,7 +1646,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("1234");
         frontLineWorkerCsvNew.setIsValid("True");
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1696,7 +1663,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("44444");
         assertNotNull(frontLineWorker);
@@ -1720,7 +1687,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
@@ -1729,7 +1696,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1747,7 +1713,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("12345");
 
         assertNotNull(flw);
@@ -1761,7 +1727,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
-        frontLineWorkerCsvNew.setTalukaCode("taluka");
+        frontLineWorkerCsvNew.setTalukaCode("1");
         frontLineWorkerCsvNew.setVillageCode("1234");
         frontLineWorkerCsvNew.setHealthBlockCode("1234");
         frontLineWorkerCsvNew.setPhcCode("12345");
@@ -1770,7 +1736,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setAdhaarNo("1234");
         frontLineWorkerCsvNew.setAshaNumber("1234");//Changed from 9876 to 1234
         frontLineWorkerCsvNew.setIsValid("True");
-        frontLineWorkerCsvNew.setIsValidated("true");
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
@@ -1788,7 +1753,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters_new.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
-        flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("12345");
@@ -1823,7 +1788,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1841,7 +1805,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
 
@@ -1875,7 +1839,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1893,7 +1856,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
 
@@ -1917,7 +1880,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setSubCentreCode("123456");
@@ -1925,7 +1888,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1943,7 +1905,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
@@ -1967,7 +1929,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
-        frontLineWorkerCsv.setTalukaCode("taluka");
+        frontLineWorkerCsv.setTalukaCode("1");
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setSubCentreCode("123456");
@@ -1975,7 +1937,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setAdhaarNo("1234");
         frontLineWorkerCsv.setAshaNumber("9876");
         frontLineWorkerCsv.setIsValid("True");
-        frontLineWorkerCsv.setIsValidated("true");
         frontLineWorkerCsv.setOwner("Etasha");
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
@@ -1993,7 +1954,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
-        flwUploadHandler.flwDataHandlerSuccess(motechEvent);
+        frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
         FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
 

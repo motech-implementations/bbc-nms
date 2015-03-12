@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 13/3/15.
+ *  This class acts as implementation class for the interface ContentUploadService.
+ *  It uses ContentUploadRecordDataService which further takes MotechDataService as
+ *  base class to performs the CRUD operations on ContentUpload records. It also adds lookup
+ *  procedures to fetch the ContentUpload record from Database.
  */
 @Service("contentUploadService")
 public class ContentUploadServiceImpl implements ContentUploadService {

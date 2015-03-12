@@ -5,7 +5,10 @@ import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import java.util.List;
 
 /**
- * Created by abhishek on 13/3/15.
+ * Interface for repository that persists simple records and allows CRUD.
+ * Its implementation uses the repository interface ContentUploadCsvRecordDataService whose base class
+ * MotechDataService will provide the implementation of this class as well
+ * as methods for adding, deleting, saving and finding all instances.
  */
 public interface ContentUploadCsvService {
 

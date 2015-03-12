@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by abhishek on 13/3/15.
+ *  This class acts as implementation class for the interface ContentUploadCsvService.
+ *  It uses ContentUploadCsvRecordDataService which further takes MotechDataService as
+ *  base class to performs the CRUD operations on ContentUploadCsv records.
  */
 @Service("contentUploadCsvService")
 public class ContentUploadCsvServiceImpl implements ContentUploadCsvService{

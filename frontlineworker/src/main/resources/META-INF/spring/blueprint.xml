@@ -6,11 +6,17 @@
 
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
+    <osgi:service ref="frontLineWorkerCsvService"
+                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService"/>
+
+    <osgi:service ref="frontLineWorkerService"
+                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService"/>
+
     <osgi:reference id="flwCsvRecordsDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService"/>
+                    interface="org.motechproject.nms.frontlineworker.repository.FrontLineWorkerCsvRecordsDataService"/>
 
     <osgi:reference id="flwRecordDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.FlwRecordDataService"/>
+                    interface="org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService"/>
 
     <osgi:reference id="locationService"
                     interface="org.motechproject.nms.masterdata.service.LocationService"/>
@@ -21,9 +27,5 @@
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
-    <osgi:service ref="frontLineWorkerService"
-                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService" />
 
-    <osgi:service ref="frontLineWorkerCsvService"
-                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService" />
 </beans>

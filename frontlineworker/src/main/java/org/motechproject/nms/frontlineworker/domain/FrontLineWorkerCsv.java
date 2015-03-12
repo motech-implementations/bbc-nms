@@ -7,8 +7,7 @@ import org.motechproject.mds.domain.MdsEntity;
 /**
  * This class Models data records provided in the Front Line Worker Csv Upload
  */
-
-@Entity(recordHistory = true)
+@Entity
 public class FrontLineWorkerCsv extends MdsEntity {
 
     @Field
@@ -48,9 +47,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String ashaNumber;
 
     @Field
-    private String isValidated;
-
-    @Field
     private String adhaarNo;
 
     @Field
@@ -61,8 +57,8 @@ public class FrontLineWorkerCsv extends MdsEntity {
 
     public FrontLineWorkerCsv(String villageCode, String flwId, String stateCode, String contactNo, String name,
                               String type, String districtCode, String talukaCode, String healthBlockCode,
-                              String phcCode, String subCentreCode, String ashaNumber, String isValidated,
-                              String adhaarNo, String isValid) {
+                              String phcCode, String subCentreCode, String ashaNumber, String adhaarNo,
+                              String isValid) {
         this.villageCode = villageCode;
         this.flwId = flwId;
         this.stateCode = stateCode;
@@ -75,7 +71,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.phcCode = phcCode;
         this.subCentreCode = subCentreCode;
         this.ashaNumber = ashaNumber;
-        this.isValidated = isValidated;
         this.adhaarNo = adhaarNo;
         this.isValid = isValid;
     }
@@ -174,14 +169,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
 
     public void setAshaNumber(String ashaNumber) {
         this.ashaNumber = ashaNumber;
-    }
-
-    public String getIsValidated() {
-        return isValidated;
-    }
-
-    public void setIsValidated(String isValidated) {
-        this.isValidated = isValidated;
     }
 
     public String getAdhaarNo() {
