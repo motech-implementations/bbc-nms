@@ -4,10 +4,13 @@ import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.TalukaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by abhishek on 12/3/15.
  */
+
+@Service("talukaService")
 public class TalukaServiceImpl implements TalukaService {
 
     private TalukaRecordsDataService talukaRecordsDataService;

@@ -42,9 +42,6 @@
     <osgi:service ref="talukaService"
                   interface="org.motechproject.nms.masterdata.service.TalukaService" />
 
-    <osgi:service ref="talukaService"
-                  interface="org.motechproject.nms.masterdata.service.TalukaService" />
-
     <osgi:service ref="talukaCsvService"
                   interface="org.motechproject.nms.masterdata.service.TalukaCsvService" />
 
