@@ -9,9 +9,9 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.impl.LanguageLocationCodeServiceImpl;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -38,7 +38,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtService;
+    private DistrictService districtService;
 
     @Inject
     private CircleDataService circleDataService;

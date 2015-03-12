@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.masterdata.service.StateService;
 
@@ -23,7 +24,7 @@ public class LocationServiceUnitTest {
     private StateService stateService;
 
     @Mock
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Mock
     private TalukaRecordsDataService talukaRecordsDataService;
@@ -43,7 +44,7 @@ public class LocationServiceUnitTest {
     @Before
     public void setUp(){
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService,districtRecordsDataService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService,districtService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -56,8 +57,8 @@ public class LocationServiceUnitTest {
         districtData.setId(1L);
 
         when(stateService.findById(stateData.getId())).thenReturn(stateData);
-        when(districtRecordsDataService.findById(districtData.getId())).thenReturn(districtData);
-        when(districtRecordsDataService.findDistrictByParentCode(districtData.getStateCode(), districtData.getDistrictCode())).thenReturn(districtData);
+        when(districtService.findById(districtData.getId())).thenReturn(districtData);
+        when(districtService.findDistrictByParentCode(districtData.getStateCode(), districtData.getDistrictCode())).thenReturn(districtData);
 
         assertNotNull(locationService.validateLocation(1L, 1L));
         assertTrue(locationService.validateLocation(1L, 1L));
@@ -73,7 +74,7 @@ public class LocationServiceUnitTest {
         districtData.setId(1L);
 
         when(stateService.findById(1L)).thenReturn(stateData);
-        when(districtRecordsDataService.findById(1L)).thenReturn(null);
+        when(districtService.findById(1L)).thenReturn(null);
 
         assertFalse(locationService.validateLocation(1L, 1L));
     }
@@ -88,7 +89,7 @@ public class LocationServiceUnitTest {
         districtData.setId(1L);
 
         when(stateService.findById(1L)).thenReturn(null);
-        when(districtRecordsDataService.findById(1L)).thenReturn(districtData);
+        when(districtService.findById(1L)).thenReturn(districtData);
 
         assertFalse(locationService.validateLocation(1L, 1L));
     }
@@ -103,7 +104,7 @@ public class LocationServiceUnitTest {
         districtData.setId(1L);
 
         when(stateService.findById(stateData.getId())).thenReturn(null);
-        when(districtRecordsDataService.findById(districtData.getId())).thenReturn(null);
+        when(districtService.findById(districtData.getId())).thenReturn(null);
 
         assertFalse(locationService.validateLocation(1L, 1L));
     }
@@ -126,7 +127,7 @@ public class LocationServiceUnitTest {
         District districtData = getDistrictData();
 
         when(stateService.findById(1L)).thenReturn(stateData);
-        when(districtRecordsDataService.findDistrictByParentCode(456L, 123L)).thenReturn(districtData);
+        when(districtService.findDistrictByParentCode(456L, 123L)).thenReturn(districtData);
 
         assertNotNull(locationService.getDistrictByCode(stateData.getId(), districtData.getDistrictCode()));
         assertTrue(456L == locationService.getDistrictByCode(stateData.getId(), districtData.getDistrictCode()).getDistrictCode());
@@ -144,7 +145,7 @@ public class LocationServiceUnitTest {
 
         Taluka talukaData = getTalukaData();
 
-        when(districtRecordsDataService.findById(1L)).thenReturn(districtData);
+        when(districtService.findById(1L)).thenReturn(districtData);
 
         when(talukaRecordsDataService.findTalukaByParentCode(districtData.getStateCode(),
                 districtData.getDistrictCode(), 8L)).thenReturn(talukaData);

@@ -9,7 +9,7 @@ import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -44,7 +44,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
     private DistrictCsvRecordsDataService districtCsvRecordsDataService;
@@ -54,13 +54,13 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvRecordsDataService,
-                districtRecordsDataService, stateService, bulkUploadErrLogService);
+                districtService, stateService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(districtCsvRecordsDataService);
-        assertNotNull(districtRecordsDataService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
@@ -81,7 +81,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(invalidCsvData.getId());
 
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-        District districtData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
+        District districtData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtData);
         assertTrue(123L == districtData.getStateCode());
@@ -95,7 +95,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-        District districtUpdateData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
+        District districtUpdateData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtUpdateData);
         assertTrue(123L == districtUpdateData.getStateCode());

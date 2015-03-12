@@ -9,9 +9,9 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -44,7 +44,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
     private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
@@ -58,14 +58,14 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
-                districtRecordsDataService, talukaCsvRecordsDataService,talukaRecordsDataService, bulkUploadErrLogService);
+                districtService, talukaCsvRecordsDataService,talukaRecordsDataService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(talukaCsvRecordsDataService);
         assertNotNull(talukaRecordsDataService);
-        assertNotNull(districtRecordsDataService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(talukaCsvUploadHandler);

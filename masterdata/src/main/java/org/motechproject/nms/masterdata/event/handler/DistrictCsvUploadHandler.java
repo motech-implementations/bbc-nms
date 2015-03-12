@@ -8,7 +8,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -37,7 +37,7 @@ public class DistrictCsvUploadHandler {
 
     private DistrictCsvRecordsDataService districtCsvRecordsDataService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     private StateService stateService;
 
@@ -46,9 +46,9 @@ public class DistrictCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     @Autowired
-    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictRecordsDataService districtRecordsDataService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.districtCsvRecordsDataService = districtCsvRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
+        this.districtService = districtService;
         this.stateService = stateService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
@@ -150,7 +150,7 @@ public class DistrictCsvUploadHandler {
     private void processDistrictData(District districtData) throws DataValidationException {
 
         logger.debug("District data contains district code : {}", districtData.getDistrictCode());
-        District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
+        District existDistrictData = districtService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             updateDistrict(existDistrictData, districtData);
             logger.info("District data is successfully updated.");
@@ -165,6 +165,6 @@ public class DistrictCsvUploadHandler {
 
     private void updateDistrict(District existDistrictData, District districtData) {
         existDistrictData.setName(districtData.getName());
-        districtRecordsDataService.update(existDistrictData);
+        districtService.update(existDistrictData);
     }
 }

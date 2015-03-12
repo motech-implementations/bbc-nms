@@ -7,6 +7,7 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthSubFacilityCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -40,7 +41,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
     private TalukaRecordsDataService talukaRecordsDataService;
@@ -63,7 +64,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateService,
-                districtRecordsDataService, talukaRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
+                districtService, talukaRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
                 healthSubFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
     }
 
@@ -74,7 +75,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthSubFacilityRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
-        assertNotNull(districtRecordsDataService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthSubFacilityCsvHandler);

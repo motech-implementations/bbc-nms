@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -42,7 +42,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
     private TalukaRecordsDataService talukaRecordsDataService;
@@ -59,7 +59,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtRecordsDataService, talukaRecordsDataService,villageCsvRecordsDataService,
+                districtService, talukaRecordsDataService,villageCsvRecordsDataService,
                 villageRecordsDataService, bulkUploadErrLogService);
     }
     @Test
@@ -68,7 +68,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(villageRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
-        assertNotNull(districtRecordsDataService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(villageCsvUploadHandler);

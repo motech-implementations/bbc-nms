@@ -6,10 +6,10 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthBlockCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -43,7 +43,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
     private TalukaRecordsDataService talukaRecordsDataService;
@@ -60,7 +60,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateService,
-                districtRecordsDataService, talukaRecordsDataService,healthBlockCsvRecordsDataService,
+                districtService, talukaRecordsDataService,healthBlockCsvRecordsDataService,
                 healthBlockRecordsDataService, bulkUploadErrLogService);
     }
     @Test
@@ -69,7 +69,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthBlockRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
-        assertNotNull(districtRecordsDataService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthBlockCsvUploadHandler);

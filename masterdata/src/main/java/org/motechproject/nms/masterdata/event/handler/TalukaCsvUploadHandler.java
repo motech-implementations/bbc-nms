@@ -8,9 +8,9 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -38,7 +38,7 @@ public class TalukaCsvUploadHandler {
 
     private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
 
@@ -49,9 +49,9 @@ public class TalukaCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
     @Autowired
-    public TalukaCsvUploadHandler(StateService stateService, DistrictRecordsDataService districtRecordsDataService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public TalukaCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
-        this.districtRecordsDataService = districtRecordsDataService;
+        this.districtService = districtService;
         this.talukaCsvRecordsDataService = talukaCsvRecordsDataService;
         this.talukaRecordsDataService = talukaRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -142,7 +142,7 @@ public class TalukaCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
-        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
             ParseDataHelper.raiseInvalidDataException("District", "districtCode");
         }
@@ -170,9 +170,9 @@ public class TalukaCsvUploadHandler {
             logger.info("Taluka data is successfully updated.");
 
         } else {
-            District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
+            District districtData = districtService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
             districtData.getTaluka().add(talukaData);
-            districtRecordsDataService.update(districtData);
+            districtService.update(districtData);
             logger.info("Taluka data is successfully inserted.");
         }
     }

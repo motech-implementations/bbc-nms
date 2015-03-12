@@ -34,6 +34,8 @@
     <osgi:service ref="stateCsvService"
                   interface="org.motechproject.nms.masterdata.service.StateCsvService" />
 
+    <osgi:service ref="districtService"
+                  interface="org.motechproject.nms.masterdata.service.DistrictService" />
 
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService"/>

@@ -10,7 +10,6 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.LanguageLocationCodeCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.*;
@@ -55,7 +54,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     private LanguageLocationCodeCsvDataService llcCsvDataService;
 
     @Inject
-    private DistrictRecordsDataService districtService;
+    private DistrictService districtService;
 
     @Inject
     private StateService stateService;

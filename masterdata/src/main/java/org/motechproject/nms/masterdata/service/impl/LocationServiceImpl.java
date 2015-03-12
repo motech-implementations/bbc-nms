@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ public class LocationServiceImpl implements LocationService {
 
     private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     private TalukaRecordsDataService talukaRecordsDataService;
 
@@ -25,9 +26,9 @@ public class LocationServiceImpl implements LocationService {
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
     @Autowired
-    public LocationServiceImpl(StateService stateService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
         this.stateService = stateService;
-        this.districtRecordsDataService = districtRecordsDataService;
+        this.districtService = districtService;
         this.talukaRecordsDataService = talukaRecordsDataService;
         this.healthBlockRecordsDataService = healthBlockRecordsDataService;
         this.villageRecordsDataService = villageRecordsDataService;
@@ -41,11 +42,11 @@ public class LocationServiceImpl implements LocationService {
         boolean flag = false;
 
         State state = stateService.findById(stateId);
-        District district = districtRecordsDataService.findById(districtId);
+        District district = districtService.findById(districtId);
 
         if (null != state && null != district) {
 
-            District districtData = districtRecordsDataService.findDistrictByParentCode(district.getStateCode(), district.getDistrictCode());
+            District districtData = districtService.findDistrictByParentCode(district.getStateCode(), district.getDistrictCode());
 
             if (null != districtData) {
                 flag = true;
@@ -83,7 +84,7 @@ public class LocationServiceImpl implements LocationService {
             State state = stateService.findById(stateId);
 
             if (null != state) {
-                district = districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
+                district = districtService.findDistrictByParentCode(districtCode, state.getStateCode());
                 return district;
             }
         }
@@ -103,7 +104,7 @@ public class LocationServiceImpl implements LocationService {
         Taluka taluka = null;
 
         if (null != districtId && null != talukaCode) {
-            District district = districtRecordsDataService.findById(districtId);
+            District district = districtService.findById(districtId);
             if (null != district) {
                 taluka = talukaRecordsDataService.findTalukaByParentCode(district.getStateCode(),
                         district.getDistrictCode(), talukaCode);
