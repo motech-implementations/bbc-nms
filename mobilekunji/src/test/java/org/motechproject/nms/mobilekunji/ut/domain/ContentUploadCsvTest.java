@@ -32,16 +32,6 @@ public class ContentUploadCsvTest {
 
     @Test
     public void testShouldSetWithNoData() {
-/*        contentUploadCsv.setIndex(1L);
-        contentUploadCsv.setOperation("ADD");
-        contentUploadCsv.setContentId("1");
-        contentUploadCsv.setCircleCode("CircleCode");
-        contentUploadCsv.setLanguageLocationCode("2");
-        contentUploadCsv.setContentName("contentName");
-        contentUploadCsv.setContentType("PROMPT");
-        contentUploadCsv.setContentFile("contentFile");
-        contentUploadCsv.setContentDuration("120");
-        contentUploadCsv.setCardNumber("20");*/
         assertEquals("Content Index[null] Operation[ADD] Content ID[null] Circle Code [null] Language Location Code [" +
                 "null] Content Name [null] Content Type [null] Content File [null] Content Duration [null]" +
                 " Card Number [null]", contentUploadCsv.toString());
