@@ -3,10 +3,6 @@ package org.motechproject.nms.mobileacademy.commons;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author nitin
- *
- */
 public class ChapterFlag {
 
     private int chapterNo;

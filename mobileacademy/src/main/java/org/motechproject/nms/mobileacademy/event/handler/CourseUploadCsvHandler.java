@@ -8,7 +8,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
-import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CourseUploadCsvHandler {
 
-    private CSVRecordProcessService csvRecordProcessService;
+    private RecordsProcessService recordsProcessService;
 
     private CourseContentCsvService courseContentCsvService;
 
@@ -31,10 +31,9 @@ public class CourseUploadCsvHandler {
             .getLogger(CourseUploadCsvHandler.class);
 
     @Autowired
-    public CourseUploadCsvHandler(
-            CSVRecordProcessService csvRecordProcessService,
+    public CourseUploadCsvHandler(RecordsProcessService recordsProcessService,
             CourseContentCsvService courseContentCsvService) {
-        this.csvRecordProcessService = csvRecordProcessService;
+        this.recordsProcessService = recordsProcessService;
         this.courseContentCsvService = courseContentCsvService;
     }
 
@@ -53,7 +52,7 @@ public class CourseUploadCsvHandler {
         String csvFileName = (String) params.get("csv-import.filename");
         LOGGER.info("Csv file name received in event : {}", csvFileName);
 
-        csvRecordProcessService.processRawRecords(
+        recordsProcessService.processRawRecords(
                 findListOfCourseRawContents(createdIds), csvFileName);
 
         LOGGER.info("Finished processing COURSE_CSV_UPLOAD_SUCCESS_EVENT Handler");
