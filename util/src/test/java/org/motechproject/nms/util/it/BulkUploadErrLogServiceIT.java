@@ -86,7 +86,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
                 Assert.assertEquals(numberOfSuccessfulRecords, retrievedCountOfSuccessfulRecords);
                 Assert.assertEquals(userName, retrievedUserName);
 
-                bulkUploadStatusDataService.delete(bulkUploadStatus);
+//                bulkUploadStatusDataService.delete(bulkUploadStatus);
             }
         }
     }
@@ -98,7 +98,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
      */
     @Test
     public void shouldAddBulkUploadErrRecord() throws Exception {
-        bulkUploadErrorDataService.deleteAll();
+//        bulkUploadErrorDataService.deleteAll();
         String bulkUploadFileName = "csv-import.someFileName";
         DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
         String recordDetails = "Some Record Details";
@@ -132,7 +132,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
                 Assert.assertEquals(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, retrievedErrorDesc);
                 Assert.assertEquals(RecordType.CIRCLE, retrievedRecordType);
 
-                bulkUploadErrorDataService.delete(bulkUploadError);
+//                bulkUploadErrorDataService.delete(bulkUploadError);
             }
         }
 
