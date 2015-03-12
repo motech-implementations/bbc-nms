@@ -9,8 +9,6 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -41,9 +39,9 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private HealthFacilityService healthFacilityService;
 
-    private HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService;
+    private HealthSubFacilityCsvService healthSubFacilityCsvService;
 
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    private HealthSubFacilityService healthSubFacilityService;
 
     private HealthBlockService healthBlockService;
 
@@ -52,13 +50,13 @@ public class HealthSubFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.healthFacilityService = healthFacilityService;
-        this.healthSubFacilityCsvRecordsDataService = healthSubFacilityCsvRecordsDataService;
-        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
+        this.healthSubFacilityCsvService = healthSubFacilityCsvService;
+        this.healthSubFacilityService = healthSubFacilityService;
         this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
@@ -96,7 +94,7 @@ public class HealthSubFacilityCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_SUB_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthSubFacilityCsvRecord = healthSubFacilityCsvRecordsDataService.findById(id);
+                healthSubFacilityCsvRecord = healthSubFacilityCsvService.findById(id);
 
                 if (healthSubFacilityCsvRecord != null) {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
@@ -128,7 +126,7 @@ public class HealthSubFacilityCsvUploadHandler {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthSubFacilityCsvRecord) {
-                    healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
+                    healthSubFacilityCsvService.delete(healthSubFacilityCsvRecord);
                 }
             }
         }
@@ -190,7 +188,7 @@ public class HealthSubFacilityCsvUploadHandler {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}", healthSubFacilityData.getHealthSubFacilityCode());
 
-        HealthSubFacility existHealthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
+        HealthSubFacility existHealthSubFacilityData = healthSubFacilityService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),
                 healthSubFacilityData.getDistrictCode(),
                 healthSubFacilityData.getTalukaCode(),
@@ -217,6 +215,6 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private void updateHealthSubFacilityDAta(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
         existHealthSubFacilityData.setName(healthSubFacilityData.getName());
-        healthSubFacilityRecordsDataService.update(existHealthSubFacilityData);
+        healthSubFacilityService.update(existHealthSubFacilityData);
     }
 }

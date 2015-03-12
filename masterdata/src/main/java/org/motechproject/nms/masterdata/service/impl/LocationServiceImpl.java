@@ -1,7 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,17 @@ public class LocationServiceImpl implements LocationService {
 
     private HealthFacilityService healthFacilityService;
 
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    private HealthSubFacilityService healthSubFacilityService;
 
     @Autowired
-    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockService healthBlockService, VillageService villageService, HealthFacilityService healthFacilityService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockService healthBlockService, VillageService villageService, HealthFacilityService healthFacilityService, HealthSubFacilityService healthSubFacilityService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
         this.healthBlockService = healthBlockService;
         this.villageService = villageService;
         this.healthFacilityService = healthFacilityService;
-        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
+        this.healthSubFacilityService = healthSubFacilityService;
     }
 
     @Override
@@ -178,7 +177,7 @@ public class LocationServiceImpl implements LocationService {
 
             if (null != healthFacility) {
 
-                healthSubFacility = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
+                healthSubFacility = healthSubFacilityService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
                         healthFacility.getDistrictCode(), healthFacility.getTalukaCode(), healthFacility.getHealthBlockCode(),
                         healthFacility.getHealthFacilityCode(), healthSubFacilityCode);
                 return healthSubFacility;

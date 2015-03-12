@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
-import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 
 import static junit.framework.Assert.assertNull;
@@ -37,12 +36,12 @@ public class LocationServiceUnitTest {
     private HealthFacilityService healthFacilityService;
 
     @Mock
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    private HealthSubFacilityService healthSubFacilityService;
 
     @Before
     public void setUp() {
         initMocks(this);
-        locationService = new LocationServiceImpl(stateService, districtService, talukaService, healthBlockService, villageService, healthFacilityService, healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService, districtService, talukaService, healthBlockService, villageService, healthFacilityService, healthSubFacilityService);
     }
 
     @Test
@@ -274,7 +273,7 @@ public class LocationServiceUnitTest {
 
         when(healthFacilityService.findById(1L)).thenReturn(healthFacilityData);
 
-        when(healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacilityData.getStateCode(),
+        when(healthSubFacilityService.findHealthSubFacilityByParentCode(healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(), healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode()
                 , healthFacilityData.getHealthFacilityCode(), 987L)).thenReturn(healthSubFacilityData);
 

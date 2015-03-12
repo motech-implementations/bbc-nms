@@ -6,7 +6,9 @@ import org.motechproject.mds.annotations.Field;
 /**
  * This class Models data records provided in the District Csv Upload
  */
-@Entity
+@Entity(
+        recordHistory = true
+)
 public class DistrictCsv extends LocationUnitMetaDataCsv {
 
     @Field(name = "districtCode")
