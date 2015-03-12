@@ -119,22 +119,22 @@
     <osgi:reference id="villageService"
                   interface="org.motechproject.nms.masterdata.service.VillageService"/>
 
-    <osgi:service ref="healthBlockCsvService"
+    <osgi:reference id="healthBlockCsvService"
                   interface="org.motechproject.nms.masterdata.service.HealthBlockCsvService"/>
 
     <osgi:reference id="healthBlockService"
                   interface="org.motechproject.nms.masterdata.service.HealthBlockService"/>
 
-    <osgi:service ref="healthFacilityCsvService"
+    <osgi:reference id="healthFacilityCsvService"
                   interface="org.motechproject.nms.masterdata.service.HealthFacilityCsvService"/>
 
-    <osgi:service ref="healthFacilityService"
+    <osgi:reference id="healthFacilityService"
                   interface="org.motechproject.nms.masterdata.service.HealthFacilityService"/>
 
-    <osgi:service ref="healthSubFacilityCsvService"
+    <osgi:reference id="healthSubFacilityCsvService"
                   interface="org.motechproject.nms.masterdata.service.HealthSubFacilityCsvService"/>
 
-    <osgi:service ref="healthSubFacilityService"
+    <osgi:reference id="healthSubFacilityService"
                   interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
 
   </beans>
