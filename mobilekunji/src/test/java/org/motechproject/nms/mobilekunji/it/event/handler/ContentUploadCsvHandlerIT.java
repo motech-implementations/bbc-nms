@@ -119,6 +119,100 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
 
 
+
+    @Test
+    public void testContentUploadValidContentType() {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("12");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("CONTENT");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(12);
+
+        assertNotNull(contentUpload);
+
+
+        assertTrue(12 == contentUpload.getContentId());
+        assertEquals("CircleCode", contentUpload.getCircleCode());
+        assertTrue(123 == contentUpload.getLanguageLocationCode());
+        assertEquals("Content", contentUpload.getContentName());
+        assertEquals(ContentType.CONTENT, contentUpload.getContentType());
+        assertEquals("NewFile", contentUpload.getContentFile());
+        assertTrue(10 == contentUpload.getCardNumber());
+        assertTrue(120 == contentUpload.getContentDuration());
+        assertEquals("Etasha", contentUpload.getCreator());
+        assertEquals("Etasha", contentUpload.getModifiedBy());
+        assertEquals("Etasha", contentUpload.getOwner());
+
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        assertTrue(listContentUploadCsv.size() == 0);
+
+
+    }
+
+
+
+    @Test
+    public void testContentUploadInValidContentType() throws DataValidationException {
+
+        ContentUploadCsv contentUploadCsv = new ContentUploadCsv();
+        contentUploadCsv.setIndex(1L);
+        contentUploadCsv.setContentId("12");
+        contentUploadCsv.setCircleCode("CircleCode");
+        contentUploadCsv.setLanguageLocationCode("123");
+        contentUploadCsv.setContentName("Content");
+        contentUploadCsv.setContentType("PROMPTS");
+        contentUploadCsv.setContentFile("NewFile");
+        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setContentDuration("120");
+        contentUploadCsv.setModifiedBy("Etasha");
+        contentUploadCsv.setOwner("Etasha");
+        contentUploadCsv.setCreator("Etasha");
+
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
+
+        Map<String, Object> parameters = new HashMap<>();
+        List<Long> uploadedIds = new ArrayList<Long>();
+
+        uploadedIds.add(contentUploadCsvDb.getId());
+        parameters.put("csv-import.created_ids", uploadedIds);
+        parameters.put("csv-import.filename", "ContentUpload.csv");
+
+        MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
+        contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
+        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(12);
+
+        assertNull(contentUpload);
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        assertTrue(listContentUploadCsv.size() == 0);
+        throw new DataValidationException();
+
+
+    }
+
+
+
     @Test
     public void testContentUploadNoContentId() throws DataValidationException {
 
