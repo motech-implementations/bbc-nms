@@ -65,7 +65,8 @@ public class DistrictServiceImpl implements DistrictService {
      */
     @Override
     public District findDistrictByParentCode(Long districtCode, Long stateCode) {
-        return null;
+
+        return districtRecordsDataService.findDistrictByParentCode(districtCode,stateCode);
     }
 
     /**
