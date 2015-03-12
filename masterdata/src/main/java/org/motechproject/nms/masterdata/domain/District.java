@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
@@ -12,7 +13,11 @@ import java.util.Set;
  * This class Models data for District location records
  */
 @Entity(recordHistory = true)
-public class District extends LocationUnitMetaData {
+public class District extends MdsEntity {
+
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
 
     @Field
     @Cascade(delete = true)
@@ -54,6 +59,14 @@ public class District extends LocationUnitMetaData {
 
     public void setStateCode(Long stateCode) {
         this.stateCode = stateCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
@@ -98,9 +111,10 @@ public class District extends LocationUnitMetaData {
     @Override
     public String toString() {
         return "District{" +
-                "districtCode=" + districtCode +
+                "name='" + name + '\'' +
                 ", taluka=" + taluka +
                 ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
                 '}';
     }
 }

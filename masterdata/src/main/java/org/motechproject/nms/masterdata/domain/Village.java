@@ -3,12 +3,13 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for Village location records
  */
 @Entity(recordHistory = true)
-public class Village extends LocationUnitMetaData {
+public class Village extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 4)
@@ -26,8 +27,20 @@ public class Village extends LocationUnitMetaData {
     @UIDisplayable(position = 1)
     private Long villageCode;
 
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
+
     public Village() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getVillageCode() {
@@ -103,8 +116,9 @@ public class Village extends LocationUnitMetaData {
         return "Village{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", villageCode=" + villageCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

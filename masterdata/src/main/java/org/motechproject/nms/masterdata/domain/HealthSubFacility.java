@@ -3,13 +3,14 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for HealthSubFacility location records
  */
 
 @Entity(recordHistory = true)
-public class HealthSubFacility extends LocationUnitMetaData {
+public class HealthSubFacility extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 6)
@@ -34,6 +35,18 @@ public class HealthSubFacility extends LocationUnitMetaData {
     @Field
     @UIDisplayable(position = 1)
     private Long healthSubFacilityCode;
+
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getHealthFacilityCode() {
         return healthFacilityCode;
@@ -136,6 +149,7 @@ public class HealthSubFacility extends LocationUnitMetaData {
                 ", healthBlockCode=" + healthBlockCode +
                 ", healthFacilityCode=" + healthFacilityCode +
                 ", healthSubFacilityCode=" + healthSubFacilityCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.Set;
 
@@ -11,7 +12,11 @@ import java.util.Set;
  * This class Models data for Taluka location records
  */
 @Entity(recordHistory = true)
-public class Taluka extends LocationUnitMetaData {
+public class Taluka extends MdsEntity {
+
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
 
     @Field
     @UIDisplayable(position = 3)
@@ -35,6 +40,14 @@ public class Taluka extends LocationUnitMetaData {
 
 
     public Taluka() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<HealthBlock> getHealthBlock() {
@@ -112,9 +125,10 @@ public class Taluka extends LocationUnitMetaData {
     @Override
     public String toString() {
         return "Taluka{" +
-                "stateCode=" + stateCode +
+                "name='" + name + '\'' +
+                ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", healthBlock=" + healthBlock +
                 ", village=" + village +
                 '}';
