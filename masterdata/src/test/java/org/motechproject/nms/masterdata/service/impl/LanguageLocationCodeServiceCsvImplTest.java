@@ -12,7 +12,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
 
-    private LanguageLocationCodeServiceCsvImpl languageLocationCodeServiceCsv;
+    private LanguageLocationCodeCsvServiceImpl languageLocationCodeServiceCsv;
 
     @Mock
     private LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService;
@@ -20,7 +20,7 @@ public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
     @Before
     public void setUp() {
         initMocks(this);
-        this.languageLocationCodeServiceCsv = new LanguageLocationCodeServiceCsvImpl(languageLocationCodeCsvDataService);
+        this.languageLocationCodeServiceCsv = new LanguageLocationCodeCsvServiceImpl(languageLocationCodeCsvDataService);
     }
 
     @Test
