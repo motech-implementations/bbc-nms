@@ -146,12 +146,12 @@ public class LocationServiceUnitTest {
         when(districtRecordsDataService.findById(1L)).thenReturn(districtData);
 
         when(talukaRecordsDataService.findTalukaByParentCode(districtData.getStateCode(),
-                districtData.getDistrictCode(), "t123")).thenReturn(talukaData);
+                districtData.getDistrictCode(), 8L)).thenReturn(talukaData);
 
-        assertNotNull(locationService.getTalukaByCode(1L,"t123"));
-        assertTrue(123L == locationService.getTalukaByCode(1L, "t123").getStateCode());
-        assertTrue(456L == locationService.getTalukaByCode(1L, "t123").getDistrictCode());
-        assertTrue("t123".equals(locationService.getTalukaByCode(1L, "t123").getTalukaCode()));
+        assertNotNull(locationService.getTalukaByCode(1L,8L));
+        assertTrue(123L == locationService.getTalukaByCode(1L, 8L).getStateCode());
+        assertTrue(456L == locationService.getTalukaByCode(1L, 8L).getDistrictCode());
+        assertTrue("t123".equals(locationService.getTalukaByCode(1L, 8L).getTalukaCode()));
     }
 
     @Test
@@ -169,9 +169,9 @@ public class LocationServiceUnitTest {
         when(talukaRecordsDataService.findById(1L)).thenReturn(talukaData);
 
         when(healthBlockRecordsDataService.findHealthBlockByParentCode(123L,
-                456L, "t123", 789L)).thenReturn(healthBlockData);
+                456L, 8L, 789L)).thenReturn(healthBlockData);
 
-        assertNotNull(locationService.getHealthBlockByCode(1L,789L));
+        assertNotNull(locationService.getHealthBlockByCode(1L, 789L));
         assertTrue(123L == locationService.getHealthBlockByCode(1L,789L).getStateCode());
         assertTrue(456L == locationService.getHealthBlockByCode(1L,789L).getDistrictCode());
         assertTrue("t123".equals(locationService.getHealthBlockByCode(1L,789L).getTalukaCode()));
@@ -223,14 +223,14 @@ public class LocationServiceUnitTest {
         healthBlockData.setId(1L);
         healthBlockData.setStateCode(123L);
         healthBlockData.setDistrictCode(456L);
-        healthBlockData.setTalukaCode("t123");
+        healthBlockData.setTalukaCode(8L);
         healthBlockData.setHealthBlockCode(789L);
 
 
         HealthFacility healthFacilityData = new HealthFacility();
         healthFacilityData.setStateCode(123L);
         healthFacilityData.setDistrictCode(456L);
-        healthFacilityData.setTalukaCode("t123");
+        healthFacilityData.setTalukaCode(8L);
         healthFacilityData.setHealthBlockCode(789L);
         healthFacilityData.setHealthFacilityCode(321L);
 
@@ -260,7 +260,7 @@ public class LocationServiceUnitTest {
         healthSubFacilityData.setId(1L);
         healthSubFacilityData.setStateCode(123L);
         healthSubFacilityData.setDistrictCode(456L);
-        healthSubFacilityData.setTalukaCode("t123");
+        healthSubFacilityData.setTalukaCode(8L);
         healthSubFacilityData.setHealthBlockCode(789L);
         healthSubFacilityData.setHealthFacilityCode(321L);
 
@@ -268,7 +268,7 @@ public class LocationServiceUnitTest {
         HealthFacility healthFacilityData = new HealthFacility();
         healthFacilityData.setStateCode(123L);
         healthFacilityData.setDistrictCode(456L);
-        healthFacilityData.setTalukaCode("t123");
+        healthFacilityData.setTalukaCode(8L);
         healthFacilityData.setHealthBlockCode(789L);
         healthFacilityData.setHealthFacilityCode(321L);
 
@@ -334,7 +334,7 @@ public class LocationServiceUnitTest {
         talukaData.setId(1L);
         talukaData.setStateCode(123L);
         talukaData.setDistrictCode(456L);
-        talukaData.setTalukaCode("t123");
+        talukaData.setTalukaCode(8L);
         return talukaData;
     }
 
@@ -342,7 +342,7 @@ public class LocationServiceUnitTest {
         Village villageData = new Village();
         villageData.setStateCode(123L);
         villageData.setDistrictCode(456L);
-        villageData.setTalukaCode("t123");
+        villageData.setTalukaCode(8L);
         villageData.setVillageCode(789L);
 
         return villageData;
@@ -353,7 +353,7 @@ public class LocationServiceUnitTest {
         healthBlockData.setId(1L);
         healthBlockData.setStateCode(123L);
         healthBlockData.setDistrictCode(456L);
-        healthBlockData.setTalukaCode("t123");
+        healthBlockData.setTalukaCode(8L);
         healthBlockData.setHealthBlockCode(789L);
         return healthBlockData;
     }
