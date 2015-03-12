@@ -7,6 +7,7 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthFacilityCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -36,7 +37,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -58,7 +59,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        healthFacilityCsvHandler = new HealthFacilityCsvUploadHandler(stateRecordsDataService,
+        healthFacilityCsvHandler = new HealthFacilityCsvUploadHandler(stateService,
                 districtRecordsDataService, talukaRecordsDataService,healthFacilityCsvRecordsDataService,
                 healthFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
     }
@@ -69,7 +70,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthFacilityCsvHandler);
     }
@@ -86,7 +87,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         districtData.getTaluka().add(talukaData);
         talukaData.getHealthBlock().add(healthBlockData);
 
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         HealthFacilityCsv csvData = TestHelper.getHealthFacilityCsvData();
         HealthFacilityCsv invalidCsvData = TestHelper.getInvalidHealthFacilityCsvData();

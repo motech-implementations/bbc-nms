@@ -6,7 +6,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.VillageCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -35,7 +39,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -54,7 +58,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        villageCsvUploadHandler = new VillageCsvUploadHandler(stateRecordsDataService,
+        villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
                 districtRecordsDataService, talukaRecordsDataService,villageCsvRecordsDataService,
                 villageRecordsDataService, bulkUploadErrLogService);
     }
@@ -65,7 +69,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(villageCsvUploadHandler);
     }
@@ -80,7 +84,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(districtData);
         districtData.getTaluka().add(talukaData);
 
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         VillageCsv csvData = TestHelper.getVillageCsvData();
         VillageCsv invalidCsvData = TestHelper.getInvalidVillageCsvData();
@@ -98,7 +102,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(villageData);
         assertTrue(123L == villageData.getStateCode());
         assertTrue(456L == villageData.getDistrictCode());
-        assertTrue(8L ==  villageData.getTalukaCode());
+        assertTrue(8L == villageData.getTalukaCode());
         assertTrue(122656L == villageData.getVillageCode());
         assertTrue("Alampur".equals(villageData.getName()));
 
@@ -114,7 +118,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(villageUpdateData);
         assertTrue(123L == villageUpdateData.getStateCode());
         assertTrue(456L == villageUpdateData.getDistrictCode());
-        assertTrue(8L ==  villageData.getTalukaCode());
+        assertTrue(8L == villageData.getTalukaCode());
         assertTrue(122656L == villageUpdateData.getVillageCode());
         assertTrue("Ahamadabad".equals(villageUpdateData.getName()));
     }

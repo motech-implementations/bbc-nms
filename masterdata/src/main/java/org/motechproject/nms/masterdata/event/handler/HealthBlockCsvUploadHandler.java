@@ -5,7 +5,11 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -30,7 +34,7 @@ import java.util.Map;
 @Component
 public class HealthBlockCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private DistrictRecordsDataService districtRecordsDataService;
 
@@ -45,8 +49,8 @@ public class HealthBlockCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @Autowired
-    public HealthBlockCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
+    public HealthBlockCsvUploadHandler(StateService stateService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
         this.districtRecordsDataService = districtRecordsDataService;
         this.talukaRecordsDataService = talukaRecordsDataService;
         this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
@@ -136,7 +140,7 @@ public class HealthBlockCsvUploadHandler {
         Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }

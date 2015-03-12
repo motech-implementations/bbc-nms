@@ -10,9 +10,9 @@ import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -41,7 +41,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -57,7 +57,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateRecordsDataService,
+        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
                 districtRecordsDataService, talukaCsvRecordsDataService,talukaRecordsDataService, bulkUploadErrLogService);
     }
 
@@ -66,7 +66,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaCsvRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(talukaCsvUploadHandler);
     }
@@ -77,7 +77,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
         stateData.getDistrict().add(districtData);
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         TalukaCsv csvData = TestHelper.getTalukaCsvData();
         TalukaCsv invalidCsvData = TestHelper.getInvalidTalukaCsvData();

@@ -7,6 +7,7 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthSubFacilityCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -36,7 +37,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -61,7 +62,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateRecordsDataService,
+        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateService,
                 districtRecordsDataService, talukaRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityCsvRecordsDataService,
                 healthSubFacilityRecordsDataService,healthBlockRecordsDataService, bulkUploadErrLogService);
     }
@@ -74,7 +75,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthSubFacilityCsvHandler);
     }
@@ -93,7 +94,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         talukaData.getHealthBlock().add(healthBlockData);
         healthBlockData.getHealthFacility().add(healthFacilityData);
 
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         HealthSubFacilityCsv csvData = TestHelper.getHealthSubFacilityCsvData();
         HealthSubFacilityCsv invalidCsvData = TestHelper.getInvalidHealthSubFacilityCsvData();
@@ -110,7 +111,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthSubFacilityData);
         assertTrue(123L == healthSubFacilityData.getStateCode());
         assertTrue(456L == healthSubFacilityData.getDistrictCode());
-        assertTrue(8L ==  healthSubFacilityData.getTalukaCode());
+        assertTrue(8L == healthSubFacilityData.getTalukaCode());
         assertTrue(1002L == healthSubFacilityData.getHealthBlockCode());
         assertTrue(1111L == healthSubFacilityData.getHealthFacilityCode());
         assertTrue(9001L == healthSubFacilityData.getHealthSubFacilityCode());

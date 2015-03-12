@@ -6,7 +6,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthBlockCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -36,7 +40,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -55,7 +59,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateRecordsDataService,
+        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateService,
                 districtRecordsDataService, talukaRecordsDataService,healthBlockCsvRecordsDataService,
                 healthBlockRecordsDataService, bulkUploadErrLogService);
     }
@@ -66,7 +70,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaRecordsDataService);
         assertNotNull(talukaRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthBlockCsvUploadHandler);
     }
@@ -81,7 +85,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(districtData);
         districtData.getTaluka().add(talukaData);
 
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         HealthBlockCsv csvData = TestHelper.getHealthBlockCsvData();
         HealthBlockCsv invalidCsvData = TestHelper.getInvalidHealthBlockCsvData();
@@ -98,7 +102,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthBlockeData);
         assertTrue(123L == healthBlockeData.getStateCode());
         assertTrue(456L == healthBlockeData.getDistrictCode());
-        assertTrue(8L ==  healthBlockeData.getTalukaCode());
+        assertTrue(8L == healthBlockeData.getTalukaCode());
         assertTrue(1002L == healthBlockeData.getHealthBlockCode());
         assertTrue("Gangiri".equals(healthBlockeData.getName()));
 

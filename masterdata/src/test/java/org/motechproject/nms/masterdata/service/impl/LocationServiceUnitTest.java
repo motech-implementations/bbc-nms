@@ -7,6 +7,7 @@ import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.StateService;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
@@ -19,7 +20,7 @@ public class LocationServiceUnitTest {
     private LocationService locationService;
 
     @Mock
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Mock
     private DistrictRecordsDataService districtRecordsDataService;
@@ -42,7 +43,7 @@ public class LocationServiceUnitTest {
     @Before
     public void setUp(){
         initMocks(this);
-        locationService = new LocationServiceImpl(stateRecordsDataService,districtRecordsDataService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
+        locationService = new LocationServiceImpl(stateService,districtRecordsDataService,talukaRecordsDataService,healthBlockRecordsDataService,villageRecordsDataService,healthFacilityRecordsDataService,healthSubFacilityRecordsDataService);
     }
 
     @Test
@@ -54,7 +55,7 @@ public class LocationServiceUnitTest {
         District districtData = TestHelper.getDistrictData();
         districtData.setId(1L);
 
-        when(stateRecordsDataService.findById(stateData.getId())).thenReturn(stateData);
+        when(stateService.findById(stateData.getId())).thenReturn(stateData);
         when(districtRecordsDataService.findById(districtData.getId())).thenReturn(districtData);
         when(districtRecordsDataService.findDistrictByParentCode(districtData.getStateCode(), districtData.getDistrictCode())).thenReturn(districtData);
 
@@ -71,7 +72,7 @@ public class LocationServiceUnitTest {
         District districtData = TestHelper.getDistrictData();
         districtData.setId(1L);
 
-        when(stateRecordsDataService.findById(1L)).thenReturn(stateData);
+        when(stateService.findById(1L)).thenReturn(stateData);
         when(districtRecordsDataService.findById(1L)).thenReturn(null);
 
         assertFalse(locationService.validateLocation(1L, 1L));
@@ -86,7 +87,7 @@ public class LocationServiceUnitTest {
         District districtData = TestHelper.getDistrictData();
         districtData.setId(1L);
 
-        when(stateRecordsDataService.findById(1L)).thenReturn(null);
+        when(stateService.findById(1L)).thenReturn(null);
         when(districtRecordsDataService.findById(1L)).thenReturn(districtData);
 
         assertFalse(locationService.validateLocation(1L, 1L));
@@ -101,7 +102,7 @@ public class LocationServiceUnitTest {
         District districtData = TestHelper.getDistrictData();
         districtData.setId(1L);
 
-        when(stateRecordsDataService.findById(stateData.getId())).thenReturn(null);
+        when(stateService.findById(stateData.getId())).thenReturn(null);
         when(districtRecordsDataService.findById(districtData.getId())).thenReturn(null);
 
         assertFalse(locationService.validateLocation(1L, 1L));
@@ -112,7 +113,7 @@ public class LocationServiceUnitTest {
 
         State stateData = getStateData();
 
-        when(stateRecordsDataService.findRecordByStateCode(123L)).thenReturn(stateData);
+        when(stateService.findRecordByStateCode(123L)).thenReturn(stateData);
 
         assertNotNull(locationService.getStateByCode(stateData.getStateCode()));
         assertTrue(123L == locationService.getStateByCode(stateData.getStateCode()).getStateCode());
@@ -124,7 +125,7 @@ public class LocationServiceUnitTest {
         State stateData = getStateData();
         District districtData = getDistrictData();
 
-        when(stateRecordsDataService.findById(1L)).thenReturn(stateData);
+        when(stateService.findById(1L)).thenReturn(stateData);
         when(districtRecordsDataService.findDistrictByParentCode(456L, 123L)).thenReturn(districtData);
 
         assertNotNull(locationService.getDistrictByCode(stateData.getId(), districtData.getDistrictCode()));
@@ -174,7 +175,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getHealthBlockByCode(1L, 789L));
         assertTrue(123L == locationService.getHealthBlockByCode(1L,789L).getStateCode());
         assertTrue(456L == locationService.getHealthBlockByCode(1L,789L).getDistrictCode());
-        assertTrue(8L == locationService.getHealthBlockByCode(1L,789L).getTalukaCode());
+        assertTrue(8L == locationService.getHealthBlockByCode(1L, 789L).getTalukaCode());
         assertTrue(789L == locationService.getHealthBlockByCode(1L,789L).getHealthBlockCode());
     }
 
@@ -243,7 +244,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getHealthFacilityByCode(1L, 321l));
         assertTrue(123L == locationService.getHealthFacilityByCode(1L, 321l).getStateCode());
         assertTrue(456L == locationService.getHealthFacilityByCode(1L,321l).getDistrictCode() );
-        assertTrue(8L == locationService.getHealthFacilityByCode(1L,321l).getTalukaCode());
+        assertTrue(8L == locationService.getHealthFacilityByCode(1L, 321l).getTalukaCode());
         assertTrue(789L == locationService.getHealthFacilityByCode(1L,321l).getHealthBlockCode());
         assertTrue(321L == locationService.getHealthFacilityByCode(1L,321l).getHealthFacilityCode());
     }
@@ -296,7 +297,7 @@ public class LocationServiceUnitTest {
 
         State stateData = getStateData();
 
-        when(stateRecordsDataService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
         assertNotNull(locationService.getMaCappingByCode(stateData.getStateCode()));
         assertTrue(100 == locationService.getMaCappingByCode(stateData.getStateCode()).intValue());
     }
@@ -306,7 +307,7 @@ public class LocationServiceUnitTest {
 
         State stateData = getStateData();
 
-        when(stateRecordsDataService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
         assertNotNull(locationService.getMkCappingByCode(stateData.getStateCode()));
         assertTrue(200 == locationService.getMkCappingByCode(stateData.getStateCode()).intValue());
     }

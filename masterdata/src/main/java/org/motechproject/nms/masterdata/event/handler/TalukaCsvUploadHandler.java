@@ -9,9 +9,9 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -36,7 +36,7 @@ import java.util.Map;
 @Component
 public class TalukaCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private DistrictRecordsDataService districtRecordsDataService;
 
@@ -49,8 +49,8 @@ public class TalukaCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
     @Autowired
-    public TalukaCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
+    public TalukaCsvUploadHandler(StateService stateService, DistrictRecordsDataService districtRecordsDataService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
         this.districtRecordsDataService = districtRecordsDataService;
         this.talukaCsvRecordsDataService = talukaCsvRecordsDataService;
         this.talukaRecordsDataService = talukaRecordsDataService;
@@ -137,7 +137,7 @@ public class TalukaCsvUploadHandler {
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
         Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }

@@ -10,7 +10,7 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -41,7 +41,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
     private DistrictRecordsDataService districtRecordsDataService;
@@ -54,14 +54,14 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvRecordsDataService,
-                districtRecordsDataService, stateRecordsDataService, bulkUploadErrLogService);
+                districtRecordsDataService, stateService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(districtCsvRecordsDataService);
         assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
 
@@ -69,7 +69,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     public void testDistrictCsvHandler() {
 
         State stateData = TestHelper.getStateData();
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         DistrictCsv csvData = TestHelper.getDistrictCsvData();
         DistrictCsv invalidCsvData = TestHelper.getInvalidDistrictCsvData();

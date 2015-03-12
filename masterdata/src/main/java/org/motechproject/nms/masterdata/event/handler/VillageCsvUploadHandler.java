@@ -6,6 +6,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -30,7 +31,7 @@ import java.util.Map;
 @Component
 public class VillageCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private DistrictRecordsDataService districtRecordsDataService;
 
@@ -45,8 +46,8 @@ public class VillageCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
+    public VillageCsvUploadHandler(StateService stateService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
         this.districtRecordsDataService = districtRecordsDataService;
         this.talukaRecordsDataService = talukaRecordsDataService;
         this.villageCsvRecordsDataService = villageCsvRecordsDataService;
@@ -135,7 +136,7 @@ public class VillageCsvUploadHandler {
         Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
         Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }

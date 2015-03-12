@@ -8,7 +8,7 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
 import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -40,7 +40,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
     private StateCsvRecordsDataService stateCsvRecordsService;
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private StateCsvUploadHandler stateCsvUploadHandler;
 
@@ -48,14 +48,14 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-       stateCsvUploadHandler = new StateCsvUploadHandler(stateRecordsDataService,
+       stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
                stateCsvRecordsService,bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(stateCsvRecordsService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
 
@@ -75,7 +75,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
 
-        State stateData = stateRecordsDataService.findRecordByStateCode(123L);
+        State stateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(stateData);
         assertTrue(123L == stateData.getStateCode());
@@ -89,7 +89,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
-        State updatedStateData = stateRecordsDataService.findRecordByStateCode(123L);
+        State updatedStateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(updatedStateData);
         assertTrue(123L == updatedStateData.getStateCode());

@@ -9,7 +9,7 @@ import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -39,17 +39,17 @@ public class DistrictCsvUploadHandler {
 
     private DistrictRecordsDataService districtRecordsDataService;
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     @Autowired
-    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictRecordsDataService districtRecordsDataService, StateRecordsDataService stateRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictRecordsDataService districtRecordsDataService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.districtCsvRecordsDataService = districtCsvRecordsDataService;
         this.districtRecordsDataService = districtRecordsDataService;
-        this.stateRecordsDataService = stateRecordsDataService;
+        this.stateService = stateService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -130,7 +130,7 @@ public class DistrictCsvUploadHandler {
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
@@ -156,9 +156,9 @@ public class DistrictCsvUploadHandler {
             logger.info("District data is successfully updated.");
         } else {
 
-            State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
+            State stateData = stateService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
-            stateRecordsDataService.update(stateData);
+            stateService.update(stateData);
             logger.info("District data is successfully inserted.");
         }
     }
