@@ -151,7 +151,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getTalukaByCode(1L,8L));
         assertTrue(123L == locationService.getTalukaByCode(1L, 8L).getStateCode());
         assertTrue(456L == locationService.getTalukaByCode(1L, 8L).getDistrictCode());
-        assertTrue("t123".equals(locationService.getTalukaByCode(1L, 8L).getTalukaCode()));
+        assertTrue(8L == locationService.getTalukaByCode(1L, 8L).getTalukaCode());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getHealthBlockByCode(1L, 789L));
         assertTrue(123L == locationService.getHealthBlockByCode(1L,789L).getStateCode());
         assertTrue(456L == locationService.getHealthBlockByCode(1L,789L).getDistrictCode());
-        assertTrue("t123".equals(locationService.getHealthBlockByCode(1L,789L).getTalukaCode()));
+        assertTrue(8L == locationService.getHealthBlockByCode(1L,789L).getTalukaCode());
         assertTrue(789L == locationService.getHealthBlockByCode(1L,789L).getHealthBlockCode());
     }
 
@@ -207,7 +207,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getVillageByCode(talukaData.getId(),789L));
         assertTrue(123L == locationService.getVillageByCode(talukaData.getId(), 789L).getStateCode());
         assertTrue(456L == locationService.getVillageByCode(talukaData.getId(),789L).getDistrictCode());
-        assertTrue("t123".equals(locationService.getVillageByCode(talukaData.getId(),789L).getTalukaCode()));
+        assertTrue(8L == locationService.getVillageByCode(talukaData.getId(),789L).getTalukaCode());
         assertTrue(789L == locationService.getVillageByCode(talukaData.getId(), 789L).getVillageCode());
     }
 
@@ -243,7 +243,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getHealthFacilityByCode(1L, 321l));
         assertTrue(123L == locationService.getHealthFacilityByCode(1L, 321l).getStateCode());
         assertTrue(456L == locationService.getHealthFacilityByCode(1L,321l).getDistrictCode() );
-        assertTrue("t123".equals(locationService.getHealthFacilityByCode(1L,321l).getTalukaCode()));
+        assertTrue(8L == locationService.getHealthFacilityByCode(1L,321l).getTalukaCode());
         assertTrue(789L == locationService.getHealthFacilityByCode(1L,321l).getHealthBlockCode());
         assertTrue(321L == locationService.getHealthFacilityByCode(1L,321l).getHealthFacilityCode());
     }
@@ -281,7 +281,7 @@ public class LocationServiceUnitTest {
         assertNotNull(locationService.getHealthSubFacilityByCode(1L, 987L));
         assertTrue(123L == locationService.getHealthSubFacilityByCode(1L, 987L).getStateCode());
         assertTrue(456L == locationService.getHealthSubFacilityByCode(1L, 987L).getDistrictCode() );
-        assertTrue("t123".equals(locationService.getHealthSubFacilityByCode(1L, 987L).getTalukaCode()));
+        assertTrue(8L == locationService.getHealthSubFacilityByCode(1L, 987L).getTalukaCode());
         assertTrue(789L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthBlockCode());
         assertTrue(321L == locationService.getHealthSubFacilityByCode(1L, 987L).getHealthFacilityCode());
     }
