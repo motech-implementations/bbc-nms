@@ -176,10 +176,7 @@ public interface CoursePopulateService {
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
      * @param questionNo refers to index of question in a chapter.. 1,2..4
-     * @param optionNo refers to correct answer option of the question
-     * @return returns true, if the corresponding question has the same answer
-     *         option as provided, else false
+     * @return correct answer option of the question
      */
-    public boolean matchAnswerOption(Integer chapterNo, Integer questionNo,
-            Integer optionNo);
+    public int getCorrectAnswerOption(Integer chapterNo, Integer questionNo);
 }

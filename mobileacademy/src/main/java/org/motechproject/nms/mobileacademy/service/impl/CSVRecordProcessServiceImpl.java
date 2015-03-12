@@ -79,7 +79,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
         Map<Integer, List<CourseContentCsv>> mapForAddRecords = new HashMap<Integer, List<CourseContentCsv>>();
         Map<String, List<CourseContentCsv>> mapForModifyRecords = new HashMap<String, List<CourseContentCsv>>();
-        Map<Integer, List<CourseContentCsv>> mapForDeleteRecords = new HashMap<Integer, List<CourseContentCsv>>();
 
         List<Integer> listOfExistingLlc = courseProcessedContentService
                 .getListOfAllExistingLlcs();
@@ -113,31 +112,18 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     continue;
                 }
 
-                if (MobileAcademyConstants.COURSE_DEL
-                        .equalsIgnoreCase(courseContentCsv.getOperation())) {
-                    putRecordInDeleteMap(mapForDeleteRecords, courseContentCsv);
+                int languageLocCode = Integer.parseInt(courseContentCsv
+                        .getLanguageLocationCode());
+                if (listOfExistingLlc.contains(languageLocCode)) {
+                    putRecordInModifyMap(mapForModifyRecords, courseContentCsv);
                     LOGGER.debug(
-                            "Record moved to Delete Map for Content ID: {}",
+                            "Record moved to Modify Map for Content ID: {}",
                             courseContentCsv.getContentId());
                 } else {
-                    int languageLocCode = Integer.parseInt(courseContentCsv
-                            .getLanguageLocationCode());
-                    if (listOfExistingLlc.contains(languageLocCode)) {
-                        courseContentCsv
-                                .setOperation(MobileAcademyConstants.COURSE_MOD);
-                        putRecordInModifyMap(mapForModifyRecords,
-                                courseContentCsv);
-                        LOGGER.debug(
-                                "Record moved to Modify Map for Content ID: {}",
-                                courseContentCsv.getContentId());
-                    } else {
-                        courseContentCsv
-                                .setOperation(MobileAcademyConstants.COURSE_ADD);
-                        putRecordInAddMap(mapForAddRecords, courseContentCsv);
-                        LOGGER.debug(
-                                "Record moved to Addition Map for Content ID: {}",
-                                courseContentCsv.getContentId());
-                    }
+                    putRecordInAddMap(mapForAddRecords, courseContentCsv);
+                    LOGGER.debug(
+                            "Record moved to Addition Map for Content ID: {}",
+                            courseContentCsv.getContentId());
                 }
                 recordIterator.remove();
             }
@@ -146,8 +132,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         processAddRecords(mapForAddRecords, errorFileName, result,
                 userDetailsDTO);
         processModificationRecords(mapForModifyRecords, errorFileName, result,
-                userDetailsDTO);
-        processDeleteRecords(mapForDeleteRecords, errorFileName, result,
                 userDetailsDTO);
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(
@@ -192,25 +176,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             List<CourseContentCsv> listOfRecords = new ArrayList<CourseContentCsv>();
             listOfRecords.add(courseContentCsv);
             mapForModifyRecords.put(key, listOfRecords);
-        }
-    }
-
-    /*
-     * This function adds the records into a Map having LLC of record as key
-     * 
-     * The map will be process afterwards for processing "DEL"ete Records
-     */
-    private void putRecordInDeleteMap(
-            Map<Integer, List<CourseContentCsv>> mapForDeleteRecords,
-            CourseContentCsv courseContentCsv) {
-        int languageLocCode = Integer.parseInt(courseContentCsv
-                .getLanguageLocationCode());
-        if (mapForDeleteRecords.containsKey(languageLocCode)) {
-            mapForDeleteRecords.get(languageLocCode).add(courseContentCsv);
-        } else {
-            List<CourseContentCsv> listOfRecords = new ArrayList<CourseContentCsv>();
-            listOfRecords.add(courseContentCsv);
-            mapForDeleteRecords.put(languageLocCode, listOfRecords);
         }
     }
 
@@ -853,164 +818,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     /*
-     * This function takes the list of CourseContentCsv records against which
-     * the file need to be deleted from the course
-     */
-    public void processDeleteRecords(
-            Map<Integer, List<CourseContentCsv>> mapForDeleteRecords,
-            String errorFileName, CsvProcessingSummary result,
-            UserDetailsDTO userDetailsDTO) {
-
-        BulkUploadError errorDetail = new BulkUploadError();
-        List<Integer> listOfExistingtLLC = courseProcessedContentService
-                .getListOfAllExistingLlcs();
-
-        if (!mapForDeleteRecords.isEmpty()) {
-            Iterator<Integer> distictLLCIterator = mapForDeleteRecords.keySet()
-                    .iterator();
-
-            while (distictLLCIterator.hasNext()) {
-
-                Integer languageLocCode = distictLLCIterator.next();
-                CourseFlags courseFlags = new CourseFlags();
-                courseFlags.resetTheFlags();
-
-                List<CourseContentCsv> courseContentCsvs = mapForDeleteRecords
-                        .get(languageLocCode);
-
-                if (CollectionUtils.isNotEmpty(listOfExistingtLLC)) {
-                    if (!listOfExistingtLLC.contains(languageLocCode)) {
-                        deleteCourseRawContentsByList(courseContentCsvs, false,
-                                result);
-                        LOGGER.info(
-                                "No record exists in content processed table for LLC: {}",
-                                languageLocCode);
-                        continue;
-                    }
-                }
-
-                if (courseContentCsvs.size() < MobileAcademyConstants.MIN_FILES_PER_COURSE) {
-                    LOGGER.warn(
-                            "Sufficient records not recieved to delete the course for LLC: {}",
-                            languageLocCode);
-                    bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            languageLocCode.toString(),
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_DEL,
-                                                    languageLocCode)));
-                    distictLLCIterator.remove();
-                    deleteCourseRawContentsByList(courseContentCsvs, true,
-                            result);
-                    continue;
-                }
-
-                Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
-                        .iterator();
-                while (courseRawContentsIterator.hasNext()) {
-                    CourseContentCsv courseContentCsv = courseRawContentsIterator
-                            .next();
-                    Record record = new Record();
-                    try {
-                        validateContentName(courseContentCsv, record);
-                    } catch (DataValidationException exc) {
-                        LOGGER.warn(
-                                "No record exists in content processed table for LLC: {}",
-                                languageLocCode);
-                        processError(errorDetail, exc,
-                                courseContentCsv.getContentId());
-
-                        bulkUploadErrLogService.writeBulkUploadErrLog(
-                                errorFileName, errorDetail);
-
-                        result.incrementFailureCount();
-                        courseContentCsvService.delete(courseContentCsv);
-                        courseRawContentsIterator.remove();
-                        continue;
-                    }
-                    checkRecordTypeAndMarkCourseFlag(record, courseFlags);
-                }
-
-                if (courseFlags.hasCompleteCourseArrived()) {
-                    courseProcessedContentService
-                            .deleteRecordsByLlc(languageLocCode);
-                    // If this was the last LLC in CPC
-                    if (CollectionUtils.isEmpty(courseProcessedContentService
-                            .getListOfAllExistingLlcs())) {
-                        coursePopulateService.updateCourseState(
-                                CourseUnitState.Inactive, userDetailsDTO);
-                        deleteChapterContentTable();
-                    }
-                    LOGGER.info("Course Deleted successfully for LLC: {}",
-                            languageLocCode);
-                    deleteCourseRawContentsByList(courseContentCsvs, false,
-                            result);
-                } else {
-                    LOGGER.warn(
-                            "Not all the records found to delete the course for LLC: {}",
-                            languageLocCode);
-                    bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            languageLocCode.toString(),
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INCOMPLETE_RECORDS_FOR_DEL,
-                                                    languageLocCode)));
-                    deleteCourseRawContentsByList(courseContentCsvs, true,
-                            result);
-                }
-                distictLLCIterator.remove();
-            }
-        }
-    }
-
-    private void deleteChapterContentTable() {
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
-        Iterator<ChapterContent> chapterContentsIterator = chapterContents
-                .iterator();
-        while (chapterContentsIterator.hasNext()) {
-            chapterContentDataService.delete(chapterContentsIterator.next());
-        }
-    }
-
-    /*
-     * this function checks the type of file to which record points to and based
-     * on that it sets the flag for successful arrival of that file
-     */
-    private void checkRecordTypeAndMarkCourseFlag(Record record,
-            CourseFlags courseFlags) {
-        if (record.getType() == FileType.LESSON_CONTENT) {
-            courseFlags.markLessonContent(record.getChapterId(),
-                    record.getLessonId());
-        } else if (record.getType() == FileType.LESSON_END_MENU) {
-            courseFlags.markLessonEndMenu(record.getChapterId(),
-                    record.getLessonId());
-        } else if (record.getType() == FileType.QUIZ_HEADER) {
-            courseFlags.markQuizHeader(record.getChapterId());
-        } else if (record.getType() == FileType.QUESTION_CONTENT) {
-            courseFlags.markQuestionContent(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.CORRECT_ANSWER) {
-            courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.WRONG_ANSWER) {
-            courseFlags.markQuestionWrongAnswer(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            courseFlags.markChapterEndMenu(record.getChapterId());
-        } else if (record.getType() == FileType.SCORE) {
-            courseFlags.markScoreFile(record.getChapterId(),
-                    record.getScoreID());
-        }
-    }
-
-    /*
      * this function updates the correct option for different questions in the
      * mTraining module.
      */
@@ -1183,7 +990,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     if ((!questionContent.getAudioFile().equals(
                             record.getFileName()))
                             || !answerOptionMatcher(record)) {
-                        LOGGER.debug("Correct Option or fileName doesn't macth");
+                        LOGGER.debug("Correct Answer Option or fileName doesn't match");
                         LOGGER.debug(
                                 MobileAcademyConstants.LOG_MSG_ORIGINAL_FILE_NAME,
                                 questionContent.getAudioFile());
@@ -1254,8 +1061,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         int answerNo = record.getAnswerId();
         int chapterNo = record.getChapterId();
 
-        return coursePopulateService.matchAnswerOption(chapterNo, questionNo,
-                answerNo);
+        return (answerNo == coursePopulateService.getCorrectAnswerOption(
+                chapterNo, questionNo));
     }
 
     /*
@@ -1388,8 +1195,16 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                         "METADETA");
             } else {
-                record.setAnswerId(ParseDataHelper.parseInt("",
-                        metaData.substring(metaData.indexOf(':') + 1), true));
+                int answerNo = ParseDataHelper.parseInt("",
+                        metaData.substring(metaData.indexOf(':') + 1), true);
+                if (verifyRange(answerNo, 1, 2)) {
+                    record.setAnswerId(answerNo);
+                } else {
+                    throw new DataValidationException(null,
+                            ErrorCategoryConstants.INCONSISTENT_DATA,
+                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                            "METADETA");
+                }
             }
         }
 
