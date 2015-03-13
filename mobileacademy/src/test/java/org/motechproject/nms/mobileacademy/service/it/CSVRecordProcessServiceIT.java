@@ -593,11 +593,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
 
-        /*
-         * CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
-         * .get(0);
-         */
-
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
