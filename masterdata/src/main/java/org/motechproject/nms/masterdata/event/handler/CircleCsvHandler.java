@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
@@ -8,10 +9,12 @@ import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.domain.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -57,22 +60,27 @@ public class CircleCsvHandler {
 
         CircleCsv record = null;
         Circle persistentRecord = null;
-        String userName = null;
-
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary result = new CsvProcessingSummary();
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
-        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
+
+        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+        BulkUploadError errorDetail = new BulkUploadError();
+        errorDetail.setCsvName(csvFileName);
+        errorDetail.setTimeOfUpload(timeStamp);
+        errorDetail.setRecordType(RecordType.CIRCLE);
+
+        BulkUploadStatus uploadStatus = new BulkUploadStatus();
+        uploadStatus.setBulkUploadFileName(csvFileName);
+        uploadStatus.setTimeOfUpload(timeStamp);
 
         for (Long id : createdIds) {
             try {
                 record = circleCsvService.getRecord(id);
 
                 if (record != null) {
-                    userName = record.getOwner();
+                    uploadStatus.setUploadedBy(record.getOwner());
                     Circle newRecord = mapCircleFrom(record);
                     persistentRecord = circleService.getRecordByCode(newRecord.getCode());
 
@@ -85,28 +93,28 @@ public class CircleCsvHandler {
                         circleService.create(newRecord);
                         logger.info("Record created successfully for circlecode {}", newRecord.getCode());
                     }
-                    result.incrementSuccessCount();
+                    uploadStatus.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the CircleCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                    result.incrementFailureCount();
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                    uploadStatus.incrementFailureCount();
                 }
             } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                result.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                uploadStatus.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetail.setRecordDetails("Exception occurred");
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                result.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                uploadStatus.incrementFailureCount();
             } finally {
                 if (null != record) {
                     circleCsvService.delete(record);
@@ -114,7 +122,7 @@ public class CircleCsvHandler {
             }
         }
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, errorFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadStatus);
         logger.info("Finished processing CircleCsv-import success");
     }
 
