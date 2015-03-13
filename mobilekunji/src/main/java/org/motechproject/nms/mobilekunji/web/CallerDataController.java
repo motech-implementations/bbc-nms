@@ -1,13 +1,11 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
-import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionCall;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
-import org.omg.CORBA.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +39,6 @@ public class CallerDataController {
 
     /**
      * Maps request for caller data detail controller
-     * @param request Http request object from the client
      * @param errors Binding error object
      * @return Json object for user detail.
      */
@@ -55,36 +52,19 @@ public class CallerDataController {
         if (errors.hasErrors()) {
             return null;
         }
-        Long msIsdn = ParseDataHelper.parseLong("",msisdn,true);
-        String operatorCode = ParseDataHelper.parseString("operatorCode",operator,true);
-        String circleCode = ParseDataHelper.parseString("circleCode",circle,true);
-        Long callId = ParseDataHelper.parseLong("callId", callid, true);
-
+        String msIsdn = ParseDataHelper.validateAndTrimMsisdn("MsIsdn", msisdn);
+        String operatorCode = ParseDataHelper.validateAndParseString("operatorCode", operator, true);
+        String circleCode = ParseDataHelper.validateAndParseString("circleCode", circle, true);
+        Long callId = ParseDataHelper.validateAndParseLong("callId", callid, true);
         
-        UserDetailApiResponse response = userDetailsService.getUserDetails(msisdn, circle,operator,callId);
+        UserDetailApiResponse response = userDetailsService.getUserDetails(msIsdn, circleCode,operatorCode,callId);
         return response.toString();
-
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
     public void saveCallDetails(HttpServletRequest request){
 
-        ServiceConsumptionCall consumptionCall = getServiceConsumptionCall();
-
-        saveCallDetailsService.saveCallDetails();
-    }
-
-    private ServiceConsumptionCall getServiceConsumptionCall() {
-
-        ServiceConsumptionCall consumptionCall = new ServiceConsumptionCall();
-        consumptionCall.setCircle("");
-        consumptionCall.setCallId(0L);
-        consumptionCall.setNmsFlwId(0L);
-        consumptionCall.setCallStartTime(null);
-        consumptionCall.setCallEndTime(null);
-
-        return consumptionCall;
     }
 
 }

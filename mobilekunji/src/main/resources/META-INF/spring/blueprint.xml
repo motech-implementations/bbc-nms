@@ -31,4 +31,11 @@
     <osgi:service ref="saveCallDetailsService"
                   interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService" />
 
+    <osgi:service ref="serviceConsumptionFlwService"
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService" />
+
+    <osgi:service ref="serviceConsumptionCallServiceImpl"
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService" />
+
+
 </beans>

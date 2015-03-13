@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.ut.domain;
 
 import org.junit.Test;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
+
 import static org.junit.Assert.assertEquals;
 /**
  * Created by abhishek on 12/3/15.
