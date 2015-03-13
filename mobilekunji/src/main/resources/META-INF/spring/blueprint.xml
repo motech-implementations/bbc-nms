@@ -25,4 +25,10 @@
     <osgi:service ref="contentUploadCsvService"
                   interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService" />
 
+    <osgi:service ref="userDetailsService"
+                  interface="org.motechproject.nms.mobilekunji.service.UserDetailsService" />
+
+    <osgi:service ref="saveCallDetailsService"
+                  interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService" />
+
 </beans>

@@ -15,7 +15,7 @@ public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
     private Long nmsFlwId;
 
     @Field
-    private Integer endofUsagePromt;
+    private Integer endOfUsagePrompt;
 
     @Field
     private Boolean welcomePromptFlag;
@@ -31,12 +31,12 @@ public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
         this.nmsFlwId = nmsFlwId;
     }
 
-    public Integer getEndofUsagePromt() {
-        return endofUsagePromt;
+    public Integer getEndOfUsagePrompt() {
+        return endOfUsagePrompt;
     }
 
-    public void setEndofUsagePromt(Integer endofUsagePromt) {
-        this.endofUsagePromt = endofUsagePromt;
+    public void setEndOfUsagePrompt(Integer endOfUsagePrompt) {
+        this.endOfUsagePrompt = endOfUsagePrompt;
     }
 
     public Boolean getWelcomePromptFlag() {
@@ -59,7 +59,7 @@ public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
     public String toString() {
         return "ServiceConsumptionFrontLineWorker{" +
                 "nmsFlwId=" + nmsFlwId +
-                ", endofUsagePromt=" + endofUsagePromt +
+                ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", welcomePromptFlag=" + welcomePromptFlag +
                 ", currentUsageInPulses=" + currentUsageInPulses +
                 '}';

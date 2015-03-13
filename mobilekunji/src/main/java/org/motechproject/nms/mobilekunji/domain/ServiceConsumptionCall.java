@@ -29,8 +29,8 @@ public class ServiceConsumptionCall extends MdsEntity {
     @Field
     private DateTime callEndTime;
 
-    @Field
     private Set<CardContent> cardContent;
+
 
     public Long getCallId() {
         return callId;
