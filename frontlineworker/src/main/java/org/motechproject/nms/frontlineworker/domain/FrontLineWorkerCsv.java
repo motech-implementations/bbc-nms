@@ -54,9 +54,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
     private String adhaarNo;
 
     @Field
-    private String operation;
-
-    @Field
     private String isValid;
 
     public FrontLineWorkerCsv() {
@@ -65,7 +62,7 @@ public class FrontLineWorkerCsv extends MdsEntity {
     public FrontLineWorkerCsv(String villageCode, String flwId, String stateCode, String contactNo, String name,
                               String type, String districtCode, String talukaCode, String healthBlockCode,
                               String phcCode, String subCentreCode, String ashaNumber, String isValidated,
-                              String adhaarNo, String operation, String isValid) {
+                              String adhaarNo, String isValid) {
         this.villageCode = villageCode;
         this.flwId = flwId;
         this.stateCode = stateCode;
@@ -80,7 +77,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.ashaNumber = ashaNumber;
         this.isValidated = isValidated;
         this.adhaarNo = adhaarNo;
-        this.operation = operation;
         this.isValid = isValid;
     }
 
@@ -194,14 +190,6 @@ public class FrontLineWorkerCsv extends MdsEntity {
 
     public void setAdhaarNo(String adhaarNo) {
         this.adhaarNo = adhaarNo;
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
     }
 
     public String getIsValid() {

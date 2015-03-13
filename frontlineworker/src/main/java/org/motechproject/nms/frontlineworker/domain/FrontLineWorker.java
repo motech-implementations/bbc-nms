@@ -47,25 +47,25 @@ public class FrontLineWorker extends MdsEntity {
     @Field(required = true)
     private Long stateCode;
 
-    @Field(required = true, name = "state_Id")
+    @Field(required = true, name = "state_id")
     private State stateId;
 
-    @Field(required = true, name = "district_Id")
+    @Field(required = true, name = "district_id")
     private District districtId;
 
-    @Field(name = "taluka_Id")
+    @Field(name = "taluka_id")
     private Taluka talukaId;
 
-    @Field(name = "healthBlock_Id")
+    @Field(name = "healthBlock_id")
     private HealthBlock healthBlockId;
 
-    @Field(name = "healthFacility_Id")
+    @Field(name = "phc_id")
     private HealthFacility healthFacilityId;
 
-    @Field(name = "healthSubFacility_Id")
+    @Field(name = "subCentre_id")
     private HealthSubFacility healthSubFacilityId;
 
-    @Field(name = "village_Id")
+    @Field(name = "village_id")
     private Village villageId;
 
     @UIDisplayable(position = 7)

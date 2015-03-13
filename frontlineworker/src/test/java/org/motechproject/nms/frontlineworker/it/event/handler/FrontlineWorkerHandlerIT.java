@@ -287,7 +287,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545494");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -354,8 +353,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990545495");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
-
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setTalukaCode("taluka");
@@ -421,7 +418,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("99905454950");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -488,7 +484,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("99905");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -561,8 +556,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setDistrictCode("123");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -600,8 +593,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setDistrictCode("122");//Invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -641,8 +632,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setTalukaCode("1233");//Invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -682,8 +671,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setVillageCode("1233");//invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -724,8 +711,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setHealthBlockCode("1233");//invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -767,8 +752,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setPhcCode("12344");//Invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -811,8 +794,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123455");//Invalid
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -855,8 +836,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -898,8 +877,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -940,8 +917,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -983,8 +958,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1026,8 +999,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1067,8 +1038,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setVillageCode("1234");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1107,8 +1076,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setHealthBlockCode("1234");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1149,8 +1116,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setPhcCode("12345");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1192,8 +1157,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setSubCentreCode("123456");
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
-        frontLineWorkerCsv.setOperation("ADD");
-
 
         FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
         assertNotNull(flwCsvRecordsDataService);
@@ -1228,7 +1191,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("1234567890");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Jyoti");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1267,7 +1229,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setContactNo("1234567890");
         frontLineWorkerCsvNew.setType("USHA");
         frontLineWorkerCsvNew.setName("Jyoti");
-        frontLineWorkerCsvNew.setOperation("ADD");
 
         frontLineWorkerCsvNew.setStateCode("12");
         frontLineWorkerCsvNew.setDistrictCode("123");
@@ -1318,7 +1279,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("1234567890");
         frontLineWorkerCsv.setType("ANM");
         frontLineWorkerCsv.setName("Jyoti");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1404,7 +1364,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("22222");
         frontLineWorkerCsv.setType("AWW");
         frontLineWorkerCsv.setName("Jaya");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1496,7 +1455,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("33333");
         frontLineWorkerCsv.setType("AWW");
         frontLineWorkerCsv.setName("Sushma");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1583,7 +1541,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("44444");
         frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setName("Rekha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1672,7 +1629,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("12345");
         frontLineWorkerCsv.setType("ANM");
         frontLineWorkerCsv.setName("Jyoti");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1761,7 +1717,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Anjali");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1811,7 +1766,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1857,7 +1811,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
@@ -1904,7 +1857,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setContactNo("9990");
         frontLineWorkerCsv.setType("USHA");
         frontLineWorkerCsv.setName("Etasha");
-        frontLineWorkerCsv.setOperation("ADD");
 
         frontLineWorkerCsv.setStateCode("12");
         frontLineWorkerCsv.setDistrictCode("123");
