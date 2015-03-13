@@ -28,6 +28,8 @@ public class BulkUploadStatus extends MdsEntity {
     private Integer numberOfFailedRecords;
 
     public BulkUploadStatus() {
+        this.numberOfSuccessfulRecords = 0;
+        this.numberOfFailedRecords = 0;
     }
 
     public BulkUploadStatus(String uploadedBy, String bulkUploadFileName, DateTime timeOfUpload, Integer numberOfFailedRecords, Integer numberOfSuccessfulRecords) {
@@ -78,4 +80,11 @@ public class BulkUploadStatus extends MdsEntity {
         this.numberOfFailedRecords = numberOfFailedRecords;
     }
 
+    public void incrementSuccessCount() {
+        numberOfSuccessfulRecords++;
+    }
+
+    public void incrementFailureCount() {
+        numberOfFailedRecords++;
+    }
 }
