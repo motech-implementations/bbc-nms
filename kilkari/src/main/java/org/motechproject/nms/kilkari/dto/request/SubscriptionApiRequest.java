@@ -1,9 +1,12 @@
-package org.motechproject.nms.kilkari.dto;
+package org.motechproject.nms.kilkari.dto.request;
 
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 
@@ -15,7 +18,7 @@ public class SubscriptionApiRequest {
     String operator;
     String circle;
     String callId;
-    String languageLocationCode;
+    Integer languageLocationCode;
     String subscriptionPack;
 
     public void setSubscriptionPack(String subscriptionPack) {
@@ -54,11 +57,11 @@ public class SubscriptionApiRequest {
         this.callId = callId;
     }
 
-    public String getLanguageLocationCode() {
+    public Integer getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(String languageLocationCode) {
+    public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -69,11 +72,12 @@ public class SubscriptionApiRequest {
     public Subscriber toSubscriber() {
         Subscriber subscriber = new Subscriber();
         subscriber.setMsisdn(this.callingNumber);
+        subscriber.setDeactivationReason(DeactivationReason.NONE);
 
-        subscriber.setLanguageLocationCode(Integer.parseInt(this.languageLocationCode));
+        subscriber.setLanguageLocationCode(this.languageLocationCode);
         if (this.subscriptionPack.equals(SubscriptionPack.PACK_48_WEEKS.toString())) {
             subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-            subscriber.setDob(new DateTime().plusDays(1));
+            subscriber.setDob(new DateTime());
         } else {
             subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
             subscriber.setLmp(new DateTime().minusMonths(3));
@@ -82,11 +86,16 @@ public class SubscriptionApiRequest {
     }
 
     public void validateMandatoryParameters() throws DataValidationException{
-        ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true);
+        ParseDataHelper.validateAndTrimMsisdn("callingNumber",
+                ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true));
         ParseDataHelper.validateAndParseString("operator", operator, true);
         ParseDataHelper.validateAndParseString("circle", circle, true);
         ParseDataHelper.validateAndParseString("callId", callId, true);
-        ParseDataHelper.validateAndParseString("languageLocationCode", languageLocationCode, true);
         ParseDataHelper.validateAndParseString("subscriptionPack", subscriptionPack, true);
+        if (languageLocationCode == null) {
+            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", languageLocationCode);
+            String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "languageLocationCode");
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
+        }
     }
 }

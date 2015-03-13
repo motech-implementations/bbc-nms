@@ -3,10 +3,6 @@ package org.motechproject.nms.mobileacademy.commons;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author nitin
- *
- */
 public class ChapterFlag {
 
     private int chapterNo;
@@ -31,18 +27,21 @@ public class ChapterFlag {
         this.chapterNo = chapterNo;
 
         List<LessonFlag> lessonFlags = new ArrayList<LessonFlag>();
-        for (int i = 1; i <= MobileAcademyConstants.NUM_OF_LESSONS; i++)
+        for (int i = 1; i <= MobileAcademyConstants.NUM_OF_LESSONS; i++) {
             lessonFlags.add(new LessonFlag(i));
+        }
         this.lessonFlags = lessonFlags;
 
         List<QuestionFlag> questionFlags = new ArrayList<QuestionFlag>();
-        for (int i = 1; i <= MobileAcademyConstants.NUM_OF_QUESTIONS; i++)
+        for (int i = 1; i <= MobileAcademyConstants.NUM_OF_QUESTIONS; i++) {
             questionFlags.add(new QuestionFlag(i));
+        }
         this.questionFlags = questionFlags;
 
         List<ScoreFlag> scoreFlags = new ArrayList<ScoreFlag>();
-        for (int i = 0; i <= MobileAcademyConstants.NUM_OF_SCORES; i++)
+        for (int i = 0; i <= MobileAcademyConstants.NUM_OF_SCORES; i++) {
             scoreFlags.add(new ScoreFlag(i));
+        }
         this.scoreFlags = scoreFlags;
     }
 
@@ -53,8 +52,9 @@ public class ChapterFlag {
     public LessonFlag getLessonFlag(int lessonNo) {
         LessonFlag lessonFlag = null;
         for (LessonFlag lessonFlagIterator : lessonFlags) {
-            if (lessonFlagIterator.getLessonNo() == lessonNo)
+            if (lessonFlagIterator.getLessonNo() == lessonNo) {
                 return lessonFlagIterator;
+            }
         }
         return lessonFlag;
     }
@@ -66,8 +66,9 @@ public class ChapterFlag {
     public QuestionFlag getQuestionFlag(int questionNo) {
         QuestionFlag questionFlag = null;
         for (QuestionFlag questionFlagIterator : questionFlags) {
-            if (questionFlagIterator.getQuestionNo() == questionNo)
+            if (questionFlagIterator.getQuestionNo() == questionNo) {
                 return questionFlagIterator;
+            }
         }
         return questionFlag;
     }
@@ -79,8 +80,9 @@ public class ChapterFlag {
     public ScoreFlag getScoreFlag(int scoreNo) {
         ScoreFlag scoreFlag = null;
         for (ScoreFlag scoreFlagIterator : scoreFlags) {
-            if (scoreFlagIterator.getScoreNo() == scoreNo)
+            if (scoreFlagIterator.getScoreNo() == scoreNo) {
                 return scoreFlagIterator;
+            }
         }
         return scoreFlag;
     }

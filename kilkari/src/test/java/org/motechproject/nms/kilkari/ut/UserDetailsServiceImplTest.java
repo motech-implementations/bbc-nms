@@ -9,7 +9,7 @@
 //import org.motechproject.nms.kilkari.builder.SubscriptionBuilder;
 //import org.motechproject.nms.kilkari.domain.Subscriber;
 //import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-//import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
+//import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 //import org.motechproject.nms.kilkari.service.SubscriberService;
 //import org.motechproject.nms.kilkari.service.SubscriptionService;
 //import org.motechproject.nms.kilkari.service.impl.UserDetailsServiceImpl;

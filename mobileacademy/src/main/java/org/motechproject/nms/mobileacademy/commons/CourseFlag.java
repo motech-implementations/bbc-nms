@@ -18,8 +18,9 @@ public class CourseFlag {
      */
     public CourseFlag() {
         List<ChapterFlag> chapterFlags = new ArrayList<ChapterFlag>();
-        for (int i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++)
+        for (int i = 0; i < MobileAcademyConstants.NUM_OF_CHAPTERS; i++) {
             chapterFlags.add(new ChapterFlag(i + 1));
+        }
         this.chapterFlags = chapterFlags;
     }
 
@@ -31,8 +32,9 @@ public class CourseFlag {
     public ChapterFlag getChapterFlag(int chapterNo) {
         ChapterFlag returnChapterFlag = null;
         for (ChapterFlag chapterFlag : chapterFlags) {
-            if (chapterFlag.getChapterNo() == chapterNo)
+            if (chapterFlag.getChapterNo() == chapterNo) {
                 return chapterFlag;
+            }
         }
         return returnChapterFlag;
     }

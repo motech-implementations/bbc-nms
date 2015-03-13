@@ -1,8 +1,9 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
+import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
@@ -59,14 +60,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //Todo : validate circle by circleCode
         Integer llcCode = llcService.getLanguageLocationCodeByCircleCode(circleCode);
         if (llcCode != null) {
-            response.setLanguageLocationCode(llcCode.toString());
+            response.setLanguageLocationCode(llcCode);
         } else {
             Integer defaultLLCCode = llcService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
             if (defaultLLCCode != null) {
-                response.setDefaultLanguageLocationCode(defaultLLCCode.toString());
+                response.setDefaultLanguageLocationCode(defaultLLCCode);
             } else {
                 //todo : set national default llcCode
-                response.setDefaultLanguageLocationCode("");
+                Configuration conf = new Configuration();
+                response.setDefaultLanguageLocationCode(conf.getNationalLanguageLocationCode());
             }
         }
     }
@@ -74,7 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void getLanguageLocationCodeForSubscriber(String circleCode, Subscriber subscriber, SubscriberDetailApiResponse response) {
         //if LanguageLocationCode for the subscriber record is present then set this is as LanguageLocationCode in response.
         if (subscriber.getLanguageLocationCode() != null) {
-            response.setLanguageLocationCode(subscriber.getLanguageLocationCode().toString());
+            response.setLanguageLocationCode(subscriber.getLanguageLocationCode());
 
         } else {
             if (subscriber.getState() != null && subscriber.getDistrict() != null) {
@@ -91,7 +93,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void getLLCCodeByStateDistrict(Long stateCode, Long districtCode, String circleCode, SubscriberDetailApiResponse response) {
         Integer llcCode = llcService.getLanguageLocationCodeByLocationCode(stateCode, districtCode);
         if (llcCode != null) {
-            response.setLanguageLocationCode(llcCode.toString());
+            response.setLanguageLocationCode(llcCode);
         } else {
             //get llcCode by circleCode if llcCode by state and district is null
             getLanguageLocationCodeByCircleCode(circleCode, response);

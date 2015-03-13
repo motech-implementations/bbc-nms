@@ -1,6 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
+import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 
 public interface UserDetailsService {
 
