@@ -6,8 +6,8 @@ import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
-import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
-import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
+import org.motechproject.nms.mobilekunji.service.ContentUploadCsvService;
+import org.motechproject.nms.mobilekunji.service.ContentUploadService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -35,15 +35,12 @@ import java.util.Map;
 @Component
 public class ContentUploadCsvHandler {
 
-
-    //@Autowired
-    private ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
-
-    //@Autowired
-    private ContentUploadRecordDataService contentUploadRecordDataService;
-
     //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    private ContentUploadService contentUploadService;
+
+    private ContentUploadCsvService contentUploadCsvService;
 
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
@@ -53,11 +50,12 @@ public class ContentUploadCsvHandler {
 
 
     @Autowired
-    public ContentUploadCsvHandler(ContentUploadCsvRecordDataService contentUploadCsvRecordDataService,
-                                   ContentUploadRecordDataService contentUploadRecordDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.contentUploadCsvRecordDataService = contentUploadCsvRecordDataService;
-        this.contentUploadRecordDataService = contentUploadRecordDataService;
+    public ContentUploadCsvHandler(ContentUploadCsvService contentUploadCsvService,
+                                   BulkUploadErrLogService bulkUploadErrLogService,
+                                   ContentUploadService contentUploadService) {
+        this.contentUploadCsvService = contentUploadCsvService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.contentUploadService = contentUploadService;
     }
 
     /**
@@ -87,25 +85,25 @@ public class ContentUploadCsvHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("Processing uploaded id : {}", id);
-                record = contentUploadCsvRecordDataService.findById(id);
+                record = contentUploadCsvService.findByIdInCsv(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
                     userName = record.getOwner();
 
                     ContentUpload newRecord = mapContentUploadFrom(record);
 
-                    ContentUpload dbRecord = contentUploadRecordDataService.findRecordByContentId(newRecord.getContentId());
+                    ContentUpload dbRecord = contentUploadService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
 
-                            contentUploadRecordDataService.create(newRecord);
+                        contentUploadService.createContentUpload(newRecord);
                             bulkUploadStatus.incrementSuccessCount();
 
 
                     } else {
 
                             mappDbRecordWithCsvrecord(newRecord, dbRecord);
-                            contentUploadRecordDataService.update(dbRecord);
+                        contentUploadService.updateContentUpload(dbRecord);
                             bulkUploadStatus.incrementSuccessCount();
 
 
@@ -125,7 +123,7 @@ public class ContentUploadCsvHandler {
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
-                    contentUploadCsvRecordDataService.delete(record);
+                    contentUploadCsvService.deleteFromCsv(record);
                 }
             }
         }

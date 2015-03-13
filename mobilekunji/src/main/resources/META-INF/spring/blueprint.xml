@@ -19,4 +19,10 @@
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
+    <osgi:service ref="contentUploadService"
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadService" />
+
+    <osgi:service ref="contentUploadCsvService"
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService" />
+
 </beans>

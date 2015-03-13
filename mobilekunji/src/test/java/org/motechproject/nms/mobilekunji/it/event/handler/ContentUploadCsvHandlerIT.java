@@ -10,8 +10,8 @@ import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import org.motechproject.nms.mobilekunji.event.handler.ContentUploadCsvHandler;
-import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
-import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
+import org.motechproject.nms.mobilekunji.service.ContentUploadCsvService;
+import org.motechproject.nms.mobilekunji.service.ContentUploadService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -39,10 +39,10 @@ import static org.junit.Assert.*;
 public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Inject
-    private ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
+    private ContentUploadCsvService contentUploadCsvService;
 
     @Inject
-    private ContentUploadRecordDataService contentUploadRecordDataService;
+    private ContentUploadService contentUploadService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -53,11 +53,11 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     public void setUp() {
 
 
-        contentUploadCsvHandler = new ContentUploadCsvHandler(contentUploadCsvRecordDataService,
-                contentUploadRecordDataService, bulkUploadErrLogService );
+        contentUploadCsvHandler = new ContentUploadCsvHandler(contentUploadCsvService, bulkUploadErrLogService,
+                contentUploadService);
 
-        assertNotNull(contentUploadCsvRecordDataService);
-        assertNotNull(contentUploadRecordDataService);
+        assertNotNull(contentUploadCsvService);
+        assertNotNull(contentUploadService);
         assertNotNull(bulkUploadErrLogService);
     }
 
@@ -127,10 +127,10 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv4.setOwner("Etasha");
         contentUploadCsv4.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb1 = contentUploadCsvRecordDataService.create(contentUploadCsv1);
-        ContentUploadCsv contentUploadCsvDb2 = contentUploadCsvRecordDataService.create(contentUploadCsv2);
-        ContentUploadCsv contentUploadCsvDb3 = contentUploadCsvRecordDataService.create(contentUploadCsv3);
-        ContentUploadCsv contentUploadCsvDb4 = contentUploadCsvRecordDataService.create(contentUploadCsv4);
+        ContentUploadCsv contentUploadCsvDb1 = contentUploadCsvService.createContentUploadCsv(contentUploadCsv1);
+        ContentUploadCsv contentUploadCsvDb2 = contentUploadCsvService.createContentUploadCsv(contentUploadCsv2);
+        ContentUploadCsv contentUploadCsvDb3 = contentUploadCsvService.createContentUploadCsv(contentUploadCsv3);
+        ContentUploadCsv contentUploadCsvDb4 = contentUploadCsvService.createContentUploadCsv(contentUploadCsv4);
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
 
@@ -144,7 +144,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("ContentUploadCsv.csv_success", parameters);
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(12);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(12);
 
         assertNotNull(contentUpload);
 
@@ -161,7 +161,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         assertEquals("Etasha", contentUpload.getModifiedBy());
         assertEquals("Etasha", contentUpload.getOwner());
 
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
 
 
@@ -185,8 +185,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -199,9 +199,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -224,8 +224,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -238,9 +238,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -263,8 +263,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -277,9 +277,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -302,8 +302,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -316,9 +316,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -341,8 +341,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -355,9 +355,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -380,8 +380,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -394,9 +394,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -418,8 +418,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -432,9 +432,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
@@ -456,8 +456,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");
 
-        ContentUploadCsv contentUploadCsvDb = contentUploadCsvRecordDataService.create(contentUploadCsv);
-        assertNotNull(contentUploadCsvRecordDataService);
+        ContentUploadCsv contentUploadCsvDb = contentUploadCsvService.createContentUploadCsv(contentUploadCsv);
+        assertNotNull(contentUploadCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -470,9 +470,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsvHandler.mobileKunjiContentUploadSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        ContentUpload contentUpload = contentUploadRecordDataService.findRecordByContentId(13);
+        ContentUpload contentUpload = contentUploadService.findRecordByContentId(13);
         assertNull(contentUpload);
-        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvRecordDataService.retrieveAll();
+        List<ContentUploadCsv> listContentUploadCsv = contentUploadCsvService.retrieveAllFromCsv();
         assertTrue(listContentUploadCsv.size() == 0);
         throw new DataValidationException();
 
