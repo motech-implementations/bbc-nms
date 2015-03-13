@@ -130,7 +130,7 @@ public class MotherMctsCsvHandler {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
-                logger.warn("DataValidationException ::::", dve);
+                logger.warn("DataValidationException ::::", dve.getMessage());
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());

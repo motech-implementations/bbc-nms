@@ -268,8 +268,8 @@ public class ChildMctsCsvHandler {
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
                     logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    dbSubscription.setStatus(Status.DEACTIVATED);
-                    subscriptionService.update(dbSubscription); /* Deactivate mother subscription */
+                    MctsCsvHelper.populateSubscription(subscriber, dbSubscription, true);
+                    subscriptionService.update(dbSubscription);
                     if (!subscriber.getChildDeath()) {
                         /* add new subscription for child */
                         Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
@@ -309,8 +309,7 @@ public class ChildMctsCsvHandler {
             
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                dbSubscription.setStatus(Status.DEACTIVATED);
-                subscriptionService.update(dbSubscription);
+                updateSubscription(subscriber, dbSubscription, true);
                 Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {

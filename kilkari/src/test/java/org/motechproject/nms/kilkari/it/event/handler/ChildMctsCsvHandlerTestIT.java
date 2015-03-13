@@ -243,5 +243,37 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertFalse(subscription.getPackName().equals(updateSubs.getPackName()));
     }
     
+    @Test
+    public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMctsTrueChildDeath() throws Exception {
+        logger.info("Inside  createDeleteOperation");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("39");
+        csv.setIdNo("39");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        ChildMctsCsv childCsv = new ChildMctsCsv();
+        childCsv = createChildMcts(childCsv);
+        childCsv.setWhomPhoneNo("40");
+        childCsv.setIdNo("40");
+        childCsv.setMotherId("39");
+        childCsv.setEntryType("9");
+        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        uploadedIds.add(dbCsv1.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        uploadedIds.clear();
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getMotherId(), Long.parseLong(childCsv.getStateCode()));
+        
+        assertNotNull(subscription);
+        assertNotNull(updateSubs);
+        assertFalse(subscription.getMsisdn().equals(updateSubs.getMsisdn()));
+    }
+    
    
 }
