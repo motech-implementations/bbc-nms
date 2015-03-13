@@ -56,7 +56,7 @@ public class InitializerIT extends BasePaxIT {
         Configuration configuration = configurationService.getConfiguration();
 
         Assert.assertEquals(configuration.getIndex(), Initializer.CONFIGURATION_INDEX);
-        Assert.assertEquals(configuration.getNumMsgPerWeek(), Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEk);
+        Assert.assertEquals(configuration.getNumMsgPerWeek(), Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK);
         Assert.assertEquals(configuration.getFreshObdPriority(), Initializer.DEFAULT_FRESH_OBD_PRIORITY);
         Assert.assertEquals(configuration.getFreshObdServiceId(), Initializer.DEFAULT_FRESH_OBD_SERVICE_ID);
         Assert.assertEquals(configuration.getMaxAllowedActiveBeneficiaryCount(), Initializer.DEFAULT_ALLOWED_BENEFICIARY_COUNT);

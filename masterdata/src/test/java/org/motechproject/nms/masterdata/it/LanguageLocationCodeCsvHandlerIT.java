@@ -111,7 +111,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setCircleCode("testCode");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("1");
-        csvRecord.setIsDefaultLanguageLocationCode("Y");
+        csvRecord.setIsDefaultLanguageLocationCode("true");
         csvRecord.setLanguageKK("LanguageKKChanged");
         csvRecord.setLanguageMA("LanguageMAChanged");
         csvRecord.setLanguageMK("LanguageMKChanged");
@@ -221,7 +221,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setCircleCode("testCode");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("1");
-        csvRecord.setIsDefaultLanguageLocationCode("Y");
+        csvRecord.setIsDefaultLanguageLocationCode("true");
         csvRecord.setLanguageKK("LanguageKK");
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");

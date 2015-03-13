@@ -42,25 +42,25 @@ public class Subscriber extends MdsEntity {
     @Field
     private Integer age;
     
-    @Field(name = "state_id")
+    @Field(name = "stateId")
     private State state;
     
-    @Field(name = "district_id")
+    @Field(name = "districtId")
     private District district;
     
-    @Field(name = "taluka_id")
+    @Field(name = "talukaId")
     private Taluka taluka;
     
-    @Field(name = "healthBlock_id")
+    @Field(name = "healthBlockId")
     private HealthBlock healthBlock;
     
-    @Field(name = "phc_id")
+    @Field(name = "phcId")
     private HealthFacility phc;
     
-    @Field(name = "subCentre_id")
+    @Field(name = "subCentreId")
     private HealthSubFacility subCentre;
     
-    @Field(name = "village_id")
+    @Field(name = "villageId")
     private Village village;
     
     @Field

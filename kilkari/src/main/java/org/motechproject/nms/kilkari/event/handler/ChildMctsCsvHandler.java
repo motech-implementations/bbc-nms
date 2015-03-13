@@ -32,16 +32,16 @@ public class ChildMctsCsvHandler {
 
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-    public static final String CSV_IMPORT_UPDATED_IDS = CSV_IMPORT_PREFIX + "updated_ids";
-    public static final String CSV_IMPORT_CREATED_COUNT = CSV_IMPORT_PREFIX + "created_count";
-    public static final String CSV_IMPORT_UPDATED_COUNT = CSV_IMPORT_PREFIX + "updated_count";
-    public static final String CSV_IMPORT_TOTAL_COUNT = CSV_IMPORT_PREFIX + "total_count";
-    public static final String CSV_IMPORT_FAILURE_MSG = CSV_IMPORT_PREFIX + "failure_message";
-    public static final String CSV_IMPORT_FAILURE_STACKTRACE = CSV_IMPORT_PREFIX + "failure_stacktrace";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
     public static final String PACK_48 = "48WEEK";
     public static final String PACK_72 = "72WEEK";
+
+    /* Constant value of entryType field that specifies child death in Mcts Csv */
     public static final String CHILD_DEATH_NINE = "9";
+
+    /* Valid length of MSISDN */
+    public static final Integer MSISDN_VALID_LENGTH = 10;
+
     public static final String SUBSCRIPTION_EXIST_ERR_DESC =
             "Upload Unsuccessful as Subscription to MSISDN already Exist";
     public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
@@ -110,7 +110,7 @@ public class ChildMctsCsvHandler {
                     logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
-                    insertSubscriptionSubccriber(subscriber);
+                    insertSubscriptionSubscriber(subscriber);
                     uploadedStatus.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
@@ -192,8 +192,8 @@ public class ChildMctsCsvHandler {
 
         String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
         int msisdnCsvLength = msisdn.length();
-        if(msisdnCsvLength > 10){
-            msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
+        if(msisdnCsvLength > MSISDN_VALID_LENGTH){
+            msisdn = msisdn.substring(msisdnCsvLength - MSISDN_VALID_LENGTH, msisdnCsvLength);
         }
         childSubscriber.setMsisdn(msisdn);
         childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString("idNo", childMctsCsv.getIdNo(), true));
@@ -216,7 +216,7 @@ public class ChildMctsCsvHandler {
      * 
      *  @param subscriber csv uploaded subscriber
      */
-    public void insertSubscriptionSubccriber(Subscriber subscriber) throws DataValidationException {
+    public void insertSubscriptionSubscriber(Subscriber subscriber) throws DataValidationException {
 
         /*
         Create new subscriber and subscription if there is no existing record for childMctsId or motherMctsId
@@ -247,26 +247,26 @@ public class ChildMctsCsvHandler {
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
                 dbSubscription = subscriptionService.getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
                 if (dbSubscription == null) {
-                    logger.debug("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_48);
+                    logger.debug("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
                     /* check for maximum allowed beneficiary */
                     if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                         Subscriber dbSubscriber = subscriberService.create(subscriber); 
-                        createSubscription(subscriber, null, dbSubscriber);
+                        createSubscription(subscriber, dbSubscriber);
                     } else {
-                        logger.info("Reached maximum beneficery count, can't add any more");
-                        throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
+                        logger.info("Reached maximum beneficiary count, can't add any more");
+                        throw new DataValidationException("Beneficiary Count Exceeded" ,"Beneficiary Count Exceeded" , null);
                     }
                     
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
-                    logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
+                    logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    MctsCsvHelper.populateSubscription(subscriber, dbSubscription, true);
+                    MctsCsvHelper.populateDbSubscription(subscriber, dbSubscription, true);
                     subscriptionService.update(dbSubscription);
                     if (!subscriber.getChildDeath()) {
                         /* add new subscription for child */
-                        Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
+                        Subscription newSubscription = createSubscription(subscriber, dbSubscriber);
                         dbSubscriber.getSubscriptionList().add(newSubscription);
                     }
                     updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
@@ -275,79 +275,52 @@ public class ChildMctsCsvHandler {
             } else { /* Record found based on mctsid(ChildMcts) than */
                 logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
+                updateDbSubscriberAndDbSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getChildMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
+                updateDbSubscriberAndDbSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
                         ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
         }
     }
-    
-    /**
-     *  This method is used to update subscriber and subscription
-     * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
-     */
-    private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
-        
-        if (subscriber.getChildDeath()) {
-            updateSubscription(subscriber, dbSubscription, true);
-            
-        } else {
-            if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                updateSubscription(subscriber, dbSubscription, true);
-                Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
-                dbSubscriber.getSubscriptionList().add(newSubscription);
-            } else {
-                updateSubscription(subscriber, dbSubscription, false);
-            }
-        }
 
-        updateDbSubscriber(subscriber, dbSubscriber);
-    }
-    
     /**
-     *  This method is used to update Subscription info in database
-     * 
+     *  This method is used to create new Subscription in database
+     *
      *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     */
-    private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
-        MctsCsvHelper.populateSubscription(subscriber, dbSubscription, statusFlag);
-        dbSubscription.setMctsId(subscriber.getChildMctsId());
-        dbSubscription.setPackName(PACK_48);;
-        subscriptionService.update(dbSubscription);
-        
-    }
-    
-    /**
-     *  This method is used to create Subscription in database
-     * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private Subscription createSubscription(Subscriber subscriber,
-            Subscription dbSubscription, Subscriber dbSubscriber) {
-        
-        Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscription, dbSubscriber);
+    private Subscription createSubscription(Subscriber subscriber, Subscriber dbSubscriber) {
+
+        Subscription newSubscription = MctsCsvHelper.populateNewSubscription(subscriber, dbSubscriber);
         newSubscription.setMctsId(subscriber.getChildMctsId());
         newSubscription.setPackName(PACK_48);
-        
+
         return subscriptionService.create(newSubscription);
     }
 
     /**
+     *  This method is used to update Subscription info in database
+     *
+     *  @param subscriber csv uploaded subscriber
+     *  @param dbSubscription database Subscription
+     */
+    private void updateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+        MctsCsvHelper.populateDbSubscription(subscriber, dbSubscription, statusFlag);
+        dbSubscription.setMctsId(subscriber.getChildMctsId());
+        dbSubscription.setPackName(PACK_48);;
+        subscriptionService.update(dbSubscription);
+
+    }
+
+    /**
      *  This method is used to update Subscriber info in database
-     * 
+     *
      *  @param subscriber csv uploaded subscriber
      *  @param dbSubscriber database Subscriber
      */
@@ -361,4 +334,43 @@ public class ChildMctsCsvHandler {
 
         subscriberService.update(dbSubscriber);
     }
+
+    /**
+     *  This method is used to update DB subscriber and DB subscription.
+     *
+     *  For Existing Subscription :
+     *  This method updates the status  to "Deactivated"
+     *  1. if childDeath
+     *  2. If DOB is changed and also creates a new Subscription with new DOB.
+     *
+     *  In all other cases updates the Subscription's MCTSId, MSISDN and Location fields.
+     *
+     *
+     *  For an Existing Subscriber:
+     *  This method updates the all the fields as per MCTS Csv record.
+     *  Also adds the new Subscription in the subscription list if created for change in DOB.
+     * 
+     *  @param subscriber csv uploaded subscriber
+     *  @param dbSubscription database Subscription
+     *  @param dbSubscriber database subscriber
+     */
+    private void updateDbSubscriberAndDbSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+        
+        if (subscriber.getChildDeath()) {
+            updateDbSubscription(subscriber, dbSubscription, true);
+            
+        } else {
+            if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
+                updateDbSubscription(subscriber, dbSubscription, true);
+                Subscription newSubscription = createSubscription(subscriber, dbSubscriber);
+                dbSubscriber.getSubscriptionList().add(newSubscription);
+            } else {
+                updateDbSubscription(subscriber, dbSubscription, false);
+            }
+        }
+
+        updateDbSubscriber(subscriber, dbSubscriber);
+    }
+    
+
 }
