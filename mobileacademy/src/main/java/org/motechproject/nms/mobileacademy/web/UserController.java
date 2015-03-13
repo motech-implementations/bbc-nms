@@ -42,7 +42,7 @@ public class UserController extends BaseController {
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
             throws DataValidationException {
-        LOGGER.debug("MA Get User Detail Controller Start");
+        LOGGER.debug("getUserDetails: Started");
         LOGGER.debug("Input request-callingNumber:" + callingNumber
                 + ", operator:" + operator + ", circle:" + circle + ", callId:"
                 + callId);
@@ -50,7 +50,7 @@ public class UserController extends BaseController {
                 callId);
         User user = userDetailsService.findUserDetails(callingNumber, operator,
                 circle);
-        LOGGER.debug("MA Get User Detail Controller End");
+        LOGGER.debug("getUserDetails:Ended");
         return user;
 
     }

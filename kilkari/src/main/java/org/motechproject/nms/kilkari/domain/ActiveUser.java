@@ -5,8 +5,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 
+/*
+ * 
+ * 
+ */
+@Entity
 public class ActiveUser {
 
     @Unique

@@ -39,7 +39,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
-        csv.setWhomPhoneNo("31");
+        csv.setWhomPhoneNo("10000000031");
         csv.setIdNo("31");
         
         ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
@@ -61,7 +61,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
-        csv.setWhomPhoneNo("32");
+        csv.setWhomPhoneNo("1000000032");
         csv.setIdNo("32");
         ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -70,7 +70,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
         ChildMctsCsv csv1 = new ChildMctsCsv();
         csv1 = createChildMcts(csv1);
-        csv1.setWhomPhoneNo("32");
+        csv1.setWhomPhoneNo("1000000032");
         csv1.setIdNo("33");
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());

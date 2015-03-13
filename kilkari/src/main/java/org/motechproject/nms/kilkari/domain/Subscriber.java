@@ -236,6 +236,7 @@ public class Subscriber extends MdsEntity {
         this.deactivationReason = deactivationReason;
     }
 
+    @Ignore
     public SubscriptionPack getSuitablePackName(){
         if (BeneficiaryType.MOTHER.equals(this)) {
             return SubscriptionPack.PACK_72_WEEKS;
@@ -244,6 +245,7 @@ public class Subscriber extends MdsEntity {
         }
     }
 
+    @Ignore
     public String getSuitableMctsId() {
         if (BeneficiaryType.MOTHER.equals(this)) {
             return getMotherMctsId();
@@ -252,6 +254,7 @@ public class Subscriber extends MdsEntity {
         }
     }
     
+    @Ignore
     public DateTime getDobLmp() {
         if (BeneficiaryType.MOTHER.equals(this)) {
             return getLmp();

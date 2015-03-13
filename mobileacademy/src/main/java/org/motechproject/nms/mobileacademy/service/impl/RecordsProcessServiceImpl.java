@@ -25,10 +25,9 @@ import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
-import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
-import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -59,10 +58,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private CourseProcessedContentService courseProcessedContentService;
 
     @Autowired
-    private ChapterContentDataService chapterContentDataService;
-
-    @Autowired
-    private CoursePopulateService coursePopulateService;
+    private CourseService courseService;
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -428,7 +424,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
         if (flagForUpdatingMetaData && isRecordChangingTheAnswerOption(record)) {
             correctAnswerOption = record.getAnswerId();
-            coursePopulateService
+            courseService
                     .updateCorrectAnswer(
                             MobileAcademyConstants.CHAPTER
                                     + String.format(
@@ -507,41 +503,41 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void determineTypeAndUpdateChapterContent(Record record,
             OperatorDetails operatorDetails) {
         if (record.getType() == FileType.LESSON_CONTENT) {
-            coursePopulateService.setLessonContent(record.getChapterId(),
+            courseService.setLessonContent(record.getChapterId(),
                     record.getLessonId(),
                     MobileAcademyConstants.CONTENT_LESSON,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.LESSON_END_MENU) {
-            coursePopulateService.setLessonContent(record.getChapterId(),
+            courseService.setLessonContent(record.getChapterId(),
                     record.getLessonId(), MobileAcademyConstants.CONTENT_MENU,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.QUESTION_CONTENT) {
-            coursePopulateService.setQuestionContent(record.getChapterId(),
+            courseService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_QUESTION,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.CORRECT_ANSWER) {
-            coursePopulateService.setQuestionContent(record.getChapterId(),
+            courseService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_CORRECT_ANSWER,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.WRONG_ANSWER) {
-            coursePopulateService.setQuestionContent(record.getChapterId(),
+            courseService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_WRONG_ANSWER,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            coursePopulateService.setChapterContent(record.getChapterId(),
+            courseService.setChapterContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_MENU, record.getFileName(),
                     operatorDetails);
         } else if (record.getType() == FileType.QUIZ_HEADER) {
-            coursePopulateService.setQuizContent(record.getChapterId(),
+            courseService.setQuizContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER,
                     record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.SCORE) {
-            coursePopulateService.setScore(record.getChapterId(),
-                    record.getScoreID(), MobileAcademyConstants.SCORE,
-                    record.getFileName(), operatorDetails);
+            courseService.setScore(record.getChapterId(), record.getScoreID(),
+                    MobileAcademyConstants.SCORE, record.getFileName(),
+                    operatorDetails);
         }
     }
 
@@ -551,11 +547,11 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
      */
     private boolean isRecordChangingTheFileName(Record record) {
         boolean status = false;
-        List<ChapterContent> chapterContents = coursePopulateService
+        List<ChapterContent> chapterContents = courseService
                 .getAllChapterContents();
 
         if (record.getType() == FileType.LESSON_CONTENT) {
-            LessonContent lessonContent = coursePopulateService
+            LessonContent lessonContent = courseService
                     .getLessonContent(chapterContents, record.getChapterId(),
                             record.getLessonId(),
                             MobileAcademyConstants.CONTENT_LESSON);
@@ -563,55 +559,54 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 status = true;
             }
         } else if (record.getType() == FileType.LESSON_END_MENU) {
-            LessonContent lessonContent = coursePopulateService
-                    .getLessonContent(chapterContents, record.getChapterId(),
-                            record.getLessonId(),
-                            MobileAcademyConstants.CONTENT_MENU);
+            LessonContent lessonContent = courseService.getLessonContent(
+                    chapterContents, record.getChapterId(),
+                    record.getLessonId(), MobileAcademyConstants.CONTENT_MENU);
             if (!lessonContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.QUESTION_CONTENT) {
-            QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(chapterContents, record.getChapterId(),
-                            record.getQuestionId(),
-                            MobileAcademyConstants.CONTENT_QUESTION);
+            QuestionContent questionContent = courseService.getQuestionContent(
+                    chapterContents, record.getChapterId(),
+                    record.getQuestionId(),
+                    MobileAcademyConstants.CONTENT_QUESTION);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.CORRECT_ANSWER) {
-            QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(chapterContents, record.getChapterId(),
-                            record.getQuestionId(),
-                            MobileAcademyConstants.CONTENT_CORRECT_ANSWER);
+            QuestionContent questionContent = courseService.getQuestionContent(
+                    chapterContents, record.getChapterId(),
+                    record.getQuestionId(),
+                    MobileAcademyConstants.CONTENT_CORRECT_ANSWER);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.WRONG_ANSWER) {
-            QuestionContent questionContent = coursePopulateService
-                    .getQuestionContent(chapterContents, record.getChapterId(),
-                            record.getQuestionId(),
-                            MobileAcademyConstants.CONTENT_WRONG_ANSWER);
+            QuestionContent questionContent = courseService.getQuestionContent(
+                    chapterContents, record.getChapterId(),
+                    record.getQuestionId(),
+                    MobileAcademyConstants.CONTENT_WRONG_ANSWER);
             if (!questionContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            ChapterContent chapterContent = coursePopulateService
-                    .getChapterContent(chapterContents, record.getChapterId(),
-                            MobileAcademyConstants.CONTENT_MENU);
+            ChapterContent chapterContent = courseService.getChapterContent(
+                    chapterContents, record.getChapterId(),
+                    MobileAcademyConstants.CONTENT_MENU);
             if (!chapterContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.QUIZ_HEADER) {
-            QuizContent quizContent = coursePopulateService.getQuizContent(
+            QuizContent quizContent = courseService.getQuizContent(
                     chapterContents, record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER);
             if (!quizContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
         } else if (record.getType() == FileType.SCORE) {
-            ScoreContent scoreContent = coursePopulateService.getScore(
-                    chapterContents, record.getChapterId(),
-                    record.getScoreID(), MobileAcademyConstants.SCORE);
+            ScoreContent scoreContent = courseService.getScore(chapterContents,
+                    record.getChapterId(), record.getScoreID(),
+                    MobileAcademyConstants.SCORE);
             if (!scoreContent.getAudioFile().equals(record.getFileName())) {
                 status = true;
             }
@@ -667,16 +662,16 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         continue;
                     }
 
-                    Course course = coursePopulateService.getMtrainingCourse();
+                    Course course = courseService.getMtrainingCourse();
                     if (course == null) {
-                        course = coursePopulateService
+                        course = courseService
                                 .populateMtrainingCourseData(operatorDetails);
                         populateCourseStructure = true;
                     }
 
                     answerOptionRecordList.clear();
 
-                    List<ChapterContent> chapterContents = coursePopulateService
+                    List<ChapterContent> chapterContents = courseService
                             .getAllChapterContents();
 
                     if (CollectionUtils.isEmpty(chapterContents)) {
@@ -783,14 +778,14 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                 RecordsProcessHelper
                                         .updateChapterContentForUserDetails(
                                                 chapterContent, operatorDetails);
-                                chapterContentDataService
-                                        .create(chapterContent);
+                                courseService
+                                        .createChapterContent(chapterContent);
                             }
                             // Update AnswerOptionList
                             // Change the state to Active
                             processListOfAnswerOptionRecords(
                                     answerOptionRecordList, operatorDetails);
-                            coursePopulateService.updateCourseState(
+                            courseService.updateCourseState(
                                     CourseUnitState.Active, operatorDetails);
                             LOGGER.info(
                                     "Course Added successfully for LLC: {}",
@@ -829,7 +824,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void processListOfAnswerOptionRecords(
             List<Record> answerOptionRecordList, OperatorDetails operatorDetails) {
         for (Record answerRecord : answerOptionRecordList) {
-            coursePopulateService
+            courseService
                     .updateCorrectAnswer(
                             MobileAcademyConstants.CHAPTER
                                     + String.format(
@@ -1064,8 +1059,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         int answerNo = record.getAnswerId();
         int chapterNo = record.getChapterId();
 
-        return (answerNo == coursePopulateService.getCorrectAnswerOption(
-                chapterNo, questionNo));
+        return (answerNo == courseService.getCorrectAnswerOption(chapterNo,
+                questionNo));
     }
 
     /*
@@ -1103,9 +1098,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         if (record.getType() != FileType.QUESTION_CONTENT) {
             return false;
         } else {
-            if (coursePopulateService.getCorrectAnswerOption(
-                    record.getChapterId(), record.getQuestionId()) != record
-                    .getAnswerId()) {
+            if (courseService.getCorrectAnswerOption(record.getChapterId(),
+                    record.getQuestionId()) != record.getAnswerId()) {
                 return true;
             }
         }

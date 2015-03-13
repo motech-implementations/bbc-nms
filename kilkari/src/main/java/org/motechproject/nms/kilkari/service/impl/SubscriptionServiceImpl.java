@@ -62,7 +62,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName) {
+    public Subscription getActiveSubscriptionByMsisdnPack(String msisdn, SubscriptionPack packName) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.ACTIVE);
         if(subscription == null) {
             subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.PENDING_ACTIVATION);
@@ -71,7 +71,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode) {
+    public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, SubscriptionPack packName, Long stateCode) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.ACTIVE, stateCode);
         if(subscription == null) {
             subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.PENDING_ACTIVATION, stateCode);
@@ -140,43 +140,41 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             otherMctsId = subscriber.getChildMctsId();
             otherPack = SubscriptionPack.PACK_48_WEEKS;
         }
-
-        /* Select * from Suscription where pack==72_Or_48Weeks & (Status==Active || Status==PendingActivation) & (Mctsid==motherorChildMctstId || msisdn== msisdn)
-
-
-        */
-
-        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack.toString());
+        
+        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack);
         if (dbSubscription == null) { 
-            logger.debug("Not found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
-            /* Find subscription from database based on mctsid(MotherMcts), packName, status */
-            dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack.toString(), subscriber.getState().getStateCode());
-
-
-            /* Select * from Subscriber where motherMctsId = subscriber.getMotherMctsId ||
-                                             childMctsId = subscriber.getChildMctsId ||
-                                             (msisdn == whosePhoneNum & childMctsId == null) ||
-                                             (msisdn == whosePhoneNum & MotherMctsId == null)  */
-
+            
+            logger.info("Not found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), subscriber.getMsisdn(), pack.toString(), Status.ACTIVE);
+            /* Find subscription from database based on mctsid, packName, status */
+            dbSubscription = getActiveSubscriptionByMctsIdPack(mctsId, pack, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
-                logger.debug("Not Found active subscription from database for BeneficeryType[{}] based on othermctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
-                createNewSubscriberAndSubscription(subscriber, channel);
-
-            } else {  /* Record found based on mctsid(MotherMcts) than */
-                logger.info("Found active subscription from database for BeneficeryType[{}] based on otherMctsId[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
-                Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateDbSubscription(subscriber, dbSubscription, true, DeactivationReason.PACK_CHANGED);
-
-                if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
-                    /* add new subscription for child */
-                    Subscription newSubscription = createNewSubscription(dbSubscriber, channel, null);
-                    dbSubscriber.getSubscriptionList().add(newSubscription);
+                logger.debug("Not found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
+                /* Find subscription from database based on mctsid(MotherMcts), packName, status */
+                dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getState().getStateCode());
+                if (dbSubscription == null) {
+                    logger.debug("Not Found active subscription from database for BeneficeryType[{}] based on othermctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
+                    createNewSubscriberAndSubscription(subscriber, channel);
+                    
+                } else {  /* Record found based on mctsid(MotherMcts) than */ 
+                    logger.info("Found active subscription from database for BeneficeryType[{}] based on otherMctsId[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
+                    Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                    //set deactivate reason in dbSubscriber
+                    updateDbSubscription(subscriber, dbSubscription, true, DeactivationReason.PACK_CHANGED);
+                    
+                    if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
+                        /* add new subscription for child */
+                        Subscription newSubscription = createNewSubscription(dbSubscriber, channel, null);
+                        dbSubscriber.getSubscriptionList().add(newSubscription);
+                    }
+                    updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
+                
                 }
-                updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
-
+            } else { /* Record found based on mctsid(ChildMcts) than */
+                logger.info("Found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
-
-        } else { /* Record found */
+        } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getSuitableMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
@@ -218,11 +216,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
         /* Find subscription from database based on msisdn, packName, status */
-        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72);
+        
+        SubscriptionPack pack = subscriber.getSuitablePackName();
+        
+        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack);
         if (dbSubscription == null) {
             logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
             /* Find subscription from database based on mctsid, packName, status */
-            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
+            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), pack, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
                 logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
                 createNewSubscriberAndSubscription(subscriber, channel);
@@ -314,7 +315,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+        //activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -333,6 +334,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dbSubscription.setMctsId(subscriber.getSuitableMctsId());
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+        
         if (statusFlag) {
 //            deactivateSubscription()
             dbSubscription.setStatus(Status.DEACTIVATED);
@@ -341,9 +343,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
-            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
         } else {
-            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
         }
     }
     
@@ -382,7 +384,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
-            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
         }
     }
 }

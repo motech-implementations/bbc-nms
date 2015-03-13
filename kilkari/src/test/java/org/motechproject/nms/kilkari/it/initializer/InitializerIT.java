@@ -1,12 +1,14 @@
 package org.motechproject.nms.kilkari.it.initializer;
 
+import javax.inject.Inject;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
 import org.motechproject.nms.kilkari.service.ActiveUserService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -16,8 +18,6 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-
-import javax.inject.Inject;
 
 /**
  * This class contains test case to test Initializer
@@ -34,9 +34,10 @@ public class InitializerIT extends BasePaxIT {
 
     @Inject
     private ConfigurationDataService configurationDataService;
-
+    
     @Inject
     private ActiveUserService activeUserService;
+
 
     private Initializer initializer;
 

@@ -18,7 +18,7 @@ import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
-import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -32,7 +32,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 public class CoursePopulateServiceIT extends BasePaxIT {
 
     @Inject
-    private CoursePopulateService coursePopulateService;
+    private CourseService courseService;
 
     @Inject
     private MTrainingService mTrainingService;
@@ -41,13 +41,13 @@ public class CoursePopulateServiceIT extends BasePaxIT {
     public void testCoursePopulateSuccess() {
         clearMobileAcademyData();
         CourseUnitState state = null;
-        state = coursePopulateService.findCourseState();
+        state = courseService.findCourseState();
         assertNull(state);
 
         OperatorDetails operatorDetails = new OperatorDetails();
 
-        coursePopulateService.populateMtrainingCourseData(operatorDetails);
-        state = coursePopulateService.findCourseState();
+        courseService.populateMtrainingCourseData(operatorDetails);
+        state = courseService.findCourseState();
         assertNotNull(state);
         assertSame(state, CourseUnitState.Inactive);
     }

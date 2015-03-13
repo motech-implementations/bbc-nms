@@ -15,7 +15,7 @@ import org.motechproject.nms.mobileacademy.domain.ScoreContent;
  * Service interface contains APIs to perform course populate operations in
  * mtraining and content tables.
  */
-public interface CoursePopulateService {
+public interface CourseService {
 
     /**
      *
@@ -35,6 +35,13 @@ public interface CoursePopulateService {
      *
      */
     public Course getMtrainingCourse();
+
+    /**
+     * Generates Chapter Content in Content Table
+     * 
+     * @param chapterContent object that need to be persisted in the system
+     */
+    public void createChapterContent(ChapterContent chapterContent);
 
     /**
      * find Course State

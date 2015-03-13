@@ -20,7 +20,7 @@ public class CustomeQueries {
      */
     public static class ActiveUserCountIncrementQuery implements
     SqlQueryExecution<ActiveUser> {
-        String incrementQuery = "update activeuser set activeusercount = activeusercount + 1";
+        String incrementQuery = "update KILKARI_ACTIVEUSER set activeUserCount = activeUserCount + 1 where id = 1; ";
         @Override
         public ActiveUser execute(Query query) {
             return (ActiveUser) query.execute();
@@ -41,7 +41,7 @@ public class CustomeQueries {
      */
     public static class ActiveUserCountDecrementQuery implements
     SqlQueryExecution<ActiveUser> {
-        String decrementQuery = "update activeuser set activeusercount = activeusercount - 1";
+        String decrementQuery = "update KILKARI_ACTIVEUSER set activeUserCount = activeUserCount - 1 where id = 1; ";
         @Override
         public ActiveUser execute(Query query) {
             return (ActiveUser) query.execute();

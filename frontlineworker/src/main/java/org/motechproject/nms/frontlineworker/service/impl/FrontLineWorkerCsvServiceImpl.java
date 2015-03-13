@@ -17,7 +17,7 @@ import java.util.List;
 public class FrontLineWorkerCsvServiceImpl implements FrontLineWorkerCsvService {
 
 
-    FrontLineWorkerCsvRecordsDataService frontLineWorkerCsvRecordsDataService;
+    public FrontLineWorkerCsvRecordsDataService frontLineWorkerCsvRecordsDataService;
 
     @Autowired
     public FrontLineWorkerCsvServiceImpl(FrontLineWorkerCsvRecordsDataService frontLineWorkerCsvRecordsDataService) {
