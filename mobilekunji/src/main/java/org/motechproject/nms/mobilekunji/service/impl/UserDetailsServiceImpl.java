@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
@@ -63,8 +64,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         ServiceConsumptionFlw serviceConsumptionFlw = new ServiceConsumptionFlw();
         serviceConsumptionFlw.setNmsFlwId(userProfile.getNmsId());
         serviceConsumptionFlw.setWelcomePromptFlag(true);
-        serviceConsumptionFlw.setCurrentUsageInPulses(0);
-        serviceConsumptionFlw.setEndOfUsagePrompt(0);
+        serviceConsumptionFlw.setCurrentUsageInPulses(KunjiConstants.ZERO);
+        serviceConsumptionFlw.setEndOfUsagePrompt(KunjiConstants.ZERO);
 
         serviceConsumptionFlwService.create(serviceConsumptionFlw);
     }
@@ -78,17 +79,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
-
-
         userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
 
         //method for capping
-        userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNmsMkNationalCapValue());
+        setNmsCappingValue(userDetailApiResponse,userProfile);
         userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getNmsMkMaxEndofusageMessage());
         userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
 
         return userDetailApiResponse;
+    }
+
+    private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse,UserProfile userProfile) {
+
+        switch(configurationService.getConfiguration().getNmsMkCappingType()){
+
+            case KunjiConstants.ZERO:
+                userDetailApiResponse.setMaxAllowedUsageInPulses(-1);
+                break;
+
+            case KunjiConstants.ONE:
+                userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNmsMkNationalCapValue());
+
+            case KunjiConstants.TWO:
+                userDetailApiResponse.setMaxAllowedUsageInPulses(userProfile.getMaxStateLevelCappingValue());
+        }
     }
 
 }

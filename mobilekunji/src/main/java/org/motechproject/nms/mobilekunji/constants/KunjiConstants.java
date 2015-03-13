@@ -17,6 +17,11 @@ public class KunjiConstants {
 
     public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 
-    public static final String CONTENT_UPLOAD_CSV_FAILED = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.failure";
+    public static final int ZERO = 0;
+
+    public static final int ONE = 1;
+
+    public static final int TWO = 2;
+
 
 }
