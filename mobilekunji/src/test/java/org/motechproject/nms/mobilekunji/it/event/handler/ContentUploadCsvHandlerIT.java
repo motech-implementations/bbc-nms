@@ -114,11 +114,11 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         ContentUploadCsv contentUploadCsv4 = new ContentUploadCsv();
         contentUploadCsv4.setIndex(4L);
-        contentUploadCsv4.setContentId("12");
+        contentUploadCsv4.setContentId("22");
         contentUploadCsv4.setCircleCode("CircleCode");
         contentUploadCsv4.setLanguageLocationCode("124");
         contentUploadCsv4.setContentName("Content");
-        contentUploadCsv4.setContentType("PROMPT");
+        contentUploadCsv4.setContentType("CONTENT");
         contentUploadCsv4.setContentFile("NewFile");
         contentUploadCsv4.setCardNumber("10");
         contentUploadCsv4.setContentDuration("120");
@@ -150,7 +150,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         assertTrue(12 == contentUpload.getContentId());
         assertEquals("CircleCode", contentUpload.getCircleCode());
-        assertTrue(124 == contentUpload.getLanguageLocationCode());
+        assertTrue(123 == contentUpload.getLanguageLocationCode());
         assertEquals("Content", contentUpload.getContentName());
         assertEquals(ContentType.PROMPT, contentUpload.getContentType());
         assertEquals("NewFile", contentUpload.getContentFile());
