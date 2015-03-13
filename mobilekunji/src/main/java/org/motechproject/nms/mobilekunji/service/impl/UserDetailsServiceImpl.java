@@ -6,6 +6,7 @@ import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,17 +36,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return User detail response object
      */
     @Override
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, Long callId) {
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, Long callId) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = null;
 
-        UserProfile userProfileData = userProfileDetailsService.handleUserDetail(msisdn,circleCode,operatorCode);
+        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn,circleCode,operatorCode);
 
         if(userProfileData.isCreated()) {
             setFlwData(userProfileData);
-            userDetailApiResponse = getUserDetailApiResponse(userProfileData);
         }
 
+        userDetailApiResponse = getUserDetailApiResponse(userProfileData);
         return userDetailApiResponse;
     }
 

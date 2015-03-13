@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.service;
 
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
+import org.motechproject.nms.util.helper.DataValidationException;
 
 public interface UserDetailsService {
 
@@ -13,5 +14,5 @@ public interface UserDetailsService {
      * @param callId     callId of the calling user
      * @return User detail response object
      */
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, Long callId);
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, Long callId) throws DataValidationException;
 }
