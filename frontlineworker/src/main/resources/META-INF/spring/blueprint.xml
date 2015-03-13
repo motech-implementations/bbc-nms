@@ -21,5 +21,9 @@
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
+    <osgi:service ref="frontLineWorkerService"
+                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService" />
 
+    <osgi:service ref="frontLineWorkerCsvService"
+                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService" />
 </beans>
