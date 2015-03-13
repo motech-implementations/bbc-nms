@@ -43,7 +43,7 @@ public class UserController extends BaseController {
             @RequestParam(value = "callId") String callId)
             throws DataValidationException {
         LOGGER.debug("getUserDetails: Started");
-        LOGGER.debug("Input request-callingNumber:" + callingNumber
+        LOGGER.info("Input request-callingNumber:" + callingNumber
                 + ", operator:" + operator + ", circle:" + circle + ", callId:"
                 + callId);
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
@@ -67,9 +67,11 @@ public class UserController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
             String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseInt(callingNumber, callingNumber, true);
+        ParseDataHelper.validateAndParseString(callingNumber, callingNumber,
+                true);
+        ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber);
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
-        ParseDataHelper.validateAndParseInt(callId, callId, true);
+        ParseDataHelper.validateAndParseLong(callId, callId, true);
     }
 }
