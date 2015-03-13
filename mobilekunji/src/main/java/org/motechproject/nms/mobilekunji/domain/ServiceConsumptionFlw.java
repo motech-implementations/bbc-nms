@@ -23,12 +23,23 @@ public class ServiceConsumptionFlw extends MdsEntity {
     @Field
     private Integer currentUsageInPulses;
 
+    @Field
+    private String msisdn;
+
     public Long getNmsFlwId() {
         return nmsFlwId;
     }
 
     public void setNmsFlwId(Long nmsFlwId) {
         this.nmsFlwId = nmsFlwId;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
 
     public Integer getEndOfUsagePrompt() {
@@ -62,6 +73,7 @@ public class ServiceConsumptionFlw extends MdsEntity {
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", welcomePromptFlag=" + welcomePromptFlag +
                 ", currentUsageInPulses=" + currentUsageInPulses +
+                ", msisdn='" + msisdn + '\'' +
                 '}';
     }
 }
