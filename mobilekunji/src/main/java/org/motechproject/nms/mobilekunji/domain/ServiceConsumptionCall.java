@@ -13,13 +13,75 @@ import java.util.Set;
 @Entity(recordHistory = true)
 public class ServiceConsumptionCall extends MdsEntity {
 
-    Long callId;
-    Long nmsFlwId;
-    String circle;
-    DateTime callStartTime;
-    DateTime callEndTime;
-    Set<CardContent> cardContent;
+    private Long callId;
 
+    private Long nmsFlwId;
 
+    private String circle;
 
+    private DateTime callStartTime;
+
+    private DateTime callEndTime;
+
+    private Set<CardContent> cardContent;
+
+    public Long getCallId() {
+        return callId;
+    }
+
+    public void setCallId(Long callId) {
+        this.callId = callId;
+    }
+
+    public Long getNmsFlwId() {
+        return nmsFlwId;
+    }
+
+    public void setNmsFlwId(Long nmsFlwId) {
+        this.nmsFlwId = nmsFlwId;
+    }
+
+    public String getCircle() {
+        return circle;
+    }
+
+    public void setCircle(String circle) {
+        this.circle = circle;
+    }
+
+    public DateTime getCallStartTime() {
+        return callStartTime;
+    }
+
+    public void setCallStartTime(DateTime callStartTime) {
+        this.callStartTime = callStartTime;
+    }
+
+    public DateTime getCallEndTime() {
+        return callEndTime;
+    }
+
+    public void setCallEndTime(DateTime callEndTime) {
+        this.callEndTime = callEndTime;
+    }
+
+    public Set<CardContent> getCardContent() {
+        return cardContent;
+    }
+
+    public void setCardContent(Set<CardContent> cardContent) {
+        this.cardContent = cardContent;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceConsumptionCall{" +
+                "callId=" + callId +
+                ", nmsFlwId=" + nmsFlwId +
+                ", circle='" + circle + '\'' +
+                ", callStartTime=" + callStartTime +
+                ", callEndTime=" + callEndTime +
+                ", cardContent=" + cardContent +
+                '}';
+    }
 }
