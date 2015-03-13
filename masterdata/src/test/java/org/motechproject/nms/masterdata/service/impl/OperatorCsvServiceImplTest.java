@@ -29,13 +29,11 @@ public class OperatorCsvServiceImplTest extends TestCase {
         operatorCsvData.setId(1L);
         operatorCsvData.setName("Test");
         operatorCsvData.setCode("123");
-        operatorCsvData.setOperation("Add");
 
         when(operatorCsvDataService.findById(1L)).thenReturn(operatorCsvData);
         assertNotNull(operatorCsvService.getRecord(1L));
         assertTrue("Test".equals(operatorCsvService.getRecord(1L).getName()));
         assertTrue("123".equals(operatorCsvService.getRecord(1L).getCode()));
-        assertTrue("Add".equals(operatorCsvService.getRecord(1L).getOperation()));
     }
 
 }

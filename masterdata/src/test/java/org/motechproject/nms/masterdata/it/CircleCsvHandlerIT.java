@@ -89,7 +89,6 @@ public class CircleCsvHandlerIT extends BasePaxIT {
         CircleCsv csv = new CircleCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("");
-        csv.setOperation("ADD");
         CircleCsv dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
@@ -103,7 +102,6 @@ public class CircleCsvHandlerIT extends BasePaxIT {
         CircleCsv csv = new CircleCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        csv.setOperation("ADD");
         CircleCsv dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 

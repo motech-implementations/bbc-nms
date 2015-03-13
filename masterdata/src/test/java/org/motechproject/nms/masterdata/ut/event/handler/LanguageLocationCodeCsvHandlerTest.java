@@ -23,7 +23,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class LanguageLocationCodeCsvHandlerTest extends TestCase {
 
-
     private LanguageLocationCodeCsvHandler handler;
 
     @Mock

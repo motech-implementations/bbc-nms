@@ -11,9 +11,6 @@ import org.motechproject.mds.domain.MdsEntity;
 public class ContentUploadCsv extends MdsEntity {
 
     @Field
-    private String operation;
-
-    @Field
     private String contentId;
 
     @Field
@@ -33,14 +30,6 @@ public class ContentUploadCsv extends MdsEntity {
 
     @Field
     private String contentDuration;
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
 
     public String getContentId() {
         return contentId;

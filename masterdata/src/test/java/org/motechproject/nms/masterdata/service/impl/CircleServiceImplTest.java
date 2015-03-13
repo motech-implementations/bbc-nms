@@ -10,9 +10,6 @@ import org.motechproject.nms.masterdata.repository.CircleDataService;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by abhishek on 6/2/15.
- */
 public class CircleServiceImplTest extends TestCase {
 
     private CircleServiceImpl circleService;

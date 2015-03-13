@@ -13,21 +13,10 @@ import org.motechproject.mds.domain.MdsEntity;
 public class OperatorCsv extends MdsEntity {
 
     @Field
-    private String operation;
-
-    @Field
     private String name;
 
     @Field
     private String code;
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
 
     public String getName() {
         return name;

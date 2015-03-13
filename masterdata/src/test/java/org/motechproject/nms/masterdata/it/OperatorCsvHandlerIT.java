@@ -54,7 +54,6 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv csv = new OperatorCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        csv.setOperation("ADD");
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
@@ -70,7 +69,6 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv csv = new OperatorCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        csv.setOperation("ADD");
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
         OperatorCsv csv2 = new OperatorCsv();
@@ -100,7 +98,6 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv csv = new OperatorCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("");
-        csv.setOperation("ADD");
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 

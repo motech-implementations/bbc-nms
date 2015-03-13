@@ -170,7 +170,6 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         // districtCode "1" and stateCode "1"
         LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
         csvRecord.setCircleCode("testCode");
-        csvRecord.setOperation("ADD");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("@");
         csvRecord.setIsDefaultLanguageLocationCode("Y");
@@ -217,7 +216,6 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         // districtCode "1" and stateCode "1"
         LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
         csvRecord.setCircleCode("testCode");
-        csvRecord.setOperation("ADD");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("1");
         csvRecord.setIsDefaultLanguageLocationCode("Y");
