@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -10,12 +11,16 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity(recordHistory = true)
 public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
 
+    @Field
     private Long nmsFlwId;
 
+    @Field
     private Integer endofUsagePromt;
 
+    @Field
     private Boolean welcomePromptFlag;
 
+    @Field
     private Integer currentUsageInPulses;
 
     public Long getNmsFlwId() {

@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.domain;
 
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.Set;
@@ -13,16 +14,22 @@ import java.util.Set;
 @Entity(recordHistory = true)
 public class ServiceConsumptionCall extends MdsEntity {
 
+    @Field
     private Long callId;
 
+    @Field
     private Long nmsFlwId;
 
+    @Field
     private String circle;
 
+    @Field
     private DateTime callStartTime;
 
+    @Field
     private DateTime callEndTime;
 
+    @Field
     private Set<CardContent> cardContent;
 
     public Long getCallId() {
