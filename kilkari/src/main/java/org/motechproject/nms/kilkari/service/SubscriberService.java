@@ -9,5 +9,7 @@ public interface SubscriberService {
     Subscriber create(Subscriber subscriber);
 
     void deleteAll();
+
+    Subscriber getSubscriberByMsisdn(String msisdn);
     
 }

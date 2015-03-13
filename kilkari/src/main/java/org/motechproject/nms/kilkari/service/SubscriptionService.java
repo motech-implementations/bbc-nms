@@ -2,6 +2,8 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.Subscription;
 
+import java.util.List;
+
 public interface SubscriptionService {
 
     void update(Subscription record);
@@ -17,5 +19,7 @@ public interface SubscriptionService {
     Subscription getSubscriptionByMctsIdState(String mctsId, Long id);
 
     void deleteAll();
+
+    List<String> getActiveSubscriptionByMsisdn(String msisdn);
 
 }

@@ -6,6 +6,8 @@ import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("subscriberService")
 public class SubscriberServiceImpl implements SubscriberService {
 
@@ -27,6 +29,16 @@ public class SubscriberServiceImpl implements SubscriberService {
     public void deleteAll() {
         subscriberDataService.deleteAll();
 
+    }
+
+    @Override
+    public Subscriber getSubscriberByMsisdn(String msisdn) {
+        List<Subscriber> subscribers;
+        subscribers =  subscriberDataService.findRecordByMsisdn(msisdn);
+        if(subscribers !=null && subscribers.size() > 0) {
+            return subscribers.get(0);
+        }
+        return null;
     }
 
 
