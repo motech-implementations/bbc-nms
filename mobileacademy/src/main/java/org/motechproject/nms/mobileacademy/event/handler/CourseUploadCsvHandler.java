@@ -13,14 +13,14 @@ import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * This class handles success and failure events for CourseContentCsv that
  * contains course structure.
  */
 
-@Component
+@Service
 public class CourseUploadCsvHandler {
 
     private CSVRecordProcessService csvRecordProcessService;

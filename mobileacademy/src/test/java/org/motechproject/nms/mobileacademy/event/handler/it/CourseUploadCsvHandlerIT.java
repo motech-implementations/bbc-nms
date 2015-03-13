@@ -176,7 +176,6 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
                 CourseContentCsv courseContentCsv = new CourseContentCsv();
-                courseContentCsv.setOperation(tokens[arrayIndex++]);
                 courseContentCsv.setContentId(tokens[arrayIndex++]);
                 courseContentCsv.setCircle(tokens[arrayIndex++]);
 

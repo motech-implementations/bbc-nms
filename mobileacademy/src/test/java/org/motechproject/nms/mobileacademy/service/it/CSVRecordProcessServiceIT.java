@@ -1,7 +1,6 @@
 package org.motechproject.nms.mobileacademy.service.it;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -36,16 +35,13 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 /**
- * /** Verify that CSVRecordProcessService is present and functional
+ * /** Verify that csvRecordProcessService is present and functional
  */
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class CSVRecordProcessServiceIT extends BasePaxIT {
-
-    @Inject
-    private CSVRecordProcessService csvRecordProcessService;
 
     @Inject
     private CourseContentCsvDataService courseContentCsvDataService;
@@ -59,14 +55,8 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Inject
     private MTrainingService mTrainingService;
 
-    /**
-     * test CoursePopulateService Instance is not null
-     */
-    @Test
-    public void testCoursePopulateServiceInstance() throws Exception {
-
-        assertNotNull(csvRecordProcessService);
-    }
+    @Inject
+    private CSVRecordProcessService csvRecordProcessService;
 
     /**
      * clear Mobile Academy and mtraining data related to course
@@ -142,6 +132,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateForLessRecords() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
@@ -153,71 +144,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(0, courseProcessedContents.size());
-    }
-
-    /**
-     * test Course Delete Success scenario
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testCourseDeleteSuccess() throws Exception {
-        clearMobileAcademyData();
-        List<CourseContentCsv> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
-        Integer llc = Integer.parseInt(courseRawContentsForAdd.get(0)
-                .getLanguageLocationCode());
-        long rawContentSize = courseRawContentsForAdd.size();
-        csvRecordProcessService.processRawRecords(courseRawContentsForAdd,
-                "CourseContentCsv.csv");
-        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
-                .findContentByLlc(llc);
-        assertEquals(rawContentSize, courseProcessedContents.size());
-        // Records Processed for DEL Begin
-        List<CourseContentCsv> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
-        for (CourseContentCsv courseContentCsv : courseRawContentsForDel) {
-            courseContentCsv.setOperation("DEL");
-        }
-        csvRecordProcessService.processRawRecords(courseRawContentsForDel,
-                "CourseContentCsv.csv");
-        List<CourseProcessedContent> courseProcessedContentsDel = courseProcessedContentDataService
-                .findContentByLlc(llc);
-        assertEquals(0, courseProcessedContentsDel.size());
-
-    }
-
-    /**
-     * test Course Delete operation ForLess Records
-     * 
-     * @throws Exception
-     */
-    @Test
-    public void testCourseDeleteForLessRecords() throws Exception {
-        clearMobileAcademyData();
-        List<CourseContentCsv> courseRawContentsForAdd = findCourseRawContentListFromCsv(null);
-        Integer llc = Integer.parseInt(courseRawContentsForAdd.get(0)
-                .getLanguageLocationCode());
-        long rawContentSize = courseRawContentsForAdd.size();
-        csvRecordProcessService.processRawRecords(courseRawContentsForAdd,
-                "CourseContentCsv.csv");
-        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
-                .findContentByLlc(llc);
-        assertEquals(rawContentSize, courseProcessedContents.size());
-        // Records Processed for DEL Begin
-        List<CourseContentCsv> courseRawContentsForDel = findCourseRawContentListFromCsv(null);
-        for (CourseContentCsv courseContentCsv : courseRawContentsForDel) {
-            courseContentCsv.setOperation("DEL");
-        }
-        // Removed one record
-        courseContentCsvDataService.delete(courseRawContentsForDel.get(1));
-        courseRawContentsForDel.remove(1);
-        csvRecordProcessService.processRawRecords(courseRawContentsForDel,
-                "CourseContentCsv.csv");
-        List<CourseProcessedContent> courseProcessedContentsDel = courseProcessedContentDataService
-                .findContentByLlc(llc);
-        assertEquals(rawContentSize, courseProcessedContentsDel.size());// No
-                                                                        // Record
-                                                                        // Deleted
-
     }
 
     /**
@@ -247,7 +173,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
                 CourseContentCsv courseContentCsv = new CourseContentCsv();
-                courseContentCsv.setOperation(tokens[arrayIndex++]);
                 courseContentCsv.setContentId(tokens[arrayIndex++]);
                 courseContentCsv.setCircle(tokens[arrayIndex++]);
                 if (StringUtils.isNotBlank(llc)) {
@@ -291,6 +216,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateSuccessForOneLlc() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
@@ -333,6 +259,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateWhenOneLlcDataPresent() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -387,6 +314,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateWhenTwoLlcDataPresent() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -445,7 +373,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
      */
     private CourseContentCsv addNewRecord(CourseContentCsv courseRawContentParam) {
         CourseContentCsv courseContentCsv = new CourseContentCsv();
-        courseContentCsv.setOperation(courseRawContentParam.getOperation());
         courseContentCsv.setContentId(courseRawContentParam.getContentId());
         courseContentCsv.setCircle(courseRawContentParam.getCircle());
         courseContentCsv.setLanguageLocationCode(courseRawContentParam
@@ -467,6 +394,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testUpdateForAllRecordsOfOneChapter() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
@@ -546,7 +474,6 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
                 CourseContentCsv courseContentCsv = new CourseContentCsv();
-                courseContentCsv.setOperation(tokens[arrayIndex++]);
                 courseContentCsv.setContentId("222");
                 arrayIndex = arrayIndex + 1;
                 courseContentCsv.setCircle(tokens[arrayIndex++]);
@@ -589,6 +516,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     public void testCourseUpdateWhenTwoLlcDataPresentAndFails()
             throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -662,6 +590,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseAddWhenOneLlcDataPresentAndFails() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
 
         /*
@@ -693,6 +622,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         courseContentCsvs.get(0).setLanguageLocationCode("sw");// LLC as string
         courseContentCsvs.get(1).setContentName("Test");// no underscore in
@@ -708,6 +638,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
+
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
@@ -737,5 +668,4 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
         assertNull(courseProcessedContent);
 
     }
-
 }
