@@ -79,24 +79,14 @@ public class Taluka extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Taluka)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof Taluka)) return false;
 
         Taluka taluka = (Taluka) o;
 
-        if (!this.getDistrictCode().equals(taluka.getDistrictCode())) {
-            return false;
-        }
-        if (!this.getStateCode().equals(taluka.getStateCode())) {
-            return false;
-        }
-        if (!this.getTalukaCode().equals(taluka.getTalukaCode())) {
-            return false;
-        }
+        if (!this.getDistrictCode().equals(taluka.getDistrictCode())) return false;
+        if (!this.getStateCode().equals(taluka.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(taluka.getTalukaCode())) return false;
 
         return true;
     }

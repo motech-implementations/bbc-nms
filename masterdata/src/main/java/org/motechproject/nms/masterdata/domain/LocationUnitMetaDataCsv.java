@@ -12,22 +12,10 @@ import org.motechproject.mds.domain.MdsEntity;
 public class LocationUnitMetaDataCsv extends MdsEntity {
 
     @Field
-    private String operation;
-
-    @Field
     private String name;
 
-    public LocationUnitMetaDataCsv(String operation, String name) {
-        this.operation = operation;
+    public LocationUnitMetaDataCsv(String name) {
         this.name = name;
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
     }
 
     public String getName() {
@@ -41,8 +29,7 @@ public class LocationUnitMetaDataCsv extends MdsEntity {
     @Override
     public String toString() {
         return "LocationUnitMetaDataCsv{" +
-                "operation=" + operation +
-                ", name=" + name +
+                "name='" + name + '\'' +
                 '}';
     }
 }

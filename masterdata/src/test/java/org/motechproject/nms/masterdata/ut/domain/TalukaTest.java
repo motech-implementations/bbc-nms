@@ -109,7 +109,7 @@ public class TalukaTest {
         Taluka taluka = new Taluka();
         taluka.setStateCode(123L);
         taluka.setDistrictCode(456L);
-        taluka.setTalukaCode("9");
+        taluka.setTalukaCode(MasterDataConstants.EMPTY_STRING);
 
         return taluka;
     }

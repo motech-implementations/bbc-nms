@@ -2,7 +2,7 @@ package org.motechproject.nms.util.ut;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 

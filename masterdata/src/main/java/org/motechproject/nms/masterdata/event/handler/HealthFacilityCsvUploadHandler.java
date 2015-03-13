@@ -1,13 +1,18 @@
 package org.motechproject.nms.masterdata.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -71,10 +76,16 @@ public class HealthFacilityCsvUploadHandler {
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
-        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
+        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+        bulkUploadStatus.setTimeOfUpload(timeStamp);
+
         BulkUploadError errorDetails = new BulkUploadError();
-        String userName = null;
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setRecordType(RecordType.HEALTH_FACILITY);
+        errorDetails.setTimeOfUpload(timeStamp);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         HealthFacilityCsv healthFacilityCsvRecord = null;
@@ -86,35 +97,39 @@ public class HealthFacilityCsvUploadHandler {
 
                 if (null != healthFacilityCsvRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
-                    userName = healthFacilityCsvRecord.getOwner();
+                    bulkUploadStatus.setUploadedBy(healthFacilityCsvRecord.getOwner());
                     HealthFacility record = mapHealthFacilityCsv(healthFacilityCsvRecord);
                     processHealthFacilityData(record);
-                    result.incrementSuccessCount();
+                    bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in HealthFacility Temporary Entity");
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    result.incrementFailureCount();
+                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetails.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                    bulkUploadStatus.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(healthFacilityCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                result.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
             } catch (Exception e) {
+                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetails.setRecordDetails("Exception occurred");
+                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                result.incrementFailureCount();
             } finally {
                 if (null != healthFacilityCsvRecord) {
                     healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
 

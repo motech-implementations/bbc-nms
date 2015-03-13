@@ -28,8 +28,8 @@ public class VillageCsv extends LocationUnitMetaDataCsv {
     @Field
     private String talukaCode;
 
-    public VillageCsv(String operation, String name, String villageCode, String stateCode, String districtCode, String talukaCode) {
-        super(operation, name);
+    public VillageCsv(String name, String villageCode, String stateCode, String districtCode, String talukaCode) {
+        super(name);
         this.villageCode = villageCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;

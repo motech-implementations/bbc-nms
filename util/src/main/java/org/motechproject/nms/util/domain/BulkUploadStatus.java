@@ -1,5 +1,6 @@
 package org.motechproject.nms.util.domain;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -12,7 +13,13 @@ import org.motechproject.mds.domain.MdsEntity;
 public class BulkUploadStatus extends MdsEntity {
 
     @Field
+    private String uploadedBy;
+
+    @Field
     private String bulkUploadFileName;
+
+    @Field
+    private DateTime timeOfUpload;
 
     @Field
     private Integer numberOfSuccessfulRecords;
@@ -20,21 +27,25 @@ public class BulkUploadStatus extends MdsEntity {
     @Field
     private Integer numberOfFailedRecords;
 
-    @Field
-    private String logFileServerIp;
-
-    @Field
-    private String logFileName;
-
     public BulkUploadStatus() {
+        this.numberOfSuccessfulRecords = 0;
+        this.numberOfFailedRecords = 0;
     }
 
-    public BulkUploadStatus(String bulkUploadFileName, Integer numberOfFailedRecords, Integer numberOfSuccessfulRecords, String logFileName, String logFileServerIp) {
+    public BulkUploadStatus(String uploadedBy, String bulkUploadFileName, DateTime timeOfUpload, Integer numberOfFailedRecords, Integer numberOfSuccessfulRecords) {
+        this.uploadedBy = uploadedBy;
         this.bulkUploadFileName = bulkUploadFileName;
+        this.timeOfUpload = timeOfUpload;
         this.numberOfSuccessfulRecords = numberOfSuccessfulRecords;
         this.numberOfFailedRecords = numberOfFailedRecords;
-        this.logFileServerIp = logFileServerIp;
-        this.logFileName = logFileName;
+    }
+
+    public String getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(String uploadedBy) {
+        this.uploadedBy = uploadedBy;
     }
 
     public String getBulkUploadFileName() {
@@ -43,6 +54,14 @@ public class BulkUploadStatus extends MdsEntity {
 
     public void setBulkUploadFileName(String bulkUploadFileName) {
         this.bulkUploadFileName = bulkUploadFileName;
+    }
+
+    public DateTime getTimeOfUpload() {
+        return timeOfUpload;
+    }
+
+    public void setTimeOfUpload(DateTime timeOfUpload) {
+        this.timeOfUpload = timeOfUpload;
     }
 
     public Integer getNumberOfSuccessfulRecords() {
@@ -61,19 +80,11 @@ public class BulkUploadStatus extends MdsEntity {
         this.numberOfFailedRecords = numberOfFailedRecords;
     }
 
-    public String getLogFileServerIp() {
-        return logFileServerIp;
+    public void incrementSuccessCount() {
+        numberOfSuccessfulRecords++;
     }
 
-    public void setLogFileServerIp(String logFileServerIp) {
-        this.logFileServerIp = logFileServerIp;
-    }
-
-    public String getLogFileName() {
-        return logFileName;
-    }
-
-    public void setLogFileName(String logFileName) {
-        this.logFileName = logFileName;
+    public void incrementFailureCount() {
+        numberOfFailedRecords++;
     }
 }

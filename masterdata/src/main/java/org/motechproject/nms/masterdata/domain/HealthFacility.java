@@ -99,30 +99,16 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof HealthFacility)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof HealthFacility)) return false;
 
         HealthFacility that = (HealthFacility) o;
 
-        if (!this.getDistrictCode().equals(that.getDistrictCode())) {
-            return false;
-        }
-        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) {
-            return false;
-        }
-        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) {
-            return false;
-        }
-        if (!this.getStateCode().equals(that.getStateCode())) {
-            return false;
-        }
-        if (!this.getTalukaCode().equals(that.getTalukaCode())) {
-            return false;
-        }
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
+        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
+        if (!this.getStateCode().equals(that.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
 
         return true;
     }
@@ -131,8 +117,8 @@ public class HealthFacility extends LocationUnitMetaData {
     public int hashCode() {
         int result = stateCode.hashCode();
         result = 31 * result + districtCode.hashCode();
-        result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthBlockCode.hashCode();
+        result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthFacilityCode.hashCode();
         return result;
     }
@@ -141,11 +127,11 @@ public class HealthFacility extends LocationUnitMetaData {
     public String toString() {
         return "HealthFacility{" +
                 "healthSubFacility=" + healthSubFacility +
-                ", healthFacilityType=" + healthFacilityType +
                 ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
                 ", healthBlockCode=" + healthBlockCode +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", healthFacilityType=" + healthFacilityType +
                 ", healthFacilityCode=" + healthFacilityCode +
                 '}';
     }

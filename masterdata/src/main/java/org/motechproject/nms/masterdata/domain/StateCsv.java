@@ -22,8 +22,8 @@ public class StateCsv extends LocationUnitMetaDataCsv {
     private String mkCapping;
 
 
-    public StateCsv(String operation, String name, String stateCode, String maCapping, String mkCapping) {
-        super(operation, name);
+    public StateCsv(String name, String stateCode, String maCapping, String mkCapping) {
+        super(name);
         this.stateCode = stateCode;
         this.maCapping = maCapping;
         this.mkCapping = mkCapping;

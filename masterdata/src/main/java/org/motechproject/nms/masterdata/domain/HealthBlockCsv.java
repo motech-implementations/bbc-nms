@@ -25,8 +25,8 @@ public class HealthBlockCsv extends LocationUnitMetaDataCsv {
     private String talukaCode;
 
 
-    public HealthBlockCsv(String operation, String name, String healthBlockCode, String stateCode, String districtCode, String talukaCode) {
-        super(operation, name);
+    public HealthBlockCsv(String name, String healthBlockCode, String stateCode, String districtCode, String talukaCode) {
+        super(name);
         this.healthBlockCode = healthBlockCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;

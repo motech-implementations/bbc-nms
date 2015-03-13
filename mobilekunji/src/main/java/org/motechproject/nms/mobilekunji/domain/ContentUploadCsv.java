@@ -18,9 +18,6 @@ public class ContentUploadCsv extends MdsEntity {
     private Long index;
 
     @Field
-    private String operation = "ADD";
-
-    @Field
     private String contentId;
 
     @Field
@@ -45,11 +42,10 @@ public class ContentUploadCsv extends MdsEntity {
     private String contentDuration;
 
 
-    public ContentUploadCsv(Long index, String operation, String contentId, String circleCode,
+    public ContentUploadCsv(Long index, String contentId, String circleCode,
                             String languageLocationCode, String contentName, String contentType, String contentFile,
                             String cardNumber, String contentDuration) {
         this.index = index;
-        this.operation = operation;
         this.contentId = contentId;
         this.circleCode = circleCode;
         this.languageLocationCode = languageLocationCode;
@@ -61,14 +57,6 @@ public class ContentUploadCsv extends MdsEntity {
     }
 
     public ContentUploadCsv() {
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
     }
 
     public String getContentId() {
@@ -152,7 +140,7 @@ public class ContentUploadCsv extends MdsEntity {
     @Override
     public String toString() {
 
-        return "Content Index[" + this.getIndex() + "] Operation[" + this.getOperation() + "] Content ID["
+        return "Content Index[" + this.getIndex() + "] Content ID["
                 + this.getContentId() + "] Circle Code [" + this.getCircleCode() + "] Language Location Code [" +
                 this.getLanguageLocationCode() + "] Content Name [" + this.getContentName() + "] Content Type [" +
                 this.getContentType() + "] Content File [" + this.contentFile + "] Content Duration [" +

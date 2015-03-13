@@ -85,35 +85,18 @@ public class HealthSubFacility extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof HealthSubFacility)) {
-            return false;
-        }
+        if (this == o) return true;
+        if (!(o instanceof HealthSubFacility)) return false;
 
         HealthSubFacility that = (HealthSubFacility) o;
 
-        if (!this.getDistrictCode().equals(that.getDistrictCode())) {
-            return false;
-        }
-        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) {
-            return false;
-        }
-        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) {
-            return false;
-        }
-        if (!this.getHealthSubFacilityCode().equals(that.getHealthSubFacilityCode())) {
-            return false;
-        }
-        if (!this.getStateCode().equals(that.getStateCode())) {
-            return false;
-        }
-        if (!this.getTalukaCode().equals(that.getTalukaCode())) {
-            return false;
-        }
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
+        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
+        if (!this.getHealthSubFacilityCode().equals(that.getHealthSubFacilityCode())) return false;
+        if (!this.getStateCode().equals(that.getStateCode())) return false;
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
+
         return true;
     }
 
@@ -133,7 +116,7 @@ public class HealthSubFacility extends LocationUnitMetaData {
         return "HealthSubFacility{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", healthBlockCode=" + healthBlockCode +
                 ", healthFacilityCode=" + healthFacilityCode +
                 ", healthSubFacilityCode=" + healthSubFacilityCode +
