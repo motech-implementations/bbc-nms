@@ -27,7 +27,7 @@ public class Village extends MdsEntity {
     @UIDisplayable(position = 1)
     private Long villageCode;
 
-    @Field(name = "name")
+    @Field
     @UIDisplayable(position = 0)
     private String name;
 

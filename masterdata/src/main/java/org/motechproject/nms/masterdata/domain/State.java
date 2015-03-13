@@ -15,7 +15,7 @@ import java.util.Set;
 @Entity(recordHistory = true)
 public class State extends MdsEntity {
 
-    @Field(name = "name")
+    @Field
     @UIDisplayable(position = 0)
     private String name;
 
