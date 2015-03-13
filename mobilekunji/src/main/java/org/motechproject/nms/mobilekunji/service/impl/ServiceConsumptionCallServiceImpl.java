@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Created by abhishek on 13/3/15.
  */
 
-@Service("serviceConsumptionCallServiceImpl")
+@Service("serviceConsumptionCallService")
 public class ServiceConsumptionCallServiceImpl implements ServiceConsumptionCallService {
 
     private ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService;

@@ -32,9 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.configurationService = configurationService;
     }
 
-
-
-
     /**
      * this method determine languageLocationCode using msisdn and circleCode
      *
