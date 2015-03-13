@@ -7,8 +7,8 @@ import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.constants.FrontLineWorkerConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
-import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
-import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -19,11 +19,13 @@ import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.util.domain.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -44,15 +46,15 @@ import java.util.Map;
 @Component
 public class FlwUploadHandler {
 
-    private FlwRecordDataService flwRecordDataService;
-
-    private FlwCsvRecordsDataService flwCsvRecordsDataService;
-
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private LocationService locationService;
 
     private LanguageLocationCodeService languageLocationCodeService;
+
+    private FrontLineWorkerService frontLineWorkerService;
+
+    private FrontLineWorkerCsvService frontLineWorkerCsvService;
 
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
 
@@ -60,25 +62,22 @@ public class FlwUploadHandler {
 
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    private Integer successCount;
-
-    private Integer failCount;
-
     private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
 
 
     @Autowired
-    public FlwUploadHandler(FlwRecordDataService flwRecordDataService,
-                            FlwCsvRecordsDataService flwCsvRecordsDataService,
-                            BulkUploadErrLogService bulkUploadErrLogService,
+    public FlwUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
                             LocationService locationService,
-                            LanguageLocationCodeService languageLocationCodeService) {
+                            LanguageLocationCodeService languageLocationCodeService,
+                            FrontLineWorkerService frontLineWorkerService,
+                            FrontLineWorkerCsvService frontLineWorkerCsvService
+                            ) {
 
-        this.flwRecordDataService = flwRecordDataService;
-        this.flwCsvRecordsDataService = flwCsvRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.locationService = locationService;
         this.languageLocationCodeService = languageLocationCodeService;
+        this.frontLineWorkerService = frontLineWorkerService;
+        this.frontLineWorkerCsvService = frontLineWorkerCsvService;
     }
 
 
@@ -90,20 +89,21 @@ public class FlwUploadHandler {
     @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandlerSuccess(MotechEvent motechEvent) {
 
+        String ownerName = null;
 
         logger.info("Success[flwDataHandlerSuccess] method start for FrontLineWorkerCsv");
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
-        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-
         logger.info("Processing Csv file");
-        setFailCount(0);
-        setSuccessCount(0);
-        CsvProcessingSummary summary = new CsvProcessingSummary(getSuccessCount(), getFailCount());
+
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        BulkUploadError errorDetails = new BulkUploadError();
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         FrontLineWorkerCsv record = null;
-        BulkUploadError errorDetails = null;
+
+        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+        bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
 
         //this loop processes each of the entries in the Front Line Worker Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -111,7 +111,7 @@ public class FlwUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("Processing uploaded id : {}", id);
-                record = flwCsvRecordsDataService.findById(id);
+                record = frontLineWorkerCsvService.findByIdInCsv(id);
                 if (record != null) {
                     logger.info("Record found in Csv database");
 
@@ -129,8 +129,9 @@ public class FlwUploadHandler {
                     if (dbRecord == null) {
 
                         logger.info("New front line worker creation starts");
-                        flwRecordDataService.create(frontLineWorker);
-                        summary.incrementSuccessCount();
+                        frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+                        bulkUploadStatus.incrementSuccessCount();
+                        ownerName = record.getOwner();
                         logger.info("Successful creation of new front line worker");
 
                     } else {
@@ -139,28 +140,32 @@ public class FlwUploadHandler {
                         if (valid == null) {
                             frontLineWorker.setStatus(dbRecord.getStatus());
                             updateDbRecord(frontLineWorker, dbRecord);
-                            summary.incrementSuccessCount();
+                            bulkUploadStatus.incrementSuccessCount();
+                            ownerName = record.getOwner();
                             logger.info("Record updated successfully for Flw with valid = null");
                         } else {
                             if (valid == true) {
                                 if (status == Status.INVALID) {
-                                    summary.incrementFailureCount();
+                                    bulkUploadStatus.incrementFailureCount();
+                                    ownerName = record.getOwner();
                                     //Bug 38
-                                    errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
+                                    errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
                                             String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
-                                    bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                                     logger.warn("Status change try from invalid to valid for id : {}", id);
                                 } else {
                                     frontLineWorker.setStatus(dbRecord.getStatus());
                                     updateDbRecord(frontLineWorker, dbRecord);
-                                    summary.incrementSuccessCount();
+                                    bulkUploadStatus.incrementSuccessCount();
+                                    ownerName = record.getOwner();
                                     logger.info("Record updated successfully for Flw with valid = true");
 
                                 }
                             } else {
                                 frontLineWorker.setStatus(Status.INVALID);
                                 updateDbRecord(frontLineWorker, dbRecord);
-                                summary.incrementSuccessCount();
+                                bulkUploadStatus.incrementSuccessCount();
+                                ownerName = record.getOwner();
                                 logger.info("Record updated successfully for Flw with valid = false");
                             }
                         }
@@ -168,9 +173,10 @@ public class FlwUploadHandler {
 
                 }
             } catch (DataValidationException dve) {
-                errorDetails = populateErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
-                summary.incrementFailureCount();
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                errorDetails = populateErrorDetails(csvFileName, record.toString(), dve.getErrorCode(), dve.getErrorDesc());
+                bulkUploadStatus.incrementFailureCount();
+                ownerName = record.getOwner();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 if (record.getFlwId() != null) {
                     logger.warn("Record not found for uploaded ID: {}", record.getFlwId());
                 } else {
@@ -182,18 +188,20 @@ public class FlwUploadHandler {
                 }
 
             } catch (Exception e) {
-                summary.incrementFailureCount();
+                bulkUploadStatus.incrementFailureCount();
+                ownerName = record.getOwner();
                 logger.error("Exception occur : {}", e.getStackTrace());
-                errorDetails = populateErrorDetails(record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
-                    flwCsvRecordsDataService.delete(record);
+                    frontLineWorkerCsvService.deleteFromCsv(record);
                 }
             }
         }
         logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(record.getOwner(), csvFileName, logFile, summary);
+        bulkUploadStatus.setUploadedBy(ownerName);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
 
     }
 
@@ -231,8 +239,7 @@ public class FlwUploadHandler {
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
         dbRecord.setCreationDate(frontLineWorker.getCreationDate());
         dbRecord.setOwner(frontLineWorker.getOwner());
-        flwRecordDataService.update(dbRecord);
-
+        frontLineWorkerService.updateFrontLineWorker(dbRecord);
     }
 
 
@@ -515,9 +522,12 @@ public class FlwUploadHandler {
      * @param errorCategory    specifies error category
      * @param errorDescription specifies error description
      */
-    private BulkUploadError populateErrorDetails(String id, String errorCategory, String errorDescription) {
+    private BulkUploadError populateErrorDetails(String csvFileName, String id, String errorCategory, String errorDescription) {
 
         BulkUploadError errorDetails = new BulkUploadError();
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        errorDetails.setRecordType(RecordType.FRONT_LINE_WORKER);
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
         errorDetails.setErrorDescription(errorDescription);
@@ -536,30 +546,14 @@ public class FlwUploadHandler {
     private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {
         logger.debug("FLW state Code : {}", stateCode);
 
-
-        FrontLineWorker dbRecord = flwRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
+        FrontLineWorker dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId,stateCode);
         if (dbRecord == null) {
             logger.debug("FLW Contact Number : {}", contactNo);
-            dbRecord = flwRecordDataService.getFlwByContactNo(contactNo);
+            dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);
         }
 
         return dbRecord;
     }
 
-    public Integer getFailCount() {
-        return failCount;
-    }
-
-    public Integer getSuccessCount() {
-        return successCount;
-    }
-
-    public void setFailCount(Integer failCount) {
-        this.failCount = failCount;
-    }
-
-    public void setSuccessCount(Integer successCount) {
-        this.successCount = successCount;
-    }
 }
 
