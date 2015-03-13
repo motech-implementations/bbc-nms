@@ -52,6 +52,7 @@ public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
 
     /**
      * Gets the Health Sub Facility Details by Id
+     *
      * @param id
      * @return HealthSubFacility
      */
@@ -62,6 +63,7 @@ public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
 
     /**
      * Gets the Health Sub Facility Details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode

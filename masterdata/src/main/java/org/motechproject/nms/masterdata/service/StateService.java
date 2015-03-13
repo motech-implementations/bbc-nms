@@ -35,6 +35,7 @@ public interface StateService {
 
     /**
      * Finds the State details by its Id
+     *
      * @param stateCode
      * @return State
      */
@@ -42,6 +43,7 @@ public interface StateService {
 
     /**
      * Finds the State details by its Id
+     *
      * @param id
      * @return State
      */

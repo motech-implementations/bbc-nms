@@ -59,6 +59,7 @@ public class StateServiceImpl implements StateService {
 
     /**
      * Gets the State Details by State Code
+     *
      * @param stateCode
      * @return State
      */
@@ -69,6 +70,7 @@ public class StateServiceImpl implements StateService {
 
     /**
      * Gets the State details by Id
+     *
      * @param stateId
      * @return State
      */

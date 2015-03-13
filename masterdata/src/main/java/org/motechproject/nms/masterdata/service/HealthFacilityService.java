@@ -34,6 +34,7 @@ public interface HealthFacilityService {
 
     /**
      * Finds the Health Facility details by its Id
+     *
      * @param id
      * @return Healthfacility
      */
@@ -41,6 +42,7 @@ public interface HealthFacilityService {
 
     /**
      * Finds the Health Facility details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -49,7 +51,7 @@ public interface HealthFacilityService {
      * @return Healthfacility
      */
     HealthFacility findHealthFacilityByParentCode(Long stateCode, Long districtCode,
-                                                  Long talukaCode,Long healthBlockCode,
+                                                  Long talukaCode, Long healthBlockCode,
                                                   Long healthFacilityCode);
 
 }

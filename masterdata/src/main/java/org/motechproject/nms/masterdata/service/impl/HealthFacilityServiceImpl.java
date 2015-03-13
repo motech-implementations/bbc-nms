@@ -62,6 +62,7 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
 
     /**
      * Gets the Health Facility by its Id
+     *
      * @param id
      * @return HealthFacility
      */
@@ -72,6 +73,7 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
 
     /**
      * Gets the Health Facility by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -81,6 +83,6 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
      */
     @Override
     public HealthFacility findHealthFacilityByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) {
-        return healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode,districtCode,talukaCode,healthBlockCode,healthFacilityCode);
+        return healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthFacilityCode);
     }
 }

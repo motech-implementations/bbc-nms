@@ -38,6 +38,7 @@ public class LocationServiceImpl implements LocationService {
 
     /**
      * validates the Location by state Id and District Id
+     *
      * @param stateId
      * @param districtId
      * @return True/False

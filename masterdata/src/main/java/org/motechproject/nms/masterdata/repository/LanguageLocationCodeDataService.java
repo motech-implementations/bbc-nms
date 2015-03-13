@@ -15,6 +15,7 @@ public interface LanguageLocationCodeDataService extends MotechDataService<Langu
 
     /**
      * find the language location code by its location code
+     *
      * @param stateCode
      * @param districtCode
      * @return LanguageLocationCode
@@ -25,6 +26,7 @@ public interface LanguageLocationCodeDataService extends MotechDataService<Langu
 
     /**
      * Finds language location code Circle wise
+     *
      * @param circleCode
      * @return List&lt;LanguageLocatioCode&gt;
      */
@@ -33,6 +35,7 @@ public interface LanguageLocationCodeDataService extends MotechDataService<Langu
 
     /**
      * Finds the language location code by its Circle code and language location code
+     *
      * @param circleCode
      * @param languageLocationCode
      * @return LanguageLocationCode

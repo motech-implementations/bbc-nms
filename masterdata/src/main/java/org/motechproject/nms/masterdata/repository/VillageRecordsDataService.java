@@ -11,7 +11,8 @@ import org.motechproject.nms.masterdata.domain.Village;
 public interface VillageRecordsDataService extends MotechDataService<Village> {
 
     /**
-     *Finds the village details by its parent code
+     * Finds the village details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode

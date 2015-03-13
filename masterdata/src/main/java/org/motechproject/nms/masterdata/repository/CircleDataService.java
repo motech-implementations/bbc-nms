@@ -12,6 +12,7 @@ public interface CircleDataService extends MotechDataService<Circle> {
 
     /**
      * Finds the Circle details by its code
+     *
      * @param code
      * @return Circle
      */
