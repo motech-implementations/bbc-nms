@@ -90,4 +90,15 @@ public class BulkUploadError extends MdsEntity{
         this.errorDescription = errorDescription;
     }
 
+    public BulkUploadError createDeepCopy() {
+        BulkUploadError bulkUploadErrorCopy = new BulkUploadError();
+        bulkUploadErrorCopy.setCsvName(this.csvName);
+        bulkUploadErrorCopy.setTimeOfUpload(this.timeOfUpload);
+        bulkUploadErrorCopy.setRecordType(this.recordType);
+        bulkUploadErrorCopy.setRecordDetails(this.recordDetails);
+        bulkUploadErrorCopy.setErrorCategory(this.errorCategory);
+        bulkUploadErrorCopy.setErrorDescription(this.errorDescription);
+        return bulkUploadErrorCopy;
+    }
+
 }
