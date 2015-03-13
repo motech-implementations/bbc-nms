@@ -10,10 +10,10 @@ import org.motechproject.mds.annotations.Field;
 @Entity
 public class DistrictCsv extends LocationUnitMetaDataCsv {
 
-    @Field(name = "districtCode")
+    @Field
     private String districtCode;
 
-    @Field(name = "stateId")
+    @Field
     private String stateCode;
 
     public DistrictCsv(String name, String districtCode, String stateCode) {
