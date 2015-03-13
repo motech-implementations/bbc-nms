@@ -19,20 +19,19 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    SqlQueryExecution {
+    QueryExecution {
 
-        private final String incrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount + 1 where id = 1";
+        private final String incrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
+                "SET activeUserCount = activeUserCount + 1 WHERE index = 1";
 
         /**
          * This method executes the query passed.
          * @param query to be executed
-         * @param restriction
          * @return List of distinct subscription packs
          */
         @Override
-        public Object execute(Query query) {
-            return query.execute();
+        public Object execute(Query query, InstanceSecurityRestriction restriction) {
+            return query.getPersistenceManager().newQuery(incrementQuery).execute();
         }
 
         /**
@@ -50,33 +49,28 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountDecrementQuery implements
-    SqlQueryExecution {
+    QueryExecution {
         
-        private final String decrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount - 1 where id = 1";
+        private final String decrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
+                "SET activeUserCount = activeUserCount - 1 WHERE index = 1";
 
         /**
          * This method executes the query passed.
          * @param query to be executed
-         * @param restriction
          * @return List of distinct subscription packs
          */
         @Override
-        public Object execute(Query query) {
-            return query.execute();
+        public Object execute(Query query, InstanceSecurityRestriction restriction) {
+            return query.getPersistenceManager().newQuery(decrementQuery).execute();
         }
 
         /**
          * This method returns the increment query string
-         * @return
+         * @return  the query string
          */
-        @Override
         public String getSqlQuery() {
             return decrementQuery;
         }
-
-       
-
         
     }
 
