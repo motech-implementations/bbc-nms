@@ -63,7 +63,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         ServiceConsumptionFlw serviceConsumptionFlw = new ServiceConsumptionFlw();
         serviceConsumptionFlw.setNmsFlwId(userProfile.getNmsId());
-        serviceConsumptionFlw.setWelcomePromptFlag(true);
+        serviceConsumptionFlw.setWelcomePromptFlag(KunjiConstants.FALSE);
         serviceConsumptionFlw.setCurrentUsageInPulses(KunjiConstants.ZERO);
         serviceConsumptionFlw.setEndOfUsagePrompt(KunjiConstants.ZERO);
 
@@ -84,7 +84,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //method for capping
         setNmsCappingValue(userDetailApiResponse,userProfile);
         userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
-        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getNmsMkMaxEndofusageMessage());
+        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
         userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
 
         return userDetailApiResponse;
@@ -92,14 +92,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse,UserProfile userProfile) {
 
-        switch(configurationService.getConfiguration().getNmsMkCappingType()){
+        switch(configurationService.getConfiguration().getCappingType()){
 
             case KunjiConstants.ZERO:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(-1);
                 break;
 
             case KunjiConstants.ONE:
-                userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNmsMkNationalCapValue());
+                userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNationalCapValue());
 
             case KunjiConstants.TWO:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(userProfile.getMaxStateLevelCappingValue());

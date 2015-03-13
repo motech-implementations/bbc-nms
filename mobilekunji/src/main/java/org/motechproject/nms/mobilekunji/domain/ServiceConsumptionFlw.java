@@ -24,7 +24,7 @@ public class ServiceConsumptionFlw extends MdsEntity {
     private Integer currentUsageInPulses;
 
     @Field
-    private Integer msisdn;
+    private String msisdn;
 
     public Long getNmsFlwId() {
         return nmsFlwId;
@@ -34,11 +34,11 @@ public class ServiceConsumptionFlw extends MdsEntity {
         this.nmsFlwId = nmsFlwId;
     }
 
-    public Integer getMsisdn() {
+    public String getMsisdn() {
         return msisdn;
     }
 
-    public void setMsisdn(Integer msisdn) {
+    public void setMsisdn(String msisdn) {
         this.msisdn = msisdn;
     }
 
