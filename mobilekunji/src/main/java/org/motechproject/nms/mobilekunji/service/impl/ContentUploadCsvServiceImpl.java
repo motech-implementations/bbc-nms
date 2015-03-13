@@ -12,7 +12,7 @@ import java.util.List;
  * Created by abhishek on 13/3/15.
  */
 @Service("contentUploadCsvService")
-public class ContentUploadCsvServiceImpl implements ContentUploadCsvService{
+public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
 
     @Autowired
     ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;

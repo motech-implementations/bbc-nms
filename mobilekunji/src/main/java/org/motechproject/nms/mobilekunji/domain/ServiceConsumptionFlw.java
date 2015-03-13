@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity(recordHistory = true)
-public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
+public class ServiceConsumptionFlw extends MdsEntity {
 
     @Field
     private Long nmsFlwId;
@@ -57,7 +57,7 @@ public class ServiceConsumptionFrontLineWorker  extends MdsEntity {
 
     @Override
     public String toString() {
-        return "ServiceConsumptionFrontLineWorker{" +
+        return "ServiceConsumptionFlw{" +
                 "nmsFlwId=" + nmsFlwId +
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", welcomePromptFlag=" + welcomePromptFlag +

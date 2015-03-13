@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
  */
 
 @Service("serviceConsumptionCallServiceImpl")
-public class ServiceConsumptionCallServiceImpl implements ServiceConsumptionCallService{
+public class ServiceConsumptionCallServiceImpl implements ServiceConsumptionCallService {
 
-   private ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService;
+    private ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService;
 
     @Override
     public ServiceConsumptionCall create(ServiceConsumptionCall record) {

@@ -27,7 +27,6 @@ import static org.junit.Assert.assertTrue;
  */
 
 
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -68,7 +67,6 @@ public class ConfigurationServiceIT extends BasePaxIT {
         assertTrue(1L == configuration.getIndex());
 
     }
-
 
 
 }

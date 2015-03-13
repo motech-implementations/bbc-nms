@@ -36,9 +36,9 @@ public class CallerDataController {
         this.userDetailsService = userDetailsService;
     }
 
-
     /**
      * Maps request for caller data detail controller
+     *
      * @param errors Binding error object
      * @return Json object for user detail.
      */
@@ -48,7 +48,7 @@ public class CallerDataController {
                                  @RequestParam String operator,
                                  @RequestParam String circle,
                                  @RequestParam String callid
-                                , BindingResult errors) throws DataValidationException{
+            , BindingResult errors) throws DataValidationException {
         if (errors.hasErrors()) {
             return null;
         }
@@ -56,15 +56,15 @@ public class CallerDataController {
         String operatorCode = ParseDataHelper.validateAndParseString("operatorCode", operator, true);
         String circleCode = ParseDataHelper.validateAndParseString("circleCode", circle, true);
         Long callId = ParseDataHelper.validateAndParseLong("callId", callid, true);
-        
-        UserDetailApiResponse response = userDetailsService.getUserDetails(msIsdn, circleCode,operatorCode,callId);
+
+        UserDetailApiResponse response = userDetailsService.getUserDetails(msIsdn, circleCode, operatorCode, callId);
         return response.toString();
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(HttpServletRequest request){
-
+    public void saveCallDetails(HttpServletRequest request) {
+        saveCallDetailsService.saveCallDetails();
     }
 
 }

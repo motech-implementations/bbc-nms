@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class CardContent extends MdsEntity{
+public class CardContent extends MdsEntity {
 
     @Field
     private Integer cardNumber;

@@ -168,7 +168,6 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     }
 
 
-
     @Test
     public void testContentUploadNoContentId() throws DataValidationException {
 
