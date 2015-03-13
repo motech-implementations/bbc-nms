@@ -27,6 +27,4 @@ public final class MasterDataConstants {
 
     public static final String YES_FOR_DEFAULT_LANG_LOC_CODE = "Y";
 
-    public static final String EMPTY_STRING = "";
-
 }

@@ -93,12 +93,12 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId()+1);
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageData = villageRecordsDataService.findVillageByParentCode(123L, 456L, "8", 122656L);
+        Village villageData = villageRecordsDataService.findVillageByParentCode(123L, 456L, 8, 122656L);
 
         assertNotNull(villageData);
         assertTrue(123L == villageData.getStateCode());
         assertTrue(456L == villageData.getDistrictCode());
-        assertTrue("8".equals(villageData.getTalukaCode()));
+        assertTrue(8 == villageData.getTalukaCode());
         assertTrue(122656L == villageData.getVillageCode());
         assertTrue("Alampur".equals(villageData.getName()));
 
@@ -109,12 +109,12 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         villageCsvUploadHandler.villageCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.VILLAGE_CSV_SUCCESS));
-        Village villageUpdateData = villageRecordsDataService.findVillageByParentCode(123L, 456L, "8", 122656L);
+        Village villageUpdateData = villageRecordsDataService.findVillageByParentCode(123L, 456L, 8, 122656L);
 
         assertNotNull(villageUpdateData);
         assertTrue(123L == villageUpdateData.getStateCode());
         assertTrue(456L == villageUpdateData.getDistrictCode());
-        assertTrue("8".equals(villageUpdateData.getTalukaCode()));
+        assertTrue(8 == villageUpdateData.getTalukaCode());
         assertTrue(122656L == villageUpdateData.getVillageCode());
         assertTrue("Ahamadabad".equals(villageUpdateData.getName()));
     }

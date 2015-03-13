@@ -98,12 +98,12 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId()+1);
 
         healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
-        HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, "8", 1002L,1111L);
+        HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, 8, 1002L,1111L);
 
         assertNotNull(healthFacilityData);
         assertTrue(123L == healthFacilityData.getStateCode());
         assertTrue(456L == healthFacilityData.getDistrictCode());
-        assertTrue("8".equals(healthFacilityData.getTalukaCode()));
+        assertTrue(8 ==  healthFacilityData.getTalukaCode());
         assertTrue(1002L == healthFacilityData.getHealthBlockCode());
         assertTrue(1111L == healthFacilityData.getHealthFacilityCode());
         assertTrue(9999L == healthFacilityData.getHealthFacilityType());
@@ -116,12 +116,12 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         healthFacilityCsvHandler.healthFacilityCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS));
-        HealthFacility healthFacilityUpdateData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, "8", 1002L, 1111L);
+        HealthFacility healthFacilityUpdateData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(123L, 456L, 8, 1002L, 1111L);
 
         assertNotNull(healthFacilityUpdateData);
         assertTrue(123L == healthFacilityUpdateData.getStateCode());
         assertTrue(456L == healthFacilityUpdateData.getDistrictCode());
-        assertTrue("8".equals(healthFacilityUpdateData.getTalukaCode()));
+        assertTrue(8 == healthFacilityUpdateData.getTalukaCode());
         assertTrue(1002L == healthFacilityUpdateData.getHealthBlockCode());
         assertTrue(1111L == healthFacilityUpdateData.getHealthFacilityCode());
         assertTrue(9999L == healthFacilityUpdateData.getHealthFacilityType());
