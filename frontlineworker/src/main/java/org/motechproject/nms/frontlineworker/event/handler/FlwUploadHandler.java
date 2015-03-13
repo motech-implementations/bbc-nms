@@ -193,10 +193,9 @@ public class FlwUploadHandler {
                 }
             }
         }
-        logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
         bulkUploadStatus.setUploadedBy(userName);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
-
+        logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
     }
 
     /**

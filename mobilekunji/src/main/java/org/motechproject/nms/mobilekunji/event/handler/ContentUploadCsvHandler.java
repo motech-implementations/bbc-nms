@@ -8,11 +8,13 @@ import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
-import org.motechproject.nms.util.domain.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -43,9 +45,6 @@ public class ContentUploadCsvHandler {
     //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-
-    private Integer successCount = 0;
-    private Integer failCount = 0;
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
@@ -61,25 +60,6 @@ public class ContentUploadCsvHandler {
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
-
-    public Integer getFailCount() {
-        return failCount;
-    }
-
-    public void setFailCount(Integer failCount) {
-        this.failCount = failCount;
-    }
-
-    public Integer getSuccessCount() {
-        return successCount;
-    }
-
-    public void setSuccessCount(Integer successCount) {
-        this.successCount = successCount;
-    }
-
-
-
     /**
      * This method provides a listener to the Content upload success scenario.
      *
@@ -89,17 +69,17 @@ public class ContentUploadCsvHandler {
     public void mobileKunjiContentUploadSuccess(MotechEvent motechEvent) {
         logger.info("Success[mobileKunjiContentUploadSuccess] method start for mobileKunjiContentUploadCsv");
         ContentUploadCsv record = null;
-
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
-        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
         logger.info("Processing Csv file");
-        CsvProcessingSummary summary = new CsvProcessingSummary(successCount, failCount);
 
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
-        BulkUploadError errorDetails = null;
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        BulkUploadError errorDetails = new BulkUploadError();
         String userName = null;
+        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+        bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
 
         //this loop processes each of the entries in the Content Upload Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -119,41 +99,39 @@ public class ContentUploadCsvHandler {
                     if (dbRecord == null) {
 
                             contentUploadRecordDataService.create(newRecord);
-                            summary.incrementSuccessCount();
+                            bulkUploadStatus.incrementSuccessCount();
 
 
                     } else {
 
                             mappDbRecordWithCsvrecord(newRecord, dbRecord);
                             contentUploadRecordDataService.update(dbRecord);
-                            summary.incrementSuccessCount();
+                            bulkUploadStatus.incrementSuccessCount();
 
 
                     }
                 }
 
             } catch (DataValidationException dve) {
-                errorDetails = setErrorDetails(record.toString(), dve.getErrorCode(), dve.getErrorDesc());
-                summary.incrementFailureCount();
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                errorDetails = setErrorDetails(csvFileName, record.toString(), dve.getErrorCode(), dve.getErrorDesc());
+                bulkUploadStatus.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 logger.warn("Record not found for uploaded ID: {}", id);
             } catch (Exception ex) {
 
                 logger.error("Exception Occur : {}", ex);
-                errorDetails = setErrorDetails(record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
-                summary.incrementFailureCount();
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                errorDetails = setErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INVALID_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                bulkUploadStatus.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
                     contentUploadCsvRecordDataService.delete(record);
                 }
             }
         }
-
+        bulkUploadStatus.setUploadedBy(userName);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
         logger.info("Success[mobileKunjiContentUploadSuccess] method finished for mobileKunjiContentUploadCsv");
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFile, summary);
-
-
     }
 
 
@@ -232,9 +210,13 @@ public class ContentUploadCsvHandler {
      * @param errorCategory    specifies error category
      * @param errorDescription specifies error descriotion
      */
-    private BulkUploadError setErrorDetails(String id, String errorCategory, String errorDescription) {
+    private BulkUploadError setErrorDetails(String csvFileName, String id, String errorCategory, String errorDescription) {
 
         BulkUploadError errorDetails = new BulkUploadError();
+
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        errorDetails.setRecordType(RecordType.CONTENT_UPLOAD_MK);
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
         errorDetails.setErrorDescription(errorDescription);
