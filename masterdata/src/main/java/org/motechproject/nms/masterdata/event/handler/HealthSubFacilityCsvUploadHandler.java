@@ -7,12 +7,9 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -40,27 +37,27 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
-    private HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService;
+    private HealthSubFacilityCsvService healthSubFacilityCsvService;
 
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    private HealthSubFacilityService healthSubFacilityService;
 
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
-        this.healthSubFacilityCsvRecordsDataService = healthSubFacilityCsvRecordsDataService;
-        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
-        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.healthFacilityService = healthFacilityService;
+        this.healthSubFacilityCsvService = healthSubFacilityCsvService;
+        this.healthSubFacilityService = healthSubFacilityService;
+        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -70,7 +67,7 @@ public class HealthSubFacilityCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.HEALTH_SUB_FACILITY_CSV_SUCCESS})
     public void healthSubFacilityCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("HEALTH_SUB_FACILITY_CSV_SUCCESS event received");
@@ -97,7 +94,7 @@ public class HealthSubFacilityCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_SUB_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthSubFacilityCsvRecord = healthSubFacilityCsvRecordsDataService.findById(id);
+                healthSubFacilityCsvRecord = healthSubFacilityCsvService.findById(id);
 
                 if (healthSubFacilityCsvRecord != null) {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
@@ -129,7 +126,7 @@ public class HealthSubFacilityCsvUploadHandler {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthSubFacilityCsvRecord) {
-                    healthSubFacilityCsvRecordsDataService.delete(healthSubFacilityCsvRecord);
+                    healthSubFacilityCsvService.delete(healthSubFacilityCsvRecord);
                 }
             }
         }
@@ -139,13 +136,13 @@ public class HealthSubFacilityCsvUploadHandler {
     private HealthSubFacility mapHealthSubFacilityCsv(HealthSubFacilityCsv record) throws DataValidationException {
         HealthSubFacility newRecord = new HealthSubFacility();
 
-        String healthSubFacilityName = ParseDataHelper.parseString("HealthSubFacilityName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
-        Long healthfacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
-        Long healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
+        String healthSubFacilityName = ParseDataHelper.validateAndParseString("HealthSubFacilityName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record.getHealthBlockCode(), true);
+        Long healthfacilityCode = ParseDataHelper.validateAndParseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
+        Long healthSubFacilityCode = ParseDataHelper.validateAndParseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -163,13 +160,13 @@ public class HealthSubFacilityCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
 
-        HealthBlock healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(
+        HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
                 stateCode, districtCode, talukaCode, healthBlockCode);
         if (healthBlock == null) {
             ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
         }
 
-        HealthFacility healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
+        HealthFacility healthFacility = healthFacilityService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
         if (healthFacility == null) {
             ParseDataHelper.raiseInvalidDataException("HealthFacility", "HealthFacilityCode");
         }
@@ -191,7 +188,7 @@ public class HealthSubFacilityCsvUploadHandler {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}", healthSubFacilityData.getHealthSubFacilityCode());
 
-        HealthSubFacility existHealthSubFacilityData = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(
+        HealthSubFacility existHealthSubFacilityData = healthSubFacilityService.findHealthSubFacilityByParentCode(
                 healthSubFacilityData.getStateCode(),
                 healthSubFacilityData.getDistrictCode(),
                 healthSubFacilityData.getTalukaCode(),
@@ -205,19 +202,19 @@ public class HealthSubFacilityCsvUploadHandler {
             logger.info("HealthSubFacility Permanent data is successfully updated.");
         } else {
 
-            HealthFacility healthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
+            HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                     healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
                     healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
                     healthSubFacilityData.getHealthFacilityCode());
 
             healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
-            healthFacilityRecordsDataService.update(healthFacilityData);
+            healthFacilityService.update(healthFacilityData);
             logger.info("HealthSubFacility Permanent data is successfully inserted.");
         }
     }
 
     private void updateHealthSubFacilityDAta(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
         existHealthSubFacilityData.setName(healthSubFacilityData.getName());
-        healthSubFacilityRecordsDataService.update(existHealthSubFacilityData);
+        healthSubFacilityService.update(existHealthSubFacilityData);
     }
 }

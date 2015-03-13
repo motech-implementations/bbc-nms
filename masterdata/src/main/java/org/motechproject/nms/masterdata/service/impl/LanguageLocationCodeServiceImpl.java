@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import javax.jdo.Query;
 import java.util.List;
 
+/**
+ * This class is used for crud operations on LanguageLocationCode
+ */
+
 @Service("languageLocationCodeService")
 public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {
 
@@ -47,6 +51,13 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
             this.resultParamName = resultParamName;
         }
 
+        /**
+         * Executes the query
+         *
+         * @param query
+         * @param restriction
+         * @return List&lt;Integer&gt;
+         */
         @Override
         public List<Integer> execute(Query query,
                                      InstanceSecurityRestriction restriction) {
@@ -120,11 +131,11 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     /**
      * This method returns the language location code record for a given circle and LanguageLocationCode
      *
-     * @param circleCode    code of the circle
+     * @param circleCode  code of the circle
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languageLocationCode object.
      */
-    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode){
+    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode) {
         return languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
     }
 
@@ -176,9 +187,9 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
         Circle circle = circleService.getRecordByCode(circleCode);
 
         if (circle != null) {
-            llc =  circle.getDefaultLanguageLocationCode();
+            llc = circle.getDefaultLanguageLocationCode();
         }
-        return  llc;
+        return llc;
     }
 
 }

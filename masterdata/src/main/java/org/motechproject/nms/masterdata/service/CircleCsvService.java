@@ -2,6 +2,10 @@ package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 
+/**
+ * This interface is used for crud operations on CircleCsv
+ */
+
 public interface CircleCsvService {
 
     /**

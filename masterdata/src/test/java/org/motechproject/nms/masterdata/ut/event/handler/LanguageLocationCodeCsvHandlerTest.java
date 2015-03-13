@@ -21,6 +21,9 @@ import java.util.List;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Language Location Code Csv
+ */
 public class LanguageLocationCodeCsvHandlerTest extends TestCase {
 
     private LanguageLocationCodeCsvHandler handler;
@@ -46,7 +49,7 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
     public void init() {
         initMocks(this);
         this.handler = new LanguageLocationCodeCsvHandler(languageLocationCodeService, languageLocationCodeServiceCsv,
-                                                        bulkUploadErrLogService, circleService, locationService);
+                bulkUploadErrLogService, circleService, locationService);
     }
 
     @Test
@@ -61,10 +64,10 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
             method.setAccessible(true);
-            record = (LanguageLocationCode)method.invoke(handler, csv);
+            record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
 
@@ -84,10 +87,10 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
             method.setAccessible(true);
-            record = (LanguageLocationCode)method.invoke(handler, csv);
+            record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
 
@@ -110,10 +113,10 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
             method.setAccessible(true);
-            record = (LanguageLocationCode)method.invoke(handler, csv);
+            record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
 
@@ -142,10 +145,10 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
             method.setAccessible(true);
-            record = (LanguageLocationCode)method.invoke(handler, csv);
+            record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
     }
@@ -182,10 +185,10 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
             method.setAccessible(true);
-            record = (LanguageLocationCode)method.invoke(handler, csv);
+            record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
+        } catch (Exception e) {
             Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
     }

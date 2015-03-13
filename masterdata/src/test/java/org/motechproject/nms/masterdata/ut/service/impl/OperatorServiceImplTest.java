@@ -10,6 +10,9 @@ import org.motechproject.nms.masterdata.service.OperatorService;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Operator Implementations
+ */
 public class OperatorServiceImplTest extends TestCase {
 
     private OperatorService operatorService;

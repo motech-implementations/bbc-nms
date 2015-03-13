@@ -3,13 +3,9 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -40,21 +36,21 @@ public class HealthBlockCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
+    private HealthBlockCsvService healthBlockCsvService;
 
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthBlockCsvUploadHandler.class);
 
     @Autowired
-    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthBlockCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockCsvService healthBlockCsvService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthBlockCsvRecordsDataService = healthBlockCsvRecordsDataService;
-        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.healthBlockCsvService = healthBlockCsvService;
+        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -64,7 +60,7 @@ public class HealthBlockCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.HEALTH_BLOCK_CSV_SUCCESS})
     public void healthBlockCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("HEALTH_BLOCK_CSV_SUCCESS event received");
@@ -90,7 +86,7 @@ public class HealthBlockCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_BLOCK_CSV_SUCCESS event processing start for ID: {}", id);
-                healthBlockCsvRecord = healthBlockCsvRecordsDataService.findById(id);
+                healthBlockCsvRecord = healthBlockCsvService.findById(id);
 
                 if (healthBlockCsvRecord != null) {
                     logger.info("Id exist in HealthBlock Temporary Entity");
@@ -123,7 +119,7 @@ public class HealthBlockCsvUploadHandler {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthBlockCsvRecord) {
-                    healthBlockCsvRecordsDataService.delete(healthBlockCsvRecord);
+                    healthBlockCsvService.delete(healthBlockCsvRecord);
                 }
             }
         }
@@ -134,11 +130,11 @@ public class HealthBlockCsvUploadHandler {
     private HealthBlock mapHealthBlockCsv(HealthBlockCsv record) throws DataValidationException {
         HealthBlock newRecord = new HealthBlock();
 
-        String healthBlockName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
+        String healthBlockName = ParseDataHelper.validateAndParseString("TalukaName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record.getHealthBlockCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -170,7 +166,7 @@ public class HealthBlockCsvUploadHandler {
     private void processHealthBlockData(HealthBlock healthBlockData) throws DataValidationException {
 
         logger.debug("Health Block data contains Health Block code : {}", healthBlockData.getHealthBlockCode());
-        HealthBlock existHealthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
+        HealthBlock existHealthBlockData = healthBlockService.findHealthBlockByParentCode(
                 healthBlockData.getStateCode(),
                 healthBlockData.getDistrictCode(),
                 healthBlockData.getTalukaCode(),
@@ -191,6 +187,6 @@ public class HealthBlockCsvUploadHandler {
 
     private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
         existHealthBlockData.setName(healthBlockData.getName());
-        healthBlockRecordsDataService.update(existHealthBlockData);
+        healthBlockService.update(existHealthBlockData);
     }
 }

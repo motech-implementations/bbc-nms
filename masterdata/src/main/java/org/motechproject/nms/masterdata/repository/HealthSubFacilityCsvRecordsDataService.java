@@ -4,7 +4,7 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.masterdata.domain.HealthSubFacilityCsv;
 
 /**
- * Created by abhishek on 31/1/15.
+ * This interface is used to operate on Health Sub Facility Csv using Motech Data service
  */
 public interface HealthSubFacilityCsvRecordsDataService extends MotechDataService<HealthSubFacilityCsv> {
 }

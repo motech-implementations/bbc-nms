@@ -3,14 +3,9 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthFacilityCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -42,24 +37,24 @@ public class HealthFacilityCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService;
+    private HealthFacilityCsvService healthFacilityCsvService;
 
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvRecordsDataService healthFacilityCsvRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvService healthFacilityCsvService, HealthFacilityService healthFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthFacilityCsvRecordsDataService = healthFacilityCsvRecordsDataService;
-        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
-        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
+        this.healthFacilityCsvService = healthFacilityCsvService;
+        this.healthFacilityService = healthFacilityService;
+        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -69,7 +64,7 @@ public class HealthFacilityCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.HEALTH_FACILITY_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.HEALTH_FACILITY_CSV_SUCCESS})
     public void healthFacilityCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("HEALTH_FACILITY_CSV_SUCCESS event received");
@@ -95,7 +90,7 @@ public class HealthFacilityCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthFacilityCsvRecord = healthFacilityCsvRecordsDataService.findById(id);
+                healthFacilityCsvRecord = healthFacilityCsvService.findById(id);
 
                 if (null != healthFacilityCsvRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
@@ -127,7 +122,7 @@ public class HealthFacilityCsvUploadHandler {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != healthFacilityCsvRecord) {
-                    healthFacilityCsvRecordsDataService.delete(healthFacilityCsvRecord);
+                    healthFacilityCsvService.delete(healthFacilityCsvRecord);
                 }
             }
         }
@@ -138,13 +133,13 @@ public class HealthFacilityCsvUploadHandler {
     private HealthFacility mapHealthFacilityCsv(HealthFacilityCsv record) throws DataValidationException {
         HealthFacility newRecord = new HealthFacility();
 
-        String healthFacilityName = ParseDataHelper.parseString("HealthFacilityName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
-        Long facilityCode = ParseDataHelper.parseLong("FacilityCode", record.getHealthFacilityCode(), true);
-        Integer facilityType = ParseDataHelper.parseInt("FacilityType", record.getHealthFacilityType(), true);
+        String healthFacilityName = ParseDataHelper.validateAndParseString("HealthFacilityName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record.getHealthBlockCode(), true);
+        Long facilityCode = ParseDataHelper.validateAndParseLong("FacilityCode", record.getHealthFacilityCode(), true);
+        Integer facilityType = ParseDataHelper.validateAndParseInt("FacilityType", record.getHealthFacilityType(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -162,7 +157,7 @@ public class HealthFacilityCsvUploadHandler {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
 
-        HealthBlock healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(
+        HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
                 stateCode, districtCode, talukaCode, healthBlockCode);
         if (healthBlock == null) {
             ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
@@ -184,7 +179,7 @@ public class HealthFacilityCsvUploadHandler {
     private void processHealthFacilityData(HealthFacility healthFacilityData) throws DataValidationException {
 
         logger.debug("Health Facility data contains facility code : {}", healthFacilityData.getHealthFacilityCode());
-        HealthFacility existHealthFacilityData = healthFacilityRecordsDataService.findHealthFacilityByParentCode(
+        HealthFacility existHealthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                 healthFacilityData.getStateCode(),
                 healthFacilityData.getDistrictCode(),
                 healthFacilityData.getTalukaCode(),
@@ -196,18 +191,18 @@ public class HealthFacilityCsvUploadHandler {
             logger.info("HealthFacility data is successfully updated.");
         } else {
 
-            HealthBlock healthBlockData = healthBlockRecordsDataService.findHealthBlockByParentCode(
+            HealthBlock healthBlockData = healthBlockService.findHealthBlockByParentCode(
                     healthFacilityData.getStateCode(), healthFacilityData.getDistrictCode(),
                     healthFacilityData.getTalukaCode(), healthFacilityData.getHealthBlockCode());
 
             healthBlockData.getHealthFacility().add(healthFacilityData);
-            healthBlockRecordsDataService.update(healthBlockData);
+            healthBlockService.update(healthBlockData);
             logger.info("HealthFacility data is successfully inserted.");
         }
     }
 
     private void updateHealthFacilityDAta(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
-        healthFacilityRecordsDataService.update(existHealthFacilityData);
+        healthFacilityService.update(existHealthFacilityData);
     }
 }

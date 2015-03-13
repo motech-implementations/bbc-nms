@@ -1,10 +1,9 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.nms.masterdata.domain.District;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This interface is used for crud operations on District
  */
 public interface DistrictService {
 
@@ -31,13 +30,23 @@ public interface DistrictService {
 
     /**
      * delete All State type object
-     *
      */
     void deleteAll();
 
+    /**
+     * Finds the district details by its parent code
+     *
+     * @param districtCode
+     * @param stateCode
+     * @return District
+     */
+    District findDistrictByParentCode(Long districtCode, Long stateCode);
 
-    @Lookup
-    District findDistrictByParentCode(Long districtCode,Long stateCode);
-
+    /**
+     * Finds the district details by its Id
+     *
+     * @param id
+     * @return District
+     */
     District findById(Long id);
 }

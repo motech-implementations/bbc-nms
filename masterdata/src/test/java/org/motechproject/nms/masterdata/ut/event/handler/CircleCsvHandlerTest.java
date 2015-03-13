@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
@@ -26,6 +26,9 @@ import java.util.Map;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Circle Csv
+ */
 public class CircleCsvHandlerTest extends TestCase {
     @Mock
     private CircleService circleService;
@@ -66,16 +69,16 @@ public class CircleCsvHandlerTest extends TestCase {
         try {
             method = handler.getClass().getDeclaredMethod("mapCircleFrom", CircleCsv.class);
             method.setAccessible(true);
-            circle = (Circle)method.invoke(handler, csv);
+            circle = (Circle) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
-        }catch(Exception e) {
-            Assert.assertTrue(e.getCause() instanceof  DataValidationException);
+        } catch (Exception e) {
+            Assert.assertTrue(e.getCause() instanceof DataValidationException);
         }
 
     }
 
-    public CircleCsv createCircleCsvRecord (String name, String code) {
+    public CircleCsv createCircleCsvRecord(String name, String code) {
         CircleCsv csv = new CircleCsv();
         csv.setName(name);
         csv.setCode(code);
@@ -86,7 +89,7 @@ public class CircleCsvHandlerTest extends TestCase {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "circle");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
     public void preSetup() {

@@ -7,9 +7,7 @@ import org.motechproject.mds.annotations.Field;
  * This class Models data records provided in the HealthFacility Csv Upload
  */
 
-@Entity(
-        recordHistory = true
-)
+@Entity
 public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
 
     @Field
@@ -32,7 +30,7 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
 
 
     public HealthFacilityCsv(String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode, String healthFacilityType) {
-        super( name);
+        super(name);
         this.healthFacilityCode = healthFacilityCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;
@@ -89,6 +87,15 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
         this.healthFacilityType = healthFacilityType;
     }
 
+    /**
+     * This method override the toString method to create string for State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code for the instance variables
+     *
+     * @return The string of the State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthFacilityCsv{" +

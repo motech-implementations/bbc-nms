@@ -10,6 +10,9 @@ import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Circle Csv Implementations
+ */
 public class CircleCsvServiceImplTest extends TestCase {
 
     private CircleCsvServiceImpl circleCsvService;

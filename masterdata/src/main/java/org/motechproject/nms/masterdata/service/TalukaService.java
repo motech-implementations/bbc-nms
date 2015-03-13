@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.service;
 import org.motechproject.nms.masterdata.domain.Taluka;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This interface is used for crud operations on Taluka
  */
 public interface TalukaService {
 
@@ -33,10 +33,23 @@ public interface TalukaService {
      */
     void deleteAll();
 
-
+    /**
+     * Finds the Taluka details by its parent code
+     *
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @return Taluka
+     */
     Taluka findTalukaByParentCode(Long stateCode,
                                   Long districtCode,
                                   Long talukaCode);
 
+    /**
+     * Finds the Taluka details by its Id
+     *
+     * @param id
+     * @return Taluka
+     */
     Taluka findById(Long id);
 }

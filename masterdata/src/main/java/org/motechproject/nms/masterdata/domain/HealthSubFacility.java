@@ -3,13 +3,14 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for HealthSubFacility location records
  */
 
 @Entity(recordHistory = true)
-public class HealthSubFacility extends LocationUnitMetaData {
+public class HealthSubFacility extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 6)
@@ -34,6 +35,18 @@ public class HealthSubFacility extends LocationUnitMetaData {
     @Field
     @UIDisplayable(position = 1)
     private Long healthSubFacilityCode;
+
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Long getHealthFacilityCode() {
         return healthFacilityCode;
@@ -116,6 +129,12 @@ public class HealthSubFacility extends LocationUnitMetaData {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the State Code, District Code, Taluka Code,
+     * Health Block Code, Health Facility code and Health Sub Facility Code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -127,6 +146,15 @@ public class HealthSubFacility extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for Health Sub facility Code, State Code
+     * District Code, Taluka Code, Health Block Code, and
+     * Health Facility Code for the instance variables
+     *
+     * @return The string of the Health Sub facility Code, State Code
+     * District Code, Taluka Code, Health Block Code and
+     * Health Facility Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthSubFacility{" +
@@ -136,6 +164,7 @@ public class HealthSubFacility extends LocationUnitMetaData {
                 ", healthBlockCode=" + healthBlockCode +
                 ", healthFacilityCode=" + healthFacilityCode +
                 ", healthSubFacilityCode=" + healthSubFacilityCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

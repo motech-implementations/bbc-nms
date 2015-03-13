@@ -4,10 +4,13 @@ import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.TalukaCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class is used for crud operations on TalukaCsv
  */
+
+@Service("talukaCsvService")
 public class TalukaCsvServiceImpl implements TalukaCsvService {
 
     private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
@@ -37,6 +40,12 @@ public class TalukaCsvServiceImpl implements TalukaCsvService {
         return talukaCsvRecordsDataService.create(record);
     }
 
+    /**
+     * Gets the TalukaCsv by Id
+     *
+     * @param id
+     * @return TalukaCsv
+     */
     @Override
     public TalukaCsv findById(Long id) {
         return talukaCsvRecordsDataService.findById(id);

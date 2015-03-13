@@ -2,8 +2,11 @@ package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 
-public interface LanguageLocationCodeService {
+/**
+ * This interface is used for crud operations on LanguageLocationCode
+ */
 
+public interface LanguageLocationCodeService {
 
 
     /**
@@ -40,7 +43,7 @@ public interface LanguageLocationCodeService {
     /**
      * This method returns the language location code record for a given circle and LanguageLocationCode
      *
-     * @param circleCode    code of the circle
+     * @param circleCode  code of the circle
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languagelocationCode object.
      */

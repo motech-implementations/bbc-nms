@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
@@ -12,7 +13,11 @@ import java.util.Set;
  * This class Models data for District location records
  */
 @Entity(recordHistory = true)
-public class District extends LocationUnitMetaData {
+public class District extends MdsEntity {
+
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
 
     @Field
     @Cascade(delete = true)
@@ -56,6 +61,14 @@ public class District extends LocationUnitMetaData {
         this.stateCode = stateCode;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -77,6 +90,11 @@ public class District extends LocationUnitMetaData {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the District Code and State Code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = districtCode != null ? districtCode.hashCode() : 0;
@@ -84,12 +102,19 @@ public class District extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for District code, Taluka and
+     * State Code for the instance variables
+     *
+     * @return The string of the District code, Taluka and State Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "District{" +
-                "districtCode=" + districtCode +
+                "name='" + name + '\'' +
                 ", taluka=" + taluka +
                 ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
                 '}';
     }
 }

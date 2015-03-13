@@ -6,6 +6,10 @@ import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on CircleCsv
+ */
+
 @Service("circleCsvService")
 public class CircleCsvServiceImpl implements CircleCsvService {
 

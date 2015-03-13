@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Created by abhishek on 11/3/15.
+ * This class is used to test(UT) the operations of Health Sub Facility
  */
 public class HealthSubFacilityTest {
 
@@ -22,7 +22,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -30,7 +30,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -40,7 +40,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -48,7 +48,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentDistrictCode(){
+    public void testEqualsWithDifferentDistrictCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -56,7 +56,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentTalukaCode(){
+    public void testEqualsWithDifferentTalukaCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -64,7 +64,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthBlockCode(){
+    public void testEqualsWithDifferentHealthBlockCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -72,7 +72,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthFacilityCode(){
+    public void testEqualsWithDifferentHealthFacilityCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -80,7 +80,7 @@ public class HealthSubFacilityTest {
     }
 
     @Test
-    public void testEqualsWithDifferentHealthSubFacilityCode(){
+    public void testEqualsWithDifferentHealthSubFacilityCode() {
 
         HealthSubFacility healthSubFacility = getHealthSubFacilityData();
 
@@ -194,7 +194,7 @@ public class HealthSubFacilityTest {
         return healthSubFacilityData;
     }
 
-    public static HealthSubFacility getHealthSubFacilityData(){
+    public static HealthSubFacility getHealthSubFacilityData() {
 
         HealthSubFacility healthSubFacilityData = new HealthSubFacility();
         healthSubFacilityData.setName("Gangiri");

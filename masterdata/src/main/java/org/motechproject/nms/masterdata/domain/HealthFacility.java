@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * This class Models data for Circle HealthFacility records
  */
 @Entity(recordHistory = true)
-public class HealthFacility extends LocationUnitMetaData {
+public class HealthFacility extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
@@ -40,6 +41,18 @@ public class HealthFacility extends LocationUnitMetaData {
     @Field
     @UIDisplayable(position = 1)
     private Long healthFacilityCode;
+
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getHealthFacilityType() {
         return healthFacilityType;
@@ -127,6 +140,13 @@ public class HealthFacility extends LocationUnitMetaData {
         return true;
     }
 
+
+    /**
+     * Calculates the hash code according to the District Code Taluka Code,
+     * Health Block Code and Health Facility code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -137,6 +157,15 @@ public class HealthFacility extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for Health Sub facility, State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code for the instance variables
+     *
+     * @return The string of the Health Sub facility, State Code
+     * District Code, Taluka Code, Health Block Code, Health Facility Type and
+     * Health Facility Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthFacility{" +
@@ -144,9 +173,10 @@ public class HealthFacility extends LocationUnitMetaData {
                 ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
                 ", healthBlockCode=" + healthBlockCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", healthFacilityType=" + healthFacilityType +
                 ", healthFacilityCode=" + healthFacilityCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

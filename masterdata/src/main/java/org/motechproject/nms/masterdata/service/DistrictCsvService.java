@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.service;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This interface is used for crud operations on DistrictCsv
  */
 public interface DistrictCsvService {
 
@@ -21,5 +21,11 @@ public interface DistrictCsvService {
      */
     DistrictCsv create(DistrictCsv record);
 
+    /**
+     * Finds the district details by its Id
+     *
+     * @param id
+     * @return District
+     */
     DistrictCsv findById(Long id);
 }

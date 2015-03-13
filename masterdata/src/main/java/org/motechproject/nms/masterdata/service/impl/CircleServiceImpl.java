@@ -6,6 +6,10 @@ import org.motechproject.nms.masterdata.service.CircleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on Circle
+ */
+
 @Service("circleService")
 public class CircleServiceImpl implements CircleService {
 

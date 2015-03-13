@@ -1,14 +1,13 @@
 package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on Location
+ */
 @Service("locationService")
 public class LocationServiceImpl implements LocationService {
 
@@ -18,25 +17,32 @@ public class LocationServiceImpl implements LocationService {
 
     private TalukaService talukaService;
 
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
-    private VillageRecordsDataService villageRecordsDataService;
+    private VillageService villageService;
 
-    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    private HealthFacilityService healthFacilityService;
 
-    private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
+    private HealthSubFacilityService healthSubFacilityService;
 
     @Autowired
-    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockService healthBlockService, VillageService villageService, HealthFacilityService healthFacilityService, HealthSubFacilityService healthSubFacilityService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.healthBlockRecordsDataService = healthBlockRecordsDataService;
-        this.villageRecordsDataService = villageRecordsDataService;
-        this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
-        this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
+        this.healthBlockService = healthBlockService;
+        this.villageService = villageService;
+        this.healthFacilityService = healthFacilityService;
+        this.healthSubFacilityService = healthSubFacilityService;
     }
 
+    /**
+     * validates the Location by state Id and District Id
+     *
+     * @param stateId
+     * @param districtId
+     * @return True/False
+     */
     @Override
     public boolean validateLocation(Long stateId, Long districtId) {
 
@@ -131,7 +137,7 @@ public class LocationServiceImpl implements LocationService {
             Taluka taluka = talukaService.findById(talukaId);
             if (null != taluka) {
 
-                healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), healthBlockCode);
+                healthBlock = healthBlockService.findHealthBlockByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), healthBlockCode);
                 return healthBlock;
             }
         }
@@ -151,11 +157,11 @@ public class LocationServiceImpl implements LocationService {
         HealthFacility healthFacility = null;
 
         if (null != healthBlockId && null != healthFacilityCode) {
-            HealthBlock healthBlock = healthBlockRecordsDataService.findById(healthBlockId);
+            HealthBlock healthBlock = healthBlockService.findById(healthBlockId);
 
             if (null != healthBlock) {
 
-                healthFacility = healthFacilityRecordsDataService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
+                healthFacility = healthFacilityService.findHealthFacilityByParentCode(healthBlock.getStateCode(),
                         healthBlock.getDistrictCode(), healthBlock.getTalukaCode(), healthBlock.getHealthBlockCode(),
                         healthFacilityCode);
                 return healthFacility;
@@ -177,11 +183,11 @@ public class LocationServiceImpl implements LocationService {
         HealthSubFacility healthSubFacility = null;
 
         if (null != healthFacilityId && null != healthSubFacilityCode) {
-            HealthFacility healthFacility = healthFacilityRecordsDataService.findById(healthFacilityId);
+            HealthFacility healthFacility = healthFacilityService.findById(healthFacilityId);
 
             if (null != healthFacility) {
 
-                healthSubFacility = healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
+                healthSubFacility = healthSubFacilityService.findHealthSubFacilityByParentCode(healthFacility.getStateCode(),
                         healthFacility.getDistrictCode(), healthFacility.getTalukaCode(), healthFacility.getHealthBlockCode(),
                         healthFacility.getHealthFacilityCode(), healthSubFacilityCode);
                 return healthSubFacility;
@@ -206,7 +212,7 @@ public class LocationServiceImpl implements LocationService {
             Taluka taluka = talukaService.findById(talukaId);
 
             if (null != taluka) {
-                village = villageRecordsDataService.findVillageByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), villageCode);
+                village = villageService.findVillageByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), villageCode);
                 return village;
             }
         }

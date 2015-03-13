@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
@@ -53,7 +53,7 @@ public class OperatorCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = MasterDataConstants.OPERATOR_CSV_SUCCESS)
+    @MotechListener(subjects = LocationConstants.OPERATOR_CSV_SUCCESS)
     public void operatorCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("OPERATOR_CSV_SUCCESS event received");
@@ -137,8 +137,8 @@ public class OperatorCsvHandler {
     private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
         Operator newRecord = new Operator();
 
-        newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
-        newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
+        newRecord.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
+        newRecord.setCode(ParseDataHelper.validateAndParseString("Code", record.getCode(), true));
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());

@@ -5,23 +5,23 @@ package org.motechproject.nms.mobilekunji.dto;
  */
 public class UserDetailApiResponse {
 
-    String circle;
+    private String circle;
 
-    Integer languageLocationCode;
+    private Integer languageLocationCode;
 
-    Integer defaultLanguageLocationCode;
+    private Integer defaultLanguageLocationCode;
 
-    Integer currentUsageInPulses;
+    private Integer currentUsageInPulses;
 
-    Integer maxAllowedUsageInPulses;
+    private Integer maxAllowedUsageInPulses;
 
-    Boolean welcomePromptFlag;
+    private Boolean welcomePromptFlag;
 
-    Integer endOfUsagePromptCounter;
+    private Integer endOfUsagePromptCounter;
 
-    Integer maxAllowedEndOfUsagePrompt;
+    private Integer maxAllowedEndOfUsagePrompt;
 
-    String  failureReason;
+    private String  failureReason;
 
     public String getCircle() {
         return circle;

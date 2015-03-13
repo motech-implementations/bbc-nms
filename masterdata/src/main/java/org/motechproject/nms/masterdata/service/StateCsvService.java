@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.service;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This interface is used for crud operations on StateCsv
  */
 public interface StateCsvService {
 
@@ -21,6 +21,12 @@ public interface StateCsvService {
      */
     StateCsv create(StateCsv record);
 
+    /**
+     * Finds the State Csv details by its Id
+     *
+     * @param id
+     * @return StateCsv
+     */
     StateCsv findById(Long id);
 
 }

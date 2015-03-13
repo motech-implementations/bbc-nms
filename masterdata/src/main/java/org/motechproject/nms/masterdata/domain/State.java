@@ -4,14 +4,20 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
 import java.util.Set;
+
 /**
  * This class Models data for State location records
  */
 @Entity(recordHistory = true)
-public class State extends LocationUnitMetaData {
+public class State extends MdsEntity {
+
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
 
     @Field
     @UIDisplayable(position = 1)
@@ -31,6 +37,14 @@ public class State extends LocationUnitMetaData {
     private Integer mkCapping;
 
     public State() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getStateCode() {
@@ -65,13 +79,21 @@ public class State extends LocationUnitMetaData {
         this.maCapping = maCapping;
     }
 
+    /**
+     * This method override the toString method to create string for name, state code
+     * District, maCapping and mkCapping for the instance variables
+     *
+     * @return The string of the name, state code
+     * District, maCapping and mkCapping  for the instance variables
+     */
     @Override
     public String toString() {
         return "State{" +
-                "stateCode=" + stateCode +
+                "name='" + name + '\'' +
+                ", stateCode=" + stateCode +
                 ", district=" + district +
-                ", mkCapping=" + mkCapping +
                 ", maCapping=" + maCapping +
+                ", mkCapping=" + mkCapping +
                 '}';
     }
 }

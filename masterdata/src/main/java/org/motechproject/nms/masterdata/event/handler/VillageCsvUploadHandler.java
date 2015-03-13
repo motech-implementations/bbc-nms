@@ -3,13 +3,9 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -40,21 +36,21 @@ public class VillageCsvUploadHandler {
 
     private TalukaService talukaService;
 
-    private VillageCsvRecordsDataService villageCsvRecordsDataService;
+    private VillageCsvService villageCsvService;
 
-    private VillageRecordsDataService villageRecordsDataService;
+    private VillageService villageService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvService villageCsvService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.stateService = stateService;
         this.districtService = districtService;
         this.talukaService = talukaService;
-        this.villageCsvRecordsDataService = villageCsvRecordsDataService;
-        this.villageRecordsDataService = villageRecordsDataService;
+        this.villageCsvService = villageCsvService;
+        this.villageService = villageService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -64,7 +60,7 @@ public class VillageCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.VILLAGE_CSV_SUCCESS})
     public void villageCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("VILLAGE_CSV_SUCCESS event received");
@@ -91,7 +87,7 @@ public class VillageCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("VILLAGE_CSV_SUCCESS event processing start for ID: {}", id);
-                villageCsvRecord = villageCsvRecordsDataService.findById(id);
+                villageCsvRecord = villageCsvService.findById(id);
 
                 if (villageCsvRecord != null) {
                     logger.info("Id exist in Village Temporary Entity");
@@ -123,7 +119,7 @@ public class VillageCsvUploadHandler {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != villageCsvRecord) {
-                    villageCsvRecordsDataService.delete(villageCsvRecord);
+                    villageCsvService.delete(villageCsvRecord);
                 }
             }
         }
@@ -133,11 +129,11 @@ public class VillageCsvUploadHandler {
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
         Village newRecord = new Village();
 
-        String villageName = ParseDataHelper.parseString("VillageName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
+        String villageName = ParseDataHelper.validateAndParseString("VillageName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long villageCode = ParseDataHelper.validateAndParseLong("VillageCode", record.getVillageCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -169,7 +165,7 @@ public class VillageCsvUploadHandler {
     private void processVillageData(Village villageData) throws DataValidationException {
 
         logger.debug("Village data contains village code : {}", villageData.getVillageCode());
-        Village existVillageData = villageRecordsDataService.findVillageByParentCode(
+        Village existVillageData = villageService.findVillageByParentCode(
                 villageData.getStateCode(),
                 villageData.getDistrictCode(),
                 villageData.getTalukaCode(),
@@ -190,6 +186,6 @@ public class VillageCsvUploadHandler {
 
     private void updateVillage(Village existVillageData, Village villageData) {
         existVillageData.setName(villageData.getName());
-        villageRecordsDataService.update(existVillageData);
+        villageService.update(existVillageData);
     }
 }

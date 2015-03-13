@@ -10,6 +10,9 @@ import org.motechproject.nms.masterdata.repository.CircleDataService;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Circle Implementations
+ */
 public class CircleServiceImplTest extends TestCase {
 
     private CircleServiceImpl circleService;

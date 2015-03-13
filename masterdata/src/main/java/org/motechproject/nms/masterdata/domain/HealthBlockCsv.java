@@ -6,10 +6,7 @@ import org.motechproject.mds.annotations.Field;
 /**
  * This class Models data records provided in the HealthBlock Csv Upload
  */
-@Entity(
-        recordHistory = true
-)
-
+@Entity
 public class HealthBlockCsv extends LocationUnitMetaDataCsv {
 
     @Field
@@ -65,6 +62,12 @@ public class HealthBlockCsv extends LocationUnitMetaDataCsv {
         this.talukaCode = talukaCode;
     }
 
+    /**
+     * This method override the toString method to create string for State Code
+     * District Code, Taluka Code and Health Block Code for the instance variables
+     *
+     * @return The string of the State Code District Code, Taluka Code and Health Block Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthBlockCsv{" +

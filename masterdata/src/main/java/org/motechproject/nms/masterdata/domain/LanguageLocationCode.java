@@ -126,6 +126,15 @@ public class LanguageLocationCode extends MdsEntity {
         this.circleCode = circleCode;
     }
 
+    /**
+     * This method override the toString method to create string for State, State Code, District
+     * District Code, Circle, Circle Code, Language Location Code, Language MA and
+     * Language MK for the instance variables
+     *
+     * @return The string of the State, State Code, District
+     * District Code, Circle, Circle Code, Language Location Code, Language MA and
+     * Language MK for the instance variables
+     */
     @Override
     public String toString() {
         return "LanguageLocationCode{" +

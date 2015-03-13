@@ -10,9 +10,12 @@ import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataSe
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Language Location Code Csv Implementations
+ */
 public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
 
-    private LanguageLocationCodeServiceCsvImpl languageLocationCodeServiceCsv;
+    private LanguageLocationCodeCsvServiceImpl languageLocationCodeServiceCsv;
 
     @Mock
     private LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService;
@@ -20,7 +23,7 @@ public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
     @Before
     public void setUp() {
         initMocks(this);
-        this.languageLocationCodeServiceCsv = new LanguageLocationCodeServiceCsvImpl(languageLocationCodeCsvDataService);
+        this.languageLocationCodeServiceCsv = new LanguageLocationCodeCsvServiceImpl(languageLocationCodeCsvDataService);
     }
 
     @Test

@@ -78,6 +78,7 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     public String getLanguageKK() {
         return languageKK;
     }
+
     public void setLanguageKK(String languageKK) {
         this.languageKK = languageKK;
     }
@@ -97,6 +98,16 @@ public class LanguageLocationCodeCsv extends MdsEntity {
     public void setIsDefaultLanguageLocationCode(String isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
+
+    /**
+     * This method override the toString method to create string for State Code,
+     * District Code, Circle Code, Language Location Code, Language MA and
+     * Language MK for the instance variables
+     *
+     * @return The string of the State Code,
+     * District Code, Circle Code, Language Location Code, Language MA and
+     * Language MK for the instance variables
+     */
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();

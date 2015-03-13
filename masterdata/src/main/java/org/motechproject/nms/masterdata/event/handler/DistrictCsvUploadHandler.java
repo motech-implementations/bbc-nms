@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
@@ -59,7 +59,7 @@ public class DistrictCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.DISTRICT_CSV_SUCCESS})
     public void districtCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("DISTRICT_CSV_SUCCESS event received");
@@ -126,9 +126,9 @@ public class DistrictCsvUploadHandler {
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
 
-        String districtName = ParseDataHelper.parseString("District Name", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
+        String districtName = ParseDataHelper.validateAndParseString("District Name", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {

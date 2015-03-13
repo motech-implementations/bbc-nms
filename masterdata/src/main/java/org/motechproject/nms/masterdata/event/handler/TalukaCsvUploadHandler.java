@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
@@ -63,7 +63,7 @@ public class TalukaCsvUploadHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_SUCCESS})
+    @MotechListener(subjects = {LocationConstants.TALUKA_CSV_SUCCESS})
     public void talukaCsvSuccess(MotechEvent motechEvent) {
 
         logger.info("TALUKA_CSV_SUCCESS event received");
@@ -132,10 +132,10 @@ public class TalukaCsvUploadHandler {
     private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
         Taluka newRecord = new Taluka();
 
-        String talukaName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
+        String talukaName = ParseDataHelper.validateAndParseString("TalukaName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {

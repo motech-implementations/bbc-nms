@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
@@ -53,7 +53,7 @@ public class CircleCsvHandler {
      *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
-    @MotechListener(subjects = MasterDataConstants.CIRCLE_CSV_SUCCESS)
+    @MotechListener(subjects = LocationConstants.CIRCLE_CSV_SUCCESS)
     public void circleCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
@@ -138,8 +138,8 @@ public class CircleCsvHandler {
 
         Circle newRecord = new Circle();
 
-        newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
-        newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
+        newRecord.setCode(ParseDataHelper.validateAndParseString("Code", record.getCode(), true));
+        newRecord.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());

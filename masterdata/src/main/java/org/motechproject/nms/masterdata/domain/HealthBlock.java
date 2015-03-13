@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * This class Models data for HealthBlock location records
  */
 @Entity(recordHistory = true)
-public class HealthBlock extends LocationUnitMetaData {
+public class HealthBlock extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
@@ -33,9 +34,20 @@ public class HealthBlock extends LocationUnitMetaData {
     @UIDisplayable(position = 1)
     private Long healthBlockCode;
 
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
 
     public HealthBlock() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getHealthBlockCode() {
@@ -105,6 +117,11 @@ public class HealthBlock extends LocationUnitMetaData {
         return true;
     }
 
+    /**
+     * Calculates the hash code according to the District Code Taluka Code and Health Block Code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -114,14 +131,21 @@ public class HealthBlock extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for Health facility, State Code
+     * District Code, Taluka Code and Health Block Code for the instance variables
+     *
+     * @return The string of the Health facility, State Code District Code, Taluka Code and Health Block Code of the instance variables.
+     */
     @Override
     public String toString() {
         return "HealthBlock{" +
                 "healthFacility=" + healthFacility +
                 ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", healthBlockCode=" + healthBlockCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

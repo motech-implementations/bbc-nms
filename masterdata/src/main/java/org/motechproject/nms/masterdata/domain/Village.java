@@ -3,12 +3,13 @@ package org.motechproject.nms.masterdata.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for Village location records
  */
 @Entity(recordHistory = true)
-public class Village extends LocationUnitMetaData {
+public class Village extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 4)
@@ -26,8 +27,20 @@ public class Village extends LocationUnitMetaData {
     @UIDisplayable(position = 1)
     private Long villageCode;
 
+    @Field
+    @UIDisplayable(position = 0)
+    private String name;
+
     public Village() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getVillageCode() {
@@ -89,6 +102,13 @@ public class Village extends LocationUnitMetaData {
         return true;
     }
 
+
+    /**
+     * Calculates the hash code according to the District Code, State Code
+     * Taluka code and village Code
+     *
+     * @return An int hash value
+     */
     @Override
     public int hashCode() {
         int result = stateCode.hashCode();
@@ -98,13 +118,21 @@ public class Village extends LocationUnitMetaData {
         return result;
     }
 
+    /**
+     * This method override the toString method to create string for state code
+     * District code, taluka code, village code and name for the instance variables
+     *
+     * @return The string of the name, state code
+     * District code, taluka code, village code and name for the instance variables
+     */
     @Override
     public String toString() {
         return "Village{" +
                 "stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", villageCode=" + villageCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

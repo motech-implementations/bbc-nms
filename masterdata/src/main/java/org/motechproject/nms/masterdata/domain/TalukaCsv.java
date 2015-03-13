@@ -1,19 +1,12 @@
 package org.motechproject.nms.masterdata.domain;
 
-import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.event.CrudEventType;
 
 /**
  * This class Models data records provided in the Taluka Csv Upload
  */
-@Entity(
-        recordHistory = true
-)
-@CrudEvents(
-        CrudEventType.CREATE
-)
+@Entity
 public class TalukaCsv extends LocationUnitMetaDataCsv {
 
     @Field
@@ -25,7 +18,7 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     @Field
     private String talukaCode;
 
-    public TalukaCsv( String name, String districtCode, String stateCode, String talukaCode) {
+    public TalukaCsv(String name, String districtCode, String stateCode, String talukaCode) {
         super(name);
         this.districtCode = districtCode;
         this.stateCode = stateCode;
@@ -56,6 +49,13 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
         this.talukaCode = tCode;
     }
 
+    /**
+     * This method override the toString method to create string for state code
+     * District code and taluka code for the instance variables
+     *
+     * @return The string of the state code
+     * District code and taluka code for the instance variables
+     */
     @Override
     public String toString() {
         return "TalukaCsv{" +

@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Created by abhishek on 11/3/15.
+ * This class is used to test(UT) the operations of Village
  */
 public class VillageTest {
 
@@ -22,7 +22,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testEquals(){
+    public void testEquals() {
 
         Village village = getVillageData();
 
@@ -30,7 +30,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testUnEquals(){
+    public void testUnEquals() {
 
         Village village = getVillageData();
 
@@ -40,7 +40,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testEqualsWithDifferentStateCode(){
+    public void testEqualsWithDifferentStateCode() {
 
         Village village = getVillageData();
 
@@ -48,7 +48,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testEqualsWithDifferentDistrictCode(){
+    public void testEqualsWithDifferentDistrictCode() {
 
         Village village = getVillageData();
 
@@ -56,7 +56,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testEqualsWithDifferentTalukaCode(){
+    public void testEqualsWithDifferentTalukaCode() {
 
         Village village = getVillageData();
 
@@ -64,7 +64,7 @@ public class VillageTest {
     }
 
     @Test
-    public void testEqualsWithDifferentVillageCode(){
+    public void testEqualsWithDifferentVillageCode() {
 
         Village village = getVillageData();
 
