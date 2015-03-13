@@ -131,21 +131,22 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         logger.trace("mapMotherMctsToSubscriber method start");
         motherSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
-        String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
-        motherSubscriber.setMsisdn(NmsUtils.trimMsisdn(msisdn));
+        String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
+        motherSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
         
-        motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
-        motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
-        motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
-        motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
-        motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
-        
-        String abortion = ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false);
+        motherSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("idNo", motherMctsCsv.getIdNo(), true));
+        motherSubscriber.setAge(ParseDataHelper.validateAndParseInt("Age", motherMctsCsv.getAge(), false));
+        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
+        motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(),false));
+        motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
+
+        /* Set the appropriate Deactivation Reason */
+        String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
         if (STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos())) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
         } else if (!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
-        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
+        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
         } else {
             motherSubscriber.setDeactivationReason(DeactivationReason.NONE);

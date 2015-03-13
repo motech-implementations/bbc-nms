@@ -26,6 +26,9 @@ public class Configuration {
     
     @Field(required = true)
     private Integer numMsgPerWeek;
+
+    @Field(required = true)
+    private Integer nationalLanguageLocationCode;
     
     @Field(required = true)
     private Integer maxAllowedActiveBeneficiaryCount;
@@ -141,5 +144,13 @@ public class Configuration {
 
     public void setRetryDay3ObdPriority(String retryDay3ObdPriority) {
         this.retryDay3ObdPriority = retryDay3ObdPriority;
+    }
+
+    public Integer getNationalLanguageLocationCode() {
+        return nationalLanguageLocationCode;
+    }
+
+    public void setNationalLanguageLocationCode(Integer nationalLanguageLocationCode) {
+        this.nationalLanguageLocationCode = nationalLanguageLocationCode;
     }
 }

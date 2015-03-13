@@ -168,25 +168,25 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
     public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException {
         
-        Long stateCode = ParseDataHelper.parseLong("State Code", mctsCsv.getStateCode(),  true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("State Code", mctsCsv.getStateCode(),  true);
         State state = stateConsistencyCheck(stateCode);
 
-        Long districtCode = ParseDataHelper.parseLong("District Code", mctsCsv.getDistrictCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("District Code", mctsCsv.getDistrictCode(), true);
         District district = districtConsistencyCheck(state, districtCode);
 
-        Long talukaCode = ParseDataHelper.parseLong("Taluka Code", mctsCsv.getTalukaCode(), false);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("Taluka Code", mctsCsv.getTalukaCode(), false);
         Taluka taluka = talukaConsistencyCheck(district, talukaCode);
 
-        Long healthBlockCode = ParseDataHelper.parseLong("Health Block Code", mctsCsv.getHealthBlockCode(), false);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("Health Block Code", mctsCsv.getHealthBlockCode(), false);
         HealthBlock healthBlock = healthBlockConsistencyCheck(talukaCode, taluka, healthBlockCode);
 
-        Long phcCode = ParseDataHelper.parseLong("Phc Code", mctsCsv.getPhcCode(), false);
+        Long phcCode = ParseDataHelper.validateAndParseLong("Phc Code", mctsCsv.getPhcCode(), false);
         HealthFacility healthFacility = phcConsistencyCheck(healthBlockCode, healthBlock, phcCode);
 
-        Long subCenterCode = ParseDataHelper.parseLong("Sub centered Code", mctsCsv.getSubCentreCode(), false);
+        Long subCenterCode = ParseDataHelper.validateAndParseLong("Sub centered Code", mctsCsv.getSubCentreCode(), false);
         HealthSubFacility healthSubFacility = subCenterCodeCheck(phcCode, healthFacility, subCenterCode);
 
-        Long villageCode = ParseDataHelper.parseLong("Village Code", mctsCsv.getVillageCode(), false);
+        Long villageCode = ParseDataHelper.validateAndParseLong("Village Code", mctsCsv.getVillageCode(), false);
         Village village = villageConsistencyCheck(talukaCode, taluka, villageCode);
 
         subscriber.setState(state);

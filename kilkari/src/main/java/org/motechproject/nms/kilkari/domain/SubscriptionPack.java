@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.domain;
 
-
-
 public enum SubscriptionPack  {
     
     PACK_72_WEEKS("72WeeksPack"),

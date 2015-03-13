@@ -52,14 +52,17 @@ public class FrontLineWorkerCsv extends MdsEntity {
     @Field
     private String isValid;
 
+    @Field
+    private String nmsFlwId;
+
     public FrontLineWorkerCsv() {
     }
 
-    public FrontLineWorkerCsv(String villageCode, String flwId, String stateCode, String contactNo, String name,
-                              String type, String districtCode, String talukaCode, String healthBlockCode,
-                              String phcCode, String subCentreCode, String ashaNumber, String adhaarNo,
-                              String isValid) {
-        this.villageCode = villageCode;
+
+    public FrontLineWorkerCsv(String flwId, String stateCode, String contactNo, String name, String type,
+                              String districtCode, String talukaCode, String healthBlockCode, String phcCode,
+                              String subCentreCode, String villageCode, String ashaNumber, String adhaarNo,
+                              String isValid, String nmsFlwId) {
         this.flwId = flwId;
         this.stateCode = stateCode;
         this.contactNo = contactNo;
@@ -70,9 +73,11 @@ public class FrontLineWorkerCsv extends MdsEntity {
         this.healthBlockCode = healthBlockCode;
         this.phcCode = phcCode;
         this.subCentreCode = subCentreCode;
+        this.villageCode = villageCode;
         this.ashaNumber = ashaNumber;
         this.adhaarNo = adhaarNo;
         this.isValid = isValid;
+        this.nmsFlwId = nmsFlwId;
     }
 
     public String getFlwId() {
@@ -185,6 +190,14 @@ public class FrontLineWorkerCsv extends MdsEntity {
 
     public void setIsValid(String isValid) {
         this.isValid = isValid;
+    }
+
+    public String getNmsFlwId() {
+        return nmsFlwId;
+    }
+
+    public void setNmsFlwId(String nmsFlwId) {
+        this.nmsFlwId = nmsFlwId;
     }
 
     @Override

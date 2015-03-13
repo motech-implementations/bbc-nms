@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Status;
@@ -48,7 +47,7 @@ public final class MctsCsvHelper  {
         return newSubscription;
     }
     
-    public static void populateDBSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
+    public static void populateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
