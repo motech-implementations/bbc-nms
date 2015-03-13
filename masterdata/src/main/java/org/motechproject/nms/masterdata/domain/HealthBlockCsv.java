@@ -2,12 +2,16 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data records provided in the HealthBlock Csv Upload
  */
 @Entity
-public class HealthBlockCsv extends LocationUnitMetaDataCsv {
+public class HealthBlockCsv extends MdsEntity {
+
+    @Field
+    private String name;
 
     @Field
     private String healthBlockCode;
@@ -21,13 +25,20 @@ public class HealthBlockCsv extends LocationUnitMetaDataCsv {
     @Field
     private String talukaCode;
 
-
     public HealthBlockCsv(String name, String healthBlockCode, String stateCode, String districtCode, String talukaCode) {
-        super(name);
+        this.name = name;
         this.healthBlockCode = healthBlockCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;
         this.talukaCode = talukaCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getHealthBlockCode() {
@@ -71,10 +82,11 @@ public class HealthBlockCsv extends LocationUnitMetaDataCsv {
     @Override
     public String toString() {
         return "HealthBlockCsv{" +
-                "healthBlockCode=" + healthBlockCode +
-                ", stateCode=" + stateCode +
-                ", districtCode=" + districtCode +
-                ", talukaCode=" + talukaCode +
+                "name='" + name + '\'' +
+                ", healthBlockCode='" + healthBlockCode + '\'' +
+                ", stateCode='" + stateCode + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", talukaCode='" + talukaCode + '\'' +
                 '}';
     }
 }

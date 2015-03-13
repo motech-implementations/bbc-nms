@@ -2,12 +2,16 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data records provided in the Taluka Csv Upload
  */
 @Entity
-public class TalukaCsv extends LocationUnitMetaDataCsv {
+public class TalukaCsv extends MdsEntity {
+
+    @Field
+    private String name;
 
     @Field
     private String districtCode;
@@ -19,10 +23,18 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     private String talukaCode;
 
     public TalukaCsv(String name, String districtCode, String stateCode, String talukaCode) {
-        super(name);
+        this.name = name;
         this.districtCode = districtCode;
         this.stateCode = stateCode;
         this.talukaCode = talukaCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDistrictCode() {
@@ -59,10 +71,10 @@ public class TalukaCsv extends LocationUnitMetaDataCsv {
     @Override
     public String toString() {
         return "TalukaCsv{" +
-                ", districtId=" + districtCode +
-                ", stateId=" + stateCode +
-                ", talukaCode=" + talukaCode +
+                "name='" + name + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", stateCode='" + stateCode + '\'' +
+                ", talukaCode='" + talukaCode + '\'' +
                 '}';
     }
-
 }

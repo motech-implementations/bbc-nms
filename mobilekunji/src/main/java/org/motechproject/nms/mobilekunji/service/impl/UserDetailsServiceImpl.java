@@ -1,7 +1,9 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
+import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
-import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,14 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private ServiceConsumptionCallService serviceConsumptionCallService;
-
     private ServiceConsumptionFlwService serviceConsumptionFlwService;
 
+    private UserProfileDetailsService userProfileDetailsService;
+
     @Autowired
-    public UserDetailsServiceImpl(ServiceConsumptionCallService serviceConsumptionCallService, ServiceConsumptionFlwService serviceConsumptionFlwService) {
-        this.serviceConsumptionCallService = serviceConsumptionCallService;
+    public UserDetailsServiceImpl(ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService) {
         this.serviceConsumptionFlwService = serviceConsumptionFlwService;
+        this.userProfileDetailsService = userProfileDetailsService;
     }
 
     /**
@@ -37,7 +39,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
+        UserProfile userProfileData = userProfileDetailsService.handleUserDetail(msisdn,circleCode,operatorCode);
+
+        if(userProfileData.isCreated()) {
+            setFlwData(userProfileData);
+        }
+
         return userDetailApiResponse;
+    }
+
+    private void setFlwData(UserProfile userProfile) {
+
+        ServiceConsumptionFlw serviceConsumptionFlw = new ServiceConsumptionFlw();
+        serviceConsumptionFlw.setNmsFlwId(userProfile.getNmsId());
+        serviceConsumptionFlw.setWelcomePromptFlag(true);
+        serviceConsumptionFlw.setCurrentUsageInPulses(0);
+        serviceConsumptionFlw.setEndOfUsagePrompt(0);
+
+        serviceConsumptionFlwService.create(serviceConsumptionFlw);
+    }
+
+    private UserDetailApiResponse getUserDetailApiResponse() {
+            return null;
     }
 
 }
