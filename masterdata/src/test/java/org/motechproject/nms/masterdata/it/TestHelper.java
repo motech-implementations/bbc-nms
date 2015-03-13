@@ -6,7 +6,7 @@ import org.motechproject.nms.masterdata.domain.*;
 import java.util.*;
 
 /**
- * Created by abhishek on 3/3/15.
+ * This class is used as a test helper
  */
 public class TestHelper {
 

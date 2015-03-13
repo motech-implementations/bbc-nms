@@ -18,6 +18,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Language Location Code Implementations
+ */
 public class LanguageLocationCodeServiceImplTest extends TestCase {
 
     private LanguageLocationCodeService languageLocationCodeService;

@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
- * Created by abhishek on 11/3/15.
+ * This class is used to test(UT) the operations of District
  */
 public class DistrictTest {
 

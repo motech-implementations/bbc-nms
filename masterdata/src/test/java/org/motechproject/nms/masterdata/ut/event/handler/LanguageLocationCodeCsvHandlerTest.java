@@ -21,6 +21,9 @@ import java.util.List;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Language Location Code Csv
+ */
 public class LanguageLocationCodeCsvHandlerTest extends TestCase {
 
     private LanguageLocationCodeCsvHandler handler;
