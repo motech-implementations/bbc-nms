@@ -2,13 +2,17 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data records provided in the District Csv Upload
  */
 
 @Entity
-public class DistrictCsv extends LocationUnitMetaDataCsv {
+public class DistrictCsv extends MdsEntity {
+
+    @Field
+    private String name;
 
     @Field
     private String districtCode;
@@ -17,9 +21,17 @@ public class DistrictCsv extends LocationUnitMetaDataCsv {
     private String stateCode;
 
     public DistrictCsv(String name, String districtCode, String stateCode) {
-        super(name);
+        this.name = name;
         this.districtCode = districtCode;
         this.stateCode = stateCode;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDistrictCode() {
@@ -47,8 +59,9 @@ public class DistrictCsv extends LocationUnitMetaDataCsv {
     @Override
     public String toString() {
         return "DistrictCsv{" +
-                "districtCode=" + districtCode +
-                ", stateCode=" + stateCode +
+                "name='" + name + '\'' +
+                ", districtCode='" + districtCode + '\'' +
+                ", stateCode='" + stateCode + '\'' +
                 '}';
     }
 }
