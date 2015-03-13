@@ -54,7 +54,7 @@ public class BulkUploadError extends MdsEntity{
         return timeOfUpload;
     }
 
-    public void setTimeOfUpload(DateTime timeStamp) {
+    public void setTimeOfUpload(DateTime timeOfUpload) {
         this.timeOfUpload = timeOfUpload;
     }
 
