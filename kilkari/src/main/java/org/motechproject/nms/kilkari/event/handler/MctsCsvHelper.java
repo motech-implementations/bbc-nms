@@ -6,8 +6,17 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
-public final class MctsCsvHelper  {
-    
+/**
+ * This class provides methods to populate Subscriber and Subscription 
+ * with information received from Mcts Csv records.
+ */
+public final class MctsCsvHelper {
+
+    /**
+     * This method id used to populate the existing Subscriber Object
+     * @param subscriber Subscriber type object
+     * @param dbSubscriber Subscriber type object
+     */
     public static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
         
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
@@ -27,9 +36,15 @@ public final class MctsCsvHelper  {
         dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
-    
-    public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
-        
+
+    /**
+     * This method is used to create and populate the Subscription object for new subscription
+     * @param dbSubscriber Subscriber type object
+     * @param channel channel of subscription
+     * @return Subscription type object
+     */
+     public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
+
         Subscription newSubscription;
         newSubscription = new Subscription();
         newSubscription.setMsisdn(dbSubscriber.getMsisdn());
@@ -46,6 +61,14 @@ public final class MctsCsvHelper  {
         
         return newSubscription;
     }
+
+    /**
+     * This method is used to populate the existing Subscription object
+     *
+     * @param subscriber Subscriber type object
+     * @param dbSubscription Subscription type object
+     * @param statusFlag boolean type object
+     */
     
     public static void populateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
         if (statusFlag) {

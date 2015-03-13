@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * This class is used to handle to success 
- * and failure event of csv upload of MotherMcts
+ * This class is used to handle the success
+ * event of csv upload of MotherMcts
  */
 @Component
 public class MotherMctsCsvHandler {

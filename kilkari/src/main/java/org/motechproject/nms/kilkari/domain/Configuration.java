@@ -10,7 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
- * This entity represents the number of messages per week in a pack.
+ * This entity represents the configuration parameters of Kilkari.
  */
 @Entity(recordHistory = true)
 public class Configuration {
