@@ -11,7 +11,7 @@ import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
-import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;

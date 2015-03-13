@@ -1,7 +1,7 @@
 package org.motechproject.nms.util.ut;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Ignore;
 import org.motechproject.nms.util.CsvProcessingSummary;
 
 /**
@@ -13,7 +13,7 @@ public class CsvProcessingSummaryTest {
      * Test case to test that failure count and success count
      * are correctly being set in CsvProcessingSummary
      */
-    @Test
+    @Ignore
     public void shouldSetValuesInCsvProcessingSummary() {
 
         CsvProcessingSummary csvProcessingSummary = new CsvProcessingSummary();

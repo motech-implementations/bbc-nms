@@ -8,7 +8,7 @@ import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadRecordDataService;
-import org.motechproject.nms.util.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;

@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
@@ -27,6 +26,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.mockito.Mockito.when;
+
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -117,9 +119,11 @@ public class LocationValidatorServiceTest {
     @Test
     public void shouldReturnNullForValidStatecode() {
         State state = new State();
-        state.setStateCode(1L);
+        Long stateCode = 1L;
+        state.setStateCode(stateCode);
         state.setId(1L);
-        Mockito.when(locationService.getStateByCode(1L)).thenReturn(state);
+        when(locationService.getStateByCode(1L)).thenReturn(state);
+        //when(ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString())).doNothing();
 
         State returnedState = null;
 
@@ -135,7 +139,7 @@ public class LocationValidatorServiceTest {
     @Test
     public void shouldReturnNullForInvalidStatecode() {
         State state = null;
-        Mockito.when(locationService.getStateByCode(1L)).thenReturn(null);
+        when(locationService.getStateByCode(1L)).thenReturn(null);
 
         try {
             state = locationValidtorService.stateConsistencyCheck(1L);
@@ -150,7 +154,7 @@ public class LocationValidatorServiceTest {
     @Test
     public void shouldReturnNullForInvalidDistrictCode() {
         District district = null;
-        Mockito.when(locationService.getDistrictByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getDistrictByCode(1L, 1L)).thenReturn(null);
         State state = new State();
         state.setId(1L);
         try {
@@ -167,7 +171,7 @@ public class LocationValidatorServiceTest {
         Taluka taluka = null;
         District district = new District();
 
-        Mockito.when(locationService.getTalukaByCode(1L,"abc")).thenReturn(null);
+        when(locationService.getTalukaByCode(1L, "abc")).thenReturn(null);
 
         try {
             taluka = locationValidtorService.talukaConsistencyCheck(district,"abc");
@@ -197,7 +201,7 @@ public class LocationValidatorServiceTest {
         Taluka taluka = new Taluka();
         String talukaCode = new String();
 
-        Mockito.when(locationService.getHealthBlockByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getHealthBlockByCode(1L, 1L)).thenReturn(null);
 
         try {
             healthBlock = locationValidtorService.healthBlockConsistencyCheck(talukaCode, taluka, 1L);
@@ -241,7 +245,7 @@ public class LocationValidatorServiceTest {
     public void shouldReturnNullForInvalidphcCode() {
         HealthFacility healthFacility = null;
         HealthBlock healthBlock = new HealthBlock();
-        Mockito.when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
             healthFacility = locationValidtorService.phcConsistencyCheck(1L, healthBlock, 1L);
@@ -255,7 +259,7 @@ public class LocationValidatorServiceTest {
     @Test
     public void phcConsistencyCheckWithHealthBlockNull() {
         HealthFacility healthFacility = null;
-        Mockito.when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
             healthFacility = locationValidtorService.phcConsistencyCheck(1L, null, 1L);
@@ -284,7 +288,7 @@ public class LocationValidatorServiceTest {
     public void shouldReturnNullForInvalidSubCenterCode() {
         HealthSubFacility healthSubFacility = null;
         HealthFacility healthFacility = new HealthFacility();
-        Mockito.when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
             healthSubFacility = locationValidtorService.subCenterCodeCheck(1L, healthFacility, 1L);
@@ -298,7 +302,7 @@ public class LocationValidatorServiceTest {
     @Test
     public void subCenterCodeCheckWithNullHealthFacility() {
         HealthSubFacility healthSubFacility = null;
-        Mockito.when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
             healthSubFacility = locationValidtorService.subCenterCodeCheck(1L, null, 1L);
@@ -327,7 +331,7 @@ public class LocationValidatorServiceTest {
         Village village = null;
         Taluka taluka = new Taluka();
         String talukaCode = new String();
-        Mockito.when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
             village = locationValidtorService.villageConsistencyCheck(talukaCode, taluka, 1L);
@@ -342,7 +346,7 @@ public class LocationValidatorServiceTest {
     public void villageConsistencyCheckWithNullTaluka() {
         Village village = null;
         String talukaCode = new String();
-        Mockito.when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
+        when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
             village = locationValidtorService.villageConsistencyCheck(talukaCode, null, 1L);
