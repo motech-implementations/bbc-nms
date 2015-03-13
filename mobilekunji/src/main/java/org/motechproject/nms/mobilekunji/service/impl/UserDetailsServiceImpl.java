@@ -37,12 +37,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, Long callId) {
 
-        UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
+        UserDetailApiResponse userDetailApiResponse = null;
 
         UserProfile userProfileData = userProfileDetailsService.handleUserDetail(msisdn,circleCode,operatorCode);
 
         if(userProfileData.isCreated()) {
             setFlwData(userProfileData);
+            userDetailApiResponse = getUserDetailApiResponse(userProfileData);
         }
 
         return userDetailApiResponse;
@@ -59,8 +60,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         serviceConsumptionFlwService.create(serviceConsumptionFlw);
     }
 
-    private UserDetailApiResponse getUserDetailApiResponse() {
-            return null;
+    private UserDetailApiResponse getUserDetailApiResponse(UserProfile userProfile) {
+
+        UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
+
+        ServiceConsumptionFlw serviceConsumptionFlw = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+
+        userDetailApiResponse.setCircle(userProfile.getCircle());
+        userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
+        userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
+
+        userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
+        userDetailApiResponse.setMaxAllowedUsageInPulses(0);
+        userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(serviceConsumptionFlw.getEndOfUsagePrompt());
+        userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
+
+        return userDetailApiResponse;
     }
 
 }

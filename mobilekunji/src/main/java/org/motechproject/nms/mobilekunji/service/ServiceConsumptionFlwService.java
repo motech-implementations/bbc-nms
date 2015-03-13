@@ -13,4 +13,6 @@ public interface ServiceConsumptionFlwService {
 
     public void delete(ServiceConsumptionFlw record);
 
+    public ServiceConsumptionFlw findServiceConsumptionByNmsFlwId(Long nmsFlwId);
+
 }

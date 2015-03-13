@@ -1,9 +1,11 @@
 package org.motechproject.nms.mobilekunji.dto;
 
+import java.io.Serializable;
+
 /**
  * API response object for user detail.
  */
-public class UserDetailApiResponse {
+public class UserDetailApiResponse implements Serializable{
 
     private String circle;
 

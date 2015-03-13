@@ -34,4 +34,9 @@ public class ServiceConsumptionFlwServiceImpl implements ServiceConsumptionFlwSe
     public void delete(ServiceConsumptionFlw record) {
         this.serviceConsumptionFlwRecordDataService.delete(record);
     }
+
+    @Override
+    public ServiceConsumptionFlw findServiceConsumptionByNmsFlwId(Long nmsFlwId) {
+        return serviceConsumptionFlwRecordDataService.findServiceConsumptionByNmsFlwId(nmsFlwId);
+    }
 }
