@@ -50,9 +50,11 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
     @Override
     public void writeBulkUploadErrLog(BulkUploadError bulkUploadError) {
 
+        BulkUploadError bulkUploadErrorDeepCopy = bulkUploadError.createDeepCopy();
+
         //Adding the record to bulk upload status table
-        bulkUploadErrorDataService.create(bulkUploadError);
-        logger.info("Record added successfully for erroneous bulk upload record in {}", bulkUploadError.getRecordType());
+        bulkUploadErrorDataService.create(bulkUploadErrorDeepCopy);
+        logger.info("Record added successfully for erroneous bulk upload record in {}", bulkUploadErrorDeepCopy.getRecordType());
     }
 
 
@@ -70,8 +72,10 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
     @Override
     public void writeBulkUploadProcessingSummary(BulkUploadStatus bulkUploadStatus) {
 
+        BulkUploadStatus bulkUploadStatusDeepCopy = bulkUploadStatus.createDeepCopy();
+
         //Adding the record to bulk upload status table
-        bulkUploadStatusDataService.create(bulkUploadStatus);
+        bulkUploadStatusDataService.create(bulkUploadStatusDeepCopy);
         logger.info("Record added successfully for bulk upload completion status for csv : {}", bulkUploadStatus.getBulkUploadFileName());
     }
 

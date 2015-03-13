@@ -28,4 +28,9 @@ public enum RecordType {
     private RecordType(String recordType) {
         this.recordType = recordType;
     }
+
+    @Override
+    public String toString() {
+        return recordType;
+    }
 }

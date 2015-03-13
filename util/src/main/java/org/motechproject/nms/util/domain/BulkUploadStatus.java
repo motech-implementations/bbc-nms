@@ -87,4 +87,14 @@ public class BulkUploadStatus extends MdsEntity {
     public void incrementFailureCount() {
         numberOfFailedRecords++;
     }
+
+    public BulkUploadStatus createDeepCopy() {
+        BulkUploadStatus bulkUploadStatusCopy = new BulkUploadStatus();
+        bulkUploadStatusCopy.setUploadedBy(this.uploadedBy);
+        bulkUploadStatusCopy.setBulkUploadFileName(this.bulkUploadFileName);
+        bulkUploadStatusCopy.setTimeOfUpload(this.timeOfUpload);
+        bulkUploadStatusCopy.setNumberOfSuccessfulRecords(this.numberOfSuccessfulRecords);
+        bulkUploadStatusCopy.setNumberOfFailedRecords(this.numberOfFailedRecords);
+        return bulkUploadStatusCopy;
+    }
 }

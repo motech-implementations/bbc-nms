@@ -66,9 +66,6 @@ public class TalukaCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.TALUKA_CSV_SUCCESS})
     public void talukaCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("TALUKA_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();

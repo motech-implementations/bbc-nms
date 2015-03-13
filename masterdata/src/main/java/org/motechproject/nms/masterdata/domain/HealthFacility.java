@@ -99,16 +99,30 @@ public class HealthFacility extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HealthFacility)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof HealthFacility)) {
+            return false;
+        }
 
         HealthFacility that = (HealthFacility) o;
 
-        if (!this.getDistrictCode().equals(that.getDistrictCode())) return false;
-        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) return false;
-        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) return false;
-        if (!this.getStateCode().equals(that.getStateCode())) return false;
-        if (!this.getTalukaCode().equals(that.getTalukaCode())) return false;
+        if (!this.getDistrictCode().equals(that.getDistrictCode())) {
+            return false;
+        }
+        if (!this.getHealthBlockCode().equals(that.getHealthBlockCode())) {
+            return false;
+        }
+        if (!this.getHealthFacilityCode().equals(that.getHealthFacilityCode())) {
+            return false;
+        }
+        if (!this.getStateCode().equals(that.getStateCode())) {
+            return false;
+        }
+        if (!this.getTalukaCode().equals(that.getTalukaCode())) {
+            return false;
+        }
 
         return true;
     }

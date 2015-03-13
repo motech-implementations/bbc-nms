@@ -62,9 +62,6 @@ public class DistrictCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
     public void districtCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("DISTRICT_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();

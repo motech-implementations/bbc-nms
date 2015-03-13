@@ -56,9 +56,6 @@ public class StateCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.STATE_CSV_SUCCESS})
     public void stateCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("STATE_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();
