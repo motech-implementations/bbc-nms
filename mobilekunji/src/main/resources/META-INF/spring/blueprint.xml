@@ -19,6 +19,12 @@
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
+    <osgi:reference id="serviceConsumptionRecordsDataService"
+                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConsumptionCallRecordDataService"/>
+
+    <osgi:reference id="serviceConsumptionFlwRecordsDataService"
+                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConsumptionFlwRecordDataService"/>
+
     <osgi:service ref="contentUploadService"
                   interface="org.motechproject.nms.mobilekunji.service.ContentUploadService"/>
 
