@@ -3,14 +3,10 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.HealthBlockCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.HealthBlockCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -27,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 14/2/15.
+ * This class is used to test(IT) the operations of HealthBlock Csv
  */
 
 @RunWith(PaxExam.class)
@@ -49,10 +45,10 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     private TalukaService talukaService;
 
     @Inject
-    private HealthBlockCsvRecordsDataService healthBlockCsvRecordsDataService;
+    private HealthBlockCsvService healthBlockCsvService;
 
     @Inject
-    private HealthBlockRecordsDataService healthBlockRecordsDataService;
+    private HealthBlockService healthBlockService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -60,13 +56,14 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateService,
-                districtService, talukaService,healthBlockCsvRecordsDataService,
-                healthBlockRecordsDataService, bulkUploadErrLogService);
+                districtService, talukaService, healthBlockCsvService,
+                healthBlockService, bulkUploadErrLogService);
     }
+
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(healthBlockCsvRecordsDataService);
-        assertNotNull(healthBlockRecordsDataService);
+        assertNotNull(healthBlockCsvService);
+        assertNotNull(healthBlockService);
         assertNotNull(talukaService);
         assertNotNull(districtService);
         assertNotNull(stateService);
@@ -93,10 +90,10 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
 
-        healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
-        HealthBlock healthBlockeData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, 8L, 1002L);
+        healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_BLOCK_CSV_SUCCESS));
+        HealthBlock healthBlockeData = healthBlockService.findHealthBlockByParentCode(123L, 456L, 8L, 1002L);
 
         assertNotNull(healthBlockeData);
         assertTrue(123L == healthBlockeData.getStateCode());
@@ -111,8 +108,8 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.HEALTH_BLOCK_CSV_SUCCESS));
-        HealthBlock healthBlockUpdateData = healthBlockRecordsDataService.findHealthBlockByParentCode(123L, 456L, 8L, 1002L);
+        healthBlockCsvUploadHandler.healthBlockCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.HEALTH_BLOCK_CSV_SUCCESS));
+        HealthBlock healthBlockUpdateData = healthBlockService.findHealthBlockByParentCode(123L, 456L, 8L, 1002L);
 
         assertNotNull(healthBlockUpdateData);
         assertTrue(123L == healthBlockUpdateData.getStateCode());
@@ -128,6 +125,6 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
     private void createHealthBlockCsvData(HealthBlockCsv csvData) {
 
-        healthBlockCsvRecordsDataService.create(csvData);
+        healthBlockCsvService.create(csvData);
     }
 }

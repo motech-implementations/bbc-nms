@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CircleCsv;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used to test(IT) the operations of Circle Csv
+ */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -97,7 +100,6 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     }
 
 
-
     public void preSetup() {
         CircleCsv csv = new CircleCsv();
         csv.setName("MotechEventCreateTest");
@@ -112,14 +114,14 @@ public class CircleCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "circle");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             Circle circle = circleDataService.findById(id);
-            if(circle !=null) {
+            if (circle != null) {
                 circleService.delete(circle);
             }
         }

@@ -23,6 +23,9 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
+/**
+ * This class is used to test(IT) the operations of Language Location Code
+ */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -109,7 +112,6 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         preSetUp();
         Assert.assertNull(llcImpl.getLanguageLocationCodeByCircleCode("xyz"));
     }
-
 
 
     public void preSetUp() {

@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.event.handler.LanguageLocationCodeCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used to test(IT) the operations of Language Location Code Csv
+ */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -71,6 +74,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     }
 
     List<Long> createdIds = new ArrayList<Long>();
+
     @Test
     public void shouldCreateLanguageLocationCodeRecordsAfterCsvUpload() throws Exception {
         LanguageLocationCodeCsvHandler llcCsvHandler = new LanguageLocationCodeCsvHandler(languageLocationCodeService,
@@ -112,7 +116,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMAChanged");
         csvRecord.setLanguageMK("LanguageMKChanged");
         csvRecord.setLanguageLocationCode("321");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -176,7 +180,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -186,7 +190,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "languageLocationCode");
-        return new MotechEvent(MasterDataConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS, params);
     }
 
     public void preSetUp() {
@@ -222,16 +226,16 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv =  llcCsvDataService.create(csvRecord);
+        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
     }
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             LanguageLocationCode ll = llcDataService.findById(id);
 
-            if(ll !=null) {
+            if (ll != null) {
                 Circle circle = circleService.getRecordByCode(ll.getCircleCode());
                 State state = locationService.getStateByCode(ll.getStateCode());
                 District district = null;

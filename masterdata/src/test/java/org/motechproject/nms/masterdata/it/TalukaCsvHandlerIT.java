@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
@@ -29,14 +29,14 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 14/2/15.
+ * This class is used to test(IT) the operations of Taluka Csv
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class TalukaCsvHandlerIT extends BasePaxIT {
 
-    private TalukaCsvUploadHandler  talukaCsvUploadHandler;
+    private TalukaCsvUploadHandler talukaCsvUploadHandler;
 
     List<Long> createdIds = new ArrayList<Long>();
 
@@ -58,7 +58,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
-                districtService, talukaCsvService,talukaService, bulkUploadErrLogService);
+                districtService, talukaCsvService, talukaService, bulkUploadErrLogService);
     }
 
     @Test
@@ -87,8 +87,8 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
 
         createdIds.add(csvData.getId());
         createdIds.add(invalidCsvData.getId());
-        createdIds.add(csvData.getId()+1);
-        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
+        createdIds.add(csvData.getId() + 1);
+        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.TALUKA_CSV_SUCCESS));
 
 
         Taluka talukaData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
@@ -104,7 +104,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
+        talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.TALUKA_CSV_SUCCESS));
         Taluka talukaUpdateData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaUpdateData);

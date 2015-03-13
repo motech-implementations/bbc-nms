@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.it;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
@@ -25,7 +25,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 3/3/15.
+ * This class is used to test(IT) the operations of State Csv
  */
 
 @RunWith(PaxExam.class)
@@ -48,8 +48,8 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-       stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
-               stateCsvService,bulkUploadErrLogService);
+        stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
+                stateCsvService, bulkUploadErrLogService);
     }
 
     @Test
@@ -70,10 +70,10 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
 
         createdIds.add(csvData.getId());
-        createdIds.add(csvData.getId()+1);
+        createdIds.add(csvData.getId() + 1);
         createdIds.add(invalidCsvData.getId());
 
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.STATE_CSV_SUCCESS));
 
         State stateData = stateService.findRecordByStateCode(123L);
 
@@ -88,7 +88,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         clearId();
         createdIds.add(csvData.getId());
 
-        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
+        stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, LocationConstants.STATE_CSV_SUCCESS));
         State updatedStateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(updatedStateData);
@@ -96,7 +96,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
         assertTrue("UK".equals(updatedStateData.getName()));
     }
 
-    private void clearId(){
+    private void clearId() {
 
         createdIds.clear();
     }

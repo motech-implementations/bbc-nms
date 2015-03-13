@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.event.handler.OperatorCsvHandler;
@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used to test(IT) the operations of Operator Csv
+ */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -57,7 +60,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(0)));
         Operator record = operatorService.getRecordByCode("12345");
@@ -77,7 +80,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         dbCsv = operatorCsvDataService.create(csv2);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(0)));
         Assert.assertNull(operatorCsvService.getRecord(createdIds.get(1)));
@@ -89,7 +92,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
     public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
         createdIds.add(1L);
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
     }
 
@@ -101,7 +104,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         OperatorCsv dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
-        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService,bulkUploadErrLogService);
+        OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
         operatorCsvHandler.operatorCsvSuccess(createMotechEvent(createdIds));
     }
 
@@ -109,14 +112,14 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "operator");
-        return new MotechEvent(MasterDataConstants.OPERATOR_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.OPERATOR_CSV_SUCCESS, params);
     }
 
     @After
     public void tearDown() {
-        for(Long id : createdIds) {
+        for (Long id : createdIds) {
             Operator operator = operatorDataService.findById(id);
-            if(operator !=null) {
+            if (operator != null) {
                 operatorService.delete(operator);
             }
         }
