@@ -75,7 +75,7 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
         BulkUploadStatus bulkUploadStatusDeepCopy = bulkUploadStatus.createDeepCopy();
 
         //Adding the record to bulk upload status table
-        bulkUploadStatusDataService.create(bulkUploadStatus);
+        bulkUploadStatusDataService.create(bulkUploadStatusDeepCopy);
         logger.info("Record added successfully for bulk upload completion status for csv : {}", bulkUploadStatus.getBulkUploadFileName());
     }
 
