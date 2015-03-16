@@ -1,9 +1,9 @@
-package org.motechproject.nms.kilkari.domain;
+package org.motechproject.nms.kilkari.dto;
 
 import java.util.List;
 
 /**
- *
+ * API response object for subscriber detail.
  */
 public class SubscriberDetailApiResponse {
 

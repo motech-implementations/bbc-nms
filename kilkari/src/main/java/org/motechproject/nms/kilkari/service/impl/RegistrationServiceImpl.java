@@ -1,7 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.SubscriberDetailApiResponse;
+import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.RegistrationService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
@@ -11,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Implement business logic for finding subscriber details and identify Language
+ * location code for the subscriber.
+ */
 @Service("registrationServiceImpl")
 public class RegistrationServiceImpl implements RegistrationService {
 

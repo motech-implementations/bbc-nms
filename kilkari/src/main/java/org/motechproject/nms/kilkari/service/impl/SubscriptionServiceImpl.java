@@ -19,6 +19,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private SubscriptionDataService subscriptionDataService;
 
+    /**
+     * Query to find list of Active and Pending subscription packs for given msisdn.
+     */
     private class ActiveSubscriptionQuery implements QueryExecution<List<String>> {
         private String msisdn;
         private String resultParamName;
@@ -35,19 +38,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             query.setResult(resultParamName);
             return null;
         }
-
     }
 
     @Override
     public void deleteAll() {
         subscriptionDataService.deleteAll();
-
     }
 
     @Override
     public void update(Subscription record) {
         subscriptionDataService.update(record);
-
     }
     
     @Override
