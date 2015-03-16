@@ -78,9 +78,9 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         assertNotNull(csvRecordProcessService);
-        assertNotNull(courseContentCsvDataService);
+        assertNotNull(courseContentCsvService);
         courseUploadCsvHandler = new CourseUploadCsvHandler(
-                csvRecordProcessService, courseContentCsvDataService);
+                csvRecordProcessService, courseContentCsvService);
         assertNotNull(courseUploadCsvHandler);
         clearMobileAcademyData();
 

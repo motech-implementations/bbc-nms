@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.nms.mobileacademy.commons.CourseFlags;
+import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.Record;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
@@ -291,15 +291,16 @@ public class CSVRecordProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Lesson Content File");
-        CourseFlags courseFlags = new CourseFlags();
+        CourseFlag courseFlags = new CourseFlag();
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
                     "checkRecordTypeAndMarkCourseFlag", new Class[] {
-                            Record.class, CourseFlags.class });
+                            Record.class, CourseFlag.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] { record,
                     courseFlags });
-            assertTrue(courseFlags.flagForLessonFilesOfChapter[0][0][0]);
+            assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                    .isFlagForLessonContentFile());
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -341,16 +342,17 @@ public class CSVRecordProcessServiceImplTest {
         lessons.add(new LessonContent(3, "lesson", "Ch1_l1.wav"));
         ChapterContent chapterContent = new ChapterContent(1, "content",
                 "ch1_l1.wav", lessons, scoreContent, quiz);
-        CourseFlags courseFlags = new CourseFlags();
+        CourseFlag courseFlags = new CourseFlag();
         try {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
                     "checkRecordConsistencyAndMarkFlag", new Class[] {
                             Record.class, ChapterContent.class,
-                            CourseFlags.class });
+                            CourseFlag.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] { record,
                     chapterContent, courseFlags });
-            assertTrue(courseFlags.flagForLessonFilesOfChapter[0][0][0]);
+            assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                    .isFlagForLessonContentFile());
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -587,7 +589,7 @@ public class CSVRecordProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Lesson Content File");
-        CourseFlags courseFlags = new CourseFlags();
+        CourseFlag courseFlags = new CourseFlag();
         List<QuestionContent> questionContent = new ArrayList<QuestionContent>() {
         };
         questionContent.add(new QuestionContent(1, "question", "ch1_q1.wav"));
@@ -613,11 +615,12 @@ public class CSVRecordProcessServiceImplTest {
             method = CSVRecordProcessServiceImpl.class.getDeclaredMethod(
                     "checkTypeAndAddToChapterContent", new Class[] {
                             Record.class, ChapterContent.class,
-                            CourseFlags.class });
+                            CourseFlag.class });
             method.setAccessible(true);
             method.invoke(csvRecordProcessServiceImpl, new Object[] { record,
                     chapterContent, courseFlags });
-            assertTrue(courseFlags.flagForLessonFilesOfChapter[0][0][0]);
+            assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                    .isFlagForLessonContentFile());
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
