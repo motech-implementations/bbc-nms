@@ -25,37 +25,34 @@ public class Configuration {
     private Long index;
     
     @Field(required = true)
-    private Integer nmsKk72WeeksPackMsgsPerWeek;
+    private Integer numMsgPerWeek;
     
     @Field(required = true)
-    private Integer nmsKk48WeeksPackMsgsPerWeek;
+    private Integer maxAllowedActiveBeneficiaryCount;
     
     @Field(required = true)
-    private Integer nmsKkMaxAllowedActiveBeneficiaryCount;
+    private String freshObdServiceId;
     
     @Field(required = true)
-    private String nmsKkFreshObdServiceId;
+    private String retryDay1ObdServiceId;
     
     @Field(required = true)
-    private String nmsKkRetryDay1ObdServiceId;
+    private String retryDay2ObdServiceId;
     
     @Field(required = true)
-    private String nmsKkRetryDay2ObdServiceId;
+    private String retryDay3ObdServiceId;
     
     @Field(required = true)
-    private String nmsKkRetryDay3ObdServiceId;
+    private String freshObdPriority;
     
     @Field(required = true)
-    private String nmsKkFreshObdPriority;
+    private String retryDay1ObdPriority;
     
     @Field(required = true)
-    private String nmsKkRetryDay1ObdPriority;
+    private String retryDay2ObdPriority;
     
     @Field(required = true)
-    private String nmsKkRetryDay2ObdPriority;
-    
-    @Field(required = true)
-    private String nmsKkRetryDay3ObdPriority;
+    private String retryDay3ObdPriority;
 
     public Long getIndex() {
         return index;
@@ -66,91 +63,83 @@ public class Configuration {
         this.index = CONFIGURATION_INDEX;
     }
 
-    public Integer getNmsKk72WeeksPackMsgsPerWeek() {
-        return nmsKk72WeeksPackMsgsPerWeek;
+    public Integer getNumMsgPerWeek() {
+        return numMsgPerWeek;
     }
 
-    public void setNmsKk72WeeksPackMsgsPerWeek(Integer nmsKk72WeeksPackMsgsPerWeek) {
-        this.nmsKk72WeeksPackMsgsPerWeek = nmsKk72WeeksPackMsgsPerWeek;
+    public void setNumMsgPerWeek(Integer numMsgPerWeek) {
+        this.numMsgPerWeek = numMsgPerWeek;
     }
 
-    public Integer getNmsKk48WeeksPackMsgsPerWeek() {
-        return nmsKk48WeeksPackMsgsPerWeek;
+    public Integer getMaxAllowedActiveBeneficiaryCount() {
+        return maxAllowedActiveBeneficiaryCount;
     }
 
-    public void setNmsKk48WeeksPackMsgsPerWeek(Integer nmsKk48WeeksPackMsgsPerWeek) {
-        this.nmsKk48WeeksPackMsgsPerWeek = nmsKk48WeeksPackMsgsPerWeek;
+    public void setMaxAllowedActiveBeneficiaryCount(Integer maxAllowedActiveBeneficiaryCount) {
+        this.maxAllowedActiveBeneficiaryCount = maxAllowedActiveBeneficiaryCount;
     }
 
-    public Integer getNmsKkMaxAllowedActiveBeneficiaryCount() {
-        return nmsKkMaxAllowedActiveBeneficiaryCount;
+    public String getFreshObdServiceId() {
+        return freshObdServiceId;
     }
 
-    public void setNmsKkMaxAllowedActiveBeneficiaryCount(Integer nmsKkMaxAllowedActiveBeneficiaryCount) {
-        this.nmsKkMaxAllowedActiveBeneficiaryCount = nmsKkMaxAllowedActiveBeneficiaryCount;
+    public void setFreshObdServiceId(String freshObdServiceId) {
+        this.freshObdServiceId = freshObdServiceId;
+    }
+    
+    public String getRetryDay1ObdServiceId() {
+        return retryDay1ObdServiceId;
     }
 
-    public String getNmsKkFreshObdServiceId() {
-        return nmsKkFreshObdServiceId;
+    public void setRetryDay1ObdServiceId(String retryDay1ObdServiceId) {
+        this.retryDay1ObdServiceId = retryDay1ObdServiceId;
     }
 
-    public void setNmsKkFreshObdServiceId(String nmsKkFreshObdServiceId) {
-        this.nmsKkFreshObdServiceId = nmsKkFreshObdServiceId;
+    public String getRetryDay2ObdServiceId() {
+        return retryDay2ObdServiceId;
     }
 
-    public String getNmsKkRetryDay1ObdServiceId() {
-        return nmsKkRetryDay1ObdServiceId;
+    public void setRetryDay2ObdServiceId(String retryDay2ObdServiceId) {
+        this.retryDay2ObdServiceId = retryDay2ObdServiceId;
     }
 
-    public void setNmsKkRetryDay1ObdServiceId(String nmsKkRetryDay1ObdServiceId) {
-        this.nmsKkRetryDay1ObdServiceId = nmsKkRetryDay1ObdServiceId;
+    public String getRetryDay3ObdServiceId() {
+        return retryDay3ObdServiceId;
     }
 
-    public String getNmsKkRetryDay2ObdServiceId() {
-        return nmsKkRetryDay2ObdServiceId;
+    public void setRetryDay3ObdServiceId(String retryDay3ObdServiceId) {
+        this.retryDay3ObdServiceId = retryDay3ObdServiceId;
     }
 
-    public void setNmsKkRetryDay2ObdServiceId(String nmsKkRetryDay2ObdServiceId) {
-        this.nmsKkRetryDay2ObdServiceId = nmsKkRetryDay2ObdServiceId;
+    public String getFreshObdPriority() {
+        return freshObdPriority;
     }
 
-    public String getNmsKkRetryDay3ObdServiceId() {
-        return nmsKkRetryDay3ObdServiceId;
+    public void setFreshObdPriority(String freshObdPriority) {
+        this.freshObdPriority = freshObdPriority;
     }
 
-    public void setNmsKkRetryDay3ObdServiceId(String nmsKkRetryDay3ObdServiceId) {
-        this.nmsKkRetryDay3ObdServiceId = nmsKkRetryDay3ObdServiceId;
+    public String getRetryDay1ObdPriority() {
+        return retryDay1ObdPriority;
     }
 
-    public String getNmsKkFreshObdPriority() {
-        return nmsKkFreshObdPriority;
+    public void setRetryDay1ObdPriority(String retryDay1ObdPriority) {
+        this.retryDay1ObdPriority = retryDay1ObdPriority;
     }
 
-    public void setNmsKkFreshObdPriority(String nmsKkFreshObdPriority) {
-        this.nmsKkFreshObdPriority = nmsKkFreshObdPriority;
+    public String getRetryDay2ObdPriority() {
+        return retryDay2ObdPriority;
     }
 
-    public String getNmsKkRetryDay1ObdPriority() {
-        return nmsKkRetryDay1ObdPriority;
+    public void setRetryDay2ObdPriority(String retryDay2ObdPriority) {
+        this.retryDay2ObdPriority = retryDay2ObdPriority;
     }
 
-    public void setNmsKkRetryDay1ObdPriority(String nmsKkRetryDay1ObdPriority) {
-        this.nmsKkRetryDay1ObdPriority = nmsKkRetryDay1ObdPriority;
+    public String getRetryDay3ObdPriority() {
+        return retryDay3ObdPriority;
     }
 
-    public String getNmsKkRetryDay2ObdPriority() {
-        return nmsKkRetryDay2ObdPriority;
-    }
-
-    public void setNmsKkRetryDay2ObdPriority(String nmsKkRetryDay2ObdPriority) {
-        this.nmsKkRetryDay2ObdPriority = nmsKkRetryDay2ObdPriority;
-    }
-
-    public String getNmsKkRetryDay3ObdPriority() {
-        return nmsKkRetryDay3ObdPriority;
-    }
-
-    public void setNmsKkRetryDay3ObdPriority(String nmsKkRetryDay3ObdPriority) {
-        this.nmsKkRetryDay3ObdPriority = nmsKkRetryDay3ObdPriority;
+    public void setRetryDay3ObdPriority(String retryDay3ObdPriority) {
+        this.retryDay3ObdPriority = retryDay3ObdPriority;
     }
 }

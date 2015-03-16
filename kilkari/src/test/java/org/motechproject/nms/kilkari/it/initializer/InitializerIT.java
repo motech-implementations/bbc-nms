@@ -5,7 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.kilkari.Initializer;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -56,17 +56,16 @@ public class InitializerIT extends BasePaxIT {
         Configuration configuration = configurationService.getConfiguration();
 
         Assert.assertEquals(configuration.getIndex(), Initializer.CONFIGURATION_INDEX);
-        Assert.assertEquals(configuration.getNmsKk48WeeksPackMsgsPerWeek(), Initializer.DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK);
-        Assert.assertEquals(configuration.getNmsKk72WeeksPackMsgsPerWeek(), Initializer.DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK);
-        Assert.assertEquals(configuration.getNmsKkFreshObdPriority(), Initializer.DEFAULT_FRESH_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getNmsKkFreshObdServiceId(), Initializer.DEFAULT_FRESH_OBD_SERVICE_ID);
-        Assert.assertEquals(configuration.getNmsKkMaxAllowedActiveBeneficiaryCount(), Initializer.DEFAULT_ALLOWED_BENEFICIARY_COUNT);
-        Assert.assertEquals(configuration.getNmsKkRetryDay1ObdPriority(), Initializer.DEFAULT_RETRY_DAY1_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getNmsKkRetryDay1ObdServiceId(), Initializer.DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
-        Assert.assertEquals(configuration.getNmsKkRetryDay2ObdPriority(), Initializer.DEFAULT_RETRY_DAY2_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getNmsKkRetryDay2ObdServiceId(), Initializer.DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
-        Assert.assertEquals(configuration.getNmsKkRetryDay3ObdPriority(), Initializer.DEFAULT_RETRY_DAY3_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getNmsKkRetryDay3ObdServiceId(), Initializer.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
+        Assert.assertEquals(configuration.getNumMsgPerWeek(), Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEk);
+        Assert.assertEquals(configuration.getFreshObdPriority(), Initializer.DEFAULT_FRESH_OBD_PRIORITY);
+        Assert.assertEquals(configuration.getFreshObdServiceId(), Initializer.DEFAULT_FRESH_OBD_SERVICE_ID);
+        Assert.assertEquals(configuration.getMaxAllowedActiveBeneficiaryCount(), Initializer.DEFAULT_ALLOWED_BENEFICIARY_COUNT);
+        Assert.assertEquals(configuration.getRetryDay1ObdPriority(), Initializer.DEFAULT_RETRY_DAY1_OBD_PRIORITY);
+        Assert.assertEquals(configuration.getRetryDay1ObdServiceId(), Initializer.DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
+        Assert.assertEquals(configuration.getRetryDay2ObdPriority(), Initializer.DEFAULT_RETRY_DAY2_OBD_PRIORITY);
+        Assert.assertEquals(configuration.getRetryDay2ObdServiceId(), Initializer.DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
+        Assert.assertEquals(configuration.getRetryDay3ObdPriority(), Initializer.DEFAULT_RETRY_DAY3_OBD_PRIORITY);
+        Assert.assertEquals(configuration.getRetryDay3ObdServiceId(), Initializer.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
 
     }
 

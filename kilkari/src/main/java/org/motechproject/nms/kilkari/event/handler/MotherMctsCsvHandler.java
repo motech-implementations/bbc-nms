@@ -274,7 +274,7 @@ public class MotherMctsCsvHandler {
                 Configuration configuration = configurationService.getConfiguration();
                 long activeUserCount = subscriptionService.getActiveUserCount();
                 /* check for maximum allowed beneficiary */
-                if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                     Subscriber dbSubscriber = subscriberService.create(subscriber); /* CREATE new subscriber */
                     createSubscription(subscriber, null, dbSubscriber); /* create subscription for above created subscriber */
                 } else {
