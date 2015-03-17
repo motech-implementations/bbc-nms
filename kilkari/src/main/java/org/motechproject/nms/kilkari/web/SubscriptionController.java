@@ -2,11 +2,14 @@ package org.motechproject.nms.kilkari.web;
 
 
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.dto.SubscriptionApiRequest;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,7 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 public class SubscriptionController {
 
     @Autowired
-    private UserDetailsService registrationService;
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     /**
      * Maps request subscription controller
@@ -39,7 +45,11 @@ public class SubscriptionController {
         if (errors.hasErrors()) {
             return null;
         }
-
+        try {
+            subscriptionService.createSubscriptionSubscriber(buildSubscriber(apiRequest.getMsisdn()), Channel.IVR);
+        } catch (DataValidationException ex) {
+            return null;
+        }
         return null;
     }
 
@@ -77,7 +87,7 @@ public class SubscriptionController {
         //TODO :validate msisdn, operator, circle, callId are not null.
         //TODO :SAVE operatorCode info in subscription table
         
-        SubscriberDetailApiResponse response = registrationService.getSubscriberDetails(msisdn, circle);
+        SubscriberDetailApiResponse response = userDetailsService.getSubscriberDetails(msisdn, circle);
         return response.toString();
 
     }
@@ -87,13 +97,5 @@ public class SubscriptionController {
         subscriber.setMsisdn(msisdn);
         subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         return subscriber;
-    }
-
-    private Subscription buildSubscription(SubscriptionApiRequest apiRequest) {
-        String msisdn = apiRequest.getMsisdn();
-        Subscription subscription = new Subscription();
-        subscription.setMsisdn(msisdn);
-        subscription.setSubscriber(buildSubscriber(msisdn));
-        return subscription;
     }
 }

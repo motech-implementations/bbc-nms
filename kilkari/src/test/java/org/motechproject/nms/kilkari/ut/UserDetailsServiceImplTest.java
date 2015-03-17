@@ -18,7 +18,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class RegistrationServiceImplTest extends TestCase {
+public class UserDetailsServiceImplTest extends TestCase {
     @Mock
     private SubscriberService subscriberService;
 
