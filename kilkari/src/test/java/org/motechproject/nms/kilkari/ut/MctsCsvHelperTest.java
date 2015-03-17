@@ -28,7 +28,7 @@ public class MctsCsvHelperTest {
 
         Method method = null;
         try {
-            method = mctsCsvHelper.getClass().getDeclaredMethod("populateSubscription", Subscriber.class, Subscription.class, boolean.class);
+            method = mctsCsvHelper.getClass().getDeclaredMethod("populateDBSubscription", Subscriber.class, Subscription.class, boolean.class);
             method.setAccessible(true);
             method.invoke(mctsCsvHelper, subscriber, dbSubscription, true);
         } catch (NoSuchMethodException e) {

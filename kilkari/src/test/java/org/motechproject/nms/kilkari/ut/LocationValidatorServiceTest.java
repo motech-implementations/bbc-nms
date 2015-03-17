@@ -94,29 +94,6 @@ public class LocationValidatorServiceTest {
     }
 
     @Test
-    public void testValidateCircleAndLLC() {
-
-        Map<String, Object> parameters = new HashMap<>();
-        List<Long> uploadedIds = new ArrayList<Long>();
-
-        uploadedIds.add(50l);
-        parameters.put("csv-import.created_ids", uploadedIds);
-        parameters.put("csv-import.filename", "ChildMctsCsvUT.csv");
-
-        ChildMctsCsvHandler childMctsCsvHandler = new ChildMctsCsvHandler(childMctsCsvService,
-                subscriptionService,
-                subscriberService,
-                locationValidatorService,
-                bulkUploadErrLogService,
-                configurationService);
-
-        MotechEvent motechEvent = new MotechEvent("ChildMctsCsv.csv_success", parameters);
-        childMctsCsvHandler.childMctsCsvSuccess(motechEvent);
-
-
-    }
-
-    @Test
     public void shouldReturnNullForValidStatecode() {
         State state = new State();
         Long stateCode = 1L;

@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkari.service;
 
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -78,5 +81,10 @@ public interface LocationValidatorService {
      *  @param taluka Taluka Object
      *  @param villageCode csv uploaded districtCode
      */
+
     public Village villageConsistencyCheck(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
+
+    public Subscriber mapMctsLocationToSubscriber(MctsCsv mctsCsv,
+            Subscriber subscriber) throws DataValidationException;
+
 }

@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
@@ -160,5 +162,40 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
             }
         }
         return village;
+    }
+    
+    @Override
+    public Subscriber mapMctsLocationToSubscriber(MctsCsv mctsCsv,
+            Subscriber subscriber) throws DataValidationException {
+        
+        Long stateCode = ParseDataHelper.parseLong("State Code", mctsCsv.getStateCode(),  true);
+        State state = stateConsistencyCheck(stateCode);
+
+        Long districtCode = ParseDataHelper.parseLong("District Code", mctsCsv.getDistrictCode(), true);
+        District district = districtConsistencyCheck(state, districtCode);
+
+        Long talukaCode = ParseDataHelper.parseLong("Taluka Code", mctsCsv.getTalukaCode(), false);
+        Taluka taluka = talukaConsistencyCheck(district, talukaCode);
+
+        Long healthBlockCode = ParseDataHelper.parseLong("Health Block Code", mctsCsv.getHealthBlockCode(), false);
+        HealthBlock healthBlock = healthBlockConsistencyCheck(talukaCode, taluka, healthBlockCode);
+
+        Long phcCode = ParseDataHelper.parseLong("Phc Code", mctsCsv.getPhcCode(), false);
+        HealthFacility healthFacility = phcConsistencyCheck(healthBlockCode, healthBlock, phcCode);
+
+        Long subCenterCode = ParseDataHelper.parseLong("Sub centered Code", mctsCsv.getSubCentreCode(), false);
+        HealthSubFacility healthSubFacility = subCenterCodeCheck(phcCode, healthFacility, subCenterCode);
+
+        Long villageCode = ParseDataHelper.parseLong("Village Code", mctsCsv.getVillageCode(), false);
+        Village village = villageConsistencyCheck(talukaCode, taluka, villageCode);
+
+        subscriber.setState(state);
+        subscriber.setDistrict(district);
+        subscriber.setTaluka(taluka);
+        subscriber.setHealthBlock(healthBlock);
+        subscriber.setPhc(healthFacility);
+        subscriber.setSubCentre(healthSubFacility);
+        subscriber.setVillage(village);
+        return subscriber;
     }
 }

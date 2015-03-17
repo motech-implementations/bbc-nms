@@ -248,38 +248,12 @@ public class CommonStructure extends BasePaxIT {
     
     protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
         logger.info("Inside  callMotherMctsCsvHandlerSuccessEvent");
-        Map<String, Object> parameters = new HashMap<>();
-        logger.info("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
-        parameters.put("csv-import.created_ids", uploadedIds);
-        parameters.put("csv-import.filename", "MotherMctsCsv.csv");
-        
-        MotherMctsCsvHandler motherMctsCsvHandler = new MotherMctsCsvHandler(motherMctsCsvService, 
-                subscriptionService, 
-                subscriberService, 
-                locationValidatorService, 
-                bulkUploadErrLogService, 
-                configurationService);
-        
-        MotechEvent motechEvent = new MotechEvent("MotherMctsCsv.csv_success", parameters);
-        motherMctsCsvHandler.motherMctsCsvSuccess(motechEvent);
+        motherMctsCsvService.processingUploadedIds("MotherMctsCsv.csv", uploadedIds);
     }
     
     protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
         logger.info("Inside  callChildMctsCsvHandlerSuccessEvent");
-        Map<String, Object> parameters = new HashMap<>();
-        logger.info("uploadCsv().size()::::::::::::::::" +uploadedIds.size());
-        parameters.put("csv-import.created_ids", uploadedIds);
-        parameters.put("csv-import.filename", "ChildMctsCsv.csv");
-        
-        ChildMctsCsvHandler childMctsCsvHandler = new ChildMctsCsvHandler(childMctsCsvService, 
-                subscriptionService, 
-                subscriberService, 
-                locationValidatorService, 
-                bulkUploadErrLogService, 
-                configurationService);
-        
-        MotechEvent motechEvent = new MotechEvent("ChildMctsCsv.csv_success", parameters);
-        childMctsCsvHandler.childMctsCsvSuccess(motechEvent);
+        childMctsCsvService.processChildMctsCsv("ChildMctsCsv.csv", uploadedIds);
     }
     
     protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {

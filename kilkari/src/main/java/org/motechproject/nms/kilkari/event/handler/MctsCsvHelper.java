@@ -1,13 +1,14 @@
 package org.motechproject.nms.kilkari.event.handler;
 
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
-public final class MctsCsvHelper {
+public final class MctsCsvHelper  {
     
-    static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
+    public static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
         
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
         dbSubscriber.setName(subscriber.getName());
@@ -22,22 +23,29 @@ public final class MctsCsvHelper {
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
     
-    static Subscription populateNewSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
+    public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
         
         Subscription newSubscription;
         newSubscription = new Subscription();
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
-        newSubscription.setChannel(Channel.MCTS);
-        newSubscription.setMsisdn(subscriber.getMsisdn());
-        newSubscription.setStateCode(subscriber.getState().getStateCode());
-        newSubscription.setModifiedBy(subscriber.getModifiedBy());
-        newSubscription.setCreator(subscriber.getCreator());
-        newSubscription.setOwner(subscriber.getOwner());
+        newSubscription.setChannel(channel);
+        newSubscription.setMsisdn(dbSubscriber.getMsisdn());
+        newSubscription.setStateCode(dbSubscriber.getState().getStateCode());
+        newSubscription.setModifiedBy(dbSubscriber.getModifiedBy());
+        newSubscription.setCreator(dbSubscriber.getCreator());
+        newSubscription.setOwner(dbSubscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
+        if (dbSubscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
+            newSubscription.setMctsId(dbSubscriber.getChildMctsId());
+            newSubscription.setPackName(BeneficiaryType.CHILD.getPack(BeneficiaryType.CHILD));
+        }else{
+            newSubscription.setMctsId(dbSubscriber.getMotherMctsId());
+            newSubscription.setPackName(BeneficiaryType.MOTHER.getPack(BeneficiaryType.MOTHER));
+        }
         return newSubscription;
     }
     
-    static void populateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+    public static void populateDBSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
