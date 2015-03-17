@@ -248,7 +248,7 @@ public class CommonStructure extends BasePaxIT {
     
     protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
         logger.info("Inside  callMotherMctsCsvHandlerSuccessEvent");
-        motherMctsCsvService.processingUploadedIds("MotherMctsCsv.csv", uploadedIds);
+        motherMctsCsvService.processMotherMctsCsv("MotherMctsCsv.csv", uploadedIds);
     }
     
     protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){

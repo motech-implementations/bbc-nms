@@ -24,10 +24,13 @@ public interface SubscriptionService {
     void deleteAll();
 
     List<String> getActiveSubscriptionByMsisdn(String msisdn);
-    void handleMctsSubscriptionRequest(Subscriber subscriber, Channel channel)
+    void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
     void createSubscriptionSubscriber(Subscriber subscriber, Channel channel)
+            throws DataValidationException;
+
+    void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
 }

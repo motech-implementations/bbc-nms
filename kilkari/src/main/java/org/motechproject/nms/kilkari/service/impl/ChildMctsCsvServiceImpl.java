@@ -74,7 +74,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                     logger.info("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = mapChildMctsToSubscriber(childMctsCsv);
-                    subscriptionService.handleMctsSubscriptionRequest(subscriber, Channel.MCTS);
+                    subscriptionService.handleMctsSubscriptionRequestForChild(subscriber, Channel.MCTS);
                     uploadedStatus.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);

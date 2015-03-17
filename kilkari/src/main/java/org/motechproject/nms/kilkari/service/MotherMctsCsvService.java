@@ -7,10 +7,6 @@ import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 public interface MotherMctsCsvService {
     
 
-    MotherMctsCsv findRecordById(Long id);
-
-    void delete(MotherMctsCsv record);
-
-    void processingUploadedIds(String csvFileName, List<Long> uploadedIDs);
+    void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs);
 
 }
