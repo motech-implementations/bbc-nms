@@ -132,10 +132,10 @@ public class TalukaCsvUploadHandler {
     private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
         Taluka newRecord = new Taluka();
 
-        String talukaName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
+        String talukaName = ParseDataHelper.validateAndParseString("TalukaName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {

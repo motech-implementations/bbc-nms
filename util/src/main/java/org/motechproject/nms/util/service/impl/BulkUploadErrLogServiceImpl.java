@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  * Simple implementation of the {@link BulkUploadErrLogService} interface.
  * <p/>
- * This class provides the api to log erroneous csv upload records in a log file.
- * Log file name is taken as input in this method and is kept at a known path
- * at local node.
+ * This class provides the api to log erroneous csv upload records in db table.
  * This api logs the erroneous record details along with error code and
  * error description
  */
@@ -39,20 +37,21 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
      * <p/>
      * Error Records contain the following information:
      * 1. Csv File Name
-     * 2. Timestamp
+     * 2. Time of upload
      * 3. Erroneous record type
-     * 3. Erroneous record details
-     * 4. Error Category
-     * 5. Error Description
+     * 4. Erroneous record details
+     * 5. Error Category
+     * 6. Error Description
      *
-     * @param bulkUploadError String describing another coding guideline
+     * @param bulkUploadError BulkUploadError object containing
+     *                        information of erroneous record
      */
     @Override
     public void writeBulkUploadErrLog(BulkUploadError bulkUploadError) {
 
         BulkUploadError bulkUploadErrorDeepCopy = bulkUploadError.createDeepCopy();
 
-        //Adding the record to bulk upload status table
+        //Adding the record to bulk upload error table
         bulkUploadErrorDataService.create(bulkUploadErrorDeepCopy);
         logger.info("Record added successfully for erroneous bulk upload record in {}", bulkUploadErrorDeepCopy.getRecordType());
     }
@@ -66,8 +65,10 @@ public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
      * 2. Number of records failed to upload
      * 3. Name of csv uploaded
      * 4. Name of the user who uploaded the csv
+     * 5. Time of upload
      *
-     * @param bulkUploadStatus Number of records successfully uploaded during bulk upload
+     * @param bulkUploadStatus BulkUploadStatus object containing
+     *                         summary of csv upload processing
      */
     @Override
     public void writeBulkUploadProcessingSummary(BulkUploadStatus bulkUploadStatus) {

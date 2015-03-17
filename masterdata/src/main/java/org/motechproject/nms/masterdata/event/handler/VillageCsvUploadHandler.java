@@ -133,11 +133,11 @@ public class VillageCsvUploadHandler {
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
         Village newRecord = new Village();
 
-        String villageName = ParseDataHelper.parseString("VillageName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
+        String villageName = ParseDataHelper.validateAndParseString("VillageName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long villageCode = ParseDataHelper.validateAndParseLong("VillageCode", record.getVillageCode(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {

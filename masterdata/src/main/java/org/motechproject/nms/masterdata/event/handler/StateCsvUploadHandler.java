@@ -126,10 +126,10 @@ public class StateCsvUploadHandler {
 
         State newRecord = new State();
 
-        String stateName = ParseDataHelper.parseString("StateName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Integer maCapping = ParseDataHelper.parseInt("maCapping", record.getMaCapping(), false);
-        Integer mkCapping = ParseDataHelper.parseInt("mkCapping", record.getMkCapping(), false);
+        String stateName = ParseDataHelper.validateAndParseString("StateName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Integer maCapping = ParseDataHelper.validateAndParseInt("maCapping", record.getMaCapping(), false);
+        Integer mkCapping = ParseDataHelper.validateAndParseInt("mkCapping", record.getMkCapping(), false);
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);

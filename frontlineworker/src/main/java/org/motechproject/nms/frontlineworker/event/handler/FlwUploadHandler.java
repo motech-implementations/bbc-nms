@@ -121,7 +121,7 @@ public class FlwUploadHandler {
                     FrontLineWorker frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
-                    Long flw = ParseDataHelper.parseLong("flwId", record.getFlwId(), false);
+                    Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
 
                     if (flw == null && dbRecord.getFlwId() != null) {
                         ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
@@ -135,7 +135,7 @@ public class FlwUploadHandler {
                         logger.info("Successful creation of new front line worker");
 
                     } else {
-                        Boolean valid = ParseDataHelper.parseBoolean("isValid", record.getIsValid(), false);
+                        Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
                         Status status = dbRecord.getStatus();
                         if (valid == null) {
                             frontLineWorker.setStatus(dbRecord.getStatus());
@@ -257,8 +257,8 @@ public class FlwUploadHandler {
         FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
 
         logger.info("validateFrontLineWorker process start");
-        frontLineWorkerContent.setStateCode(ParseDataHelper.parseLong("StateCode", record.getStateCode(), true));
-        frontLineWorkerContent.setDistrictCode(ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true));
+        frontLineWorkerContent.setStateCode(ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true));
+        frontLineWorkerContent.setDistrictCode(ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true));
 
 
         state = locationService.getStateByCode(frontLineWorkerContent.getStateCode());
@@ -278,13 +278,13 @@ public class FlwUploadHandler {
         frontLineWorkerContent.setHealthFacility(healthFacilityConsistencyCheck(frontLineWorkerContent.getHealthBlock(), record.getPhcCode()));
         frontLineWorkerContent.setHealthSubFacility(healthSubFacilityConsistencyCheck(frontLineWorkerContent.getHealthFacility(), record.getSubCentreCode()));
 
-        contactNo = ParseDataHelper.parseString("Contact Number", record.getContactNo(), true);
+        contactNo = ParseDataHelper.validateAndParseString("Contact Number", record.getContactNo(), true);
         contactNoLength = contactNo.length();
         finalContactNo = (contactNoLength > FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
         frontLineWorkerContent.setContactNo(finalContactNo);
 
         //Bug 28
-        designation = ParseDataHelper.parseString("Flw Type", record.getType(), true);
+        designation = ParseDataHelper.validateAndParseString("Flw Type", record.getType(), true);
 
         //Bug 21
         if (Designation.getEnum(designation) != Designation.ANM && Designation.getEnum(designation) != Designation.AWW &&
@@ -315,7 +315,7 @@ public class FlwUploadHandler {
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
 
-        frontLineWorker.setName(ParseDataHelper.parseString("Name", record.getName(), true));
+        frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
         frontLineWorker.setDesignation(frontLineWorkerContent.getDesignation());
 
         frontLineWorker.setStateCode(frontLineWorkerContent.getStateCode());
@@ -327,9 +327,9 @@ public class FlwUploadHandler {
         frontLineWorker.setHealthFacilityId(frontLineWorkerContent.getHealthFacility());
         frontLineWorker.setHealthSubFacilityId(frontLineWorkerContent.getHealthSubFacility());
 
-        frontLineWorker.setFlwId(ParseDataHelper.parseLong("Flw Id", record.getFlwId(), false));
-        frontLineWorker.setAshaNumber(ParseDataHelper.parseString("Asha Number", record.getAshaNumber(), false));
-        frontLineWorker.setAdhaarNumber(ParseDataHelper.parseString("Adhaar Number", record.getAdhaarNo(), false));
+        frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
+        frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
+        frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
 
         LanguageLocationCode locationCode = languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
                 frontLineWorker.getDistrictId().getDistrictCode());
@@ -350,7 +350,7 @@ public class FlwUploadHandler {
         frontLineWorker.setCreationDate(record.getCreationDate());
 
         //Bug 15
-        frontLineWorker.setIsValidated(ParseDataHelper.parseBoolean("Is Validated", record.getIsValidated(), false));
+        frontLineWorker.setIsValidated(ParseDataHelper.validateAndParseBoolean("Is Validated", record.getIsValidated(), false));
         logger.info("mapFrontLineWorkerFrom process end");
 
         return frontLineWorker;
@@ -370,7 +370,8 @@ public class FlwUploadHandler {
     private Taluka talukaConsistencyCheck(Long districtId, String record) throws DataValidationException {
         Long talukaCode;
         Taluka taluka = null;
-        talukaCode = ParseDataHelper.parseLong("TalukaCode", record, false);
+        talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record, false);
+
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(districtId, talukaCode);
             if (taluka == null) {
@@ -397,7 +398,7 @@ public class FlwUploadHandler {
 
         Long villageCode;
         Village village = null;
-        villageCode = ParseDataHelper.parseLong("VillageCode", record, false);
+        villageCode = ParseDataHelper.validateAndParseLong("VillageCode", record, false);
         if (villageCode != null) {
             if (taluka != null) {
                 village = locationService.getVillageByCode(taluka.getId(), villageCode);
@@ -428,7 +429,7 @@ public class FlwUploadHandler {
         Long healthclockCode;
         HealthBlock healthBlock = null;
 
-        healthclockCode = ParseDataHelper.parseLong("HealthBlockCode", record, false);
+        healthclockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record, false);
         if (healthclockCode != null) {
             if (taluka != null) {
                 healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthclockCode);
@@ -460,7 +461,7 @@ public class FlwUploadHandler {
         Long healthFacilityCode;
         HealthFacility healthFacility = null;
 
-        healthFacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record, false);
+        healthFacilityCode = ParseDataHelper.validateAndParseLong("HealthFacilityCode", record, false);
         if (healthFacilityCode != null) {
             if (healthBlock != null) {
                 healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), healthFacilityCode);
@@ -491,7 +492,7 @@ public class FlwUploadHandler {
         Long healthSubFacilityCode;
         HealthSubFacility healthSubFacility = null;
 
-        healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record, false);
+        healthSubFacilityCode = ParseDataHelper.validateAndParseLong("HealthSubFacilityCode", record, false);
         if (healthSubFacilityCode != null) {
             if (healthFacility != null) {
                 healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), healthSubFacilityCode);

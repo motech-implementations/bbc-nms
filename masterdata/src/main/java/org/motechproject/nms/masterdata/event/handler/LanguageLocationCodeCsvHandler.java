@@ -149,9 +149,9 @@ public class LanguageLocationCodeCsvHandler {
 
         LanguageLocationCode newRecord = null;
 
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        String circleCode = ParseDataHelper.parseString("CircleCode", record.getCircleCode(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        String circleCode = ParseDataHelper.validateAndParseString("CircleCode", record.getCircleCode(), true);
 
         State state = locationService.getStateByCode(stateCode);
         if (state == null) {
@@ -183,16 +183,16 @@ public class LanguageLocationCodeCsvHandler {
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
 
-        newRecord.setLanguageLocationCode(ParseDataHelper.parseInt("LanguageLocationCode",
+        newRecord.setLanguageLocationCode(ParseDataHelper.validateAndParseInt("LanguageLocationCode",
                 record.getLanguageLocationCode(), true));
         circle.setDefaultLanguageLocationCode(newRecord.getLanguageLocationCode());
-        newRecord.setLanguageKK(ParseDataHelper.parseString("LanguageKK", record.getLanguageKK(), true));
-        newRecord.setLanguageMK(ParseDataHelper.parseString("LanguageMK", record.getLanguageMK(), true));
-        newRecord.setLanguageMA(ParseDataHelper.parseString("LanguageMA", record.getLanguageMA(), true));
+        newRecord.setLanguageKK(ParseDataHelper.validateAndParseString("LanguageKK", record.getLanguageKK(), true));
+        newRecord.setLanguageMK(ParseDataHelper.validateAndParseString("LanguageMK", record.getLanguageMK(), true));
+        newRecord.setLanguageMA(ParseDataHelper.validateAndParseString("LanguageMA", record.getLanguageMA(), true));
 
 
         /* Update the Default Language Location Codes in Circle entity */
-        String valueOfIsDefLangLocCode = ParseDataHelper.parseString("isDefaultLanguageLocationCode",
+        String valueOfIsDefLangLocCode = ParseDataHelper.validateAndParseString("isDefaultLanguageLocationCode",
                 record.getIsDefaultLanguageLocationCode(), true);
         Boolean isDefaultLangLocCode = (
                 MasterDataConstants.YES_FOR_DEFAULT_LANG_LOC_CODE.equalsIgnoreCase(valueOfIsDefLangLocCode));

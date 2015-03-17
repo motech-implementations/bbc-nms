@@ -162,25 +162,25 @@ public class MotherMctsCsvHandler {
         Subscriber motherSubscriber = new Subscriber();
 
         logger.info("Validation and map to entity process start");
-        Long stateCode = ParseDataHelper.parseLong("State Code", motherMctsCsv.getStateCode(),  true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("State Code", motherMctsCsv.getStateCode(), true);
         State state = locationValidator.stateConsistencyCheck(stateCode);
 
-        Long districtCode = ParseDataHelper.parseLong("District Code", motherMctsCsv.getDistrictCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("District Code", motherMctsCsv.getDistrictCode(), true);
         District district = locationValidator.districtConsistencyCheck(state, districtCode);
 
-        Long talukaCode = ParseDataHelper.parseLong("Taluka Code", motherMctsCsv.getTalukaCode(), false);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("Taluka Code", motherMctsCsv.getTalukaCode(), false);
         Taluka taluka = locationValidator.talukaConsistencyCheck(district, talukaCode);
 
-        Long healthBlockCode = ParseDataHelper.parseLong("Health Block Code", motherMctsCsv.getHealthBlockCode(), false);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("Health Block Code", motherMctsCsv.getHealthBlockCode(), false);
         HealthBlock healthBlock = locationValidator.healthBlockConsistencyCheck(talukaCode, taluka, healthBlockCode);
 
-        Long phcCode = ParseDataHelper.parseLong("Phc Code", motherMctsCsv.getPhcCode(), false);
+        Long phcCode = ParseDataHelper.validateAndParseLong("Phc Code", motherMctsCsv.getPhcCode(), false);
         HealthFacility healthFacility = locationValidator.phcConsistencyCheck(healthBlockCode, healthBlock, phcCode);
 
-        Long subCenterCode = ParseDataHelper.parseLong("Sub centered Code", motherMctsCsv.getSubCentreCode(), false);
+        Long subCenterCode = ParseDataHelper.validateAndParseLong("Sub centered Code", motherMctsCsv.getSubCentreCode(), false);
         HealthSubFacility healthSubFacility = locationValidator.subCenterCodeCheck(phcCode, healthFacility, subCenterCode);
 
-        Long villageCode = ParseDataHelper.parseLong("Village id", motherMctsCsv.getVillageCode(), false);
+        Long villageCode = ParseDataHelper.validateAndParseLong("Village id", motherMctsCsv.getVillageCode(), false);
         Village village = locationValidator.villageConsistencyCheck(talukaCode, taluka, villageCode);
 
 
@@ -194,23 +194,23 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
         
-        String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
+        String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
         int msisdnCsvLength = msisdn.length();
         if(msisdnCsvLength > 10){
             msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
         }
         motherSubscriber.setMsisdn(msisdn);
-        motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
-        motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
-        motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
-        motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
+        motherSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("idNo", motherMctsCsv.getIdNo(), true));
+        motherSubscriber.setAge(ParseDataHelper.validateAndParseInt("Age", motherMctsCsv.getAge(), false));
+        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
+        motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(), false));
 
-        motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
+        motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
         motherSubscriber.setStillBirth(STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
 
-        String abortion = ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false);
+        String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
         motherSubscriber.setAbortion(!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion)));
-        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false)));
+        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false)));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());

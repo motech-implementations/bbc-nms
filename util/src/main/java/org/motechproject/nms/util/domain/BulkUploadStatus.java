@@ -88,6 +88,13 @@ public class BulkUploadStatus extends MdsEntity {
         numberOfFailedRecords++;
     }
 
+
+    /**
+     * This method creates the deep copy of BulkUploadStatus object
+     * on which it is invoked.
+     *
+     * @return BulkUploadStatus the deep copied object
+     */
     public BulkUploadStatus createDeepCopy() {
         BulkUploadStatus bulkUploadStatusCopy = new BulkUploadStatus();
         bulkUploadStatusCopy.setUploadedBy(this.uploadedBy);

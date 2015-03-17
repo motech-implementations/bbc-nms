@@ -138,13 +138,13 @@ public class HealthFacilityCsvUploadHandler {
     private HealthFacility mapHealthFacilityCsv(HealthFacilityCsv record) throws DataValidationException {
         HealthFacility newRecord = new HealthFacility();
 
-        String healthFacilityName = ParseDataHelper.parseString("HealthFacilityName", record.getName(), true);
-        Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
-        Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
-        Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
-        Long facilityCode = ParseDataHelper.parseLong("FacilityCode", record.getHealthFacilityCode(), true);
-        Integer facilityType = ParseDataHelper.parseInt("FacilityType", record.getHealthFacilityType(), true);
+        String healthFacilityName = ParseDataHelper.validateAndParseString("HealthFacilityName", record.getName(), true);
+        Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
+        Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record.getHealthBlockCode(), true);
+        Long facilityCode = ParseDataHelper.validateAndParseLong("FacilityCode", record.getHealthFacilityCode(), true);
+        Integer facilityType = ParseDataHelper.validateAndParseInt("FacilityType", record.getHealthFacilityType(), true);
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {

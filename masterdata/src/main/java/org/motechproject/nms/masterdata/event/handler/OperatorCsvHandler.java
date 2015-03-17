@@ -137,8 +137,8 @@ public class OperatorCsvHandler {
     private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
         Operator newRecord = new Operator();
 
-        newRecord.setName(ParseDataHelper.parseString("Name", record.getName(), true));
-        newRecord.setCode(ParseDataHelper.parseString("Code", record.getCode(), true));
+        newRecord.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
+        newRecord.setCode(ParseDataHelper.validateAndParseString("Code", record.getCode(), true));
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
