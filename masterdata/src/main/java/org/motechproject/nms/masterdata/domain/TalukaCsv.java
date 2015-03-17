@@ -8,9 +8,7 @@ import org.motechproject.mds.event.CrudEventType;
 /**
  * This class Models data records provided in the Taluka Csv Upload
  */
-@Entity(
-        recordHistory = true
-)
+@Entity
 @CrudEvents(
         CrudEventType.CREATE
 )

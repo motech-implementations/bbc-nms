@@ -6,6 +6,10 @@ import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on ContentUploadCsv
+ */
+
 @Service("contentUploadCsvService")
 public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
 

@@ -2,6 +2,10 @@ package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.Operator;
 
+/**
+ * This interface is used for crud operations on Operator
+ */
+
 public interface OperatorService {
 
     /**

@@ -7,7 +7,7 @@ import org.motechproject.mds.annotations.Field;
  * This class Models data records provided in the HealthSubFacility Csv Upload
  */
 
-@Entity(recordHistory = true)
+@Entity
 public class HealthSubFacilityCsv extends LocationUnitMetaDataCsv {
 
     @Field

@@ -9,6 +9,10 @@ import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.util.helper.DataValidationException;
 
+/**
+ * This class is used for crud operations on LocationValidator
+ */
+
 public interface LocationValidatorService {
     
     /**

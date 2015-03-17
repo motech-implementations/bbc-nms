@@ -14,6 +14,10 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on LocationValidator
+ */
+
 @Service("locationValidatorService")
 public class LocationValidatorServiceImpl implements LocationValidatorService{
     

@@ -19,16 +19,28 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     @Autowired
     private ConfigurationDataService configurationDataService;
 
+    /**
+     * Creates Configuration
+     * @param configuration Configuration type object
+     */
     @Override
     public void createConfiguration(Configuration configuration) {
         configurationDataService.create(configuration);
     }
 
+    /**
+     * gets configuration by configuration index
+     * @return Configuration type objet
+     */
     @Override
     public Configuration getConfiguration() {
         return configurationDataService.findConfigurationByIndex(CONFIGURATION_INDEX);
     }
 
+    /**
+     * check whether the configuration is present or not
+     * @return Boolean type value
+     */
     @Override
     public Boolean isConfigurationPresent() {
         return (getConfiguration() != null);

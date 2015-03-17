@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 import javax.jdo.Query;
 import java.util.List;
 
+/**
+ * This class is used for crud operations on LanguageLocationCode
+ */
+
 @Service("languageLocationCodeService")
 public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeService {
 

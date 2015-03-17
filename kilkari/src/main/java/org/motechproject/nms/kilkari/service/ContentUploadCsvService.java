@@ -2,6 +2,10 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 
+/**
+ * This interface is used for crud operations on ContentUploadCsv
+ */
+
 public interface ContentUploadCsvService {
 
     /**

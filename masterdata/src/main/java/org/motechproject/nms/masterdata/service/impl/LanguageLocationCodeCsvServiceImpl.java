@@ -6,6 +6,10 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on LanguageLocationCodeCsv
+ */
+
 @Service("languageLocationCodeServiceCsv")
 public class LanguageLocationCodeCsvServiceImpl implements LanguageLocationCodeServiceCsv {
 

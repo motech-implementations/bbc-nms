@@ -6,6 +6,10 @@ import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used for crud operations on ContentUpload
+ */
+
 @Service("contentUploadService")
 public class ContentUploadServiceImpl implements ContentUploadService {
 

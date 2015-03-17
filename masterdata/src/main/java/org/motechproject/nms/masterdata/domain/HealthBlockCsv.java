@@ -6,10 +6,7 @@ import org.motechproject.mds.annotations.Field;
 /**
  * This class Models data records provided in the HealthBlock Csv Upload
  */
-@Entity(
-        recordHistory = true
-)
-
+@Entity
 public class HealthBlockCsv extends LocationUnitMetaDataCsv {
 
     @Field
