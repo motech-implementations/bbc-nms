@@ -1,8 +1,12 @@
 package org.motechproject.nms.kilkari.web;
 
 
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.RegistrationService;
+import org.motechproject.nms.kilkari.dto.SubscriptionApiRequest;
+import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public class SubscriptionController {
 
     @Autowired
-    private RegistrationService registrationService;
+    private UserDetailsService registrationService;
 
     /**
      * Maps request subscription controller
@@ -29,10 +33,13 @@ public class SubscriptionController {
      * @return
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.POST)
-    public String createSubscription(HttpServletRequest request, BindingResult errors) {
+    @ResponseBody
+    public String createSubscription(HttpServletRequest request, BindingResult errors,
+                                     SubscriptionApiRequest apiRequest) {
         if (errors.hasErrors()) {
             return null;
         }
+
         return null;
     }
 
@@ -73,5 +80,20 @@ public class SubscriptionController {
         SubscriberDetailApiResponse response = registrationService.getSubscriberDetails(msisdn, circle);
         return response.toString();
 
+    }
+
+    private Subscriber buildSubscriber(String msisdn) {
+        Subscriber subscriber = new Subscriber();
+        subscriber.setMsisdn(msisdn);
+        subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        return subscriber;
+    }
+
+    private Subscription buildSubscription(SubscriptionApiRequest apiRequest) {
+        String msisdn = apiRequest.getMsisdn();
+        Subscription subscription = new Subscription();
+        subscription.setMsisdn(msisdn);
+        subscription.setSubscriber(buildSubscriber(msisdn));
+        return subscription;
     }
 }

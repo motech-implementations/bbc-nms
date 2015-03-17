@@ -2,7 +2,7 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.RegistrationService;
+import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -16,7 +16,7 @@ import java.util.List;
  * location code for the subscriber.
  */
 @Service("registrationServiceImpl")
-public class RegistrationServiceImpl implements RegistrationService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private SubscriberService subscriberService;

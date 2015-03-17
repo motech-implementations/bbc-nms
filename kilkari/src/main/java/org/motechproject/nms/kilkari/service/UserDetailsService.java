@@ -2,7 +2,7 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
 
-public interface RegistrationService {
+public interface UserDetailsService {
 
     /**
      * this method determine languageLocationCode using msisdn and circleCode
