@@ -72,10 +72,6 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private String ashaNumber;
 
-    //Bug 7
-    @Field
-    private Boolean isValidated;
-
     @UIDisplayable(position = 8)
     @Field
     private String adhaarNumber;
@@ -95,7 +91,7 @@ public class FrontLineWorker extends MdsEntity {
     public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, Long operatorId,
                            Long stateCode, State stateId, District districtId, Taluka talukaId, HealthBlock
             healthBlockId, HealthFacility healthFacilityId, HealthSubFacility healthSubFacilityId,
-                           Village villageId, String ashaNumber, boolean isValidated, String adhaarNumber,
+                           Village villageId, String ashaNumber, String adhaarNumber,
                            Status status, Long languageLocationCodeId) {
         this.flwId = flwId;
         this.contactNo = contactNo;
@@ -111,7 +107,6 @@ public class FrontLineWorker extends MdsEntity {
         this.healthSubFacilityId = healthSubFacilityId;
         this.villageId = villageId;
         this.ashaNumber = ashaNumber;
-        this.isValidated = isValidated;
         this.adhaarNumber = adhaarNumber;
         this.status = status;
         this.languageLocationCodeId = languageLocationCodeId;
@@ -228,14 +223,6 @@ public class FrontLineWorker extends MdsEntity {
 
     public void setAshaNumber(String ashaNumber) {
         this.ashaNumber = ashaNumber;
-    }
-
-    public Boolean getIsValidated() {
-        return isValidated;
-    }
-
-    public void setIsValidated(Boolean isValidated) {
-        this.isValidated = isValidated;
     }
 
     public String getAdhaarNumber() {

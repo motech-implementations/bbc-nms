@@ -3,7 +3,7 @@ package org.motechproject.nms.mobilekunji.constants;
 /**
  * This class contains the constants needed for initial values to be set in Mobile Kunji tables
  */
-public class KunjiConstants {
+public class ConfigurationConstants {
 
     public static final Long CONFIGURATION_INDEX = 1L;
 
@@ -17,6 +17,4 @@ public class KunjiConstants {
 
     public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 
-    public static final String CONTENT_UPLOAD_CSV_FAILED = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.failure";
-
-}
+  }

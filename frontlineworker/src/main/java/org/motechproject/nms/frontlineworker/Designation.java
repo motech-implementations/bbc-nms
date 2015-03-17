@@ -1,12 +1,13 @@
 package org.motechproject.nms.frontlineworker;
 
 /**
- * Created by abhishek on 24/2/15.
+ * This enum specified the possible values for Front Line Worker Designation
  */
 public enum Designation {
 
     ANM, AWW, ASHA, USHA;
 
+    //This procedure returns the Designation corresponding to the string provided.
     public static Designation getEnum(String s) {
         if (ANM.name().equals(s)) {
             return ANM;

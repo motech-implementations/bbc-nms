@@ -4,7 +4,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
-import org.motechproject.nms.frontlineworker.constants.FrontLineWorkerConstants;
+import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
@@ -44,7 +44,7 @@ import java.util.Map;
  */
 
 @Component
-public class FlwUploadHandler {
+public class FrontLineWorkerUploadHandler {
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
@@ -62,16 +62,16 @@ public class FlwUploadHandler {
 
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
-    private static Logger logger = LoggerFactory.getLogger(FlwUploadHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(FrontLineWorkerUploadHandler.class);
 
 
     @Autowired
-    public FlwUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
-                            LocationService locationService,
-                            LanguageLocationCodeService languageLocationCodeService,
-                            FrontLineWorkerService frontLineWorkerService,
-                            FrontLineWorkerCsvService frontLineWorkerCsvService
-                            ) {
+    public FrontLineWorkerUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
+                                        LocationService locationService,
+                                        LanguageLocationCodeService languageLocationCodeService,
+                                        FrontLineWorkerService frontLineWorkerService,
+                                        FrontLineWorkerCsvService frontLineWorkerCsvService
+    ) {
 
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.locationService = locationService;
@@ -82,11 +82,11 @@ public class FlwUploadHandler {
 
 
     /**
-     * This method provides a listener to the Front Line Worker upload success scenario.
+     * This method provides a listener to the Front Line Worker upload scenario.
      *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {FrontLineWorkerConstants.FLW_UPLOAD_SUCCESS})
+    @MotechListener(subjects = {ConfigurationConstants.FLW_UPLOAD_SUCCESS})
     public void flwDataHandlerSuccess(MotechEvent motechEvent) {
 
         String userName = null;
@@ -141,7 +141,7 @@ public class FlwUploadHandler {
                             frontLineWorker.setStatus(dbRecord.getStatus());
                             updateDbRecord(frontLineWorker, dbRecord);
                             bulkUploadStatus.incrementSuccessCount();
-                             logger.info("Record updated successfully for Flw with valid = null");
+                            logger.info("Record updated successfully for Flw with valid = null");
                         } else {
                             if (valid == true) {
                                 if (status == Status.INVALID) {
@@ -225,7 +225,6 @@ public class FlwUploadHandler {
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
-        dbRecord.setIsValidated(frontLineWorker.getIsValidated());
 
         dbRecord.setCreator(frontLineWorker.getCreator());
         dbRecord.setModificationDate(frontLineWorker.getModificationDate());
@@ -280,7 +279,7 @@ public class FlwUploadHandler {
 
         contactNo = ParseDataHelper.validateAndParseString("Contact Number", record.getContactNo(), true);
         contactNoLength = contactNo.length();
-        finalContactNo = (contactNoLength > FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - FrontLineWorkerConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
+        finalContactNo = (contactNoLength > ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
         frontLineWorkerContent.setContactNo(finalContactNo);
 
         //Bug 28
@@ -349,8 +348,6 @@ public class FlwUploadHandler {
         frontLineWorker.setModificationDate(record.getModificationDate());
         frontLineWorker.setCreationDate(record.getCreationDate());
 
-        //Bug 15
-        frontLineWorker.setIsValidated(ParseDataHelper.validateAndParseBoolean("Is Validated", record.getIsValidated(), false));
         logger.info("mapFrontLineWorkerFrom process end");
 
         return frontLineWorker;
@@ -540,7 +537,7 @@ public class FlwUploadHandler {
     private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {
         logger.debug("FLW state Code : {}", stateCode);
 
-        FrontLineWorker dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId,stateCode);
+        FrontLineWorker dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId, stateCode);
         if (dbRecord == null) {
             logger.debug("FLW Contact Number : {}", contactNo);
             dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);

@@ -3,7 +3,11 @@ package org.motechproject.nms.frontlineworker.service;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 
 /**
- * Created by abhishek on 13/3/15.
+ * Interface for repository that persists simple records and allows CRUD.
+ * Its implementation uses the repository interface FlwRecordsDataService whose base class
+ * MotechDataService will provide the implementation of this class as well
+ * as methods for adding, deleting, saving and finding all instances. In this interface we
+ * also declare lookups we may need to find record from Database.
  */
 public interface FrontLineWorkerService {
 

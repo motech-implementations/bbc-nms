@@ -1,37 +1,45 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
-import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
+import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 13/3/15.
+ * This class acts as implementation class for the interface FrontLineWorkerService.
+ * It uses FrontLineWorkerRecordDataService which further takes MotechDataService as
+ * base class to performs the CRUD operations on FrontLineWorker records. It also adds lookup
+ * procedures to fetch the frontLineWorker record from Database.
  */
 @Service("frontLineWorkerService")
 public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
 
+
+    FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
+
     @Autowired
-    FlwRecordDataService flwRecordDataService;
+    public FrontLineWorkerServiceImpl(FrontLineWorkerRecordDataService frontLineWorkerRecordDataService) {
+        this.frontLineWorkerRecordDataService = frontLineWorkerRecordDataService;
+    }
 
     @Override
     public void createFrontLineWorker(FrontLineWorker frontLineWorker) {
-        flwRecordDataService.create(frontLineWorker);
+        frontLineWorkerRecordDataService.create(frontLineWorker);
     }
 
     @Override
     public void updateFrontLineWorker(FrontLineWorker frontLineWorker) {
-        flwRecordDataService.update(frontLineWorker);
+        frontLineWorkerRecordDataService.update(frontLineWorker);
     }
 
     @Override
     public FrontLineWorker getFlwBycontactNo(String contactNo) {
-        return flwRecordDataService.getFlwByContactNo(contactNo);
+        return frontLineWorkerRecordDataService.getFlwByContactNo(contactNo);
     }
 
     @Override
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode) {
-        return flwRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
+        return frontLineWorkerRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
     }
 }
