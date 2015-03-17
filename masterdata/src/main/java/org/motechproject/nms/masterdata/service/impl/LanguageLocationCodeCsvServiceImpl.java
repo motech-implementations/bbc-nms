@@ -7,12 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("languageLocationCodeServiceCsv")
-public class LanguageLocationCodeServiceCsvImpl implements LanguageLocationCodeServiceCsv {
+public class LanguageLocationCodeCsvServiceImpl implements LanguageLocationCodeServiceCsv {
 
     private LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService;
 
     @Autowired
-    public LanguageLocationCodeServiceCsvImpl(LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService) {
+    public LanguageLocationCodeCsvServiceImpl(LanguageLocationCodeCsvDataService languageLocationCodeCsvDataService) {
         this.languageLocationCodeCsvDataService = languageLocationCodeCsvDataService;
     }
 
