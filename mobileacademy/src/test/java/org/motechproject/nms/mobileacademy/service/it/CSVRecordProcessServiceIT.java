@@ -27,6 +27,7 @@ import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -48,6 +49,9 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
 
     @Inject
     private CourseProcessedContentDataService courseProcessedContentDataService;
+
+    @Inject
+    private CoursePopulateService coursePopulateService;
 
     @Inject
     private ChapterContentDataService chapterContentDataService;
@@ -662,5 +666,83 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
                         languageLocationCode, contentNameUpdate.toUpperCase());
         assertNull(courseProcessedContent);
 
+    }
+
+    @Test
+    public void testAnswerOptionUpdateSuccess() throws Exception {
+        clearMobileAcademyData();
+        String contentName = "Chapter01_Question01";
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
+                .get(0);
+        String circle = courseRawContentUpdateRecord.getCircle();
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
+
+        courseRawContentUpdateRecord.setContentName(contentName);
+        courseRawContentUpdateRecord.setMetaData("correctAnswer:2");
+        courseRawContentUpdateRecord
+                .setContentFile("File Changed for Question Content.wav");
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(courseRawContentUpdateRecord);
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "Answer Option change.csv");
+
+        CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
+
+        assertEquals(courseProcessedContent.getContentFile(),
+                "File Changed for Question Content.wav");
+        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
+    }
+
+    @Test
+    public void testModificationWithNoChangeInRecord() throws Exception {
+        clearMobileAcademyData();
+        String contentName = "Chapter01_Question01";
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
+                .get(0);
+        String circle = courseRawContentUpdateRecord.getCircle();
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        String fileName = "";
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+        CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
+
+        fileName = courseProcessedContent.getContentFile();
+
+        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
+
+        courseRawContentUpdateRecord.setContentName(contentName);
+        courseRawContentUpdateRecord.setMetaData("correctAnswer:01");
+        courseRawContentUpdateRecord.setContentFile(fileName);
+        courseContentCsvs = new ArrayList<>();
+        courseContentCsvs.add(courseRawContentUpdateRecord);
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "Answer Option change.csv");
+
+        courseProcessedContent = courseProcessedContentDataService
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
+
+        assertEquals(courseProcessedContent.getContentFile(), fileName);
+        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
     }
 }
