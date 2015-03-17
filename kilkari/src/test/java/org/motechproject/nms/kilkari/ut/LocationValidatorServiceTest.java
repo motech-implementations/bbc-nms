@@ -171,10 +171,10 @@ public class LocationValidatorServiceTest {
         Taluka taluka = null;
         District district = new District();
 
-        when(locationService.getTalukaByCode(1L, "abc")).thenReturn(null);
+        when(locationService.getTalukaByCode(1L, 1L)).thenReturn(null);
 
         try {
-            taluka = locationValidtorService.talukaConsistencyCheck(district,"abc");
+            taluka = locationValidtorService.talukaConsistencyCheck(district,1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -199,12 +199,11 @@ public class LocationValidatorServiceTest {
     public void shouldReturnNullForInvalidHealthBlockCode() {
         HealthBlock healthBlock = null;
         Taluka taluka = new Taluka();
-        String talukaCode = new String();
 
         when(locationService.getHealthBlockByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(talukaCode, taluka, 1L);
+            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, taluka, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -215,11 +214,9 @@ public class LocationValidatorServiceTest {
     @Test
     public void healthBlockConsistencyCheckWithNullTaluka() {
         HealthBlock healthBlock = null;
-        String talukaCode = new String();
-
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(talukaCode, null, 1L);
+            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -230,11 +227,10 @@ public class LocationValidatorServiceTest {
     @Test
     public void healthBlockConsistencyCheckWithNullHealthBlockCode() {
         HealthBlock healthBlock = null;
-        String talukaCode = new String();
         Taluka taluka = new Taluka();
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(talukaCode, taluka, null);
+            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, taluka, null);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -330,11 +326,10 @@ public class LocationValidatorServiceTest {
     public void shouldReturnNullForInvalidVillageCode() {
         Village village = null;
         Taluka taluka = new Taluka();
-        String talukaCode = new String();
         when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(talukaCode, taluka, 1L);
+            village = locationValidtorService.villageConsistencyCheck(1L, taluka, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -345,11 +340,10 @@ public class LocationValidatorServiceTest {
     @Test
     public void villageConsistencyCheckWithNullTaluka() {
         Village village = null;
-        String talukaCode = new String();
         when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(talukaCode, null, 1L);
+            village = locationValidtorService.villageConsistencyCheck(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -361,10 +355,10 @@ public class LocationValidatorServiceTest {
     public void villageConsistencyCheckWithNullVillageCode() {
         Village village = null;
         Taluka taluka = new Taluka();
-        String talukaCode = new String();
+
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(talukaCode, taluka, null);
+            village = locationValidtorService.villageConsistencyCheck(1L, taluka, null);
         } catch (Exception e) {
             Assert.fail();
         }

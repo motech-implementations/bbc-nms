@@ -183,7 +183,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         taluka.setName("taluka");
         taluka.setStateCode(12L);
         taluka.setDistrictCode(123L);
-        taluka.setTalukaCode("taluka");
+        taluka.setTalukaCode(1L);
         taluka.setCreator("Etasha");
         taluka.setOwner("Etasha");
         taluka.setModifiedBy("Etasha");
@@ -198,7 +198,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         village.setName("villageName");
         village.setStateCode(12L);
         village.setDistrictCode(123L);
-        village.setTalukaCode("taluka");
+        village.setTalukaCode(1L);
         village.setVillageCode(1234L);
         village.setCreator("Etasha");
         village.setOwner("Etasha");
@@ -216,7 +216,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthBlock.setName("healthBlockName");
         healthBlock.setStateCode(12L);
         healthBlock.setDistrictCode(123L);
-        healthBlock.setTalukaCode("taluka");
+        healthBlock.setTalukaCode(1L);
         healthBlock.setHealthBlockCode(1234L);
         healthBlock.setCreator("Etasha");
         healthBlock.setOwner("Etasha");
@@ -235,7 +235,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthFacility.setName("healthFacilityName");
         healthFacility.setStateCode(12L);
         healthFacility.setDistrictCode(123L);
-        healthFacility.setTalukaCode("taluka");
+        healthFacility.setTalukaCode(1L);
         healthFacility.setHealthBlockCode(1234L);
         healthFacility.setHealthFacilityCode(12345L);
         healthFacility.setCreator("Etasha");
@@ -256,7 +256,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthSubFacility.setName("healthSubFacilityName");
         healthSubFacility.setStateCode(12L);
         healthSubFacility.setDistrictCode(123L);
-        healthSubFacility.setTalukaCode("taluka");
+        healthSubFacility.setTalukaCode(1L);
         healthSubFacility.setHealthBlockCode(1234L);
         healthSubFacility.setHealthFacilityCode(12345L);
         healthSubFacility.setHealthSubFacilityCode(123456L);

@@ -1,21 +1,9 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.inject.Inject;
-import javax.jdo.JDOObjectNotFoundException;
-
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
@@ -23,29 +11,20 @@ import org.motechproject.nms.kilkari.event.handler.ChildMctsCsvHandler;
 import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.jdo.JDOObjectNotFoundException;
+import java.util.*;
+
+import static org.junit.Assert.assertNull;
 
 public class CommonStructure extends BasePaxIT {
     
@@ -133,7 +112,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setName("taluka");
         newRecord.setStateCode(1L);
         newRecord.setDistrictCode(1L);
-        newRecord.setTalukaCode("1");
+        newRecord.setTalukaCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
         newRecord.setModifiedBy("Deepak");
@@ -179,7 +158,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setName("healthFacilityName");
         newRecord.setStateCode(1L);
         newRecord.setDistrictCode(1L);
-        newRecord.setTalukaCode("1");
+        newRecord.setTalukaCode(1L);
         newRecord.setHealthBlockCode(1L);
         newRecord.setHealthFacilityCode(1L);
         newRecord.setCreator("Deepak");
@@ -198,7 +177,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setName("healthBlockName");
         newRecord.setStateCode(1L);
         newRecord.setDistrictCode(1L);
-        newRecord.setTalukaCode("1");
+        newRecord.setTalukaCode(1L);
         newRecord.setHealthBlockCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
@@ -214,7 +193,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setName("healthSubFacilityName");
         newRecord.setStateCode(1L);
         newRecord.setDistrictCode(1L);
-        newRecord.setTalukaCode("1");
+        newRecord.setTalukaCode(1L);
         newRecord.setHealthBlockCode(1L);
         newRecord.setHealthFacilityCode(1L);
         newRecord.setHealthSubFacilityCode(1L);
@@ -237,7 +216,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setName("villageName");
         newRecord.setStateCode(1L);
         newRecord.setDistrictCode(1L);
-        newRecord.setTalukaCode("1");
+        newRecord.setTalukaCode(1L);
         newRecord.setVillageCode(1L);
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
