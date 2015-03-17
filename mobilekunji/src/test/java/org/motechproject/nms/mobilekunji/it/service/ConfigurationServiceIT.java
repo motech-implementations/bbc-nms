@@ -23,10 +23,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 4/3/15.
+ * This Class models the integration testing for configuration Service
  */
-
-
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)

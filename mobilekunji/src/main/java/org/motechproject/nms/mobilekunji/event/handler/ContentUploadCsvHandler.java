@@ -2,7 +2,7 @@ package org.motechproject.nms.mobilekunji.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
 import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
@@ -63,7 +63,7 @@ public class ContentUploadCsvHandler {
      *
      * @param motechEvent name of the event raised during upload
      */
-    @MotechListener(subjects = {KunjiConstants.CONTENT_UPLOAD_CSV_SUCCESS})
+    @MotechListener(subjects = {ConfigurationConstants.CONTENT_UPLOAD_CSV_SUCCESS})
     public void mobileKunjiContentUploadSuccess(MotechEvent motechEvent) {
         logger.info("Success[mobileKunjiContentUploadSuccess] method start for mobileKunjiContentUploadCsv");
         ContentUploadCsv record = null;
