@@ -6,6 +6,7 @@ import java.util.Map;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.util.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +19,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class MotherMctsCsvHandler {
 
-    private static final String CSV_IMPORT_PREFIX = "csv-import.";
-    public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-    public static final String CSV_IMPORT_UPDATED_IDS = CSV_IMPORT_PREFIX + "updated_ids";
-    public static final String CSV_IMPORT_CREATED_COUNT = CSV_IMPORT_PREFIX + "created_count";
-    public static final String CSV_IMPORT_UPDATED_COUNT = CSV_IMPORT_PREFIX + "updated_count";
-    public static final String CSV_IMPORT_TOTAL_COUNT = CSV_IMPORT_PREFIX + "total_count";
-    public static final String CSV_IMPORT_FAILURE_MSG = CSV_IMPORT_PREFIX + "failure_message";
-    public static final String CSV_IMPORT_FAILURE_STACKTRACE = CSV_IMPORT_PREFIX + "failure_stacktrace";
-    public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
-
-    private MotherMctsCsvService motherMctsCsvService;
-
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
-
+    private MotherMctsCsvService motherMctsCsvService;
+    private static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
+    
+    
     @Autowired
     public MotherMctsCsvHandler(MotherMctsCsvService motherMctsCsvService){
         
         this.motherMctsCsvService = motherMctsCsvService;
-
     }
 
     /**
@@ -44,16 +35,17 @@ public class MotherMctsCsvHandler {
      * 
      * @param motechEvent This is motechEvent having uploaded record details 
      */
-    @MotechListener(subjects = "mds.crud.kilkari.MotherMctsCsv.csv-import.success")
+    @MotechListener(subjects = MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT)
     public void motherMctsCsvSuccess(MotechEvent motechEvent) {
-        logger.info("Success[motherMctsCsvSuccess] method start for MotherMctsCsv");
+        logger.trace("Success[motherMctsCsvSuccess] method start for MotherMctsCsv");
+        logger.info("Event invoked [{}]" + MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT);
         
         Map<String, Object> parameters = motechEvent.getParameters();
-        List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
-        String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
+        List<Long> uploadedIDs = (List<Long>) parameters.get(Constants.CSV_IMPORT_CREATED_IDS);
+        String csvFileName = (String) parameters.get(Constants.CSV_IMPORT_FILE_NAME);
 
         motherMctsCsvService.processMotherMctsCsv(csvFileName, uploadedIDs);
-        logger.info("Success[motherMctsCsvSuccess] method finished for MotherMctsCsv");
+        logger.trace("Success[motherMctsCsvSuccess] method finished for MotherMctsCsv");
     }
     
 

@@ -9,6 +9,7 @@ import javax.validation.constraints.Min;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
@@ -42,25 +43,25 @@ public class Subscriber extends MdsEntity {
     @Field
     private Integer age;
     
-    @Field(name = "state_id")
+    @Field(name = "stateId")
     private State state;
     
-    @Field(name = "district_id")
+    @Field(name = "districtId")
     private District district;
     
-    @Field(name = "taluka_id")
+    @Field(name = "talukaId")
     private Taluka taluka;
     
-    @Field(name = "healthBlock_id")
+    @Field(name = "healthBlockId")
     private HealthBlock healthBlock;
     
-    @Field(name = "phc_id")
+    @Field(name = "phcId")
     private HealthFacility phc;
     
-    @Field(name = "subCentre_id")
+    @Field(name = "subCentreId")
     private HealthSubFacility subCentre;
     
-    @Field(name = "village_id")
+    @Field(name = "villageId")
     private Village village;
     
     @Field
@@ -77,20 +78,11 @@ public class Subscriber extends MdsEntity {
     @Field
     private DateTime dob;
     
-    @Field
-    private Boolean stillBirth;
-    
-    @Field
-    private Boolean abortion;
-    
-    @Field
-    private Boolean motherDeath;
-    
-    @Field
-    private Boolean childDeath;
-    
     @Persistent(mappedBy = "subscriber")
     private Set<Subscription> subscriptionList;
+    
+    @Ignore
+    private DeactivationReason deactivationReason;
 
     public String getMsisdn() {
         return msisdn;
@@ -228,44 +220,44 @@ public class Subscriber extends MdsEntity {
         this.dob = dob;
     }
 
-    public Boolean getStillBirth() {
-        return stillBirth;
-    }
-
-    public void setStillBirth(Boolean stillBirth) {
-        this.stillBirth = stillBirth;
-    }
-
-    public Boolean getAbortion() {
-        return abortion;
-    }
-
-    public void setAbortion(Boolean abortion) {
-        this.abortion = abortion;
-    }
-
-    public Boolean getMotherDeath() {
-        return motherDeath;
-    }
-
-    public void setMotherDeath(Boolean motherDeath) {
-        this.motherDeath = motherDeath;
-    }
-
-    public Boolean getChildDeath() {
-        return childDeath;
-    }
-
-    public void setChildDeath(Boolean childDeath) {
-        this.childDeath = childDeath;
-    }
-
     public Set<Subscription> getSubscriptionList() {
         return subscriptionList;
     }
 
     public void setSubscriptionList(Set<Subscription> subscriptionList) {
         this.subscriptionList = subscriptionList;
+    }
+    
+    public DeactivationReason getDeactivationReason() {
+        return deactivationReason;
+    }
+
+    public void setDeactivationReason(DeactivationReason deactivationReason) {
+        this.deactivationReason = deactivationReason;
+    }
+
+    public SubscriptionPack getSuitablePackName(){
+        if (BeneficiaryType.MOTHER.equals(this)) {
+            return SubscriptionPack.PACK_72_WEEKS;
+        } else {
+            return SubscriptionPack.PACK_48_WEEKS;
+        }
+    }
+
+    public String getSuitableMctsId() {
+        if (BeneficiaryType.MOTHER.equals(this)) {
+            return getMotherMctsId();
+        } else {
+            return getChildMctsId();
+        }
+    }
+    
+    public DateTime getDobLmp() {
+        if (BeneficiaryType.MOTHER.equals(this)) {
+            return getLmp();
+        } else {
+            return getDob();
+        }
     }
 
 }

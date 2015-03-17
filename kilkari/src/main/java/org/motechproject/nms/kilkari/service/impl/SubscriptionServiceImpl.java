@@ -6,9 +6,9 @@ import javax.jdo.Query;
 
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
@@ -167,7 +167,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
                     MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, true, channel);
                     update(dbSubscription);
-                    if (!subscriber.getChildDeath()) {
+                    
+                    if (subscriber.getDeactivationReason()==DeactivationReason.NONE) {
                         /* add new subscription for child */
                         Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
                         create(newSubscription);
@@ -179,13 +180,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid(ChildMcts) than */
                 logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscriptionForChild(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getChildMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscriptionForChild(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
                         ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
@@ -235,14 +236,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid than update subscriber and subscription */
                 logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscriptionForMother(subscriber, dbSubscription, dbSubscriber, channel);
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel);
             }
         } else {
             logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getMotherMctsId())) {
                 logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscriptionForMother(subscriber, dbSubscription, dbSubscriber, channel);
+                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel);
 
             } else {
                 throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
@@ -274,16 +275,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private void updateSubscriberSubscriptionForChild(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
+    private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
         
-        if (subscriber.getChildDeath()) {
+        if (subscriber.getDeactivationReason() != DeactivationReason.NONE) {
             updateSubscription(subscriber, dbSubscription, true, channel);
             
         } else {
-            if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
+            if (!dbSubscriber.getDobLmp().equals(subscriber.getDobLmp())) {
                 updateSubscription(subscriber, dbSubscription, true, channel);
                 Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
-                create(newSubscription);
+                newSubscription = create(newSubscription);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateSubscription(subscriber, dbSubscription, false, channel);
@@ -291,33 +292,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         updateDbSubscriber(subscriber, dbSubscriber);
-    }
-    
-    /**
-     *  This method is used to update subscriber and subscription
-     * 
-     *  @param subscriber csv uploaded subscriber
-     *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
-     */
-    private void updateSubscriberSubscriptionForMother(Subscriber subscriber,
-            Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
-
-        if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()) {
-            updateSubscription(subscriber, dbSubscription, true, channel);
-        } else {
-            if (!dbSubscriber.getLmp().equals(subscriber.getLmp())) {
-                updateSubscription(subscriber, dbSubscription, true, channel);
-                Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
-                create(newSubscription);
-                dbSubscriber.getSubscriptionList().add(newSubscription);
-            } else {
-                updateSubscription(subscriber, dbSubscription, false, channel);
-            }
-        }
-
-        updateDbSubscriber(subscriber, dbSubscriber);
-
     }
     
     /**

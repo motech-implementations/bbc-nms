@@ -25,9 +25,7 @@ public final class MctsCsvHelper  {
         dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
         dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
         dbSubscriber.setDob(subscriber.getDob());
-        dbSubscriber.setAbortion(subscriber.getAbortion());
-        dbSubscriber.setStillBirth(subscriber.getStillBirth());
-        dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
+        
         dbSubscriber.setLmp(subscriber.getLmp());
     }
     
@@ -43,13 +41,9 @@ public final class MctsCsvHelper  {
         newSubscription.setCreator(dbSubscriber.getCreator());
         newSubscription.setOwner(dbSubscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
-        if (dbSubscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
-            newSubscription.setMctsId(dbSubscriber.getChildMctsId());
-            newSubscription.setPackName(BeneficiaryType.CHILD.getPackForBeneficiaryType());
-        }else{
-            newSubscription.setMctsId(dbSubscriber.getMotherMctsId());
-            newSubscription.setPackName(BeneficiaryType.MOTHER.getPackForBeneficiaryType());
-        }
+        newSubscription.setPackName(dbSubscriber.getSuitablePackName());
+        newSubscription.setMctsId(dbSubscriber.getSuitableMctsId());
+        
         return newSubscription;
     }
     
@@ -61,12 +55,8 @@ public final class MctsCsvHelper  {
         dbSubscription.setChannel(channel);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-        if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
-            dbSubscription.setMctsId(subscriber.getChildMctsId());
-            dbSubscription.setPackName(BeneficiaryType.CHILD.getPackForBeneficiaryType());
-        }else{
-            dbSubscription.setMctsId(subscriber.getMotherMctsId());
-            dbSubscription.setPackName(BeneficiaryType.MOTHER.getPackForBeneficiaryType());
-        }
+        dbSubscription.setMctsId(subscriber.getSuitableMctsId());
+        dbSubscription.setPackName(subscriber.getSuitablePackName());
     }
+
 }

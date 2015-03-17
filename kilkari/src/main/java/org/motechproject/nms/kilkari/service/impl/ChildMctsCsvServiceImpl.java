@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
@@ -48,9 +49,9 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     @Autowired
     private ConfigurationService configurationService;
     
-    public static final String CHILD_DEATH_NINE = "9";
-    
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
+    
+    public static final String CHILD_DEATH_NINE = "9";
     
     @Override
     public void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs){
@@ -67,11 +68,11 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         
         for (Long id : uploadedIDs) {
             try {
-                logger.info("Processing record id[{}]", id);
+                logger.debug("Processing record id[{}]", id);
                 childMctsCsv = childMctsCsvDataService.findById(id);
                 
                 if (childMctsCsv != null) {
-                    logger.info("Record found in database for record id[{}]", id);
+                    logger.debug("Record found in database for record id[{}]", id);
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = mapChildMctsToSubscriber(childMctsCsv);
                     subscriptionService.handleMctsSubscriptionRequestForChild(subscriber, Channel.MCTS);
@@ -124,29 +125,29 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
         Subscriber childSubscriber = new Subscriber();
         
-        logger.info("Validation and map to entity process start");
+        logger.trace("mapChildMctsToSubscriber method start");
         childSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
 
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
-        int msisdnCsvLength = msisdn.length();
-        if(msisdnCsvLength > 10){
-            msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
-        }
-        childSubscriber.setMsisdn(msisdn);
+        childSubscriber.setMsisdn(NmsUtils.trimMsisdn(msisdn));
+        
         childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
-        childSubscriber.setChildDeath(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false)));
-
         childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
         childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));
+        
+        if(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false))){
+            childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
+        } else {
+            childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
+        }
 
+        childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
         childSubscriber.setCreator(childMctsCsv.getCreator());
         childSubscriber.setOwner(childMctsCsv.getOwner());
 
-        childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-
-        logger.info("Validation and map to entity process finished");
+        logger.trace("mapChildMctsToSubscriber method finished");
         return childSubscriber;
     }
 

@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.domain;
 
-import javax.jdo.annotations.Unique;
 
 
 public enum SubscriptionPack  {

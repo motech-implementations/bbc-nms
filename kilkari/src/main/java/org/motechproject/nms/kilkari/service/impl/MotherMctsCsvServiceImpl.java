@@ -5,6 +5,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
@@ -50,14 +51,9 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
-    public static final String PACK_72 = "72WEEK";
     public static final String STILL_BIRTH_ZERO = "0";
     public static final String MOTHER_DEATH_NINE = "9";
     public static final String ABORTION_NONE = "none";
-    public static final String SUBSCRIPTION_EXIST_ERR_DESC =
-            "Upload Unsuccessful as Subscription to MSISDN already Exist";
-    public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
-            "Subscription to MSISDN already Exist";
 
     @Override
     public void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs){
@@ -74,10 +70,10 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
         for (Long id : uploadedIDs) {
             try {
-                logger.info("Processing record id[{}]", id);
+                logger.debug("Processing record id[{}]", id);
                 motherMctsCsv = motherMctsCsvDataService.findById(id);
                 if (motherMctsCsv != null) {
-                    logger.info("Record found in database for uploaded id[{}]", id);
+                    logger.debug("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = mapMotherMctsToSubscriber(motherMctsCsv);
                     subscriptionService.handleMctsSubscriptionRequestForMother(subscriber, Channel.MCTS);
@@ -132,37 +128,36 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
         Subscriber motherSubscriber = new Subscriber();
 
-        logger.info("Validation and map to entity process start");
+        logger.trace("mapMotherMctsToSubscriber method start");
         motherSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
-        int msisdnCsvLength = msisdn.length();
+        motherSubscriber.setMsisdn(NmsUtils.trimMsisdn(msisdn));
         
-        if(msisdnCsvLength > 10){
-            msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
-        }
-        
-        motherSubscriber.setMsisdn(msisdn);
         motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
         motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
         motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
         motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
-
         motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
-        motherSubscriber.setStillBirth(STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
-
+        
         String abortion = ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false);
-        motherSubscriber.setAbortion(!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion)));
-        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false)));
+        if (STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos())) {
+            motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
+        } else if (!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion))) {
+            motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
+        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
+            motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
+        } else {
+            motherSubscriber.setDeactivationReason(DeactivationReason.NONE);
+        }
+        
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
         motherSubscriber.setOwner(motherMctsCsv.getOwner());
 
-        logger.info("Validation and map to entity process finished");
+        logger.trace("mapMotherMctsToSubscriber method finished");
         return motherSubscriber;
     }
-
     
 }

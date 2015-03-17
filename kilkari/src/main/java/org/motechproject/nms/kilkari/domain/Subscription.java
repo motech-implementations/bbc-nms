@@ -38,7 +38,7 @@ public class Subscription extends MdsEntity {
     private Status status;
 
     @Field
-    private Boolean isDeactivatedBySystem;
+    private DeactivationReason deactivationReason;
 
     @Field
     private Integer weekNumber;
@@ -115,13 +115,13 @@ public class Subscription extends MdsEntity {
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    public Boolean getIsDeactivatedBySystem() {
-        return isDeactivatedBySystem;
+    
+    public DeactivationReason getDeactivationReason() {
+        return deactivationReason;
     }
 
-    public void setIsDeactivatedBySystem(Boolean isDeactivatedBySystem) {
-        this.isDeactivatedBySystem = isDeactivatedBySystem;
+    public void setDeactivationReason(DeactivationReason deactivationReason) {
+        this.deactivationReason = deactivationReason;
     }
 
     public Integer getWeekNumber() {

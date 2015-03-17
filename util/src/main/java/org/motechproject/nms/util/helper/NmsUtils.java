@@ -1,6 +1,7 @@
 package org.motechproject.nms.util.helper;
 
 import org.joda.time.DateTime;
+import org.motechproject.nms.util.constants.Constants;
 
 /**
  * Utility class to provide static utility methods
@@ -26,5 +27,14 @@ public final class NmsUtils {
 
         DateTime dateTime = new DateTime();
         return dateTime;
+    }
+    
+    public static String trimMsisdn(String msisdn) {
+        int msisdnCsvLength = msisdn.length();
+        
+        if(msisdnCsvLength > Constants.MSISDN_LENGTH){
+            msisdn = msisdn.substring(msisdnCsvLength-10, msisdnCsvLength);
+        }
+        return msisdn;
     }
 }
