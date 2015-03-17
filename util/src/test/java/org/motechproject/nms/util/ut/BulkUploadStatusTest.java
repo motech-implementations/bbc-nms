@@ -1,6 +1,7 @@
 package org.motechproject.nms.util.ut;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.helper.NmsUtils;
@@ -53,8 +54,21 @@ public class BulkUploadStatusTest {
          assertEquals(numberOfSuccessfulRecords, bulkUploadStatusNew.getNumberOfSuccessfulRecords());
          assertEquals(uploadedBy, bulkUploadStatusNew.getUploadedBy());
          assertEquals(timeOfUpload, bulkUploadStatusNew.getTimeOfUpload());
+     }
 
-
+     /**
+      * Test class to test the method to deep copy BulkUploadStatus object
+      */
+     @Test
+     public void shouldCreateBulkUploadStatusDeepCopy() {
+        DateTime time = NmsUtils.getCurrentTimeStamp();
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus("user-name", "Name.csv", time, 3, 47);
+        BulkUploadStatus bulkUploadStatusDeepCopy = bulkUploadStatus.createDeepCopy();
+        Assert.assertEquals(bulkUploadStatusDeepCopy.getBulkUploadFileName(), bulkUploadStatus.getBulkUploadFileName());
+        Assert.assertEquals(bulkUploadStatusDeepCopy.getUploadedBy(), bulkUploadStatus.getUploadedBy());
+        Assert.assertEquals(bulkUploadStatusDeepCopy.getNumberOfFailedRecords(), bulkUploadStatus.getNumberOfFailedRecords());
+        Assert.assertEquals(bulkUploadStatusDeepCopy.getTimeOfUpload(), bulkUploadStatus.getTimeOfUpload());
+        Assert.assertEquals(bulkUploadStatusDeepCopy.getNumberOfSuccessfulRecords(), bulkUploadStatus.getNumberOfSuccessfulRecords());
      }
 
 }

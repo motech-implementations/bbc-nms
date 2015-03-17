@@ -41,5 +41,23 @@ public class BulkUploadErrorTest {
         DateTime time = NmsUtils.getCurrentTimeStamp();
         bulkUploadError.setTimeOfUpload(time);
         Assert.assertEquals(time, bulkUploadError.getTimeOfUpload());
+
+    }
+
+    /**
+     * Test class to test the method to deep copy BulkUploadError object
+     */
+    @Test
+    public void shouldCreateBulkUploadErrorDeepCopy() {
+        DateTime time = NmsUtils.getCurrentTimeStamp();
+        BulkUploadError bulkUploadError = new BulkUploadError("Name.csv", time, RecordType.CIRCLE, "Record Detail", ErrorCategoryConstants.GENERAL_EXCEPTION, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
+        BulkUploadError bulkUploadErrorDeepCopy = bulkUploadError.createDeepCopy();
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getCsvName(), bulkUploadError.getCsvName());
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getErrorCategory(), bulkUploadError.getErrorCategory());
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getErrorDescription(), bulkUploadError.getErrorDescription());
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getRecordDetails(), bulkUploadError.getRecordDetails());
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getRecordType(), bulkUploadError.getRecordType());
+        Assert.assertEquals(bulkUploadErrorDeepCopy.getTimeOfUpload(), bulkUploadError.getTimeOfUpload());
+
     }
 }
