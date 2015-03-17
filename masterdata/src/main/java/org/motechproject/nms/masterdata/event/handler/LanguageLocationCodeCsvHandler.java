@@ -192,12 +192,10 @@ public class LanguageLocationCodeCsvHandler {
 
 
         /* Update the Default Language Location Codes in Circle entity */
-        String valueOfIsDefLangLocCode = ParseDataHelper.parseString("isDefaultLanguageLocationCode",
+        Boolean isDefLangLocCode = ParseDataHelper.parseBoolean("isDefaultLanguageLocationCode",
                 record.getIsDefaultLanguageLocationCode(), true);
-        Boolean isDefaultLangLocCode = (
-                MasterDataConstants.YES_FOR_DEFAULT_LANG_LOC_CODE.equalsIgnoreCase(valueOfIsDefLangLocCode));
 
-        if (isDefaultLangLocCode) {
+        if (isDefLangLocCode) {
             circle.setDefaultLanguageLocationCode(newRecord.getLanguageLocationCode());
             circleService.update(circle);
         }

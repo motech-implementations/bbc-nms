@@ -24,7 +24,4 @@ public final class MasterDataConstants {
     public static final String CIRCLE_CSV_SUCCESS = "mds.crud.masterdata.CircleCsv.csv-import.success";
 
     public static final String LANGUAGE_LOCATION_CODE_CSV_SUCCESS = "mds.crud.masterdata.LanguageLocationCodeCsv.csv-import.success";
-
-    public static final String YES_FOR_DEFAULT_LANG_LOC_CODE = "Y";
-
 }
