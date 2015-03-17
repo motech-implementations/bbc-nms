@@ -23,7 +23,7 @@ public class Taluka extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 1)
-    private String talukaCode;
+    private Long talukaCode;
 
     @Field
     @Cascade(delete = true)
@@ -53,11 +53,11 @@ public class Taluka extends LocationUnitMetaData {
         this.village = village;
     }
 
-    public String getTalukaCode() {
+    public Long getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Long talukaCode) {
         this.talukaCode = talukaCode;
     }
 

@@ -54,12 +54,12 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
      *  @param district District object
      *  @param talukaCode csv uploaded districtCode
      */
-    public Taluka talukaConsistencyCheck(District district, String talukaCode) throws DataValidationException {
+    public Taluka talukaConsistencyCheck(District district, Long talukaCode) throws DataValidationException {
         Taluka taluka = null;
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
             if (taluka == null) {
-                ParseDataHelper.raiseInvalidDataException("Taluka Code", talukaCode);
+                ParseDataHelper.raiseInvalidDataException("Taluka Code", talukaCode.toString());
             }
         }
         return taluka;
@@ -73,7 +73,7 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
      *  @param taluka Taluka object
      *  @param talukaCode csv uploaded healthBlockCode
      */
-    public HealthBlock healthBlockConsistencyCheck(String talukaCode, 
+    public HealthBlock healthBlockConsistencyCheck(Long talukaCode,
             Taluka taluka, Long healthBlockCode) throws DataValidationException {
         HealthBlock healthBlock = null;
         if (healthBlockCode != null) {
@@ -83,7 +83,7 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
                     ParseDataHelper.raiseInvalidDataException("Block Code", healthBlockCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode);
+                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode.toString());
             }
         }
         return healthBlock;
@@ -147,7 +147,7 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
      *  @param taluka Taluka Object
      *  @param villageCode csv uploaded districtCode
      */
-    public Village villageConsistencyCheck(String talukaCode, Taluka taluka, Long villageCode) throws DataValidationException {
+    public Village villageConsistencyCheck(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException {
         Village village = null;
         if (villageCode != null) {
             if (taluka != null) {

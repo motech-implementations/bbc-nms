@@ -10,6 +10,9 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -31,11 +34,11 @@ import java.util.Map;
 @Component
 public class HealthSubFacilityCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
 
@@ -50,10 +53,10 @@ public class HealthSubFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityCsvRecordsDataService healthSubFacilityCsvRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
+        this.districtService = districtService;
+        this.talukaService = talukaService;
         this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
         this.healthSubFacilityCsvRecordsDataService = healthSubFacilityCsvRecordsDataService;
         this.healthSubFacilityRecordsDataService = healthSubFacilityRecordsDataService;
@@ -139,22 +142,22 @@ public class HealthSubFacilityCsvUploadHandler {
         String healthSubFacilityName = ParseDataHelper.parseString("HealthSubFacilityName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
+        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.parseLong("HealthBlockCode", record.getHealthBlockCode(), true);
         Long healthfacilityCode = ParseDataHelper.parseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.parseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
-        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
             ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
-        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");

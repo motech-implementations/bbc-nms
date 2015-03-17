@@ -8,10 +8,10 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaCsvService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -36,24 +36,24 @@ import java.util.Map;
 @Component
 public class TalukaCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
-    private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
+    private TalukaCsvService talukaCsvService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
     @Autowired
-    public TalukaCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaCsvRecordsDataService talukaCsvRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
-        this.talukaCsvRecordsDataService = talukaCsvRecordsDataService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+    public TalukaCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaCsvService talukaCsvService, TalukaService talukaService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
+        this.districtService = districtService;
+        this.talukaCsvService = talukaCsvService;
+        this.talukaService = talukaService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -90,7 +90,7 @@ public class TalukaCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("TALUKA_CSV_SUCCESS event processing start for ID: {}", id);
-                talukaCsvRecord = talukaCsvRecordsDataService.findById(id);
+                talukaCsvRecord = talukaCsvService.findById(id);
 
                 if (talukaCsvRecord != null) {
                     logger.info("Id exist in Taluka Temporary Entity");
@@ -122,7 +122,7 @@ public class TalukaCsvUploadHandler {
                 logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != talukaCsvRecord) {
-                    talukaCsvRecordsDataService.delete(talukaCsvRecord);
+                    talukaCsvService.delete(talukaCsvRecord);
                 }
             }
         }
@@ -135,14 +135,14 @@ public class TalukaCsvUploadHandler {
         String talukaName = ParseDataHelper.parseString("TalukaName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
+        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
-        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
             ParseDataHelper.raiseInvalidDataException("District", "districtCode");
         }
@@ -160,7 +160,7 @@ public class TalukaCsvUploadHandler {
 
     private void processTalukaData(Taluka talukaData) throws DataValidationException {
 
-        Taluka existTalukaData = talukaRecordsDataService.findTalukaByParentCode(
+        Taluka existTalukaData = talukaService.findTalukaByParentCode(
                 talukaData.getStateCode(),
                 talukaData.getDistrictCode(),
                 talukaData.getTalukaCode());
@@ -170,15 +170,15 @@ public class TalukaCsvUploadHandler {
             logger.info("Taluka data is successfully updated.");
 
         } else {
-            District districtData = districtRecordsDataService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
+            District districtData = districtService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
             districtData.getTaluka().add(talukaData);
-            districtRecordsDataService.update(districtData);
+            districtService.update(districtData);
             logger.info("Taluka data is successfully inserted.");
         }
     }
 
     private void updateTaluka(Taluka existTalukaData, Taluka talukaData) {
         existTalukaData.setName(talukaData.getName());
-        talukaRecordsDataService.update(existTalukaData);
+        talukaService.update(existTalukaData);
     }
 }

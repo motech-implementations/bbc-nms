@@ -9,10 +9,10 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaCsvService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -41,32 +41,32 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
-    private TalukaCsvRecordsDataService talukaCsvRecordsDataService;
+    private TalukaCsvService talukaCsvService;
 
     @Inject
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Before
     public void setUp() {
-        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateRecordsDataService,
-                districtRecordsDataService, talukaCsvRecordsDataService,talukaRecordsDataService, bulkUploadErrLogService);
+        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
+                districtService, talukaCsvService,talukaService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(talukaCsvRecordsDataService);
-        assertNotNull(talukaRecordsDataService);
-        assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(talukaCsvService);
+        assertNotNull(talukaService);
+        assertNotNull(districtService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(talukaCsvUploadHandler);
     }
@@ -77,7 +77,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
         stateData.getDistrict().add(districtData);
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         TalukaCsv csvData = TestHelper.getTalukaCsvData();
         TalukaCsv invalidCsvData = TestHelper.getInvalidTalukaCsvData();
@@ -91,7 +91,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
 
 
-        Taluka talukaData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L,"8");
+        Taluka talukaData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaData);
         assertTrue(123L == talukaData.getStateCode());
@@ -105,7 +105,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         talukaCsvUploadHandler.talukaCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.TALUKA_CSV_SUCCESS));
-        Taluka talukaUpdateData = talukaRecordsDataService.findTalukaByParentCode(123L, 456L, "8");
+        Taluka talukaUpdateData = talukaService.findTalukaByParentCode(123L, 456L, 8L);
 
         assertNotNull(talukaUpdateData);
         assertTrue(123L == talukaUpdateData.getStateCode());
@@ -119,6 +119,6 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
 
     private void createTalukaCsvData(TalukaCsv csvData) {
 
-        talukaCsvRecordsDataService.create(csvData);
+        talukaCsvService.create(csvData);
     }
 }

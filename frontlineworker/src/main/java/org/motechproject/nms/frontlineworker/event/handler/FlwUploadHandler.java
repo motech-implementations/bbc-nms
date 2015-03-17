@@ -368,9 +368,9 @@ public class FlwUploadHandler {
      * @throws DataValidationException
      */
     private Taluka talukaConsistencyCheck(Long districtId, String record) throws DataValidationException {
-        String talukaCode;
+        Long talukaCode;
         Taluka taluka = null;
-        talukaCode = ParseDataHelper.parseString("TalukaCode", record, false);
+        talukaCode = ParseDataHelper.parseLong("TalukaCode", record, false);
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(districtId, talukaCode);
             if (taluka == null) {

@@ -31,7 +31,7 @@ public interface LocationService {
      * @param talukaCode Taluka Census (or Proposed Census) Code
      * @return Taluka object corresponding to the Census (or Proposed Census)code
      */
-    Taluka getTalukaByCode(Long districtId, String talukaCode);
+    Taluka getTalukaByCode(Long districtId, Long talukaCode);
 
     /**
      * get HealthBlock record for given HealthBlock Census (or Proposed Census) Code

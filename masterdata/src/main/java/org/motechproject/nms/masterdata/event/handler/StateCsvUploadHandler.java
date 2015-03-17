@@ -6,8 +6,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
-import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateCsvService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -32,18 +32,18 @@ import java.util.Map;
 @Component
 public class StateCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
-    private StateCsvRecordsDataService stateCsvRecordsDataService;
+    private StateCsvService stateCsvService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
 
     @Autowired
-    public StateCsvUploadHandler(StateRecordsDataService stateRecordsDataService, StateCsvRecordsDataService stateCsvRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
-        this.stateCsvRecordsDataService = stateCsvRecordsDataService;
+    public StateCsvUploadHandler(StateService stateService, StateCsvService stateCsvService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
+        this.stateCsvService = stateCsvService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -80,7 +80,7 @@ public class StateCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("STATE_CSV_SUCCESS event processing start for ID: {}", id);
-                stateCsvRecord = stateCsvRecordsDataService.findById(id);
+                stateCsvRecord = stateCsvService.findById(id);
 
                 if (stateCsvRecord != null) {
                     bulkUploadStatus.setUploadedBy(stateCsvRecord.getOwner());
@@ -114,7 +114,7 @@ public class StateCsvUploadHandler {
                 logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != stateCsvRecord) {
-                    stateCsvRecordsDataService.delete(stateCsvRecord);
+                    stateCsvService.delete(stateCsvRecord);
                 }
             }
         }
@@ -145,13 +145,13 @@ public class StateCsvUploadHandler {
     private void processStateData(State stateData) throws DataValidationException {
 
         logger.debug("State data contains state code : {}", stateData.getStateCode());
-        State stateExistData = stateRecordsDataService.findRecordByStateCode(stateData.getStateCode());
+        State stateExistData = stateService.findRecordByStateCode(stateData.getStateCode());
 
         if (null != stateExistData) {
             updateState(stateExistData, stateData);
             logger.info("State data is successfully updated.");
         } else {
-            stateRecordsDataService.create(stateData);
+            stateService.create(stateData);
             logger.info("State data is successfully inserted.");
         }
     }
@@ -162,7 +162,7 @@ public class StateCsvUploadHandler {
         stateExistData.setMaCapping(stateData.getMaCapping());
         stateExistData.setMkCapping(stateData.getMkCapping());
 
-        stateRecordsDataService.update(stateExistData);
+        stateService.update(stateExistData);
     }
 
 }

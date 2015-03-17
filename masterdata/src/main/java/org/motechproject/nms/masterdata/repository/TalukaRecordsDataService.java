@@ -12,5 +12,5 @@ public interface TalukaRecordsDataService extends MotechDataService<Taluka> {
     @Lookup
     Taluka findTalukaByParentCode(@LookupField(name = "stateCode") Long stateCode,
                                   @LookupField(name = "districtCode") Long districtCode,
-                                  @LookupField(name = "talukaCode") String talukaCode);
+                                  @LookupField(name = "talukaCode") Long talukaCode);
 }

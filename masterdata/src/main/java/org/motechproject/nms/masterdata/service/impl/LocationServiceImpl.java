@@ -2,18 +2,21 @@ package org.motechproject.nms.masterdata.service.impl;
 
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("locationService")
 public class LocationServiceImpl implements LocationService {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private HealthBlockRecordsDataService healthBlockRecordsDataService;
 
@@ -24,10 +27,10 @@ public class LocationServiceImpl implements LocationService {
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
     @Autowired
-    public LocationServiceImpl(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
-        this.stateRecordsDataService = stateRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+    public LocationServiceImpl(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthBlockRecordsDataService healthBlockRecordsDataService, VillageRecordsDataService villageRecordsDataService, HealthFacilityRecordsDataService healthFacilityRecordsDataService, HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService) {
+        this.stateService = stateService;
+        this.districtService = districtService;
+        this.talukaService = talukaService;
         this.healthBlockRecordsDataService = healthBlockRecordsDataService;
         this.villageRecordsDataService = villageRecordsDataService;
         this.healthFacilityRecordsDataService = healthFacilityRecordsDataService;
@@ -39,12 +42,12 @@ public class LocationServiceImpl implements LocationService {
 
         boolean flag = false;
 
-        State state = stateRecordsDataService.findById(stateId);
-        District district = districtRecordsDataService.findById(districtId);
+        State state = stateService.findById(stateId);
+        District district = districtService.findById(districtId);
 
         if (null != state && null != district) {
 
-            District districtData = districtRecordsDataService.findDistrictByParentCode(district.getStateCode(), district.getDistrictCode());
+            District districtData = districtService.findDistrictByParentCode(district.getStateCode(), district.getDistrictCode());
 
             if (null != districtData) {
                 flag = true;
@@ -63,7 +66,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public State getStateByCode(Long stateCode) {
 
-        return stateRecordsDataService.findRecordByStateCode(stateCode);
+        return stateService.findRecordByStateCode(stateCode);
     }
 
     /**
@@ -79,10 +82,10 @@ public class LocationServiceImpl implements LocationService {
         District district = null;
 
         if (null != stateId && null != districtCode) {
-            State state = stateRecordsDataService.findById(stateId);
+            State state = stateService.findById(stateId);
 
             if (null != state) {
-                district = districtRecordsDataService.findDistrictByParentCode(districtCode, state.getStateCode());
+                district = districtService.findDistrictByParentCode(districtCode, state.getStateCode());
                 return district;
             }
         }
@@ -97,14 +100,14 @@ public class LocationServiceImpl implements LocationService {
      * @return Taluka object corresponding to the Census (or Proposed Census)code
      */
     @Override
-    public Taluka getTalukaByCode(Long districtId, String talukaCode) {
+    public Taluka getTalukaByCode(Long districtId, Long talukaCode) {
 
         Taluka taluka = null;
 
         if (null != districtId && null != talukaCode) {
-            District district = districtRecordsDataService.findById(districtId);
+            District district = districtService.findById(districtId);
             if (null != district) {
-                taluka = talukaRecordsDataService.findTalukaByParentCode(district.getStateCode(),
+                taluka = talukaService.findTalukaByParentCode(district.getStateCode(),
                         district.getDistrictCode(), talukaCode);
                 return taluka;
             }
@@ -125,7 +128,7 @@ public class LocationServiceImpl implements LocationService {
         HealthBlock healthBlock = null;
 
         if (null != talukaId && null != healthBlockCode) {
-            Taluka taluka = talukaRecordsDataService.findById(talukaId);
+            Taluka taluka = talukaService.findById(talukaId);
             if (null != taluka) {
 
                 healthBlock = healthBlockRecordsDataService.findHealthBlockByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), healthBlockCode);
@@ -200,7 +203,7 @@ public class LocationServiceImpl implements LocationService {
         Village village = null;
 
         if (null != talukaId && null != villageCode) {
-            Taluka taluka = talukaRecordsDataService.findById(talukaId);
+            Taluka taluka = talukaService.findById(talukaId);
 
             if (null != taluka) {
                 village = villageRecordsDataService.findVillageByParentCode(taluka.getStateCode(), taluka.getDistrictCode(), taluka.getTalukaCode(), villageCode);

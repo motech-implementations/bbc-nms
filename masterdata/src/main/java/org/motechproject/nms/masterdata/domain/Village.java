@@ -20,7 +20,7 @@ public class Village extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private String talukaCode;
+    private Long talukaCode;
 
     @Field
     @UIDisplayable(position = 1)
@@ -38,12 +38,11 @@ public class Village extends LocationUnitMetaData {
         this.villageCode = villageCode;
     }
 
-    public String getTalukaCode() {
-
+    public Long getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Long talukaCode) {
         this.talukaCode = talukaCode;
     }
 

@@ -1,30 +1,11 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.digester.SetRootRule;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -38,6 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to handle to success 
@@ -183,7 +167,7 @@ public class ChildMctsCsvHandler {
         Long districtCode = ParseDataHelper.parseLong("District Code", childMctsCsv.getDistrictCode(), true);
         District district = locationValidator.districtConsistencyCheck(state, districtCode);
 
-        String talukaCode = ParseDataHelper.parseString("Taluka Code", childMctsCsv.getTalukaCode(), false);
+        Long talukaCode = ParseDataHelper.parseLong("Taluka Code", childMctsCsv.getTalukaCode(), false);
         Taluka taluka = locationValidator.talukaConsistencyCheck(district, talukaCode);
 
         Long healthBlockCode = ParseDataHelper.parseLong("Health Block Code", childMctsCsv.getHealthBlockCode(), false);
@@ -267,7 +251,7 @@ public class ChildMctsCsvHandler {
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
                     /* check for maximum allowed beneficiary */
-                    if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                    if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                         Subscriber dbSubscriber = subscriberService.create(subscriber); 
                         createSubscription(subscriber, null, dbSubscriber);
                     } else {
