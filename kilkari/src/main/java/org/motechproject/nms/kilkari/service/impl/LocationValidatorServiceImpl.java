@@ -165,8 +165,8 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
     }
     
     @Override
-    public Subscriber mapMctsLocationToSubscriber(MctsCsv mctsCsv,
-            Subscriber subscriber) throws DataValidationException {
+    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
+                                                             Subscriber subscriber) throws DataValidationException {
         
         Long stateCode = ParseDataHelper.parseLong("State Code", mctsCsv.getStateCode(),  true);
         State state = stateConsistencyCheck(stateCode);

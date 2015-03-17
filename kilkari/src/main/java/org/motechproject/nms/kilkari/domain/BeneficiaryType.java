@@ -4,8 +4,8 @@ public enum BeneficiaryType {
     MOTHER,
     CHILD;
     
-    public String getPack(BeneficiaryType type){
-        if (BeneficiaryType.MOTHER==type){
+    public String getPackForBeneficiaryType(){
+        if (BeneficiaryType.MOTHER.equals(this)) {
             return "PACK_72";
         } else {
             return "PACK_48";

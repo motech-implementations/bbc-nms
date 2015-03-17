@@ -84,7 +84,7 @@ public interface LocationValidatorService {
 
     public Village villageConsistencyCheck(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
 
-    public Subscriber mapMctsLocationToSubscriber(MctsCsv mctsCsv,
-            Subscriber subscriber) throws DataValidationException;
+    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
+                                                             Subscriber subscriber) throws DataValidationException;
 
 }

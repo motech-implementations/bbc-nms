@@ -24,6 +24,7 @@ public interface SubscriptionService {
     void deleteAll();
 
     List<String> getActiveSubscriptionByMsisdn(String msisdn);
+
     void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 

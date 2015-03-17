@@ -309,6 +309,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             if (!dbSubscriber.getLmp().equals(subscriber.getLmp())) {
                 updateSubscription(subscriber, dbSubscription, true, channel);
                 Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
+                create(newSubscription);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateSubscription(subscriber, dbSubscription, false, channel);

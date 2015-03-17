@@ -14,9 +14,6 @@ import org.motechproject.mds.domain.MdsEntity;
 public class Subscription extends MdsEntity {
 
     @Persistent
-    private SubscriptionPack subscriptionPack;
-
-    @Persistent
     private Subscriber subscriber;
 
     @Field
@@ -32,7 +29,7 @@ public class Subscription extends MdsEntity {
     private Long stateCode;
     
     @Field
-    private String packName;
+    private SubscriptionPack packName;
 
     @Field(required = true)
     private Channel channel;
@@ -54,14 +51,6 @@ public class Subscription extends MdsEntity {
 
     @Field
     private DateTime nextObdDate;
-
-    public SubscriptionPack getSubscriptionPack() {
-        return subscriptionPack;
-    }
-
-    public void setSubscriptionPack(SubscriptionPack subscriptionPack) {
-        this.subscriptionPack = subscriptionPack;
-    }
 
     public Subscriber getSubscriber() {
         return subscriber;
@@ -103,11 +92,11 @@ public class Subscription extends MdsEntity {
         this.stateCode = stateCode;
     }
 
-    public String getPackName() {
+    public SubscriptionPack getPackName() {
         return packName;
     }
 
-    public void setPackName(String packName) {
+    public void setPackName(SubscriptionPack packName) {
         this.packName = packName;
     }
 

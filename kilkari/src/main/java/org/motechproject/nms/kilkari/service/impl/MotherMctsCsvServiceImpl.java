@@ -5,12 +5,8 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
@@ -137,7 +133,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         Subscriber motherSubscriber = new Subscriber();
 
         logger.info("Validation and map to entity process start");
-        motherSubscriber = locationValidator.mapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
+        motherSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
         int msisdnCsvLength = msisdn.length();

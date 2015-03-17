@@ -125,7 +125,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         Subscriber childSubscriber = new Subscriber();
         
         logger.info("Validation and map to entity process start");
-        childSubscriber = locationValidator.mapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
+        childSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
 
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
         int msisdnCsvLength = msisdn.length();
@@ -136,13 +136,15 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
         childSubscriber.setChildDeath(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false)));
-        childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+
         childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
         childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));
 
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
         childSubscriber.setCreator(childMctsCsv.getCreator());
         childSubscriber.setOwner(childMctsCsv.getOwner());
+
+        childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
 
         logger.info("Validation and map to entity process finished");
         return childSubscriber;

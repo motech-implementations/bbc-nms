@@ -2,26 +2,17 @@ package org.motechproject.nms.kilkari.domain;
 
 import javax.jdo.annotations.Unique;
 
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.domain.MdsEntity;
 
-@Entity(recordHistory=true)
-public class SubscriptionPack extends MdsEntity  {
+public enum SubscriptionPack  {
     
-    @Unique
-    @Field(required = true)
+    PACK_72_WEEKS("72WeeksPack"),
+    PACK_48_WEEKS("48WeeksPack");
+
     private String name;
-    
-    @Unique
-    private Integer startWeekNumber;
-    
-    @Field(required = true)
-    private Integer durationInWeeks;
-    
-    @Field(required = true)
-    private Integer numMsgPerWeek;
 
+    private SubscriptionPack(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -32,27 +23,16 @@ public class SubscriptionPack extends MdsEntity  {
     }
 
     public Integer getStartWeekNumber() {
-        return startWeekNumber;
+        return PACK_72_WEEKS.equals(this)?1:27;
     }
 
-    public void setStartWeekNumber(Integer startWeekNumber) {
-        this.startWeekNumber = startWeekNumber;
+    public Integer getDuration() {
+        return PACK_72_WEEKS.equals(this)?72:48;
     }
 
-    public Integer getDurationInWeeks() {
-        return durationInWeeks;
+    @Override
+    public String toString() {
+        return name;
     }
 
-    public void setDurationInWeeks(Integer durationInWeeks) {
-        this.durationInWeeks = durationInWeeks;
-    }
-
-    public Integer getNumMsgPerWeek() {
-        return numMsgPerWeek;
-    }
-
-    public void setNumMsgPerWeek(Integer numMsgPerWeek) {
-        this.numMsgPerWeek = numMsgPerWeek;
-    }
-    
 }

@@ -22,17 +22,13 @@ public final class MctsCsvHelper  {
         dbSubscriber.setVillage(subscriber.getVillage());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
-        if (dbSubscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
-            dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
-            dbSubscriber.setDob(subscriber.getDob());
-            dbSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-        } else {
-            dbSubscriber.setAbortion(subscriber.getAbortion());
-            dbSubscriber.setStillBirth(subscriber.getStillBirth());
-            dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
-            dbSubscriber.setLmp(subscriber.getLmp());
-            dbSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
-        }
+        dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
+        dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
+        dbSubscriber.setDob(subscriber.getDob());
+        dbSubscriber.setAbortion(subscriber.getAbortion());
+        dbSubscriber.setStillBirth(subscriber.getStillBirth());
+        dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
+        dbSubscriber.setLmp(subscriber.getLmp());
     }
     
     public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
@@ -49,10 +45,10 @@ public final class MctsCsvHelper  {
         newSubscription.setSubscriber(dbSubscriber);
         if (dbSubscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
             newSubscription.setMctsId(dbSubscriber.getChildMctsId());
-            newSubscription.setPackName(BeneficiaryType.CHILD.getPack(BeneficiaryType.CHILD));
+            newSubscription.setPackName(BeneficiaryType.CHILD.getPackForBeneficiaryType());
         }else{
             newSubscription.setMctsId(dbSubscriber.getMotherMctsId());
-            newSubscription.setPackName(BeneficiaryType.MOTHER.getPack(BeneficiaryType.MOTHER));
+            newSubscription.setPackName(BeneficiaryType.MOTHER.getPackForBeneficiaryType());
         }
         return newSubscription;
     }
@@ -67,10 +63,10 @@ public final class MctsCsvHelper  {
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
         if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
             dbSubscription.setMctsId(subscriber.getChildMctsId());
-            dbSubscription.setPackName(BeneficiaryType.CHILD.getPack(BeneficiaryType.CHILD));
+            dbSubscription.setPackName(BeneficiaryType.CHILD.getPackForBeneficiaryType());
         }else{
             dbSubscription.setMctsId(subscriber.getMotherMctsId());
-            dbSubscription.setPackName(BeneficiaryType.MOTHER.getPack(BeneficiaryType.MOTHER));
+            dbSubscription.setPackName(BeneficiaryType.MOTHER.getPackForBeneficiaryType());
         }
     }
 }
