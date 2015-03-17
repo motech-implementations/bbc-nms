@@ -9,10 +9,10 @@
     <osgi:service ref="bulkUploadErrLogService"
                   interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
-    <osgi:service ref="bulkUploadStatusService"
-                  interface="org.motechproject.nms.util.service.BulkUploadStatusService"/>
-
     <osgi:reference id="bulkUploadStatusDataService"
                     interface="org.motechproject.nms.util.repository.BulkUploadStatusDataService"/>
+
+    <osgi:reference id="bulkUploadErrorDataService"
+                    interface="org.motechproject.nms.util.repository.BulkUploadErrorDataService"/>
 
 </beans>

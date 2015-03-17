@@ -27,7 +27,7 @@ public class HealthBlock extends LocationUnitMetaData {
 
     @Field
     @UIDisplayable(position = 2)
-    private String talukaCode;
+    private Long talukaCode;
 
     @Field
     @UIDisplayable(position = 1)
@@ -54,11 +54,11 @@ public class HealthBlock extends LocationUnitMetaData {
         this.healthFacility = healthFacility;
     }
 
-    public String getTalukaCode() {
+    public Long getTalukaCode() {
         return talukaCode;
     }
 
-    public void setTalukaCode(String talukaCode) {
+    public void setTalukaCode(Long talukaCode) {
         this.talukaCode = talukaCode;
     }
 
@@ -80,7 +80,6 @@ public class HealthBlock extends LocationUnitMetaData {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) {
             return true;
         }
@@ -102,6 +101,7 @@ public class HealthBlock extends LocationUnitMetaData {
         if (!this.getTalukaCode().equals(that.getTalukaCode())) {
             return false;
         }
+
         return true;
     }
 
@@ -112,5 +112,16 @@ public class HealthBlock extends LocationUnitMetaData {
         result = 31 * result + talukaCode.hashCode();
         result = 31 * result + healthBlockCode.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HealthBlock{" +
+                "healthFacility=" + healthFacility +
+                ", stateCode=" + stateCode +
+                ", districtCode=" + districtCode +
+                ", talukaCode='" + talukaCode + '\'' +
+                ", healthBlockCode=" + healthBlockCode +
+                '}';
     }
 }

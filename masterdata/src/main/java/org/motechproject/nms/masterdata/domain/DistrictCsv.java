@@ -17,8 +17,8 @@ public class DistrictCsv extends LocationUnitMetaDataCsv {
     @Field(name = "stateId")
     private String stateCode;
 
-    public DistrictCsv(String operation, String name, String districtCode, String stateCode) {
-        super(operation, name);
+    public DistrictCsv(String name, String districtCode, String stateCode) {
+        super(name);
         this.districtCode = districtCode;
         this.stateCode = stateCode;
     }

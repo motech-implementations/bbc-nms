@@ -13,9 +13,6 @@ import org.motechproject.mds.domain.MdsEntity;
 public class CourseContentCsv extends MdsEntity {
 
     @Field
-    private String operation;
-
-    @Field
     private String contentId;
 
     @Field
@@ -49,7 +46,6 @@ public class CourseContentCsv extends MdsEntity {
     /**
      * constructor with all arguments.
      * 
-     * @param operation Indicate either ADD/MOD/DEL operation.
      * @param contentId Unique identifier of the content.
      * @param circle Circle code.
      * @param languageLocationCode Language location code for the content. One
@@ -62,11 +58,10 @@ public class CourseContentCsv extends MdsEntity {
      *            contain name-value pairs separated by semicolon(;). The name
      *            and value are separated by hyphen (-:).
      */
-    public CourseContentCsv(String operation, String contentId, String circle,
+    public CourseContentCsv(String contentId, String circle,
             String languageLocationCode, String contentName,
             String contentType, String contentFile, String contentDuration,
             String metaData) {
-        this.operation = operation;
         this.contentId = contentId;
         this.circle = circle;
         this.languageLocationCode = languageLocationCode;
@@ -75,14 +70,6 @@ public class CourseContentCsv extends MdsEntity {
         this.contentFile = contentFile;
         this.contentDuration = contentDuration;
         this.metaData = metaData;
-    }
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
     }
 
     public String getContentId() {

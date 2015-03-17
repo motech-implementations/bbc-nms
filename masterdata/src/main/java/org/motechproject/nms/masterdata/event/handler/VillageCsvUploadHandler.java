@@ -1,13 +1,22 @@
 package org.motechproject.nms.masterdata.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
+import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -25,11 +34,11 @@ import java.util.Map;
 @Component
 public class VillageCsvUploadHandler {
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
-    private TalukaRecordsDataService talukaRecordsDataService;
+    private TalukaService talukaService;
 
     private VillageCsvRecordsDataService villageCsvRecordsDataService;
 
@@ -40,10 +49,10 @@ public class VillageCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateRecordsDataService stateRecordsDataService, DistrictRecordsDataService districtRecordsDataService, TalukaRecordsDataService talukaRecordsDataService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateRecordsDataService = stateRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
-        this.talukaRecordsDataService = talukaRecordsDataService;
+    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvRecordsDataService villageCsvRecordsDataService, VillageRecordsDataService villageRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.stateService = stateService;
+        this.districtService = districtService;
+        this.talukaService = talukaService;
         this.villageCsvRecordsDataService = villageCsvRecordsDataService;
         this.villageRecordsDataService = villageRecordsDataService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -58,19 +67,23 @@ public class VillageCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.VILLAGE_CSV_SUCCESS})
     public void villageCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("VILLAGE_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
-        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
+
+        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+        bulkUploadStatus.setTimeOfUpload(timeStamp);
+
         BulkUploadError errorDetails = new BulkUploadError();
-        String userName = null;
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setRecordType(RecordType.VILLAGE);
+        errorDetails.setTimeOfUpload(timeStamp);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         VillageCsv villageCsvRecord = null;
@@ -82,35 +95,39 @@ public class VillageCsvUploadHandler {
 
                 if (villageCsvRecord != null) {
                     logger.info("Id exist in Village Temporary Entity");
-                    userName = villageCsvRecord.getOwner();
+                    bulkUploadStatus.setUploadedBy(villageCsvRecord.getOwner());
                     Village record = mapVillageCsv(villageCsvRecord);
                     processVillageData(record);
-                    result.incrementSuccessCount();
+                    bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Village Temporary Entity");
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    result.incrementFailureCount();
+                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetails.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                    bulkUploadStatus.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(villageCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                result.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
             } catch (Exception e) {
+                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetails.setRecordDetails("Exception occurred");
+                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                result.incrementFailureCount();
             } finally {
                 if (null != villageCsvRecord) {
                     villageCsvRecordsDataService.delete(villageCsvRecord);
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
     private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
@@ -119,20 +136,20 @@ public class VillageCsvUploadHandler {
         String villageName = ParseDataHelper.parseString("VillageName", record.getName(), true);
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
-        String talukaCode = ParseDataHelper.parseString("TalukaCode", record.getTalukaCode(), true);
+        Long talukaCode = ParseDataHelper.parseLong("TalukaCode", record.getTalukaCode(), true);
         Long villageCode = ParseDataHelper.parseLong("VillageCode", record.getVillageCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
 
-        District district = districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
+        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
             ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
         }
 
-        Taluka taluka = talukaRecordsDataService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
+        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
         if (taluka == null) {
             ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
         }
@@ -163,10 +180,10 @@ public class VillageCsvUploadHandler {
             logger.info("Village data is successfully updated.");
         } else {
 
-            Taluka talukaRecord = talukaRecordsDataService.findTalukaByParentCode(villageData.getStateCode(),
+            Taluka talukaRecord = talukaService.findTalukaByParentCode(villageData.getStateCode(),
                     villageData.getDistrictCode(), villageData.getTalukaCode());
             talukaRecord.getVillage().add(villageData);
-            talukaRecordsDataService.update(talukaRecord);
+            talukaService.update(talukaRecord);
             logger.info("Village data is successfully inserted.");
         }
     }

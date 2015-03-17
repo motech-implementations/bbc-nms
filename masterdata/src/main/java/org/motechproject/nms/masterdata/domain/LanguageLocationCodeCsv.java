@@ -12,9 +12,6 @@ import org.motechproject.mds.domain.MdsEntity;
 public class LanguageLocationCodeCsv extends MdsEntity {
 
     @Field
-    private String operation;
-
-    @Field
     private String stateCode;
 
     @Field
@@ -37,14 +34,6 @@ public class LanguageLocationCodeCsv extends MdsEntity {
 
     @Field
     private String languageKK;
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
 
     public String getStateCode() {
         return stateCode;

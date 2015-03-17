@@ -93,7 +93,6 @@ public class CircleCsvHandlerTest extends TestCase {
         CircleCsv csv = new CircleCsv();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        csv.setOperation("ADD");
         CircleCsv dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
     }

@@ -27,6 +27,22 @@
     <osgi:service ref="locationService"
                   interface="org.motechproject.nms.masterdata.service.LocationService" />
 
+    <osgi:service ref="stateService"
+                  interface="org.motechproject.nms.masterdata.service.StateService" />
+
+    <osgi:service ref="stateCsvService"
+                  interface="org.motechproject.nms.masterdata.service.StateCsvService" />
+
+    <osgi:service ref="districtService"
+                  interface="org.motechproject.nms.masterdata.service.DistrictService" />
+
+    <osgi:service ref="districtCsvService"
+                  interface="org.motechproject.nms.masterdata.service.DistrictCsvService" />
+
+    <osgi:service ref="talukaService"
+                  interface="org.motechproject.nms.masterdata.service.TalukaService" />
+
+
     <osgi:reference id="stateRecordsDataService"
                     interface="org.motechproject.nms.masterdata.repository.StateRecordsDataService"/>
 

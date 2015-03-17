@@ -1,30 +1,17 @@
 package org.motechproject.nms.util.service.impl;
 
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
-import org.motechproject.nms.util.constants.Constants;
+import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.repository.BulkUploadErrorDataService;
+import org.motechproject.nms.util.repository.BulkUploadStatusDataService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-import org.motechproject.nms.util.service.BulkUploadStatusService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.FileSystems;
-import java.util.Collections;
-import java.util.Enumeration;
-
 /**
- * Simple implementation of the {@link BulkUploadStatusService} interface.
+ * Simple implementation of the {@link BulkUploadErrLogService} interface.
  * <p/>
  * This class provides the api to log erroneous csv upload records in a log file.
  * Log file name is taken as input in this method and is kept at a known path
@@ -35,145 +22,61 @@ import java.util.Enumeration;
 @Service("bulkUploadErrLogService")
 public class BulkUploadErrLogServiceImpl implements BulkUploadErrLogService {
 
-    private BulkUploadStatusService bulkUploadStatusService;
+    private BulkUploadStatusDataService bulkUploadStatusDataService;
+    private BulkUploadErrorDataService bulkUploadErrorDataService;
 
     private Logger logger = LoggerFactory.getLogger(BulkUploadErrLogServiceImpl.class);
 
     @Autowired
-    public BulkUploadErrLogServiceImpl(BulkUploadStatusService bulkUploadStatusService) {
-        this.bulkUploadStatusService = bulkUploadStatusService;
+    public BulkUploadErrLogServiceImpl(BulkUploadStatusDataService bulkUploadStatusDataService, BulkUploadErrorDataService bulkUploadErrorDataService) {
+        this.bulkUploadStatusDataService = bulkUploadStatusDataService;
+        this.bulkUploadErrorDataService = bulkUploadErrorDataService;
     }
 
     /**
-     * This method is used to write logs for erroneous records
-     * found during csv/bulk upload.
+     * This method is used to write information corresponding to
+     * erroneous records found during csv/bulk upload to db.
      * <p/>
-     * Error logs are written to a separate log file
-     * Error Logs contain the following information:
-     * 1. Timestamp
-     * 2. Erroneous record details
-     * 3. Error Code
-     * 4. Error Description
+     * Error Records contain the following information:
+     * 1. Csv File Name
+     * 2. Timestamp
+     * 3. Erroneous record type
+     * 3. Erroneous record details
+     * 4. Error Category
+     * 5. Error Description
      *
-     * @param logFileName     String containing the name of log file including path
      * @param bulkUploadError String describing another coding guideline
      */
     @Override
-    public void writeBulkUploadErrLog(String logFileName, BulkUploadError bulkUploadError) {
+    public void writeBulkUploadErrLog(BulkUploadError bulkUploadError) {
 
-        Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
-
-        //Generating log in the required format
-        StringBuffer errLog = new StringBuffer();
-        errLog.append(Constants.ERROR_LOG_TITLE);
-        errLog.append(Constants.NEXT_LINE);
-        errLog.append(bulkUploadError.getRecordDetails());
-        errLog.append(Constants.DELIMITER);
-        errLog.append(bulkUploadError.getErrorCategory());
-        errLog.append(Constants.DELIMITER);
-        errLog.append(bulkUploadError.getErrorDescription());
-        errLog.append(Constants.NEXT_LINE);
-
-        try {
-            Files.write(logFilePath, errLog.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-        } catch (IOException ioe) {
-            logger.error("IOException while writing error log to file : {} Error : {}", logFileName, ioe.getMessage());
-        }
-    }
-
-
-    /**
-     * This method is used to write summary of all the records after bulk upload is complete
-     * <p/>
-     * The bulk upload summary is written to the file after bulk upload is complete
-     * The bulk upload summary contains:
-     * 1. Number of Records Successfully uploaded
-     * 2. Number of records failed to upload
-     *
-     * @param logFileName          String containing name of log file including file path
-     * @param csvProcessingSummary Number of records successfully uploaded during bulk upload
-     */
-    @Override
-    public void writeBulkUploadProcessingSummary(String userName, String bulkUploadFileName, String logFileName, CsvProcessingSummary csvProcessingSummary) {
-
-        //Formatting the content of bulk upload processing summary
-        StringBuffer uploadProcessingSummary = new StringBuffer();
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.UNDERLINE);
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.BULK_UPLOAD_SUMMARY_TITLE);
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.UNDERLINE);
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.TAB);
-        uploadProcessingSummary.append(Constants.USER_NAME_TITLE);
-        uploadProcessingSummary.append(userName);
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.TAB);
-        uploadProcessingSummary.append(Constants.SUCCESSFUL_RECORDS_TITLE);
-        uploadProcessingSummary.append(csvProcessingSummary.getSuccessCount().toString());
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-        uploadProcessingSummary.append(Constants.TAB);
-        uploadProcessingSummary.append(Constants.FAILED_RECORDS_TITLE);
-        uploadProcessingSummary.append(csvProcessingSummary.getFailureCount().toString());
-        uploadProcessingSummary.append(Constants.NEXT_LINE);
-
-        Path logFilePath = FileSystems.getDefault().getPath(logFileName.toString());
-
-        //writing bulk upload processing summary log to specified log file
-        try {
-            Files.write(logFilePath, uploadProcessingSummary.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-        } catch (IOException ioe) {
-            logger.error("IOException while writing error log to file : {} Error : {}", logFileName, ioe.getMessage());
-        }
-
-        //Determining the full path of log file including the file name
-        Path logFileLocation = Paths.get(System.getProperty("user.dir"), logFileName.toString());
-
-        //Creating bulk upload status record
-        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-        bulkUploadStatus.setCreator(userName);
-        bulkUploadStatus.setBulkUploadFileName(bulkUploadFileName);
-        bulkUploadStatus.setLogFileName(logFileLocation.toString());
-        bulkUploadStatus.setNumberOfFailedRecords(csvProcessingSummary.getFailureCount());
-        bulkUploadStatus.setNumberOfSuccessfulRecords(csvProcessingSummary.getSuccessCount());
-        bulkUploadStatus.setLogFileServerIp(getLocalHostName());
+        BulkUploadError bulkUploadErrorDeepCopy = bulkUploadError.createDeepCopy();
 
         //Adding the record to bulk upload status table
-        bulkUploadStatusService.add(bulkUploadStatus);
-
-        logger.info("Record added successfully for bulk upload completion status for csv : {}", bulkUploadFileName);
-
+        bulkUploadErrorDataService.create(bulkUploadErrorDeepCopy);
+        logger.info("Record added successfully for erroneous bulk upload record in {}", bulkUploadErrorDeepCopy.getRecordType());
     }
+
 
     /**
-     * This method is used to identify local host ip address
+     * This method is used to write status of all the records after bulk upload is complete
      * <p/>
-     * It uses the NetworkInterface and InetAddress to identify
-     * the hostname.
+     * The bulk upload status contains:
+     * 1. Number of Records Successfully uploaded
+     * 2. Number of records failed to upload
+     * 3. Name of csv uploaded
+     * 4. Name of the user who uploaded the csv
      *
-     * @return The ip address(host name) of the system
+     * @param bulkUploadStatus Number of records successfully uploaded during bulk upload
      */
-    private String getLocalHostName() {
-        Enumeration<NetworkInterface> netInterfaces = null;
+    @Override
+    public void writeBulkUploadProcessingSummary(BulkUploadStatus bulkUploadStatus) {
 
-        try {
-            netInterfaces = NetworkInterface.getNetworkInterfaces();
-        } catch (SocketException e) {
-            logger.error("Socket Exception while retrieving host name. Error : {}", e.getMessage());
-            return Constants.EMPTY_STRING;
-        }
+        BulkUploadStatus bulkUploadStatusDeepCopy = bulkUploadStatus.createDeepCopy();
 
-        for (NetworkInterface netInterface : Collections.list(netInterfaces)) {
-            netInterface.getInetAddresses();
-            Enumeration<InetAddress> inetAddresses = netInterface.getInetAddresses();
-
-            for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                if (!(inetAddress.isLoopbackAddress() || inetAddress.isLinkLocalAddress())) {
-                    return inetAddress.getHostName();
-                }
-            }
-        }
-        return Constants.EMPTY_STRING;
+        //Adding the record to bulk upload status table
+        bulkUploadStatusDataService.create(bulkUploadStatusDeepCopy);
+        logger.info("Record added successfully for bulk upload completion status for csv : {}", bulkUploadStatus.getBulkUploadFileName());
     }
+
 }

@@ -10,9 +10,6 @@ import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataSe
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-/**
- * Created by abhishek on 6/2/15.
- */
 public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
 
     private LanguageLocationCodeServiceCsvImpl languageLocationCodeServiceCsv;

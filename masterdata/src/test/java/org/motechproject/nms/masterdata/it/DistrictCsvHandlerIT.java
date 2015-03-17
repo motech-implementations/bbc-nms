@@ -8,9 +8,9 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.DistrictCsvService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -41,27 +41,27 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     @Inject
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
     @Inject
-    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+    private DistrictCsvService districtCsvService;
 
     List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {
-        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvRecordsDataService,
-                districtRecordsDataService, stateRecordsDataService, bulkUploadErrLogService);
+        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvService,
+                districtService, stateService, bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(districtCsvRecordsDataService);
-        assertNotNull(districtRecordsDataService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(districtCsvService);
+        assertNotNull(districtService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
 
@@ -69,7 +69,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     public void testDistrictCsvHandler() {
 
         State stateData = TestHelper.getStateData();
-        stateRecordsDataService.create(stateData);
+        stateService.create(stateData);
 
         DistrictCsv csvData = TestHelper.getDistrictCsvData();
         DistrictCsv invalidCsvData = TestHelper.getInvalidDistrictCsvData();
@@ -81,7 +81,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(invalidCsvData.getId());
 
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-        District districtData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
+        District districtData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtData);
         assertTrue(123L == districtData.getStateCode());
@@ -95,7 +95,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         createdIds.add(csvData.getId());
 
         districtCsvUploadHandler.districtCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.DISTRICT_CSV_SUCCESS));
-        District districtUpdateData = districtRecordsDataService.findDistrictByParentCode(456L, 123L);
+        District districtUpdateData = districtService.findDistrictByParentCode(456L, 123L);
 
         assertNotNull(districtUpdateData);
         assertTrue(123L == districtUpdateData.getStateCode());
@@ -109,6 +109,6 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
 
     private void createDistrictCsvData(DistrictCsv csvData) {
 
-        districtCsvRecordsDataService.create(csvData);
+        districtCsvService.create(csvData);
     }
 }

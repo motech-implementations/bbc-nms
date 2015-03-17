@@ -12,8 +12,8 @@ import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FlwUploadHandler;
-import org.motechproject.nms.frontlineworker.repository.FlwCsvRecordsDataService;
-import org.motechproject.nms.frontlineworker.repository.FlwRecordDataService;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
@@ -58,12 +58,6 @@ import static org.junit.Assert.*;
 public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     @Inject
-    private FlwRecordDataService flwRecordDataService;
-
-    @Inject
-    private FlwCsvRecordsDataService flwCsvRecordsDataService;
-
-    @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Inject
@@ -93,6 +87,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     @Inject
     private HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
+    @Inject
+    private FrontLineWorkerService frontLineWorkerService;
+
+    @Inject
+    private FrontLineWorkerCsvService frontLineWorkerCsvService;
+
     private FlwUploadHandler flwUploadHandler;
 
     private State stateData;
@@ -121,17 +121,17 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     public void setUp() {
 
 
-        flwUploadHandler = new FlwUploadHandler(flwRecordDataService,
-                flwCsvRecordsDataService,
-                bulkUploadErrLogService,
+        flwUploadHandler = new FlwUploadHandler(bulkUploadErrLogService,
                 locationService,
-                languageLocationCodeService);
+                languageLocationCodeService,
+                frontLineWorkerService, frontLineWorkerCsvService
+                );
 
-        assertNotNull(flwRecordDataService);
-        assertNotNull(flwCsvRecordsDataService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
         assertNotNull(languageLocationCodeService);
+        assertNotNull(frontLineWorkerService);
+        assertNotNull(frontLineWorkerCsvService);
 
         if (!setUpIsDone) {
             System.out.println("");
@@ -183,7 +183,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         taluka.setName("taluka");
         taluka.setStateCode(12L);
         taluka.setDistrictCode(123L);
-        taluka.setTalukaCode("taluka");
+        taluka.setTalukaCode(1L);
         taluka.setCreator("Etasha");
         taluka.setOwner("Etasha");
         taluka.setModifiedBy("Etasha");
@@ -198,7 +198,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         village.setName("villageName");
         village.setStateCode(12L);
         village.setDistrictCode(123L);
-        village.setTalukaCode("taluka");
+        village.setTalukaCode(1L);
         village.setVillageCode(1234L);
         village.setCreator("Etasha");
         village.setOwner("Etasha");
@@ -216,7 +216,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthBlock.setName("healthBlockName");
         healthBlock.setStateCode(12L);
         healthBlock.setDistrictCode(123L);
-        healthBlock.setTalukaCode("taluka");
+        healthBlock.setTalukaCode(1L);
         healthBlock.setHealthBlockCode(1234L);
         healthBlock.setCreator("Etasha");
         healthBlock.setOwner("Etasha");
@@ -235,7 +235,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthFacility.setName("healthFacilityName");
         healthFacility.setStateCode(12L);
         healthFacility.setDistrictCode(123L);
-        healthFacility.setTalukaCode("taluka");
+        healthFacility.setTalukaCode(1L);
         healthFacility.setHealthBlockCode(1234L);
         healthFacility.setHealthFacilityCode(12345L);
         healthFacility.setCreator("Etasha");
@@ -256,7 +256,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         healthSubFacility.setName("healthSubFacilityName");
         healthSubFacility.setStateCode(12L);
         healthSubFacility.setDistrictCode(123L);
-        healthSubFacility.setTalukaCode("taluka");
+        healthSubFacility.setTalukaCode(1L);
         healthSubFacility.setHealthBlockCode(1234L);
         healthSubFacility.setHealthFacilityCode(12345L);
         healthSubFacility.setHealthSubFacilityCode(123456L);
@@ -304,7 +304,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -315,7 +317,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990545494");
+
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990545494");
 
         assertNotNull(flw);
         assertTrue(1L == flw.getFlwId());
@@ -339,7 +342,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -369,7 +372,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -380,7 +384,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByFlwIdAndStateId(2L, 12L);
+        FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(2L, 12L);
 
         assertNotNull(flw);
 
@@ -405,7 +409,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -435,7 +440,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -446,7 +452,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByFlwIdAndStateId(3L, 12L);
+        FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
 
         assertNotNull(flw);
 
@@ -471,7 +477,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -501,7 +508,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -512,7 +520,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByFlwIdAndStateId(4L, 12L);
+        FrontLineWorker flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
 
         assertNotNull(flw);
 
@@ -537,7 +545,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
     }
@@ -557,8 +566,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -571,9 +581,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
 
@@ -594,8 +606,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -608,9 +621,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -633,8 +648,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -647,9 +663,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -672,8 +690,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -686,9 +705,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -712,8 +733,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -726,9 +748,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -753,8 +777,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -767,9 +792,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -795,8 +821,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -809,9 +836,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -837,8 +866,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -851,9 +881,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -878,8 +910,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+       //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -892,9 +925,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -918,8 +953,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -932,9 +968,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -959,8 +997,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -973,9 +1012,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1000,8 +1041,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1014,9 +1056,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1039,8 +1083,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1053,9 +1098,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1077,8 +1124,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1091,9 +1139,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1117,8 +1167,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1131,9 +1182,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1158,8 +1211,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setIsValid("true");
         frontLineWorkerCsv.setIsValidated("true");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
-        assertNotNull(flwCsvRecordsDataService);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1172,9 +1226,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("9990545496");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
 
         throw new DataValidationException();
@@ -1208,7 +1264,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1219,7 +1277,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("1234567890");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
 
         assertNotNull(flw);
 
@@ -1245,8 +1303,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setOwner("Etasha");
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
+        assertNotNull(frontLineWorkerCsvService);
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1259,12 +1319,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("1234567890");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertTrue(10L == frontLineWorker.getFlwId());
 
-
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
 
@@ -1296,7 +1356,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1307,7 +1369,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("1234567890");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
 
         assertNotNull(flw);
 
@@ -1334,7 +1396,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        assertNotNull(frontLineWorkerCsvService);
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1346,12 +1411,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("1234567890");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti2", frontLineWorker.getName());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -1381,7 +1447,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1392,7 +1461,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("22222");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("22222");
 
         assertNotNull(flw);
         assertEquals(Status.INVALID, flw.getStatus());
@@ -1420,7 +1489,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1433,13 +1505,14 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("22222");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("22222");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jaya", frontLineWorker.getName());
         assertEquals(Status.INVALID, flw.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
 
@@ -1472,7 +1545,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+       // FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1483,7 +1559,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("33333");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("33333");
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
@@ -1511,7 +1587,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1523,12 +1602,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("33333");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("33333");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INVALID, frontLineWorker.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -1558,7 +1638,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsvdb);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1569,7 +1653,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("44444");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("44444");
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
@@ -1599,7 +1683,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1611,12 +1698,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("44444");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("44444");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INACTIVE, frontLineWorker.getStatus());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
     }
 
@@ -1646,7 +1734,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1657,7 +1748,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("12345");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("12345");
 
         assertNotNull(flw);
         assertTrue(14L == flw.getFlwId());
@@ -1684,7 +1775,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvNew.setCreator("Etasha");
         frontLineWorkerCsvNew.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+        FrontLineWorkerCsv frontLineWorkerCsvdb2 = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsvNew);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb2 = flwCsvRecordsDataService.create(frontLineWorkerCsvNew);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters_new = new HashMap<>();
         List<Long> uploadedIds_new = new ArrayList<Long>();
@@ -1697,13 +1791,14 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = flwRecordDataService.getFlwByContactNo("12345");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("12345");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti", frontLineWorker.getName());
         assertTrue(14L == frontLineWorker.getFlwId());
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
     }
@@ -1733,7 +1828,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1747,11 +1845,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         thrown.expect(DataValidationException.class);
 
 
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
 
         assertNull(flw);
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
     }
@@ -1781,7 +1880,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1793,11 +1895,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
 
         assertNull(flw);
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
     }
@@ -1827,7 +1930,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1840,10 +1946,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
         assertNull(flw);
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
     }
@@ -1873,7 +1980,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsv.setCreator("Etasha");
         frontLineWorkerCsv.setModifiedBy("Etasha");
 
-        FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+        FrontLineWorkerCsv frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        //FrontLineWorkerCsv frontLineWorkerCsvdb = flwCsvRecordsDataService.create(frontLineWorkerCsv);
+
+        assertNotNull(frontLineWorkerCsvService);
 
         Map<String, Object> parameters = new HashMap<>();
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -1885,11 +1995,12 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         flwUploadHandler.flwDataHandlerSuccess(motechEvent);
         thrown.expect(DataValidationException.class);
-        FrontLineWorker flw = flwRecordDataService.getFlwByContactNo("9990");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("9990");
 
         assertNull(flw);
 
-        List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
+        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        //List<FrontLineWorkerCsv> listFlwCsv = flwCsvRecordsDataService.retrieveAll();
         assertTrue(listFlwCsv.size() == 0);
         throw new DataValidationException();
     }

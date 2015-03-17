@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.domain.ContentType;
@@ -13,11 +14,13 @@ import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -70,12 +73,18 @@ public class ContentUploadCsvHandler {
 
         ContentUploadCsv record = null;
         ContentUpload persistentRecord = null;
-        String userName = null;
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary summary = new CsvProcessingSummary();
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        String csvImportFileName = (String) params.get("csv-import.filename");
-        String errorFileName = BulkUploadError.createBulkUploadErrLogFileName(csvImportFileName);
+        String csvFileName = (String) params.get("csv-import.filename");
+
+        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+        BulkUploadError errorDetail = new BulkUploadError();
+        errorDetail.setCsvName(csvFileName);
+        errorDetail.setTimeOfUpload(timeStamp);
+        errorDetail.setRecordType(RecordType.CONTENT_UPLOAD_KK);
+
+        BulkUploadStatus uploadStatus = new BulkUploadStatus();
+        uploadStatus.setBulkUploadFileName(csvFileName);
+        uploadStatus.setTimeOfUpload(timeStamp);
 
 
         for (Long id : createdIds) {
@@ -83,7 +92,7 @@ public class ContentUploadCsvHandler {
                 record = contentUploadCsvService.getRecord(id);
 
                 if (record != null) {
-                    userName = record.getOwner();
+                    uploadStatus.setUploadedBy(record.getOwner());
                     ContentUpload newRecord = mapContentUploadFrom(record);
 
                     persistentRecord = contentUploadService.getRecordByContentId(newRecord.getContentId());
@@ -95,28 +104,28 @@ public class ContentUploadCsvHandler {
                         contentUploadService.create(newRecord);
                         logger.info("Record created successfully for contentid : {}", newRecord.getContentId());
                     }
-                    summary.incrementSuccessCount();
+                    uploadStatus.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the ContentUploadCsv table with id {}", id);
                     errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetail.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                    summary.incrementFailureCount();
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                    uploadStatus.incrementFailureCount();
                 }
             } catch (DataValidationException ex) {
                 errorDetail.setErrorCategory(ex.getErrorCode());
                 errorDetail.setRecordDetails(record.toString());
                 errorDetail.setErrorDescription(ex.getErrorDesc());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                uploadStatus.incrementFailureCount();
             } catch (Exception e) {
                 logger.error("CONTENT_UPLOAD_CSV_SUCCESS processing receive Exception exception, message: {}", e);
                 errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetail.setRecordDetails("Some Error Occurred");
                 errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorFileName, errorDetail);
-                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
+                uploadStatus.incrementFailureCount();
             } finally {
                 if (record != null) {
                     contentUploadCsvService.delete(record);
@@ -124,7 +133,7 @@ public class ContentUploadCsvHandler {
             }
         }
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvImportFileName, errorFileName, summary);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadStatus);
         logger.info("Finished processing CircleCsv-import success");
     }
 

@@ -1,17 +1,22 @@
 package org.motechproject.nms.masterdata.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.DistrictCsv;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.masterdata.service.DistrictCsvService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -30,21 +35,21 @@ import java.util.Map;
 @Component
 public class DistrictCsvUploadHandler {
 
-    private DistrictCsvRecordsDataService districtCsvRecordsDataService;
+    private DistrictCsvService districtCsvService;
 
-    private DistrictRecordsDataService districtRecordsDataService;
+    private DistrictService districtService;
 
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     @Autowired
-    public DistrictCsvUploadHandler(DistrictCsvRecordsDataService districtCsvRecordsDataService, DistrictRecordsDataService districtRecordsDataService, StateRecordsDataService stateRecordsDataService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.districtCsvRecordsDataService = districtCsvRecordsDataService;
-        this.districtRecordsDataService = districtRecordsDataService;
-        this.stateRecordsDataService = stateRecordsDataService;
+    public DistrictCsvUploadHandler(DistrictCsvService districtCsvService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.districtCsvService = districtCsvService;
+        this.districtService = districtService;
+        this.stateService = stateService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -57,19 +62,22 @@ public class DistrictCsvUploadHandler {
     @MotechListener(subjects = {MasterDataConstants.DISTRICT_CSV_SUCCESS})
     public void districtCsvSuccess(MotechEvent motechEvent) {
 
-        int failedRecordCount = 0;
-        int successRecordCount = 0;
-
         logger.info("DISTRICT_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();
 
-        String userName = null;
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
-        String logFileName = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        CsvProcessingSummary result = new CsvProcessingSummary(successRecordCount, failedRecordCount);
+        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
+        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+        bulkUploadStatus.setTimeOfUpload(timeStamp);
+
         BulkUploadError errorDetails = new BulkUploadError();
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setRecordType(RecordType.DISTRICT);
+        errorDetails.setTimeOfUpload(timeStamp);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         DistrictCsv districtCsvRecord = null;
@@ -77,39 +85,43 @@ public class DistrictCsvUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
-                districtCsvRecord = districtCsvRecordsDataService.findById(id);
+                districtCsvRecord = districtCsvService.findById(id);
 
                 if (districtCsvRecord != null) {
-                    District record = mapDistrictCsv(districtCsvRecord);
-                    userName = districtCsvRecord.getOwner();
                     logger.info("Id exist in District Temporary Entity");
+                    bulkUploadStatus.setUploadedBy(districtCsvRecord.getOwner());
+                    District record = mapDistrictCsv(districtCsvRecord);
                     processDistrictData(record);
-                    result.incrementSuccessCount();
+                    bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in District Temporary Entity");
-                    errorDetails.setRecordDetails(id.toString());
-                    errorDetails.setErrorCategory("Record_Not_Found");
-                    errorDetails.setErrorDescription("Record not in database");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                    result.incrementFailureCount();
+                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
+                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
+                    errorDetails.setRecordDetails("Record is null");
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                    bulkUploadStatus.incrementFailureCount();
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
                 errorDetails.setRecordDetails(districtCsvRecord.toString());
                 errorDetails.setErrorCategory(dataValidationException.getErrorCode());
                 errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFileName, errorDetails);
-                result.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
             } catch (Exception e) {
+                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
+                errorDetails.setRecordDetails("Exception occurred");
+                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                bulkUploadStatus.incrementFailureCount();
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                result.incrementFailureCount();
             } finally {
                 if (null != districtCsvRecord) {
-                    districtCsvRecordsDataService.delete(districtCsvRecord);
+                    districtCsvService.delete(districtCsvRecord);
                 }
             }
         }
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFileName, result);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
     private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
@@ -118,7 +130,7 @@ public class DistrictCsvUploadHandler {
         Long stateCode = ParseDataHelper.parseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.parseLong("DistrictCode", record.getDistrictCode(), true);
 
-        State state = stateRecordsDataService.findRecordByStateCode(stateCode);
+        State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", "StateCode");
         }
@@ -138,21 +150,21 @@ public class DistrictCsvUploadHandler {
     private void processDistrictData(District districtData) throws DataValidationException {
 
         logger.debug("District data contains district code : {}", districtData.getDistrictCode());
-        District existDistrictData = districtRecordsDataService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
+        District existDistrictData = districtService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             updateDistrict(existDistrictData, districtData);
             logger.info("District data is successfully updated.");
         } else {
 
-            State stateData = stateRecordsDataService.findRecordByStateCode(districtData.getStateCode());
+            State stateData = stateService.findRecordByStateCode(districtData.getStateCode());
             stateData.getDistrict().add(districtData);
-            stateRecordsDataService.update(stateData);
+            stateService.update(stateData);
             logger.info("District data is successfully inserted.");
         }
     }
 
     private void updateDistrict(District existDistrictData, District districtData) {
         existDistrictData.setName(districtData.getName());
-        districtRecordsDataService.update(existDistrictData);
+        districtService.update(existDistrictData);
     }
 }

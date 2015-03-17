@@ -8,8 +8,8 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
-import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class CourseUploadCsvHandler {
 
     private CSVRecordProcessService csvRecordProcessService;
 
-    private CourseContentCsvDataService courseContentCsvDataService;
+    private CourseContentCsvService courseContentCsvService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(CourseUploadCsvHandler.class);
@@ -33,9 +33,9 @@ public class CourseUploadCsvHandler {
     @Autowired
     public CourseUploadCsvHandler(
             CSVRecordProcessService csvRecordProcessService,
-            CourseContentCsvDataService courseContentCsvDataService) {
+            CourseContentCsvService courseContentCsvService) {
         this.csvRecordProcessService = csvRecordProcessService;
-        this.courseContentCsvDataService = courseContentCsvDataService;
+        this.courseContentCsvService = courseContentCsvService;
     }
 
     /**
@@ -69,8 +69,7 @@ public class CourseUploadCsvHandler {
             List<Long> createdIds) {
         List<CourseContentCsv> listOfCourseRawContents = new ArrayList<>();
         for (Long id : createdIds) {
-            listOfCourseRawContents.add(courseContentCsvDataService
-                    .findById(id));
+            listOfCourseRawContents.add(courseContentCsvService.findById(id));
         }
         return listOfCourseRawContents;
     }

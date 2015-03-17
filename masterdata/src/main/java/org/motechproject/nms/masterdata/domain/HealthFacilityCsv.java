@@ -31,8 +31,8 @@ public class HealthFacilityCsv extends LocationUnitMetaDataCsv {
     private String healthFacilityType;
 
 
-    public HealthFacilityCsv(String operation, String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode, String healthFacilityType) {
-        super(operation, name);
+    public HealthFacilityCsv(String name, String healthFacilityCode, String stateCode, String districtCode, String talukaCode, String healthBlockCode, String healthFacilityType) {
+        super( name);
         this.healthFacilityCode = healthFacilityCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;

@@ -14,7 +14,7 @@ public class TestHelper {
 
     public static StateCsv getStateCsvData(){
 
-        StateCsv stateCsvData = new StateCsv("Add","UP","123",null, null);
+        StateCsv stateCsvData = new StateCsv("UP","123",null, null);
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -23,7 +23,7 @@ public class TestHelper {
 
     public static StateCsv getInvalidStateCsvData(){
 
-        StateCsv stateCsvData = new StateCsv("Add","Bihar","abc123",null, null);
+        StateCsv stateCsvData = new StateCsv("Bihar","abc123",null, null);
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -32,7 +32,7 @@ public class TestHelper {
 
     public static StateCsv getUpdatedStateCsvData(){
 
-        StateCsv stateCsvData = new StateCsv("Add","UK","123",null, null);
+        StateCsv stateCsvData = new StateCsv("UK","123",null, null);
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -54,19 +54,19 @@ public class TestHelper {
 
     public static DistrictCsv getDistrictCsvData(){
 
-        DistrictCsv districtCsvData = new DistrictCsv("Add","Agra","456","123");
+        DistrictCsv districtCsvData = new DistrictCsv("Agra","456","123");
         return districtCsvData;
     }
 
     public static DistrictCsv getInvalidDistrictCsvData(){
 
-        DistrictCsv districtCsvData = new DistrictCsv("Add","Agra","456","456");
+        DistrictCsv districtCsvData = new DistrictCsv("Agra","456","456");
         return districtCsvData;
     }
 
     public static DistrictCsv getUpdatedDistrictCsvData(){
 
-        DistrictCsv districtCsvData = new DistrictCsv("Add","Aligarh","456","123");
+        DistrictCsv districtCsvData = new DistrictCsv("Aligarh","456","123");
         return districtCsvData;
     }
 
@@ -85,20 +85,20 @@ public class TestHelper {
 
     public static TalukaCsv getTalukaCsvData(){
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Add","Gabhana","456","123","8");
+        TalukaCsv talukaCsvData = new TalukaCsv("Gabhana","456","123","8");
         return talukaCsvData;
     }
 
     public static TalukaCsv getInvalidTalukaCsvData(){
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Add","Gabhana","456","abc123","8");
+        TalukaCsv talukaCsvData = new TalukaCsv("Gabhana","456","abc123","8");
         return talukaCsvData;
 
     }
 
     public static TalukaCsv getUpdatedTalukaCsvData(){
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Add","Ghabhana","456","123","8");
+        TalukaCsv talukaCsvData = new TalukaCsv("Ghabhana","456","123","8");
         return talukaCsvData;
     }
 
@@ -111,7 +111,7 @@ public class TestHelper {
         talukaData.setName("Gabhana");
         talukaData.setStateCode(123L);
         talukaData.setDistrictCode(456L);
-        talukaData.setTalukaCode("8");
+        talukaData.setTalukaCode(8L);
         talukaData.setHealthBlock(healthBlockSet);
         talukaData.setVillage(villageSet);
 
@@ -120,19 +120,19 @@ public class TestHelper {
 
     public static HealthBlockCsv getHealthBlockCsvData(){
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Add","Gangiri","1002","123","456","8");
+        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Gangiri","1002","123","456","8");
         return healthBlockCsvData;
     }
 
     public static HealthBlockCsv getInvalidHealthBlockCsvData(){
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Add","Gangiri","1002","abc123","456","8");
+        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Gangiri","1002","abc123","456","8");
         return healthBlockCsvData;
     }
 
     public static HealthBlockCsv getUpdateHealthBlockCsvData(){
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Add","Ganiri","1002","123","456","8");
+        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Ganiri","1002","123","456","8");
         return healthBlockCsvData;
     }
 
@@ -144,7 +144,7 @@ public class TestHelper {
         healthBlockData.setName("Gangiri");
         healthBlockData.setStateCode(123L);
         healthBlockData.setDistrictCode(456L);
-        healthBlockData.setTalukaCode("8");
+        healthBlockData.setTalukaCode(8L);
         healthBlockData.setHealthBlockCode(1002L);
         healthBlockData.setHealthFacility(healthFacilitySet);
 
@@ -154,19 +154,19 @@ public class TestHelper {
 
     public static VillageCsv getVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Add","Alampur","122656","123","456","8");
+        VillageCsv villageCsvData = new VillageCsv("Alampur","122656","123","456","8");
         return villageCsvData;
     }
 
     public static VillageCsv getInvalidVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Add","Alampur","122656","abc123","456","8");
+        VillageCsv villageCsvData = new VillageCsv("Alampur","122656","abc123","456","8");
         return villageCsvData;
     }
 
     public static VillageCsv getUpdateVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Add","Ahamadabad","122656","123","456","8");
+        VillageCsv villageCsvData = new VillageCsv("Ahamadabad","122656","123","456","8");
         return villageCsvData;
     }
 
@@ -178,7 +178,7 @@ public class TestHelper {
         healthFacilityData.setName("Gangiri");
         healthFacilityData.setStateCode(123L);
         healthFacilityData.setDistrictCode(456L);
-        healthFacilityData.setTalukaCode("8");
+        healthFacilityData.setTalukaCode(8L);
         healthFacilityData.setHealthBlockCode(1002L);
         healthFacilityData.setHealthFacilityCode(1111L);
         healthFacilityData.setHealthSubFacility(healthSubFacilitySet);
@@ -188,37 +188,37 @@ public class TestHelper {
 
     public static HealthFacilityCsv getHealthFacilityCsvData(){
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF1","1111","123","456","8","1002","9999");
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF1","1111","123","456","8","1002","9999");
         return healthFacilityCsvData;
     }
 
     public static HealthFacilityCsv getInvalidHealthFacilityCsvData(){
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF1","1111","abc123","456","8","1002","9999");
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF1","1111","abc123","456","8","1002","9999");
         return healthFacilityCsvData;
     }
 
     public static HealthFacilityCsv getUpdateHealthFacilityCsvData(){
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("Add","HF2","1111","123","456","8","1002","9999");
+        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF2","1111","123","456","8","1002","9999");
         return healthFacilityCsvData;
     }
 
     public static HealthSubFacilityCsv getHealthSubFacilityCsvData(){
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","123","456","8","1002");
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF1","1111","9001","123","456","8","1002");
         return healthSubFacilityCsvData;
     }
 
     public static HealthSubFacilityCsv getInvalidHealthSubFacilityCsvData(){
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF1","1111","9001","abc123","456","8","1002");
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF1","1111","9001","abc123","456","8","1002");
         return healthSubFacilityCsvData;
     }
 
     public static HealthSubFacilityCsv getUpdateHealthSubFacilityCsvData(){
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("Add","HSF2","1111","9001","123","456","8","1002");
+        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF2","1111","9001","123","456","8","1002");
         return healthSubFacilityCsvData;
     }
 

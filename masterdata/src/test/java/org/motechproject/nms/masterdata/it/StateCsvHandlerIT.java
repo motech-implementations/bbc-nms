@@ -7,8 +7,8 @@ import org.motechproject.nms.masterdata.constants.MasterDataConstants;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.StateCsv;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
-import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.service.StateCsvService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -37,10 +37,10 @@ public class StateCsvHandlerIT extends BasePaxIT {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Inject
-    private StateCsvRecordsDataService stateCsvRecordsService;
+    private StateCsvService stateCsvService;
 
     @Inject
-    private StateRecordsDataService stateRecordsDataService;
+    private StateService stateService;
 
     private StateCsvUploadHandler stateCsvUploadHandler;
 
@@ -48,14 +48,14 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-       stateCsvUploadHandler = new StateCsvUploadHandler(stateRecordsDataService,
-               stateCsvRecordsService,bulkUploadErrLogService);
+       stateCsvUploadHandler = new StateCsvUploadHandler(stateService,
+               stateCsvService,bulkUploadErrLogService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(stateCsvRecordsService);
-        assertNotNull(stateRecordsDataService);
+        assertNotNull(stateCsvService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
     }
 
@@ -63,10 +63,10 @@ public class StateCsvHandlerIT extends BasePaxIT {
     public void testStateCsvSuccessAndFailure() {
 
         StateCsv csvData = TestHelper.getStateCsvData();
-        stateCsvRecordsService.create(csvData);
+        stateCsvService.create(csvData);
 
         StateCsv invalidCsvData = TestHelper.getInvalidStateCsvData();
-        stateCsvRecordsService.create(invalidCsvData);
+        stateCsvService.create(invalidCsvData);
 
 
         createdIds.add(csvData.getId());
@@ -75,7 +75,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
 
-        State stateData = stateRecordsDataService.findRecordByStateCode(123L);
+        State stateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(stateData);
         assertTrue(123L == stateData.getStateCode());
@@ -83,13 +83,13 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
         //Updated Name in State
         csvData = TestHelper.getUpdatedStateCsvData();
-        stateCsvRecordsService.create(csvData);
+        stateCsvService.create(csvData);
 
         clearId();
         createdIds.add(csvData.getId());
 
         stateCsvUploadHandler.stateCsvSuccess(TestHelper.createMotechEvent(createdIds, MasterDataConstants.STATE_CSV_SUCCESS));
-        State updatedStateData = stateRecordsDataService.findRecordByStateCode(123L);
+        State updatedStateData = stateService.findRecordByStateCode(123L);
 
         assertNotNull(updatedStateData);
         assertTrue(123L == updatedStateData.getStateCode());

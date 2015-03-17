@@ -78,9 +78,9 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         assertNotNull(csvRecordProcessService);
-        assertNotNull(courseContentCsvDataService);
+        assertNotNull(courseContentCsvService);
         courseUploadCsvHandler = new CourseUploadCsvHandler(
-                csvRecordProcessService, courseContentCsvDataService);
+                csvRecordProcessService, courseContentCsvService);
         assertNotNull(courseUploadCsvHandler);
         clearMobileAcademyData();
 
@@ -176,7 +176,6 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
                 int arrayIndex = 0;
                 String[] tokens = line.split(DELIMITER);
                 CourseContentCsv courseContentCsv = new CourseContentCsv();
-                courseContentCsv.setOperation(tokens[arrayIndex++]);
                 courseContentCsv.setContentId(tokens[arrayIndex++]);
                 courseContentCsv.setCircle(tokens[arrayIndex++]);
 

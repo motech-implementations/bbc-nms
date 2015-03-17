@@ -19,4 +19,10 @@ public interface CourseContentCsvService {
      */
     void deleteAll();
 
+    /**
+     * @param id: id of courseContentCsv Record
+     * 
+     * @return: instance of CourseContentCsv for the id
+     */
+    CourseContentCsv findById(Long id);
 }

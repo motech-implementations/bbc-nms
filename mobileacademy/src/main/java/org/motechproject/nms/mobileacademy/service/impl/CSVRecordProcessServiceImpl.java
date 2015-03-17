@@ -8,10 +8,11 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.nms.mobileacademy.commons.ContentType;
-import org.motechproject.nms.mobileacademy.commons.CourseFlags;
+import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.commons.Record;
@@ -28,10 +29,12 @@ import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -70,16 +73,15 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     @Override
     public String processRawRecords(List<CourseContentCsv> courseContentCsvs,
             String csvFileName) {
+        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        BulkUploadStatus bulkUploadStatus = new BulkUploadStatus("",
+                csvFileName, timeOfUpload, 0, 0);
 
-        BulkUploadError errorDetail = new BulkUploadError();
-        CsvProcessingSummary result = new CsvProcessingSummary();
-
-        String errorFileName = BulkUploadError
-                .createBulkUploadErrLogFileName(csvFileName);
+        BulkUploadError bulkUploadError = new BulkUploadError(csvFileName,
+                timeOfUpload, RecordType.COURSE_CONTENT, "", "", "");
 
         Map<Integer, List<CourseContentCsv>> mapForAddRecords = new HashMap<Integer, List<CourseContentCsv>>();
         Map<String, List<CourseContentCsv>> mapForModifyRecords = new HashMap<String, List<CourseContentCsv>>();
-        Map<Integer, List<CourseContentCsv>> mapForDeleteRecords = new HashMap<Integer, List<CourseContentCsv>>();
 
         List<Integer> listOfExistingLlc = courseProcessedContentService
                 .getListOfAllExistingLlcs();
@@ -88,6 +90,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
             // set user details from first record
             userDetailsDTO.setCreator(courseContentCsvs.get(0).getCreator());
+            bulkUploadStatus.setUploadedBy(userDetailsDTO.getCreator());
             userDetailsDTO.setModifiedBy(courseContentCsvs.get(0)
                     .getModifiedBy());
             userDetailsDTO.setOwner(courseContentCsvs.get(0).getOwner());
@@ -100,11 +103,11 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 try {
                     validateSchema(courseContentCsv);
                 } catch (DataValidationException ex) {
-                    processError(errorDetail, ex,
+                    processError(bulkUploadError, ex,
                             courseContentCsv.getContentId());
-                    bulkUploadErrLogService.writeBulkUploadErrLog(
-                            errorFileName, errorDetail);
-                    result.incrementFailureCount();
+                    bulkUploadErrLogService
+                            .writeBulkUploadErrLog(bulkUploadError);
+                    bulkUploadStatus.incrementFailureCount();
 
                     recordIterator.remove();
                     courseContentCsvService.delete(courseContentCsv);
@@ -113,45 +116,31 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     continue;
                 }
 
-                if (MobileAcademyConstants.COURSE_DEL
-                        .equalsIgnoreCase(courseContentCsv.getOperation())) {
-                    putRecordInDeleteMap(mapForDeleteRecords, courseContentCsv);
+                int languageLocCode = Integer.parseInt(courseContentCsv
+                        .getLanguageLocationCode());
+                if (listOfExistingLlc.contains(languageLocCode)) {
+                    putRecordInModifyMap(mapForModifyRecords, courseContentCsv);
                     LOGGER.debug(
-                            "Record moved to Delete Map for Content ID: {}",
+                            "Record moved to Modify Map for Content ID: {}",
                             courseContentCsv.getContentId());
                 } else {
-                    int languageLocCode = Integer.parseInt(courseContentCsv
-                            .getLanguageLocationCode());
-                    if (listOfExistingLlc.contains(languageLocCode)) {
-                        courseContentCsv
-                                .setOperation(MobileAcademyConstants.COURSE_MOD);
-                        putRecordInModifyMap(mapForModifyRecords,
-                                courseContentCsv);
-                        LOGGER.debug(
-                                "Record moved to Modify Map for Content ID: {}",
-                                courseContentCsv.getContentId());
-                    } else {
-                        courseContentCsv
-                                .setOperation(MobileAcademyConstants.COURSE_ADD);
-                        putRecordInAddMap(mapForAddRecords, courseContentCsv);
-                        LOGGER.debug(
-                                "Record moved to Addition Map for Content ID: {}",
-                                courseContentCsv.getContentId());
-                    }
+                    putRecordInAddMap(mapForAddRecords, courseContentCsv);
+                    LOGGER.debug(
+                            "Record moved to Addition Map for Content ID: {}",
+                            courseContentCsv.getContentId());
                 }
                 recordIterator.remove();
             }
         }
 
-        processAddRecords(mapForAddRecords, errorFileName, result,
+        processAddRecords(mapForAddRecords, bulkUploadError, bulkUploadStatus,
                 userDetailsDTO);
-        processModificationRecords(mapForModifyRecords, errorFileName, result,
-                userDetailsDTO);
-        processDeleteRecords(mapForDeleteRecords, errorFileName, result,
-                userDetailsDTO);
+        processModificationRecords(mapForModifyRecords, bulkUploadError,
+                bulkUploadStatus, userDetailsDTO);
 
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(
-                userDetailsDTO.getOwner(), csvFileName, errorFileName, result);
+        bulkUploadErrLogService
+                .writeBulkUploadProcessingSummary(bulkUploadStatus);
+
         LOGGER.info("Finished processing CircleCsv-import success");
 
         return "Records Processed Successfully";
@@ -196,25 +185,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     /*
-     * This function adds the records into a Map having LLC of record as key
-     * 
-     * The map will be process afterwards for processing "DEL"ete Records
-     */
-    private void putRecordInDeleteMap(
-            Map<Integer, List<CourseContentCsv>> mapForDeleteRecords,
-            CourseContentCsv courseContentCsv) {
-        int languageLocCode = Integer.parseInt(courseContentCsv
-                .getLanguageLocationCode());
-        if (mapForDeleteRecords.containsKey(languageLocCode)) {
-            mapForDeleteRecords.get(languageLocCode).add(courseContentCsv);
-        } else {
-            List<CourseContentCsv> listOfRecords = new ArrayList<CourseContentCsv>();
-            listOfRecords.add(courseContentCsv);
-            mapForDeleteRecords.put(languageLocCode, listOfRecords);
-        }
-    }
-
-    /*
      * This function does the schema level validation on a CourseContentCsv
      * Record. In case a erroneous field, throws DataValidationException
      */
@@ -243,10 +213,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private void processModificationRecords(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
-            String errorFileName, CsvProcessingSummary result,
+            BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
             UserDetailsDTO userDetailsDTO) {
-
-        BulkUploadError errorDetail = new BulkUploadError();
 
         if (!mapForModifyRecords.isEmpty()) {
             Iterator<String> contentNamesIterator = mapForModifyRecords
@@ -270,12 +238,12 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                             LOGGER.warn(
                                     "Record Validation failed for content ID: {}",
                                     courseContentCsv.getContentId());
-                            processError(errorDetail, exc,
+                            processError(bulkUploadError, exc,
                                     courseContentCsv.getContentId());
 
-                            bulkUploadErrLogService.writeBulkUploadErrLog(
-                                    errorFileName, errorDetail);
-                            result.incrementFailureCount();
+                            bulkUploadErrLogService
+                                    .writeBulkUploadErrLog(bulkUploadError);
+                            bulkUploadStatus.incrementFailureCount();
 
                             courseRawContentsIterator.remove();
                             courseContentCsvService.delete(courseContentCsv);
@@ -314,7 +282,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                         .update(courseProcessedContent);
 
                             }
-                            result.incrementSuccessCount();
+                            bulkUploadStatus.incrementSuccessCount();
                             courseRawContentsIterator.remove();
                             courseContentCsvService.delete(courseContentCsv);
                         }
@@ -347,19 +315,21 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     LOGGER.warn(
                             "Records corresponding to all the existing LLCs not received for modifying file with content name: {}",
                             contentName);
+
+                    bulkUploadError.setRecordDetails(contentName);
+                    bulkUploadError
+                            .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                    bulkUploadError
+                            .setErrorDescription(String
+                                    .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
+                                            contentName));
+
                     bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            contentName,
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
-                                                    contentName)));
+                            .writeBulkUploadErrLog(bulkUploadError);
 
                     contentNamesIterator.remove();
                     deleteCourseRawContentsByList(courseContentCsvs, true,
-                            result);
+                            bulkUploadStatus);
 
                     continue;
                 }
@@ -378,18 +348,20 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         LOGGER.warn(
                                 "Content file name does not match for content name: {}, contentID: {}",
                                 contentName, courseContentCsv.getContentId());
+
+                        bulkUploadError.setRecordDetails(courseContentCsv
+                                .getContentId());
+                        bulkUploadError
+                                .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                        bulkUploadError
+                                .setErrorDescription(String
+                                        .format(MobileAcademyConstants.INCONSISTENT_RECORD_FOR_MODIFY,
+                                                contentName));
                         bulkUploadErrLogService
-                                .writeBulkUploadErrLog(
-                                        errorFileName,
-                                        new BulkUploadError(
-                                                courseContentCsv.getContentId(),
-                                                ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                String.format(
-                                                        MobileAcademyConstants.INCONSISTENT_RECORD_FOR_MODIFY,
-                                                        contentName)));
+                                .writeBulkUploadErrLog(bulkUploadError);
 
                         deleteCourseRawContentsByList(courseContentCsvs, true,
-                                result);
+                                bulkUploadStatus);
                         contentNamesIterator.remove();
                         updateContentFile = false;
                         break;
@@ -453,7 +425,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     .update(courseProcessedContent);
                         }
 
-                        result.incrementSuccessCount();
+                        bulkUploadStatus.incrementSuccessCount();
                         fileModifyingRecordsIterator.remove();
                         courseContentCsvService.delete(courseContentCsv);
                     }
@@ -463,18 +435,21 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     LOGGER.warn("Course not modified for content name: {}",
                             contentName);
                     LOGGER.warn("Records for all exisiting LLCs not recieved");
+
+                    bulkUploadError.setRecordDetails(contentName);
+                    bulkUploadError
+                            .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                    bulkUploadError
+                            .setErrorDescription(String
+                                    .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
+                                            contentName));
+
                     bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            contentName,
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
-                                                    contentName)));
+                            .writeBulkUploadErrLog(bulkUploadError);
 
                     deleteCourseRawContentsByList(
-                            mapForModifyRecords.get(contentName), true, result);
+                            mapForModifyRecords.get(contentName), true,
+                            bulkUploadStatus);
                 }
             }
         }
@@ -482,14 +457,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
     private void deleteCourseRawContentsByList(
             List<CourseContentCsv> courseContentCsvs, Boolean hasErrorOccured,
-            CsvProcessingSummary result) {
+            BulkUploadStatus bulkUploadStatus) {
         if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
 
             for (CourseContentCsv courseContentCsv : courseContentCsvs) {
                 if (hasErrorOccured) {
-                    result.incrementFailureCount();
+                    bulkUploadStatus.incrementFailureCount();
                 } else {
-                    result.incrementSuccessCount();
+                    bulkUploadStatus.incrementSuccessCount();
                 }
                 courseContentCsvService.delete(courseContentCsv);
             }
@@ -628,18 +603,19 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      */
     private void processAddRecords(
             Map<Integer, List<CourseContentCsv>> mapForAddRecords,
-            String errorFileName, CsvProcessingSummary result,
+            BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
             UserDetailsDTO userDetailsDTO) {
+
         boolean populateCourseStructure = false;
-        CourseFlags courseFlags = new CourseFlags();
+
         List<Record> answerOptionRecordList = new ArrayList<Record>();
-        BulkUploadError errorDetail = new BulkUploadError();
         boolean abortAdditionProcess = false;
 
         if (!mapForAddRecords.isEmpty()) {
             Iterator<Integer> distictLLCIterator = mapForAddRecords.keySet()
                     .iterator();
             while (distictLLCIterator.hasNext()) {
+                CourseFlag courseFlag = new CourseFlag();
                 abortAdditionProcess = false;
                 populateCourseStructure = false;
                 Integer languageLocCode = distictLLCIterator.next();
@@ -653,16 +629,17 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 languageLocCode);
 
                         deleteCourseRawContentsByList(courseContentCsvs, true,
-                                result);
+                                bulkUploadStatus);
+                        bulkUploadError.setRecordDetails(languageLocCode
+                                .toString());
+                        bulkUploadError
+                                .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                        bulkUploadError
+                                .setErrorDescription(String
+                                        .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
+                                                languageLocCode));
                         bulkUploadErrLogService
-                                .writeBulkUploadErrLog(
-                                        errorFileName,
-                                        new BulkUploadError(
-                                                languageLocCode.toString(),
-                                                ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                String.format(
-                                                        MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
-                                                        languageLocCode)));
+                                .writeBulkUploadErrLog(bulkUploadError);
 
                         distictLLCIterator.remove();
                         continue;
@@ -677,7 +654,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         populateCourseStructure = true;
                     }
 
-                    courseFlags.resetTheFlags();
                     answerOptionRecordList.clear();
 
                     List<ChapterContent> chapterContents = coursePopulateService
@@ -703,25 +679,25 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     "Record validation failed for content ID: {}",
                                     courseContentCsv.getContentId());
 
-                            processError(errorDetail, exc,
+                            processError(bulkUploadError, exc,
                                     courseContentCsv.getContentId());
 
-                            bulkUploadErrLogService.writeBulkUploadErrLog(
-                                    errorFileName, errorDetail);
-
                             bulkUploadErrLogService
-                                    .writeBulkUploadErrLog(
-                                            errorFileName,
-                                            new BulkUploadError(
-                                                    courseContentCsv
-                                                            .getContentId(),
-                                                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                    String.format(
-                                                            MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
-                                                            languageLocCode)));
+                                    .writeBulkUploadErrLog(bulkUploadError);
+
+                            bulkUploadError.setRecordDetails(courseContentCsv
+                                    .getContentId());
+                            bulkUploadError
+                                    .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                            bulkUploadError
+                                    .setErrorDescription(String
+                                            .format(MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
+                                                    languageLocCode));
+                            bulkUploadErrLogService
+                                    .writeBulkUploadErrLog(bulkUploadError);
 
                             deleteCourseRawContentsByList(courseContentCsvs,
-                                    true, result);
+                                    true, bulkUploadStatus);
                             distictLLCIterator.remove();
                             break;
                         }
@@ -731,28 +707,30 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 answerOptionRecordList.add(record);
                             }
                             checkTypeAndAddToChapterContent(record,
-                                    chapterContents, courseFlags);
+                                    chapterContents, courseFlag);
                         } else {
                             if (!checkRecordConsistencyAndMarkFlag(record,
-                                    chapterContents, courseFlags)) {
+                                    chapterContents, courseFlag)) {
                                 LOGGER.warn(
                                         "Record with content ID: {} is not consistent with the data already existing in the system",
                                         courseContentCsv.getContentId());
 
+                                bulkUploadError
+                                        .setRecordDetails(courseContentCsv
+                                                .getContentId());
+                                bulkUploadError
+                                        .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                                bulkUploadError
+                                        .setErrorDescription(String
+                                                .format(MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
+                                                        languageLocCode));
                                 bulkUploadErrLogService
-                                        .writeBulkUploadErrLog(
-                                                errorFileName,
-                                                new BulkUploadError(
-                                                        courseContentCsv
-                                                                .getContentId(),
-                                                        ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                        String.format(
-                                                                MobileAcademyConstants.INCONSISTENT_RECORDS_FOR_ADD,
-                                                                languageLocCode)));
+                                        .writeBulkUploadErrLog(bulkUploadError);
 
                                 distictLLCIterator.remove();
                                 deleteCourseRawContentsByList(
-                                        courseContentCsvs, true, result);
+                                        courseContentCsvs, true,
+                                        bulkUploadStatus);
                                 abortAdditionProcess = true;
                                 break;
                             }
@@ -762,13 +740,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         continue;
                     }
 
-                    if (courseFlags.hasCompleteCourseArrived()) {
+                    if (courseFlag.hasCompleteCourseArrived()) {
                         courseRawContentsIterator = courseContentCsvs
                                 .iterator();
                         while (courseRawContentsIterator.hasNext()) {
                             CourseContentCsv courseContentCsv = courseRawContentsIterator
                                     .next();
-                            result.incrementSuccessCount();
+                            bulkUploadStatus.incrementSuccessCount();
                             updateRecordInContentProcessedTable(
                                     courseContentCsv, userDetailsDTO);
                             courseContentCsvService.delete(courseContentCsv);
@@ -795,20 +773,23 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     languageLocCode);
                         }
                     } else {
+                        bulkUploadError.setRecordDetails(languageLocCode
+                                .toString());
+                        bulkUploadError
+                                .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                        bulkUploadError
+                                .setErrorDescription(String
+                                        .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
+                                                languageLocCode));
+
                         bulkUploadErrLogService
-                                .writeBulkUploadErrLog(
-                                        errorFileName,
-                                        new BulkUploadError(
-                                                languageLocCode.toString(),
-                                                ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                String.format(
-                                                        MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_ADD,
-                                                        languageLocCode)));
+                                .writeBulkUploadErrLog(bulkUploadError);
+
                         LOGGER.warn(
                                 "Record for complete course haven't arrived to add the course for LLC: {}",
                                 languageLocCode);
                         deleteCourseRawContentsByList(courseContentCsvs, true,
-                                result);
+                                bulkUploadStatus);
                     }
 
                 }
@@ -853,164 +834,6 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     /*
-     * This function takes the list of CourseContentCsv records against which
-     * the file need to be deleted from the course
-     */
-    public void processDeleteRecords(
-            Map<Integer, List<CourseContentCsv>> mapForDeleteRecords,
-            String errorFileName, CsvProcessingSummary result,
-            UserDetailsDTO userDetailsDTO) {
-
-        BulkUploadError errorDetail = new BulkUploadError();
-        List<Integer> listOfExistingtLLC = courseProcessedContentService
-                .getListOfAllExistingLlcs();
-
-        if (!mapForDeleteRecords.isEmpty()) {
-            Iterator<Integer> distictLLCIterator = mapForDeleteRecords.keySet()
-                    .iterator();
-
-            while (distictLLCIterator.hasNext()) {
-
-                Integer languageLocCode = distictLLCIterator.next();
-                CourseFlags courseFlags = new CourseFlags();
-                courseFlags.resetTheFlags();
-
-                List<CourseContentCsv> courseContentCsvs = mapForDeleteRecords
-                        .get(languageLocCode);
-
-                if (CollectionUtils.isNotEmpty(listOfExistingtLLC)) {
-                    if (!listOfExistingtLLC.contains(languageLocCode)) {
-                        deleteCourseRawContentsByList(courseContentCsvs, false,
-                                result);
-                        LOGGER.info(
-                                "No record exists in content processed table for LLC: {}",
-                                languageLocCode);
-                        continue;
-                    }
-                }
-
-                if (courseContentCsvs.size() < MobileAcademyConstants.MIN_FILES_PER_COURSE) {
-                    LOGGER.warn(
-                            "Sufficient records not recieved to delete the course for LLC: {}",
-                            languageLocCode);
-                    bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            languageLocCode.toString(),
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_DEL,
-                                                    languageLocCode)));
-                    distictLLCIterator.remove();
-                    deleteCourseRawContentsByList(courseContentCsvs, true,
-                            result);
-                    continue;
-                }
-
-                Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
-                        .iterator();
-                while (courseRawContentsIterator.hasNext()) {
-                    CourseContentCsv courseContentCsv = courseRawContentsIterator
-                            .next();
-                    Record record = new Record();
-                    try {
-                        validateContentName(courseContentCsv, record);
-                    } catch (DataValidationException exc) {
-                        LOGGER.warn(
-                                "No record exists in content processed table for LLC: {}",
-                                languageLocCode);
-                        processError(errorDetail, exc,
-                                courseContentCsv.getContentId());
-
-                        bulkUploadErrLogService.writeBulkUploadErrLog(
-                                errorFileName, errorDetail);
-
-                        result.incrementFailureCount();
-                        courseContentCsvService.delete(courseContentCsv);
-                        courseRawContentsIterator.remove();
-                        continue;
-                    }
-                    checkRecordTypeAndMarkCourseFlag(record, courseFlags);
-                }
-
-                if (courseFlags.hasCompleteCourseArrived()) {
-                    courseProcessedContentService
-                            .deleteRecordsByLlc(languageLocCode);
-                    // If this was the last LLC in CPC
-                    if (CollectionUtils.isEmpty(courseProcessedContentService
-                            .getListOfAllExistingLlcs())) {
-                        coursePopulateService.updateCourseState(
-                                CourseUnitState.Inactive, userDetailsDTO);
-                        deleteChapterContentTable();
-                    }
-                    LOGGER.info("Course Deleted successfully for LLC: {}",
-                            languageLocCode);
-                    deleteCourseRawContentsByList(courseContentCsvs, false,
-                            result);
-                } else {
-                    LOGGER.warn(
-                            "Not all the records found to delete the course for LLC: {}",
-                            languageLocCode);
-                    bulkUploadErrLogService
-                            .writeBulkUploadErrLog(
-                                    errorFileName,
-                                    new BulkUploadError(
-                                            languageLocCode.toString(),
-                                            ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(
-                                                    MobileAcademyConstants.INCOMPLETE_RECORDS_FOR_DEL,
-                                                    languageLocCode)));
-                    deleteCourseRawContentsByList(courseContentCsvs, true,
-                            result);
-                }
-                distictLLCIterator.remove();
-            }
-        }
-    }
-
-    private void deleteChapterContentTable() {
-        List<ChapterContent> chapterContents = chapterContentDataService
-                .retrieveAll();
-        Iterator<ChapterContent> chapterContentsIterator = chapterContents
-                .iterator();
-        while (chapterContentsIterator.hasNext()) {
-            chapterContentDataService.delete(chapterContentsIterator.next());
-        }
-    }
-
-    /*
-     * this function checks the type of file to which record points to and based
-     * on that it sets the flag for successful arrival of that file
-     */
-    private void checkRecordTypeAndMarkCourseFlag(Record record,
-            CourseFlags courseFlags) {
-        if (record.getType() == FileType.LESSON_CONTENT) {
-            courseFlags.markLessonContent(record.getChapterId(),
-                    record.getLessonId());
-        } else if (record.getType() == FileType.LESSON_END_MENU) {
-            courseFlags.markLessonEndMenu(record.getChapterId(),
-                    record.getLessonId());
-        } else if (record.getType() == FileType.QUIZ_HEADER) {
-            courseFlags.markQuizHeader(record.getChapterId());
-        } else if (record.getType() == FileType.QUESTION_CONTENT) {
-            courseFlags.markQuestionContent(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.CORRECT_ANSWER) {
-            courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.WRONG_ANSWER) {
-            courseFlags.markQuestionWrongAnswer(record.getChapterId(),
-                    record.getQuestionId());
-        } else if (record.getType() == FileType.CHAPTER_END_MENU) {
-            courseFlags.markChapterEndMenu(record.getChapterId());
-        } else if (record.getType() == FileType.SCORE) {
-            courseFlags.markScoreFile(record.getChapterId(),
-                    record.getScoreID());
-        }
-    }
-
-    /*
      * this function updates the correct option for different questions in the
      * mTraining module.
      */
@@ -1039,7 +862,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * flags
      */
     private boolean checkRecordConsistencyAndMarkFlag(Record record,
-            List<ChapterContent> chapterContents, CourseFlags courseFlags) {
+            List<ChapterContent> chapterContents, CourseFlag courseFlag) {
         boolean status = true;
         ChapterContent chapterContent = null;
         for (ChapterContent chapter : chapterContents) {
@@ -1054,13 +877,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
             if ((record.getType() == FileType.LESSON_CONTENT)
                     || (record.getType() == FileType.LESSON_END_MENU)) {
                 status = checkRecordConsistencyAndMarkFlagForLesson(record,
-                        chapterContent, courseFlags, status);
+                        chapterContent, courseFlag, status);
 
             } else if ((record.getType() == FileType.QUESTION_CONTENT)
                     || (record.getType() == FileType.CORRECT_ANSWER)
                     || (record.getType() == FileType.WRONG_ANSWER)) {
                 status = checkRecordConsistencyAndMarkFlagForQuestion(record,
-                        chapterContent, courseFlags, status);
+                        chapterContent, courseFlag, status);
             } else if (record.getType() == FileType.QUIZ_HEADER) {
                 QuizContent quizContent = chapterContent.getQuiz();
                 if ((MobileAcademyConstants.CONTENT_QUIZ_HEADER
@@ -1075,7 +898,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markQuizHeader(record.getChapterId());
+                        courseFlag.markQuizHeader(record.getChapterId());
                     }
                 }
             } else if (record.getType() == FileType.CHAPTER_END_MENU) {
@@ -1091,7 +914,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markChapterEndMenu(record.getChapterId());
+                        courseFlag.markChapterEndMenu(record.getChapterId());
                     }
                 }
             } else if (record.getType() == FileType.SCORE) {
@@ -1110,7 +933,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                     record.getFileName());
                             status = false;
                         } else {
-                            courseFlags.markScoreFile(record.getChapterId(),
+                            courseFlag.markScoreFile(record.getChapterId(),
                                     record.getScoreID());
                         }
                         break;
@@ -1122,7 +945,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     private boolean checkRecordConsistencyAndMarkFlagForLesson(Record record,
-            ChapterContent chapterContent, CourseFlags courseFlags,
+            ChapterContent chapterContent, CourseFlag courseFlag,
             boolean status) {
         if (record.getType() == FileType.LESSON_CONTENT) {
             for (LessonContent lessonContent : chapterContent.getLessons()) {
@@ -1139,7 +962,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markLessonContent(record.getChapterId(),
+                        courseFlag.markLessonContent(record.getChapterId(),
                                 record.getLessonId());
                     }
                     break;
@@ -1160,7 +983,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markLessonEndMenu(record.getChapterId(),
+                        courseFlag.markLessonEndMenu(record.getChapterId(),
                                 record.getLessonId());
                     }
                     break;
@@ -1171,7 +994,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     private boolean checkRecordConsistencyAndMarkFlagForQuestion(Record record,
-            ChapterContent chapterContent, CourseFlags courseFlags,
+            ChapterContent chapterContent, CourseFlag courseFlag,
             boolean status) {
         if (record.getType() == FileType.QUESTION_CONTENT) {
             for (QuestionContent questionContent : chapterContent.getQuiz()
@@ -1183,7 +1006,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     if ((!questionContent.getAudioFile().equals(
                             record.getFileName()))
                             || !answerOptionMatcher(record)) {
-                        LOGGER.debug("Correct Option or fileName doesn't macth");
+                        LOGGER.debug("Correct Answer Option or fileName doesn't match");
                         LOGGER.debug(
                                 MobileAcademyConstants.LOG_MSG_ORIGINAL_FILE_NAME,
                                 questionContent.getAudioFile());
@@ -1192,7 +1015,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markQuestionContent(record.getChapterId(),
+                        courseFlag.markQuestionContent(record.getChapterId(),
                                 record.getQuestionId());
                     }
                     break;
@@ -1215,7 +1038,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markQuestionCorrectAnswer(
+                        courseFlag.markQuestionCorrectAnswer(
                                 record.getChapterId(), record.getQuestionId());
                     }
                     break;
@@ -1238,7 +1061,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                                 record.getFileName());
                         status = false;
                     } else {
-                        courseFlags.markQuestionWrongAnswer(
+                        courseFlag.markQuestionWrongAnswer(
                                 record.getChapterId(), record.getQuestionId());
                     }
                     break;
@@ -1254,8 +1077,8 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         int answerNo = record.getAnswerId();
         int chapterNo = record.getChapterId();
 
-        return coursePopulateService.matchAnswerOption(chapterNo, questionNo,
-                answerNo);
+        return (answerNo == coursePopulateService.getCorrectAnswerOption(
+                chapterNo, questionNo));
     }
 
     /*
@@ -1383,13 +1206,26 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
-                throw new DataValidationException(null,
+                throw new DataValidationException(
+                        null,
                         ErrorCategoryConstants.INCONSISTENT_DATA,
-                        MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                        "METADETA");
+                        String.format(
+                                MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                                courseContentCsv.getContentId()), "METADETA");
             } else {
-                record.setAnswerId(ParseDataHelper.parseInt("",
-                        metaData.substring(metaData.indexOf(':') + 1), true));
+                int answerNo = ParseDataHelper.parseInt("",
+                        metaData.substring(metaData.indexOf(':') + 1), true);
+                if (verifyRange(answerNo, 1, 2)) {
+                    record.setAnswerId(answerNo);
+                } else {
+                    throw new DataValidationException(
+                            null,
+                            ErrorCategoryConstants.INCONSISTENT_DATA,
+                            String.format(
+                                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                                    courseContentCsv.getContentId()),
+                            "METADETA");
+                }
             }
         }
 
@@ -1408,8 +1244,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         boolean recordDataValidation = true;
         if (contentName.indexOf('_') == -1) {
             throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                            courseContentCsv.getContentId()),
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1421,8 +1258,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                 || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
                         chapterString.length() - 2))) {
             throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                            courseContentCsv.getContentId()),
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1432,8 +1270,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         } catch (NumberFormatException exception) {
             LOGGER.debug(exception.getMessage(), exception);
             throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                            courseContentCsv.getContentId()),
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1444,8 +1283,9 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
 
         if ((!recordDataValidation) || (!isTypeDeterminable(record, subString))) {
             throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA,
-                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
+                            courseContentCsv.getContentId()),
                     MobileAcademyConstants.CONTENT_NAME);
         }
 
@@ -1535,7 +1375,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
      * the flag in courseFlags for successful arrival of the file.
      */
     private void checkTypeAndAddToChapterContent(Record record,
-            List<ChapterContent> chapterContents, CourseFlags courseFlags) {
+            List<ChapterContent> chapterContents, CourseFlag courseFlag) {
         ChapterContent chapterContent = null;
         for (ChapterContent chapter : chapterContents) {
             if (chapter.getChapterNumber() == record.getChapterId()) {
@@ -1548,13 +1388,13 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
         } else {
             if ((record.getType() == FileType.LESSON_CONTENT)
                     || (record.getType() == FileType.LESSON_END_MENU)) {
-                checkTypeAndAddToChapterContentForLesson(record, courseFlags,
+                checkTypeAndAddToChapterContentForLesson(record, courseFlag,
                         chapterContent);
 
             } else if ((record.getType() == FileType.QUESTION_CONTENT)
                     || (record.getType() == FileType.CORRECT_ANSWER)
                     || (record.getType() == FileType.WRONG_ANSWER)) {
-                checkTypeAndAddToChapterContentForQuestion(record, courseFlags,
+                checkTypeAndAddToChapterContentForQuestion(record, courseFlag,
                         chapterContent);
 
             } else if (record.getType() == FileType.QUIZ_HEADER) {
@@ -1563,14 +1403,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         .equalsIgnoreCase(quiz.getName()))) {
                     quiz.setAudioFile(record.getFileName());
                 }
-                courseFlags.markQuizHeader(record.getChapterId());
+                courseFlag.markQuizHeader(record.getChapterId());
 
             } else if (record.getType() == FileType.CHAPTER_END_MENU) {
                 if (MobileAcademyConstants.CONTENT_MENU
                         .equalsIgnoreCase(chapterContent.getName())) {
                     chapterContent.setAudioFile(record.getFileName());
                 }
-                courseFlags.markChapterEndMenu(record.getChapterId());
+                courseFlag.markChapterEndMenu(record.getChapterId());
             } else if (record.getType() == FileType.SCORE) {
                 List<ScoreContent> scoreContents = chapterContent.getScores();
                 for (ScoreContent scoreContent : scoreContents) {
@@ -1582,14 +1422,14 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                         break;
                     }
                 }
-                courseFlags.markScoreFile(record.getChapterId(),
+                courseFlag.markScoreFile(record.getChapterId(),
                         record.getScoreID());
             }
         }
     }
 
     private void checkTypeAndAddToChapterContentForQuestion(Record record,
-            CourseFlags courseFlags, ChapterContent chapterContent) {
+            CourseFlag courseFlag, ChapterContent chapterContent) {
         if (record.getType() == FileType.QUESTION_CONTENT) {
             List<QuestionContent> questions = chapterContent.getQuiz()
                     .getQuestions();
@@ -1601,7 +1441,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     break;
                 }
             }
-            courseFlags.markQuestionContent(record.getChapterId(),
+            courseFlag.markQuestionContent(record.getChapterId(),
                     record.getQuestionId());
 
         } else if (record.getType() == FileType.CORRECT_ANSWER) {
@@ -1615,7 +1455,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     break;
                 }
             }
-            courseFlags.markQuestionCorrectAnswer(record.getChapterId(),
+            courseFlag.markQuestionCorrectAnswer(record.getChapterId(),
                     record.getQuestionId());
 
         } else if (record.getType() == FileType.WRONG_ANSWER) {
@@ -1629,7 +1469,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     break;
                 }
             }
-            courseFlags.markQuestionWrongAnswer(record.getChapterId(),
+            courseFlag.markQuestionWrongAnswer(record.getChapterId(),
                     record.getQuestionId());
 
         }
@@ -1637,7 +1477,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
     }
 
     private void checkTypeAndAddToChapterContentForLesson(Record record,
-            CourseFlags courseFlags, ChapterContent chapterContent) {
+            CourseFlag courseFlag, ChapterContent chapterContent) {
         if (record.getType() == FileType.LESSON_CONTENT) {
             List<LessonContent> lessons = chapterContent.getLessons();
             for (LessonContent lesson : lessons) {
@@ -1648,7 +1488,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     break;
                 }
             }
-            courseFlags.markLessonContent(record.getChapterId(),
+            courseFlag.markLessonContent(record.getChapterId(),
                     record.getLessonId());
 
         } else if (record.getType() == FileType.LESSON_END_MENU) {
@@ -1661,7 +1501,7 @@ public class CSVRecordProcessServiceImpl implements CSVRecordProcessService {
                     break;
                 }
             }
-            courseFlags.markLessonEndMenu(record.getChapterId(),
+            courseFlag.markLessonEndMenu(record.getChapterId(),
                     record.getLessonId());
 
         }

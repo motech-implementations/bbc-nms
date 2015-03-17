@@ -33,7 +33,7 @@ public interface LocationValidatorService {
      *  @param district District object
      *  @param talukaCode csv uploaded districtCode
      */
-    public Taluka talukaConsistencyCheck(District district, String talukaCode) throws DataValidationException;
+    public Taluka talukaConsistencyCheck(District district, Long talukaCode) throws DataValidationException;
     
     /**
      *  This method is used to fetch Health Block from DB 
@@ -43,7 +43,7 @@ public interface LocationValidatorService {
      *  @param taluka Taluka object
      *  @param talukaCode csv uploaded healthBlockCode
      */
-    public HealthBlock healthBlockConsistencyCheck(String talukaCode, 
+    public HealthBlock healthBlockConsistencyCheck(Long talukaCode,
             Taluka taluka, Long healthBlockCode) throws DataValidationException;
 
 
@@ -78,5 +78,5 @@ public interface LocationValidatorService {
      *  @param taluka Taluka Object
      *  @param villageCode csv uploaded districtCode
      */
-    public Village villageConsistencyCheck(String talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
+    public Village villageConsistencyCheck(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
 }

@@ -25,4 +25,11 @@ public class CourseContentCsvServiceImpl implements CourseContentCsvService {
     public void deleteAll() {
         courseContentCsvDataService.deleteAll();
     }
+
+    @Override
+    public CourseContentCsv findById(Long id) {
+        CourseContentCsv courseContentCsv = courseContentCsvDataService
+                .findById(id);
+        return courseContentCsv;
+    }
 }

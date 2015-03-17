@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari;
+package org.motechproject.nms.kilkari.initializer;
 
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -22,9 +22,7 @@ public class Initializer {
     
     public static final Long CONFIGURATION_INDEX = 1L;
 
-    public static final Integer DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK = 1;
-
-    public static final Integer DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK = 1;
+    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEk = 1;
 
     public static final Integer DEFAULT_ALLOWED_BENEFICIARY_COUNT = 9718577;
 
@@ -59,24 +57,19 @@ public class Initializer {
          * Check if configuration is not present then create with default values
          */
         if (!configurationService.isConfigurationPresent()) {
-
-
             Configuration configuration = new Configuration();
-
             logger.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
-            configuration.setNmsKk48WeeksPackMsgsPerWeek(DEFAULT_48_WEEKS_PACK_MSGS_PER_WEEK);
-            configuration.setNmsKk72WeeksPackMsgsPerWeek(DEFAULT_72_WEEKS_PACK_MSGS_PER_WEEK);
-            configuration.setNmsKkMaxAllowedActiveBeneficiaryCount(DEFAULT_ALLOWED_BENEFICIARY_COUNT);
-            configuration.setNmsKkFreshObdServiceId(DEFAULT_FRESH_OBD_SERVICE_ID);
-            configuration.setNmsKkRetryDay1ObdServiceId(DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
-            configuration.setNmsKkRetryDay2ObdServiceId(DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
-            configuration.setNmsKkRetryDay3ObdServiceId(DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
-            configuration.setNmsKkFreshObdPriority(DEFAULT_FRESH_OBD_PRIORITY);
-            configuration.setNmsKkRetryDay1ObdPriority(DEFAULT_RETRY_DAY1_OBD_PRIORITY);
-            configuration.setNmsKkRetryDay2ObdPriority(DEFAULT_RETRY_DAY2_OBD_PRIORITY);
-            configuration.setNmsKkRetryDay3ObdPriority(DEFAULT_RETRY_DAY3_OBD_PRIORITY);
-
+            configuration.setNumMsgPerWeek(DEFAULT_NUMBER_OF_MSG_PER_WEEk);
+            configuration.setMaxAllowedActiveBeneficiaryCount(DEFAULT_ALLOWED_BENEFICIARY_COUNT);
+            configuration.setFreshObdServiceId(DEFAULT_FRESH_OBD_SERVICE_ID);
+            configuration.setRetryDay1ObdServiceId(DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
+            configuration.setRetryDay2ObdServiceId(DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
+            configuration.setRetryDay3ObdServiceId(DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
+            configuration.setFreshObdPriority(DEFAULT_FRESH_OBD_PRIORITY);
+            configuration.setRetryDay1ObdPriority(DEFAULT_RETRY_DAY1_OBD_PRIORITY);
+            configuration.setRetryDay2ObdPriority(DEFAULT_RETRY_DAY2_OBD_PRIORITY);
+            configuration.setRetryDay3ObdPriority(DEFAULT_RETRY_DAY3_OBD_PRIORITY);
             configurationService.createConfiguration(configuration);
 
         }

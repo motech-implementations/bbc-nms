@@ -115,9 +115,8 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         return state;
     }
 
-    public boolean matchAnswerOption(Integer chapterNo, Integer questionNo,
-            Integer optionNo) {
-        boolean status = false;
+    @Override
+    public int getCorrectAnswerOption(Integer chapterNo, Integer questionNo) {
         List<Chapter> chapters = mTrainingService
                 .getChapterByName(MobileAcademyConstants.CHAPTER
                         + String.format(
@@ -137,18 +136,12 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                                                 MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                                 questionNo))) {
                     String answer = question.getAnswer();
-                    status = Integer.valueOf(answer) == optionNo;
-                    if (!status) {
-                        LOGGER.info(
-                                "Answer Option not matching for Chapter {}, Question {}",
-                                chapterNo, questionNo);
-                    }
-                    break;
+
+                    return Integer.valueOf(answer);
                 }
             }
-
         }
-        return status;
+        return 0;
     }
 
     @Override
@@ -215,7 +208,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (LessonContent lessonContent : chapterContent
                             .getLessons()) {
@@ -228,6 +221,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                             chapterContent.setModifiedBy(userDetailsDTO
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            break outer;
                         }
                     }
                 }
@@ -264,7 +258,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (QuestionContent questionContent : chapterContent
                             .getQuiz().getQuestions()) {
@@ -277,6 +271,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                             chapterContent.setModifiedBy(userDetailsDTO
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            break outer;
                         }
                     }
                 }
@@ -313,7 +308,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
         List<ChapterContent> chapterContents = chapterContentDataService
                 .retrieveAll();
         if (CollectionUtils.isNotEmpty(chapterContents)) {
-            for (ChapterContent chapterContent : chapterContents) {
+            outer: for (ChapterContent chapterContent : chapterContents) {
                 if (chapterContent.getChapterNumber() == chapterId) {
                     for (ScoreContent scoreContent : chapterContent.getScores()) {
                         if ((scoreContent.getName()
@@ -327,6 +322,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                             chapterContent.setModifiedBy(userDetailsDTO
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            break outer;
                         }
                     }
                 }
@@ -364,6 +360,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                         chapterContent.setModifiedBy(userDetailsDTO
                                 .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
+                        break;
                     }
                 }
             }
@@ -404,6 +401,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
                         chapterContent.setModifiedBy(userDetailsDTO
                                 .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
+                        break;
                     }
                 }
             }

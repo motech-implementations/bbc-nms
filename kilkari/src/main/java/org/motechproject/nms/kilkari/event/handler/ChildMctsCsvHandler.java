@@ -1,39 +1,27 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.util.List;
-import java.util.Map;
-
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.util.BulkUploadError;
-import org.motechproject.nms.util.CsvProcessingSummary;
+import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.domain.BulkUploadError;
+import org.motechproject.nms.util.domain.BulkUploadStatus;
+import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is used to handle to success 
@@ -103,9 +91,12 @@ public class ChildMctsCsvHandler {
         String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
         
         logger.info("Processing Csv file[{}]", csvFileName);
-        String logFile = BulkUploadError.createBulkUploadErrLogFileName(csvFileName);
-        CsvProcessingSummary summary = new CsvProcessingSummary();
+        BulkUploadStatus uploadedStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
+        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        errorDetails.setCsvName(csvFileName);
+        errorDetails.setTimeOfUpload(timeOfUpload);
+        errorDetails.setRecordType(RecordType.CHILD_MCTS);
         
         ChildMctsCsv childMctsCsv = null;
         String userName = null;
@@ -120,30 +111,30 @@ public class ChildMctsCsvHandler {
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = childMctsToSubscriberMapper(childMctsCsv);
                     insertSubscriptionSubccriber(subscriber);
-                    summary.incrementSuccessCount();
+                    uploadedStatus.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetails.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
+                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                     logger.error("Record not found for uploaded id [{}]", id);
-                    summary.incrementFailureCount();
+                    uploadedStatus.incrementFailureCount();
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
-                logger.error("DataValidationException ::::", dve);
+                logger.error("DataValidationException ::::", dve.getMessage());
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                uploadedStatus.incrementFailureCount();
 
             } catch (Exception e) {
                 errorDetails.setRecordDetails("Some Error Occurred");
                 errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(logFile, errorDetails);
-                summary.incrementFailureCount();
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                uploadedStatus.incrementFailureCount();
                 
             } finally {
                 if (childMctsCsv != null) {
@@ -151,8 +142,11 @@ public class ChildMctsCsvHandler {
                 }
             }
         }
-
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(userName, csvFileName, logFile, summary);
+        uploadedStatus.setUploadedBy(userName);
+        uploadedStatus.setBulkUploadFileName(csvFileName);
+        uploadedStatus.setTimeOfUpload(timeOfUpload);
+        
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadedStatus);
         logger.info("Success[childMctsCsvSuccess] method finished for ChildMctsCsv");
     }
 
@@ -173,7 +167,7 @@ public class ChildMctsCsvHandler {
         Long districtCode = ParseDataHelper.parseLong("District Code", childMctsCsv.getDistrictCode(), true);
         District district = locationValidator.districtConsistencyCheck(state, districtCode);
 
-        String talukaCode = ParseDataHelper.parseString("Taluka Code", childMctsCsv.getTalukaCode(), false);
+        Long talukaCode = ParseDataHelper.parseLong("Taluka Code", childMctsCsv.getTalukaCode(), false);
         Taluka taluka = locationValidator.talukaConsistencyCheck(district, talukaCode);
 
         Long healthBlockCode = ParseDataHelper.parseLong("Health Block Code", childMctsCsv.getHealthBlockCode(), false);
@@ -257,7 +251,7 @@ public class ChildMctsCsvHandler {
                     Configuration configuration = configurationService.getConfiguration();
                     long activeUserCount = subscriptionService.getActiveUserCount();
                     /* check for maximum allowed beneficiary */
-                    if (activeUserCount < configuration.getNmsKkMaxAllowedActiveBeneficiaryCount()) {
+                    if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                         Subscriber dbSubscriber = subscriberService.create(subscriber); 
                         createSubscription(subscriber, null, dbSubscriber);
                     } else {
@@ -268,8 +262,8 @@ public class ChildMctsCsvHandler {
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
                     logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    dbSubscription.setStatus(Status.DEACTIVATED);
-                    subscriptionService.update(dbSubscription); /* Deactivate mother subscription */
+                    MctsCsvHelper.populateSubscription(subscriber, dbSubscription, true);
+                    subscriptionService.update(dbSubscription);
                     if (!subscriber.getChildDeath()) {
                         /* add new subscription for child */
                         Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
@@ -309,8 +303,7 @@ public class ChildMctsCsvHandler {
             
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                dbSubscription.setStatus(Status.DEACTIVATED);
-                subscriptionService.update(dbSubscription);
+                updateSubscription(subscriber, dbSubscription, true);
                 Subscription newSubscription = createSubscription(subscriber, dbSubscription, dbSubscriber);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
