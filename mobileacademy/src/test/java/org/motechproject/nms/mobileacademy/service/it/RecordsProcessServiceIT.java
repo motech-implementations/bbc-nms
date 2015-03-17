@@ -26,7 +26,7 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -42,7 +42,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class CSVRecordProcessServiceIT extends BasePaxIT {
+public class RecordsProcessServiceIT extends BasePaxIT {
 
     @Inject
     private CourseContentCsvDataService courseContentCsvDataService;
@@ -60,7 +60,7 @@ public class CSVRecordProcessServiceIT extends BasePaxIT {
     private MTrainingService mTrainingService;
 
     @Inject
-    private CSVRecordProcessService csvRecordProcessService;
+    private RecordsProcessService csvRecordProcessService;
 
     /**
      * clear Mobile Academy and mtraining data related to course
