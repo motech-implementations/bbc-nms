@@ -31,7 +31,6 @@ public final class ParseDataHelper {
     public static boolean isNullOrEmpty(String field) {
         //"NULL" with ignore case is also considered as empty
         return(StringUtils.isBlank(field) || StringUtils.equalsIgnoreCase(field, "NULL"));
-        //return (field == null || "".equals(field.trim()) || "NULL".equalsIgnoreCase(field.trim()));
     }
 
     /**
