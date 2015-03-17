@@ -21,6 +21,18 @@ public final class MctsCsvHelper  {
         dbSubscriber.setSubCentre(subscriber.getSubCentre());
         dbSubscriber.setVillage(subscriber.getVillage());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
+        dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
+        if (dbSubscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
+            dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
+            dbSubscriber.setDob(subscriber.getDob());
+            dbSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        } else {
+            dbSubscriber.setAbortion(subscriber.getAbortion());
+            dbSubscriber.setStillBirth(subscriber.getStillBirth());
+            dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
+            dbSubscriber.setLmp(subscriber.getLmp());
+            dbSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        }
     }
     
     public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
@@ -45,13 +57,20 @@ public final class MctsCsvHelper  {
         return newSubscription;
     }
     
-    public static void populateDBSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+    public static void populateDBSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
-        dbSubscription.setChannel(Channel.MCTS);
+        dbSubscription.setChannel(channel);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+        if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD){
+            dbSubscription.setMctsId(subscriber.getChildMctsId());
+            dbSubscription.setPackName(BeneficiaryType.CHILD.getPack(BeneficiaryType.CHILD));
+        }else{
+            dbSubscription.setMctsId(subscriber.getMotherMctsId());
+            dbSubscription.setPackName(BeneficiaryType.MOTHER.getPack(BeneficiaryType.MOTHER));
+        }
     }
 }

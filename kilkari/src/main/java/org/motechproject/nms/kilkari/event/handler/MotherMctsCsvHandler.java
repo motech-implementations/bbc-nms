@@ -52,7 +52,7 @@ public class MotherMctsCsvHandler {
         List<Long> uploadedIDs = (List<Long>) parameters.get(CSV_IMPORT_CREATED_IDS);
         String csvFileName = (String) parameters.get(CSV_IMPORT_FILE_NAME);
 
-        motherMctsCsvService.processingUploadedIds(csvFileName, uploadedIDs);
+        motherMctsCsvService.processMotherMctsCsv(csvFileName, uploadedIDs);
         logger.info("Success[motherMctsCsvSuccess] method finished for MotherMctsCsv");
     }
     

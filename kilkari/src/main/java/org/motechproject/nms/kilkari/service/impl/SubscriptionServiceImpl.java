@@ -128,7 +128,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      */
     @Override
-    public void handleMctsSubscriptionRequest(Subscriber subscriber, Channel channel) throws DataValidationException {
+    public void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel) throws DataValidationException {
 
         /*
         Create new subscriber and subscription if there is no existing record for childMctsId or motherMctsId
@@ -165,7 +165,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
                     logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, true);
+                    MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, true, channel);
                     update(dbSubscription);
                     if (!subscriber.getChildDeath()) {
                         /* add new subscription for child */
@@ -179,14 +179,72 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid(ChildMcts) than */
                 logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateSubscriberSubscriptionForChild(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getChildMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateSubscriberSubscriptionForChild(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
+                throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
+                        ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
+            }
+        }
+    }
+    
+    
+    /**
+     *  This method is used to insert/update subscription and subscriber
+     * 
+     *  @param subscriber csv uploaded subscriber
+     */
+    @Override
+    public void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel) throws DataValidationException {
+
+        /*
+        Create a new Subscriber and Subscription record in NMS database, if
+           - there is no existing subscription record with MSISDN and MCTSId (having status as
+             Active/PendingActivation) matching the ones in motherMctsCsv Record. Also check that number of existing
+             active subscribers is not exceeding the value of Max Allowed Active Kilkari Subscribers.
+
+        Update the existing subscriber record (with MSISDN, motherMCTSId, Location, name , age and LMP), if a
+           subscription record ((having status as Active/PendingActivation ) exists in NMS database
+            - Having MCTS Id same as the one in motherMctsCsv Record.
+            - Having null or empty MCTS Id and MSISDN matching the one in motherMctsCsv Record.
+
+        Update an existing subscription’s status as Deactivated if in  motherMctsCsv Record
+            - Number of outcome is 0 i.e. stillbirth is reported
+            - EntryType is Death i.e. mother death is reported.
+            - Abortion is not “none” i.e. abortion is reported.
+            - LMP is modified (also create a new subscription in this case)
+
+         */
+
+
+        /* Find subscription from database based on msisdn, packName, status */
+        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_72);
+        if (dbSubscription == null) {
+            logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
+            /* Find subscription from database based on mctsid, packName, status */
+            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
+            if (dbSubscription == null) {
+                logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
+                createSubscriptionSubscriber(subscriber, channel);
+                
+            } else { /* Record found based on mctsid than update subscriber and subscription */
+                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.ACTIVE);
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                updateSubscriberSubscriptionForMother(subscriber, dbSubscription, dbSubscriber, channel);
+            }
+        } else {
+            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
+            if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getMotherMctsId())) {
+                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
+                Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                updateSubscriberSubscriptionForMother(subscriber, dbSubscription, dbSubscriber, channel);
+
+            } else {
                 throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
                         ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
@@ -216,23 +274,49 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private void updateSubscriberSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
+    private void updateSubscriberSubscriptionForChild(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
         
         if (subscriber.getChildDeath()) {
-            updateSubscription(subscriber, dbSubscription, true);
+            updateSubscription(subscriber, dbSubscription, true, channel);
             
         } else {
             if (!dbSubscriber.getDob().equals(subscriber.getDob())) {
-                updateSubscription(subscriber, dbSubscription, true);
+                updateSubscription(subscriber, dbSubscription, true, channel);
                 Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
                 create(newSubscription);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
-                updateSubscription(subscriber, dbSubscription, false);
+                updateSubscription(subscriber, dbSubscription, false, channel);
             }
         }
 
         updateDbSubscriber(subscriber, dbSubscriber);
+    }
+    
+    /**
+     *  This method is used to update subscriber and subscription
+     * 
+     *  @param subscriber csv uploaded subscriber
+     *  @param dbSubscription database Subscription
+     *  @param dbSubscriber database subscriber
+     */
+    private void updateSubscriberSubscriptionForMother(Subscriber subscriber,
+            Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
+
+        if (subscriber.getAbortion() || subscriber.getStillBirth() || subscriber.getMotherDeath()) {
+            updateSubscription(subscriber, dbSubscription, true, channel);
+        } else {
+            if (!dbSubscriber.getLmp().equals(subscriber.getLmp())) {
+                updateSubscription(subscriber, dbSubscription, true, channel);
+                Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
+                dbSubscriber.getSubscriptionList().add(newSubscription);
+            } else {
+                updateSubscription(subscriber, dbSubscription, false, channel);
+            }
+        }
+
+        updateDbSubscriber(subscriber, dbSubscriber);
+
     }
     
     /**
@@ -241,12 +325,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      *  @param dbSubscription database Subscription
      */
-    private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
-        MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, statusFlag);
-        dbSubscription.setMctsId(subscriber.getChildMctsId());
-        dbSubscription.setPackName(PACK_48);;
+    private void updateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
+        MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, statusFlag, channel);
         update(dbSubscription);
-        
     }
     
     /**
@@ -258,11 +339,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
 
         MctsCsvHelper.polpulateDbSubscriber(subscriber, dbSubscriber);
-        dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
-        dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
-        dbSubscriber.setDob(subscriber.getDob());
-        dbSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-
         subscriberDataService.update(dbSubscriber);
 
     }
