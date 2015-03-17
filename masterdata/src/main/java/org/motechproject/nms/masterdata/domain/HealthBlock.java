@@ -4,6 +4,7 @@ import org.motechproject.mds.annotations.Cascade;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * This class Models data for HealthBlock location records
  */
 @Entity(recordHistory = true)
-public class HealthBlock extends LocationUnitMetaData {
+public class HealthBlock extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
@@ -34,8 +35,21 @@ public class HealthBlock extends LocationUnitMetaData {
     private Long healthBlockCode;
 
 
+    @Field(name = "name")
+    @UIDisplayable(position = 0)
+    private String name;
+
+
     public HealthBlock() {
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getHealthBlockCode() {
@@ -131,8 +145,9 @@ public class HealthBlock extends LocationUnitMetaData {
                 "healthFacility=" + healthFacility +
                 ", stateCode=" + stateCode +
                 ", districtCode=" + districtCode +
-                ", talukaCode='" + talukaCode + '\'' +
+                ", talukaCode=" + talukaCode +
                 ", healthBlockCode=" + healthBlockCode +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
