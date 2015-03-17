@@ -2,12 +2,14 @@ package org.motechproject.nms.mobileacademy.service.ut;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -254,37 +256,6 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
-     * This test case is used to test the processing of raw records with Delete
-     * as Operation.
-     */
-    @Test
-    public void testProcessDeleteRecords() {
-        Map<Integer, List<CourseContentCsv>> mapForDeleteRecords = new HashMap<Integer, List<CourseContentCsv>>();
-        List<CourseContentCsv> listCourseRecords = new ArrayList<>();
-        listCourseRecords.add(new CourseContentCsv("100014", "AP", "14",
-                "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", ""));
-        listCourseRecords.add(new CourseContentCsv("100015", "AP", "14",
-                "Chapter01_Lesson03", "Content", "ch1_l3.wav", "250", ""));
-        listCourseRecords.add(new CourseContentCsv("100016", "AP", "14",
-                "Chapter01_Lesson04", "Content", "ch1_l4.wav", "150", ""));
-        listCourseRecords.add(new CourseContentCsv("100017", "AP", "14",
-                "Chapter01_Lesson02", "Content", "ch1_l2.wav", "450", ""));
-        mapForDeleteRecords.put(14, listCourseRecords);
-        Method method;
-        try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "processDeleteRecords", new Class[] { Map.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl,
-                    new Object[] { mapForDeleteRecords });
-            assertTrue(mapForDeleteRecords.isEmpty());
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-        }
-    }
-
-    /*
      * This test case is used to Check the type of the record and mark the
      * appropriate course flag.
      */
@@ -326,14 +297,14 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        List<QuestionContent> quizContent = new ArrayList<QuestionContent>() {
+        List<QuestionContent> questionContents = new ArrayList<QuestionContent>() {
         };
-        quizContent.add(new QuestionContent(1, "question", "ch1_q1.wav"));
-        quizContent
-                .add(new QuestionContent(1, "correctAnswer", "ch1_q1_ca.wav"));
-        quizContent.add(new QuestionContent(2, "question", "ch1_q2.wav"));
+        questionContents.add(new QuestionContent(1, "question", "ch1_q1.wav"));
+        questionContents.add(new QuestionContent(1, "correctAnswer",
+                "ch1_q1_ca.wav"));
+        questionContents.add(new QuestionContent(2, "question", "ch1_q2.wav"));
         QuizContent quiz = new QuizContent("quiz header", "ch1_qp.wav",
-                quizContent);
+                questionContents);
         List<ScoreContent> scoreContent = new ArrayList<ScoreContent>() {
         };
         scoreContent.add(new ScoreContent("score01", "Ch1_1ca.wav"));
@@ -358,6 +329,39 @@ public class RecordsProcessServiceImplTest {
                     chapterContent, courseFlags });
             assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
                     .isFlagForLessonContentFile());
+
+            record.setFileName("ABC.wav");
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.CORRECT_ANSWER);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.WRONG_ANSWER);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.LESSON_CONTENT);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.LESSON_END_MENU);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.CHAPTER_END_MENU);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.QUIZ_HEADER);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
+            record.setType(FileType.SCORE);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, chapterContent, courseFlags }));
+
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -394,6 +398,62 @@ public class RecordsProcessServiceImplTest {
             flag = false;
         }
         assertTrue(flag);
+    }
+
+    @Test
+    @Ignore
+    public void testValidateRawContentwithInvalidMetaData() {
+        CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
+                "AP", "14", "Chapter01_Question01", "Content", "ch1_q1.wav",
+                "150", "RightAnswer:01");
+        Record record = new Record();
+        record.setType(FileType.QUESTION_CONTENT);
+        record.setChapterId(1);
+        record.setLessonId(1);
+        record.setFileName("Ch1_q1.wav");
+        Method method = null;
+        Boolean flag = true;
+        try {
+            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
+                            Record.class });
+            method.setAccessible(true);
+            method.invoke(recordsProcessServiceImpl, new Object[] {
+                    courseContentCsv, record });
+        } catch (NoSuchMethodException | SecurityException
+                | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            flag = false;
+        }
+        assertFalse(flag);
+    }
+
+    @Test
+    @Ignore
+    public void testValidateRawContentWithOutOfBoundAnswerIndex() {
+        CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
+                "AP", "14", "Chapter01_Question01", "Content", "ch1_q1.wav",
+                "150", "CorrectAnswer:04");
+        Record record = new Record();
+        record.setType(FileType.QUESTION_CONTENT);
+        record.setChapterId(1);
+        record.setLessonId(1);
+        record.setFileName("Ch1_q1.wav");
+        Method method = null;
+        Boolean flag = true;
+        try {
+            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
+                    "validateRawContent", new Class[] { CourseContentCsv.class,
+                            Record.class });
+            method.setAccessible(true);
+            method.invoke(recordsProcessServiceImpl, new Object[] {
+                    courseContentCsv, record });
+        } catch (NoSuchMethodException | SecurityException
+                | IllegalAccessException | IllegalArgumentException
+                | InvocationTargetException e) {
+            flag = false;
+        }
+        assertFalse(flag);
     }
 
     /*
@@ -558,6 +618,70 @@ public class RecordsProcessServiceImplTest {
         assertFalse(flag);
     }
 
+    @Test
+    public void testValidateContentNameWithNotNumericIndex() {
+        CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
+                "AP", "14", "Chapter01_LessonAB", "Content", "ch1_l1.wav",
+                "150", "");
+        Record record = new Record();
+        record.setType(FileType.LESSON_CONTENT);
+        record.setChapterId(1);
+        record.setLessonId(1);
+        record.setFileName("Ch1_l1.wav");
+        Method method = null;
+        Boolean flag = true;
+        try {
+            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
+                    "validateContentName", new Class[] {
+                            CourseContentCsv.class, Record.class });
+            method.setAccessible(true);
+            method.invoke(recordsProcessServiceImpl, new Object[] {
+                    courseContentCsv, record });
+
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof DataValidationException) {
+                System.out.println(e.getCause());
+                flag = false;
+            }
+        } catch (NoSuchMethodException | SecurityException
+                | IllegalAccessException | IllegalArgumentException e) {
+            flag = false;
+        }
+        assertFalse(flag);
+    }
+
+    @Test
+    public void testValidateContentNameWithOutOfBoundIndex() {
+        CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
+                "AP", "14", "Chapter21_Lesson01", "Content", "ch1_l1.wav",
+                "150", "");
+        Record record = new Record();
+        record.setType(FileType.LESSON_CONTENT);
+        record.setChapterId(1);
+        record.setLessonId(1);
+        record.setFileName("Ch1_l1.wav");
+        Method method = null;
+        Boolean flag = true;
+        try {
+            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
+                    "validateContentName", new Class[] {
+                            CourseContentCsv.class, Record.class });
+            method.setAccessible(true);
+            method.invoke(recordsProcessServiceImpl, new Object[] {
+                    courseContentCsv, record });
+
+        } catch (InvocationTargetException e) {
+            if (e.getCause() instanceof DataValidationException) {
+                System.out.println(e.getCause());
+                flag = false;
+            }
+        } catch (NoSuchMethodException | SecurityException
+                | IllegalAccessException | IllegalArgumentException e) {
+            flag = false;
+        }
+        assertFalse(flag);
+    }
+
     /*
      * this test case is used to test whether the type is determinable Or Not
      */
@@ -566,21 +690,28 @@ public class RecordsProcessServiceImplTest {
     public void testIsTypeDeterminable() {
         Method method;
         Record record = new Record();
-        record.setChapterId(1);
-        record.setLessonId(1);
-        record.setQuestionId(1);
         try {
             method = RecordsProcessServiceImpl.class.getDeclaredMethod(
                     "isTypeDeterminable", new Class[] { Record.class,
                             String.class });
             method.setAccessible(true);
+
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, "Lesson" }));
+            assertNull(record.getType());
+
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, "LessonAB" }));
+            assertNull(record.getType());
+
             method.invoke(recordsProcessServiceImpl, new Object[] { record,
                     "Lesson01" });
+            assertSame(FileType.LESSON_CONTENT, record.getType());
+
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
         }
-        assertSame(FileType.LESSON_CONTENT, record.getType());
     }
 
     /*
@@ -616,16 +747,21 @@ public class RecordsProcessServiceImplTest {
         lessons.add(new LessonContent(2, "lesson", "Ch1_l3.wav"));
         lessons.add(new LessonContent(4, "lesson", "Ch1_l4.wav"));
         lessons.add(new LessonContent(1, "lesson", "Ch1_l1.wav"));
-        ChapterContent chapterContent = new ChapterContent(1, "content",
+        ChapterContent chapterContent = new ChapterContent(14, "content",
                 "ch1_l1.wav", lessons, scoreContent, quiz);
         try {
             method = RecordsProcessServiceImpl.class.getDeclaredMethod(
                     "checkTypeAndAddToChapterContent", new Class[] {
-                            Record.class, ChapterContent.class,
-                            CourseFlag.class });
+                            Record.class, List.class, CourseFlag.class });
             method.setAccessible(true);
             method.invoke(recordsProcessServiceImpl, new Object[] { record,
-                    chapterContent, courseFlags });
+                    Arrays.asList(chapterContent), courseFlags });
+            assertFalse(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                    .isFlagForLessonContentFile());
+
+            chapterContent.setChapterNumber(1);
+            method.invoke(recordsProcessServiceImpl, new Object[] { record,
+                    Arrays.asList(chapterContent), courseFlags });
             assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
                     .isFlagForLessonContentFile());
         } catch (NoSuchMethodException | SecurityException
@@ -633,5 +769,4 @@ public class RecordsProcessServiceImplTest {
                 | InvocationTargetException e) {
         }
     }
-
 }

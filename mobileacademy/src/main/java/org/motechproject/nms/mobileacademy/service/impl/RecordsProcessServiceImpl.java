@@ -250,234 +250,242 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
         // Start Processing the file change records:
         if (!mapForModifyRecords.isEmpty()) {
+            processModificationRecordForAnswerOrFileChange(mapForModifyRecords,
+                    bulkUploadError, bulkUploadStatus, userDetailsDTO);
+        }
+    }
 
-            Iterator<String> contentNamesIterator = mapForModifyRecords
-                    .keySet().iterator();
-            while (contentNamesIterator.hasNext()) {
-                String contentName = contentNamesIterator.next();
-                boolean flagForUpdatingMetaData = false;
-                boolean flagForAbortingModification = false;
+    /*
+     * This function process the modification records for which there is change
+     * in Audio File name or correct answer option
+     */
+    private void processModificationRecordForAnswerOrFileChange(
+            Map<String, List<CourseContentCsv>> mapForModifyRecords,
+            BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
+            UserDetailsDTO userDetailsDTO) {
 
-                // Getting new List as the list return is unmodifiable
-                List<Integer> listOfExistingLlc = new ArrayList<Integer>(
-                        courseProcessedContentService
-                                .getListOfAllExistingLlcs());
+        Iterator<String> contentNamesIterator = mapForModifyRecords.keySet()
+                .iterator();
+        while (contentNamesIterator.hasNext()) {
+            String contentName = contentNamesIterator.next();
+            boolean flagForUpdatingMetaData = false;
+            boolean flagForAbortingModification = false;
 
-                List<CourseContentCsv> courseContentCsvs = mapForModifyRecords
-                        .get(contentName);
-                if (courseContentCsvs.size() < listOfExistingLlc.size()) {
+            // Getting new List as the list return is unmodifiable
+            List<Integer> listOfExistingLlc = new ArrayList<Integer>(
+                    courseProcessedContentService.getListOfAllExistingLlcs());
+
+            List<CourseContentCsv> courseContentCsvs = mapForModifyRecords
+                    .get(contentName);
+            if (courseContentCsvs.size() < listOfExistingLlc.size()) {
+                LOGGER.warn(
+                        "Records corresponding to all the existing LLCs not received for modification against content name: {}",
+                        contentName);
+
+                bulkUploadError.setRecordDetails(contentName);
+                bulkUploadError
+                        .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                bulkUploadError.setErrorDescription(String.format(
+                        MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
+                        contentName));
+
+                bulkUploadErrLogService.writeBulkUploadErrLog(bulkUploadError);
+
+                contentNamesIterator.remove();
+                deleteCourseRawContentsByList(courseContentCsvs, true,
+                        bulkUploadStatus);
+
+                continue;
+            }
+
+            String fileName = mapForModifyRecords.get(contentName).get(0)
+                    .getContentFile();
+
+            String metaData = "";
+
+            int correctAnswerOption = 0;
+
+            /*
+             * This block of code is just being written for the purpose to know
+             * whether this bunch of record refers to questionContent type or
+             * not
+             */
+            Record record = new Record();
+            try {
+                RecordProcessHelper.validateContentName(mapForModifyRecords
+                        .get(contentName).get(0), record);
+            } catch (DataValidationException e1) {
+                LOGGER.error("", e1);
+            }
+
+            if (record.getType() == FileType.QUESTION_CONTENT) {
+                metaData = mapForModifyRecords.get(contentName).get(0)
+                        .getMetaData();
+                flagForUpdatingMetaData = true;
+            }
+
+            Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
+                    .iterator();
+            while (courseRawContentsIterator.hasNext()) {
+                CourseContentCsv courseContentCsv = courseRawContentsIterator
+                        .next();
+                int languageLocCode = Integer.parseInt(courseContentCsv
+                        .getLanguageLocationCode());
+                if (!fileName.equals(courseContentCsv.getContentFile())) {
                     LOGGER.warn(
-                            "Records corresponding to all the existing LLCs not received for modification against content name: {}",
-                            contentName);
-
-                    bulkUploadError.setRecordDetails(contentName);
-                    bulkUploadError
-                            .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
-                    bulkUploadError
-                            .setErrorDescription(String
-                                    .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
-                                            contentName));
-
-                    bulkUploadErrLogService
-                            .writeBulkUploadErrLog(bulkUploadError);
-
-                    contentNamesIterator.remove();
-                    deleteCourseRawContentsByList(courseContentCsvs, true,
-                            bulkUploadStatus);
-
-                    continue;
+                            "Content file name does not match for content name: {}, contentID: {}",
+                            contentName, courseContentCsv.getContentId());
+                    flagForAbortingModification = true;
                 }
-
-                String fileName = mapForModifyRecords.get(contentName).get(0)
-                        .getContentFile();
-
-                String metaData = "";
-
-                int correctAnswerOption = 0;
-
                 /*
-                 * This block of code is just being written for the purpose to
-                 * know whether this bunch of record refers to questionContent
-                 * type or not
+                 * Check for consistency of metaData only if record corresponds
+                 * to question content type
                  */
-                Record record = new Record();
-                try {
-                    RecordProcessHelper.validateContentName(mapForModifyRecords
-                            .get(contentName).get(0), record);
-                } catch (DataValidationException e1) {
-                    e1.printStackTrace();
-                }
-
-                if (record.getType() == FileType.QUESTION_CONTENT) {
-                    metaData = mapForModifyRecords.get(contentName).get(0)
-                            .getMetaData();
-                    flagForUpdatingMetaData = true;
-                }
-
-                Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
-                        .iterator();
-                while (courseRawContentsIterator.hasNext()) {
-                    CourseContentCsv courseContentCsv = courseRawContentsIterator
-                            .next();
-                    int languageLocCode = Integer.parseInt(courseContentCsv
-                            .getLanguageLocationCode());
-                    if (!fileName.equals(courseContentCsv.getContentFile())) {
+                if (flagForUpdatingMetaData) {
+                    if (!metaData.equalsIgnoreCase(courseContentCsv
+                            .getMetaData())) {
                         LOGGER.warn(
-                                "Content file name does not match for content name: {}, contentID: {}",
+                                "Correct Answer Option(MetaData) does not match for content name: {}, contentID: {}",
                                 contentName, courseContentCsv.getContentId());
                         flagForAbortingModification = true;
                     }
-                    /*
-                     * Check for consistency of metaData only if record
-                     * corresponds to question content type
-                     */
-                    if (flagForUpdatingMetaData) {
-                        if (!metaData.equalsIgnoreCase(courseContentCsv
-                                .getMetaData())) {
-                            LOGGER.warn(
-                                    "Correct Answer Option(MetaData) does not match for content name: {}, contentID: {}",
-                                    contentName,
-                                    courseContentCsv.getContentId());
-                            flagForAbortingModification = true;
-                        }
-                    }
-                    if (flagForAbortingModification) {
-
-                        bulkUploadError.setRecordDetails(courseContentCsv
-                                .getContentId());
-                        bulkUploadError
-                                .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
-                        bulkUploadError
-                                .setErrorDescription(String
-                                        .format(MobileAcademyConstants.INCONSISTENT_RECORD_FOR_MODIFY,
-                                                contentName));
-                        bulkUploadErrLogService
-                                .writeBulkUploadErrLog(bulkUploadError);
-
-                        deleteCourseRawContentsByList(courseContentCsvs, true,
-                                bulkUploadStatus);
-                        contentNamesIterator.remove();
-
-                        break;
-                    }
-                    listOfExistingLlc.remove(Integer.valueOf(languageLocCode));
                 }
-
                 if (flagForAbortingModification) {
-                    contentNamesIterator.remove();
-                    continue;
-                }
 
-                // If data has arrived for all the existing LLCS.
-                if (CollectionUtils.isEmpty(listOfExistingLlc)) {
-
-                    /*
-                     * This is done just to know the type of file to which this
-                     * bunch of modification record refers to.
-                     */
-
-                    try {
-                        if (mapForModifyRecords.get(contentName) != null) {
-                            RecordProcessHelper
-                                    .validateRawContent(mapForModifyRecords
-                                            .get(contentName).get(0), record);
-                        }
-                    } catch (DataValidationException e) {
-                        LOGGER.debug(e.getMessage(), e);
-                    }
-
-                    if (isRecordChangingTheFileName(record)) {
-                        determineTypeAndUpdateChapterContent(record,
-                                userDetailsDTO);
-                        LOGGER.info(
-                                "Audio file name has been changed for contentName: {}",
-                                contentName);
-                    }
-
-                    if (flagForUpdatingMetaData
-                            && isRecordChangingTheAnswerOption(record)) {
-                        correctAnswerOption = record.getAnswerId();
-                        coursePopulateService
-                                .updateCorrectAnswer(
-                                        MobileAcademyConstants.CHAPTER
-                                                + String.format(
-                                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-                                                        record.getChapterId()),
-                                        MobileAcademyConstants.QUESTION
-                                                + String.format(
-                                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
-                                                        record.getChapterId()),
-                                        Integer.toString(correctAnswerOption),
-                                        userDetailsDTO);
-                        LOGGER.info(
-                                "Correct Answer Option for contentName: {} has been changed to :{}",
-                                contentName, correctAnswerOption);
-                    }
-
-                    List<CourseContentCsv> fileModifyingRecords = mapForModifyRecords
-                            .get(contentName);
-
-                    Iterator<CourseContentCsv> fileModifyingRecordsIterator = fileModifyingRecords
-                            .iterator();
-
-                    while (fileModifyingRecordsIterator.hasNext()) {
-                        CourseContentCsv courseContentCsv = fileModifyingRecordsIterator
-                                .next();
-                        int languageLocCode = Integer.parseInt(courseContentCsv
-                                .getLanguageLocationCode());
-                        CourseProcessedContent courseProcessedContent = courseProcessedContentService
-                                .getRecordforModification(courseContentCsv
-                                        .getCircle().toUpperCase(),
-                                        languageLocCode, contentName
-                                                .toUpperCase());
-                        if (courseProcessedContent != null) {
-                            courseProcessedContent.setContentFile(fileName);
-                            courseProcessedContent.setContentDuration(Integer
-                                    .parseInt(courseContentCsv
-                                            .getContentDuration()));
-                            courseProcessedContent.setContentID(Integer
-                                    .parseInt(courseContentCsv.getContentId()));
-                            courseProcessedContent.setModifiedBy(userDetailsDTO
-                                    .getModifiedBy());
-                            if (flagForUpdatingMetaData) {
-                                courseProcessedContent
-                                        .setMetadata(MobileAcademyConstants.CONTENT_CORRECT_ANSWER
-                                                + ":"
-                                                + Integer
-                                                        .toString(correctAnswerOption));
-                            }
-                            courseProcessedContentService
-                                    .update(courseProcessedContent);
-                        }
-
-                        bulkUploadStatus.incrementSuccessCount();
-                        fileModifyingRecordsIterator.remove();
-                        courseContentCsvService.delete(courseContentCsv);
-                    }
-                    LOGGER.warn("Course modified for content name: {}",
-                            contentName);
-                } else { // Not sufficient records for a course
-                    LOGGER.warn("Course not modified for content name: {}",
-                            contentName);
-                    LOGGER.warn("Records for all exisiting LLCs not recieved");
-
-                    bulkUploadError.setRecordDetails(contentName);
+                    bulkUploadError.setRecordDetails(courseContentCsv
+                            .getContentId());
                     bulkUploadError
                             .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                     bulkUploadError
                             .setErrorDescription(String
-                                    .format(MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
+                                    .format(MobileAcademyConstants.INCONSISTENT_RECORD_FOR_MODIFY,
                                             contentName));
-
                     bulkUploadErrLogService
                             .writeBulkUploadErrLog(bulkUploadError);
 
-                    deleteCourseRawContentsByList(
-                            mapForModifyRecords.get(contentName), true,
+                    deleteCourseRawContentsByList(courseContentCsvs, true,
                             bulkUploadStatus);
+                    contentNamesIterator.remove();
+
+                    break;
                 }
+                listOfExistingLlc.remove(Integer.valueOf(languageLocCode));
+            }
+
+            if (flagForAbortingModification) {
+                contentNamesIterator.remove();
+                continue;
+            }
+
+            // If data has arrived for all the existing LLCS.
+            if (CollectionUtils.isEmpty(listOfExistingLlc)) {
+                updateModificationRecordsInSystem(mapForModifyRecords,
+                        bulkUploadError, bulkUploadStatus, userDetailsDTO,
+                        contentName, fileName, correctAnswerOption,
+                        flagForUpdatingMetaData);
+            } else { // Not sufficient records for a course
+                LOGGER.warn("Course not modified for content name: {}",
+                        contentName);
+                LOGGER.warn("Records for all exisiting LLCs not recieved");
+
+                bulkUploadError.setRecordDetails(contentName);
+                bulkUploadError
+                        .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                bulkUploadError.setErrorDescription(String.format(
+                        MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
+                        contentName));
+
+                bulkUploadErrLogService.writeBulkUploadErrLog(bulkUploadError);
+
+                deleteCourseRawContentsByList(
+                        mapForModifyRecords.get(contentName), true,
+                        bulkUploadStatus);
             }
         }
+    }
+
+    private void updateModificationRecordsInSystem(
+            Map<String, List<CourseContentCsv>> mapForModifyRecords,
+            BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
+            UserDetailsDTO userDetailsDTO, String contentName, String fileName,
+            int correctAnswerOption, boolean flagForUpdatingMetaData) {
+
+        /*
+         * This is done just to know the type of file to which this bunch of
+         * modification record refers to.
+         */
+        Record record = new Record();
+        try {
+            if (mapForModifyRecords.get(contentName) != null) {
+                RecordProcessHelper.validateRawContent(
+                        mapForModifyRecords.get(contentName).get(0), record);
+            }
+        } catch (DataValidationException e) {
+            LOGGER.debug(e.getMessage(), e);
+        }
+
+        if (isRecordChangingTheFileName(record)) {
+            determineTypeAndUpdateChapterContent(record, userDetailsDTO);
+            LOGGER.info("Audio file name has been changed for contentName: {}",
+                    contentName);
+        }
+
+        if (flagForUpdatingMetaData && isRecordChangingTheAnswerOption(record)) {
+            correctAnswerOption = record.getAnswerId();
+            coursePopulateService
+                    .updateCorrectAnswer(
+                            MobileAcademyConstants.CHAPTER
+                                    + String.format(
+                                            MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                            record.getChapterId()),
+                            MobileAcademyConstants.QUESTION
+                                    + String.format(
+                                            MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                            record.getChapterId()), Integer
+                                    .toString(correctAnswerOption),
+                            userDetailsDTO);
+            LOGGER.info(
+                    "Correct Answer Option for contentName: {} has been changed to :{}",
+                    contentName, correctAnswerOption);
+        }
+
+        List<CourseContentCsv> fileModifyingRecords = mapForModifyRecords
+                .get(contentName);
+
+        Iterator<CourseContentCsv> fileModifyingRecordsIterator = fileModifyingRecords
+                .iterator();
+
+        while (fileModifyingRecordsIterator.hasNext()) {
+            CourseContentCsv courseContentCsv = fileModifyingRecordsIterator
+                    .next();
+            int languageLocCode = Integer.parseInt(courseContentCsv
+                    .getLanguageLocationCode());
+            CourseProcessedContent courseProcessedContent = courseProcessedContentService
+                    .getRecordforModification(courseContentCsv.getCircle()
+                            .toUpperCase(), languageLocCode, contentName
+                            .toUpperCase());
+            if (courseProcessedContent != null) {
+                courseProcessedContent.setContentFile(fileName);
+                courseProcessedContent.setContentDuration(Integer
+                        .parseInt(courseContentCsv.getContentDuration()));
+                courseProcessedContent.setContentID(Integer
+                        .parseInt(courseContentCsv.getContentId()));
+                courseProcessedContent.setModifiedBy(userDetailsDTO
+                        .getModifiedBy());
+                if (flagForUpdatingMetaData) {
+                    courseProcessedContent
+                            .setMetadata(MobileAcademyConstants.CONTENT_CORRECT_ANSWER
+                                    + ":"
+                                    + Integer.toString(correctAnswerOption));
+                }
+                courseProcessedContentService.update(courseProcessedContent);
+            }
+
+            bulkUploadStatus.incrementSuccessCount();
+            fileModifyingRecordsIterator.remove();
+            courseContentCsvService.delete(courseContentCsv);
+        }
+        LOGGER.warn("Course modified for content name: {}", contentName);
     }
 
     private void deleteCourseRawContentsByList(

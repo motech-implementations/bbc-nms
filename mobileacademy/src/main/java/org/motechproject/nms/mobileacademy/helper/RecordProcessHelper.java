@@ -382,7 +382,8 @@ public class RecordProcessHelper {
     public static boolean isTypeDeterminable(Record record, String subString) {
         // If the substring is "QuizHeader" or "EndMenu", it will be determined.
         FileType fileType = FileType.getFor(subString);
-        if (fileType != null) {
+        if ((fileType == FileType.QUIZ_HEADER)
+                || (fileType == FileType.CHAPTER_END_MENU)) {
             record.setType(fileType);
             return true;
         }
@@ -411,6 +412,10 @@ public class RecordProcessHelper {
             String type, int index) {
         FileType fileType;
         fileType = FileType.getFor(type);
+        if (fileType == null) {
+            return false;
+        }
+
         record.setType(fileType);
         if ((fileType == FileType.LESSON_CONTENT)
                 || (fileType == FileType.LESSON_END_MENU)) {

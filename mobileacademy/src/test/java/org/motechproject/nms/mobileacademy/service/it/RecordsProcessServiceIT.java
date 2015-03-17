@@ -26,14 +26,16 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * /** Verify that csvRecordProcessService is present and functional
@@ -61,6 +63,9 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     @Inject
     private RecordsProcessService csvRecordProcessService;
+
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(RecordsProcessServiceIT.class);
 
     /**
      * clear Mobile Academy and mtraining data related to course
@@ -201,12 +206,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured", e);
         } finally {
             try {
                 fileReader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IOException occured", e);
             }
         }
         return courseContentCsvs;
@@ -307,6 +312,71 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
 
+    }
+
+    @Test
+    public void testCourseUpdateWithInconsistentData() throws Exception {
+        clearMobileAcademyData();
+
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        // add other LLC records i.e 20
+        List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
+        Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
+                .getLanguageLocationCode());
+        courseRawContents2.get(4).setContentFile("Inconsistent Audio File");
+        csvRecordProcessService.processRawRecords(courseRawContents2,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
+                .findContentByLlc(llc2);
+        assertEquals(0, courseProcessedContents2.size());
+    }
+
+    @Test
+    public void testCourseUpdateWithDuplicateData() throws Exception {
+        clearMobileAcademyData();
+
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
+                .get(0);
+        courseContentCsvs.remove(1);
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(0, courseProcessedContents.size());
+    }
+
+    @Test
+    public void testCourseUpdateWithOutOfBoundIndices() throws Exception {
+        clearMobileAcademyData();
+
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+        CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
+                .get(0);
+        courseContentCsvs.remove(0);
+        courseRawContentUpdateRecord1.setContentName("Chapter15_Lesson01");
+        courseContentCsvs.add(courseRawContentUpdateRecord1);
+
+        Integer llc = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc);
+        assertEquals(0, courseProcessedContents.size());
     }
 
     /**
@@ -499,12 +569,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Exception occured", e);
         } finally {
             try {
                 fileReader.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.error("IOException occured", e);
             }
         }
         return courseContentCsvs;
