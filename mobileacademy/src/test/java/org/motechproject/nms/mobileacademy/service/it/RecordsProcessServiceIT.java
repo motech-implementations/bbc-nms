@@ -315,7 +315,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void testCourseUpdateWithInconsistentData() throws Exception {
+    public void testCourseAddWithInconsistentData() throws Exception {
         clearMobileAcademyData();
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
@@ -342,7 +342,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void testCourseUpdateWithDuplicateData() throws Exception {
+    public void testCourseAddWithDuplicateData() throws Exception {
         clearMobileAcademyData();
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
@@ -360,7 +360,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     @Test
-    public void testCourseUpdateWithOutOfBoundIndices() throws Exception {
+    public void testCourseAddWithOutOfBoundIndices() throws Exception {
         clearMobileAcademyData();
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);

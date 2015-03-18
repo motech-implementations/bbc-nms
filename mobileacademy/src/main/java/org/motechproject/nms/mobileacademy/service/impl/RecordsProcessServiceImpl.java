@@ -380,9 +380,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             // If data has arrived for all the existing LLCS.
             if (CollectionUtils.isEmpty(listOfExistingLlc)) {
                 updateModificationRecordsInSystem(mapForModifyRecords,
-                        bulkUploadError, bulkUploadStatus, userDetailsDTO,
-                        contentName, fileName, correctAnswerOption,
-                        flagForUpdatingMetaData);
+                        bulkUploadStatus, userDetailsDTO, contentName,
+                        fileName, correctAnswerOption, flagForUpdatingMetaData);
             } else { // Not sufficient records for a course
                 LOGGER.warn("Course not modified for content name: {}",
                         contentName);
@@ -406,9 +405,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
     private void updateModificationRecordsInSystem(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
-            BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
-            UserDetailsDTO userDetailsDTO, String contentName, String fileName,
-            int correctAnswerOption, boolean flagForUpdatingMetaData) {
+            BulkUploadStatus bulkUploadStatus, UserDetailsDTO userDetailsDTO,
+            String contentName, String fileName, int correctAnswerOption,
+            boolean flagForUpdatingMetaData) {
 
         /*
          * This is done just to know the type of file to which this bunch of
@@ -675,8 +674,6 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                     if (course == null) {
                         course = coursePopulateService
                                 .populateMtrainingCourseData(userDetailsDTO);
-                        populateCourseStructure = true;
-                    } else if (coursePopulateService.findCourseState() == CourseUnitState.Inactive) {
                         populateCourseStructure = true;
                     }
 
