@@ -48,7 +48,7 @@ public final class MctsCsvHelper  {
         return newSubscription;
     }
     
-    public static void populateDBSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
+    public static void populateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag, Channel channel) {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }

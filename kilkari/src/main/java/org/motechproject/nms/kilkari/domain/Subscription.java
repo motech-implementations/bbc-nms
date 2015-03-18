@@ -17,7 +17,7 @@ public class Subscription extends MdsEntity {
     private Subscriber subscriber;
 
     @Field
-    private Integer operatorCode;  
+    private String operatorCode;
     
     @Field(required = true)
     private String msisdn;
@@ -60,11 +60,11 @@ public class Subscription extends MdsEntity {
         this.subscriber = subscriber;
     }
 
-    public Integer getOperatorCode() {
+    public String getOperatorCode() {
         return operatorCode;
     }
 
-    public void setOperatorCode(Integer operatorCode) {
+    public void setOperatorCode(String operatorCode) {
         this.operatorCode = operatorCode;
     }
 

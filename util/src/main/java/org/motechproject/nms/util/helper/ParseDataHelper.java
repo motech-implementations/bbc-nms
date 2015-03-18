@@ -1,6 +1,8 @@
 package org.motechproject.nms.util.helper;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
+import org.motechproject.nms.util.constants.Constants;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 
@@ -159,6 +161,26 @@ public final class ParseDataHelper {
         }
 
         return parsedValue;
+    }
+
+    /**
+     * This methods validates that Msisdn is of 10 or more digits and then trims it to 10 digits
+     *
+     * @param fieldName Name of the field
+     * @param msisdn value of the field
+     * @return 10 digit msisdn value
+     * @throws DataValidationException
+     */
+    public static String validateAndTrimMsisdn(String fieldName, String msisdn) throws DataValidationException {
+
+        int msisdnLength = msisdn.length();
+
+        if (StringUtils.isNumeric(msisdn) && msisdnLength >= Constants.MSISDN_LENGTH) {
+            msisdn = msisdn.substring(msisdnLength - Constants.MSISDN_LENGTH, msisdnLength);
+        } else {
+            ParseDataHelper.raiseInvalidDataException(fieldName, msisdn);
+        }
+        return msisdn;
     }
 
     /**

@@ -8,7 +8,9 @@ public enum DeactivationReason {
     STILL_BIRTH("StillBirth"),
     MSISDN_IN_DND("MsisdnInDND"),
     INVALID_MSISDN("InvalidMsisdn"), 
-    USER_DEACTIVATE("UserDeactivation"), 
+    USER_DEACTIVATED("UserDeactivation"),
+    PACK_CHANGED("PackChanged"),
+    PACK_SCHEDULE_CHANGED("PackLmpOrDobChanged"),
     NONE("None");
     
     private String name;

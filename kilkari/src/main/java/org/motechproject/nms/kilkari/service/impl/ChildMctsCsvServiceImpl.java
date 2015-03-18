@@ -129,17 +129,18 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
 
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
-        childSubscriber.setMsisdn(NmsUtils.trimMsisdn(msisdn));
+        childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
         
         childSubscriber.setChildMctsId(ParseDataHelper.parseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.parseString("Mother Id", childMctsCsv.getMotherId(), false));
         childSubscriber.setName(ParseDataHelper.parseString("Mother Name", childMctsCsv.getMotherName(), false));
         childSubscriber.setDob(ParseDataHelper.parseDate("Birth Date", childMctsCsv.getBirthdate(), true));
-        
+
+        /* Set the appropriate Deactivation Reason */
         if(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.parseString("Entry Type", childMctsCsv.getEntryType(), false))){
             childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
         } else {
-            childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
+            childSubscriber.setDeactivationReason(DeactivationReason.NONE);
         }
 
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);

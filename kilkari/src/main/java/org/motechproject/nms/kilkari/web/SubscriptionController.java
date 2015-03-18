@@ -4,7 +4,6 @@ package org.motechproject.nms.kilkari.web;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.dto.SubscriptionApiRequest;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
@@ -46,7 +45,7 @@ public class SubscriptionController {
             return null;
         }
         try {
-            subscriptionService.createSubscriptionSubscriber(buildSubscriber(apiRequest.getMsisdn()), Channel.IVR);
+            subscriptionService.createNewSubscriberAndSubscription(buildSubscriber(apiRequest.getMsisdn()), Channel.IVR);
         } catch (DataValidationException ex) {
             return null;
         }

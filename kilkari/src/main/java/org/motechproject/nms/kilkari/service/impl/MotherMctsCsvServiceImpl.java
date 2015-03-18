@@ -132,14 +132,15 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
         String msisdn = ParseDataHelper.parseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
-        motherSubscriber.setMsisdn(NmsUtils.trimMsisdn(msisdn));
+        motherSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
         
         motherSubscriber.setMotherMctsId(ParseDataHelper.parseString("idNo", motherMctsCsv.getIdNo(), true));
         motherSubscriber.setAge(ParseDataHelper.parseInt("Age", motherMctsCsv.getAge(), false));
         motherSubscriber.setAadharNumber(ParseDataHelper.parseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
         motherSubscriber.setName(ParseDataHelper.parseString("Name", motherMctsCsv.getName(),false));
         motherSubscriber.setLmp(ParseDataHelper.parseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
-        
+
+        /* Set the appropriate Deactivation Reason */
         String abortion = ParseDataHelper.parseString("Abortion", motherMctsCsv.getAbortion(), false);
         if (STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos())) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
