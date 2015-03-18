@@ -2,13 +2,17 @@ package org.motechproject.nms.masterdata.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data records provided in the State Csv Upload
  */
 
 @Entity
-public class StateCsv extends LocationUnitMetaDataCsv {
+public class StateCsv extends MdsEntity {
+
+    @Field
+    private String name;
 
     @Field
     private String stateCode;
@@ -21,10 +25,18 @@ public class StateCsv extends LocationUnitMetaDataCsv {
 
 
     public StateCsv(String name, String stateCode, String maCapping, String mkCapping) {
-        super(name);
+        this.name = name;
         this.stateCode = stateCode;
         this.maCapping = maCapping;
         this.mkCapping = mkCapping;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getStateCode() {
@@ -61,7 +73,8 @@ public class StateCsv extends LocationUnitMetaDataCsv {
     @Override
     public String toString() {
         return "StateCsv{" +
-                "stateCode='" + stateCode + '\'' +
+                "name='" + name + '\'' +
+                ", stateCode='" + stateCode + '\'' +
                 ", maCapping='" + maCapping + '\'' +
                 ", mkCapping='" + mkCapping + '\'' +
                 '}';

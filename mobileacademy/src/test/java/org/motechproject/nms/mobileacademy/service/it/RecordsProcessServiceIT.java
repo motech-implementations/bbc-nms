@@ -256,7 +256,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(222, courseProcessedContent.getContentID().longValue());
         assertEquals(333, courseProcessedContent.getContentDuration()
                 .longValue());
-
     }
 
     /**
@@ -369,6 +368,25 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                         contentName.toUpperCase());
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
+
+        int correctAnswer = coursePopulateService.getCorrectAnswerOption(1, 1);
+
+        courseContentCsvs = new ArrayList<>();
+        courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
+        courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
+                .toString(llc1));
+        courseRawContentUpdateRecord1
+                .setContentFile("Testing Correct Answer.wav");
+        courseRawContentUpdateRecord1.setMetaData("correctAnswer:1");
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+
+        courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
+                .toString(llc2));
+        courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
+        courseContentCsvs.add(courseRawContentUpdateRecord1);
+
+        assertEquals(correctAnswer,
+                coursePopulateService.getCorrectAnswerOption(1, 1));
     }
 
     @Test

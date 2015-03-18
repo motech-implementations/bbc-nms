@@ -203,6 +203,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private void updateHealthFacilityDAta(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
+        existHealthFacilityData.setHealthFacilityType(healthFacilityData.getHealthFacilityType());
         healthFacilityService.update(existHealthFacilityData);
     }
 }
