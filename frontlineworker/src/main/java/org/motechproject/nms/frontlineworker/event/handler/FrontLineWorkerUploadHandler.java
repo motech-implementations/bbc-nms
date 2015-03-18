@@ -240,7 +240,7 @@ public class FrontLineWorkerUploadHandler {
      * mandatory field is empty/null or is invalid date format
      *
      * @param record the Front Line Worker record from Csv that is to be validated
-     * @return temporaryFrontLineWorker generated after applying validations.
+     * @param frontLineWorker the Front Line Worker record that is to be saved in database
      * @throws DataValidationException
      */
     private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
@@ -300,7 +300,6 @@ public class FrontLineWorkerUploadHandler {
      *
      * @param record          the Front Line Worker record from Csv
      * @param frontLineWorker frontLineWorker record that is to be stored to database
-     * @return the Front Line Worker generated.
      * @throws DataValidationException
      */
     private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
