@@ -112,7 +112,7 @@ public final class ParseDataHelper {
     }
 
     /**
-     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * This method validates a field of Long type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Long format
      *
      * @param fieldName   name of the field to be used in exception
