@@ -6,12 +6,14 @@ import javax.jdo.Query;
 
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -148,43 +150,58 @@ public class SubscriptionServiceImpl implements SubscriptionService {
          */
 
         /* Find subscription from database based on msisdn, packName, status */
-        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), PACK_48);
+
+        SubscriptionPack pack = subscriber.getSuitablePackName();
+        String mctsId = null;
+        SubscriptionPack otherPack = null;
+        String otherMctsId = null;
+        
+        if(BeneficiaryType.CHILD == subscriber.getBeneficiaryType()) {
+            mctsId = subscriber.getChildMctsId();
+            otherMctsId = subscriber.getMotherMctsId();
+            otherPack = SubscriptionPack.PACK_72_WEEKS;
+        }else {
+            mctsId = subscriber.getMotherMctsId();
+            otherMctsId = subscriber.getChildMctsId();
+            otherPack = SubscriptionPack.PACK_48_WEEKS;
+        }
+        
+        Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack.toString());
         if (dbSubscription == null) { 
             
-            logger.info("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_48);
-            /* Find subscription from database based on mctsid(ChildMcts), packName, status */
-            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getChildMctsId(), PACK_48, subscriber.getState().getStateCode());
+            logger.info("Not found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), subscriber.getMsisdn(), pack.toString(), Status.ACTIVE);
+            /* Find subscription from database based on mctsid, packName, status */
+            dbSubscription = getActiveSubscriptionByMctsIdPack(mctsId, pack.toString(), subscriber.getState().getStateCode());
             if (dbSubscription == null) {
-                logger.debug("Not found active subscription from database based on Childmctsid[{}], packName[{}]", subscriber.getChildMctsId(), PACK_48);
+                logger.debug("Not found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
-                dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), PACK_72, subscriber.getState().getStateCode());
+                dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack.toString(), subscriber.getState().getStateCode());
                 if (dbSubscription == null) {
-                    logger.debug("Not Found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_48);
+                    logger.debug("Not Found active subscription from database for BeneficeryType[{}] based on othermctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
                     createSubscriptionSubscriber(subscriber, channel);
                     
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
-                    logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_48, Status.ACTIVE);
+                    logger.info("Found active subscription from database for BeneficeryType[{}] based on otherMctsId[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    MctsCsvHelper.populateDBSubscription(subscriber, dbSubscription, true, channel);
-                    update(dbSubscription);
+                    //set deactivate reason in dbSubscriber
+                    updateSubscription(subscriber, dbSubscription, true, channel);
                     
-                    if (subscriber.getDeactivationReason()==DeactivationReason.NONE) {
+                    if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
                         /* add new subscription for child */
-                        Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
-                        create(newSubscription);
+                        Subscription newSubscription = createSubscription(dbSubscriber, channel);
                         dbSubscriber.getSubscriptionList().add(newSubscription);
                     }
                     updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
                 
                 }
             } else { /* Record found based on mctsid(ChildMcts) than */
-                logger.info("Found active subscription from database based on Childmctsid[{}], packName[{}], status[{}]", subscriber.getChildMctsId(), PACK_48, Status.ACTIVE);
+                logger.info("Found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
-            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_48, Status.ACTIVE);
-            if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getChildMctsId())) {
+            logger.info("Found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
+            if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getSuitableMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateSubscriberSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
@@ -260,8 +277,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         /* check for maximum allowed beneficiary */
         if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
             Subscriber dbSubscriber = subscriberDataService.create(subscriber); 
-            Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
-            create(newSubscription);
+            createSubscription(dbSubscriber, channel);
         } else {
             logger.info("Reached maximum beneficery count, can't add any more");
             throw new DataValidationException("Overload Beneficery" ,"Overload Beneficery" ,"Overload Beneficery");
@@ -282,9 +298,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             
         } else {
             if (!dbSubscriber.getDobLmp().equals(subscriber.getDobLmp())) {
+                //set deactivate reason
                 updateSubscription(subscriber, dbSubscription, true, channel);
-                Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
-                newSubscription = create(newSubscription);
+                Subscription newSubscription = createSubscription(dbSubscriber, channel);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateSubscription(subscriber, dbSubscription, false, channel);
@@ -292,6 +308,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         updateDbSubscriber(subscriber, dbSubscriber);
+    }
+    
+    private Subscription createSubscription(Subscriber dbSubscriber, Channel channel) {
+        Subscription newSubscription = MctsCsvHelper.populateNewSubscription(dbSubscriber, channel);
+        return create(newSubscription);
     }
     
     /**

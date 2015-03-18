@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.event.handler;
 
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
@@ -20,29 +21,29 @@ public final class MctsCsvHelper  {
         dbSubscriber.setPhc(subscriber.getPhc());
         dbSubscriber.setSubCentre(subscriber.getSubCentre());
         dbSubscriber.setVillage(subscriber.getVillage());
-        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
-        dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
         dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
         dbSubscriber.setDob(subscriber.getDob());
-        
         dbSubscriber.setLmp(subscriber.getLmp());
+        dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
+        dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
     
     public static Subscription populateNewSubscription(Subscriber dbSubscriber, Channel channel)  {
         
         Subscription newSubscription;
         newSubscription = new Subscription();
-        newSubscription.setStatus(Status.PENDING_ACTIVATION);
-        newSubscription.setChannel(channel);
         newSubscription.setMsisdn(dbSubscriber.getMsisdn());
+        newSubscription.setMctsId(dbSubscriber.getSuitableMctsId());
         newSubscription.setStateCode(dbSubscriber.getState().getStateCode());
+        newSubscription.setPackName(dbSubscriber.getSuitablePackName());
+        newSubscription.setChannel(channel);
+        newSubscription.setStatus(Status.PENDING_ACTIVATION);
+        newSubscription.setDeactivationReason(DeactivationReason.NONE);
         newSubscription.setModifiedBy(dbSubscriber.getModifiedBy());
         newSubscription.setCreator(dbSubscriber.getCreator());
         newSubscription.setOwner(dbSubscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
-        newSubscription.setPackName(dbSubscriber.getSuitablePackName());
-        newSubscription.setMctsId(dbSubscriber.getSuitableMctsId());
         
         return newSubscription;
     }
@@ -51,12 +52,13 @@ public final class MctsCsvHelper  {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
+        dbSubscription.setMsisdn(subscriber.getMsisdn());
+        dbSubscription.setMctsId(subscriber.getSuitableMctsId());
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setChannel(channel);
-        dbSubscription.setMsisdn(subscriber.getMsisdn());
+        dbSubscription.setDeactivationReason(subscriber.getDeactivationReason());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-        dbSubscription.setMctsId(subscriber.getSuitableMctsId());
-        dbSubscription.setPackName(subscriber.getSuitablePackName());
+        //dbSubscription.setPackName(subscriber.getSuitablePackName());
     }
 
 }
