@@ -1,7 +1,8 @@
 package org.motechproject.nms.kilkari.domain;
 
 /**
- * This enum is used for content type prompt and content
+ * This enum represents the type of Content that IVR shall play
+ * Prompt or Content 
  */
 public enum ContentType {
 

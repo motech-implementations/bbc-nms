@@ -6,12 +6,13 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
 /**
- * This class provides methods to populate DBSubscriber, new subscriber and subscription
+ * This class provides methods to populate Subscriber and Subscription 
+ * with information received from Mcts Csv records.
  */
 public final class MctsCsvHelper {
 
     /**
-     * This method id used to populate the object of Subscriber
+     * This method id used to populate the existing Subscriber Object
      * @param subscriber Subscriber type object
      * @param dbSubscriber Subscriber type object
      */
@@ -31,7 +32,7 @@ public final class MctsCsvHelper {
     }
 
     /**
-     * This method is used to populate the Subscription object for new subscription
+     * This method is used to create and populate the Subscription object for new subscription
      * @param subscriber Subscriber type object
      * @param dbSubscriber Subscriber type object
      * @return Subscription type object

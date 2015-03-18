@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * This class is used to handle to success 
- * and failure event of csv upload of ChildMcts
+ * event of csv upload of ChildMcts
  */
 @Component
 public class ChildMctsCsvHandler {

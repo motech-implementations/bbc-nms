@@ -50,6 +50,11 @@ public class Initializer {
         this.configurationService = configurationService;
     }
 
+    /**
+     * This Method is called post construction of Initalizer component and 
+     * it creates the configuration entity in DB with default values, 
+     * if not created already
+     */
     @PostConstruct
     public void initializeConfiguration() {
 
