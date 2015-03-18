@@ -116,9 +116,9 @@ public class FrontLineWorkerUploadHandler {
                     userName = record.getOwner();
                     logger.info("Record found in Csv database");
 
-
-                    FrontLineWorkerContent frontLineWorkerContent = validateFrontLineWorker(record);
-                    FrontLineWorker frontLineWorker = mapFrontLineWorkerFrom(record, frontLineWorkerContent);
+                    FrontLineWorker frontLineWorker = new FrontLineWorker();
+                    validateFrontLineWorker(record, frontLineWorker);
+                    mapFrontLineWorkerFrom(record, frontLineWorker);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
                     Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
@@ -243,7 +243,7 @@ public class FrontLineWorkerUploadHandler {
      * @return temporaryFrontLineWorker generated after applying validations.
      * @throws DataValidationException
      */
-    private FrontLineWorkerContent validateFrontLineWorker(FrontLineWorkerCsv record) throws DataValidationException {
+    private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
         String contactNo;
         String finalContactNo;
@@ -251,36 +251,34 @@ public class FrontLineWorkerUploadHandler {
         int contactNoLength;
         State state = null;
         District district = null;
-
-
-        FrontLineWorkerContent frontLineWorkerContent = new FrontLineWorkerContent();
+        Long districtCode = null;
 
         logger.info("validateFrontLineWorker process start");
-        frontLineWorkerContent.setStateCode(ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true));
-        frontLineWorkerContent.setDistrictCode(ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true));
+        frontLineWorker.setStateCode(ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true));
+        districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
 
 
-        state = locationService.getStateByCode(frontLineWorkerContent.getStateCode());
+        state = locationService.getStateByCode(frontLineWorker.getStateCode());
         if (state == null) {
             ParseDataHelper.raiseInvalidDataException("State", null);
         }
-        frontLineWorkerContent.setState(state);
-        district = locationService.getDistrictByCode(frontLineWorkerContent.getState().getId(), frontLineWorkerContent.getDistrictCode());
+        frontLineWorker.setStateId(state);
+        district = locationService.getDistrictByCode(frontLineWorker.getStateId().getId(), districtCode);
         if (district == null) {
             ParseDataHelper.raiseInvalidDataException("District", null);
         }
 
-        frontLineWorkerContent.setDistrict(district);
-        frontLineWorkerContent.setTaluka(talukaConsistencyCheck(frontLineWorkerContent.getDistrict().getId(), record.getTalukaCode()));
-        frontLineWorkerContent.setVillage(villageConsistencyCheck(frontLineWorkerContent.getTaluka(), record.getVillageCode()));
-        frontLineWorkerContent.setHealthBlock(healthBlockConsistencyCheck(frontLineWorkerContent.getTaluka(), record.getHealthBlockCode()));
-        frontLineWorkerContent.setHealthFacility(healthFacilityConsistencyCheck(frontLineWorkerContent.getHealthBlock(), record.getPhcCode()));
-        frontLineWorkerContent.setHealthSubFacility(healthSubFacilityConsistencyCheck(frontLineWorkerContent.getHealthFacility(), record.getSubCentreCode()));
+        frontLineWorker.setDistrictId(district);
+        frontLineWorker.setTalukaId(talukaConsistencyCheck(frontLineWorker.getDistrictId().getId(), record.getTalukaCode()));
+        frontLineWorker.setVillageId(villageConsistencyCheck(frontLineWorker.getTalukaId(), record.getVillageCode()));
+        frontLineWorker.setHealthBlockId(healthBlockConsistencyCheck(frontLineWorker.getTalukaId(), record.getHealthBlockCode()));
+        frontLineWorker.setHealthFacilityId(healthFacilityConsistencyCheck(frontLineWorker.getHealthBlockId(), record.getPhcCode()));
+        frontLineWorker.setHealthSubFacilityId(healthSubFacilityConsistencyCheck(frontLineWorker.getHealthFacilityId(), record.getSubCentreCode()));
 
         contactNo = ParseDataHelper.validateAndParseString("Contact Number", record.getContactNo(), true);
         contactNoLength = contactNo.length();
         finalContactNo = (contactNoLength > ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
-        frontLineWorkerContent.setContactNo(finalContactNo);
+        frontLineWorker.setContactNo(finalContactNo);
 
         //Bug 28
         designation = ParseDataHelper.validateAndParseString("Flw Type", record.getType(), true);
@@ -291,40 +289,26 @@ public class FrontLineWorkerUploadHandler {
             ParseDataHelper.raiseInvalidDataException("Flw Type", "Invalid");
         } else {
             //Bug 16
-            frontLineWorkerContent.setDesignation(Designation.getEnum(designation));
+            frontLineWorker.setDesignation(Designation.getEnum(designation));
         }
         logger.info("validateFrontLineWorker process end");
-        return frontLineWorkerContent;
     }
 
     /**
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param record                 the Front Line Worker record from Csv
-     * @param frontLineWorkerContent temporary flw record that is to be stored to database
+     * @param record          the Front Line Worker record from Csv
+     * @param frontLineWorker frontLineWorker record that is to be stored to database
      * @return the Front Line Worker generated.
      * @throws DataValidationException
      */
-    private FrontLineWorker mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorkerContent frontLineWorkerContent) throws DataValidationException {
+    private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
 
         logger.info("mapFrontLineWorkerFrom process start");
 
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        frontLineWorker.setContactNo(frontLineWorkerContent.getContactNo());
-
         frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
-        frontLineWorker.setDesignation(frontLineWorkerContent.getDesignation());
-
-        frontLineWorker.setStateCode(frontLineWorkerContent.getStateCode());
-        frontLineWorker.setStateId(frontLineWorkerContent.getState());
-        frontLineWorker.setDistrictId(frontLineWorkerContent.getDistrict());
-        frontLineWorker.setTalukaId(frontLineWorkerContent.getTaluka());
-        frontLineWorker.setVillageId(frontLineWorkerContent.getVillage());
-        frontLineWorker.setHealthBlockId(frontLineWorkerContent.getHealthBlock());
-        frontLineWorker.setHealthFacilityId(frontLineWorkerContent.getHealthFacility());
-        frontLineWorker.setHealthSubFacilityId(frontLineWorkerContent.getHealthSubFacility());
 
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
         frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
@@ -349,8 +333,6 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setCreationDate(record.getCreationDate());
 
         logger.info("mapFrontLineWorkerFrom process end");
-
-        return frontLineWorker;
     }
 
 
