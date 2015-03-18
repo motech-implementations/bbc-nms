@@ -94,23 +94,13 @@ public class RecordsProcessServiceImplTest {
      */
     @Test
     public void testValidateSchemaForInvalidContentId() {
-        Method method = null;
         Boolean flag = true;
         CourseContentCsv courseContentCsv = new CourseContentCsv("CI14", "AP",
                 "14", "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", "");
         try {
-            method = RecordProcessHelper.class.getDeclaredMethod(
-                    "validateSchema", new Class[] { CourseContentCsv.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl,
-                    new Object[] { courseContentCsv });
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof DataValidationException) {
-                System.out.println(e.getCause());
-                flag = false;
-            }
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException e) {
+            RecordProcessHelper.validateSchema(courseContentCsv);
+        } catch (DataValidationException e) {
+            flag = false;
         }
         assertFalse(flag);
     }
@@ -421,18 +411,10 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseContentCsv.class,
-                            Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -452,18 +434,10 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseContentCsv.class,
-                            Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -483,18 +457,11 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
+
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateRawContent", new Class[] { CourseContentCsv.class,
-                            Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
+            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -513,22 +480,11 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
+
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateContentName", new Class[] {
-                            CourseContentCsv.class, Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof DataValidationException) {
-                System.out.println(e.getCause());
-                flag = false;
-            }
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException e) {
+            RecordProcessHelper.validateContentName(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -548,22 +504,10 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateContentName", new Class[] {
-                            CourseContentCsv.class, Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof DataValidationException) {
-                System.out.println(e.getCause());
-                flag = false;
-            }
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException e) {
+            RecordProcessHelper.validateContentName(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -579,23 +523,10 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateContentName", new Class[] {
-                            CourseContentCsv.class, Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof DataValidationException) {
-                System.out.println(e.getCause());
-                flag = false;
-            }
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException e) {
+            RecordProcessHelper.validateContentName(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
@@ -611,23 +542,10 @@ public class RecordsProcessServiceImplTest {
         record.setChapterId(1);
         record.setLessonId(1);
         record.setFileName("Ch1_l1.wav");
-        Method method = null;
         Boolean flag = true;
         try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "validateContentName", new Class[] {
-                            CourseContentCsv.class, Record.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] {
-                    courseContentCsv, record });
-
-        } catch (InvocationTargetException e) {
-            if (e.getCause() instanceof DataValidationException) {
-                System.out.println(e.getCause());
-                flag = false;
-            }
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException e) {
+            RecordProcessHelper.validateContentName(courseContentCsv, record);
+        } catch (DataValidationException e) {
             flag = false;
         }
         assertFalse(flag);
