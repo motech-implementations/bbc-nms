@@ -231,9 +231,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                                     .getModifiedBy());
                                     courseProcessedContentService
                                             .update(courseProcessedContent);
-                                    break;
                                 }
-
                             }
                             bulkUploadStatus.incrementSuccessCount();
                             courseRawContentsIterator.remove();
@@ -373,7 +371,6 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             }
 
             if (flagForAbortingModification) {
-                contentNamesIterator.remove();
                 continue;
             }
 
