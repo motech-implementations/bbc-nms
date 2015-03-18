@@ -22,8 +22,8 @@ public final class MctsCsvHelper {
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
     
-    static Subscription populateNewSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber) {
-        
+    static Subscription populateNewSubscription(Subscriber subscriber, Subscriber dbSubscriber) {
+
         Subscription newSubscription;
         newSubscription = new Subscription();
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
@@ -37,7 +37,7 @@ public final class MctsCsvHelper {
         return newSubscription;
     }
     
-    static void populateSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+    static void populateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
