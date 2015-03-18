@@ -9,10 +9,6 @@ public enum Designation {
 
     //This procedure returns the Designation corresponding to the string provided.
     public static Designation getEnum(String s) {
-        String ANMName = ANM.name();
-        String AWWName = AWW.name();
-        String ASHAName = ASHA.name();
-        String USHANAme = USHA.name();
 
         switch (s) {
             case "ANM":
