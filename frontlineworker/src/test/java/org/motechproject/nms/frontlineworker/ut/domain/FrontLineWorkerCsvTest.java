@@ -6,7 +6,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by abhishek on 12/3/15.
+ * This class performs the UT of FrontLineWorkerCsv.
  */
 public class FrontLineWorkerCsvTest {
 
