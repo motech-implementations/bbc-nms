@@ -35,7 +35,7 @@ public class CallerDataController {
 
 
     /**
-     * Maps request for subscriber detail controller
+     * Maps request for caller data detail controller
      * @param request Http request object from the client
      * @param errors Binding error object
      * @return Json object for user detail.
