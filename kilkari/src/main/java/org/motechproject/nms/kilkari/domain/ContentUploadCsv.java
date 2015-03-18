@@ -87,6 +87,15 @@ public class ContentUploadCsv extends MdsEntity {
         this.contentDuration = contentDuration;
     }
 
+    /**
+     * This method override the toString method to create string for contentId,
+     * circleCode,languageLocationCode,contentName,contentFile,contentType,and
+     * contentDuration for the instance variables
+
+     * @return String of contentId,
+     * circleCode,languageLocationCode,contentName,contentFile,contentType,and
+     * contentDuration
+     */
     public String toString() {
 
         StringBuffer recordStr = new StringBuffer();

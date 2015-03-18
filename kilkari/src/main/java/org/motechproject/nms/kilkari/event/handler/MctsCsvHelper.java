@@ -5,8 +5,16 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 
+/**
+ * This class provides methods to populate DBSubscriber, new subscriber and subscription
+ */
 public final class MctsCsvHelper {
-    
+
+    /**
+     * This method id used to populate the object of Subscriber
+     * @param subscriber Subscriber type object
+     * @param dbSubscriber Subscriber type object
+     */
     static void polpulateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
         
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
@@ -21,7 +29,13 @@ public final class MctsCsvHelper {
         dbSubscriber.setVillage(subscriber.getVillage());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
     }
-    
+
+    /**
+     * This method is used to populate the Subscription object for new subscription
+     * @param subscriber Subscriber type object
+     * @param dbSubscriber Subscriber type object
+     * @return Subscription type object
+     */
     static Subscription populateNewSubscription(Subscriber subscriber, Subscriber dbSubscriber) {
 
         Subscription newSubscription;
@@ -36,8 +50,16 @@ public final class MctsCsvHelper {
         newSubscription.setSubscriber(dbSubscriber);
         return newSubscription;
     }
-    
+
+    /**
+     * This method is used to populate the existing Subscription object
+     *
+     * @param subscriber Subscriber type object
+     * @param dbSubscription Subscription type object
+     * @param statusFlag boolean type object
+     */
     static void populateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag) {
+
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
