@@ -12,6 +12,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Location
+ */
 public class LocationServiceUnitTest {
 
 

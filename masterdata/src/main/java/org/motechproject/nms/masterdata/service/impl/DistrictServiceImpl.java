@@ -59,6 +59,7 @@ public class DistrictServiceImpl implements DistrictService {
 
     /**
      * Gets the District Details by its parent code
+     *
      * @param districtCode
      * @param stateCode
      * @return District
@@ -66,11 +67,12 @@ public class DistrictServiceImpl implements DistrictService {
     @Override
     public District findDistrictByParentCode(Long districtCode, Long stateCode) {
 
-        return districtRecordsDataService.findDistrictByParentCode(districtCode,stateCode);
+        return districtRecordsDataService.findDistrictByParentCode(districtCode, stateCode);
     }
 
     /**
      * Gets the District details by its Id
+     *
      * @param id
      * @return District
      */

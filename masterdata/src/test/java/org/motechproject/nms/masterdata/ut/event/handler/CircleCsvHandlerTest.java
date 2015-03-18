@@ -26,6 +26,9 @@ import java.util.Map;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Circle Csv
+ */
 public class CircleCsvHandlerTest extends TestCase {
     @Mock
     private CircleService circleService;

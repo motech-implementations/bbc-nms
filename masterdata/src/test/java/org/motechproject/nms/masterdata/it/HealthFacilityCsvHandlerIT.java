@@ -23,7 +23,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 11/3/15.
+ * This class is used to test(IT) the operations of HealthFacility Csv
  */
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)

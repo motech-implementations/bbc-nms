@@ -28,14 +28,16 @@ public interface HealthSubFacilityService {
     void update(HealthSubFacility record);
 
     /**
-     *Finds the district details by its Id
+     * Finds the district details by its Id
+     *
      * @param id
      * @return
      */
     HealthSubFacility findById(Long id);
 
     /**
-     *Finds the health sub facility details by its parent code
+     * Finds the health sub facility details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode

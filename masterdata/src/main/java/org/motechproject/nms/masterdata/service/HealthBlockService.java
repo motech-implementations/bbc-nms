@@ -30,6 +30,7 @@ public interface HealthBlockService {
 
     /**
      * Finds the Health Block details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -40,6 +41,7 @@ public interface HealthBlockService {
 
     /**
      * Finds the health block details by its Id
+     *
      * @param id
      * @return HealthBlock
      */

@@ -21,7 +21,8 @@ public interface HealthSubFacilityCsvService {
     HealthSubFacilityCsv create(HealthSubFacilityCsv record);
 
     /**
-     *Finds the health sub facility details by its Id
+     * Finds the health sub facility details by its Id
+     *
      * @param id
      * @return
      */

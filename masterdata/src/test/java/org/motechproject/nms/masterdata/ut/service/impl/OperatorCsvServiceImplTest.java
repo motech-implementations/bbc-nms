@@ -10,6 +10,9 @@ import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+/**
+ * This class is used to test(UT) the operations of Operator Csv Implementations
+ */
 public class OperatorCsvServiceImplTest extends TestCase {
 
     private OperatorCsvService operatorCsvService;

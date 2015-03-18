@@ -34,7 +34,8 @@ public interface DistrictService {
     void deleteAll();
 
     /**
-     *  Finds the district details by its parent code
+     * Finds the district details by its parent code
+     *
      * @param districtCode
      * @param stateCode
      * @return District
@@ -43,6 +44,7 @@ public interface DistrictService {
 
     /**
      * Finds the district details by its Id
+     *
      * @param id
      * @return District
      */

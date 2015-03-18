@@ -21,6 +21,7 @@ public class VillageServiceImpl implements VillageService {
 
     /**
      * creates a new record for the village
+     *
      * @param record of the Village
      * @return
      */
@@ -31,6 +32,7 @@ public class VillageServiceImpl implements VillageService {
 
     /**
      * updates the record of the Village
+     *
      * @param record of the Village
      */
     @Override
@@ -41,6 +43,7 @@ public class VillageServiceImpl implements VillageService {
 
     /**
      * deletes the record of the Village
+     *
      * @param record of the Village
      */
     @Override
@@ -51,6 +54,7 @@ public class VillageServiceImpl implements VillageService {
 
     /**
      * Gets the village details according to the parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode

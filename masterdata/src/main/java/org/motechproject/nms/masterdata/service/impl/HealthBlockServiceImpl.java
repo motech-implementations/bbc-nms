@@ -52,6 +52,7 @@ public class HealthBlockServiceImpl implements HealthBlockService {
 
     /**
      * Gets the Health Block details by tis parents code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -65,6 +66,7 @@ public class HealthBlockServiceImpl implements HealthBlockService {
 
     /**
      * Gets the Health Block Details by its Id
+     *
      * @param id
      * @return HealthBlock
      */

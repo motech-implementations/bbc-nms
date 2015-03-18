@@ -53,6 +53,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
         /**
          * Executes the query
+         *
          * @param query
          * @param restriction
          * @return List&lt;Integer&gt;

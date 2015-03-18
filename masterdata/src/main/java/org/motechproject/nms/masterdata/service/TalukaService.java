@@ -35,6 +35,7 @@ public interface TalukaService {
 
     /**
      * Finds the Taluka details by its parent code
+     *
      * @param stateCode
      * @param districtCode
      * @param talukaCode
@@ -46,6 +47,7 @@ public interface TalukaService {
 
     /**
      * Finds the Taluka details by its Id
+     *
      * @param id
      * @return Taluka
      */
