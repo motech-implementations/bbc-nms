@@ -8,8 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.commons.Record;
 import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
+import org.motechproject.nms.mobileacademy.commons.Record;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
@@ -212,64 +212,6 @@ public class RecordsProcessHelper {
         chapterContent.setModifiedBy(operatorDetails.getModifiedBy());
         chapterContent.setOwner(operatorDetails.getOwner());
 
-    }
-
-    /**
-     * Check record for consistency and mark flag for lesson
-     * 
-     * @param record
-     * @param chapterContent
-     * @param courseFlag
-     * @param status
-     * @return
-     */
-    public static boolean checkRecordConsistencyAndMarkFlagForLesson(
-            Record record, ChapterContent chapterContent,
-            CourseFlag courseFlag, boolean status) {
-        if (record.getType() == FileType.LESSON_CONTENT) {
-            for (LessonContent lessonContent : chapterContent.getLessons()) {
-                if (lessonContent.getLessonNumber() == record.getLessonId()
-                        && MobileAcademyConstants.CONTENT_LESSON
-                                .equalsIgnoreCase(lessonContent.getName())) {
-                    if (!lessonContent.getAudioFile().equals(
-                            record.getFileName())) {
-                        LOGGER.debug(
-                                MobileAcademyConstants.LOG_MSG_ORIGINAL_FILE_NAME,
-                                lessonContent.getAudioFile());
-                        LOGGER.debug(
-                                MobileAcademyConstants.LOG_MSG_NEW_FILE_NAME,
-                                record.getFileName());
-                        status = false;
-                    } else {
-                        courseFlag.markLessonContent(record.getChapterId(),
-                                record.getLessonId());
-                    }
-                    break;
-                }
-            }
-        } else if (record.getType() == FileType.LESSON_END_MENU) {
-            for (LessonContent lessonContent : chapterContent.getLessons()) {
-                if ((lessonContent.getLessonNumber() == record.getLessonId())
-                        && (MobileAcademyConstants.CONTENT_MENU
-                                .equalsIgnoreCase(lessonContent.getName()))) {
-                    if (!lessonContent.getAudioFile().equals(
-                            record.getFileName())) {
-                        LOGGER.debug(
-                                MobileAcademyConstants.LOG_MSG_ORIGINAL_FILE_NAME,
-                                lessonContent.getAudioFile());
-                        LOGGER.debug(
-                                MobileAcademyConstants.LOG_MSG_NEW_FILE_NAME,
-                                record.getFileName());
-                        status = false;
-                    } else {
-                        courseFlag.markLessonEndMenu(record.getChapterId(),
-                                record.getLessonId());
-                    }
-                    break;
-                }
-            }
-        }
-        return status;
     }
 
     /*

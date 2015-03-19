@@ -385,8 +385,30 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
         courseContentCsvs.add(courseRawContentUpdateRecord1);
 
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+
         assertEquals(correctAnswer,
                 coursePopulateService.getCorrectAnswerOption(1, 1));
+
+        courseContentCsvs = new ArrayList<>();
+        courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
+        courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
+                .toString(llc1));
+        courseRawContentUpdateRecord1
+                .setContentFile("Testing Correct Answer.wav");
+        courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
+        courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
+
+        courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
+                .toString(llc2));
+        courseContentCsvs.add(courseRawContentUpdateRecord1);
+
+        csvRecordProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+
+        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
+
     }
 
     @Test
@@ -876,7 +898,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
 
         courseRawContentUpdateRecord.setContentName(contentName);
-        courseRawContentUpdateRecord.setMetaData("correctAnswer:01");
+        courseRawContentUpdateRecord.setMetaData("correctAnswer:02");
         courseRawContentUpdateRecord.setContentFile(fileName);
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(courseRawContentUpdateRecord);
@@ -888,6 +910,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                         contentName.toUpperCase());
 
         assertEquals(courseProcessedContent.getContentFile(), fileName);
-        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
     }
 }
