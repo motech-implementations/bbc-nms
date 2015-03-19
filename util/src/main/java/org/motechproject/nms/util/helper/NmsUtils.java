@@ -13,20 +13,12 @@ public final class NmsUtils {
     }
 
     /**
-     * This is a utility method to return the current timestamp
+     * This is a utility method to return the current time in
+     * joda DateTime format
      *
      * @return current timestamp
      */
     public static DateTime getCurrentTimeStamp() {
-        //DateFormat logDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm:SS");
-        //String timeStamp = logDateFormat.format(new Date());
-        //Date date = new Date();
-        //Long time = date.getTime();
-        //Timestamp timestamp = new Timestamp(time);
-
-        DateTime dateTime = new DateTime();
-        return dateTime;
+        return (new DateTime());
     }
-
-
 }

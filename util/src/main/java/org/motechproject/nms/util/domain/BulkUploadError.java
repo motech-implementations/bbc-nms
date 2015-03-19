@@ -90,6 +90,12 @@ public class BulkUploadError extends MdsEntity{
         this.errorDescription = errorDescription;
     }
 
+    /**
+     * This method creates the deep copy of BulkUploadError object
+     * on which it is invoked.
+     *
+     * @return BulkUploadError the deep copied object
+     */
     public BulkUploadError createDeepCopy() {
         BulkUploadError bulkUploadErrorCopy = new BulkUploadError();
         bulkUploadErrorCopy.setCsvName(this.csvName);

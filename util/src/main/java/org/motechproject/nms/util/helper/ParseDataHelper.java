@@ -24,14 +24,14 @@ public final class ParseDataHelper {
     }
 
     /**
-     * checks if the field value is null or empty
+     * checks if the field value is null or empty or blank
      *
      * @param field The value of the field to be checked
-     * @return true if null or empty else false
+     * @return true if null or empty or blank else false
      */
     public static boolean isNullOrEmpty(String field) {
-            /* "NULL" with ignore case is also considered as empty */
-        return (field == null || "".equals(field.trim()) || "NULL".equalsIgnoreCase(field.trim()));
+        //"NULL" with ignore case is also considered as empty
+        return(StringUtils.isBlank(field) || StringUtils.equalsIgnoreCase(field, "NULL"));
     }
 
     /**
@@ -44,7 +44,7 @@ public final class ParseDataHelper {
      * @return null if field is optional and its value is null/empty, else field value is returned
      * @throws DataValidationException
      */
-    public static String parseString(String fieldName, String fieldValue, boolean isMandatory)
+    public static String validateAndParseString(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
 
         if (isNullOrEmpty(fieldValue)) {
@@ -68,12 +68,12 @@ public final class ParseDataHelper {
      * from string to DateTime and returned
      * @throws DataValidationException
      */
-    public static DateTime parseDate(String fieldName, String fieldValue, boolean isMandatory)
+    public static DateTime validateAndParseDate(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
         DateTime parsedDateTime = null;
 
         try {
-            if (parseString(fieldName, fieldValue, isMandatory) != null) {
+            if (validateAndParseString(fieldName, fieldValue, isMandatory) != null) {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 dateFormat.setLenient(false);
                 Date date = dateFormat.parse(fieldValue);
@@ -98,11 +98,11 @@ public final class ParseDataHelper {
      * from string to Integer and returned
      * @throws DataValidationException
      */
-    public static Integer parseInt(String fieldName, String fieldValue, boolean isMandatory)
+    public static Integer validateAndParseInt(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
         Integer parsedValue = null;
         try {
-            if (parseString(fieldName, fieldValue, isMandatory) != null) {
+            if (validateAndParseString(fieldName, fieldValue, isMandatory) != null) {
                 parsedValue = Integer.parseInt(fieldValue);
             }
         } catch (NumberFormatException e) {
@@ -113,7 +113,7 @@ public final class ParseDataHelper {
     }
 
     /**
-     * This method validates a field of Date type for null/empty values, and raises exception if a
+     * This method validates a field of Long type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Long format
      *
      * @param fieldName   name of the field to be used in exception
@@ -123,11 +123,11 @@ public final class ParseDataHelper {
      * from string to Long and returned
      * @throws DataValidationException
      */
-    public static Long parseLong(String fieldName, String fieldValue, boolean isMandatory)
+    public static Long validateAndParseLong(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
         Long parsedValue = null;
         try {
-            if (parseString(fieldName, fieldValue, isMandatory) != null) {
+            if (validateAndParseString(fieldName, fieldValue, isMandatory) != null) {
                 parsedValue = Long.parseLong(fieldValue);
             }
         } catch (NumberFormatException e) {
@@ -148,10 +148,10 @@ public final class ParseDataHelper {
      * from string to Boolean and returned
      * @throws DataValidationException
      */
-    public static Boolean parseBoolean(String fieldName, String fieldValue, boolean isMandatory)
+    public static Boolean validateAndParseBoolean(String fieldName, String fieldValue, boolean isMandatory)
             throws DataValidationException {
         Boolean parsedValue = null;
-        if (parseString(fieldName, fieldValue, isMandatory) != null) {
+        if (validateAndParseString(fieldName, fieldValue, isMandatory) != null) {
             if (fieldValue.equalsIgnoreCase("true") || fieldValue.equalsIgnoreCase(("false"))) {
                 parsedValue = Boolean.parseBoolean(fieldValue);
             }
