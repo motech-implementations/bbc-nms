@@ -1,9 +1,9 @@
 package org.motechproject.nms.kilkari.web;
 
 import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.dto.DeactivateApiRequest;
-import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.dto.SubscriptionApiRequest;
+import org.motechproject.nms.kilkari.dto.request.DeactivateApiRequest;
+import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
+import org.motechproject.nms.kilkari.dto.request.SubscriptionApiRequest;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -48,7 +48,7 @@ public class SubscriptionController {
     @RequestMapping(value = "/subscription", method = RequestMethod.DELETE)
     public String deactivateSubscription(@RequestBody DeactivateApiRequest apiRequest) throws DataValidationException{
         apiRequest.validateMandatoryParameter();
-        subscriptionService.deactivateSubscription(Long.parseLong(apiRequest.getSubscriptionId()));
+        subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId());
         return null;
     }
 
@@ -65,14 +65,16 @@ public class SubscriptionController {
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
             response = userDetailsService.getSubscriberDetails(callingNumber, circle);
 
-        logger.info("Finished processing getUserDetails");
+        logger.trace("Finished processing getUserDetails");
         return response;
     }
 
     public void validateSubscriberDetailsRequestParams(
             String msisdn, String operator, String circle, String callId) throws DataValidationException {
-        ParseDataHelper.validateAndParseString("callingNumber", msisdn, true);
+        ParseDataHelper.validateAndTrimMsisdn("callingNumber",
+                ParseDataHelper.validateAndParseString("callingNumber", msisdn, true));
         ParseDataHelper.validateAndParseString("operator", operator, true);
         ParseDataHelper.validateAndParseString("circle", circle, true);
+        ParseDataHelper.validateAndParseString("callId", callId, true);
     }
 }

@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkari.dto;
+package org.motechproject.nms.kilkari.dto.response;
 
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
@@ -11,11 +11,11 @@ public class SubscriberDetailApiResponse {
 
     String circle;
 
-    String languageLocationCode;
+    Integer languageLocationCode;
 
     List<SubscriptionPack> subscriptionPackList;
 
-    String defaultLanguageLocationCode;
+    Integer defaultLanguageLocationCode;
 
     public String getCircle() {
         return circle;
@@ -25,20 +25,20 @@ public class SubscriberDetailApiResponse {
         this.circle = circle;
     }
 
-    public String getDefaultLanguageLocationCode() {
-        return defaultLanguageLocationCode;
-    }
-
-    public void setDefaultLanguageLocationCode(String defaultLanguageLocationCode) {
-        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
-    }
-
-    public String getLanguageLocationCode() {
+    public Integer getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(String languageLocationCode) {
+    public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
+    }
+
+    public Integer getDefaultLanguageLocationCode() {
+        return defaultLanguageLocationCode;
+    }
+
+    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
+        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
     public List<SubscriptionPack> getSubscriptionPackList() {
