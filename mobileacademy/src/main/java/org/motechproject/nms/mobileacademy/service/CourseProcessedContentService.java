@@ -47,12 +47,4 @@ public interface CourseProcessedContentService {
      * @param courseProcessedContent new Object to be persisted in the system
      */
     void update(CourseProcessedContent courseProcessedContent);
-
-    /**
-     * To delete all the CPC record by LanguageLocationCode
-     * 
-     * @param languageLocationCode
-     */
-    public void deleteRecordsByLlc(int languageLocationCode);
-
 }
