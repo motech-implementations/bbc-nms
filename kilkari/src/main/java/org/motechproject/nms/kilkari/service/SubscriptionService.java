@@ -27,7 +27,7 @@ public interface SubscriptionService {
     void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
-    void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, Operator operator)
+    void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
             throws DataValidationException;
 
     void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)

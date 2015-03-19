@@ -1,5 +1,10 @@
 package org.motechproject.nms.kilkari.dto;
 
+import org.joda.time.DateTime;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+
 /**
  * This class represents the Subscription Api request object
  */
@@ -54,4 +59,20 @@ public class SubscriptionApiRequest {
     public String getSubscriptionPack() {
         return subscriptionPack;
     }
+
+    public Subscriber toSubscriber() {
+        DateTime dt = new DateTime();
+        Subscriber subscriber = new Subscriber();
+        subscriber.setMsisdn(this.msisdn);
+
+        subscriber.setLanguageLocationCode(Integer.parseInt(this.languageLocationCode));
+        if (this.subscriptionPack.equals(SubscriptionPack.PACK_48_WEEKS.toString())) {
+            subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        } else {
+            subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        }
+        return subscriber;
+    }
+
+
 }

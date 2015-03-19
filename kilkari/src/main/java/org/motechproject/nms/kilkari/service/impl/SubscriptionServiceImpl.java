@@ -2,10 +2,6 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
-import javax.jdo.Query;
-
-import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Configuration;
@@ -14,18 +10,14 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
 import org.motechproject.nms.kilkari.repository.CustomeQueries;
-
-import org.motechproject.nms.kilkari.domain.*;
-import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
-
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.slf4j.Logger;
@@ -47,6 +39,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     @Autowired
     private ActiveUserDataService activeUserDataService;
+
+    @Autowired
+    private OperatorService operatorService;
     
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
@@ -59,26 +54,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             "Subscription to MSISDN already Exist";
 
 
-    /**
-     * Query to find list of Active and Pending subscription packs for given msisdn.
-     */
-    private class ActiveSubscriptionQuery implements QueryExecution<List<SubscriptionPack>> {
-        private String msisdn;
-        private String resultParamName;
 
-        public ActiveSubscriptionQuery(String msisdn, String resultParamName) {
-            this.msisdn = msisdn;
-            this.resultParamName = resultParamName;
-        }
-
-        @Override
-        public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
-            query.setFilter("msisdn == '" + msisdn + "'");
-            query.setFilter("status == " + Status.ACTIVE + "or" + " status == " + Status.PENDING_ACTIVATION);
-            query.setResult("DISTINCT " + resultParamName);
-            return null;
-        }
-    }
 
     @Override
     public void deleteAll() {
@@ -119,7 +95,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public List<SubscriptionPack> getActiveSubscriptionPacksByMsisdn(String msisdn) {
-        ActiveSubscriptionQuery query = new ActiveSubscriptionQuery(msisdn, "packName");
+        CustomeQueries.ActiveSubscriptionQuery query = new CustomeQueries.ActiveSubscriptionQuery(msisdn, "packName");
         return subscriptionDataService.executeQuery(query);
     }
     
@@ -276,15 +252,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, Operator operator)
+    public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
             throws DataValidationException {
+        if (operatorCode != null) {
+            Operator operator = operatorService.getRecordByCode(operatorCode);
+        }
         Configuration configuration = configurationService.getConfiguration();
         long activeUserCount = getActiveUserCount();
         /* check for maximum allowed beneficiary */
         if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
             Subscriber dbSubscriber = subscriberDataService.create(subscriber); 
             if (dbSubscriber.getDeactivationReason() == DeactivationReason.NONE) {
-                createNewSubscription(dbSubscriber, channel, operator);
+                createNewSubscription(dbSubscriber, channel, operatorCode);
             }
         } else {
             logger.info("Reached maximum beneficiary count, can't add any more");
@@ -317,7 +296,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         updateDbSubscriber(subscriber, dbSubscriber);
     }
     
-    private Subscription createNewSubscription(Subscriber dbSubscriber, Channel channel, Operator operator) {
+    private Subscription createNewSubscription(Subscriber dbSubscriber, Channel channel, String operatorCode) {
 
         Subscription newSubscription = new Subscription();
 
@@ -328,7 +307,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setChannel(channel);
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
         newSubscription.setDeactivationReason(DeactivationReason.NONE);
-        newSubscription.setOperatorCode(operator.getCode());
+        newSubscription.setOperatorCode(operatorCode);
         newSubscription.setModifiedBy(dbSubscriber.getModifiedBy());
         newSubscription.setCreator(dbSubscriber.getCreator());
         newSubscription.setOwner(dbSubscriber.getOwner());
@@ -355,11 +334,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
         if (statusFlag) {
+//            deactivateSubscription()
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
-        
+
         subscriptionDataService.update(dbSubscription);
-        
+
         if (statusFlag) {
             activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
         } else {
@@ -396,4 +376,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
+    public void deactivateSubscription(Long subscriptionId) {
+        Subscription subscription = subscriptionDataService.findById(subscriptionId);
+        if (subscription != null) {
+            subscription.setStatus(Status.DEACTIVATED);
+            subscriptionDataService.update(subscription);
+            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+        }
+    }
 }

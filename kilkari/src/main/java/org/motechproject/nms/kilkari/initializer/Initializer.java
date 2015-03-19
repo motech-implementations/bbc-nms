@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
-
 
 /**
  * The purpose of this class is to perform initialization for Kilkari Service.
@@ -46,6 +44,8 @@ public class Initializer {
 
     public static final String DEFAULT_RETRY_DAY3_OBD_PRIORITY = "1";
 
+    public static final Integer DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = 1;
+
     private ConfigurationService configurationService;
     
     private ActiveUserService activeUserService;
@@ -78,6 +78,7 @@ public class Initializer {
             configuration.setRetryDay1ObdPriority(DEFAULT_RETRY_DAY1_OBD_PRIORITY);
             configuration.setRetryDay2ObdPriority(DEFAULT_RETRY_DAY2_OBD_PRIORITY);
             configuration.setRetryDay3ObdPriority(DEFAULT_RETRY_DAY3_OBD_PRIORITY);
+            configuration.setNationalLanguageLocationCode(DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE);
             configurationService.createConfiguration(configuration);
             
             ActiveUser activeUser = new ActiveUser();

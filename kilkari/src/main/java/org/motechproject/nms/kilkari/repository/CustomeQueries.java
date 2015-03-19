@@ -2,8 +2,14 @@ package org.motechproject.nms.kilkari.repository;
 
 import javax.jdo.Query;
 
+import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.query.SqlQueryExecution;
+import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.ActiveUser;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+
+import java.util.List;
 
 public class CustomeQueries {
 
@@ -44,6 +50,27 @@ public class CustomeQueries {
         @Override
         public String getSqlQuery() {
             return decrementQuery;
+        }
+    }
+
+    /**
+     * Query to find list of Active and Pending subscription packs for given msisdn.
+     */
+    public static class ActiveSubscriptionQuery implements QueryExecution<List<SubscriptionPack>> {
+        private String msisdn;
+        private String resultParamName;
+
+        public ActiveSubscriptionQuery(String msisdn, String resultParamName) {
+            this.msisdn = msisdn;
+            this.resultParamName = resultParamName;
+        }
+
+        @Override
+        public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
+            query.setFilter("msisdn == '" + msisdn + "'");
+            query.setFilter("status == " + Status.ACTIVE + "or" + " status == " + Status.PENDING_ACTIVATION);
+            query.setResult("DISTINCT " + resultParamName);
+            return null;
         }
     }
 }
