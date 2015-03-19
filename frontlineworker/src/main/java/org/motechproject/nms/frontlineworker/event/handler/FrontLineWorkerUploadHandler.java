@@ -115,7 +115,7 @@ public class FrontLineWorkerUploadHandler {
 
                     FrontLineWorker frontLineWorker = new FrontLineWorker();
                     validateFrontLineWorker(record, frontLineWorker);
-                    frontLineWorker.mapFrontLineWorkerFromCsvRecord(record);
+                    mapFrontLineWorkerFromCsvRecord(record, frontLineWorker);
 
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker);
                     Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
@@ -136,7 +136,7 @@ public class FrontLineWorkerUploadHandler {
                         Status status = dbRecord.getStatus();
                         if (valid == null) {
                             frontLineWorker.setStatus(dbRecord.getStatus());
-                            dbRecord = frontLineWorker.updateDbRecord(dbRecord);
+                            updateDbRecord(dbRecord, frontLineWorker);
                             frontLineWorkerService.updateFrontLineWorker(dbRecord);
                             bulkUploadStatus.incrementSuccessCount();
                             logger.debug("Record updated successfully for Flw with valid = null");
@@ -151,7 +151,7 @@ public class FrontLineWorkerUploadHandler {
                                     logger.warn("Status change try from invalid to valid for id : {}", id);
                                 } else {
                                     frontLineWorker.setStatus(dbRecord.getStatus());
-                                    dbRecord = frontLineWorker.updateDbRecord(dbRecord);
+                                    updateDbRecord(dbRecord, frontLineWorker);
                                     frontLineWorkerService.updateFrontLineWorker(dbRecord);
                                     bulkUploadStatus.incrementSuccessCount();
                                     logger.debug("Record updated successfully for Flw with valid = true");
@@ -159,7 +159,7 @@ public class FrontLineWorkerUploadHandler {
                                 }
                             } else {
                                 frontLineWorker.setStatus(Status.INVALID);
-                                dbRecord = frontLineWorker.updateDbRecord(dbRecord);
+                                updateDbRecord(dbRecord, frontLineWorker);
                                 frontLineWorkerService.updateFrontLineWorker(dbRecord);
                                 bulkUploadStatus.incrementSuccessCount();
                                 logger.debug("Record updated successfully for Flw with valid = false");
@@ -450,6 +450,75 @@ public class FrontLineWorkerUploadHandler {
 
 
 
+    /**
+     * This method maps a field of FrontLineWorkerCsv type to FrontLineWorker field. It checks for null/empty values,
+     * and raises exception if a mandatory field is empty/null or is invalid date format
+     * @param record        FrontLineWorker Csv record which is provided in the Csv
+     * @param frontLineWorker the frontLineWorker object which is to be mapped from FrontLineWorkerCsv record
+     */
+    public void mapFrontLineWorkerFromCsvRecord(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
+
+
+        logger.debug("mapFrontLineWorkerFrom process start");
+
+        frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
+
+        frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
+        frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
+        frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
+
+        if (record.getIsValid().equalsIgnoreCase("false")) {
+            frontLineWorker.setStatus(Status.INVALID);
+        } else {
+            frontLineWorker.setStatus(Status.INACTIVE);
+        }
+
+        frontLineWorker.setCreator(record.getCreator());
+        frontLineWorker.setModifiedBy(record.getModifiedBy());
+        frontLineWorker.setOwner(record.getOwner());
+        frontLineWorker.setModificationDate(record.getModificationDate());
+        frontLineWorker.setCreationDate(record.getCreationDate());
+
+        logger.debug("mapFrontLineWorkerFrom process end");
+    }
+
+
+    /**
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
+     *
+     * @param dbRecord        the record which will be updated in db
+     * @param frontLineWorker the frontLineWorker object which is to be mapped to the db object
+     */
+    public void updateDbRecord(FrontLineWorker dbRecord, FrontLineWorker frontLineWorker) {
+
+        dbRecord.setName(frontLineWorker.getName());
+        dbRecord.setStatus(frontLineWorker.getStatus());
+        dbRecord.setContactNo(frontLineWorker.getContactNo());
+        dbRecord.setDesignation(frontLineWorker.getDesignation());
+
+
+        dbRecord.setStateCode(frontLineWorker.getStateCode());
+        dbRecord.setStateId(frontLineWorker.getStateId());
+        dbRecord.setDistrictId(frontLineWorker.getDistrictId());
+        dbRecord.setTalukaId(frontLineWorker.getTalukaId());
+        dbRecord.setVillageId(frontLineWorker.getVillageId());
+        dbRecord.setHealthBlockId(frontLineWorker.getHealthBlockId());
+        dbRecord.setHealthFacilityId(frontLineWorker.getHealthFacilityId());
+        dbRecord.setHealthSubFacilityId(frontLineWorker.getHealthSubFacilityId());
+        dbRecord.setLanguageLocationCodeId(frontLineWorker.getLanguageLocationCodeId());
+
+        dbRecord.setFlwId(frontLineWorker.getFlwId());
+        dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
+        dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
+
+        dbRecord.setCreator(frontLineWorker.getCreator());
+        dbRecord.setModificationDate(frontLineWorker.getModificationDate());
+        dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
+        dbRecord.setCreationDate(frontLineWorker.getCreationDate());
+        dbRecord.setOwner(frontLineWorker.getOwner());
+
+    }
 
     }
 

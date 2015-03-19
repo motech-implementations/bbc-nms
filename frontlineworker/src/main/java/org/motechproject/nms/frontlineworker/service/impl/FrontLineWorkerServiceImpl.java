@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
 
 
-    FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
+    public FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
 
     @Autowired
     public FrontLineWorkerServiceImpl(FrontLineWorkerRecordDataService frontLineWorkerRecordDataService) {
