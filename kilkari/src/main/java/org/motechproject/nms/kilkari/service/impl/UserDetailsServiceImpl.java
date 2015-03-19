@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
@@ -42,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         if (subscriber != null) {
             //get list of subscription packs for the subscriber.
-            List<String> activePackList = subscriptionService.getActiveSubscriptionByMsisdn(msisdn);
+            List<SubscriptionPack> activePackList = subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn);
             response.setSubscriptionPackList(activePackList);
 
             getLanguageLocationCodeForSubscriber(circleCode, subscriber, response);
@@ -55,13 +56,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private void getLanguageLocationCodeByCircleCode(String circleCode, SubscriberDetailApiResponse response) {
+        //Todo : validate circle by circleCode
         Integer llcCode = llcService.getLanguageLocationCodeByCircleCode(circleCode);
         if (llcCode != null) {
             response.setLanguageLocationCode(llcCode.toString());
         } else {
-            //Todo : determine default languageLocationCode.This is a case where circle is unknown i,e 99
-            response.setCircle("99");
-            response.setDefaultLanguageLocationCode("");
+            Integer defaultLLCCode = llcService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
+            if (defaultLLCCode != null) {
+                response.setDefaultLanguageLocationCode(defaultLLCCode.toString());
+            } else {
+                //todo : set national default llcCode
+                response.setDefaultLanguageLocationCode("");
+            }
         }
     }
 
@@ -70,13 +76,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (subscriber.getLanguageLocationCode() != null) {
             response.setLanguageLocationCode(subscriber.getLanguageLocationCode().toString());
 
-        } else if(subscriber.getState() != null && subscriber.getDistrict() != null) {
-            //if llcCode is null then get it by state and district
-            Integer llcCode = llcService.getLanguageLocationCodeByLocationCode(
-                    subscriber.getState().getStateCode(), subscriber.getDistrict().getDistrictCode());
+        } else {
+            if (subscriber.getState() != null && subscriber.getDistrict() != null) {
+                //if llcCode is null then get it by state and district
+                getLLCCodeByStateDistrict(subscriber.getState().getStateCode(), subscriber.getDistrict().getDistrictCode(), circleCode, response);
+
+            } else {
+                //if either state or district is null then get llcCode by circleCode.
+                getLanguageLocationCodeByCircleCode(circleCode, response);
+            }
+        }
+    }
+
+    private void getLLCCodeByStateDistrict(Long stateCode, Long districtCode, String circleCode, SubscriberDetailApiResponse response) {
+        Integer llcCode = llcService.getLanguageLocationCodeByLocationCode(stateCode, districtCode);
+        if (llcCode != null) {
             response.setLanguageLocationCode(llcCode.toString());
         } else {
-            //if either state or district is null then get llcCode by circleCode.
+            //get llcCode by circleCode if llcCode by state and district is null
             getLanguageLocationCodeByCircleCode(circleCode, response);
         }
     }

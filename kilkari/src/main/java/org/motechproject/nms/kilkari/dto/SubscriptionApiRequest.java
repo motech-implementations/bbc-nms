@@ -10,7 +10,6 @@ public class SubscriptionApiRequest {
     String callId;
     String languageLocationCode;
     String subscriptionPack;
-    String failureReason;
 
     public String getMsisdn() {
         return msisdn;
@@ -54,13 +53,5 @@ public class SubscriptionApiRequest {
 
     public String getSubscriptionPack() {
         return subscriptionPack;
-    }
-
-    public String getFailureReason() {
-        return failureReason;
-    }
-
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
     }
 }
