@@ -36,8 +36,18 @@ public class SubscriptionController {
     @RequestMapping(value = "/subscription", method = RequestMethod.POST)
     @ResponseBody
     public String createSubscription(@RequestBody SubscriptionApiRequest apiRequest) throws DataValidationException{
+        logger.info("*****createSubscription is invoked******");
+        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("callingNumber : [" + apiRequest.getCallingNumber() + "]");
+        logger.debug("operator : [" + apiRequest.getOperator() + "]");
+        logger.debug("circle : [" + apiRequest.getCircle() + "]");
+        logger.debug("callId : [" + apiRequest.getCallId() + "]");
+        logger.debug("languageLocationCode : [" + apiRequest.getLanguageLocationCode().toString() + "]");
+        logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
+
         apiRequest.validateMandatoryParameters();
         subscriptionService.createNewSubscriberAndSubscription(apiRequest.toSubscriber(), Channel.IVR, apiRequest.getOperator());
+        logger.trace("Finished processing createSubscription");
         return null;
     }
 
@@ -47,8 +57,17 @@ public class SubscriptionController {
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.DELETE)
     public String deactivateSubscription(@RequestBody DeactivateApiRequest apiRequest) throws DataValidationException{
+        logger.info("*****deactivateSubscription is invoked******");
+        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("calledNumber : [" + apiRequest.getCalledNumber() + "]");
+        logger.debug("operator : [" + apiRequest.getOperator() + "]");
+        logger.debug("circle : [" + apiRequest.getCircle() + "]");
+        logger.debug("callId : [" + apiRequest.getCallId() + "]");
+        logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId().toString() + "]");
+
         apiRequest.validateMandatoryParameter();
         subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId());
+        logger.trace("Finished processing deactivateSubscription");
         return null;
     }
 
@@ -61,6 +80,11 @@ public class SubscriptionController {
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
                                        @RequestParam String circle, @RequestParam String callId) throws DataValidationException{
         logger.info("*****getSubscriberDetails is invoked******");
+        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("callingNumber : [" + callingNumber + "]");
+        logger.debug("operator : [" + operator + "]");
+        logger.debug("circle : [" + circle + "]");
+        logger.debug("callId : [" + callId + "]");
         SubscriberDetailApiResponse response;
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
             response = userDetailsService.getSubscriberDetails(callingNumber, circle);
