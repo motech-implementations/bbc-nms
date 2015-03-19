@@ -12,6 +12,9 @@
     <osgi:service ref="frontLineWorkerService"
                   interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService"/>
 
+    <osgi:service ref="userProfileDetailsService"
+                  interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
+
     <osgi:reference id="flwCsvRecordsDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.FrontLineWorkerCsvRecordsDataService"/>
 
