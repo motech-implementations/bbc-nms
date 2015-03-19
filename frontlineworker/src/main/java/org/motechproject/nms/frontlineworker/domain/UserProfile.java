@@ -12,8 +12,13 @@ public class UserProfile {
 
     private boolean isDefaultLanguageLocationCode;
 
-    private Long languageLocationCode;
+    private Integer languageLocationCode;
 
-    private Long defaultLanguageLocationCode;
+    private Integer defaultLanguageLocationCode;
+
+    private String circle;
+
+    private Integer maxCappingValue;
+
 
 }

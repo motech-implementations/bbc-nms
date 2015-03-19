@@ -2,7 +2,6 @@ package org.motechproject.nms.frontlineworker.service.impl;
 
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.masterdata.domain.Circle;
 
 /**
  *  This class provides the implementation of User Profile Details.
@@ -10,7 +9,7 @@ import org.motechproject.nms.masterdata.domain.Circle;
 public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
     @Override
-    public UserProfile checkAndUpdateUserDetails(String msisdn, Circle circle, Long operatorId){
+    public UserProfile handleUserDetail(String msisdn, String circle, String operatorCode) {
 
         UserProfile userProfile = null;
 
@@ -19,11 +18,15 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
     }
 
     @Override
-    public boolean updateLanguageLocationCodeFromMsisdn(Long languageLocationCode, String msisdn ){
+    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn ) {
 
         boolean status = true;
 
         return status;
 
     }
+
+
+
+
 }
