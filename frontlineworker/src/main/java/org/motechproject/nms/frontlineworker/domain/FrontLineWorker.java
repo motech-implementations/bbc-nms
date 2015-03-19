@@ -13,6 +13,10 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jdo.annotations.Unique;
 
@@ -84,6 +88,7 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private Long languageLocationCodeId = null;
 
+    private static Logger logger = LoggerFactory.getLogger(FrontLineWorker.class);
 
     public FrontLineWorker() {
     }
@@ -247,6 +252,75 @@ public class FrontLineWorker extends MdsEntity {
 
     public void setLanguageLocationCodeId(Long languageLocationCodeId) {
         this.languageLocationCodeId = languageLocationCodeId;
+    }
+
+
+    /**
+     * This method maps a field of FrontLineWorkerCsv type to FrontLineWorker field. It checks for null/empty values,
+     * and raises exception if a mandatory field is empty/null or is invalid date format
+     */
+    public void mapFrontLineWorkerFromCsvRecord(FrontLineWorkerCsv record) throws DataValidationException {
+
+
+        logger.debug("mapFrontLineWorkerFrom process start");
+
+        this.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
+
+        this.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
+        this.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
+        this.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
+
+        if (record.getIsValid().equalsIgnoreCase("false")) {
+            this.setStatus(Status.INVALID);
+        } else {
+            this.setStatus(Status.INACTIVE);
+        }
+
+        this.setCreator(record.getCreator());
+        this.setModifiedBy(record.getModifiedBy());
+        this.setOwner(record.getOwner());
+        this.setModificationDate(record.getModificationDate());
+        this.setCreationDate(record.getCreationDate());
+
+        logger.debug("mapFrontLineWorkerFrom process end");
+    }
+
+
+    /**
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
+     *
+     * @param dbRecord        the record which will be updated in db
+     */
+    public FrontLineWorker updateDbRecord(FrontLineWorker dbRecord) {
+
+        dbRecord.setName(this.getName());
+        dbRecord.setStatus(this.getStatus());
+        dbRecord.setContactNo(this.getContactNo());
+        dbRecord.setDesignation(this.getDesignation());
+
+
+        dbRecord.setStateCode(this.getStateCode());
+        dbRecord.setStateId(this.getStateId());
+        dbRecord.setDistrictId(this.getDistrictId());
+        dbRecord.setTalukaId(this.getTalukaId());
+        dbRecord.setVillageId(this.getVillageId());
+        dbRecord.setHealthBlockId(this.getHealthBlockId());
+        dbRecord.setHealthFacilityId(this.getHealthFacilityId());
+        dbRecord.setHealthSubFacilityId(this.getHealthSubFacilityId());
+        dbRecord.setLanguageLocationCodeId(this.getLanguageLocationCodeId());
+
+        dbRecord.setFlwId(this.getFlwId());
+        dbRecord.setAdhaarNumber(this.getAdhaarNumber());
+        dbRecord.setAshaNumber(this.getAshaNumber());
+
+        dbRecord.setCreator(this.getCreator());
+        dbRecord.setModificationDate(this.getModificationDate());
+        dbRecord.setModifiedBy(this.getModifiedBy());
+        dbRecord.setCreationDate(this.getCreationDate());
+        dbRecord.setOwner(this.getOwner());
+        return dbRecord;
+
     }
 
 

@@ -123,13 +123,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
-                languageLocationCodeService,
+                //languageLocationCodeService,
                 frontLineWorkerService, frontLineWorkerCsvService
         );
 
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
-        assertNotNull(languageLocationCodeService);
+        //assertNotNull(languageLocationCodeService);
         assertNotNull(frontLineWorkerService);
         assertNotNull(frontLineWorkerCsvService);
 
