@@ -29,7 +29,6 @@ import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataS
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -62,9 +61,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     @Inject
     private LocationService locationService;
-
-    @Inject
-    private LanguageLocationCodeService languageLocationCodeService;
 
     @Inject
     private StateRecordsDataService stateRecordsDataService;
@@ -123,13 +119,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
-                //languageLocationCodeService,
                 frontLineWorkerService, frontLineWorkerCsvService
         );
 
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
-        //assertNotNull(languageLocationCodeService);
         assertNotNull(frontLineWorkerService);
         assertNotNull(frontLineWorkerCsvService);
 
