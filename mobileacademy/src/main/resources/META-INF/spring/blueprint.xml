@@ -19,6 +19,10 @@
 
 	<osgi:service ref="CoursePopulateService"
 		interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
+		
+	<osgi:service ref="userDetailsServiceMa"
+		interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
+	
 
 	<osgi:reference id="CourseProcessedContentDataService"
 		interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
@@ -37,5 +41,12 @@
 
 	<osgi:reference id="bulkUploadErrLogService"
 		interface="org.motechproject.nms.util.service.BulkUploadErrLogService" />
+		
+	<osgi:reference id="UserProfileDetailsService"
+		interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService" />
+		
+	<osgi:reference id="FlwUsuageDetailDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.FlwUsuageDetailDataService" />
+		
 
 </beans>

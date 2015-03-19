@@ -84,4 +84,6 @@ public class MobileAcademyConstants {
 
     public static final String LOG_MSG_NEW_FILE_NAME = "new file name: {}";
 
+    public static final Long SERVICE_CONFIG_DEFAULT_RECORD_INDEX = 1l;
+
 }

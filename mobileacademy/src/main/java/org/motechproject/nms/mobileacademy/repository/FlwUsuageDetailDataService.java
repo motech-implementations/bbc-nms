@@ -3,25 +3,25 @@ package org.motechproject.nms.mobileacademy.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.mobileacademy.domain.ServiceConfigParam;
+import org.motechproject.nms.mobileacademy.domain.FlwUsuageDetail;
 
 /**
  * Interface for repository that persists simple records and allows CRUD on
- * ServiceConfigParam table. MotechDataService base class will provide the
+ * FlwUsuageDetail table. MotechDataService base class will provide the
  * implementation of this class as well as methods for adding, deleting, saving
  * and finding all instances. In this class we define and custom lookups we may
  * need.
  */
-public interface ServiceConfigParamDataService extends
-        MotechDataService<ServiceConfigParam> {
+public interface FlwUsuageDetailDataService extends
+        MotechDataService<FlwUsuageDetail> {
 
     /**
-     * find By Index field
+     * find By flwId
      * 
-     * @param index
-     * @return ServiceConfigParam
+     * @param flwId
+     * @return FlwUsuageDetail
      */
     @Lookup
-    ServiceConfigParam findByIndex(@LookupField(name = "index") Long index);
+    FlwUsuageDetail findByFlwId(@LookupField(name = "flwId") Long flwId);
 
 }
