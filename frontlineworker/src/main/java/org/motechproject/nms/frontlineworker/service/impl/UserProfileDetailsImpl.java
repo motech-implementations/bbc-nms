@@ -5,7 +5,7 @@ import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.springframework.stereotype.Service;
 
 /**
- *  This class provides the implementation of User Profile Details interface.
+ * This class provides the implementation of User Profile Details interface.
  */
 @Service("userProfileDetailsService")
 public class UserProfileDetailsImpl implements UserProfileDetailsService {
@@ -15,20 +15,18 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
         UserProfile userProfile = null;
 
-       return userProfile;
+        return userProfile;
 
     }
 
     @Override
-    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn ) {
+    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn) {
 
         boolean status = true;
 
         return status;
 
     }
-
-
 
 
 }
