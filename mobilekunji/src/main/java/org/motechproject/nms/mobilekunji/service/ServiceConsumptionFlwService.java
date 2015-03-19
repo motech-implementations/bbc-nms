@@ -1,15 +1,16 @@
 package org.motechproject.nms.mobilekunji.service;
 
-import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFrontLineWorker;
+import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 
 /**
  * Created by abhishek on 13/3/15.
  */
 public interface ServiceConsumptionFlwService {
 
-    public ServiceConsumptionFrontLineWorker create(ServiceConsumptionFrontLineWorker record);
+    public ServiceConsumptionFlw create(ServiceConsumptionFlw record);
 
-    public ServiceConsumptionFrontLineWorker update(ServiceConsumptionFrontLineWorker record);
+    public ServiceConsumptionFlw update(ServiceConsumptionFlw record);
 
-    public void delete(ServiceConsumptionFrontLineWorker record);
+    public void delete(ServiceConsumptionFlw record);
+
 }

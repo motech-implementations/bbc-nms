@@ -9,6 +9,4 @@
     <context:component-scan base-package="org.motechproject.nms.mobilekunji"/>
 
 
-
-
 </beans>

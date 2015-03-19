@@ -21,7 +21,7 @@ public class UserDetailApiResponse {
 
     private Integer maxAllowedEndOfUsagePrompt;
 
-    private String  failureReason;
+    private String failureReason;
 
     public String getCircle() {
         return circle;

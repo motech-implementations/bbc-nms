@@ -97,14 +97,14 @@ public class ContentUploadCsvHandler {
                     if (dbRecord == null) {
 
                         contentUploadService.createContentUpload(newRecord);
-                            bulkUploadStatus.incrementSuccessCount();
+                        bulkUploadStatus.incrementSuccessCount();
 
 
                     } else {
 
-                            mappDbRecordWithCsvrecord(newRecord, dbRecord);
+                        mappDbRecordWithCsvrecord(newRecord, dbRecord);
                         contentUploadService.updateContentUpload(dbRecord);
-                            bulkUploadStatus.incrementSuccessCount();
+                        bulkUploadStatus.incrementSuccessCount();
 
 
                     }
@@ -133,7 +133,7 @@ public class ContentUploadCsvHandler {
     }
 
 
-    private void mappDbRecordWithCsvrecord(ContentUpload newRecord,ContentUpload dbRecord){
+    private void mappDbRecordWithCsvrecord(ContentUpload newRecord, ContentUpload dbRecord) {
 
         dbRecord.setCircleCode(newRecord.getCircleCode());
         dbRecord.setCardNumber(newRecord.getCardNumber());
@@ -221,7 +221,6 @@ public class ContentUploadCsvHandler {
 
         return errorDetails;
     }
-
 
 
 }

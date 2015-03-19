@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 
 import static org.junit.Assert.assertEquals;
+
 /**
  * Created by abhishek on 12/3/15.
  */
@@ -20,6 +21,6 @@ public class ContentTypeTest {
     public void TestValidValue2() {
         ContentType contentType;
         contentType = ContentType.of("CONTENT");
-        assertEquals(ContentType.CONTENT,contentType);
+        assertEquals(ContentType.CONTENT, contentType);
     }
 }

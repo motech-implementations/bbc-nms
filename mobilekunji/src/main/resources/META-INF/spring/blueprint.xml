@@ -20,22 +20,22 @@
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
     <osgi:service ref="contentUploadService"
-                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadService" />
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadService"/>
 
     <osgi:service ref="contentUploadCsvService"
-                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService" />
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService"/>
 
     <osgi:service ref="userDetailsService"
-                  interface="org.motechproject.nms.mobilekunji.service.UserDetailsService" />
+                  interface="org.motechproject.nms.mobilekunji.service.UserDetailsService"/>
 
     <osgi:service ref="saveCallDetailsService"
-                  interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService" />
+                  interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService"/>
 
     <osgi:service ref="serviceConsumptionFlwService"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService" />
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
 
     <osgi:service ref="serviceConsumptionCallServiceImpl"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService" />
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
 
 
 </beans>
