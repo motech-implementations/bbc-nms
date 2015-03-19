@@ -1,7 +1,8 @@
 package org.motechproject.nms.frontlineworker.domain;
 
 /**
- *  This Class models data for User Profile Details.
+ *  This Class models data for User Profile Details. The object of this class will be returned as the response
+ *  to the API calls from other  modules to get details of front line worker.
  */
 
 public class UserProfile {
