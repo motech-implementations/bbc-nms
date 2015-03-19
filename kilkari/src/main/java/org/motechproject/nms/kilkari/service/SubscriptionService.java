@@ -15,6 +15,7 @@ public interface SubscriptionService {
     
     Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode);
     
+
     long getActiveUserCount();
 
     Subscription getSubscriptionByMctsIdState(String mctsId, Long id);
