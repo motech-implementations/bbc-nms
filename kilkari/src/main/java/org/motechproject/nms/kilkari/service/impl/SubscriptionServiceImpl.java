@@ -376,6 +376,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
+    @Override
     public void deactivateSubscription(Long subscriptionId) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {

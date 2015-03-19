@@ -33,4 +33,5 @@ public interface SubscriptionService {
     void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
+    void deactivateSubscription(Long subscriptionId);
 }
