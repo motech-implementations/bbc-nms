@@ -101,6 +101,7 @@ public class FrontLineWorkerUploadHandler {
         BulkUploadError errorDetails = new BulkUploadError();
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
         FrontLineWorkerCsv record = null;
+        Long nmsFlwId = null;
 
         bulkUploadStatus.setBulkUploadFileName(csvFileName);
         bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
@@ -120,11 +121,19 @@ public class FrontLineWorkerUploadHandler {
                     validateFrontLineWorker(record, frontLineWorker);
                     mapFrontLineWorkerFrom(record, frontLineWorker);
 
-                    FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(), frontLineWorker.getContactNo());
+                    nmsFlwId = frontLineWorker.getId();
+
+                    FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(),
+                            frontLineWorker.getContactNo(), nmsFlwId);
                     Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
 
                     if (flw == null && dbRecord.getFlwId() != null) {
                         ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
+                    }
+
+                    if (dbRecord != null && dbRecord.getId() != nmsFlwId && nmsFlwId != null) {
+
+                        ParseDataHelper.raiseInvalidDataException("nmsFlwId", "Incorrect");
                     }
 
                     if (dbRecord == null) {
@@ -223,6 +232,7 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setLanguageLocationCodeId(frontLineWorker.getLanguageLocationCodeId());
 
         dbRecord.setFlwId(frontLineWorker.getFlwId());
+        dbRecord.setId(frontLineWorker.getId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
 
@@ -310,6 +320,7 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
 
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
+        frontLineWorker.setId(ParseDataHelper.validateAndParseLong("Nms Flw Id", record.getNmsFlwId(), false));
         frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
 
@@ -515,13 +526,16 @@ public class FrontLineWorkerUploadHandler {
      * @return null if there is no db record for given FlwId else the record generated from db
      * @throws DataValidationException
      */
-    private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo) throws DataValidationException {
+    private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo, Long nmsFlwId) throws DataValidationException {
         logger.debug("FLW state Code : {}", stateCode);
 
-        FrontLineWorker dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId, stateCode);
+        FrontLineWorker dbRecord = frontLineWorkerService.findById(nmsFlwId);
         if (dbRecord == null) {
-            logger.debug("FLW Contact Number : {}", contactNo);
-            dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);
+            dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId, stateCode);
+            if (dbRecord == null) {
+                logger.debug("FLW Contact Number : {}", contactNo);
+                dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);
+            }
         }
 
         return dbRecord;

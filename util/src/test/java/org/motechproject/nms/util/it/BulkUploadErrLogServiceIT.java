@@ -2,6 +2,7 @@ package org.motechproject.nms.util.it;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -45,6 +46,14 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
     private BulkUploadErrorDataService bulkUploadErrorDataService;
 
     private Logger logger = LoggerFactory.getLogger(BulkUploadErrLogServiceIT.class);
+
+    @Before
+    public void setUp() {
+        assertNotNull(bulkUploadStatusDataService);
+        assertNotNull(bulkUploadErrLogService);
+        assertNotNull(bulkUploadErrorDataService);
+    }
+
     /**
      * This test case tests the add method of BulkUploadStatusService for
      * successfully adding a record in db after a bulk upload is complete.
@@ -53,9 +62,6 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
     @Test
     public void shouldAddBulkUploadStatus() throws Exception {
 
-        assertNotNull(bulkUploadStatusDataService);
-        assertNotNull(bulkUploadErrLogService);
-        assertNotNull(bulkUploadErrorDataService);
         String bulkUploadFileName = "csv-import.someFileName";
         Integer numberOfFailedRecords = 82;
         Integer numberOfSuccessfulRecords = 3;
@@ -86,9 +92,9 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
                 Assert.assertEquals(numberOfSuccessfulRecords, retrievedCountOfSuccessfulRecords);
                 Assert.assertEquals(userName, retrievedUserName);
 
-//                bulkUploadStatusDataService.delete(bulkUploadStatus);
             }
         }
+        bulkUploadStatusDataService.deleteAll();
     }
 
     /**
@@ -98,7 +104,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
      */
     @Test
     public void shouldAddBulkUploadErrRecord() throws Exception {
-//        bulkUploadErrorDataService.deleteAll();
+        bulkUploadErrorDataService.deleteAll();
         String bulkUploadFileName = "csv-import.someFileName";
         DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
         String recordDetails = "Some Record Details";
@@ -123,20 +129,16 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
                     && retrievedTimeOfUpload == timeOfUpload
                     && retrievedRecordDetails == recordDetails) {
 
-                logger.info("*******************Record found*******************");
                 String retrievedErrorCategory = error.getErrorCategory();
                 String retrievedErrorDesc = error.getErrorDescription();
                 RecordType retrievedRecordType = error.getRecordType();
 
+                Assert.assertEquals(RecordType.CIRCLE, retrievedRecordType);
                 Assert.assertEquals(ErrorCategoryConstants.GENERAL_EXCEPTION, retrievedErrorCategory);
                 Assert.assertEquals(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, retrievedErrorDesc);
-                Assert.assertEquals(RecordType.CIRCLE, retrievedRecordType);
 
-//                bulkUploadErrorDataService.delete(bulkUploadError);
             }
         }
-
-        logger.info("*******************Outside For*******************");
+        bulkUploadErrorDataService.deleteAll();
     }
-
 }

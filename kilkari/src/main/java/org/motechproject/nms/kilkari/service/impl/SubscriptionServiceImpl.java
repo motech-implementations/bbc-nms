@@ -14,8 +14,13 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
 import org.motechproject.nms.kilkari.repository.CustomeQueries;
+
+import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
+
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -57,7 +62,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     /**
      * Query to find list of Active and Pending subscription packs for given msisdn.
      */
-    private class ActiveSubscriptionQuery implements QueryExecution<List<String>> {
+    private class ActiveSubscriptionQuery implements QueryExecution<List<SubscriptionPack>> {
         private String msisdn;
         private String resultParamName;
 
@@ -67,10 +72,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
 
         @Override
-        public List<String> execute(Query query, InstanceSecurityRestriction restriction) {
+        public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
             query.setFilter("msisdn == '" + msisdn + "'");
-            query.setFilter("subscriptionPack == ACTIVE or subscriptionPack == PENDING_ACTIVATION");
-            query.setResult(resultParamName);
+            query.setFilter("status == " + Status.ACTIVE + "or" + " status == " + Status.PENDING_ACTIVATION);
+            query.setResult("DISTINCT " + resultParamName);
             return null;
         }
     }
@@ -113,10 +118,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
     @Override
-    public List<String> getActiveSubscriptionByMsisdn(String msisdn) {
-        ActiveSubscriptionQuery query = new ActiveSubscriptionQuery(msisdn, "subscriptionPack");
-        List<String> subscriptionPackList = subscriptionDataService.executeQuery(query);
-        return subscriptionPackList;
+    public List<SubscriptionPack> getActiveSubscriptionPacksByMsisdn(String msisdn) {
+        ActiveSubscriptionQuery query = new ActiveSubscriptionQuery(msisdn, "packName");
+        return subscriptionDataService.executeQuery(query);
     }
     
     /**
