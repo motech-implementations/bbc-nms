@@ -42,4 +42,9 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode) {
         return frontLineWorkerRecordDataService.getFlwByFlwIdAndStateId(flwId, stateCode);
     }
+
+    @Override
+    public FrontLineWorker findById(Long id) {
+        return frontLineWorkerRecordDataService.findById(id);
+    }
 }
