@@ -19,7 +19,7 @@ public class UserProfile {
 
     private String circle;
 
-    private Integer maxCappingValue;
+    private Integer maxStateLevelCappingValue;
 
     public boolean isCreated() {
         return isCreated;
@@ -69,11 +69,13 @@ public class UserProfile {
         this.circle = circle;
     }
 
-    public Integer getMaxCappingValue() {
-        return maxCappingValue;
+    public Integer getMaxStateLevelCappingValue() {
+        return maxStateLevelCappingValue;
     }
 
-    public void setMaxCappingValue(Integer maxCappingValue) {
-        this.maxCappingValue = maxCappingValue;
+    public void setMaxStateLevelCappingValue(Integer maxStateLevelCappingValue) {
+        this.maxStateLevelCappingValue = maxStateLevelCappingValue;
     }
 }
+
+

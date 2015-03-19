@@ -2,6 +2,7 @@ package org.motechproject.nms.frontlineworker.service.impl;
 
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service;
 public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
     @Override
-    public UserProfile handleUserDetail(String msisdn, String circle, String operatorCode) {
+    public UserProfile processUserDetails(String msisdn, String circle, String operatorCode)
+            throws DataValidationException {
 
         UserProfile userProfile = null;
 
@@ -20,13 +22,9 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
     }
 
     @Override
-    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn) {
-
-        boolean status = true;
-
-        return status;
+    public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
+            throws DataValidationException{
 
     }
-
 
 }
