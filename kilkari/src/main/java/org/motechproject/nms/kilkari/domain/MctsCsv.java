@@ -5,7 +5,8 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * This entity represents the mother mcts record.
+ * This entity represents the mcts csv record fields common in
+ * Mother and Child data.
  */
 @Entity
 public class MctsCsv extends MdsEntity {

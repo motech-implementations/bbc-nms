@@ -1,5 +1,9 @@
 package org.motechproject.nms.kilkari.domain;
 
+/**
+ * This enum define the subscription pack types
+ * their duration and start week.
+ */
 public enum SubscriptionPack  {
     
     PACK_72_WEEKS("72WeeksPack"),

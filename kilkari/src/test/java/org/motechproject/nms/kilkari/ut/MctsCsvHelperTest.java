@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.ut;
 
 import org.junit.Test;
+import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
@@ -28,9 +29,9 @@ public class MctsCsvHelperTest {
 
         Method method = null;
         try {
-            method = mctsCsvHelper.getClass().getDeclaredMethod("populateDbSubscription", Subscriber.class, Subscription.class, boolean.class);
+            method = mctsCsvHelper.getClass().getDeclaredMethod("populateDbSubscription", Subscriber.class, Subscription.class, boolean.class, Channel.class);
             method.setAccessible(true);
-            method.invoke(mctsCsvHelper, subscriber, dbSubscription, true);
+            method.invoke(mctsCsvHelper, subscriber, dbSubscription, true, null);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
