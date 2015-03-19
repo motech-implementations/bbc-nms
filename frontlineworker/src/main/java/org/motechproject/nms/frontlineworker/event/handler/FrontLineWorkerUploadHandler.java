@@ -467,7 +467,8 @@ public class FrontLineWorkerUploadHandler {
      * which is generated from the parameters
      * @throws DataValidationException
      */
-    private HealthSubFacility healthSubFacilityConsistencyCheck(HealthFacility healthFacility, String record) throws DataValidationException {
+    private HealthSubFacility healthSubFacilityConsistencyCheck(HealthFacility healthFacility, String record)
+            throws DataValidationException {
         Long healthSubFacilityCode;
         HealthSubFacility healthSubFacility = null;
 
@@ -514,17 +515,59 @@ public class FrontLineWorkerUploadHandler {
      * @return null if there is no db record for given FlwId else the record generated from db
      */
 
-    private FrontLineWorker checkExistenceOfFlw(FrontLineWorker frontLineWorker) {
+    private FrontLineWorker checkExistenceOfFlw(FrontLineWorker frontLineWorker) throws DataValidationException {
 
-        FrontLineWorker dbRecord = frontLineWorkerService.findById(frontLineWorker.getId());
-        if (dbRecord == null) {
+        FrontLineWorker dbRecord = null;
+        FrontLineWorker dbRecordByContactNo = null;
+        Long id = frontLineWorker.getId();
+        if (id != null) {
+            dbRecord = frontLineWorkerService.findById(frontLineWorker.getId());
+            if (dbRecord == null) {
+                ParseDataHelper.raiseInvalidDataException("nmsFlwId", id.toString());
+            }
+
+        } else {
             Long stateCode = frontLineWorker.getStateCode();
             logger.debug("FLW state Code : {}", stateCode);
             dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(), stateCode);
-            if (dbRecord == null) {
-                String contactNo = frontLineWorker.getContactNo();
-                logger.debug("FLW Contact Number : {}", contactNo);
-                dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);
+        }
+
+        String contactNo = frontLineWorker.getContactNo();
+        logger.debug("FLW Contact Number : {}", contactNo);
+        dbRecordByContactNo = frontLineWorkerService.getFlwBycontactNo(contactNo);
+
+        //creation when record not found in database
+        if (dbRecord == null && dbRecordByContactNo == null) {
+            return dbRecord;
+        } else {
+            if (dbRecord == null && dbRecordByContactNo != null) {
+                //creation of new record when existing record is invalid
+                if (dbRecordByContactNo.getStatus() == Status.INVALID) {
+                    return dbRecord;
+                }
+                //updation of existing record
+                else {
+                    return dbRecordByContactNo;
+                }
+
+            } else {
+                //updation of existing record
+                if (dbRecord != null && dbRecordByContactNo == null) {
+                    return dbRecord;
+                } else {
+                    //updation of existing record. here both dbRecord and dbRecordByContactNo point to same FLW
+                    if (dbRecord.getId() == dbRecordByContactNo.getId()) {
+                        return dbRecord;
+                    } else {
+                        //creation of new record when existing record is invalid
+                        if (dbRecordByContactNo.getStatus() == Status.INVALID) {
+                            return dbRecord;
+                        } else {
+                            //when trying to update record where two different records are fetched from database
+                            ParseDataHelper.raiseInvalidDataException("contactNo", dbRecord.getContactNo());
+                        }
+                    }
+                }
             }
         }
 
