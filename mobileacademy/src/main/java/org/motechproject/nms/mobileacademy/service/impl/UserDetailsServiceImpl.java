@@ -3,10 +3,10 @@ package org.motechproject.nms.mobileacademy.service.impl;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.domain.FlwUsuageDetail;
+import org.motechproject.nms.mobileacademy.domain.FlwUsageDetail;
 import org.motechproject.nms.mobileacademy.domain.ServiceConfigParam;
 import org.motechproject.nms.mobileacademy.dto.User;
-import org.motechproject.nms.mobileacademy.repository.FlwUsuageDetailDataService;
+import org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService;
 import org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
  * UserDetailsServiceImpl class contains implementation of UserDetailsService
  *
  */
-@Service("userDetailsServiceMa")
+@Service("UserDetailsServiceMa")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private ServiceConfigParamDataService serviceConfigParamDataService;
 
     @Autowired
-    private FlwUsuageDetailDataService flwUsuageDetailDataService;
+    private FlwUsageDetailDataService flwUsageDetailDataService;
 
     /*
      * (non-Javadoc)
@@ -52,10 +52,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .findByIndex(MobileAcademyConstants.SERVICE_CONFIG_DEFAULT_RECORD_INDEX);
         user.setMaxAllowedEndOfUsagePrompt(serviceConfigParam
                 .getMaxEndOfUsuageMessage());
-        FlwUsuageDetail flwUsuageDetail = findFlwUsageInfo(userProfile
-                .getNmsId());
-        user.setCurrentUsageInPulses(flwUsuageDetail.getCurrentUsageInPulses());
-        user.setEndOfUsagePromptCounter(flwUsuageDetail
+        FlwUsageDetail flwUsageDetail = findFlwUsageInfo(userProfile.getNmsId());
+        user.setCurrentUsageInPulses(flwUsageDetail.getCurrentUsageInPulses());
+        user.setEndOfUsagePromptCounter(flwUsageDetail
                 .getEndOfUsagePromptCounter());
         return user;
     }
@@ -64,21 +63,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * find Front line worker mobile academy Usage information
      * 
      * @param flwId
-     * @return FlwUsuageDetail
+     * @return FlwUsageDetail
      */
-    private FlwUsuageDetail findFlwUsageInfo(Long flwId) {
-        FlwUsuageDetail flwUsuageDetail = flwUsuageDetailDataService
+    private FlwUsageDetail findFlwUsageInfo(Long flwId) {
+        FlwUsageDetail flwUsageDetail = flwUsageDetailDataService
                 .findByFlwId(flwId);
-        if (flwUsuageDetail == null) {
+        if (flwUsageDetail == null) {
             // TODO in save call detail api
-            flwUsuageDetail = new FlwUsuageDetail();
-            flwUsuageDetail.setFlwId(flwId);
-            flwUsuageDetail.setCurrentUsageInPulses(0);
-            flwUsuageDetail.setEndOfUsagePromptCounter(0);
-            flwUsuageDetail = flwUsuageDetailDataService
-                    .create(flwUsuageDetail);
+            flwUsageDetail = new FlwUsageDetail();
+            flwUsageDetail.setFlwId(flwId);
+            flwUsageDetail.setCurrentUsageInPulses(0);
+            flwUsageDetail.setEndOfUsagePromptCounter(0);
+            flwUsageDetail = flwUsageDetailDataService.create(flwUsageDetail);
         }
-        return flwUsuageDetail;
+        return flwUsageDetail;
 
     }
 }

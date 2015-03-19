@@ -20,7 +20,7 @@
 	<osgi:service ref="CourseService"
 		interface="org.motechproject.nms.mobileacademy.service.CourseService" />
 		
-	<osgi:service ref="userDetailsServiceMa"
+	<osgi:service ref="UserDetailsServiceMa"
 		interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
 	
 
@@ -45,8 +45,8 @@
 	<osgi:reference id="UserProfileDetailsService"
 		interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService" />
 		
-	<osgi:reference id="FlwUsuageDetailDataService"
-		interface="org.motechproject.nms.mobileacademy.repository.FlwUsuageDetailDataService" />
+	<osgi:reference id="FlwUsageDetailDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService" />
 		
 
 </beans>

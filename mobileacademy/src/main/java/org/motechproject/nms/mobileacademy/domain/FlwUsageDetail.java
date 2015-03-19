@@ -5,11 +5,11 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * FlwUsuageDetail object refer to mobile academy usage by front line worker
+ * FlwUsageDetail object refer to mobile academy usage by front line worker
  *
  */
 @Entity(recordHistory = true)
-public class FlwUsuageDetail extends MdsEntity {
+public class FlwUsageDetail extends MdsEntity {
 
     @Field
     private Long flwId;
