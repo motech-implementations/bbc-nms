@@ -171,14 +171,14 @@ public class ContentUploadCsvHandler {
         Integer cardNumber = null;
         Integer contentDuration = null;
 
-        contentId = ParseDataHelper.parseInt("Content Id", record.getContentId(), true);
-        circleCode = ParseDataHelper.parseString("Circle Code", record.getCircleCode(), true);
-        languageLocationCode = ParseDataHelper.parseInt("Language Location Code", record.getLanguageLocationCode(), true);
-        contentName = ParseDataHelper.parseString("Conteny name", record.getContentName(), true);
-        contentFile = ParseDataHelper.parseString("Content File", record.getContentFile(), true);
-        cardNumber = ParseDataHelper.parseInt("Card number", record.getCardNumber(), true);
-        contentDuration = ParseDataHelper.parseInt("Content Duration", record.getContentDuration(), true);
-        content = ParseDataHelper.parseString("Content Type", record.getContentType(), true);
+        contentId = ParseDataHelper.validateAndParseInt("Content Id", record.getContentId(), true);
+        circleCode = ParseDataHelper.validateAndParseString("Circle Code", record.getCircleCode(), true);
+        languageLocationCode = ParseDataHelper.validateAndParseInt("Language Location Code", record.getLanguageLocationCode(), true);
+        contentName = ParseDataHelper.validateAndParseString("Conteny name", record.getContentName(), true);
+        contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
+        cardNumber = ParseDataHelper.validateAndParseInt("Card number", record.getCardNumber(), true);
+        contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
+        content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
 
         //Bug24
         if (ContentType.of(content) != ContentType.CONTENT && ContentType.of(content) != ContentType.PROMPT) {
