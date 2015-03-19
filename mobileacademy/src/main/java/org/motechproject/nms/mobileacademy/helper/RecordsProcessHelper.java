@@ -9,7 +9,7 @@ import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.commons.Record;
-import org.motechproject.nms.mobileacademy.commons.UserDetailsDTO;
+import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
@@ -28,10 +28,10 @@ import org.slf4j.LoggerFactory;
  * service.
  *
  */
-public class RecordProcessHelper {
+public class RecordsProcessHelper {
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(RecordProcessHelper.class);
+            .getLogger(RecordsProcessHelper.class);
 
     /*
      * This function adds the records into a Map having LLC of record as key
@@ -183,34 +183,34 @@ public class RecordProcessHelper {
      * update Chapter Content For User Details
      * 
      * @param chapterContent
-     * @param userDetailsDTO
+     * @param operatorDetails
      */
     public static void updateChapterContentForUserDetails(
-            ChapterContent chapterContent, UserDetailsDTO userDetailsDTO) {
+            ChapterContent chapterContent, OperatorDetails operatorDetails) {
         for (LessonContent lessonContent : chapterContent.getLessons()) {
-            lessonContent.setCreator(userDetailsDTO.getCreator());
-            lessonContent.setModifiedBy(userDetailsDTO.getModifiedBy());
-            lessonContent.setOwner(userDetailsDTO.getOwner());
+            lessonContent.setCreator(operatorDetails.getCreator());
+            lessonContent.setModifiedBy(operatorDetails.getModifiedBy());
+            lessonContent.setOwner(operatorDetails.getOwner());
         }
         for (ScoreContent scoreContent : chapterContent.getScores()) {
-            scoreContent.setCreator(userDetailsDTO.getCreator());
-            scoreContent.setModifiedBy(userDetailsDTO.getModifiedBy());
-            scoreContent.setOwner(userDetailsDTO.getOwner());
+            scoreContent.setCreator(operatorDetails.getCreator());
+            scoreContent.setModifiedBy(operatorDetails.getModifiedBy());
+            scoreContent.setOwner(operatorDetails.getOwner());
         }
 
         QuizContent quiz = chapterContent.getQuiz();
         for (QuestionContent questionContent : quiz.getQuestions()) {
-            questionContent.setCreator(userDetailsDTO.getCreator());
-            questionContent.setModifiedBy(userDetailsDTO.getModifiedBy());
-            questionContent.setOwner(userDetailsDTO.getOwner());
+            questionContent.setCreator(operatorDetails.getCreator());
+            questionContent.setModifiedBy(operatorDetails.getModifiedBy());
+            questionContent.setOwner(operatorDetails.getOwner());
         }
-        quiz.setCreator(userDetailsDTO.getCreator());
-        quiz.setModifiedBy(userDetailsDTO.getModifiedBy());
-        quiz.setOwner(userDetailsDTO.getOwner());
+        quiz.setCreator(operatorDetails.getCreator());
+        quiz.setModifiedBy(operatorDetails.getModifiedBy());
+        quiz.setOwner(operatorDetails.getOwner());
 
-        chapterContent.setCreator(userDetailsDTO.getCreator());
-        chapterContent.setModifiedBy(userDetailsDTO.getModifiedBy());
-        chapterContent.setOwner(userDetailsDTO.getOwner());
+        chapterContent.setCreator(operatorDetails.getCreator());
+        chapterContent.setModifiedBy(operatorDetails.getModifiedBy());
+        chapterContent.setOwner(operatorDetails.getOwner());
 
     }
 

@@ -28,7 +28,7 @@ import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
-import org.motechproject.nms.mobileacademy.helper.RecordProcessHelper;
+import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
@@ -98,7 +98,7 @@ public class RecordsProcessServiceImplTest {
         CourseContentCsv courseContentCsv = new CourseContentCsv("CI14", "AP",
                 "14", "Chapter01_Lesson01", "Content", "ch1_l1.wav", "150", "");
         try {
-            RecordProcessHelper.validateSchema(courseContentCsv);
+            RecordsProcessHelper.validateSchema(courseContentCsv);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -116,7 +116,7 @@ public class RecordsProcessServiceImplTest {
                 "150", "");
 
         try {
-            RecordProcessHelper.validateSchema(courseContentCsv);
+            RecordsProcessHelper.validateSchema(courseContentCsv);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -133,7 +133,7 @@ public class RecordsProcessServiceImplTest {
         CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
                 "AP", "14", "", "Content", "ch1_l1.wav", "150", "");
         try {
-            RecordProcessHelper.validateSchema(courseContentCsv);
+            RecordsProcessHelper.validateSchema(courseContentCsv);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -150,7 +150,7 @@ public class RecordsProcessServiceImplTest {
         CourseContentCsv courseContentCsv = new CourseContentCsv("14", "AP",
                 "14", "null", "Content", "ch1_l1.wav", "150", "");
         try {
-            RecordProcessHelper.validateSchema(courseContentCsv);
+            RecordsProcessHelper.validateSchema(courseContentCsv);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -352,7 +352,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -371,7 +371,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_q1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -390,7 +390,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_q1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -413,7 +413,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -436,7 +436,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -460,7 +460,7 @@ public class RecordsProcessServiceImplTest {
 
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateRawContent(courseContentCsv, record);
+            RecordsProcessHelper.validateRawContent(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -483,7 +483,7 @@ public class RecordsProcessServiceImplTest {
         Boolean flag = true;
 
         try {
-            RecordProcessHelper.validateContentName(courseContentCsv, record);
+            RecordsProcessHelper.validateContentName(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -506,7 +506,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateContentName(courseContentCsv, record);
+            RecordsProcessHelper.validateContentName(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -525,7 +525,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateContentName(courseContentCsv, record);
+            RecordsProcessHelper.validateContentName(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -544,7 +544,7 @@ public class RecordsProcessServiceImplTest {
         record.setFileName("Ch1_l1.wav");
         Boolean flag = true;
         try {
-            RecordProcessHelper.validateContentName(courseContentCsv, record);
+            RecordsProcessHelper.validateContentName(courseContentCsv, record);
         } catch (DataValidationException e) {
             flag = false;
         }
@@ -558,11 +558,11 @@ public class RecordsProcessServiceImplTest {
     public void testIsTypeDeterminable() {
         Record record = new Record();
 
-        assertFalse(RecordProcessHelper.isTypeDeterminable(record, "Lesson"));
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "Lesson"));
         assertNull(record.getType());
-        assertFalse(RecordProcessHelper.isTypeDeterminable(record, "LessonAB"));
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "LessonAB"));
         assertNull(record.getType());
-        RecordProcessHelper.isTypeDeterminable(record, "Lesson01");
+        RecordsProcessHelper.isTypeDeterminable(record, "Lesson01");
         assertSame(FileType.LESSON_CONTENT, record.getType());
     }
 

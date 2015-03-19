@@ -17,7 +17,7 @@ import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.commons.UserDetailsDTO;
+import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -44,9 +44,9 @@ public class CoursePopulateServiceIT extends BasePaxIT {
         state = coursePopulateService.findCourseState();
         assertNull(state);
 
-        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
+        OperatorDetails operatorDetails = new OperatorDetails();
 
-        coursePopulateService.populateMtrainingCourseData(userDetailsDTO);
+        coursePopulateService.populateMtrainingCourseData(operatorDetails);
         state = coursePopulateService.findCourseState();
         assertNotNull(state);
         assertSame(state, CourseUnitState.Inactive);

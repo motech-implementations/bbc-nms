@@ -16,7 +16,7 @@ import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.commons.Record;
-import org.motechproject.nms.mobileacademy.commons.UserDetailsDTO;
+import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
@@ -24,7 +24,7 @@ import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
-import org.motechproject.nms.mobileacademy.helper.RecordProcessHelper;
+import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
@@ -85,15 +85,15 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
         List<Integer> listOfExistingLlc = courseProcessedContentService
                 .getListOfAllExistingLlcs();
-        UserDetailsDTO userDetailsDTO = new UserDetailsDTO();
+        OperatorDetails operatorDetails = new OperatorDetails();
 
         if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
             // set user details from first record
-            userDetailsDTO.setCreator(courseContentCsvs.get(0).getCreator());
-            bulkUploadStatus.setUploadedBy(userDetailsDTO.getCreator());
-            userDetailsDTO.setModifiedBy(courseContentCsvs.get(0)
+            operatorDetails.setCreator(courseContentCsvs.get(0).getCreator());
+            bulkUploadStatus.setUploadedBy(operatorDetails.getCreator());
+            operatorDetails.setModifiedBy(courseContentCsvs.get(0)
                     .getModifiedBy());
-            userDetailsDTO.setOwner(courseContentCsvs.get(0).getOwner());
+            operatorDetails.setOwner(courseContentCsvs.get(0).getOwner());
 
             Iterator<CourseContentCsv> recordIterator = courseContentCsvs
                     .iterator();
@@ -101,9 +101,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             while (recordIterator.hasNext()) {
                 CourseContentCsv courseContentCsv = recordIterator.next();
                 try {
-                    RecordProcessHelper.validateSchema(courseContentCsv);
+                    RecordsProcessHelper.validateSchema(courseContentCsv);
                 } catch (DataValidationException ex) {
-                    RecordProcessHelper.processError(bulkUploadError, ex,
+                    RecordsProcessHelper.processError(bulkUploadError, ex,
                             courseContentCsv.getContentId());
                     bulkUploadErrLogService
                             .writeBulkUploadErrLog(bulkUploadError);
@@ -119,13 +119,13 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 int languageLocCode = Integer.parseInt(courseContentCsv
                         .getLanguageLocationCode());
                 if (listOfExistingLlc.contains(languageLocCode)) {
-                    RecordProcessHelper.putRecordInModifyMap(
+                    RecordsProcessHelper.putRecordInModifyMap(
                             mapForModifyRecords, courseContentCsv);
                     LOGGER.debug(
                             "Record moved to Modify Map for Content ID: {}",
                             courseContentCsv.getContentId());
                 } else {
-                    RecordProcessHelper.putRecordInAddMap(mapForAddRecords,
+                    RecordsProcessHelper.putRecordInAddMap(mapForAddRecords,
                             courseContentCsv);
                     LOGGER.debug(
                             "Record moved to Addition Map for Content ID: {}",
@@ -136,9 +136,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
 
         processAddRecords(mapForAddRecords, bulkUploadError, bulkUploadStatus,
-                userDetailsDTO);
+                operatorDetails);
         processModificationRecords(mapForModifyRecords, bulkUploadError,
-                bulkUploadStatus, userDetailsDTO);
+                bulkUploadStatus, operatorDetails);
 
         bulkUploadErrLogService
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
@@ -155,7 +155,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void processModificationRecords(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
-            UserDetailsDTO userDetailsDTO) {
+            OperatorDetails operatorDetails) {
         if (!mapForModifyRecords.isEmpty()) {
             Iterator<String> contentNamesIterator = mapForModifyRecords
                     .keySet().iterator();
@@ -173,14 +173,14 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
                         Record record = new Record();
                         try {
-                            RecordProcessHelper.validateRawContent(
+                            RecordsProcessHelper.validateRawContent(
                                     courseContentCsv, record);
 
                         } catch (DataValidationException exc) {
                             LOGGER.warn(
                                     "Record Validation failed for content ID: {}",
                                     courseContentCsv.getContentId());
-                            RecordProcessHelper.processError(bulkUploadError,
+                            RecordsProcessHelper.processError(bulkUploadError,
                                     exc, courseContentCsv.getContentId());
 
                             bulkUploadErrLogService
@@ -227,7 +227,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     courseProcessedContent
                                             .setContentID(contentId);
                                     courseProcessedContent
-                                            .setModifiedBy(userDetailsDTO
+                                            .setModifiedBy(operatorDetails
                                                     .getModifiedBy());
                                     courseProcessedContentService
                                             .update(courseProcessedContent);
@@ -249,7 +249,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         // Start Processing the file change records:
         if (!mapForModifyRecords.isEmpty()) {
             processModificationRecordForAnswerOrFileChange(mapForModifyRecords,
-                    bulkUploadError, bulkUploadStatus, userDetailsDTO);
+                    bulkUploadError, bulkUploadStatus, operatorDetails);
         }
     }
 
@@ -260,7 +260,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void processModificationRecordForAnswerOrFileChange(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
-            UserDetailsDTO userDetailsDTO) {
+            OperatorDetails operatorDetails) {
 
         Iterator<String> contentNamesIterator = mapForModifyRecords.keySet()
                 .iterator();
@@ -310,7 +310,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
              */
             Record record = new Record();
             try {
-                RecordProcessHelper.validateContentName(mapForModifyRecords
+                RecordsProcessHelper.validateContentName(mapForModifyRecords
                         .get(contentName).get(0), record);
             } catch (DataValidationException e1) {
                 LOGGER.error("", e1);
@@ -377,7 +377,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             // If data has arrived for all the existing LLCS.
             if (CollectionUtils.isEmpty(listOfExistingLlc)) {
                 updateModificationRecordsInSystem(mapForModifyRecords,
-                        bulkUploadStatus, userDetailsDTO, contentName,
+                        bulkUploadStatus, operatorDetails, contentName,
                         fileName, correctAnswerOption, flagForUpdatingMetaData);
             } else { // Not sufficient records for a course
                 LOGGER.warn("Course not modified for content name: {}",
@@ -402,7 +402,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
     private void updateModificationRecordsInSystem(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
-            BulkUploadStatus bulkUploadStatus, UserDetailsDTO userDetailsDTO,
+            BulkUploadStatus bulkUploadStatus, OperatorDetails operatorDetails,
             String contentName, String fileName, int correctAnswerOption,
             boolean flagForUpdatingMetaData) {
 
@@ -413,7 +413,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         Record record = new Record();
         try {
             if (mapForModifyRecords.get(contentName) != null) {
-                RecordProcessHelper.validateRawContent(
+                RecordsProcessHelper.validateRawContent(
                         mapForModifyRecords.get(contentName).get(0), record);
             }
         } catch (DataValidationException e) {
@@ -421,7 +421,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
 
         if (isRecordChangingTheFileName(record)) {
-            determineTypeAndUpdateChapterContent(record, userDetailsDTO);
+            determineTypeAndUpdateChapterContent(record, operatorDetails);
             LOGGER.info("Audio file name has been changed for contentName: {}",
                     contentName);
         }
@@ -439,7 +439,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                             MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                             record.getChapterId()), Integer
                                     .toString(correctAnswerOption),
-                            userDetailsDTO);
+                            operatorDetails);
             LOGGER.info(
                     "Correct Answer Option for contentName: {} has been changed to :{}",
                     contentName, correctAnswerOption);
@@ -466,7 +466,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         .parseInt(courseContentCsv.getContentDuration()));
                 courseProcessedContent.setContentID(Integer
                         .parseInt(courseContentCsv.getContentId()));
-                courseProcessedContent.setModifiedBy(userDetailsDTO
+                courseProcessedContent.setModifiedBy(operatorDetails
                         .getModifiedBy());
                 if (flagForUpdatingMetaData) {
                     courseProcessedContent
@@ -505,43 +505,43 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
      * record object, into courseContent tables
      */
     private void determineTypeAndUpdateChapterContent(Record record,
-            UserDetailsDTO userDetailsDTO) {
+            OperatorDetails operatorDetails) {
         if (record.getType() == FileType.LESSON_CONTENT) {
             coursePopulateService.setLessonContent(record.getChapterId(),
                     record.getLessonId(),
                     MobileAcademyConstants.CONTENT_LESSON,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.LESSON_END_MENU) {
             coursePopulateService.setLessonContent(record.getChapterId(),
                     record.getLessonId(), MobileAcademyConstants.CONTENT_MENU,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.QUESTION_CONTENT) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_QUESTION,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.CORRECT_ANSWER) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_CORRECT_ANSWER,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.WRONG_ANSWER) {
             coursePopulateService.setQuestionContent(record.getChapterId(),
                     record.getQuestionId(),
                     MobileAcademyConstants.CONTENT_WRONG_ANSWER,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.CHAPTER_END_MENU) {
             coursePopulateService.setChapterContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_MENU, record.getFileName(),
-                    userDetailsDTO);
+                    operatorDetails);
         } else if (record.getType() == FileType.QUIZ_HEADER) {
             coursePopulateService.setQuizContent(record.getChapterId(),
                     MobileAcademyConstants.CONTENT_QUIZ_HEADER,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         } else if (record.getType() == FileType.SCORE) {
             coursePopulateService.setScore(record.getChapterId(),
                     record.getScoreID(), MobileAcademyConstants.SCORE,
-                    record.getFileName(), userDetailsDTO);
+                    record.getFileName(), operatorDetails);
         }
     }
 
@@ -626,7 +626,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void processAddRecords(
             Map<Integer, List<CourseContentCsv>> mapForAddRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
-            UserDetailsDTO userDetailsDTO) {
+            OperatorDetails operatorDetails) {
 
         boolean populateCourseStructure = false;
 
@@ -670,7 +670,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                     Course course = coursePopulateService.getMtrainingCourse();
                     if (course == null) {
                         course = coursePopulateService
-                                .populateMtrainingCourseData(userDetailsDTO);
+                                .populateMtrainingCourseData(operatorDetails);
                         populateCourseStructure = true;
                     }
 
@@ -680,7 +680,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             .getAllChapterContents();
 
                     if (CollectionUtils.isEmpty(chapterContents)) {
-                        chapterContents = RecordProcessHelper
+                        chapterContents = RecordsProcessHelper
                                 .createChapterContentPrototype();
                     }
 
@@ -691,7 +691,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                 .next();
                         Record record = new Record();
                         try {
-                            RecordProcessHelper.validateRawContent(
+                            RecordsProcessHelper.validateRawContent(
                                     courseContentCsv, record);
                         } catch (DataValidationException exc) {
 
@@ -701,7 +701,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     "Record validation failed for content ID: {}",
                                     courseContentCsv.getContentId());
 
-                            RecordProcessHelper.processError(bulkUploadError,
+                            RecordsProcessHelper.processError(bulkUploadError,
                                     exc, courseContentCsv.getContentId());
 
                             bulkUploadErrLogService
@@ -728,7 +728,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             if (record.getType() == FileType.QUESTION_CONTENT) {
                                 answerOptionRecordList.add(record);
                             }
-                            RecordProcessHelper
+                            RecordsProcessHelper
                                     .checkTypeAndAddToChapterContent(record,
                                             chapterContents, courseFlag);
                         } else {
@@ -771,7 +771,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     .next();
                             bulkUploadStatus.incrementSuccessCount();
                             updateRecordInContentProcessedTable(
-                                    courseContentCsv, userDetailsDTO);
+                                    courseContentCsv, operatorDetails);
                             courseContentCsvService.delete(courseContentCsv);
                             courseRawContentsIterator.remove();
                         }
@@ -780,18 +780,18 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             for (int chapterCounter = 0; chapterCounter < MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCounter++) {
                                 ChapterContent chapterContent = chapterContents
                                         .get(chapterCounter);
-                                RecordProcessHelper
+                                RecordsProcessHelper
                                         .updateChapterContentForUserDetails(
-                                                chapterContent, userDetailsDTO);
+                                                chapterContent, operatorDetails);
                                 chapterContentDataService
                                         .create(chapterContent);
                             }
                             // Update AnswerOptionList
                             // Change the state to Active
                             processListOfAnswerOptionRecords(
-                                    answerOptionRecordList, userDetailsDTO);
+                                    answerOptionRecordList, operatorDetails);
                             coursePopulateService.updateCourseState(
-                                    CourseUnitState.Active, userDetailsDTO);
+                                    CourseUnitState.Active, operatorDetails);
                             LOGGER.info(
                                     "Course Added successfully for LLC: {}",
                                     languageLocCode);
@@ -827,7 +827,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
      * mTraining module.
      */
     private void processListOfAnswerOptionRecords(
-            List<Record> answerOptionRecordList, UserDetailsDTO userDetailsDTO) {
+            List<Record> answerOptionRecordList, OperatorDetails operatorDetails) {
         for (Record answerRecord : answerOptionRecordList) {
             coursePopulateService
                     .updateCorrectAnswer(
@@ -840,7 +840,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                             MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                                             answerRecord.getQuestionId()),
                             String.valueOf(answerRecord.getAnswerId()),
-                            userDetailsDTO);
+                            operatorDetails);
         }
     }
 
@@ -865,7 +865,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         } else {
             if ((record.getType() == FileType.LESSON_CONTENT)
                     || (record.getType() == FileType.LESSON_END_MENU)) {
-                status = RecordProcessHelper
+                status = RecordsProcessHelper
                         .checkRecordConsistencyAndMarkFlagForLesson(record,
                                 chapterContent, courseFlag, status);
 
@@ -1027,7 +1027,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
      * table chapter
      */
     private void updateRecordInContentProcessedTable(
-            CourseContentCsv courseContentCsv, UserDetailsDTO userDetailsDTO) {
+            CourseContentCsv courseContentCsv, OperatorDetails operatorDetails) {
         String metaData = "";
         ContentType contentType = ContentType.CONTENT;
 
@@ -1046,9 +1046,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 courseContentCsv.getContentFile(),
                 Integer.parseInt(courseContentCsv.getContentDuration()),
                 metaData);
-        courseProcessedContent.setCreator(userDetailsDTO.getCreator());
-        courseProcessedContent.setModifiedBy(userDetailsDTO.getModifiedBy());
-        courseProcessedContent.setOwner(userDetailsDTO.getOwner());
+        courseProcessedContent.setCreator(operatorDetails.getCreator());
+        courseProcessedContent.setModifiedBy(operatorDetails.getModifiedBy());
+        courseProcessedContent.setOwner(operatorDetails.getOwner());
         courseProcessedContentService.create(courseProcessedContent);
     }
 

@@ -3,11 +3,11 @@ package org.motechproject.nms.mobileacademy.commons;
 import java.io.Serializable;
 
 /**
- * User Details DTO object refer user details(i.e creator, owner, modifiedBy)
+ * Operator Details object refer user details(i.e creator, owner, modifiedBy)
  * that used in add/update operations
  *
  */
-public class UserDetailsDTO implements Serializable {
+public class OperatorDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
