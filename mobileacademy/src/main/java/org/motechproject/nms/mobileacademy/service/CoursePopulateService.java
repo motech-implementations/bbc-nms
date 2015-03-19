@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
-import org.motechproject.nms.mobileacademy.commons.UserDetailsDTO;
+import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
 import org.motechproject.nms.mobileacademy.domain.ChapterContent;
 import org.motechproject.nms.mobileacademy.domain.LessonContent;
 import org.motechproject.nms.mobileacademy.domain.QuestionContent;
@@ -21,11 +21,11 @@ public interface CoursePopulateService {
      *
      * populate course static Data in mtraining.
      * 
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      * @return
      *
      */
-    public Course populateMtrainingCourseData(UserDetailsDTO userDetailsDTO);
+    public Course populateMtrainingCourseData(OperatorDetails operatorDetails);
 
     /**
      *
@@ -47,10 +47,10 @@ public interface CoursePopulateService {
      * update Course State
      * 
      * @param courseUnitState Course state enum contain course state
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void updateCourseState(CourseUnitState courseUnitState,
-            UserDetailsDTO userDetailsDTO);
+            OperatorDetails operatorDetails);
 
     /**
      * update Correct Answer in mtraining
@@ -59,10 +59,10 @@ public interface CoursePopulateService {
      * @param questionName refer to question identifier i.e
      *            Question01,Question02
      * @param answer refer to answer identifier i.e 1,2
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void updateCorrectAnswer(String chapterName, String questionName,
-            String answer, UserDetailsDTO userDetailsDTO);
+            String answer, OperatorDetails operatorDetails);
 
     /**
      * This returns all the chapterContents saved for a course.
@@ -127,10 +127,10 @@ public interface CoursePopulateService {
      * @param type refers to the type of lesson files: "Lesson" for lesson
      *            content file or "menu" for end menu file of lesson
      * @param fileName name of audio file for lesson content to be updated
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void setLessonContent(int chapterNo, int lessonNo, String type,
-            String fileName, UserDetailsDTO userDetailsDTO);
+            String fileName, OperatorDetails operatorDetails);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
@@ -140,38 +140,38 @@ public interface CoursePopulateService {
      *            audio file of question or "wrongAnswer" for wrong answer audio
      *            file of question
      * @param fileName name of audio file for lesson content to be updated
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void setQuestionContent(int chapterNo, int questionNo, String type,
-            String fileName, UserDetailsDTO userDetailsDTO);
+            String fileName, OperatorDetails operatorDetails);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
      * @param scoreNo refers to the score in a quiz.. 0,1,2..4
      * @param type refers to type of file stored for scores: "score"
      * @param fileName name of audio file for lesson content to be updated
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void setScore(int chapterNo, int scoreNo, String type,
-            String fileName, UserDetailsDTO userDetailsDTO);
+            String fileName, OperatorDetails operatorDetails);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
      * @param type refers to type of file stored for chapters: "menu"
      * @param fileName name of audio file for lesson content to be updated
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void setChapterContent(int chapterNo, String type, String fileName,
-            UserDetailsDTO userDetailsDTO);
+            OperatorDetails operatorDetails);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11
      * @param type refers to type of file stored for quiz: "quizHeader"
      * @param fileName name of audio file for lesson content to be updated
-     * @param userDetailsDTO object contain user details
+     * @param operatorDetails object contain user details
      */
     public void setQuizContent(int chapterNo, String type, String fileName,
-            UserDetailsDTO userDetailsDTO);
+            OperatorDetails operatorDetails);
 
     /**
      * @param chapterNo refers to index of chapter.. 1,2,3..11

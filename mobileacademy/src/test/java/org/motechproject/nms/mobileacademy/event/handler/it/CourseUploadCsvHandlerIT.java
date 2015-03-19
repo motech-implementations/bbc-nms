@@ -30,7 +30,7 @@ import org.motechproject.nms.mobileacademy.event.handler.CourseUploadCsvHandler;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.service.CSVRecordProcessService;
+import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -50,7 +50,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 public class CourseUploadCsvHandlerIT extends BasePaxIT {
 
     @Inject
-    private CSVRecordProcessService csvRecordProcessService;
+    private RecordsProcessService recordsProcessService;
 
     @Inject
     private CourseContentCsvDataService courseContentCsvDataService;
@@ -77,10 +77,10 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
      */
     @Before
     public void setUp() {
-        assertNotNull(csvRecordProcessService);
+        assertNotNull(recordsProcessService);
         assertNotNull(courseContentCsvService);
         courseUploadCsvHandler = new CourseUploadCsvHandler(
-                csvRecordProcessService, courseContentCsvService);
+                recordsProcessService, courseContentCsvService);
         assertNotNull(courseUploadCsvHandler);
         clearMobileAcademyData();
 

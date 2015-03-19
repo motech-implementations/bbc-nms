@@ -48,11 +48,4 @@ public class CourseProcessedContentServiceImpl implements
                 circle, languageLocationCode, contentName);
     }
 
-    @Override
-    public void deleteRecordsByLlc(int languageLocationCode) {
-        courseProcessedContentDataService
-                .executeQuery(new CourseProcessedContentCustomQuery().new DeleteProcessedContentQueryExecutionImpl(
-                        languageLocationCode));
-    }
-
 }
