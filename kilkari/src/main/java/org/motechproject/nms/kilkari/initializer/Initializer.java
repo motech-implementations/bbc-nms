@@ -1,6 +1,8 @@
 package org.motechproject.nms.kilkari.initializer;
 
+import org.motechproject.nms.kilkari.domain.ActiveUser;
 import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.service.ActiveUserService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,8 @@ public class Initializer {
     private Logger logger = LoggerFactory.getLogger(Initializer.class);
     
     public static final Long CONFIGURATION_INDEX = 1L;
+    
+    public static final Long ACTIVEUSER_COUNT = 0L;
 
     public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEk = 1;
 
@@ -43,11 +47,14 @@ public class Initializer {
     public static final String DEFAULT_RETRY_DAY3_OBD_PRIORITY = "1";
 
     private ConfigurationService configurationService;
+    
+    private ActiveUserService activeUserService;
 
 
     @Autowired
-    public Initializer(ConfigurationService configurationService) {
+    public Initializer(ConfigurationService configurationService, ActiveUserService activeUserService) {
         this.configurationService = configurationService;
+        this.activeUserService = activeUserService;
     }
 
     @PostConstruct
@@ -57,6 +64,7 @@ public class Initializer {
          * Check if configuration is not present then create with default values
          */
         if (!configurationService.isConfigurationPresent()) {
+            
             Configuration configuration = new Configuration();
             logger.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
@@ -71,7 +79,12 @@ public class Initializer {
             configuration.setRetryDay2ObdPriority(DEFAULT_RETRY_DAY2_OBD_PRIORITY);
             configuration.setRetryDay3ObdPriority(DEFAULT_RETRY_DAY3_OBD_PRIORITY);
             configurationService.createConfiguration(configuration);
-
+            
+            ActiveUser activeUser = new ActiveUser();
+            activeUser.setIndex(CONFIGURATION_INDEX);
+            activeUser.setActiveUserCount(ACTIVEUSER_COUNT);
+            activeUserService.create(activeUser);
+            
         }
     }
 

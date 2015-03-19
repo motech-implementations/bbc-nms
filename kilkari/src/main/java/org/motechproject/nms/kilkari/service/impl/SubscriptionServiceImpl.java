@@ -14,7 +14,8 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.event.handler.MctsCsvHelper;
+import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
+import org.motechproject.nms.kilkari.repository.CustomeQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -38,6 +39,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     @Autowired
     private ConfigurationService configurationService;
+    
+    @Autowired
+    private ActiveUserDataService activeUserDataService;
     
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
@@ -305,7 +309,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 updateDbSubscription(subscriber, dbSubscription, false, subscriber.getDeactivationReason());
             }
         }
-
+        
         updateDbSubscriber(subscriber, dbSubscriber);
     }
     
@@ -326,7 +330,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setOwner(dbSubscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
 
-        return subscriptionDataService.create(newSubscription);
+        newSubscription =  subscriptionDataService.create(newSubscription);
+        activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+        
+        return newSubscription;
     }
     
     /**
@@ -337,15 +344,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     private void updateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag,
                                       DeactivationReason deactivationReason) {
-        if (statusFlag) {
-            dbSubscription.setStatus(Status.DEACTIVATED);
-        }
+        
         dbSubscription.setDeactivationReason(deactivationReason);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
         dbSubscription.setMctsId(subscriber.getSuitableMctsId());
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
+        if (statusFlag) {
+            dbSubscription.setStatus(Status.DEACTIVATED);
+        }
+        
         subscriptionDataService.update(dbSubscription);
+        
+        if (statusFlag) {
+            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+        } else {
+            activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+        }
     }
     
     /**

@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Status;
