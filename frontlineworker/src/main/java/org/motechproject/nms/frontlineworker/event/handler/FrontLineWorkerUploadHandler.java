@@ -123,8 +123,7 @@ public class FrontLineWorkerUploadHandler {
 
                     nmsFlwId = frontLineWorker.getId();
 
-                    FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker.getFlwId(), frontLineWorker.getStateCode(),
-                            frontLineWorker.getContactNo(), nmsFlwId);
+                    FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker);
                     Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
 
                     if (flw == null && dbRecord.getFlwId() != null) {
@@ -520,19 +519,19 @@ public class FrontLineWorkerUploadHandler {
     /**
      * This method is used to set error record details
      *
-     * @param flwId     FlwId for which db record is to be found
-     * @param stateCode specifies the state code from the Csv record
-     * @param contactNo specifies the contact no from the Csv record
+     * @param frontLineWorker  front line worker whose details are to be fetched from database.
      * @return null if there is no db record for given FlwId else the record generated from db
-     * @throws DataValidationException
      */
-    private FrontLineWorker checkExistenceOfFlw(Long flwId, Long stateCode, String contactNo, Long nmsFlwId) throws DataValidationException {
-        logger.debug("FLW state Code : {}", stateCode);
 
-        FrontLineWorker dbRecord = frontLineWorkerService.findById(nmsFlwId);
+    private FrontLineWorker checkExistenceOfFlw(FrontLineWorker frontLineWorker) {
+
+        FrontLineWorker dbRecord = frontLineWorkerService.findById(frontLineWorker.getId());
         if (dbRecord == null) {
-            dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(flwId, stateCode);
+            Long stateCode = frontLineWorker.getStateCode();
+            logger.debug("FLW state Code : {}", stateCode);
+            dbRecord = frontLineWorkerService.getFlwByFlwIdAndStateId(frontLineWorker.getFlwId(), stateCode);
             if (dbRecord == null) {
+                String contactNo = frontLineWorker.getContactNo();
                 logger.debug("FLW Contact Number : {}", contactNo);
                 dbRecord = frontLineWorkerService.getFlwBycontactNo(contactNo);
             }
