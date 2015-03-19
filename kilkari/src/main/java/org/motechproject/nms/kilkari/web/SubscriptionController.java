@@ -53,7 +53,7 @@ public class SubscriptionController {
             return null;
         }
         try {
-            subscriptionService.createNewSubscriberAndSubscription(buildSubscriber(apiRequest.getMsisdn()), Channel.IVR);
+            subscriptionService.createNewSubscriberAndSubscription(buildSubscriber(apiRequest.getMsisdn()), Channel.IVR, null);
         } catch (DataValidationException ex) {
             return null;
         }

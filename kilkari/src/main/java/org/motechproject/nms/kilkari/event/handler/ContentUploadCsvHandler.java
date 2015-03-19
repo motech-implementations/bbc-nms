@@ -148,26 +148,26 @@ public class ContentUploadCsvHandler {
     private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
         ContentUpload newRecord = new ContentUpload();
 
-        String circleCode = ParseDataHelper.parseString("circleCode", record.getCircleCode(), true);
+        String circleCode = ParseDataHelper.validateAndParseString("circleCode", record.getCircleCode(), true);
         if (circleService.getRecordByCode(circleCode)!= null) {
             newRecord.setCircleCode(circleCode);
         } else {
             ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
         }
 
-        Integer llc = ParseDataHelper.parseInt("LanguageLocationCode", record.getLanguageLocationCode(), true);
+        Integer llc = ParseDataHelper.validateAndParseInt("LanguageLocationCode", record.getLanguageLocationCode(), true);
         if (languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, llc) != null) {
             newRecord.setLanguageLocationCode(llc);
         } else {
             ParseDataHelper.raiseInvalidDataException("languageLocationCode and/or circleCode", record.getLanguageLocationCode());
         }
 
-        newRecord.setContentDuration(ParseDataHelper.parseInt("contentDuration", record.getContentDuration(), true));
-        newRecord.setContentFile(ParseDataHelper.parseString("contentFile", record.getContentFile(), true));
-        newRecord.setContentId(ParseDataHelper.parseLong("contentId", record.getContentId(), true));
-        newRecord.setContentName(ParseDataHelper.parseString("contentName", record.getContentName(), true));
+        newRecord.setContentDuration(ParseDataHelper.validateAndParseInt("contentDuration", record.getContentDuration(), true));
+        newRecord.setContentFile(ParseDataHelper.validateAndParseString("contentFile", record.getContentFile(), true));
+        newRecord.setContentId(ParseDataHelper.validateAndParseLong("contentId", record.getContentId(), true));
+        newRecord.setContentName(ParseDataHelper.validateAndParseString("contentName", record.getContentName(), true));
 
-        String contentType = ParseDataHelper.parseString("contentType", record.getContentType(), true);
+        String contentType = ParseDataHelper.validateAndParseString("contentType", record.getContentType(), true);
         if (contentType.equals(ContentType.CONTENT.toString())) {
             newRecord.setContentType(ContentType.CONTENT);
         } else {
