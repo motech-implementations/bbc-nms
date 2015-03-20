@@ -27,5 +27,17 @@
     <osgi:reference id="bulkUploadErrLogService"
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
+    <osgi:reference id="operatorService"
+                    interface="org.motechproject.nms.masterdata.service.OperatorService"/>
+
+    <osgi:reference id="circleService"
+                    interface="org.motechproject.nms.masterdata.service.CircleService"/>
+
+    <osgi:reference id="languageLocationCodeService"
+                    interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
+
+    <osgi:reference id="stateService"
+                    interface="org.motechproject.nms.masterdata.service.StateService"/>
 
 </beans>
+
