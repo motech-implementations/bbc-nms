@@ -35,6 +35,7 @@ public class ConfigurationServiceIT extends BasePaxIT {
     @Inject
     private ConfigurationDataService configurationDataService;
 
+    @Inject
     private ConfigurationService configurationService;
 
     private Initializer initializer;
@@ -42,7 +43,6 @@ public class ConfigurationServiceIT extends BasePaxIT {
     @Before
     public void setUp() {
 
-        configurationService = new ConfigurationServiceImpl(configurationDataService);
 
         initializer = new Initializer(configurationService);
 
