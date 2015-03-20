@@ -4,9 +4,7 @@ import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.UserDetailsService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +26,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private LanguageLocationCodeService llcService;
+
+    @Autowired
+    private ConfigurationService configurationService;
+
+    @Autowired
+    private ActiveUserService activeUserService;
 
     /**
      * this method determine languageLocationCode using msisdn and circleCode
@@ -66,9 +70,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (defaultLLCCode != null) {
                 response.setDefaultLanguageLocationCode(defaultLLCCode);
             } else {
-                //todo : set national default llcCode
-                Configuration conf = new Configuration();
-                response.setDefaultLanguageLocationCode(conf.getNationalLanguageLocationCode());
+                //case when circle is unknown i,e 99
+                Configuration configuration = configurationService.getConfiguration();
+                response.setDefaultLanguageLocationCode(configuration.getNationalLanguageLocationCode());
             }
         }
     }

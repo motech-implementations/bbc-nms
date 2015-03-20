@@ -4,15 +4,20 @@ import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.State;
+import sun.font.StandardTextSource;
 
 public class SubscriptionBuilder {
     Subscriber subscriber = new Subscriber();
 
-    public Subscriber buildSubscriber(Object... args) {
+    public Subscriber buildSubscriber(String msisdn, Integer llcCode, State state, District district) {
         subscriber.setName("motechUser");
-        subscriber.setMsisdn((String) args[0]);
+        subscriber.setMsisdn(msisdn);
         subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-        subscriber.setLanguageLocationCode((Integer) args[1]);
+        subscriber.setLanguageLocationCode(llcCode);
+        subscriber.setState(state);
+        subscriber.setDistrict(district);
         return subscriber;
     }
 
@@ -22,10 +27,4 @@ public class SubscriptionBuilder {
         return subscription;
     }
 
-//    public SubscriptionPack buildSubscriptionPack(String name, Integer duration, Integer NumOfMsg, Integer startWeek) {
-////        SubscriptionPack pack = new SubscriptionPack("");
-////        pack.setName(name);
-////        return pack;
-////    }
-//    }
 }
