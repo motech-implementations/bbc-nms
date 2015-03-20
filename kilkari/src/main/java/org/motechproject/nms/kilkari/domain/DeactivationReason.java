@@ -16,5 +16,5 @@ public enum DeactivationReason {
     PACK_SCHEDULE_CHANGED,
     NONE;
     
-    
+
 }
