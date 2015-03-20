@@ -11,10 +11,7 @@ import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 import java.util.List;
 
-/**
- * This class is used to write custom queries for kilkari module.
- */
-public class CustomeQueries {
+public class CustomQueries {
 
     /**
      * ActiveUserCountIncrementQuery class prepares a custom MDS query. The query
@@ -22,19 +19,29 @@ public class CustomeQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    SqlQueryExecution<ActiveUser> {
-        String incrementQuery = "update KILKARI_ACTIVEUSER set activeUserCount = activeUserCount + 1 where id = 1; ";
+    QueryExecution<ActiveUser> {
+
+        private final String incrementQuery = "update KILKARI_ACTIVEUSER " +
+                "set activeUserCount = activeUserCount + 1 where id = 1; ";
+
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
-        public ActiveUser execute(Query query) {
+        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
             return (ActiveUser) query.execute();
         }
 
-        @Override
+        /**
+         * This method returns the increment query string
+         * @return
+         */
         public String getSqlQuery() {
             return incrementQuery;
         }
-
-
     }
 
     /**
@@ -43,14 +50,26 @@ public class CustomeQueries {
      *
      */
     public static class ActiveUserCountDecrementQuery implements
-    SqlQueryExecution<ActiveUser> {
-        String decrementQuery = "update KILKARI_ACTIVEUSER set activeUserCount = activeUserCount - 1 where id = 1; ";
+    QueryExecution<ActiveUser> {
+
+        private final String decrementQuery = "update KILKARI_ACTIVEUSER " +
+                "set activeUserCount = activeUserCount - 1 where id = 1; ";
+
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
-        public ActiveUser execute(Query query) {
+        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
             return (ActiveUser) query.execute();
         }
 
-        @Override
+        /**
+         * This method returns the increment query string
+         * @return
+         */
         public String getSqlQuery() {
             return decrementQuery;
         }
@@ -68,12 +87,18 @@ public class CustomeQueries {
             this.resultParamName = resultParamName;
         }
 
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
             query.setFilter("msisdn == '" + msisdn + "'");
             query.setFilter("status == " + Status.ACTIVE + "or" + " status == " + Status.PENDING_ACTIVATION);
             query.setResult("DISTINCT " + resultParamName);
-            return null;
+            return (List<SubscriptionPack>) query.execute();
         }
     }
 }

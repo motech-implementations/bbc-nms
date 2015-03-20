@@ -2,7 +2,7 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
-import org.motechproject.nms.kilkari.repository.CustomeQueries;
+import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
@@ -126,7 +126,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public List<SubscriptionPack> getActiveSubscriptionPacksByMsisdn(String msisdn) {
-        CustomeQueries.ActiveSubscriptionQuery query = new CustomeQueries.ActiveSubscriptionQuery(msisdn, "packName");
+        CustomQueries.ActiveSubscriptionQuery query = new CustomQueries.ActiveSubscriptionQuery(msisdn, "packName");
         return subscriptionDataService.executeQuery(query);
     }
     
