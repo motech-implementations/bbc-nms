@@ -27,8 +27,11 @@
                   interface="org.motechproject.nms.kilkari.service.LocationValidatorService" />  
                   
     <osgi:service ref="configurationService"
-                  interface="org.motechproject.nms.kilkari.service.ConfigurationService" />                                                                                                          
-                                    
+                  interface="org.motechproject.nms.kilkari.service.ConfigurationService" />
+
+    <osgi:service ref="activeUserService"
+                  interface="org.motechproject.nms.kilkari.service.ActiveUserService" />
+
     <osgi:reference id="motherMctsCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService" />
                     
@@ -66,5 +69,6 @@
                     interface="org.motechproject.nms.masterdata.service.CircleService"/>
                     
 	<osgi:reference id="operatorService"
-                    interface="org.motechproject.nms.masterdata.service.OperatorService"/>                    
+                    interface="org.motechproject.nms.masterdata.service.OperatorService"/>
+
 </beans>

@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.it.initializer;
 
-import javax.inject.Inject;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -18,6 +16,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+
+import javax.inject.Inject;
 
 /**
  * This class contains test case to test Initializer
@@ -72,6 +72,9 @@ public class InitializerIT extends BasePaxIT {
         Assert.assertEquals(configuration.getRetryDay3ObdPriority(), Initializer.DEFAULT_RETRY_DAY3_OBD_PRIORITY);
         Assert.assertEquals(configuration.getRetryDay3ObdServiceId(), Initializer.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
 
+        Long expectedActiveUserCount = 0L;
+        Long actualActiveUserCount = activeUserService.getActiveUserCount();
+        Assert.assertTrue(expectedActiveUserCount == actualActiveUserCount);
     }
 
 }
