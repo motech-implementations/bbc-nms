@@ -11,6 +11,9 @@ import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 import java.util.List;
 
+/**
+ * This class is used to write custom queries for kilkari module.
+ */
 public class CustomeQueries {
 
     /**
