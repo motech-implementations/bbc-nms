@@ -5,6 +5,7 @@ import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
+import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -30,6 +31,7 @@ public class ServiceConsumptionCall extends MdsEntity {
     private DateTime callEndTime;
 
     @Field
+    @Persistent(defaultFetchGroup = "true")
     private Set<CardContent> cardContent;
 
     public Long getCallId() {
