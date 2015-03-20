@@ -60,10 +60,10 @@ public class ConfigurationServiceIT extends BasePaxIT {
         configuration = configurationService.getConfiguration();
 
         assertNotNull(configuration);
-        assertTrue(0 == configuration.getNmsMkCappingType());
-        assertTrue(0 == configuration.getNmsMkNationalCapValue());
-        assertTrue(1 == configuration.getNmsMkMaxWelcomeMessage());
-        assertTrue(2 == configuration.getNmsMkMaxEndofusageMessage());
+        assertTrue(0 == configuration.getCappingType());
+        assertTrue(0 == configuration.getNationalCapValue());
+        assertTrue(1 == configuration.getMaxWelcomeMessage());
+        assertTrue(2 == configuration.getMaxEndofusageMessage());
         assertTrue(1L == configuration.getIndex());
 
     }

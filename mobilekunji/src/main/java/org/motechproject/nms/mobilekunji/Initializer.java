@@ -45,10 +45,10 @@ public class Initializer {
 
             LOG.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
-            configuration.setNmsMkCappingType(DEFAULT_CAPPING_TYPE);
-            configuration.setNmsMkMaxWelcomeMessage(DEFAULT_MAX_WELCOME_MESSAGE);
-            configuration.setNmsMkMaxEndofusageMessage(DEFAULT_MAX_END_OF_USAGE_MESSAGE);
-            configuration.setNmsMkNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);
+            configuration.setCappingType(DEFAULT_CAPPING_TYPE);
+            configuration.setMaxWelcomeMessage(DEFAULT_MAX_WELCOME_MESSAGE);
+            configuration.setMaxEndofusageMessage(DEFAULT_MAX_END_OF_USAGE_MESSAGE);
+            configuration.setNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);
             configurationService.createConfiguration(configuration);
 
         }
