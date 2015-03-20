@@ -16,6 +16,7 @@ import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.impl.UserDetailsServiceImpl;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -182,6 +183,82 @@ public class UserDetailsServiceImplTest {
         Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
         Assert.assertEquals(response.getCircle(), "AP");
         Assert.assertTrue(response.getDefaultLanguageLocationCode() == 555);
+    }
+
+    @Test
+    public void  shouldGetLLCByCircleCodeWithNullSubscriber() {
+        initMocks(this);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(null);
+        when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(123);
+
+        //invoke the userDetailService.
+        SubscriberDetailApiResponse response = userDetailsService.getSubscriberDetails(msisdn, "AP");
+
+        //Do Assertions.
+        Assert.assertTrue(response.getLanguageLocationCode() == 123);
+        Assert.assertNull(response.getSubscriptionPackList());
+        Assert.assertEquals(response.getCircle(), "AP");
+        Assert.assertNull(response.getDefaultLanguageLocationCode());
+    }
+
+    @Test
+    public void  shouldDetermineDefaultLLCbyCircleCodeWithNullSubscriber() {
+        initMocks(this);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(null);
+        when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
+        when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(555);
+        //invoke the userDetailService.
+        SubscriberDetailApiResponse response = userDetailsService.getSubscriberDetails(msisdn, "AP");
+
+        //Do Assertions.
+        Assert.assertNull(response.getLanguageLocationCode());
+        Assert.assertNull(response.getSubscriptionPackList());
+        Assert.assertEquals(response.getCircle(), "AP");
+        Assert.assertEquals(response.getDefaultLanguageLocationCode(), Integer.valueOf(555));
+    }
+
+    @Test
+    public void  shouldgetDefaultLLCByNationalDefaultLLCWithNullSubscriber() {
+        initMocks(this);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(null);
+        when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
+        when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
+        when(configurationService.getConfiguration()).thenReturn(createConfiguration(555));
+        //invoke the userDetailService.
+        SubscriberDetailApiResponse response = userDetailsService.getSubscriberDetails(msisdn, "AP");
+
+        //Do Assertions.
+        Assert.assertNull(response.getLanguageLocationCode());
+        Assert.assertNull(response.getSubscriptionPackList());
+        Assert.assertEquals(response.getCircle(), "AP");
+        Assert.assertEquals(response.getDefaultLanguageLocationCode(), Integer.valueOf(555));
+    }
+
+    @Test
+    public void shouldGetSubscriberDetailsWhenActivePackListIsNull() {
+        initMocks(this);
+
+        //set the subscriber details
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(null);
+
+        //invoke the userDetailService.
+        SubscriberDetailApiResponse response= userDetailsService.getSubscriberDetails(msisdn, "AP");
+
+        //Do Assertions.
+        Assert.assertTrue(response.getLanguageLocationCode() == 123);
+        Assert.assertNull(response.getSubscriptionPackList());
+        Assert.assertEquals(response.getCircle(), "AP");
+        Assert.assertNull(response.getDefaultLanguageLocationCode());
     }
 
     private Configuration createConfiguration(Integer nationLLCCode) {
