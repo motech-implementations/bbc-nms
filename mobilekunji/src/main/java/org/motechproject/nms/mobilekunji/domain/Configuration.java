@@ -21,16 +21,16 @@ public class Configuration extends MdsEntity {
     private Long index;
 
     @Field(required = true)
-    private Integer nmsMkCappingType;
+    private Integer cappingType;
 
     @Field(required = true)
-    private Integer nmsMkNationalCapValue;
+    private Integer nationalCapValue;
 
     @Field(required = true)
-    private Integer nmsMkMaxWelcomeMessage;
+    private Integer maxWelcomeMessage;
 
     @Field(required = true)
-    private Integer nmsMkMaxEndofusageMessage;
+    private Integer maxEndofusageMessage;
 
     public Long getIndex() {
         return index;
@@ -40,36 +40,36 @@ public class Configuration extends MdsEntity {
         this.index = index;
     }
 
-    public Integer getNmsMkCappingType() {
-        return nmsMkCappingType;
+    public Integer getCappingType() {
+        return cappingType;
     }
 
-    public void setNmsMkCappingType(Integer nmsMkCappingType) {
-        this.nmsMkCappingType = nmsMkCappingType;
+    public void setCappingType(Integer cappingType) {
+        this.cappingType = cappingType;
     }
 
-    public Integer getNmsMkNationalCapValue() {
-        return nmsMkNationalCapValue;
+    public Integer getNationalCapValue() {
+        return nationalCapValue;
     }
 
-    public void setNmsMkNationalCapValue(Integer nmsMkNationalCapValue) {
-        this.nmsMkNationalCapValue = nmsMkNationalCapValue;
+    public void setNationalCapValue(Integer nationalCapValue) {
+        this.nationalCapValue = nationalCapValue;
     }
 
-    public Integer getNmsMkMaxWelcomeMessage() {
-        return nmsMkMaxWelcomeMessage;
+    public Integer getMaxWelcomeMessage() {
+        return maxWelcomeMessage;
     }
 
-    public void setNmsMkMaxWelcomeMessage(Integer nmsMkMaxWelcomeMessage) {
-        this.nmsMkMaxWelcomeMessage = nmsMkMaxWelcomeMessage;
+    public void setMaxWelcomeMessage(Integer maxWelcomeMessage) {
+        this.maxWelcomeMessage = maxWelcomeMessage;
     }
 
-    public Integer getNmsMkMaxEndofusageMessage() {
-        return nmsMkMaxEndofusageMessage;
+    public Integer getMaxEndofusageMessage() {
+        return maxEndofusageMessage;
     }
 
-    public void setNmsMkMaxEndofusageMessage(Integer nmsMkMaxEndofusageMessage) {
-        this.nmsMkMaxEndofusageMessage = nmsMkMaxEndofusageMessage;
+    public void setMaxEndofusageMessage(Integer maxEndofusageMessage) {
+        this.maxEndofusageMessage = maxEndofusageMessage;
     }
 }
 
