@@ -13,11 +13,9 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -50,8 +48,6 @@ public class FrontLineWorkerUploadHandler {
 
     private LocationService locationService;
 
-    private LanguageLocationCodeService languageLocationCodeService;
-
     private FrontLineWorkerService frontLineWorkerService;
 
     private FrontLineWorkerCsvService frontLineWorkerCsvService;
@@ -68,21 +64,21 @@ public class FrontLineWorkerUploadHandler {
     @Autowired
     public FrontLineWorkerUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
                                         LocationService locationService,
-                                        LanguageLocationCodeService languageLocationCodeService,
                                         FrontLineWorkerService frontLineWorkerService,
                                         FrontLineWorkerCsvService frontLineWorkerCsvService
     ) {
 
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.locationService = locationService;
-        this.languageLocationCodeService = languageLocationCodeService;
         this.frontLineWorkerService = frontLineWorkerService;
         this.frontLineWorkerCsvService = frontLineWorkerCsvService;
     }
 
-
     /**
-     * This method provides a listener to the Front Line Worker upload scenario.
+     * This method provides a listener to the Front Line Worker upload scenario. Here, FrontLineWorker CSV is received
+     * from which records are fetched one by one and validations are performed on the record. If all the validations
+     * pass, the record is saved in Database else the record is rejected. After completion of the processing on the
+     * CSV record, it is deleted from the database.
      *
      * @param motechEvent name of the event raised during upload
      */
@@ -95,7 +91,7 @@ public class FrontLineWorkerUploadHandler {
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
-        logger.info("Processing Csv file");
+        logger.debug("Processing Csv file");
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -115,7 +111,7 @@ public class FrontLineWorkerUploadHandler {
                 record = frontLineWorkerCsvService.findByIdInCsv(id);
                 if (record != null) {
                     userName = record.getOwner();
-                    logger.info("Record found in Csv database");
+                    logger.debug("Record found in Csv database");
 
                     FrontLineWorker frontLineWorker = new FrontLineWorker();
                     validateFrontLineWorker(record, frontLineWorker);
@@ -137,10 +133,10 @@ public class FrontLineWorkerUploadHandler {
 
                     if (dbRecord == null) {
 
-                        logger.info("New front line worker creation starts");
+                        logger.debug("New front line worker creation starts");
                         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
                         bulkUploadStatus.incrementSuccessCount();
-                        logger.info("Successful creation of new front line worker");
+                        logger.debug("Successful creation of new front line worker");
 
                     } else {
                         Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
@@ -149,7 +145,7 @@ public class FrontLineWorkerUploadHandler {
                             frontLineWorker.setStatus(dbRecord.getStatus());
                             updateDbRecord(frontLineWorker, dbRecord);
                             bulkUploadStatus.incrementSuccessCount();
-                            logger.info("Record updated successfully for Flw with valid = null");
+                            logger.debug("Record updated successfully for Flw with valid = null");
                         } else {
                             if (valid == true) {
                                 if (status == Status.INVALID) {
@@ -163,14 +159,14 @@ public class FrontLineWorkerUploadHandler {
                                     frontLineWorker.setStatus(dbRecord.getStatus());
                                     updateDbRecord(frontLineWorker, dbRecord);
                                     bulkUploadStatus.incrementSuccessCount();
-                                    logger.info("Record updated successfully for Flw with valid = true");
+                                    logger.debug("Record updated successfully for Flw with valid = true");
 
                                 }
                             } else {
                                 frontLineWorker.setStatus(Status.INVALID);
                                 updateDbRecord(frontLineWorker, dbRecord);
                                 bulkUploadStatus.incrementSuccessCount();
-                                logger.info("Record updated successfully for Flw with valid = false");
+                                logger.debug("Record updated successfully for Flw with valid = false");
                             }
                         }
                     }
@@ -203,14 +199,15 @@ public class FrontLineWorkerUploadHandler {
         }
         bulkUploadStatus.setUploadedBy(userName);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
-        logger.info("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
+        logger.debug("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
     }
 
     /**
-     * This method maps fields of generated front line worker to the db record
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
      *
-     * @param frontLineWorker the Front Line Worker record genrated
      * @param dbRecord        the record which will be updated in db
+     * @param frontLineWorker the frontLineWorker object which is to be mapped to the db object
      */
     private void updateDbRecord(FrontLineWorker frontLineWorker, FrontLineWorker dbRecord) {
 
@@ -228,7 +225,6 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setHealthBlockId(frontLineWorker.getHealthBlockId());
         dbRecord.setHealthFacilityId(frontLineWorker.getHealthFacilityId());
         dbRecord.setHealthSubFacilityId(frontLineWorker.getHealthSubFacilityId());
-        dbRecord.setLanguageLocationCodeId(frontLineWorker.getLanguageLocationCodeId());
 
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setId(frontLineWorker.getId());
@@ -262,7 +258,7 @@ public class FrontLineWorkerUploadHandler {
         District district = null;
         Long districtCode = null;
 
-        logger.info("validateFrontLineWorker process start");
+        logger.debug("validateFrontLineWorker process start");
         frontLineWorker.setStateCode(ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true));
         districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
 
@@ -300,21 +296,21 @@ public class FrontLineWorkerUploadHandler {
             //Bug 16
             frontLineWorker.setDesignation(Designation.getEnum(designation));
         }
-        logger.info("validateFrontLineWorker process end");
+        logger.debug("validateFrontLineWorker process end");
     }
 
+
     /**
-     * This method validates a field of Date type for null/empty values, and raises exception if a
-     * mandatory field is empty/null or is invalid date format
-     *
-     * @param record          the Front Line Worker record from Csv
-     * @param frontLineWorker frontLineWorker record that is to be stored to database
+     * This method maps a field of FrontLineWorkerCsv type to FrontLineWorker field. It checks for null/empty values,
+     * and raises exception if a mandatory field is empty/null or is invalid date format
+     * @param record        FrontLineWorker Csv record which is provided in the Csv
+     * @param frontLineWorker the frontLineWorker object which is to be mapped from FrontLineWorkerCsv record
      * @throws DataValidationException
      */
     private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
 
-        logger.info("mapFrontLineWorkerFrom process start");
+        logger.debug("mapFrontLineWorkerFrom process start");
 
         frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
 
@@ -322,12 +318,6 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setId(ParseDataHelper.validateAndParseLong("Nms Flw Id", record.getNmsFlwId(), false));
         frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
-
-        LanguageLocationCode locationCode = languageLocationCodeService.getRecordByLocationCode(frontLineWorker.getStateCode(),
-                frontLineWorker.getDistrictId().getDistrictCode());
-        if (null != locationCode) {
-            frontLineWorker.setLanguageLocationCodeId(locationCode.getId());
-        }
 
         if (record.getIsValid().equalsIgnoreCase("false")) {
             frontLineWorker.setStatus(Status.INVALID);
@@ -341,7 +331,7 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setModificationDate(record.getModificationDate());
         frontLineWorker.setCreationDate(record.getCreationDate());
 
-        logger.info("mapFrontLineWorkerFrom process end");
+        logger.debug("mapFrontLineWorkerFrom process end");
     }
 
 

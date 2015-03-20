@@ -4,7 +4,7 @@ import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 
 /**
- *  This class provides the implementation of User Profile Details.
+ *  This class provides the implementation of User Profile Details interface.
  */
 public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
