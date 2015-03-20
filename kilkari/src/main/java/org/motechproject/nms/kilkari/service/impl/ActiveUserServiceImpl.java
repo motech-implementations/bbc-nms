@@ -29,7 +29,7 @@ public class ActiveUserServiceImpl implements ActiveUserService {
 
     /**
      * finds active user count by index
-     * @return ActiveUser type object
+     * @return Long type object
      */
     @Override
     public Long getActiveUserCount() {

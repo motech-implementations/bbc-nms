@@ -17,8 +17,8 @@ public interface ActiveUserService {
 
     /**
      * finds active user count by index
-     * @return ActiveUser type object
+     * @return Long type object
      */
-    ActiveUser getActiveUserCount();
+    Long getActiveUserCount();
 
 }
