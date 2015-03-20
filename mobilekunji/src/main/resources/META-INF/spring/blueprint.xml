@@ -6,6 +6,30 @@
 
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
+    <osgi:service ref="contentUploadService"
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadService"/>
+
+    <osgi:service ref="contentUploadCsvService"
+                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService"/>
+
+    <osgi:service ref="userDetailsService"
+                  interface="org.motechproject.nms.mobilekunji.service.UserDetailsService"/>
+
+    <osgi:service ref="saveCallDetailsService"
+                  interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService"/>
+
+    <osgi:service ref="serviceConsumptionFlwService"
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
+
+    <osgi:service ref="serviceConsumptionCallService"
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService"/>
+
+    <osgi:service ref="configurationService"
+                  interface="org.motechproject.nms.mobilekunji.service.ConfigurationService"/>
+
+
+    <osgi:reference id="cardContentDataService"
+                  interface="org.motechproject.nms.mobilekunji.repository.CardContentDataService"/>
 
     <osgi:reference id="configurationDataService"
                     interface="org.motechproject.nms.mobilekunji.repository.ConfigurationDataService"/>
@@ -25,23 +49,9 @@
     <osgi:reference id="serviceConsumptionFlwRecordsDataService"
                     interface="org.motechproject.nms.mobilekunji.repository.ServiceConsumptionFlwRecordDataService"/>
 
-    <osgi:service ref="contentUploadService"
-                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadService"/>
+    <osgi:reference id="userProfileDetailsService"
+                  interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
 
-    <osgi:service ref="contentUploadCsvService"
-                  interface="org.motechproject.nms.mobilekunji.service.ContentUploadCsvService"/>
-
-    <osgi:service ref="userDetailsService"
-                  interface="org.motechproject.nms.mobilekunji.service.UserDetailsService"/>
-
-    <osgi:service ref="saveCallDetailsService"
-                  interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService"/>
-
-    <osgi:service ref="serviceConsumptionFlwService"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
-
-    <osgi:service ref="serviceConsumptionCallServiceImpl"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService"/>
 
 
 </beans>

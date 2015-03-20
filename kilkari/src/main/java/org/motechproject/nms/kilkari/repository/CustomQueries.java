@@ -31,7 +31,10 @@ public class CustomQueries {
          */
         @Override
         public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            return query.getPersistenceManager().newQuery(incrementQuery).execute();
+            /*
+             * Todo : to be implemented in next review request
+             */
+            return null;
         }
 
         /**
@@ -61,7 +64,10 @@ public class CustomQueries {
          */
         @Override
         public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            return query.getPersistenceManager().newQuery(decrementQuery).execute();
+            /*
+             * Todo : to be implemented in next review request
+             */
+            return null;
         }
 
         /**
