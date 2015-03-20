@@ -11,5 +11,5 @@ import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 public interface ServiceConsumptionFlwRecordDataService extends MotechDataService<ServiceConsumptionFlw> {
 
     @Lookup
-    public ServiceConsumptionFlw findServiceConsumptionByNmsFlwId(@LookupField Long nmsFlwId);
+    public ServiceConsumptionFlw findServiceConsumptionByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
 }

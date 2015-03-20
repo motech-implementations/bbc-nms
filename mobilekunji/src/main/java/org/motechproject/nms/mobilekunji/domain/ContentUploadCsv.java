@@ -7,7 +7,6 @@ import org.motechproject.mds.domain.MdsEntity;
 import javax.jdo.annotations.Unique;
 
 /**
- * Created by abhishek on 26/1/15.
  * This class Models data records provided in the Content Csv Upload
  */
 @Entity(recordHistory = true)

@@ -238,7 +238,7 @@ public class Subscriber extends MdsEntity {
 
     @Ignore
     public SubscriptionPack getSuitablePackName(){
-        if (BeneficiaryType.MOTHER.equals(this)) {
+        if (BeneficiaryType.MOTHER.equals(this.beneficiaryType)) {
             return SubscriptionPack.PACK_72_WEEKS;
         } else {
             return SubscriptionPack.PACK_48_WEEKS;
@@ -247,7 +247,7 @@ public class Subscriber extends MdsEntity {
 
     @Ignore
     public String getSuitableMctsId() {
-        if (BeneficiaryType.MOTHER.equals(this)) {
+        if (BeneficiaryType.MOTHER.equals(this.beneficiaryType)) {
             return getMotherMctsId();
         } else {
             return getChildMctsId();
@@ -256,7 +256,7 @@ public class Subscriber extends MdsEntity {
     
     @Ignore
     public DateTime getDobLmp() {
-        if (BeneficiaryType.MOTHER.equals(this)) {
+        if (BeneficiaryType.MOTHER.equals(this.beneficiaryType)) {
             return getLmp();
         } else {
             return getDob();

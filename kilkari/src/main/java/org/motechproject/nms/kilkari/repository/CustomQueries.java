@@ -19,20 +19,22 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    QueryExecution<ActiveUser> {
+    QueryExecution {
 
-        private final String incrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount + 1 where id = 1; ";
+        private final String incrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
+                "SET activeUserCount = activeUserCount + 1 WHERE index = 1";
 
         /**
          * This method executes the query passed.
          * @param query to be executed
-         * @param restriction
          * @return List of distinct subscription packs
          */
         @Override
-        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
-            return (ActiveUser) query.execute();
+        public Object execute(Query query, InstanceSecurityRestriction restriction) {
+            /*
+             * Todo : to be implemented in next review request
+             */
+            return null;
         }
 
         /**
@@ -50,29 +52,32 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountDecrementQuery implements
-    QueryExecution<ActiveUser> {
-
-        private final String decrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount - 1 where id = 1; ";
+    QueryExecution {
+        
+        private final String decrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
+                "SET activeUserCount = activeUserCount - 1 WHERE index = 1";
 
         /**
          * This method executes the query passed.
          * @param query to be executed
-         * @param restriction
          * @return List of distinct subscription packs
          */
         @Override
-        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
-            return (ActiveUser) query.execute();
+        public Object execute(Query query, InstanceSecurityRestriction restriction) {
+            /*
+             * Todo : to be implemented in next review request
+             */
+            return null;
         }
 
         /**
          * This method returns the increment query string
-         * @return
+         * @return  the query string
          */
         public String getSqlQuery() {
             return decrementQuery;
         }
+        
     }
 
     /**

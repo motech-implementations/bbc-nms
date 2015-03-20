@@ -20,5 +20,12 @@ public interface ActiveUserService {
      * @return Long type object
      */
     Long getActiveUserCount();
+    
+    
+    /**
+     * Checks ActiveUserCount record exists
+     * @return true if exists else false
+     */
+    Boolean isActiveUserCountPresent();
 
 }

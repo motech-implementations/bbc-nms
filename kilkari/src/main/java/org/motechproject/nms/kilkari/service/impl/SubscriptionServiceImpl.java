@@ -1,6 +1,17 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import org.motechproject.nms.kilkari.domain.*;
+
+import java.util.List;
+
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
@@ -18,8 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  *This class is used to perform crud operations on Subscription object
@@ -101,10 +110,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public long getActiveUserCount() {
-        
-        List<Subscription> activeRecord = subscriptionDataService.getSubscriptionByStatus(Status.ACTIVE);
-        List<Subscription> pendingRecord = subscriptionDataService.getSubscriptionByStatus(Status.PENDING_ACTIVATION);
-        return activeRecord.size() + pendingRecord.size();
+        return activeUserDataService.findActiveUserCountByIndex(Initializer.CONFIGURATION_INDEX).getActiveUserCount();
     }
 
     /**
@@ -194,7 +200,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     
                     if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
                         /* add new subscription for child */
-                        Subscription newSubscription = createNewSubscription(dbSubscriber, channel, null);
+                        Subscription newSubscription = createNewSubscription(subscriber, dbSubscriber, channel, null);
                         dbSubscriber.getSubscriptionList().add(newSubscription);
                     }
                     updateDbSubscriber(subscriber, dbSubscriber); /* update subscriber info */
@@ -300,7 +306,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
             Subscriber dbSubscriber = subscriberDataService.create(subscriber); 
             if (dbSubscriber.getDeactivationReason() == DeactivationReason.NONE) {
-                createNewSubscription(dbSubscriber, channel, operatorCode);
+                createNewSubscription(subscriber, dbSubscriber, channel, operatorCode);
             }
         } else {
             logger.info("Reached maximum beneficiary count, can't add any more");
@@ -323,7 +329,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         } else {
             if (!dbSubscriber.getDobLmp().equals(subscriber.getDobLmp())) {
                 updateDbSubscription(subscriber, dbSubscription, true, DeactivationReason.PACK_SCHEDULE_CHANGED);
-                Subscription newSubscription = createNewSubscription(dbSubscriber, channel, null);
+                Subscription newSubscription = createNewSubscription(subscriber, dbSubscriber, channel, null);
                 dbSubscriber.getSubscriptionList().add(newSubscription);
             } else {
                 updateDbSubscription(subscriber, dbSubscription, false, subscriber.getDeactivationReason());
@@ -340,25 +346,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param operatorCode code of the operator
      *  @param dbSubscriber database subscriber
      */
-    private Subscription createNewSubscription(Subscriber dbSubscriber, Channel channel, String operatorCode) {
+    private Subscription createNewSubscription(Subscriber subscriber, Subscriber dbSubscriber, Channel channel, String operatorCode) {
 
         Subscription newSubscription = new Subscription();
 
-        newSubscription.setMsisdn(dbSubscriber.getMsisdn());
-        newSubscription.setMctsId(dbSubscriber.getSuitableMctsId());
-        newSubscription.setStateCode(dbSubscriber.getState().getStateCode());
-        newSubscription.setPackName(dbSubscriber.getSuitablePackName());
+        newSubscription.setMsisdn(subscriber.getMsisdn());
+        newSubscription.setMctsId(subscriber.getSuitableMctsId());
+        newSubscription.setStateCode(subscriber.getState().getStateCode());
+        newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
         newSubscription.setDeactivationReason(DeactivationReason.NONE);
         newSubscription.setOperatorCode(operatorCode);
-        newSubscription.setModifiedBy(dbSubscriber.getModifiedBy());
-        newSubscription.setCreator(dbSubscriber.getCreator());
-        newSubscription.setOwner(dbSubscriber.getOwner());
+        newSubscription.setModifiedBy(subscriber.getModifiedBy());
+        newSubscription.setCreator(subscriber.getCreator());
+        newSubscription.setOwner(subscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        //activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+        activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -374,21 +380,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
         dbSubscription.setDeactivationReason(deactivationReason);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
-        dbSubscription.setMctsId(subscriber.getSuitableMctsId());
+        if(DeactivationReason.PACK_CHANGED!=deactivationReason) {
+            dbSubscription.setMctsId(subscriber.getSuitableMctsId());
+        }
         dbSubscription.setStateCode(subscriber.getState().getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
         
         if (statusFlag) {
-//            deactivateSubscription()
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
 
         subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
-           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         } else {
-           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountIncrementQuery());
+            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         }
     }
     
@@ -432,7 +439,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
-           // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         }
     }
 
@@ -443,7 +450,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @throws DataValidationException
      */
     private void validateCircleAndOperator(String circleCode, String operatorCode) throws DataValidationException{
-        //validate operatorCode if not NUll
         if (operatorCode != null) {
             Operator operator = operatorService.getRecordByCode(operatorCode);
             if (operator == null) {
@@ -453,7 +459,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
         }
 
-        //validate circleCode if not NUll
         if (circleCode != null) {
             Circle circle = circleService.getRecordByCode(circleCode);
             if (circle == null) {
