@@ -333,6 +333,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         updateDbSubscriber(subscriber, dbSubscriber);
     }
     
+    /**
+     *  This method is used to create subscription
+     *
+     *  @param channel channel by which request is invoked
+     *  @param operatorCode code of the operator
+     *  @param dbSubscriber database subscriber
+     */
     private Subscription createNewSubscription(Subscriber dbSubscriber, Channel channel, String operatorCode) {
 
         Subscription newSubscription = new Subscription();
@@ -429,6 +436,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
+    /**
+     * This method validate the operatorCode and circleCode from database
+     * @param circleCode code of the circle
+     * @param operatorCode code of the operator
+     * @throws DataValidationException
+     */
     private void validateCircleAndOperator(String circleCode, String operatorCode) throws DataValidationException{
         //validate operatorCode if not NUll
         if (operatorCode != null) {
