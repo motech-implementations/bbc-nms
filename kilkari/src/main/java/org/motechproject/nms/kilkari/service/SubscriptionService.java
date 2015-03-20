@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface SubscriptionService {
     
-    Subscription getActiveSubscriptionByMsisdnPack(String msisdn, String packName);
+    Subscription getActiveSubscriptionByMsisdnPack(String msisdn, SubscriptionPack packName);
     
-    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, String packName, Long stateCode);
+    Subscription getActiveSubscriptionByMctsIdPack(String mctsId, SubscriptionPack packName, Long stateCode);
     
 
     long getActiveUserCount();

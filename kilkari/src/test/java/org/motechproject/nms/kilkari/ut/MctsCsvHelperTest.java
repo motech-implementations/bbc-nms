@@ -27,11 +27,13 @@ public class MctsCsvHelperTest {
 
         MctsCsvHelper mctsCsvHelper = new MctsCsvHelper();
 
+        Channel channel = Channel.MCTS;
+
         Method method = null;
         try {
             method = mctsCsvHelper.getClass().getDeclaredMethod("populateDbSubscription", Subscriber.class, Subscription.class, boolean.class, Channel.class);
             method.setAccessible(true);
-            method.invoke(mctsCsvHelper, subscriber, dbSubscription, true, null);
+            method.invoke(mctsCsvHelper, subscriber, dbSubscription, true, channel);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

@@ -7,19 +7,20 @@ import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 public interface SubscriptionDataService extends MotechDataService<Subscription> {
     
     @Lookup
     Subscription getSubscriptionByMsisdnPackStatus(
             @LookupField(name = "msisdn") String msisdn, 
-            @LookupField(name = "packName") String packName,
+            @LookupField(name = "packName") SubscriptionPack packName,
             @LookupField(name = "status") Status status);
     
     @Lookup
     Subscription getSubscriptionByMctsIdPackStatus(
             @LookupField(name = "mctsId") String mctsId, 
-            @LookupField(name = "packName") String packName,
+            @LookupField(name = "packName") SubscriptionPack packName,
             @LookupField(name = "status") Status status,
             @LookupField(name = "stateCode") Long stateCode);
 

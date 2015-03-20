@@ -49,6 +49,9 @@
 
     <osgi:reference id="contentUploadCsvDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService" />
+                    
+	<osgi:reference id="activeUserDataService"
+                    interface="org.motechproject.nms.kilkari.repository.ActiveUserDataService" />                    
 
     <osgi:reference id="locationService"
                     interface="org.motechproject.nms.masterdata.service.LocationService"/>
@@ -61,4 +64,7 @@
 
     <osgi:reference id="circleService"
                     interface="org.motechproject.nms.masterdata.service.CircleService"/>
+                    
+	<osgi:reference id="operatorService"
+                    interface="org.motechproject.nms.masterdata.service.OperatorService"/>                    
 </beans>
