@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
@@ -89,7 +90,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
-        csv.setWhomPhoneNo("34");
+        csv.setWhomPhoneNo("1000000034");
         csv.setIdNo("34");
         ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -99,7 +100,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
         ChildMctsCsv csv1 = new ChildMctsCsv();
         csv1 = createChildMcts(csv1);
-        csv1.setWhomPhoneNo("34");
+        csv1.setWhomPhoneNo("1000000034");
         csv1.setIdNo("34");
         csv1.setMotherName("testing");
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
@@ -130,7 +131,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
         ChildMctsCsv csv1 = new ChildMctsCsv();
         csv1 = createChildMcts(csv1);
-        csv1.setWhomPhoneNo("36");
+        csv1.setWhomPhoneNo("1000000036");
         csv1.setIdNo("35");
         csv1.setMotherName("testDifferentName");
         csv1.setBirthdate("2015-01-22 08:08:08");
@@ -145,6 +146,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(updateSubs.getSubscriber());
         assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
         assertFalse(subscription.getSubscriber().getDob().equals(updateSubs.getSubscriber().getDob()));
+        assertFalse(subscription.getDeactivationReason() == updateSubs.getDeactivationReason());
     }
     
     @Test
@@ -153,7 +155,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
-        csv.setWhomPhoneNo("51");
+        csv.setWhomPhoneNo("1000000051");
         csv.setIdNo("51");
         ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -163,7 +165,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
         ChildMctsCsv csv1 = new ChildMctsCsv();
         csv1 = createChildMcts(csv1);
-        csv1.setWhomPhoneNo("52");
+        csv1.setWhomPhoneNo("1000000052");
         csv1.setIdNo("51");
         csv1.setMotherName("testDifferentName");
         csv1.setEntryType("9");
@@ -178,6 +180,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(updateSubs.getSubscriber());
         assertFalse(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
         assertFalse(subscription.getStatus()==updateSubs.getStatus());
+        assertTrue(DeactivationReason.CHILD_DEATH==updateSubs.getDeactivationReason());
     }
     
     
@@ -217,16 +220,17 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("37");
+        csv.setWhomPhoneNo("1000000037");
         csv.setIdNo("37");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
+        
         ChildMctsCsv childCsv = new ChildMctsCsv();
         childCsv = createChildMcts(childCsv);
-        childCsv.setWhomPhoneNo("38");
+        childCsv.setWhomPhoneNo("1000000038");
         childCsv.setIdNo("38");
         childCsv.setMotherId("37");
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
@@ -240,7 +244,8 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(subscription);
         assertNotNull(updateSubs);
         assertFalse(subscription.getStatus()==updateSubs.getStatus());
-        assertFalse(subscription.getPackName().equals(updateSubs.getPackName()));
+        assertTrue(subscription.getDeactivationReason()==DeactivationReason.PACK_CHANGED);
+        
     }
     
     @Test
@@ -250,7 +255,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("39");
+        csv.setWhomPhoneNo("1000000039");
         csv.setIdNo("39");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -260,7 +265,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
         ChildMctsCsv childCsv = new ChildMctsCsv();
         childCsv = createChildMcts(childCsv);
-        childCsv.setWhomPhoneNo("40");
+        childCsv.setWhomPhoneNo("1000000040");
         childCsv.setIdNo("40");
         childCsv.setMotherId("39");
         childCsv.setEntryType("9");

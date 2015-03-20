@@ -22,7 +22,9 @@ public class Initializer {
     
     public static final Long CONFIGURATION_INDEX = 1L;
     
-    public static final Long ACTIVEUSER_COUNT = 0L;
+    public static final Long ACTIVEUSER_INDEX = 1L;
+    
+    public static final Long DEFAULT_ACTIVEUSER_COUNT = 0L;
 
     public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEk = 1;
 
@@ -86,11 +88,17 @@ public class Initializer {
             configuration.setNationalLanguageLocationCode(DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE);
             configurationService.createConfiguration(configuration);
             
-            ActiveUser activeUser = new ActiveUser();
-            activeUser.setIndex(CONFIGURATION_INDEX);
-            activeUser.setActiveUserCount(ACTIVEUSER_COUNT);
-            activeUserService.create(activeUser);
             
+            
+        }
+        
+ if (!activeUserService.isActiveUserCountPresent()) {
+            
+            ActiveUser activeUser = new ActiveUser();
+            logger.info("Creating ActiveUser with default values");
+            activeUser.setIndex(ACTIVEUSER_INDEX);
+            activeUser.setActiveUserCount(DEFAULT_ACTIVEUSER_COUNT);
+            activeUserService.create(activeUser); 
         }
     }
 

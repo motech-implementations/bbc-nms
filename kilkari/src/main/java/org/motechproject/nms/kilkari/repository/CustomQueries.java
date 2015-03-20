@@ -19,10 +19,10 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    QueryExecution<ActiveUser> {
+    SqlQueryExecution {
 
         private final String incrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount + 1 where id = 1; ";
+                "set activeUserCount = activeUserCount + 1 where id = 1";
 
         /**
          * This method executes the query passed.
@@ -31,8 +31,8 @@ public class CustomQueries {
          * @return List of distinct subscription packs
          */
         @Override
-        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
-            return (ActiveUser) query.execute();
+        public Object execute(Query query) {
+            return query.execute();
         }
 
         /**
@@ -50,10 +50,10 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountDecrementQuery implements
-    QueryExecution<ActiveUser> {
-
+    SqlQueryExecution {
+        
         private final String decrementQuery = "update KILKARI_ACTIVEUSER " +
-                "set activeUserCount = activeUserCount - 1 where id = 1; ";
+                "set activeUserCount = activeUserCount - 1 where id = 1";
 
         /**
          * This method executes the query passed.
@@ -62,17 +62,22 @@ public class CustomQueries {
          * @return List of distinct subscription packs
          */
         @Override
-        public ActiveUser execute(Query query, InstanceSecurityRestriction restriction) {
-            return (ActiveUser) query.execute();
+        public Object execute(Query query) {
+            return query.execute();
         }
 
         /**
          * This method returns the increment query string
          * @return
          */
+        @Override
         public String getSqlQuery() {
             return decrementQuery;
         }
+
+       
+
+        
     }
 
     /**

@@ -40,7 +40,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("1");
+        csv.setWhomPhoneNo("1000000001");
         csv.setIdNo("1");
         
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
@@ -63,7 +63,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("2");
+        csv.setWhomPhoneNo("1000000002");
         csv.setIdNo("2");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -72,7 +72,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("2");
+        csv1.setWhomPhoneNo("1000000002");
         csv1.setIdNo("3");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
@@ -91,7 +91,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("4");
+        csv.setWhomPhoneNo("1000000004");
         csv.setIdNo("4");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -101,7 +101,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("4");
+        csv1.setWhomPhoneNo("1000000004");
         csv1.setIdNo("4");
         csv1.setEntryType("2");
         csv1.setAbortion("None");
@@ -126,7 +126,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("10");
+        csv.setWhomPhoneNo("1000000010");
         csv.setIdNo("10");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -136,7 +136,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("10");
+        csv1.setWhomPhoneNo("1000000010");
         csv1.setIdNo("10");
         csv1.setAbortion("null");
         csv1.setOutcomeNos("1");
@@ -164,7 +164,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("11");
+        csv.setWhomPhoneNo("1000000011");
         csv.setIdNo("11");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -174,7 +174,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("11");
+        csv1.setWhomPhoneNo("1000000011");
         csv1.setIdNo("11");
         csv.setAbortion("abortion");
         csv1.setOutcomeNos("1");
@@ -203,7 +203,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("12");
+        csv.setWhomPhoneNo("1000000012");
         csv.setIdNo("12");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -213,7 +213,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("12");
+        csv1.setWhomPhoneNo("1000000012");
         csv1.setIdNo("12");
         csv.setAbortion("null");
         csv1.setOutcomeNos("0");
@@ -243,7 +243,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("15");
+        csv.setWhomPhoneNo("1000000015");
         csv.setIdNo("15");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -253,7 +253,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("15");
+        csv1.setWhomPhoneNo("1000000015");
         csv1.setIdNo("15");
         csv1.setAbortion("None");
         csv1.setEntryType("8");
@@ -292,7 +292,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("6");
+        csv1.setWhomPhoneNo("1000000006");
         csv1.setIdNo("5");
         csv1.setName("testDifferentName");
         csv1.setLmpDate("2015-01-22 08:08:08");
@@ -317,7 +317,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("12");
+        csv.setWhomPhoneNo("1000000012");
         csv.setIdNo("7");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
@@ -327,7 +327,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         MotherMctsCsv csv1 = new MotherMctsCsv();
         csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("13");
+        csv1.setWhomPhoneNo("1000000013");
         csv1.setIdNo("7");
         csv1.setOperation("Del");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);

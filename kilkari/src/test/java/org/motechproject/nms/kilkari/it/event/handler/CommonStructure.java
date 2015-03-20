@@ -44,6 +44,9 @@ public class CommonStructure extends BasePaxIT {
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
     
     @Inject
+    protected SubscriberService subscriberService;
+    
+    @Inject
     protected MotherMctsCsvDataService motherMctsCsvDataService;
     
     @Inject
@@ -56,13 +59,10 @@ public class CommonStructure extends BasePaxIT {
     protected ChildMctsCsvService childMctsCsvService;
 
     @Inject
-    protected SubscriberService subscriberService;
-    
-    @Inject
     protected SubscriptionService subscriptionService;
 
-  //  @Inject
-    //protected LanguageLocationCodeService languageLocationCodeService;
+    @Inject
+    protected LanguageLocationCodeService languageLocationCodeService;
 
     @Inject
     protected BulkUploadErrLogService bulkUploadErrLogService;
@@ -72,12 +72,6 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected LocationValidatorService locationValidatorService;
-    
-    @Inject
-    protected VillageRecordsDataService villageRecordsDataService;
-    
-    @Inject
-    protected HealthSubFacilityRecordsDataService healthSubFacilityRecordsDataService;
 
     private static boolean setUpIsDone = false;
     
@@ -86,7 +80,6 @@ public class CommonStructure extends BasePaxIT {
     @Before
     public void setUp() {
         if (!setUpIsDone) {
-            deleteAll();
             createState();
             createDistrict();
             createTaluka();
@@ -107,35 +100,9 @@ public class CommonStructure extends BasePaxIT {
             subscriptionService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
-            villageRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthSubFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthFacilityRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            healthBlockRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            talukaRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
-            districtRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         
-        logger.info("Deleted all location data.");
-        
-        /*
-        
-        try {
-            stateRecordsDataService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        */
         logger.info("Deleted all location data.");
         
     }
@@ -271,8 +238,8 @@ public class CommonStructure extends BasePaxIT {
         csv.setVillageCode("1");
         csv.setName("test");
         csv.setLmpDate("2014-12-01 08:08:08");
-        csv.setAbortion("Abortion");
-        csv.setOutcomeNos("0");
+        csv.setAbortion("NONE");
+        csv.setOutcomeNos("1");
         csv.setAge("30");
         csv.setEntryType("Birth");
         csv.setAadharNo("123456789876");
@@ -306,14 +273,14 @@ public class CommonStructure extends BasePaxIT {
         return csv;
     }
 
-/*
+
     @After
     public void tearDown() {
                     deleteAll();
 
         setUpIsDone = false;
     }
-  */  
+    
     @Test
     public void testUploadedIdNotInDatabase() throws Exception {
         logger.info("Inside  createDeleteOperation");

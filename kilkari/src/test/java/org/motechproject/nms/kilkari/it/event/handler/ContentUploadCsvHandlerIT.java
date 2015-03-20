@@ -1,5 +1,12 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,9 +20,15 @@ import org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService;
 import org.motechproject.nms.kilkari.repository.ContentUploadDataService;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
-import org.motechproject.nms.masterdata.constants.MasterDataConstants;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.constants.LocationConstants;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
+import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -25,13 +38,6 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
-
-import javax.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -195,7 +201,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         Map<String, Object> params = new HashMap<>();
         params.put("csv-import.created_ids", ids);
         params.put("csv-import.filename", "contentUpload");
-        return new MotechEvent(MasterDataConstants.CIRCLE_CSV_SUCCESS, params);
+        return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
     public void preSetup() {
