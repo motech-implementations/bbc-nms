@@ -59,7 +59,7 @@ public class CallerDataController extends BaseController {
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
         UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator,
-                callId);
+                Long.parseLong(callId));
         log.debug("getUserDetails:Ended");
         return userDetailApiResponse;
 
@@ -89,6 +89,6 @@ public class CallerDataController extends BaseController {
         ParseDataHelper.validateAndParseInt(callingNumber, callingNumber, true);
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
-        ParseDataHelper.validateAndParseInt(callId, callId, true);
+        ParseDataHelper.validateAndParseLong(callId, callId, true);
     }
 }

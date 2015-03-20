@@ -4,6 +4,7 @@ import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
+import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -20,11 +21,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserProfileDetailsService userProfileDetailsService;
 
+    private ConfigurationService configurationService;
+
+
     @Autowired
-    public UserDetailsServiceImpl(ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService) {
+    public UserDetailsServiceImpl(ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService, ConfigurationService configurationService) {
         this.serviceConsumptionFlwService = serviceConsumptionFlwService;
         this.userProfileDetailsService = userProfileDetailsService;
+        this.configurationService = configurationService;
     }
+
+
+
 
     /**
      * this method determine languageLocationCode using msisdn and circleCode
@@ -40,13 +48,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = null;
 
-        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn,circleCode,operatorCode);
+        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode);
 
         if(userProfileData.isCreated()) {
             setFlwData(userProfileData);
         }
 
-        userDetailApiResponse = getUserDetailApiResponse(userProfileData);
+        userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
         return userDetailApiResponse;
     }
 
@@ -61,7 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         serviceConsumptionFlwService.create(serviceConsumptionFlw);
     }
 
-    private UserDetailApiResponse getUserDetailApiResponse(UserProfile userProfile) {
+    private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
@@ -71,10 +79,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
 
+
         userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
-        userDetailApiResponse.setMaxAllowedUsageInPulses(0);
+
+        //method for capping
+        userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNmsMkNationalCapValue());
         userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
-        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(serviceConsumptionFlw.getEndOfUsagePrompt());
+        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getNmsMkMaxEndofusageMessage());
         userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
 
         return userDetailApiResponse;
