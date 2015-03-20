@@ -241,7 +241,11 @@ public class FrontLineWorker extends MdsEntity {
         this.status = status;
     }
 
+    public Integer getLanguageLocationCodeId() {
+        return languageLocationCodeId;
+    }
 
-
-
+    public void setLanguageLocationCodeId(Integer languageLocationCodeId) {
+        this.languageLocationCodeId = languageLocationCodeId;
+    }
 }

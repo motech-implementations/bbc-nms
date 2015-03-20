@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -24,6 +25,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 /**
  * CoursePopulateServiceImpl class implements CoursePopulateService interface to
@@ -411,6 +416,374 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void createChapterContent(ChapterContent chapterContent) {
         chapterContentDataService.create(chapterContent);
+    }
+
+    @Override
+    public String getCourseJson() {
+        List<ChapterContent> chapterContents = getAllChapterContents();
+        JsonObject courseJsonObject = new JsonObject();
+        courseJsonObject.addProperty("name",
+                MobileAcademyConstants.DEFAULT_COURSE_NAME);
+        courseJsonObject.addProperty("courseVersion", 23234332);
+
+        courseJsonObject.add("chapters",
+                generateChapterListJson(chapterContents));
+
+        return courseJsonObject.toString();
+    }
+
+    /*
+     * This function generates JSONArray for chapters
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonArray for chapters
+     */
+    private JsonArray generateChapterListJson(
+            List<ChapterContent> chapterContents) {
+        JsonArray chapterListJson = new JsonArray();
+        for (int chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
+            chapterListJson
+                    .add(generateChapterJson(chapterNo, chapterContents));
+        }
+        return chapterListJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the chapterNo
+     */
+    private JsonObject generateChapterJson(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject courseJson = new JsonObject();
+        courseJson
+                .addProperty(
+                        "name",
+                        MobileAcademyConstants.CHAPTER
+                                + String.format(
+                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                        chapterNo));
+        courseJson.add("content",
+                generateContentForChapter(chapterNo, chapterContents));
+        courseJson.add("lessons",
+                generateLessonListForChapter(chapterNo, chapterContents));
+        courseJson.add("quiz",
+                generateQuizForChapter(chapterNo, chapterContents));
+
+        return courseJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the quiz of chapter as per chapterNo
+     */
+    private JsonObject generateQuizForChapter(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject quizJson = new JsonObject();
+        quizJson.addProperty("name", MobileAcademyConstants.QUIZ);
+        quizJson.add("content",
+                generateContentForQuiz(chapterNo, chapterContents));
+        quizJson.add("questions",
+                generateQuestionListForQuiz(chapterNo, chapterContents));
+        return quizJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @return JsonArray corresponding to the questions of chapter as per
+     * chapterNo
+     */
+    private JsonArray generateQuestionListForQuiz(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonArray questionsJsonArray = new JsonArray();
+        for (int questionNo = 1; questionNo < MobileAcademyConstants.NUM_OF_QUESTIONS; questionNo++) {
+            questionsJsonArray.add(generateQuestionJson(chapterNo, questionNo,
+                    chapterContents));
+        }
+        return questionsJsonArray;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param questionNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the question of chapter as per
+     * chapterNo & questionNo
+     */
+    private JsonObject generateQuestionJson(int chapterNo, int questionNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject questionJson = new JsonObject();
+
+        questionJson
+                .addProperty(
+                        "name",
+                        MobileAcademyConstants.QUESTION
+                                + String.format(
+                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                        questionNo));
+        questionJson.addProperty("correctAnswerOption",
+                getCorrectAnswerOption(chapterNo, questionNo));
+        questionJson.add(
+                "content",
+                generateContentForQuestion(chapterNo, questionNo,
+                        chapterContents));
+
+        return questionJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param questionNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the content for question of chapter
+     * as per chapterNo & questionNo
+     */
+    private JsonObject generateContentForQuestion(int chapterNo,
+            int questionNo, List<ChapterContent> chapterContents) {
+        JsonObject contentJson = new JsonObject();
+        String nameString;
+        String audioFile;
+
+        nameString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.QUESTION
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        questionNo);
+        contentJson.addProperty("name", nameString);
+
+        audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
+                MobileAcademyConstants.CONTENT_QUESTION).getAudioFile();
+        contentJson.add("question",
+                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+
+        audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
+                MobileAcademyConstants.CONTENT_CORRECT_ANSWER).getAudioFile();
+        contentJson.add("correctAnswer",
+                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+
+        audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
+                MobileAcademyConstants.CONTENT_WRONG_ANSWER).getAudioFile();
+        contentJson.add("wrongAnswer",
+                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+
+        return contentJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the content for quiz of chapter as
+     * per chapterNo
+     */
+    private JsonObject generateContentForQuiz(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject contentJson = new JsonObject();
+        String idString;
+        String audioFile;
+
+        idString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.CONTENT_QUIZ_HEADER;
+
+        audioFile = getQuizContent(chapterContents, chapterNo,
+                MobileAcademyConstants.CONTENT_QUIZ_HEADER).getAudioFile();
+
+        contentJson.add("menu",
+                generateIdFileNode(idString, Arrays.asList(audioFile)));
+        return contentJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonArray corresponding to the lessons of chapter as per
+     * chapterNo
+     */
+    private JsonArray generateLessonListForChapter(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonArray lessonJsonArray = new JsonArray();
+        for (int lessonNo = 1; lessonNo < MobileAcademyConstants.NUM_OF_LESSONS; lessonNo++) {
+            lessonJsonArray.add(generateLessonJson(chapterNo, lessonNo,
+                    chapterContents));
+        }
+        return lessonJsonArray;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param lessonNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the lesson of chapter as per
+     * chapterNo and lessonNo
+     */
+    private JsonObject generateLessonJson(int chapterNo, int lessonNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject lessonJson = new JsonObject();
+
+        lessonJson
+                .addProperty(
+                        "name",
+                        MobileAcademyConstants.LESSON
+                                + String.format(
+                                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                                        lessonNo));
+        lessonJson.add("content",
+                generateContentForLesson(chapterNo, lessonNo, chapterContents));
+
+        return lessonJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param lessonNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the content of lesson of chapter as
+     * per chapterNo and lessonNo
+     */
+    private JsonObject generateContentForLesson(int chapterNo, int lessonNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject contentJson = new JsonObject();
+        String idString;
+        String audioFile;
+
+        idString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.LESSON
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        lessonNo);
+        audioFile = getLessonContent(chapterContents, chapterNo, lessonNo,
+                MobileAcademyConstants.CONTENT_LESSON).getAudioFile();
+        contentJson.add("lesson",
+                generateIdFileNode(idString, Arrays.asList(audioFile)));
+
+        audioFile = getLessonContent(chapterContents, chapterNo, lessonNo,
+                MobileAcademyConstants.CONTENT_MENU).getAudioFile();
+        idString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.LESSON
+                + MobileAcademyConstants.END_MENU
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        lessonNo);
+        contentJson.add("menu",
+                generateIdFileNode(idString, Arrays.asList(audioFile)));
+
+        return contentJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return JsonObject corresponding to the content of chapter as per
+     * chapterNo
+     */
+    private JsonObject generateContentForChapter(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        JsonObject contentJson = new JsonObject();
+        String idString;
+        String audioFile;
+
+        List<String> scoreFiles = getScoreFiles(chapterNo, chapterContents);
+        idString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.END_MENU;
+        contentJson.add("menu", generateIdFileNode(idString, scoreFiles));
+
+        idString = MobileAcademyConstants.CHAPTER
+                + String.format(
+                        MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
+                        chapterNo)
+                + MobileAcademyConstants.UNDERSCORE_DELIMITER
+                + MobileAcademyConstants.SCORE;
+        audioFile = getChapterContent(chapterContents, chapterNo,
+                MobileAcademyConstants.CONTENT_MENU).getAudioFile();
+        contentJson.add("score",
+                generateIdFileNode(idString, Arrays.asList(audioFile)));
+
+        return contentJson;
+    }
+
+    /*
+     * @param chapterNo
+     * 
+     * @param chapterContents
+     * 
+     * @return This returns all the score files in sequence for a particular
+     * chapter
+     */
+    private List<String> getScoreFiles(int chapterNo,
+            List<ChapterContent> chapterContents) {
+        List<String> scoreFiles = new ArrayList<String>();
+        for (int scoreNo = 0; scoreNo <= MobileAcademyConstants.NUM_OF_SCORES; scoreNo++) {
+            scoreFiles.add(getScore(chapterContents, chapterNo, scoreNo,
+                    MobileAcademyConstants.SCORE).getAudioFile());
+        }
+        return scoreFiles;
+    }
+
+    /*
+     * @param idString
+     * 
+     * @param files
+     * 
+     * @return This function returns a Json node with "id" and "file" key in
+     * that. If the list of files contain more than one file, key will be
+     * "files" instead of "file"
+     */
+    private JsonObject generateIdFileNode(String idString, List<String> files) {
+        JsonObject node = new JsonObject();
+        if (CollectionUtils.isNotEmpty(files)) {
+            node.addProperty("id", idString);
+            if (files.size() == 1) {
+                node.addProperty("file", files.get(0));
+            } else {
+                Gson gson = new Gson();
+                node.add("files", gson.toJsonTree(files));
+            }
+        }
+        return node;
     }
 
 }

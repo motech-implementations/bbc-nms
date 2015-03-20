@@ -48,6 +48,10 @@ public class MobileAcademyConstants {
 
     public static final String COURSE_DEL = "DEL";
 
+    public static final String UNDERSCORE_DELIMITER = "_";
+
+    public static final String END_MENU = "EndMenu";
+
     // 1 file for Chapter End Menu , 2 files For Lesson: Content and Menu file
     // 3 files For Question: content,correct answer and wrong Answer file
     // 1 file For Quiz Header in each Quiz

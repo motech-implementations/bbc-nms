@@ -12,6 +12,6 @@ public interface UserProfileDetailsService {
 
     public UserProfile handleUserDetail(String msisdn, String circle, String operatorCode);
 
-    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn );
+    public boolean updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn);
 
 }

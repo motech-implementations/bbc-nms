@@ -186,4 +186,11 @@ public interface CourseService {
      * @return correct answer option of the question
      */
     public int getCorrectAnswerOption(Integer chapterNo, Integer questionNo);
+
+    /**
+     * Used to get the current course structure in JSON format
+     * 
+     * @return CourseJson in string format
+     */
+    public String getCourseJson();
 }

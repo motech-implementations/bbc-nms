@@ -244,7 +244,7 @@ public class FrontLineWorkerUploadHandler {
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
-     * @param record the Front Line Worker record from Csv that is to be validated
+     * @param record          the Front Line Worker record from Csv that is to be validated
      * @param frontLineWorker the Front Line Worker record that is to be saved in database
      * @throws DataValidationException
      */
@@ -303,7 +303,8 @@ public class FrontLineWorkerUploadHandler {
     /**
      * This method maps a field of FrontLineWorkerCsv type to FrontLineWorker field. It checks for null/empty values,
      * and raises exception if a mandatory field is empty/null or is invalid date format
-     * @param record        FrontLineWorker Csv record which is provided in the Csv
+     *
+     * @param record          FrontLineWorker Csv record which is provided in the Csv
      * @param frontLineWorker the frontLineWorker object which is to be mapped from FrontLineWorkerCsv record
      * @throws DataValidationException
      */
@@ -509,7 +510,7 @@ public class FrontLineWorkerUploadHandler {
     /**
      * This method is used to set error record details
      *
-     * @param frontLineWorker  front line worker whose details are to be fetched from database.
+     * @param frontLineWorker front line worker whose details are to be fetched from database.
      * @return null if there is no db record for given FlwId else the record generated from db
      */
 
