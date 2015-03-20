@@ -419,6 +419,7 @@ public class CourseServiceImpl implements CourseService {
         chapterContentDataService.create(chapterContent);
     }
 
+    // To be implemented in next review cycle
     @Override
     public String getCourseJson() {
         List<ChapterContent> chapterContents = getAllChapterContents();
@@ -795,9 +796,13 @@ public class CourseServiceImpl implements CourseService {
         return node;
     }
 
+    // To be implemented in next review cycle
     @Override
     public long getCurrentCourseVersion() {
         Course course = getMtrainingCourse();
+        if (course == null) {
+            return 0;
+        }
         DateTime date = course.getModificationDate();
         return date.getMillis() / 100;
     }
