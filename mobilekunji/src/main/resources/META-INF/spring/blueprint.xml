@@ -35,7 +35,7 @@
                   interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
 
     <osgi:service ref="serviceConsumptionCallServiceImpl"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
+                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService"/>
 
 
 </beans>
