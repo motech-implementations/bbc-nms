@@ -55,8 +55,8 @@ public class BaseController {
     /**
      * Handle General Exceptions occur on server side i.e null pointer(500)
      *
-     * @param ex
-     * @param req
+     * @param exception
+     * @param request
      * @return ResponseEntity<String>
      */
     @ExceptionHandler(value = { Exception.class })

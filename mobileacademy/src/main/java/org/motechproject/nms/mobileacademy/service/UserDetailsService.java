@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobileacademy.service;
 
 import org.motechproject.nms.mobileacademy.dto.User;
+import org.motechproject.nms.util.helper.DataValidationException;
 
 /**
  * UserDetailsService interface contains methods to retrieve data required by
@@ -15,6 +16,8 @@ public interface UserDetailsService {
      * @param operator operator of caller
      * @param circle Circle from where the call is originating.
      * @return User
+     * @throws DataValidationException
      */
-    User findUserDetails(String callingNumber, String operator, String circle);
+    User findUserDetails(String callingNumber, String operator, String circle)
+            throws DataValidationException;
 }

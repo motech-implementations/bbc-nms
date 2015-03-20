@@ -9,6 +9,7 @@ import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService;
 import org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +37,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public User findUserDetails(String callingNumber, String operator,
-            String circle) {
+            String circle) throws DataValidationException {
         User user = new User();// response DTO
-        UserProfile userProfile = userProfileDetailsService.handleUserDetail(
+        UserProfile userProfile = userProfileDetailsService.processUserDetails(
                 callingNumber, circle, operator);
         user.setCircle(userProfile.getCircle());
-        user.setMaxAllowedUsageInPulses(userProfile.getMaxCappingValue());// TODO
+        user.setMaxAllowedUsageInPulses(userProfile
+                .getMaxStateLevelCappingValue());// TODO
         if (userProfile.isDefaultLanguageLocationCode()) {
             user.setDefaultLanguageLocationCode(userProfile
                     .getDefaultLanguageLocationCode());
