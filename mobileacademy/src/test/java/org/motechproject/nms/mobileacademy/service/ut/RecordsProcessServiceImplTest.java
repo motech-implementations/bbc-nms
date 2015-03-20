@@ -32,7 +32,7 @@ import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
-import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.impl.RecordsProcessServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -56,7 +56,7 @@ public class RecordsProcessServiceImplTest {
     public CourseContentCsvDataService courseContentCsvDataService;
 
     @Mock
-    private CoursePopulateService coursePopulateService;
+    private CourseService courseService;
 
     @Mock
     private BulkUploadErrLogService bulkUploadErrLogService;

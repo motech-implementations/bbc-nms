@@ -26,7 +26,7 @@ import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -53,7 +53,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     private CourseProcessedContentDataService courseProcessedContentDataService;
 
     @Inject
-    private CoursePopulateService coursePopulateService;
+    private CourseService courseService;
 
     @Inject
     private ChapterContentDataService chapterContentDataService;
@@ -369,7 +369,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
 
-        int correctAnswer = coursePopulateService.getCorrectAnswerOption(1, 1);
+        int correctAnswer = courseService.getCorrectAnswerOption(1, 1);
 
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
@@ -389,7 +389,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 "CourseContentCsv.csv");
 
         assertEquals(correctAnswer,
-                coursePopulateService.getCorrectAnswerOption(1, 1));
+                courseService.getCorrectAnswerOption(1, 1));
 
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
@@ -407,7 +407,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         csvRecordProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
 
-        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
 
     }
 
@@ -852,7 +852,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
 
-        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
 
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:2");
@@ -869,7 +869,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
         assertEquals(courseProcessedContent.getContentFile(),
                 "File Changed for Question Content.wav");
-        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
     }
 
     @Test
@@ -895,7 +895,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
         fileName = courseProcessedContent.getContentFile();
 
-        assertEquals(1, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
 
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:02");
@@ -910,6 +910,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                         contentName.toUpperCase());
 
         assertEquals(courseProcessedContent.getContentFile(), fileName);
-        assertEquals(2, coursePopulateService.getCorrectAnswerOption(1, 1));
+        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
     }
 }

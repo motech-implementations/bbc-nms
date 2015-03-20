@@ -19,7 +19,7 @@ import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
-import org.motechproject.nms.mobileacademy.service.CoursePopulateService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ import org.springframework.stereotype.Service;
  * perform course populate related operations in mtraining and content tables.
  *
  */
-@Service("CoursePopulateService")
-public class CoursePopulateServiceImpl implements CoursePopulateService {
+@Service("CourseService")
+public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private MTrainingService mTrainingService;
@@ -40,7 +40,7 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
     private ChapterContentDataService chapterContentDataService;
 
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(CoursePopulateServiceImpl.class);
+            .getLogger(CourseServiceImpl.class);
 
     @Override
     public Course populateMtrainingCourseData(OperatorDetails operatorDetails) {
@@ -407,4 +407,10 @@ public class CoursePopulateServiceImpl implements CoursePopulateService {
             }
         }
     }
+
+    @Override
+    public void createChapterContent(ChapterContent chapterContent) {
+        chapterContentDataService.create(chapterContent);
+    }
+
 }

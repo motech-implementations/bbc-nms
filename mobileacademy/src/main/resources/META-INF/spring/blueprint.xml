@@ -17,8 +17,8 @@
 	<osgi:service ref="CourseContentCsvService"
 		interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
 
-	<osgi:service ref="CoursePopulateService"
-		interface="org.motechproject.nms.mobileacademy.service.CoursePopulateService" />
+	<osgi:service ref="CourseService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseService" />
 		
 	<osgi:service ref="userDetailsServiceMa"
 		interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
