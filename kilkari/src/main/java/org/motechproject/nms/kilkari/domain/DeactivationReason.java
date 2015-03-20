@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkari.domain;
 
+/**
+ * This enum is used for reason for deactivation of subscription.
+ */
 public enum DeactivationReason {
 
     CHILD_DEATH("ChildDeath"),

@@ -1,7 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.motechproject.nms.kilkari.domain.ActiveUser;
-import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
 import org.motechproject.nms.kilkari.service.ActiveUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,8 @@ public class ActiveUserServiceImpl implements ActiveUserService {
     }
     
     @Override
-    public ActiveUser getActiveUserCount() {
-        return activeUserDataService.findActiveUserCountByIndex(ACTIVEUSER_INDEX);
+    public Long getActiveUserCount() {
+        return activeUserDataService.findActiveUserCountByIndex(ACTIVEUSER_INDEX).getActiveUserCount();
     }
 
 }
