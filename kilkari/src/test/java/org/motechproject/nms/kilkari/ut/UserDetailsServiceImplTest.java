@@ -1,12 +1,9 @@
 package org.motechproject.nms.kilkari.ut;
 
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
 import org.motechproject.nms.kilkari.builder.LocationBuilder;
 import org.motechproject.nms.kilkari.builder.SubscriptionBuilder;
 import org.motechproject.nms.kilkari.domain.Configuration;
@@ -135,6 +132,7 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+
         //create a subscriber with languageLocationCode.
         subscriber = builder.buildSubscriber(msisdn, null, null, null);
 
