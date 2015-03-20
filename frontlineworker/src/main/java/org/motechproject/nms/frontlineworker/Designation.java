@@ -1,7 +1,7 @@
 package org.motechproject.nms.frontlineworker;
 
 /**
- * This enum specified the possible values for Front Line Worker Designation
+ * This enum specifies the possible values for Front Line Worker Designation
  */
 public enum Designation {
 

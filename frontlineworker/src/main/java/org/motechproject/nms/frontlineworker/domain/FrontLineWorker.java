@@ -14,8 +14,6 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 
-import javax.jdo.annotations.Unique;
-
 /**
  * This class Models data for Front Line Worker records
  */
@@ -29,28 +27,24 @@ public class FrontLineWorker extends MdsEntity {
 
     @UIDisplayable(position = 2)
     @Field(required = true)
-    @Unique
     private String contactNo;
 
     @UIDisplayable(position = 1)
-    @Field(required = true)
     private String name;
 
     @UIDisplayable(position = 3)
-    @Field(required = true)
     private Designation designation;
 
     @Field
     private Long operatorId;
 
     @UIDisplayable(position = 4)
-    @Field(required = true)
     private Long stateCode;
 
-    @Field(required = true, name = "state_id")
+    @Field(name = "state_id")
     private State stateId;
 
-    @Field(required = true, name = "district_id")
+    @Field(name = "district_id")
     private District districtId;
 
     @Field(name = "taluka_id")
@@ -68,11 +62,11 @@ public class FrontLineWorker extends MdsEntity {
     @Field(name = "village_id")
     private Village villageId;
 
-    @UIDisplayable(position = 7)
+    @UIDisplayable(position = 8)
     @Field
     private String ashaNumber;
 
-    @UIDisplayable(position = 8)
+    @UIDisplayable(position = 9)
     @Field
     private String adhaarNumber;
 
@@ -84,15 +78,19 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private Integer languageLocationCodeId = null;
 
+    @UIDisplayable(position = 7)
+    @Field
+    private Integer defaultLanguageLocationCodeId = null;
+
 
     public FrontLineWorker() {
     }
 
     public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, Long operatorId,
-                           Long stateCode, State stateId, District districtId, Taluka talukaId, HealthBlock
-            healthBlockId, HealthFacility healthFacilityId, HealthSubFacility healthSubFacilityId,
-                           Village villageId, String ashaNumber, String adhaarNumber,
-                           Status status, Integer languageLocationCodeId) {
+                           Long stateCode, State stateId, District districtId, Taluka talukaId,
+                           HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
+                           healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
+                           Status status, Integer languageLocationCodeId, Integer defaultLanguageLocationCodeId) {
         this.flwId = flwId;
         this.contactNo = contactNo;
         this.name = name;
@@ -110,8 +108,8 @@ public class FrontLineWorker extends MdsEntity {
         this.adhaarNumber = adhaarNumber;
         this.status = status;
         this.languageLocationCodeId = languageLocationCodeId;
+        this.defaultLanguageLocationCodeId = defaultLanguageLocationCodeId;
     }
-
 
     public Long getFlwId() {
         return flwId;
@@ -247,5 +245,13 @@ public class FrontLineWorker extends MdsEntity {
 
     public void setLanguageLocationCodeId(Integer languageLocationCodeId) {
         this.languageLocationCodeId = languageLocationCodeId;
+    }
+
+    public Integer getDefaultLanguageLocationCodeId() {
+        return defaultLanguageLocationCodeId;
+    }
+
+    public void setDefaultLanguageLocationCodeId(Integer defaultLanguageLocationCodeId) {
+        this.defaultLanguageLocationCodeId = defaultLanguageLocationCodeId;
     }
 }

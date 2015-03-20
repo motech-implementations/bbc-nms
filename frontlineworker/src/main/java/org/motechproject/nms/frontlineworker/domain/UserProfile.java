@@ -41,7 +41,7 @@ public class UserProfile {
         return isDefaultLanguageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
+    public void setIsDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
 
