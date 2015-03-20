@@ -52,6 +52,40 @@ public class MobileAcademyConstants {
 
     public static final String END_MENU = "EndMenu";
 
+    public static final String COURSE_KEY_VERSION = "courseVersion";
+
+    public static final String COURSE_KEY_NAME = "name";
+
+    public static final String COURSE_KEY_CONTENT = "content";
+
+    public static final String COURSE_KEY_CHAPTERS = "chapters";
+
+    public static final String COURSE_KEY_LESSONS = "lessons";
+
+    public static final String COURSE_KEY_QUIZ = "quiz";
+
+    public static final String COURSE_KEY_QUESTIONS = "questions";
+
+    public static final String COURSE_KEY_CORRECT_ANSWER_OPTION = "correctAnswerOption";
+
+    public static final String COURSE_KEY_QUESTION = "question";
+
+    public static final String COURSE_KEY_LESSON = "lesson";
+
+    public static final String COURSE_KEY_CORRECT_ANSWER = "correctAnswer";
+
+    public static final String COURSE_KEY_WRONG_ANSWER = "wrongAnswer";
+
+    public static final String COURSE_KEY_MENU = "menu";
+
+    public static final String COURSE_KEY_SCORE = "score";
+
+    public static final String COURSE_KEY_ID = "id";
+
+    public static final String COURSE_KEY_FILE = "file";
+
+    public static final String COURSE_KEY_FILES = "files";
+
     // 1 file for Chapter End Menu , 2 files For Lesson: Content and Menu file
     // 3 files For Question: content,correct answer and wrong Answer file
     // 1 file For Quiz Header in each Quiz

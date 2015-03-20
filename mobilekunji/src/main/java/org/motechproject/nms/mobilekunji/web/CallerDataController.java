@@ -52,15 +52,14 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
             throws DataValidationException {
-        log.debug("getUserDetails: Started");
-        log.debug("Input request-callingNumber:" + callingNumber
-                + ", operator:" + operator + ", circle:" + circle + ", callId:"
-                + callId);
+        log.info("getUserDetails: Started");
+        log.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber,operator,circle,callId);
+
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
         UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator,
                 Long.parseLong(callId));
-        log.debug("getUserDetails:Ended");
+        log.trace("getUserDetails:Ended");
         return userDetailApiResponse;
 
     }
