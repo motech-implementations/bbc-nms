@@ -5,7 +5,10 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 
-public class DeactivateApiRequest {
+/**
+ * Represents deactivateApiRequest object
+ */
+public class SubscriptionDeactivateApiRequest {
 
     private String calledNumber;
     private String operator;
@@ -53,6 +56,10 @@ public class DeactivateApiRequest {
         this.subscriptionId = subscriptionId;
     }
 
+    /**
+     * Validates mandatory value parameter and non null values
+     * @throws DataValidationException if parameter value is blank or null
+     */
     public void validateMandatoryParameter() throws DataValidationException{
         ParseDataHelper.validateAndTrimMsisdn("calledNumber",
                 ParseDataHelper.validateAndParseString("calledNumber", calledNumber, true));
@@ -61,7 +68,7 @@ public class DeactivateApiRequest {
         ParseDataHelper.validateAndParseString("callId", callId, true);
         if (subscriptionId == null) {
             String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "subscriptionId", subscriptionId);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "subscriptionId");
+            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "subscriptionId");
             throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "subscriptionId");
         }
     }

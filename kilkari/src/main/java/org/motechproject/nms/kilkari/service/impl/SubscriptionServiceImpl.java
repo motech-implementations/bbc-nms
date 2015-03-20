@@ -16,9 +16,12 @@ import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +45,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Autowired
     private OperatorService operatorService;
+
+    @Autowired
+    private CircleService circleService;
     
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
@@ -249,15 +255,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel)
             throws DataValidationException {
-        createNewSubscriberAndSubscription(subscriber, channel, null);
+        createNewSubscriberAndSubscription(subscriber, channel, null, null);
     }
 
     @Override
-    public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
+    public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
             throws DataValidationException {
-        if (operatorCode != null) {
-            Operator operator = operatorService.getRecordByCode(operatorCode);
-        }
+        validateCircleAndOperator(circleCode, operatorCode);
         Configuration configuration = configurationService.getConfiguration();
         long activeUserCount = getActiveUserCount();
         /* check for maximum allowed beneficiary */
@@ -379,12 +383,35 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void deactivateSubscription(Long subscriptionId) {
+    public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode) throws DataValidationException{
+        validateCircleAndOperator(circleCode, operatorCode);
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
            // activeUserDataService.executeSQLQuery(new CustomeQueries.ActiveUserCountDecrementQuery());
+        }
+    }
+
+    private void validateCircleAndOperator(String circleCode, String operatorCode) throws DataValidationException{
+        //validate operatorCode if not NUll
+        if (operatorCode != null) {
+            Operator operator = operatorService.getRecordByCode(operatorCode);
+            if (operator == null) {
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "operatorCode", operatorCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "operatorCode");
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "operatorCode");
+            }
+        }
+
+        //validate circleCode if not NUll
+        if (circleCode != null) {
+            Circle circle = circleService.getRecordByCode(circleCode);
+            if (circle == null) {
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", operatorCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
+            }
         }
     }
 }

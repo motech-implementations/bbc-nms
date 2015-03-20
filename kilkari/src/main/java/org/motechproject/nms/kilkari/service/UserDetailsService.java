@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
+import org.motechproject.nms.util.helper.DataValidationException;
 
 public interface UserDetailsService {
 
@@ -10,5 +11,6 @@ public interface UserDetailsService {
      * @param circleCode circle code of the beneficiary
      * @return Subscriber detail response object
      */
-    public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode);
+    public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode, String operatorCode)
+    throws DataValidationException;
 }

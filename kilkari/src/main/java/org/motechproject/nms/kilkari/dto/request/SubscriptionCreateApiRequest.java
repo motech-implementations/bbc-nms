@@ -13,7 +13,7 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 /**
  * This class represents the Subscription Api request object
  */
-public class SubscriptionApiRequest {
+public class SubscriptionCreateApiRequest {
     String callingNumber;
     String operator;
     String circle;
@@ -69,6 +69,10 @@ public class SubscriptionApiRequest {
         return subscriptionPack;
     }
 
+    /**
+     * create Subscriber from the Api request parameter.
+     * @return Subscriber object
+     */
     public Subscriber toSubscriber() {
         Subscriber subscriber = new Subscriber();
         subscriber.setMsisdn(this.callingNumber);
@@ -85,6 +89,10 @@ public class SubscriptionApiRequest {
         return subscriber;
     }
 
+    /**
+     * Validates mandatory value parameter and non null values
+     * @throws DataValidationException if parameter value is blank or null
+     */
     public void validateMandatoryParameters() throws DataValidationException{
         ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true));
@@ -94,7 +102,7 @@ public class SubscriptionApiRequest {
         ParseDataHelper.validateAndParseString("subscriptionPack", subscriptionPack, true);
         if (languageLocationCode == null) {
             String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", languageLocationCode);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "languageLocationCode");
+            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
             throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
         }
     }

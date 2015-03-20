@@ -5,7 +5,14 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +40,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private ActiveUserService activeUserService;
 
+    @Autowired
+    private OperatorService operatorService;
+
+    @Autowired
+    private CircleService circleService;
+
     /**
      * this method determine languageLocationCode using msisdn and circleCode
      * @param msisdn Phone number of the beneficiary
@@ -40,7 +53,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return Subscriber detail response object
      */
     @Override
-    public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode) {
+    public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode, String operatorCode)
+            throws DataValidationException{
+        validateCircleAndOperator(circleCode, operatorCode);
+
         SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
         response.setCircle(circleCode);
         //get subscriber for given msisdn
@@ -61,7 +77,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private void getLanguageLocationCodeByCircleCode(String circleCode, SubscriberDetailApiResponse response) {
-        //Todo : validate circle by circleCode
         Integer llcCode = llcService.getLanguageLocationCodeByCircleCode(circleCode);
         if (llcCode != null) {
             response.setLanguageLocationCode(llcCode);
@@ -101,6 +116,28 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             //get llcCode by circleCode if llcCode by state and district is null
             getLanguageLocationCodeByCircleCode(circleCode, response);
+        }
+    }
+
+    private void validateCircleAndOperator(String circleCode, String operatorCode) throws DataValidationException{
+        //validate operatorCode if not NUll
+        if (operatorCode != null) {
+            Operator operator = operatorService.getRecordByCode(operatorCode);
+            if (operator == null) {
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "operatorCode", operatorCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "operatorCode");
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "operatorCode");
+            }
+        }
+
+        //validate circleCode if not NUll
+        if (circleCode != null) {
+            Circle circle = circleService.getRecordByCode(circleCode);
+            if (circle == null) {
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", operatorCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
+            }
         }
     }
 }

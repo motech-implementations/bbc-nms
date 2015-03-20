@@ -1,9 +1,9 @@
 package org.motechproject.nms.kilkari.web;
 
 import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.dto.request.DeactivateApiRequest;
+import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.dto.request.SubscriptionApiRequest;
+import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * and get subscriber details
  */
 @Controller
-public class SubscriptionController {
+public class SubscriptionController extends BaseController{
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -35,7 +35,7 @@ public class SubscriptionController {
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.POST)
     @ResponseBody
-    public void createSubscription(@RequestBody SubscriptionApiRequest apiRequest) throws DataValidationException{
+    public void createSubscription(@RequestBody SubscriptionCreateApiRequest apiRequest) throws DataValidationException{
         logger.info("*****createSubscription is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + apiRequest.getCallingNumber() + "]");
@@ -46,7 +46,8 @@ public class SubscriptionController {
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
 
         apiRequest.validateMandatoryParameters();
-        subscriptionService.createNewSubscriberAndSubscription(apiRequest.toSubscriber(), Channel.IVR, apiRequest.getOperator());
+        subscriptionService.createNewSubscriberAndSubscription(apiRequest.toSubscriber(),
+                Channel.IVR, apiRequest.getOperator(), apiRequest.getCircle());
         logger.trace("Finished processing createSubscription");
     }
 
@@ -55,7 +56,7 @@ public class SubscriptionController {
      * @return
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.DELETE)
-    public void deactivateSubscription(@RequestBody DeactivateApiRequest apiRequest) throws DataValidationException{
+    public void deactivateSubscription(@RequestBody SubscriptionDeactivateApiRequest apiRequest) throws DataValidationException{
         logger.info("*****deactivateSubscription is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("calledNumber : [" + apiRequest.getCalledNumber() + "]");
@@ -65,7 +66,8 @@ public class SubscriptionController {
         logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId().toString() + "]");
 
         apiRequest.validateMandatoryParameter();
-        subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId());
+        subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId(),
+                apiRequest.getOperator(), apiRequest.getCircle());
         logger.trace("Finished processing deactivateSubscription");
     }
 
@@ -85,7 +87,7 @@ public class SubscriptionController {
         logger.debug("callId : [" + callId + "]");
         SubscriberDetailApiResponse response;
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
-            response = userDetailsService.getSubscriberDetails(callingNumber, circle);
+            response = userDetailsService.getSubscriberDetails(callingNumber, circle, operator);
 
         logger.trace("Finished processing getUserDetails");
         return response;

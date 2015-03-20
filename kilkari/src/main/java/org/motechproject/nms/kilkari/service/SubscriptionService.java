@@ -27,11 +27,12 @@ public interface SubscriptionService {
     void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
-    void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
+    void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
             throws DataValidationException;
 
     void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
             throws DataValidationException;
 
-    void deactivateSubscription(Long subscriptionId);
+    void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
+            throws DataValidationException;
 }
