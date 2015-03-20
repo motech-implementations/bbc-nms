@@ -375,7 +375,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 updateModificationRecordsInSystem(mapForModifyRecords,
                         bulkUploadStatus, operatorDetails, contentName,
                         fileName, correctAnswerOption, flagForUpdatingMetaData);
-            } else { // Not sufficient records for a course
+                courseService.updateCourseVersion(operatorDetails.getCreator());
+            } else {
+                // Not sufficient records for a course
                 LOGGER.warn("Course not modified for content name: {}",
                         contentName);
                 LOGGER.warn("Records for all exisiting LLCs not recieved");

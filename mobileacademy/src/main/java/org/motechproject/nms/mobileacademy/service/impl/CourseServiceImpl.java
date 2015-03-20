@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.DateTime;
 import org.motechproject.mtraining.domain.Chapter;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
@@ -425,11 +426,8 @@ public class CourseServiceImpl implements CourseService {
         courseJsonObject.addProperty(MobileAcademyConstants.COURSE_KEY_NAME,
                 MobileAcademyConstants.DEFAULT_COURSE_NAME);
 
-        // TODO Course Version taken as dummy, will be replaced with actual
-        // version later
-
         courseJsonObject.addProperty(MobileAcademyConstants.COURSE_KEY_VERSION,
-                23234332);
+                getCurrentCourseVersion());
 
         courseJsonObject.add(MobileAcademyConstants.COURSE_KEY_CHAPTERS,
                 generateChapterListJson(chapterContents));
@@ -795,6 +793,20 @@ public class CourseServiceImpl implements CourseService {
             }
         }
         return node;
+    }
+
+    @Override
+    public long getCurrentCourseVersion() {
+        Course course = getMtrainingCourse();
+        DateTime date = course.getModificationDate();
+        return date.getMillis() / 100;
+    }
+
+    @Override
+    public void updateCourseVersion(String username) {
+        Course course = getMtrainingCourse();
+        course.setModifiedBy(username);
+        mTrainingService.updateCourse(course);
     }
 
 }

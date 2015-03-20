@@ -193,4 +193,18 @@ public interface CourseService {
      * @return CourseJson in string format
      */
     public String getCourseJson();
+
+    /**
+     * Used to get the current course version
+     * 
+     * @return Course Version in long
+     */
+    public long getCurrentCourseVersion();
+
+    /**
+     * Used to update MTraining course with current time stamp
+     * 
+     * @param username: user who has modified the course
+     */
+    void updateCourseVersion(String username);
 }
