@@ -19,16 +19,28 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     @Autowired
     private ConfigurationDataService configurationDataService;
 
+    /**
+     * Create Kilkari Service configuration
+     * @param configuration object to save
+     */
     @Override
     public void createConfiguration(Configuration configuration) {
         configurationDataService.create(configuration);
     }
 
+    /**
+     * get service configuration object
+     * @return object corresponding to service configuration
+     */
     @Override
     public Configuration getConfiguration() {
         return configurationDataService.findConfigurationByIndex(CONFIGURATION_INDEX);
     }
 
+    /**
+     * Checks if the configuration is already present
+     * @return true if present, else false
+     */
     @Override
     public Boolean isConfigurationPresent() {
         return (getConfiguration() != null);

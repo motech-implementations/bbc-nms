@@ -1,19 +1,9 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -28,6 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+/**
+ * This class is used to insert mother record
+ */
 @Service("motherMctsCsvService")
 public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
@@ -55,6 +50,11 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     public static final String MOTHER_DEATH_NINE = "9";
     public static final String ABORTION_NONE = "none";
 
+    /**
+     * this method process the mother record
+     * @param csvFileName String type object
+     * @param uploadedIDs List type object
+     */
     @Override
     public void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);

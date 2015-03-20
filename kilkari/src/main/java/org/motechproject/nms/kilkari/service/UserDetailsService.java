@@ -3,6 +3,9 @@ package org.motechproject.nms.kilkari.service;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.util.helper.DataValidationException;
 
+/**
+ * This interface provides method for finding user details
+ */
 public interface UserDetailsService {
 
     /**

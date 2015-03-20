@@ -3,10 +3,8 @@ package org.motechproject.nms.kilkari.builder;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
-import sun.font.StandardTextSource;
 
 public class SubscriptionBuilder {
     Subscriber subscriber = new Subscriber();

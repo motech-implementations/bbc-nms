@@ -2,6 +2,9 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 
+/**
+ * This interface provides methods to perform crud operations on ContentUpload
+ */
 public interface ContentUploadService {
 
     /**

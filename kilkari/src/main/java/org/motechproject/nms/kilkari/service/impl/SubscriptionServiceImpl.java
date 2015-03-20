@@ -1,15 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
 import org.motechproject.nms.kilkari.repository.CustomeQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
@@ -28,6 +19,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+/**
+ *This class is used to perform crud operations on Subscription object
+ */
 @Service("subscriptionService")
 public class SubscriptionServiceImpl implements SubscriptionService {
 
@@ -60,13 +56,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             "Subscription to MSISDN already Exist";
 
 
-
-
+    /**
+     * Deletes all subscriptions
+     */
     @Override
     public void deleteAll() {
         subscriptionDataService.deleteAll();
     }
 
+    /**
+     * Gets active subscription by msisdn and pack name
+     * @param msisdn String type object
+     * @param packName SubscriptionPack type object
+     * @return Subscription type object
+     */
     @Override
     public Subscription getActiveSubscriptionByMsisdnPack(String msisdn, SubscriptionPack packName) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus(msisdn, packName, Status.ACTIVE);
@@ -76,6 +79,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscription;
     }
 
+    /**
+     * Gets active subscription by MctsId
+     * @param mctsId String type object
+     * @param packName SubscriptionPack type object
+     * @param stateCode Long type object
+     * @return Subscription type object
+     */
     @Override
     public Subscription getActiveSubscriptionByMctsIdPack(String mctsId, SubscriptionPack packName, Long stateCode) {
         Subscription subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.ACTIVE, stateCode);
@@ -85,6 +95,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscription;
     }
 
+    /**
+     * Gets actives users count
+     * @return long type object
+     */
     @Override
     public long getActiveUserCount() {
         
@@ -92,13 +106,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         List<Subscription> pendingRecord = subscriptionDataService.getSubscriptionByStatus(Status.PENDING_ACTIVATION);
         return activeRecord.size() + pendingRecord.size();
     }
-    
+
+    /**
+     * Get subscription by mctsId and state code
+     * @param mctsId String type object
+     * @param stateCode Long type object
+     * @return Subscription type object
+     */
     @Override
     public Subscription getSubscriptionByMctsIdState(String mctsId, Long stateCode){
         return subscriptionDataService.getSubscriptionByMctsIdState(mctsId, stateCode);
     }
 
 
+    /**
+     * Get active subscription packs by msisdn
+     * @param msisdn String type object
+     * @return List<SubscriptionPack> type object
+     */
     @Override
     public List<SubscriptionPack> getActiveSubscriptionPacksByMsisdn(String msisdn) {
         CustomeQueries.ActiveSubscriptionQuery query = new CustomeQueries.ActiveSubscriptionQuery(msisdn, "packName");
@@ -258,6 +283,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         createNewSubscriberAndSubscription(subscriber, channel, null, null);
     }
 
+    /**
+     * creates new subscriber and subscription
+     * @param subscriber Subscriber type object
+     * @param channel Channel type object
+     * @param operatorCode String type object
+     * @throws DataValidationException
+     */
     @Override
     public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
             throws DataValidationException {
@@ -382,6 +414,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
+    /**
+     * This method deactivates the subscription corresponding to subscriptionId
+     * @param subscriptionId Long type object
+     */
     @Override
     public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode) throws DataValidationException{
         validateCircleAndOperator(circleCode, operatorCode);

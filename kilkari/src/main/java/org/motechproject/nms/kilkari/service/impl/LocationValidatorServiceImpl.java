@@ -16,6 +16,9 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used to validate locations
+ */
 @Service("locationValidatorService")
 public class LocationValidatorServiceImpl implements LocationValidatorService{
     
@@ -163,7 +166,14 @@ public class LocationValidatorServiceImpl implements LocationValidatorService{
         }
         return village;
     }
-    
+
+    /**
+     * This method validates and map location to subscriber
+     * @param mctsCsv MctsCsv type object
+     * @param subscriber Subscriber type object
+     * @return Subscriber type object
+     * @throws DataValidationException
+     */
     @Override
     public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException {

@@ -6,6 +6,9 @@ import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * This class is used to get and delete the ContentUploadCsv record
+ */
 @Service("contentUploadCsvService")
 public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
 

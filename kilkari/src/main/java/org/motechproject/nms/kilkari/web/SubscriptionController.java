@@ -93,6 +93,14 @@ public class SubscriptionController extends BaseController{
         return response;
     }
 
+    /**
+     * This method validates SubscriberDetailRequest parameters
+     * @param msisdn String type object
+     * @param operator String type object
+     * @param circle String type object
+     * @param callId String type object
+     * @throws DataValidationException
+     */
     public void validateSubscriberDetailsRequestParams(
             String msisdn, String operator, String circle, String callId) throws DataValidationException {
         ParseDataHelper.validateAndTrimMsisdn("callingNumber",

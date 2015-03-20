@@ -2,6 +2,9 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 
+/**
+ * This interface provides methods to get and delete the ContentUploadCsv record
+ */
 public interface ContentUploadCsvService {
 
     /**

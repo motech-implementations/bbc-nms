@@ -70,8 +70,8 @@ public class SubscriptionCreateApiRequest {
     }
 
     /**
-     * create Subscriber from the Api request parameter.
-     * @return Subscriber object
+     * This method creates a subscriber object by subscrition api request
+     * @return subscriber type object
      */
     public Subscriber toSubscriber() {
         Subscriber subscriber = new Subscriber();

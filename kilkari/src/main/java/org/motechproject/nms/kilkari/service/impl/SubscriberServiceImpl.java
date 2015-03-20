@@ -8,29 +8,49 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * This class is used to create,delete and get Subscriber object
+ */
 @Service("subscriberService")
 public class SubscriberServiceImpl implements SubscriberService {
 
     @Autowired
     private SubscriberDataService subscriberDataService;
-    
+
+    /**
+     * Updates Subscriber record
+     * @param record Subscriber type object
+     */
     @Override
     public void update(Subscriber record) {
         subscriberDataService.update(record);
 
     }
-    
+
+    /**
+     * This method creates subscriber
+     * @param subscriber Subscriber type object
+     * @return Subscriber type object
+     */
     @Override
     public Subscriber create(Subscriber subscriber) {
         return subscriberDataService.create(subscriber);
     }
-    
+
+    /**
+     * Deletes all subscribers from database
+     */
     @Override
     public void deleteAll() {
         subscriberDataService.deleteAll();
 
     }
 
+    /**
+     * This method gets subscriber by msisdn
+     * @param msisdn String type object
+     * @return Subscriber type object
+     */
     @Override
     public Subscriber getSubscriberByMsisdn(String msisdn) {
         List<Subscriber> subscribers;
