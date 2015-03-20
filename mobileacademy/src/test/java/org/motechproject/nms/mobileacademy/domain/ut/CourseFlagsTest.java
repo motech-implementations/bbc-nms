@@ -12,6 +12,9 @@ public class CourseFlagsTest {
     @InjectMocks
     CourseFlag courseFlag = new CourseFlag();
 
+    /*
+	 * Test whether the complete course has arrived for the LLC or not
+	 */
     @Test
     public void testHasCompleteCourseArrived() {
 

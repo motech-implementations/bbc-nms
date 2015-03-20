@@ -12,18 +12,28 @@ import org.motechproject.nms.mobileacademy.domain.QuizContent;
 public class QuizContentTest {
 
 	QuizContent quizContent = new QuizContent();
+	
+	/*
+	 * Test the Name of the Quiz
+	 */
 	@Test
 	public void testName() {
 		quizContent.setName("quiz header");
 		assertEquals("quiz header",quizContent.getName());
 	}
 
+	/*
+	 * Test the AudioFile of the Quiz
+	 */
 	@Test
 	public void testAudioFile() {
 		quizContent.setAudioFile("ch1_qp.wav");
 		assertSame("ch1_qp.wav",quizContent.getAudioFile());
 	}
 
+	/*
+	 * Test the questions of the Quiz
+	 */
 	@SuppressWarnings("serial")
 	@Test
 	public void testQuestions() {

@@ -312,6 +312,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 courseProcessedContent.getContentFile());
     }
 
+    /*
+     * this test case is used to test update scenario
+     * when provide with record with different audio file names for existing LLCs
+     */
     @Test
     public void testCourseUpdateWithTwoLlcFail() throws Exception {
         clearMobileAcademyData();
@@ -411,6 +415,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     }
 
+    /*
+     * this test case is used to test course add scenario 
+     * when provided with inconsistent data
+     */
     @Test
     public void testCourseAddWithInconsistentData() throws Exception {
         clearMobileAcademyData();
@@ -438,6 +446,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(0, courseProcessedContents2.size());
     }
 
+    /*
+     * this test case is used to test course add when
+     * provided with duplicate data
+     */
     @Test
     public void testCourseAddWithDuplicateData() throws Exception {
         clearMobileAcademyData();
@@ -456,6 +468,9 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(0, courseProcessedContents.size());
     }
 
+    /*
+     * this test case is used to test course add with chapter id out of bound
+     */
     @Test
     public void testCourseAddWithOutOfBoundIndices() throws Exception {
         clearMobileAcademyData();
@@ -785,6 +800,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertTrue(CollectionUtils.isEmpty(courseProcessedContents));
     }
 
+    /*
+     * this test case is used to test course populate fail scenario
+     * when provided with invalid data
+     */
     @Test
     public void testCoursePopulateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
@@ -801,6 +820,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(0, courseProcessedContents.size());
     }
 
+    /*
+     * this test case is used to test update fail scenario
+     * when provided with invalid data
+     */
     @Test
     public void testCourseUpdateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
@@ -835,6 +858,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     }
 
+    /*
+     * this test case is used to test whether the
+     * answer option update successfully when provided with valid values
+     */
     @Test
     public void testAnswerOptionUpdateSuccess() throws Exception {
         clearMobileAcademyData();
@@ -872,6 +899,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
     }
 
+    /*
+     * this test case is used to test modification scenario
+     * when there is no change in the record to be uploaded
+     */
     @Test
     public void testModificationWithNoChangeInRecord() throws Exception {
         clearMobileAcademyData();

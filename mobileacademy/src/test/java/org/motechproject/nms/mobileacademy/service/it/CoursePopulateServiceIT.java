@@ -51,7 +51,10 @@ public class CoursePopulateServiceIT extends BasePaxIT {
         assertNotNull(state);
         assertSame(state, CourseUnitState.Inactive);
     }
-
+    
+    /**
+     * clear Mobile Academy and mtraining data related to course
+     */
     private void clearMobileAcademyData() {
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);

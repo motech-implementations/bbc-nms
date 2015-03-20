@@ -359,6 +359,10 @@ public class RecordsProcessServiceImplTest {
         assertTrue(flag);
     }
 
+    /*
+     * this test case is used to validate raw content
+     * when provided with invalid meta data
+     */
     @Test
     public void testValidateRawContentwithInvalidMetaData() {
         CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
@@ -378,6 +382,10 @@ public class RecordsProcessServiceImplTest {
         assertFalse(flag);
     }
 
+    /*
+     * this test case is used to validate raw content
+     * when provided with out of bound index value for answer option
+     */
     @Test
     public void testValidateRawContentWithOutOfBoundAnswerIndex() {
         CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
@@ -513,6 +521,10 @@ public class RecordsProcessServiceImplTest {
         assertFalse(flag);
     }
 
+    /*
+     * this test case is used to validate content name
+     * when content name has lesson id has non numeric index
+     */
     @Test
     public void testValidateContentNameWithNotNumericIndex() {
         CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
@@ -532,6 +544,10 @@ public class RecordsProcessServiceImplTest {
         assertFalse(flag);
     }
 
+    /*
+     * this test case is used to validate the content name 
+     * when content name has chapter id out of bound
+     */
     @Test
     public void testValidateContentNameWithOutOfBoundIndex() {
         CourseContentCsv courseContentCsv = new CourseContentCsv("100014",

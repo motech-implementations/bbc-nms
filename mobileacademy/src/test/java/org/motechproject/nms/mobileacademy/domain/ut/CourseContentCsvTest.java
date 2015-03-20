@@ -9,15 +9,18 @@ public class CourseContentCsvTest {
 
     CourseContentCsv courseContentCsv = new CourseContentCsv();
 
-    // "ADD", "14",
-    // "AP", "14", "null", "Content", "ch1_l1.wav", "150", ""
-
+    /*
+	 * Test the Content Id for the CourseContent
+	 */
     @Test
     public void testContentId() {
         courseContentCsv.setContentId("100014");
         assertEquals("100014", courseContentCsv.getContentId());
     }
 
+    /*
+	 * Test the Circle for the CourseContent
+	 */
     @Test
     public void testCircle() {
         courseContentCsv.setCircle("AP");
@@ -25,6 +28,9 @@ public class CourseContentCsvTest {
         assertEquals("AP", courseContentCsv.getCircle());
     }
 
+    /*
+	 * Test the LanguageLocationCode for the CourseContent
+	 */
     @Test
     public void testLanguageLocationCode() {
         courseContentCsv.setLanguageLocationCode("14");
@@ -32,18 +38,27 @@ public class CourseContentCsvTest {
         assertEquals("14", courseContentCsv.getLanguageLocationCode());
     }
 
+    /*
+	 * Test the Content Name for the CourseContent
+	 */
     @Test
     public void testContentName() {
         courseContentCsv.setContentName("Chapter01_Lesson01");
         assertEquals("Chapter01_Lesson01", courseContentCsv.getContentName());
     }
 
+    /*
+	 * Test the Content type for the CourseContent
+	 */
     @Test
     public void testContentType() {
         courseContentCsv.setContentType("content");
         assertEquals("content", courseContentCsv.getContentType());
     }
 
+    /*
+	 * Test the Content File for the CourseContent
+	 */
     @Test
     public void testContentFile() {
         courseContentCsv.setContentFile("ch1_l1.wav");
@@ -51,6 +66,9 @@ public class CourseContentCsvTest {
         assertEquals("ch1_l1.wav", courseContentCsv.getContentFile());
     }
 
+    /*
+	 * Test the Content Duration for the CourseContent
+	 */
     @Test
     public void testContentDuration() {
         courseContentCsv.setContentDuration("150");
@@ -58,6 +76,9 @@ public class CourseContentCsvTest {
         assertEquals("150", courseContentCsv.getContentDuration());
     }
 
+    /*
+	 * Test the Meta Data for the CourseContent
+	 */
     @Test
     public void testMetaData() {
         courseContentCsv.setMetaData("CorrectAnswer : 1");

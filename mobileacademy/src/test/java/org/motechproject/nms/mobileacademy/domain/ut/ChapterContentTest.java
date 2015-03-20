@@ -16,24 +16,36 @@ public class ChapterContentTest {
 
 	ChapterContent chapterContent = new ChapterContent();
 
+	/*
+	 * Test the Chapter Number for the Chapter Content
+	 */
 	@Test
 	public void testChapterNumber() {
 		chapterContent.setChapterNumber(1);
 		assertSame(1, chapterContent.getChapterNumber());
 	}
-
+	
+	/*
+	 * Test the Name for the Chapter
+	 */
 	@Test
 	public void testName() {
 		chapterContent.setName("content");
 		assertEquals("content",chapterContent.getName());
 	}
 
+	/*
+	 * Test the AudioFile for the Chapter
+	 */
 	@Test
 	public void testAudioFile() {
 		chapterContent.setAudioFile("ch1_l1.wav");
 		assertEquals("ch1_l1.wav",chapterContent.getAudioFile());
 	}
 
+	/*
+	 * Test the Lesson Content for the Chapter
+	 */
 	@SuppressWarnings("serial")
 	@Test
 	public void testLesson() {	
@@ -46,6 +58,9 @@ public class ChapterContentTest {
 		assertEquals(lessons,chapterContent.getLessons());
 	}
 
+	/*
+	 * Test the Score Content for the Chapter
+	 */
 	@SuppressWarnings("serial")
 	@Test
 	public void testScore() {
@@ -57,6 +72,9 @@ public class ChapterContentTest {
 		assertEquals(scoreContent,chapterContent.getScores());
 	}
 
+	/*
+	 * Test the Quiz Content for the Chapter
+	 */
 	@SuppressWarnings("serial")
 	@Test
 	public void testQuiz() {
