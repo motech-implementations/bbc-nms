@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * This class is used to insert mother record
+ * This class implements the logic in MotherMctsCsvService.
  */
 @Service("motherMctsCsvService")
 public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {

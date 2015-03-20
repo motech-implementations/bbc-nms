@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * This class process the ChildMctsCsv
+ * This class implements the logic in ChildMctsCsvService.
  */
 @Service("childMctsCsvService")
 public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {

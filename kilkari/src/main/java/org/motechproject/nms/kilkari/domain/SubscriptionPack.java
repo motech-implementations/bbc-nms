@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkari.domain;
 
+import org.motechproject.nms.kilkari.commons.Constants;
+
 /**
  * This enum define the subscription pack types
  * their duration and start week.
@@ -24,11 +26,11 @@ public enum SubscriptionPack  {
     }
 
     public Integer getStartWeekNumber() {
-        return PACK_72_WEEKS.equals(this)?1:27;
+        return PACK_72_WEEKS.equals(this)? Constants.START_WEEK_OF_72_WEEK_PACK:Constants.START_WEEK_OF_48_WEEK_PACK;
     }
 
     public Integer getDuration() {
-        return PACK_72_WEEKS.equals(this)?72:48;
+        return PACK_72_WEEKS.equals(this)?Constants.DURATION_OF_72_WEEK_PACK:Constants.DURATION_OF_48_WEEK_PACK;
     }
 
     @Override
