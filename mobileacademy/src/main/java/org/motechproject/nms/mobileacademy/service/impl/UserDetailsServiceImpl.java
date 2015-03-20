@@ -10,6 +10,7 @@ import org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService;
 import org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User findUserDetails(String callingNumber, String operator,
             String circle) throws DataValidationException {
         User user = new User();// response DTO
+        String msisdn = ParseDataHelper.validateAndTrimMsisdn(callingNumber,
+                callingNumber);
         UserProfile userProfile = userProfileDetailsService.processUserDetails(
-                callingNumber, circle, operator);
+                msisdn, circle, operator);
         user.setCircle(userProfile.getCircle());
         user.setMaxAllowedUsageInPulses(userProfile
                 .getMaxStateLevelCappingValue());// TODO
