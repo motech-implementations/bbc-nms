@@ -10,7 +10,7 @@ import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
-import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
+import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
@@ -68,7 +68,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     private FrontLineWorkerService frontLineWorkerService;
     
     @Inject
-    private FrontLineWorkerCsvService frontLineWorkerCsvService;
+    private CsvFrontLineWorkerService csvFrontLineWorkerService;
     
     private UserProfileDetailsServiceImpl userProfileDetailsImpl;
     

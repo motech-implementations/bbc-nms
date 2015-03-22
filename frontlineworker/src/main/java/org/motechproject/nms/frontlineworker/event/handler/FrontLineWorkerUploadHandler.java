@@ -6,9 +6,9 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
+import org.motechproject.nms.frontlineworker.domain.CsvFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
-import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
-import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
+import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
@@ -50,7 +50,7 @@ public class FrontLineWorkerUploadHandler {
 
     private FrontLineWorkerService frontLineWorkerService;
 
-    private FrontLineWorkerCsvService frontLineWorkerCsvService;
+    private CsvFrontLineWorkerService csvFrontLineWorkerService;
 
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
 
@@ -65,13 +65,13 @@ public class FrontLineWorkerUploadHandler {
     public FrontLineWorkerUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
                                         LocationService locationService,
                                         FrontLineWorkerService frontLineWorkerService,
-                                        FrontLineWorkerCsvService frontLineWorkerCsvService
+                                        CsvFrontLineWorkerService csvFrontLineWorkerService
     ) {
 
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.locationService = locationService;
         this.frontLineWorkerService = frontLineWorkerService;
-        this.frontLineWorkerCsvService = frontLineWorkerCsvService;
+        this.csvFrontLineWorkerService = csvFrontLineWorkerService;
     }
 
     /**
@@ -87,7 +87,7 @@ public class FrontLineWorkerUploadHandler {
 
         String userName = null;
 
-        logger.info("Success[flwDataHandlerSuccess] method start for FrontLineWorkerCsv");
+        logger.info("Success[flwDataHandlerSuccess] method start for CsvFrontLineWorker");
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
@@ -96,7 +96,7 @@ public class FrontLineWorkerUploadHandler {
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
         List<Long> createdIds = (ArrayList<Long>) params.get(CSV_IMPORT_CREATED_IDS);
-        FrontLineWorkerCsv record = null;
+        CsvFrontLineWorker record = null;
         Long nmsFlwId = null;
 
         bulkUploadStatus.setBulkUploadFileName(csvFileName);
@@ -108,7 +108,7 @@ public class FrontLineWorkerUploadHandler {
         for (Long id : createdIds) {
             try {
                 logger.debug("Processing uploaded id : {}", id);
-                record = frontLineWorkerCsvService.findByIdInCsv(id);
+                record = csvFrontLineWorkerService.findByIdInCsv(id);
                 if (record != null) {
                     //Record is found in Csv
                     userName = record.getOwner();
@@ -199,13 +199,13 @@ public class FrontLineWorkerUploadHandler {
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
-                    frontLineWorkerCsvService.deleteFromCsv(record);
+                    csvFrontLineWorkerService.deleteFromCsv(record);
                 }
             }
         }
         bulkUploadStatus.setUploadedBy(userName);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
-        logger.debug("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
+        logger.debug("Success[flwDataHandlerSuccess] method finished for CsvFrontLineWorker");
     }
 
     /**
@@ -300,7 +300,7 @@ public class FrontLineWorkerUploadHandler {
      * @param frontLineWorker the Front Line Worker record that is to be saved in database
      * @throws DataValidationException
      */
-    private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
+    private void validateFrontLineWorker(CsvFrontLineWorker record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
         String contactNo;
         String designation;
@@ -349,14 +349,14 @@ public class FrontLineWorkerUploadHandler {
 
 
     /**
-     * This method maps a field of FrontLineWorkerCsv type to FrontLineWorker field. It checks for null/empty values,
+     * This method maps a field of CsvFrontLineWorker type to FrontLineWorker field. It checks for null/empty values,
      * and raises exception if a mandatory field is empty/null or is invalid date format
      *
      * @param record          FrontLineWorker Csv record which is provided in the Csv
-     * @param frontLineWorker the frontLineWorker object which is to be mapped from FrontLineWorkerCsv record
+     * @param frontLineWorker the frontLineWorker object which is to be mapped from CsvFrontLineWorker record
      * @throws DataValidationException
      */
-    private void mapFrontLineWorkerFrom(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
+    private void mapFrontLineWorkerFrom(CsvFrontLineWorker record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
 
         logger.debug("mapFrontLineWorkerFrom process start");

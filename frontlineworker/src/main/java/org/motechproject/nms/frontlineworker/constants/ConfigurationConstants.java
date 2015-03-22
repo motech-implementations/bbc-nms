@@ -7,7 +7,7 @@ public final class ConfigurationConstants {
 
     public static final int FLW_CONTACT_NUMBER_LENGTH = 10;
     
-    public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success";
+    public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.CsvFrontLineWorker.csv-import.success";
 
     public static final int CAPPING_NOT_FOUND_BY_STATE = -1;
 
