@@ -313,8 +313,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test update scenario
-     * when provide with record with different audio file names for existing LLCs
+     * this test case is used to test update scenario when provide with record
+     * with different audio file names for existing LLCs
      */
     @Test
     public void testCourseUpdateWithTwoLlcFail() throws Exception {
@@ -392,8 +392,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
 
-        assertEquals(correctAnswer,
-                courseService.getCorrectAnswerOption(1, 1));
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
 
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
@@ -416,8 +415,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test course add scenario 
-     * when provided with inconsistent data
+     * this test case is used to test course add scenario when provided with
+     * inconsistent data
      */
     @Test
     public void testCourseAddWithInconsistentData() throws Exception {
@@ -447,8 +446,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test course add when
-     * provided with duplicate data
+     * this test case is used to test course add when provided with duplicate
+     * data
      */
     @Test
     public void testCourseAddWithDuplicateData() throws Exception {
@@ -801,8 +800,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test course populate fail scenario
-     * when provided with invalid data
+     * this test case is used to test course populate fail scenario when
+     * provided with invalid data
      */
     @Test
     public void testCoursePopulateFailForInvalidData() throws Exception {
@@ -821,8 +820,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test update fail scenario
-     * when provided with invalid data
+     * this test case is used to test update fail scenario when provided with
+     * invalid data
      */
     @Test
     public void testCourseUpdateFailForInvalidData() throws Exception {
@@ -859,8 +858,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test whether the
-     * answer option update successfully when provided with valid values
+     * this test case is used to test whether the answer option update
+     * successfully when provided with valid values
      */
     @Test
     public void testAnswerOptionUpdateSuccess() throws Exception {
@@ -900,8 +899,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     }
 
     /*
-     * this test case is used to test modification scenario
-     * when there is no change in the record to be uploaded
+     * this test case is used to test modification scenario when there is no
+     * change in the record to be uploaded
      */
     @Test
     public void testModificationWithNoChangeInRecord() throws Exception {
