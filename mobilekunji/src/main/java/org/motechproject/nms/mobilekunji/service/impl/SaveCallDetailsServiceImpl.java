@@ -1,6 +1,9 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
 
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiResponse;
+import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
@@ -29,7 +32,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
     }
 
     @Override
-    public void saveCallDetails() {
-
+    public SaveCallDetailApiResponse saveCallDetails(UserDetailApiResponse userDetailApiResponse, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+        return null;
     }
 }

@@ -183,6 +183,19 @@ public final class ParseDataHelper {
         return msisdn;
     }
 
+    public static Boolean validateAndTrimCallId(String fieldName,String callId) throws DataValidationException {
+
+        if (null != callId) {
+
+            if (callId.trim().length() == Constants.CALL_ID_LENGTH) {
+                return true;
+            } else {
+                ParseDataHelper.raiseInvalidDataException(fieldName,callId);
+            }
+        }
+        return false;
+    }
+
     /**
      * Raises exception for invalid data
      * @param fieldName Name of the field

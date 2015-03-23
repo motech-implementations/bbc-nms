@@ -1,11 +1,11 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
-import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
+import org.motechproject.nms.mobilekunji.domain.FlwDetail;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
@@ -44,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return User detail response object
      */
     @Override
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, Long callId) throws DataValidationException {
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = null;
 
@@ -55,11 +55,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public int updateLanguageLocationCode(String msisdn, Integer languageLocationCode) throws DataValidationException {
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
 
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(languageLocationCode, msisdn);
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
 
-        return HttpStatus.SC_OK;
     }
 
 
@@ -67,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        ServiceConsumptionFlw serviceConsumptionFlw = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+        FlwDetail serviceConsumptionFlw = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
 
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());

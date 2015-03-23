@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.domain;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -9,7 +10,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity(recordHistory = true)
-public class ServiceConsumptionFlw extends MdsEntity {
+public class FlwDetail extends MdsEntity {
 
     @Field
     private Long nmsFlwId;
@@ -25,6 +26,17 @@ public class ServiceConsumptionFlw extends MdsEntity {
 
     @Field
     private String msisdn;
+
+    @Field
+    private DateTime lastAccessDate;
+
+    public DateTime getLastAccessDate() {
+        return lastAccessDate;
+    }
+
+    public void setLastAccessDate(DateTime lastAccessDate) {
+        this.lastAccessDate = lastAccessDate;
+    }
 
     public Long getNmsFlwId() {
         return nmsFlwId;
@@ -68,7 +80,7 @@ public class ServiceConsumptionFlw extends MdsEntity {
 
     @Override
     public String toString() {
-        return "ServiceConsumptionFlw{" +
+        return "FlwDetail{" +
                 "nmsFlwId=" + nmsFlwId +
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", welcomePromptFlag=" + welcomePromptFlag +

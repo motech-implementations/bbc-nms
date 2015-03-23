@@ -29,4 +29,6 @@ public class ConfigurationConstants {
 
     public static final int DEFAULT_STATE_CAPPING_TYPE = 2;
 
+    public static final int CALL_ID_LENGTH = 15;
+
 }

@@ -13,7 +13,7 @@ import java.util.Set;
  */
 
 @Entity(recordHistory = true)
-public class ServiceConsumptionCall extends MdsEntity {
+public class CallDetail extends MdsEntity {
 
     @Field
     private Long callId;
@@ -84,7 +84,7 @@ public class ServiceConsumptionCall extends MdsEntity {
 
     @Override
     public String toString() {
-        return "ServiceConsumptionCall{" +
+        return "CallDetail{" +
                 "callId=" + callId +
                 ", nmsFlwId=" + nmsFlwId +
                 ", circle='" + circle + '\'' +
