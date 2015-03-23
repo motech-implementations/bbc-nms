@@ -299,19 +299,33 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
             throws DataValidationException {
+
         validateCircleAndOperator(circleCode, operatorCode);
-        Configuration configuration = configurationService.getConfiguration();
-        long activeUserCount = getActiveUserCount();
-        /* check for maximum allowed beneficiary */
-        if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
-            Subscriber dbSubscriber = subscriberDataService.create(subscriber); 
-            if (dbSubscriber.getDeactivationReason() == DeactivationReason.NONE) {
-                createNewSubscription(subscriber, dbSubscriber, channel, operatorCode);
-            }
+        Subscriber dbSubscriber = null;
+        if(subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
+            dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
         } else {
-            logger.info("Reached maximum beneficiary count, can't add any more");
-            throw new DataValidationException("Beneficiary Count Exceeded" ,"Beneficiary Count Exceeded" , null);
+            dbSubscriber = subscriberDataService.findRecordByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
         }
+
+
+        if (dbSubscriber != null) {
+            updateDbSubscriber(subscriber, dbSubscriber);
+        } else {
+            Configuration configuration = configurationService.getConfiguration();
+            long activeUserCount = getActiveUserCount();
+        /* check for maximum allowed beneficiary */
+            if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
+                Subscriber newSubscriber = subscriberDataService.create(subscriber);
+                if (newSubscriber.getDeactivationReason() == DeactivationReason.NONE) {
+                    createNewSubscription(subscriber, newSubscriber, channel, operatorCode);
+                }
+            } else {
+                logger.info("Reached maximum beneficiary count, can't add any more");
+                throw new DataValidationException("Beneficiary Count Exceeded" ,"Beneficiary Count Exceeded" , null);
+            }
+        }
+
     }
     
     /**
