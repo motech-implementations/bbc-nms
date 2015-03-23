@@ -184,8 +184,8 @@ public class FrontLineWorkerUploadHandler {
 
             } catch (Exception e) {
                 bulkUploadStatus.incrementFailureCount();
-                logger.error("Exception occur : {}", e.getStackTrace());
-                errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                logger.error("Exception occured : {}", e.getStackTrace());
+                errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.GENERAL_EXCEPTION, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
