@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.builder;
 
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
 
 public class LanguageLocationCodeBuilder {
     public LanguageLocationCode buildLLCCode(Long stateCode, Long districtCode, Integer code, String circleCode) {
@@ -26,6 +27,13 @@ public class LanguageLocationCodeBuilder {
         circle.setDefaultLanguageLocationCode(defaultLlcCode);
         circle.setCode(code);
         return circle;
+    }
+
+    public Operator buildOperator(String code,String name) {
+        Operator operator = new Operator();
+        operator.setCode(code);
+        operator.setName(name);
+        return operator;
     }
 
     public Integer getDefaultLLCCodeByCircleCode(Integer defaultLlcCode, String circleCode) {
