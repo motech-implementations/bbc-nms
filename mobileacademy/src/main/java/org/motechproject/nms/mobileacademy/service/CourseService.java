@@ -188,23 +188,25 @@ public interface CourseService {
     public int getCorrectAnswerOption(Integer chapterNo, Integer questionNo);
 
     /**
-     * Used to get the current course structure in JSON format
+     * Used to get the current course structure in JSON format Returns empty
+     * JSON {"":""} if there is no any course in the system
      * 
      * @return CourseJson in string format
      */
     public String getCourseJson();
 
     /**
-     * Used to get the current course version
+     * Used to get the current course version returns -1 if there is no course
+     * in the system
      * 
      * @return Course Version in long
      */
-    public long getCurrentCourseVersion();
+    public int getCurrentCourseVersion();
 
     /**
      * Used to update MTraining course with current time stamp
      * 
      * @param username: user who has modified the course
      */
-    void updateCourseVersion(String username);
+    public void updateCourseVersion(String username);
 }

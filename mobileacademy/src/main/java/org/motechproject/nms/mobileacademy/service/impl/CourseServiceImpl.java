@@ -422,6 +422,11 @@ public class CourseServiceImpl implements CourseService {
     // To be implemented in next review cycle
     @Override
     public String getCourseJson() {
+        Course course = getMtrainingCourse();
+        if (course == null) {
+            // TODO condition for empty Json
+            return "{\" \":\" \"}";
+        }
         List<ChapterContent> chapterContents = getAllChapterContents();
         JsonObject courseJsonObject = new JsonObject();
         courseJsonObject.addProperty(MobileAcademyConstants.COURSE_KEY_NAME,
@@ -798,20 +803,23 @@ public class CourseServiceImpl implements CourseService {
 
     // To be implemented in next review cycle
     @Override
-    public long getCurrentCourseVersion() {
+    public int getCurrentCourseVersion() {
         Course course = getMtrainingCourse();
         if (course == null) {
-            return 0;
+            return -1;
         }
         DateTime date = course.getModificationDate();
-        return date.getMillis() / 100;
+        return (int) (date.getMillis() / 1000);
     }
 
     @Override
     public void updateCourseVersion(String username) {
         Course course = getMtrainingCourse();
-        course.setModifiedBy(username);
-        mTrainingService.updateCourse(course);
+        if (course != null) {
+            course.setModificationDate(DateTime.now());
+            course.setModifiedBy(username);
+            mTrainingService.updateCourse(course);
+        }
     }
 
 }

@@ -124,4 +124,8 @@ public class MobileAcademyConstants {
 
     public static final Long SERVICE_CONFIG_DEFAULT_RECORD_INDEX = 1l;
 
+    public static final String NO_COURSE_PRESENT = "No Course Present in the System";
+
+    public static final String COURSE_UPLOAD_ONGOING = "Course upload is ongoing in the system";
+
 }

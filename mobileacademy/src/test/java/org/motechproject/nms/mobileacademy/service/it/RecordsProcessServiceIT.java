@@ -62,7 +62,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     private MTrainingService mTrainingService;
 
     @Inject
-    private RecordsProcessService csvRecordProcessService;
+    private RecordsProcessService recordsProcessService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(RecordsProcessServiceIT.class);
@@ -106,7 +106,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -126,7 +126,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(addNewRecord(courseContentCsvs.get(0)));
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -148,7 +148,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         // Removed one record
         courseContentCsvDataService.delete(courseContentCsvs.get(1));
         courseContentCsvs.remove(1);
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -232,7 +232,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -248,7 +248,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord.setContentDuration("333");
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord));
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
@@ -274,7 +274,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -285,7 +285,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
-        csvRecordProcessService.processRawRecords(courseRawContents2,
+        recordsProcessService.processRawRecords(courseRawContents2,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
@@ -303,7 +303,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord1.setContentFile("ch_test_update.wav");
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
@@ -326,7 +326,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc1 = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc1);
@@ -337,7 +337,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
-        csvRecordProcessService.processRawRecords(courseRawContents2,
+        recordsProcessService.processRawRecords(courseRawContents2,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
@@ -359,7 +359,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord1.setContentFile("ch_test2_update.wav");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
 
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(), llc1,
@@ -389,7 +389,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
         courseContentCsvs.add(courseRawContentUpdateRecord1);
 
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
 
         assertEquals(correctAnswer,
@@ -408,7 +408,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .toString(llc2));
         courseContentCsvs.add(courseRawContentUpdateRecord1);
 
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
 
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
@@ -428,7 +428,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -439,7 +439,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         courseRawContents2.get(4).setContentFile("Inconsistent Audio File");
-        csvRecordProcessService.processRawRecords(courseRawContents2,
+        recordsProcessService.processRawRecords(courseRawContents2,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
@@ -461,7 +461,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -484,7 +484,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -507,7 +507,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -518,7 +518,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
-        csvRecordProcessService.processRawRecords(courseRawContents2,
+        recordsProcessService.processRawRecords(courseRawContents2,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
@@ -536,7 +536,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         // add another update record for new llc
         courseRawContentUpdateRecord1.setLanguageLocationCode("20");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
@@ -585,7 +585,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -595,7 +595,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs = findCourseRawContentUpdateListFromCsv();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
                 .findByCircleLlcContentName("AP", 14, "CHAPTER01_LESSON01");
@@ -709,7 +709,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -721,7 +721,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
-        csvRecordProcessService.processRawRecords(courseRawContents2,
+        recordsProcessService.processRawRecords(courseRawContents2,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
@@ -748,7 +748,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
         String originalFileName = courseProcessedContent1.getContentFile();
 
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
 
         courseProcessedContent1 = courseProcessedContentDataService
@@ -782,7 +782,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -793,7 +793,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContents2.get((int) (rawContentSize - 2)).setContentFile(
                 "Dummy Test Case File");
 
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(20);
@@ -813,7 +813,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.get(1).setContentName("Test");// no underscore in
                                                         // content name
         courseContentCsvs.get(2).setContentName("Chapter12_Lesson02");
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(14);
@@ -834,7 +834,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -849,7 +849,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord.setContentName(contentNameUpdate);
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord));
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle.toUpperCase(),
@@ -873,7 +873,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -887,7 +887,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .setContentFile("File Changed for Question Content.wav");
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(courseRawContentUpdateRecord);
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "Answer Option change.csv");
 
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
@@ -915,7 +915,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .getLanguageLocationCode());
         String fileName = "";
         long rawContentSize = courseContentCsvs.size();
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
@@ -933,7 +933,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord.setContentFile(fileName);
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(courseRawContentUpdateRecord);
-        csvRecordProcessService.processRawRecords(courseContentCsvs,
+        recordsProcessService.processRawRecords(courseContentCsvs,
                 "Answer Option change.csv");
 
         courseProcessedContent = courseProcessedContentDataService
