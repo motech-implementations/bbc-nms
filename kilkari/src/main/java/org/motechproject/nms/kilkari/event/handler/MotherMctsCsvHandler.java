@@ -206,7 +206,7 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setMsisdn(msisdn);
         motherSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("idNo", motherMctsCsv.getIdNo(), true));
         motherSubscriber.setAge(ParseDataHelper.validateAndParseInt("Age", motherMctsCsv.getAge(), false));
-        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString("AAdhar Num", motherMctsCsv.getAadharNo(), true));
+        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString("AAdhar Num", motherMctsCsv.getAadharNo(), false));
         motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(), false));
 
         motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
@@ -330,6 +330,8 @@ public class MotherMctsCsvHandler {
         dbSubscriber.setAbortion(subscriber.getAbortion());
         dbSubscriber.setStillBirth(subscriber.getStillBirth());
         dbSubscriber.setMotherDeath(subscriber.getMotherDeath());
+        dbSubscriber.setAadharNumber(subscriber.getAadharNumber());
+        dbSubscriber.setAge(subscriber.getAge());
         dbSubscriber.setLmp(subscriber.getLmp());
 
         subscriberService.update(dbSubscriber);
