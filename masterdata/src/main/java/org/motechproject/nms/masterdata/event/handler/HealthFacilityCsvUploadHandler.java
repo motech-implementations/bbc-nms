@@ -5,6 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -18,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,7 @@ public class HealthFacilityCsvUploadHandler {
 
     private HealthBlockService healthBlockService;
 
+    private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
@@ -72,6 +76,44 @@ public class HealthFacilityCsvUploadHandler {
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        healthFacilityRecordsDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -80,18 +122,18 @@ public class HealthFacilityCsvUploadHandler {
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.HEALTH_FACILITY);
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        HealthFacilityCsv healthFacilityCsvRecord = null;
+
+        CsvHealthFacility csvHealthFacilityRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthFacilityCsvRecord = healthFacilityCsvService.findById(id);
+                csvHealthFacilityRecord = healthFacilityCsvService.findById(id);
 
-                if (null != healthFacilityCsvRecord) {
+                if (null != csvHealthFacilityRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(healthFacilityCsvRecord.getOwner());
-                    HealthFacility record = mapHealthFacilityCsv(healthFacilityCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvHealthFacilityRecord.getOwner());
+                    HealthFacility record = mapHealthFacilityCsv(csvHealthFacilityRecord);
                     processHealthFacilityData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -102,7 +144,7 @@ public class HealthFacilityCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), healthFacilityCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvHealthFacilityRecord.toString());
 
             } catch (Exception e) {
 
@@ -110,8 +152,8 @@ public class HealthFacilityCsvUploadHandler {
 
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != healthFacilityCsvRecord) {
-                    healthFacilityCsvService.delete(healthFacilityCsvRecord);
+                if (null != csvHealthFacilityRecord) {
+                    healthFacilityCsvService.delete(csvHealthFacilityRecord);
                 }
             }
         }
@@ -119,7 +161,7 @@ public class HealthFacilityCsvUploadHandler {
     }
 
 
-    private HealthFacility mapHealthFacilityCsv(HealthFacilityCsv record) throws DataValidationException {
+    private HealthFacility mapHealthFacilityCsv(CsvHealthFacility record) throws DataValidationException {
         HealthFacility newRecord = new HealthFacility();
 
         String healthFacilityName = ParseDataHelper.validateAndParseString("HealthFacilityName", record.getName(), true);

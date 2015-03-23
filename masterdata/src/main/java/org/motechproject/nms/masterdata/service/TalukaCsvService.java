@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.TalukaCsv;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 
 /**
  * This interface is used for crud operations on TalukaCsv
@@ -13,14 +13,14 @@ public interface TalukaCsvService {
      *
      * @param record of the TalukaCsv
      */
-    void delete(TalukaCsv record);
+    void delete(CsvTaluka record);
 
     /**
      * create TalukaCsv type object
      *
      * @param record of the TalukaCsv
      */
-    TalukaCsv create(TalukaCsv record);
+    CsvTaluka create(CsvTaluka record);
 
     /**
      * Finds the TalukaCsv details by its Id
@@ -28,5 +28,5 @@ public interface TalukaCsvService {
      * @param id
      * @return TalukaCsv
      */
-    TalukaCsv findById(Long id);
+    CsvTaluka findById(Long id);
 }

@@ -241,4 +241,62 @@ public class LocationServiceImpl implements LocationService {
 
         return getStateByCode(stateCode).getMkCapping();
     }
+
+    /**
+     * Check whether MK is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public Boolean getMkServiceDeployedByCode(Long stateCode) {
+        State state = getStateByCode(stateCode);
+        if(null != state)
+            return state.getIsMkDeployed();
+       return null;
+    }
+
+    /**
+     * Check whether MA is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public Boolean getMaServiceDeployedByCode(Long stateCode) {
+        State state = getStateByCode(stateCode);
+        if(null != state)
+            return state.getIsMaDeployed();
+        return null;
+    }
+
+    /**
+     * Check whether KK is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public Boolean getKkServiceDeployedByCode(Long stateCode) {
+        State state = getStateByCode(stateCode);
+        if(null != state)
+            return state.getIsKkDeployed();
+        return null;
+    }
+
+    /**
+     * Check whether White List for msisdn is enabled on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public Boolean getWhiteListingEnableStatusByCode(Long stateCode) {
+        State state = getStateByCode(stateCode);
+        if(null != state)
+            return state.getIsWhiteListEnable();
+        return null;
+    }
+
+
 }

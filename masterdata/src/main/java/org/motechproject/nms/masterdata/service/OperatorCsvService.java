@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.OperatorCsv;
+import org.motechproject.nms.masterdata.domain.CsvOperator;
 
 /**
  * This interface is used for crud operations on OperatorCsv
@@ -14,13 +14,13 @@ public interface OperatorCsvService {
      * @param id primary key of the record
      * @return OperatorCsv type object
      */
-    OperatorCsv getRecord(Long id);
+    CsvOperator getRecord(Long id);
 
     /**
      * deletes OperatorCsv from database
      *
      * @param record OperatorCsv type object
      */
-    void delete(OperatorCsv record);
+    void delete(CsvOperator record);
 
 }

@@ -4,8 +4,9 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
+import org.motechproject.nms.masterdata.domain.CsvState;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class StateCsvUploadHandler {
 
     private StateCsvService stateCsvService;
 
+    private StateRecordsDataService stateRecordsDataService;
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
@@ -61,6 +65,44 @@ public class StateCsvUploadHandler {
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        processRecords(createdIds, csvFileName);
+
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        stateRecordsDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
 
@@ -70,18 +112,17 @@ public class StateCsvUploadHandler {
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.STATE);
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        StateCsv stateCsvRecord = null;
+        CsvState csvStateRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("STATE_CSV_SUCCESS event processing start for ID: {}", id);
-                stateCsvRecord = stateCsvService.findById(id);
+                csvStateRecord = stateCsvService.findById(id);
 
-                if (stateCsvRecord != null) {
-                    bulkUploadStatus.setUploadedBy(stateCsvRecord.getOwner());
+                if (csvStateRecord != null) {
+                    bulkUploadStatus.setUploadedBy(csvStateRecord.getOwner());
                     logger.info("Id exist in State Temporary Entity");
-                    State newRecord = mapStateCsv(stateCsvRecord);
+                    State newRecord = mapStateCsv(csvStateRecord);
                     processStateData(newRecord);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -93,7 +134,7 @@ public class StateCsvUploadHandler {
 
                 logger.error("STATE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), stateCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvStateRecord.toString());
 
             } catch (Exception e) {
 
@@ -101,8 +142,8 @@ public class StateCsvUploadHandler {
 
                 logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != stateCsvRecord) {
-                    stateCsvService.delete(stateCsvRecord);
+                if (null != csvStateRecord) {
+                    stateCsvService.delete(csvStateRecord);
                 }
             }
         }
@@ -110,7 +151,8 @@ public class StateCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private State mapStateCsv(StateCsv record) throws DataValidationException {
+
+    private State mapStateCsv(CsvState record) throws DataValidationException {
 
         State newRecord = new State();
 
@@ -118,11 +160,19 @@ public class StateCsvUploadHandler {
         Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
         Integer maCapping = ParseDataHelper.validateAndParseInt("maCapping", record.getMaCapping(), false);
         Integer mkCapping = ParseDataHelper.validateAndParseInt("mkCapping", record.getMkCapping(), false);
+        Boolean isMkdeployed = ParseDataHelper.validateAndParseBoolean("IsMkDeployed", record.getIsMkDeployed(), false);
+        Boolean isMadeployed = ParseDataHelper.validateAndParseBoolean("IsMaDeployed", record.getIsMaDeployed(), false);
+        Boolean isWhiteListEnable = ParseDataHelper.validateAndParseBoolean("IsWhiteListEnable", record.getIsWhiteListEnable(), false);
+        Boolean isKkdeployed = ParseDataHelper.validateAndParseBoolean("IsKkDeployed", record.getIsKkDeployed(), false);
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);
         newRecord.setMaCapping(maCapping);
         newRecord.setMkCapping(mkCapping);
+        newRecord.setIsMkDeployed(isMkdeployed);
+        newRecord.setIsMaDeployed(isMadeployed);
+        newRecord.setIsKkDeployed(isKkdeployed);
+        newRecord.setIsWhiteListEnable(isWhiteListEnable);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
@@ -149,7 +199,12 @@ public class StateCsvUploadHandler {
         stateExistData.setName(stateData.getName());
         stateExistData.setMaCapping(stateData.getMaCapping());
         stateExistData.setMkCapping(stateData.getMkCapping());
+        stateExistData.setIsMkDeployed(stateData.getIsMkDeployed());
+        stateExistData.setIsMaDeployed(stateData.getIsMaDeployed());
+        stateExistData.setIsKkDeployed(stateData.getIsKkDeployed());
+        stateExistData.setIsWhiteListEnable(stateData.getIsWhiteListEnable());
         stateExistData.setModifiedBy(stateData.getModifiedBy());
+
 
         stateService.update(stateExistData);
     }

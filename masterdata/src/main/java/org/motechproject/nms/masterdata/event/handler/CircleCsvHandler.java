@@ -5,7 +5,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,8 @@ public class CircleCsvHandler {
     private CircleService circleService;
 
     private CircleCsvService circleCsvService;
+
+    private CircleDataService circleDataService;
 
     private static Logger logger = LoggerFactory.getLogger(CircleCsvHandler.class);
 
@@ -56,13 +62,48 @@ public class CircleCsvHandler {
     public void circleCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
-
-        CircleCsv record = null;
-        Circle persistentRecord = null;
-
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        processRecords(createdIds, csvFileName);
+
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        circleDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+        CsvCircle record = null;
+        Circle persistentRecord = null;
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
@@ -114,7 +155,9 @@ public class CircleCsvHandler {
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadStatus);
         logger.info("Finished processing CircleCsv-import success");
+
     }
+
 
     /**
      * This method is used to validate csv uploaded record
@@ -124,7 +167,7 @@ public class CircleCsvHandler {
      * @return Circle record after the mapping
      * @throws DataValidationException
      */
-    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
+    private Circle mapCircleFrom(CsvCircle record) throws DataValidationException {
 
         Circle newRecord = new Circle();
 

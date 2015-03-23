@@ -96,7 +96,7 @@ public class FrontLineWorkerUploadHandler {
         logger.debug("Processing Csv file");
 
         processRecords(findListOfRecords(createdIds), csvFileName);
-        logger.info("Finished processing COURSE_CSV_UPLOAD_SUCCESS_EVENT Handler");
+        logger.info("Finished processing FrontLineWorker_CSV_UPLOAD_SUCCESS_EVENT Handler");
     }
 
 
@@ -622,7 +622,7 @@ public class FrontLineWorkerUploadHandler {
     }
 
     /**
-     * This method is used to set error record details
+     * This method is used to check existence of frontlineworker
      *
      * @param frontLineWorker front line worker whose details are to be fetched from database.
      * @return null if there is no db record for given FlwId else the record generated from db

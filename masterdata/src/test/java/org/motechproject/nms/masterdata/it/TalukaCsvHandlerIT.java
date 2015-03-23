@@ -8,7 +8,7 @@ import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.TalukaCsv;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
@@ -80,8 +80,8 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(districtData);
         stateService.create(stateData);
 
-        TalukaCsv csvData = TestHelper.getTalukaCsvData();
-        TalukaCsv invalidCsvData = TestHelper.getInvalidTalukaCsvData();
+        CsvTaluka csvData = TestHelper.getTalukaCsvData();
+        CsvTaluka invalidCsvData = TestHelper.getInvalidTalukaCsvData();
 
         createTalukaCsvData(csvData);
         createTalukaCsvData(invalidCsvData);
@@ -123,7 +123,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createTalukaCsvData(TalukaCsv csvData) {
+    private void createTalukaCsvData(CsvTaluka csvData) {
 
         talukaCsvService.create(csvData);
     }

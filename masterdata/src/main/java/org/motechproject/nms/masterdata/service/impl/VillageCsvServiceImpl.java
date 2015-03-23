@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.VillageCsv;
+import org.motechproject.nms.masterdata.domain.CsvVillage;
 import org.motechproject.nms.masterdata.repository.VillageCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.VillageCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class VillageCsvServiceImpl implements VillageCsvService {
      * @param record of the VillageCsv
      */
     @Override
-    public void delete(VillageCsv record) {
+    public void delete(CsvVillage record) {
         villageCsvRecordsDataService.delete(record);
 
     }
@@ -36,7 +36,7 @@ public class VillageCsvServiceImpl implements VillageCsvService {
      * @param record of the VillageCsv
      */
     @Override
-    public VillageCsv create(VillageCsv record) {
+    public CsvVillage create(CsvVillage record) {
         return villageCsvRecordsDataService.create(record);
     }
 
@@ -47,7 +47,7 @@ public class VillageCsvServiceImpl implements VillageCsvService {
      * @return villageCsv
      */
     @Override
-    public VillageCsv findById(Long id) {
+    public CsvVillage findById(Long id) {
         return villageCsvRecordsDataService.findById(id);
     }
 }

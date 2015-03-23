@@ -20,7 +20,8 @@ public enum RecordType {
     FRONT_LINE_WORKER("Front Line Worker"),
     CONTENT_UPLOAD_KK("Content Upload Kilkari"),
     CONTENT_UPLOAD_MK("Content Upload Mobile Kunji"),
-    COURSE_CONTENT("Course Content");
+    COURSE_CONTENT("Course Content"),
+    WHITE_LIST_USERS("White List Users");
 
     private final String recordType;
 

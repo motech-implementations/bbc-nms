@@ -5,8 +5,9 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
+import org.motechproject.nms.masterdata.domain.CsvDistrict;
 import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
@@ -22,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ public class DistrictCsvUploadHandler {
     private DistrictService districtService;
 
     private StateService stateService;
+    private DistrictRecordsDataService districtRecordsDataService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
@@ -64,9 +68,46 @@ public class DistrictCsvUploadHandler {
         logger.info("DISTRICT_CSV_SUCCESS event received");
 
         Map<String, Object> params = motechEvent.getParameters();
-
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        districtRecordsDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -76,18 +117,17 @@ public class DistrictCsvUploadHandler {
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.DISTRICT);
 
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        DistrictCsv districtCsvRecord = null;
+        CsvDistrict csvDistrictRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
-                districtCsvRecord = districtCsvService.findById(id);
+                csvDistrictRecord = districtCsvService.findById(id);
 
-                if (districtCsvRecord != null) {
+                if (csvDistrictRecord != null) {
                     logger.info("Id exist in District Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(districtCsvRecord.getOwner());
-                    District record = mapDistrictCsv(districtCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvDistrictRecord.getOwner());
+                    District record = mapDistrictCsv(csvDistrictRecord);
                     processDistrictData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -98,21 +138,22 @@ public class DistrictCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), districtCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvDistrictRecord.toString());
             } catch (Exception e) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != districtCsvRecord) {
-                    districtCsvService.delete(districtCsvRecord);
+                if (null != csvDistrictRecord) {
+                    districtCsvService.delete(csvDistrictRecord);
                 }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
+
     }
 
-    private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
+    private District mapDistrictCsv(CsvDistrict record) throws DataValidationException {
 
         String districtName = ParseDataHelper.validateAndParseString("District Name", record.getName(), true);
         Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);

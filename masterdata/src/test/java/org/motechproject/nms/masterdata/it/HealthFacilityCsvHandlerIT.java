@@ -89,8 +89,8 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        HealthFacilityCsv csvData = TestHelper.getHealthFacilityCsvData();
-        HealthFacilityCsv invalidCsvData = TestHelper.getInvalidHealthFacilityCsvData();
+        CsvHealthFacility csvData = TestHelper.getHealthFacilityCsvData();
+        CsvHealthFacility invalidCsvData = TestHelper.getInvalidHealthFacilityCsvData();
         createHealthFacilityCsvData(csvData);
         createHealthFacilityCsvData(invalidCsvData);
 
@@ -138,7 +138,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createHealthFacilityCsvData(HealthFacilityCsv csvData) {
+    private void createHealthFacilityCsvData(CsvHealthFacility csvData) {
         healthFacilityCsvService.create(csvData);
     }
 }

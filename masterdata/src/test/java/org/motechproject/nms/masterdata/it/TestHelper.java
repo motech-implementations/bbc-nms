@@ -12,31 +12,31 @@ public class TestHelper {
 
     private static final String OPERATION = null;
 
-    public static StateCsv getStateCsvData() {
+    public static CsvState getStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("UP", "123", null, null);
-        stateCsvData.setOwner("balvinder");
-        stateCsvData.setCreator("balvinder");
-        stateCsvData.setModifiedBy("balvinder");
-        return stateCsvData;
+        CsvState csvStateData = new CsvState("UP", "123", null, null, "true", "true", "true", "true");
+        csvStateData.setOwner("balvinder");
+        csvStateData.setCreator("balvinder");
+        csvStateData.setModifiedBy("balvinder");
+        return csvStateData;
     }
 
-    public static StateCsv getInvalidStateCsvData() {
+    public static CsvState getInvalidStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("Bihar", "abc123", null, null);
-        stateCsvData.setOwner("balvinder");
-        stateCsvData.setCreator("balvinder");
-        stateCsvData.setModifiedBy("balvinder");
-        return stateCsvData;
+        CsvState csvStateData = new CsvState("Bihar", "abc123", null, null, "true", "true", "true", "true");
+        csvStateData.setOwner("balvinder");
+        csvStateData.setCreator("balvinder");
+        csvStateData.setModifiedBy("balvinder");
+        return csvStateData;
     }
 
-    public static StateCsv getUpdatedStateCsvData() {
+    public static CsvState getUpdatedStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("UK", "123", null, null);
-        stateCsvData.setOwner("balvinder");
-        stateCsvData.setCreator("balvinder");
-        stateCsvData.setModifiedBy("balvinder");
-        return stateCsvData;
+        CsvState csvStateData = new CsvState("UK", "123", null, null, "true", "true", "true", "true");
+        csvStateData.setOwner("balvinder");
+        csvStateData.setCreator("balvinder");
+        csvStateData.setModifiedBy("balvinder");
+        return csvStateData;
     }
 
     public static State getStateData() {
@@ -52,22 +52,22 @@ public class TestHelper {
         return stateData;
     }
 
-    public static DistrictCsv getDistrictCsvData() {
+    public static CsvDistrict getDistrictCsvData() {
 
-        DistrictCsv districtCsvData = new DistrictCsv("Agra", "456", "123");
-        return districtCsvData;
+        CsvDistrict csvDistrictData = new CsvDistrict("Agra", "456", "123");
+        return csvDistrictData;
     }
 
-    public static DistrictCsv getInvalidDistrictCsvData() {
+    public static CsvDistrict getInvalidDistrictCsvData() {
 
-        DistrictCsv districtCsvData = new DistrictCsv("Agra", "456", "456");
-        return districtCsvData;
+        CsvDistrict csvDistrictData = new CsvDistrict("Agra", "456", "456");
+        return csvDistrictData;
     }
 
-    public static DistrictCsv getUpdatedDistrictCsvData() {
+    public static CsvDistrict getUpdatedDistrictCsvData() {
 
-        DistrictCsv districtCsvData = new DistrictCsv("Aligarh", "456", "123");
-        return districtCsvData;
+        CsvDistrict csvDistrictData = new CsvDistrict("Aligarh", "456", "123");
+        return csvDistrictData;
     }
 
     public static District getDistrictData() {
@@ -83,23 +83,23 @@ public class TestHelper {
         return districtData;
     }
 
-    public static TalukaCsv getTalukaCsvData() {
+    public static CsvTaluka getTalukaCsvData() {
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Gabhana", "456", "123", "8");
-        return talukaCsvData;
+        CsvTaluka csvTalukaData = new CsvTaluka("Gabhana", "456", "123", "8");
+        return csvTalukaData;
     }
 
-    public static TalukaCsv getInvalidTalukaCsvData() {
+    public static CsvTaluka getInvalidTalukaCsvData() {
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Gabhana", "456", "abc123", "8");
-        return talukaCsvData;
+        CsvTaluka csvTalukaData = new CsvTaluka("Gabhana", "456", "abc123", "8");
+        return csvTalukaData;
 
     }
 
-    public static TalukaCsv getUpdatedTalukaCsvData() {
+    public static CsvTaluka getUpdatedTalukaCsvData() {
 
-        TalukaCsv talukaCsvData = new TalukaCsv("Ghabhana", "456", "123", "8");
-        return talukaCsvData;
+        CsvTaluka csvTalukaData = new CsvTaluka("Ghabhana", "456", "123", "8");
+        return csvTalukaData;
     }
 
     public static Taluka getTalukaData() {
@@ -118,22 +118,22 @@ public class TestHelper {
         return talukaData;
     }
 
-    public static HealthBlockCsv getHealthBlockCsvData() {
+    public static CsvHealthBlock getHealthBlockCsvData() {
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Gangiri", "1002", "123", "456", "8");
-        return healthBlockCsvData;
+        CsvHealthBlock csvHealthBlockData = new CsvHealthBlock("Gangiri", "1002", "123", "456", "8");
+        return csvHealthBlockData;
     }
 
-    public static HealthBlockCsv getInvalidHealthBlockCsvData() {
+    public static CsvHealthBlock getInvalidHealthBlockCsvData() {
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Gangiri", "1002", "abc123", "456", "8");
-        return healthBlockCsvData;
+        CsvHealthBlock csvHealthBlockData = new CsvHealthBlock("Gangiri", "1002", "abc123", "456", "8");
+        return csvHealthBlockData;
     }
 
-    public static HealthBlockCsv getUpdateHealthBlockCsvData() {
+    public static CsvHealthBlock getUpdateHealthBlockCsvData() {
 
-        HealthBlockCsv healthBlockCsvData = new HealthBlockCsv("Ganiri", "1002", "123", "456", "8");
-        return healthBlockCsvData;
+        CsvHealthBlock csvHealthBlockData = new CsvHealthBlock("Ganiri", "1002", "123", "456", "8");
+        return csvHealthBlockData;
     }
 
     public static HealthBlock getHealthBlockData() {
@@ -152,22 +152,22 @@ public class TestHelper {
     }
 
 
-    public static VillageCsv getVillageCsvData() {
+    public static CsvVillage getVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Alampur", "122656", "123", "456", "8");
-        return villageCsvData;
+        CsvVillage csvVillageData = new CsvVillage("Alampur", "122656", "123", "456", "8");
+        return csvVillageData;
     }
 
-    public static VillageCsv getInvalidVillageCsvData() {
+    public static CsvVillage getInvalidVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Alampur", "122656", "abc123", "456", "8");
-        return villageCsvData;
+        CsvVillage csvVillageData = new CsvVillage("Alampur", "122656", "abc123", "456", "8");
+        return csvVillageData;
     }
 
-    public static VillageCsv getUpdateVillageCsvData() {
+    public static CsvVillage getUpdateVillageCsvData() {
 
-        VillageCsv villageCsvData = new VillageCsv("Ahamadabad", "122656", "123", "456", "8");
-        return villageCsvData;
+        CsvVillage csvVillageData = new CsvVillage("Ahamadabad", "122656", "123", "456", "8");
+        return csvVillageData;
     }
 
     public static HealthFacility getHealthFacilityData() {
@@ -186,40 +186,40 @@ public class TestHelper {
         return healthFacilityData;
     }
 
-    public static HealthFacilityCsv getHealthFacilityCsvData() {
+    public static CsvHealthFacility getHealthFacilityCsvData() {
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF1", "1111", "123", "456", "8", "1002", "9999");
-        return healthFacilityCsvData;
+        CsvHealthFacility csvHealthFacilityData = new CsvHealthFacility("HF1", "1111", "123", "456", "8", "1002", "9999");
+        return csvHealthFacilityData;
     }
 
-    public static HealthFacilityCsv getInvalidHealthFacilityCsvData() {
+    public static CsvHealthFacility getInvalidHealthFacilityCsvData() {
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF1", "1111", "abc123", "456", "8", "1002", "9999");
-        return healthFacilityCsvData;
+        CsvHealthFacility csvHealthFacilityData = new CsvHealthFacility("HF1", "1111", "abc123", "456", "8", "1002", "9999");
+        return csvHealthFacilityData;
     }
 
-    public static HealthFacilityCsv getUpdateHealthFacilityCsvData() {
+    public static CsvHealthFacility getUpdateHealthFacilityCsvData() {
 
-        HealthFacilityCsv healthFacilityCsvData = new HealthFacilityCsv("HF2", "1111", "123", "456", "8", "1002", "9999");
-        return healthFacilityCsvData;
+        CsvHealthFacility csvHealthFacilityData = new CsvHealthFacility("HF2", "1111", "123", "456", "8", "1002", "9999");
+        return csvHealthFacilityData;
     }
 
-    public static HealthSubFacilityCsv getHealthSubFacilityCsvData() {
+    public static CsvHealthSubFacility getHealthSubFacilityCsvData() {
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF1", "1111", "9001", "123", "456", "8", "1002");
-        return healthSubFacilityCsvData;
+        CsvHealthSubFacility csvHealthSubFacilityData = new CsvHealthSubFacility("HSF1", "1111", "9001", "123", "456", "8", "1002");
+        return csvHealthSubFacilityData;
     }
 
-    public static HealthSubFacilityCsv getInvalidHealthSubFacilityCsvData() {
+    public static CsvHealthSubFacility getInvalidHealthSubFacilityCsvData() {
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF1", "1111", "9001", "abc123", "456", "8", "1002");
-        return healthSubFacilityCsvData;
+        CsvHealthSubFacility csvHealthSubFacilityData = new CsvHealthSubFacility("HSF1", "1111", "9001", "abc123", "456", "8", "1002");
+        return csvHealthSubFacilityData;
     }
 
-    public static HealthSubFacilityCsv getUpdateHealthSubFacilityCsvData() {
+    public static CsvHealthSubFacility getUpdateHealthSubFacilityCsvData() {
 
-        HealthSubFacilityCsv healthSubFacilityCsvData = new HealthSubFacilityCsv("HSF2", "1111", "9001", "123", "456", "8", "1002");
-        return healthSubFacilityCsvData;
+        CsvHealthSubFacility csvHealthSubFacilityData = new CsvHealthSubFacility("HSF2", "1111", "9001", "123", "456", "8", "1002");
+        return csvHealthSubFacilityData;
     }
 
     public static MotechEvent createMotechEvent(List<Long> ids, String event) {

@@ -18,12 +18,23 @@
     <osgi:service ref="removeInvalidRecordService"
                   interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecordService"/>
 
+    <osgi:service ref="csvWhiteListUsersService"
+                  interface="org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService"/>
 
-    <osgi:reference id="flwCsvRecordsDataService"
+    <osgi:service ref="whiteListUsersService"
+                  interface="org.motechproject.nms.frontlineworker.service.WhiteListUsersService"/>
+
+    <osgi:reference id="csvFlwRecordsDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.CsvFrontLineWorkerRecordsDataService"/>
 
     <osgi:reference id="flwRecordDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService"/>
+
+    <osgi:reference id="csvWhiteListUsersDataService"
+                    interface="org.motechproject.nms.frontlineworker.repository.CsvWhiteListUsersRecordDataService"/>
+
+    <osgi:reference id="whiteListUsersDataService"
+                    interface="org.motechproject.nms.frontlineworker.repository.WhiteListUsersRecordDataService"/>
 
     <osgi:reference id="locationService"
                     interface="org.motechproject.nms.masterdata.service.LocationService"/>
@@ -60,7 +71,6 @@
 
     <osgi:reference id="healthSubFacilityService"
                     interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
-
 
     <osgi:reference id="schedulerServiceOsgi"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
