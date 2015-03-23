@@ -36,21 +36,23 @@ public class CallerDataController extends BaseController {
      * Get User Details
      *
      * @param callingNumber mobile number of the caller
-     * @param operator operator of caller
-     * @param circle Circle from where the call is originating.
-     * @param callId unique call id assigned by IVR
+     * @param operator      operator of caller
+     * @param circle        Circle from where the call is originating.
+     * @param callId        unique call id assigned by IVR
      * @return User
      * @throws DataValidationException
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody UserDetailApiResponse getUserDetails(
+    public
+    @ResponseBody
+    UserDetailApiResponse getUserDetails(
             @RequestParam(value = "callingNumber") String callingNumber,
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
             throws DataValidationException {
         log.info("getUserDetails: Started");
-        log.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber,operator,circle,callId);
+        log.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
 
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
@@ -68,7 +70,9 @@ public class CallerDataController extends BaseController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+    public
+    @ResponseBody
+    int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
 
         userDetailsService.updateLanguageLocationCode(request.getCallingNumber(), request.getLanguageLocationCode());
         return HttpStatus.SC_OK;

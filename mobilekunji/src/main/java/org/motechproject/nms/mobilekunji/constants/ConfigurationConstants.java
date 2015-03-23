@@ -7,8 +7,6 @@ public class ConfigurationConstants {
 
     public static final Long CONFIGURATION_INDEX = 1L;
 
-
-
     public static final Integer DEFAULT_MAX_NATIONAL_CAPITAL_VALUE = 0;
 
     public static final Integer DEFAULT_MAX_WELCOME_MESSAGE = 1;

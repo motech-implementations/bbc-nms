@@ -5,25 +5,26 @@
             <div class="form-group">
                 <div class="controls">
                     <button class="btn btn-primary" ng-click="sayHello()">
-                        {{msg('mk.btn.sayHello')}}</button>
+                        {{msg('mk.btn.sayHello')}}
+                    </button>
                     {{msg('mk.info.instructions')}}
                 </div>
             </div>
 
             <div class="clearfix">
                 <table
-                    class="table table-bordered table-condensed table-lightblue">
+                        class="table table-bordered table-condensed table-lightblue">
                     <thead>
-                        <tr>
-                            <th>{{msg('mk.info.serviceResponse')}}</th>
-                            <th>{{msg('mk.info.serviceCount')}}</th>
-                        </tr>
+                    <tr>
+                        <th>{{msg('mk.info.serviceResponse')}}</th>
+                        <th>{{msg('mk.info.serviceCount')}}</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><span>{{sayHelloResult}}</span></td>
-                            <td><span>{{sayHelloCount}}</span></td>
-                        </tr>
+                    <tr>
+                        <td><span>{{sayHelloResult}}</span></td>
+                        <td><span>{{sayHelloCount}}</span></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

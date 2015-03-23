@@ -9,7 +9,6 @@ import org.motechproject.nms.mobilekunji.Initializer;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
 import org.motechproject.nms.mobilekunji.repository.ConfigurationDataService;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
-import org.motechproject.nms.mobilekunji.service.impl.ConfigurationServiceImpl;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;

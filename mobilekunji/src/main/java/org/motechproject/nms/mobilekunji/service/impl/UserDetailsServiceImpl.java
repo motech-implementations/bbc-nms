@@ -56,9 +56,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public int updateLanguageLocationCode(String msisdn, Integer languageLocationCode) throws DataValidationException {
 
-         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(languageLocationCode,msisdn);
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(languageLocationCode, msisdn);
 
-         return HttpStatus.SC_OK;
+        return HttpStatus.SC_OK;
     }
 
 
@@ -76,7 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         setNmsCappingValue(userDetailApiResponse, userProfile);
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
-        if(null != serviceConsumptionFlw) {
+        if (null != serviceConsumptionFlw) {
             userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
             userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
             userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
@@ -88,9 +88,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetailApiResponse;
     }
 
-    private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse,UserProfile userProfile) {
+    private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
 
-        switch(configurationService.getConfiguration().getCappingType()){
+        switch (configurationService.getConfiguration().getCappingType()) {
 
             case ConfigurationConstants.DEFAULT_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(-1);

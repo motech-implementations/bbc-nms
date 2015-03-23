@@ -12,7 +12,6 @@ import org.springframework.web.context.request.WebRequest;
  * BaseController class contain handlers for exceptions that occur in
  * controllers having rest api. Controller needs to extend this class to use
  * this functionality.
- *
  */
 public class BaseController {
 
@@ -25,7 +24,7 @@ public class BaseController {
      * @param request
      * @return ResponseEntity<String>
      */
-    @ExceptionHandler(value = { MissingServletRequestParameterException.class })
+    @ExceptionHandler(value = {MissingServletRequestParameterException.class})
     protected ResponseEntity<String> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException exception,
             final WebRequest request) {
@@ -43,7 +42,7 @@ public class BaseController {
      * @param request
      * @return ResponseEntity<String>
      */
-    @ExceptionHandler(value = { DataValidationException.class })
+    @ExceptionHandler(value = {DataValidationException.class})
     public ResponseEntity<String> handleDataValidationException(
             final DataValidationException exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
@@ -59,7 +58,7 @@ public class BaseController {
      * @param req
      * @return ResponseEntity<String>
      */
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<String> handleGeneralExceptions(
             final Exception exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
