@@ -8,9 +8,4 @@
 
     <context:annotation-config />
     <context:component-scan base-package="org.motechproject.nms.kilkari" />
-
-    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <property name="defaultURL" value="/kilkari"/>
-    </bean>
-
 </beans>

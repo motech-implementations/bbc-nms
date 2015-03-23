@@ -21,11 +21,15 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class SubscriptionController extends BaseController{
 
-    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
     private SubscriptionService subscriptionService;
+
+    @Autowired
+    public  SubscriptionController(UserDetailsService userDetailsService, SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+        this.userDetailsService = userDetailsService;
+    }
 
     Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
@@ -46,8 +50,7 @@ public class SubscriptionController extends BaseController{
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
 
         apiRequest.validateMandatoryParameters();
-        subscriptionService.createNewSubscriberAndSubscription(apiRequest.toSubscriber(),
-                Channel.IVR, apiRequest.getOperator(), apiRequest.getCircle());
+        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle());
         logger.trace("Finished processing createSubscription");
     }
 

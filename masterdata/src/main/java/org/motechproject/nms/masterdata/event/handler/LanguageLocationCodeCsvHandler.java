@@ -185,7 +185,6 @@ public class LanguageLocationCodeCsvHandler {
 
         newRecord.setLanguageLocationCode(ParseDataHelper.validateAndParseInt("LanguageLocationCode",
                 record.getLanguageLocationCode(), true));
-        circle.setDefaultLanguageLocationCode(newRecord.getLanguageLocationCode());
         newRecord.setLanguageKK(ParseDataHelper.validateAndParseString("LanguageKK", record.getLanguageKK(), true));
         newRecord.setLanguageMK(ParseDataHelper.validateAndParseString("LanguageMK", record.getLanguageMK(), true));
         newRecord.setLanguageMA(ParseDataHelper.validateAndParseString("LanguageMA", record.getLanguageMA(), true));
