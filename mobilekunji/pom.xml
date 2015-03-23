@@ -89,14 +89,13 @@
                         <Blueprint-Enabled>true</Blueprint-Enabled>
 
                         <!-- Bug 22 -->
-                        <Resource-Path>mobilekunji/resources</Resource-Path>
                         <Context-Path>mobilekunji</Context-Path>
+                        <Resource-Path>mobilekunji/resources</Resource-Path>
                         <Export-Package>org.motechproject.nms.mobilekunji;version=${project.version},
                             org.motechproject.nms.mobilekunji.service;version=${project.version},
-                            org.motechproject.nms.mobilekunji.service.impl;version=${project.version},<!-- Bug 23 -->
                             org.motechproject.nms.mobilekunji.repository;version=${project.version},
                             org.motechproject.nms.mobilekunji.constants;version=${project.version},
-                            org.motechproject.nms.mobilekunji.event.handler;version=${project.version},<!-- Bug 18 -->
+                            org.motechproject.nms.mobilekunji.event.handler;version=${project.version},
                             org.motechproject.nms.mobilekunji.domain;version=${project.version},
                             org.motechproject.nms.mobilekunji.web;version=${project.version},
                         </Export-Package>

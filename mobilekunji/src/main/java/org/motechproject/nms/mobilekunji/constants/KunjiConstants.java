@@ -27,5 +27,4 @@ public class KunjiConstants {
 
     public static final int TWO = 2;
 
-
 }

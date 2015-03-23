@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This class Models data for CardContent records
  */
 
-@Entity
+@Entity(recordHistory = true)
 public class CardContent extends MdsEntity {
 
     @Field
@@ -69,11 +69,11 @@ public class CardContent extends MdsEntity {
     @Override
     public String toString() {
         return "CardContent{" +
-                "endTime=" + endTime +
-                ", startTime=" + startTime +
-                ", audioFileName='" + audioFileName + '\'' +
+                "cardNumber=" + cardNumber +
                 ", contentName='" + contentName + '\'' +
-                ", cardNumber=" + cardNumber +
+                ", audioFileName='" + audioFileName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }

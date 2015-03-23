@@ -5,25 +5,16 @@ package org.motechproject.nms.kilkari.domain;
  */
 public enum DeactivationReason {
 
-    CHILD_DEATH("ChildDeath"),
-    MOTHER_DEATH("MotherDeath"),
-    ABORTION("Abortion"),
-    STILL_BIRTH("StillBirth"),
-    MSISDN_IN_DND("MsisdnInDND"),
-    INVALID_MSISDN("InvalidMsisdn"), 
-    USER_DEACTIVATED("UserDeactivation"),
-    PACK_CHANGED("PackChanged"),
-    PACK_SCHEDULE_CHANGED("PackLmpOrDobChanged"),
-    NONE("None");
+    CHILD_DEATH,
+    MOTHER_DEATH,
+    ABORTION,
+    STILL_BIRTH,
+    MSISDN_IN_DND,
+    INVALID_MSISDN,
+    USER_DEACTIVATED,
+    PACK_CHANGED,
+    PACK_SCHEDULE_CHANGED,
+    NONE;
     
-    private String name;
-    
-    private DeactivationReason(String name){
-        this.name = name;
-    }
-    
-    @Override
-    public String toString(){
-        return name;
-    }
+
 }
