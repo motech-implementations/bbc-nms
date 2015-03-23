@@ -3,6 +3,7 @@ package org.motechproject.nms.mobilekunji.web;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
@@ -64,7 +65,7 @@ public class CallerDataController extends BaseController {
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails() {
+    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) {
 
         saveCallDetailsService.saveCallDetails();
     }
