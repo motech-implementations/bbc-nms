@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
-import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.mobilekunji.domain.CardContent;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
@@ -65,18 +65,25 @@ public class CallerDataController extends BaseController {
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) {
+    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
+
+        log.info("SaveCallDetails: Started");
+
+        validateInputDataForSaveCallDetails(request);
 
         saveCallDetailsService.saveCallDetails();
+
+        log.trace("Save CallDetails:Ended");
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+    public @ResponseBody void updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+
+        log.info("Update Language Location Code: Started");
 
         userDetailsService.updateLanguageLocationCode(request.getCallingNumber(), request.getLanguageLocationCode());
-        return HttpStatus.SC_OK;
+
+        log.trace("Update LanguageLocationCode:Ended");
     }
 
     /**
@@ -95,5 +102,26 @@ public class CallerDataController extends BaseController {
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
         ParseDataHelper.validateAndParseLong(callId, callId, true);
+    }
+
+    private void validateInputDataForSaveCallDetails(SaveCallDetailApiRequest request)
+            throws DataValidationException {
+
+        ParseDataHelper.validateAndParseInt("CallingNumber", request.getCallingNumber(), true);
+        ParseDataHelper.validateAndParseString("Operator", request.getCircle(), true);
+        ParseDataHelper.validateAndParseString("Circle", request.getCircle(), true);
+        ParseDataHelper.validateAndParseInt("CallStartTime", request.getStartTime().toString(), true);
+        ParseDataHelper.validateAndParseInt("CallEndTime",request.getEndTime().toString() , true);
+        ParseDataHelper.validateAndParseInt("CurrentUsageInPulses",request.getCurrentUsageInPulses().toString(),true);
+        ParseDataHelper.validateAndParseInt("",request.getEndOfUsagePromptCounter().toString(),true);
+        ParseDataHelper.validateAndParseBoolean("WelcomeMessageFlag",request.getWelcomeMessageFlag().toString(),true);
+
+        CardContent cardContent = request.getCardContentList().get(0);
+
+        ParseDataHelper.validateAndParseInt("CardNumber", cardContent.getCardNumber().toString(), true);
+        ParseDataHelper.validateAndParseString("ContentName",cardContent.getContentName(),true);
+        ParseDataHelper.validateAndParseString("AudioFileName",cardContent.getAudioFileName(),true);
+        ParseDataHelper.validateAndParseInt("StartTime",cardContent.getStartTime().toString(),true);
+        ParseDataHelper.validateAndParseInt("EndTime",cardContent.getEndTime().toString(),true);
     }
 }
