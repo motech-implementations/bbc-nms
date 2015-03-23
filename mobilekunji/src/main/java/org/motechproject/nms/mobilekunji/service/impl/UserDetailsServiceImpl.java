@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
@@ -47,7 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = null;
 
-        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode);
+        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
         return userDetailApiResponse;
