@@ -421,9 +421,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     private void updateDbSubscriber(Subscriber subscriber, Subscriber dbSubscriber) {
 
+        if(subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER){
+            dbSubscriber.setName(subscriber.getName());
+            dbSubscriber.setAge(subscriber.getAge());
+            dbSubscriber.setAadharNumber(subscriber.getAadharNumber());
+            dbSubscriber.setLmp(subscriber.getLmp());
+        } else {
+            dbSubscriber.setDob(subscriber.getDob());
+        }
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
-        dbSubscriber.setName(subscriber.getName());
-        dbSubscriber.setAge(subscriber.getAge());
         dbSubscriber.setState(subscriber.getState());
         dbSubscriber.setDistrict(subscriber.getDistrict());
         dbSubscriber.setTaluka(subscriber.getTaluka());
@@ -433,8 +439,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dbSubscriber.setVillage(subscriber.getVillage());
         dbSubscriber.setMotherMctsId(subscriber.getMotherMctsId());
         dbSubscriber.setChildMctsId(subscriber.getChildMctsId());
-        dbSubscriber.setDob(subscriber.getDob());
-        dbSubscriber.setLmp(subscriber.getLmp());
         dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
 
