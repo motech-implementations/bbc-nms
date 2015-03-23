@@ -10,6 +10,7 @@ import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.CsvFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
+import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -64,6 +65,9 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
     
     @Inject
     private CsvFrontLineWorkerService csvFrontLineWorkerService;
+
+    @Inject
+    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
     
     @Inject
     private StateService stateService;
@@ -133,7 +137,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         
         frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
-                frontLineWorkerService, csvFrontLineWorkerService
+                frontLineWorkerService, csvFrontLineWorkerService,frontLineWorkerRecordDataService
         );
         
         assertNotNull(bulkUploadErrLogService);
