@@ -85,7 +85,8 @@ public class FlwDetail extends MdsEntity {
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", welcomePromptFlag=" + welcomePromptFlag +
                 ", currentUsageInPulses=" + currentUsageInPulses +
-                ", msisdn=" + msisdn +
+                ", msisdn='" + msisdn + '\'' +
+                ", lastAccessDate=" + lastAccessDate +
                 '}';
     }
 }
