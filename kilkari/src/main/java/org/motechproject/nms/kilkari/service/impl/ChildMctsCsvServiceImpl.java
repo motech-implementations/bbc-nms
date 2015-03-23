@@ -138,11 +138,8 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber.setDob(ParseDataHelper.validateAndParseDate("Birth Date", childMctsCsv.getBirthdate(), true));
 
         /* Set the appropriate Deactivation Reason */
-        if(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false))){
-            childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
-        } else {
-            childSubscriber.setDeactivationReason(DeactivationReason.NONE);
-        }
+        String entryType = ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false);
+        childSubscriber.setDeactivationReason(setDeactivateForStillBirth(entryType));
 
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
@@ -151,6 +148,26 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
         logger.trace("mapChildMctsToSubscriber method finished");
         return childSubscriber;
+    }
+    
+    private DeactivationReason setDeactivateForStillBirth (String entryType) throws DataValidationException {
+        
+        DeactivationReason deactivationReason = null;
+        if (entryType!=null) {
+            boolean foundEntryType = EntryType.checkValidEntryType(entryType);
+            if(foundEntryType){
+                if(CHILD_DEATH_NINE.equalsIgnoreCase(entryType)){
+                    deactivationReason = DeactivationReason.CHILD_DEATH;
+                } else {
+                    deactivationReason = DeactivationReason.NONE;
+                }
+            } else{
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
+            }
+        } else {
+            deactivationReason = DeactivationReason.NONE;
+        }
+        return deactivationReason;
     }
 
 

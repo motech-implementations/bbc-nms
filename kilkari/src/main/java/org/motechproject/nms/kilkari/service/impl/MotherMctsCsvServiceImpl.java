@@ -1,9 +1,22 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import java.util.List;
+
+import org.apache.velocity.app.event.ReferenceInsertionEventHandler.referenceInsertExecutor;
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.AbortionType;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.EntryType;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.LocationValidatorService;
+import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -17,8 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -142,13 +153,14 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
 
         /* Set the appropriate Deactivation Reason */
+        String entryType = ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false);
+        motherSubscriber.setDeactivationReason(setDeactivateForStillBirth(motherSubscriber, entryType));
+        
         String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
+        motherSubscriber.setDeactivationReason(setDeactivateForAbortion(motherSubscriber, abortion));
+        
         if (STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos())) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
-        } else if (!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion))) {
-            motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
-        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
-            motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
         } else {
             motherSubscriber.setDeactivationReason(DeactivationReason.NONE);
         }
@@ -160,6 +172,47 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
         logger.trace("mapMotherMctsToSubscriber method finished");
         return motherSubscriber;
+    }
+
+    private DeactivationReason setDeactivateForAbortion(Subscriber motherSubscriber,
+            String abortion) throws DataValidationException {
+        DeactivationReason deactivationReason = null;
+        if(abortion!=null){
+            boolean foundAbortionType = AbortionType.checkAbortionType(abortion);
+            if(foundAbortionType){
+                if(ABORTION_NONE.equalsIgnoreCase(abortion)){
+                    deactivationReason = DeactivationReason.ABORTION;
+                } else {
+                    deactivationReason = DeactivationReason.NONE;
+                }
+            } else {
+                ParseDataHelper.raiseInvalidDataException("Abortion", abortion);
+            }
+        } else {
+            deactivationReason = DeactivationReason.ABORTION;
+        }
+        return deactivationReason;
+    }
+
+    private DeactivationReason setDeactivateForStillBirth(Subscriber motherSubscriber,
+            String entryType) throws DataValidationException {
+        
+        DeactivationReason deactivationReason = null;
+        if (entryType!=null) {
+            boolean foundEntryType = EntryType.checkValidEntryType(entryType);
+            if(foundEntryType){
+                if(MOTHER_DEATH_NINE.equalsIgnoreCase(entryType)){
+                    deactivationReason = DeactivationReason.MOTHER_DEATH;
+                } else {
+                    deactivationReason = DeactivationReason.NONE;
+                }
+            } else{
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
+            }
+        } else {
+            deactivationReason = DeactivationReason.NONE;
+        }
+        return deactivationReason;
     }
     
 }
