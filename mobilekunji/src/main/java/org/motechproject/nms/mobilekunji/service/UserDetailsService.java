@@ -16,4 +16,6 @@ public interface UserDetailsService {
      */
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, Long callId) throws DataValidationException;
 
+    public int updateLanguageLocationCode(String msisdn, Integer languageLocationCode) throws DataValidationException;
+
 }
