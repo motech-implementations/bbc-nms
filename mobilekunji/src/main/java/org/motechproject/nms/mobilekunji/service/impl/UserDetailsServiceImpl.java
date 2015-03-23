@@ -2,7 +2,7 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
+import org.motechproject.nms.mobilekunji.constants.KunjiConstants;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 13/3/15.
+ * This class provides the implementation of UserDetailsService
  */
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -48,24 +48,24 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode);
 
-        /*if(userProfileData.isCreated()) {
+        if(userProfileData.isCreated()) {
             setFlwData(userProfileData);
-        }*/
+        }
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
         return userDetailApiResponse;
     }
 
-   /* private void setFlwData(UserProfile userProfile) {
+    private void setFlwData(UserProfile userProfile) {
 
         ServiceConsumptionFlw serviceConsumptionFlw = new ServiceConsumptionFlw();
         serviceConsumptionFlw.setNmsFlwId(userProfile.getNmsId());
-        serviceConsumptionFlw.setWelcomePromptFlag(ConfigurationConstants.FALSE);
-        serviceConsumptionFlw.setCurrentUsageInPulses(ConfigurationConstants.ZERO);
-        serviceConsumptionFlw.setEndOfUsagePrompt(ConfigurationConstants.ZERO);
+        serviceConsumptionFlw.setWelcomePromptFlag(KunjiConstants.FALSE);
+        serviceConsumptionFlw.setCurrentUsageInPulses(KunjiConstants.ZERO);
+        serviceConsumptionFlw.setEndOfUsagePrompt(KunjiConstants.ZERO);
 
         serviceConsumptionFlwService.create(serviceConsumptionFlw);
-    }*/
+    }
 
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) {
 
@@ -76,21 +76,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
+        userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
 
         //method for capping
         setNmsCappingValue(userDetailApiResponse,userProfile);
-
+        userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
-
-        if(null != serviceConsumptionFlw) {
-            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
-            userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
-            userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
-        } else {
-            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
-            userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-            userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
-        }
+        userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
 
         return userDetailApiResponse;
     }
@@ -99,16 +91,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         switch(configurationService.getConfiguration().getCappingType()){
 
-            case ConfigurationConstants.DEFAULT_CAPPING_TYPE:
+            case KunjiConstants.ZERO:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(-1);
                 break;
 
-            case ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE:
+            case KunjiConstants.ONE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNationalCapValue());
-                break;
-            case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
+
+            case KunjiConstants.TWO:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(userProfile.getMaxStateLevelCappingValue());
-                break;
         }
     }
 

@@ -5,7 +5,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * Created by abhishek on 18/3/15.
+ * This class Models data records provided in the Service Consumption FLW
  */
 
 @Entity(recordHistory = true)

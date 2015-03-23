@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.web;
 
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
@@ -11,12 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * This class register the controller methods for creation of user and update its details.
@@ -66,15 +62,14 @@ public class CallerDataController extends BaseController {
 
     @RequestMapping(value = "/user", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(HttpServletRequest request) {
+    public void saveCallDetails() {
 
         saveCallDetailsService.saveCallDetails();
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody int updateLanguageLocationCode(  @RequestParam(value = "languageLocationCode") String languageLocationCode,
-                                                          @RequestParam(value = "callingNumber") String callingNumber){
-
+    public @ResponseBody int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request){
+        
         return HttpStatus.SC_OK;
     }
 

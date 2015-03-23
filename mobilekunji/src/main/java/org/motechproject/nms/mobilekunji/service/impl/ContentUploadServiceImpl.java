@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by abhishek on 13/3/15.
+ * This class provides the implementation of ContentUploadService
  */
 @Service("contentUploadService")
 public class ContentUploadServiceImpl implements ContentUploadService {

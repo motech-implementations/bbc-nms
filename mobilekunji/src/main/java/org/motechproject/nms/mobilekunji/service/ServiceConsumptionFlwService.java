@@ -3,7 +3,8 @@ package org.motechproject.nms.mobilekunji.service;
 import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
 
 /**
- * Created by abhishek on 13/3/15.
+ * The purpose of this class is to provide methods to create, delete, find and update the
+ * service level ServiceConsumptionFlw.
  */
 public interface ServiceConsumptionFlwService {
 
