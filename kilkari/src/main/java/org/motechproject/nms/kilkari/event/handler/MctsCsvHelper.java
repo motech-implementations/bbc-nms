@@ -20,7 +20,6 @@ public final class MctsCsvHelper {
         
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
         dbSubscriber.setName(subscriber.getName());
-        dbSubscriber.setAge(subscriber.getAge());
         dbSubscriber.setState(subscriber.getState());
         dbSubscriber.setDistrict(subscriber.getDistrict());
         dbSubscriber.setTaluka(subscriber.getTaluka());
