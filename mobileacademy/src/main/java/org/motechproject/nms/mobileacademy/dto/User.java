@@ -1,5 +1,9 @@
 package org.motechproject.nms.mobileacademy.dto;
 
+/**
+ * User object contain details required in get user detail API response.
+ *
+ */
 public class User {
 
     private String circle;

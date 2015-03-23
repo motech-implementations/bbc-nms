@@ -1,12 +1,14 @@
 package org.motechproject.nms.mobileacademy.web;
 
 import org.apache.log4j.Logger;
+import org.motechproject.nms.mobileacademy.dto.LlcRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,36 +24,75 @@ public class UserController extends BaseController {
 
     private static final Logger LOGGER = Logger.getLogger(UserController.class);
 
+    private static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
+
+    private static final String REQUEST_PARAM_OPERATOR = "operator";
+
+    private static final String REQUEST_PARAM_CIRCLE = "circle";
+
+    private static final String REQUEST_PARAM_CALL_ID = "callId";
+
+    private static final String REQUEST_PARAM_LLC = "languageLocationCode";
+
     @Autowired
     private UserDetailsService userDetailsService;
 
     /**
-     * Get User Details
+     * Get User Details API
      * 
      * @param callingNumber mobile number of the caller
      * @param operator operator of caller
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
-     * @return User
+     * @return User response object containing user details
      * @throws DataValidationException
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public @ResponseBody User getUserDetails(
-            @RequestParam(value = "callingNumber") String callingNumber,
-            @RequestParam(value = "operator") String operator,
-            @RequestParam(value = "circle") String circle,
-            @RequestParam(value = "callId") String callId)
+            @RequestParam(value = UserController.REQUEST_PARAM_CALLING_NUMBER) String callingNumber,
+            @RequestParam(value = UserController.REQUEST_PARAM_OPERATOR) String operator,
+            @RequestParam(value = UserController.REQUEST_PARAM_CIRCLE) String circle,
+            @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
             throws DataValidationException {
         LOGGER.debug("getUserDetails: Started");
-        LOGGER.info("Input request-callingNumber:" + callingNumber
-                + ", operator:" + operator + ", circle:" + circle + ", callId:"
-                + callId);
+        LOGGER.info("Input request-"
+                + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
+                + callingNumber + ", " + UserController.REQUEST_PARAM_OPERATOR
+                + ":" + operator + ", " + UserController.REQUEST_PARAM_CIRCLE
+                + ":" + circle + ", " + UserController.REQUEST_PARAM_CALL_ID
+                + ":" + callId);
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
         User user = userDetailsService.findUserDetails(callingNumber, operator,
                 circle);
-        LOGGER.debug("getUserDetails:Ended");
+        LOGGER.debug("getUserDetails: Ended");
         return user;
+
+    }
+
+    /**
+     * Set language location code API
+     * 
+     * @param llcRequest object contain input request
+     * @throws DataValidationException
+     */
+    @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
+    public void setLanguageLocationCode(@RequestBody LlcRequest llcRequest)
+            throws DataValidationException {
+        LOGGER.debug("setLanguageLocationCode: Started");
+        LOGGER.info("Input request-"
+                + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
+                + llcRequest.getCallingNumber() + ", "
+                + UserController.REQUEST_PARAM_LLC + ":"
+                + llcRequest.getLanguageLocationCode() + ", "
+                + UserController.REQUEST_PARAM_CALL_ID + ":"
+                + llcRequest.getCallId());
+        // TODO JSON
+        validateInputDataForSetLlc(llcRequest);
+        userDetailsService.setLanguageLocationCode(
+                llcRequest.getLanguageLocationCode(),
+                llcRequest.getCallingNumber());
+        LOGGER.debug("setLanguageLocationCode: Ended");
 
     }
 
@@ -67,11 +108,37 @@ public class UserController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
             String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(callingNumber, callingNumber,
+        ParseDataHelper.validateAndParseString(
+                UserController.REQUEST_PARAM_CALLING_NUMBER, callingNumber,
                 true);
-        ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber);
-        ParseDataHelper.validateAndParseString(operator, operator, true);
-        ParseDataHelper.validateAndParseString(circle, circle, true);
-        ParseDataHelper.validateAndParseLong(callId, callId, true);
+        ParseDataHelper.validateAndTrimMsisdn(
+                UserController.REQUEST_PARAM_CALLING_NUMBER, callingNumber);
+        ParseDataHelper.validateAndParseString(
+                UserController.REQUEST_PARAM_OPERATOR, operator, true);
+        ParseDataHelper.validateAndParseString(
+                UserController.REQUEST_PARAM_CIRCLE, circle, true);
+        ParseDataHelper.validateAndParseLong(
+                UserController.REQUEST_PARAM_CALL_ID, callId, true);
+    }
+
+    /**
+     * validate Input Data For Set Language location code
+     * 
+     * @param llcRequest object contain input request
+     * @throws DataValidationException
+     */
+    private void validateInputDataForSetLlc(LlcRequest llcRequest)
+            throws DataValidationException {
+        ParseDataHelper.validateAndParseString(
+                UserController.REQUEST_PARAM_CALLING_NUMBER,
+                llcRequest.getCallingNumber(), true);
+        ParseDataHelper.validateAndTrimMsisdn(
+                UserController.REQUEST_PARAM_CALLING_NUMBER,
+                llcRequest.getCallingNumber());
+        ParseDataHelper.validateAndParseLong(
+                UserController.REQUEST_PARAM_CALL_ID, llcRequest.getCallId(),
+                true);
+        ParseDataHelper.validateAndParseInt(UserController.REQUEST_PARAM_LLC,
+                llcRequest.getLanguageLocationCode(), true);
     }
 }

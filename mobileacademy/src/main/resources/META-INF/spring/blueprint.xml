@@ -22,6 +22,9 @@
 
     <osgi:service ref="UserDetailsServiceMa"
         interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
+        
+     <osgi:service ref="ConfigurationServiceMa"
+        interface="org.motechproject.nms.mobileacademy.service.ConfigurationService" />
 
 
     <osgi:reference id="CourseProcessedContentDataService"
@@ -33,8 +36,8 @@
     <osgi:reference id="ChapterContentDataService"
         interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />
 
-    <osgi:reference id="ServiceConfigParamDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.ServiceConfigParamDataService" />
+    <osgi:reference id="ConfigurationDataService"
+        interface="org.motechproject.nms.mobileacademy.repository.ConfigurationDataService" />
 
     <osgi:reference id="MTrainingService"
         interface="org.motechproject.mtraining.service.MTrainingService" />
@@ -47,6 +50,9 @@
 
     <osgi:reference id="FlwUsageDetailDataService"
         interface="org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService" />
-
+        
+    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <property name="defaultURL" value="/mobileacademy"/>
+    </bean>
 
 </beans>

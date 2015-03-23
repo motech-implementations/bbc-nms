@@ -122,10 +122,30 @@ public class MobileAcademyConstants {
 
     public static final String LOG_MSG_NEW_FILE_NAME = "new file name: {}";
 
-    public static final Long SERVICE_CONFIG_DEFAULT_RECORD_INDEX = 1l;
-
     public static final String NO_COURSE_PRESENT = "No Course Present in the System";
 
     public static final String COURSE_UPLOAD_ONGOING = "Course upload is ongoing in the system";
+
+    /* Mobile academy service configuration parameters -Start */
+
+    public static final Long CONFIG_DEFAULT_RECORD_INDEX = 1l;
+
+    public static final Integer CONFIG_DEFAULT_CAPPING_TYPE = 0;
+
+    public static final Integer CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT = 2;
+
+    public static final Integer CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE = 22;
+
+    public static final Integer CONFIG_DEFAULT_NATIONAL_CAP_VALUE = 0;
+
+    public static final Integer CONFIG_DEFAULT_LANGUAGE_LOCATION_CODE = 1;
+
+    public static final String CONFIG_DEFAULT_SMS_SENDER_ADDRESS = "DEFAULT_SMS_SENDER_ADDRESS";
+
+    /* Mobile academy service configuration parameters -End */
+
+    public static final Integer MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED = -1;
+
+    public static final String UNKNOWN_CIRCLE_CODE = "99";
 
 }

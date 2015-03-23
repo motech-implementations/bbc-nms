@@ -121,6 +121,7 @@
                             org.motechproject.nms.mobileacademy.commons;version=${project.version},
                             org.motechproject.nms.mobileacademy.domain;version=${project.version},
                             org.motechproject.nms.mobileacademy.logic;version=${project.version},
+                            org.motechproject.nms.mobileacademy.initializer;version=${project.version},
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *</Import-Package>

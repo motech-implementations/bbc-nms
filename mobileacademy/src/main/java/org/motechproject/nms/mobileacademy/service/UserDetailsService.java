@@ -15,9 +15,20 @@ public interface UserDetailsService {
      * @param callingNumber mobile number of the caller
      * @param operator operator of caller
      * @param circle Circle from where the call is originating.
-     * @return User
+     * @return User user response object
      * @throws DataValidationException
      */
     User findUserDetails(String callingNumber, String operator, String circle)
             throws DataValidationException;
+
+    /**
+     * set Language Location Code for user
+     * 
+     * @param languageLocationCode Language location preference provided by
+     *            caller
+     * @param callingNumber calling number i.e msisdn
+     * @throws DataValidationException
+     */
+    void setLanguageLocationCode(String languageLocationCode,
+            String callingNumber) throws DataValidationException;
 }

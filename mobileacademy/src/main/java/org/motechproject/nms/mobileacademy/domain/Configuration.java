@@ -8,34 +8,40 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * ServiceConfigParam object to refer Mobile Academy Service configuration
+ * Configuration object to refer Mobile Academy Service configuration
  * Parameters.
  *
  */
 @Entity
-public class ServiceConfigParam extends MdsEntity {
+public class Configuration extends MdsEntity {
 
     @Field(required = true)
     @Size(min = 1, max = 1)
     @Unique
     private Long index;
 
+    @Field
     private Integer cappingType;
 
+    @Field
     private Integer nationalCapValue;
 
-    private Integer maxEndOfUsuageMessage;
+    @Field
+    private Integer maxAllowedEndOfUsagePrompt;
 
+    @Field
     private Integer courseQualifyingScore;
 
+    @Field
     private Integer defaultLanguageLocationCode;
 
+    @Field
     private String smsSenderAddress;
 
     /**
      * constructor with 0 arguments.
      */
-    public ServiceConfigParam() {
+    public Configuration() {
 
     }
 
@@ -46,9 +52,9 @@ public class ServiceConfigParam extends MdsEntity {
      * @param CappingType specify capping type: 0-No capping 1-National Capping
      *            2-State wise capping
      * @param NationalCapValue specify national cap value.
-     * @param MaxEndOfUsuageMessage Maximum no. of times end of usage message
-     *            can be played to the user on usage unavailability. After the
-     *            expiry of this value, call will be simply dropped.
+     * @param maxAllowedEndOfUsagePrompt Maximum no. of times end of usage
+     *            message can be played to the user on usage unavailability.
+     *            After the expiry of this value, call will be simply dropped.
      * @param CourseQualifyingScore Minimum score a user should achieve in order
      *            to qualify the MA course.
      * @param DefaultLanguageLocationCode language Location Code value in case
@@ -56,14 +62,14 @@ public class ServiceConfigParam extends MdsEntity {
      * @param SmsSenderAddress Address to be populated in from field of SMS
      *            which will be sent on successful completion of course.
      */
-    public ServiceConfigParam(Long index, Integer cappingType,
-            Integer nationalCapValue, Integer maxEndOfUsuageMessage,
+    public Configuration(Long index, Integer cappingType,
+            Integer nationalCapValue, Integer maxAllowedEndOfUsagePrompt,
             Integer courseQualifyingScore, Integer defaultLanguageLocationCode,
             String smsSenderAddress) {
         this.index = index;
         this.cappingType = cappingType;
         this.nationalCapValue = nationalCapValue;
-        this.maxEndOfUsuageMessage = maxEndOfUsuageMessage;
+        this.maxAllowedEndOfUsagePrompt = maxAllowedEndOfUsagePrompt;
         this.courseQualifyingScore = courseQualifyingScore;
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
         this.smsSenderAddress = smsSenderAddress;
@@ -93,12 +99,12 @@ public class ServiceConfigParam extends MdsEntity {
         this.nationalCapValue = nationalCapValue;
     }
 
-    public Integer getMaxEndOfUsuageMessage() {
-        return maxEndOfUsuageMessage;
+    public Integer getMaxAllowedEndOfUsagePrompt() {
+        return maxAllowedEndOfUsagePrompt;
     }
 
-    public void setMaxEndOfUsuageMessage(Integer maxEndOfUsuageMessage) {
-        this.maxEndOfUsuageMessage = maxEndOfUsuageMessage;
+    public void setMaxAllowedEndOfUsagePrompt(Integer maxAllowedEndOfUsagePrompt) {
+        this.maxAllowedEndOfUsagePrompt = maxAllowedEndOfUsagePrompt;
     }
 
     public Integer getCourseQualifyingScore() {

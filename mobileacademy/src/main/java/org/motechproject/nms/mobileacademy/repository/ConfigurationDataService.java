@@ -3,17 +3,17 @@ package org.motechproject.nms.mobileacademy.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.mobileacademy.domain.ServiceConfigParam;
+import org.motechproject.nms.mobileacademy.domain.Configuration;
 
 /**
  * Interface for repository that persists simple records and allows CRUD on
- * ServiceConfigParam table. MotechDataService base class will provide the
+ * Configuration table. MotechDataService base class will provide the
  * implementation of this class as well as methods for adding, deleting, saving
  * and finding all instances. In this class we define and custom lookups we may
  * need.
  */
-public interface ServiceConfigParamDataService extends
-        MotechDataService<ServiceConfigParam> {
+public interface ConfigurationDataService extends
+        MotechDataService<Configuration> {
 
     /**
      * find By Index field
@@ -22,6 +22,6 @@ public interface ServiceConfigParamDataService extends
      * @return ServiceConfigParam
      */
     @Lookup
-    ServiceConfigParam findByIndex(@LookupField(name = "index") Long index);
+    Configuration findByIndex(@LookupField(name = "index") Long index);
 
 }
