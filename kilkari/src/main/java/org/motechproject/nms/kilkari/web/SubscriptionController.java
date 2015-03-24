@@ -81,7 +81,7 @@ public class SubscriptionController extends BaseController{
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
-                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException{
+                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException, Exception{
         logger.info("*****getSubscriberDetails is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + callingNumber + "]");
