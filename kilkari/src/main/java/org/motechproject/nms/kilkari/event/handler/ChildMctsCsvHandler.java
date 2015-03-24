@@ -130,7 +130,8 @@ public class ChildMctsCsvHandler {
                 uploadedStatus.incrementFailureCount();
 
             } catch (Exception e) {
-                errorDetails.setRecordDetails("Some Error Occurred");
+                logger.error("****Generic exception occured****", e);
+                errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
@@ -198,6 +199,14 @@ public class ChildMctsCsvHandler {
         childSubscriber.setMsisdn(msisdn);
         childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString("idNo", childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("Mother Id", childMctsCsv.getMotherId(), false));
+        
+        String entryType = ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false);
+        if(entryType!=null){
+            if(!MctsCsvHelper.checkValidEntryType(entryType)){
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
+            }
+        }
+        
         childSubscriber.setChildDeath(CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false)));
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setName(ParseDataHelper.validateAndParseString("Mother Name", childMctsCsv.getMotherName(), false));

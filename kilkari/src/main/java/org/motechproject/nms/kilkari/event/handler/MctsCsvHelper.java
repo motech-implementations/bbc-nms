@@ -11,6 +11,15 @@ import org.motechproject.nms.kilkari.domain.Subscription;
  */
 public final class MctsCsvHelper {
 
+    private static final String MIGRATED_OUT_ENTRY = "3";
+    private static final String MIGRATED_IN_ENTRY = "2";
+    private static final String DEATH_ENTRY = "9";
+    private static final String ACTIVE_ENTRY = "1";
+    private static final String NONE = "None";
+    private static final String SPONTANEOUS = "Spontaneous";
+    private static final String MTP_L12_WEEKS = "MTP<12 Weeks";
+    private static final String MTP_G12_WEEKS = "MTP>12 Weeks";
+    
     /**
      * This method id used to populate the existing Subscriber Object
      * @param subscriber Subscriber type object
@@ -68,4 +77,49 @@ public final class MctsCsvHelper {
         dbSubscription.setMsisdn(subscriber.getMsisdn());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
     }
+    
+    /**
+     * This method is used to validate EntryType possible values
+     *
+     * @param entryType csv uploaded entryType value
+     * @return boolean according to valid or invalid value
+     */
+    static boolean checkValidEntryType(String entryType) {
+        boolean isRightEntryType = false;
+
+        if(entryType.equalsIgnoreCase(ACTIVE_ENTRY)){
+            isRightEntryType = true;
+        }else if (entryType.equalsIgnoreCase(DEATH_ENTRY)) {
+            isRightEntryType = true;
+        }else if (entryType.equalsIgnoreCase(MIGRATED_IN_ENTRY)) {
+            isRightEntryType = true;
+        }else if (entryType.equalsIgnoreCase(MIGRATED_OUT_ENTRY)) {
+            isRightEntryType = true;
+        }
+        return isRightEntryType;
+    }
+
+    /**
+     * This method is used to validate abortion's possible values
+     *
+     * @param abortion csv uploaded abortion value
+     * @return boolean according to valid or invalid value
+     */
+    static boolean checkValidAbortionValue(String abortion) {
+        boolean isRightAbortionValue = false ;
+        
+        if(abortion.equalsIgnoreCase(MTP_G12_WEEKS)){
+            isRightAbortionValue = true;
+        }else if (abortion.equalsIgnoreCase(MTP_L12_WEEKS)) {
+            isRightAbortionValue = true;
+        }else if (abortion.equalsIgnoreCase(SPONTANEOUS)) {
+            isRightAbortionValue = true;
+        }else if (abortion.equalsIgnoreCase(NONE)) {
+            isRightAbortionValue = true;
+        }
+        return isRightAbortionValue;
+   }
+    
+    
+    
 }

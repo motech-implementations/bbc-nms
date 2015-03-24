@@ -238,8 +238,8 @@ public class CommonStructure extends BasePaxIT {
         csv.setVillageCode("1");
         csv.setName("test");
         csv.setLmpDate("2014-12-01 08:08:08");
-        csv.setAbortion("Abortion");
-        csv.setOutcomeNos("0");
+        csv.setAbortion("None");
+        csv.setOutcomeNos("2");
         csv.setAge("30");
         csv.setEntryType("Birth");
         csv.setAadharNo("123456789876");

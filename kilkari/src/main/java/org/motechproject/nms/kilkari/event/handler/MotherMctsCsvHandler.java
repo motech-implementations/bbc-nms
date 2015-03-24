@@ -36,7 +36,7 @@ public class MotherMctsCsvHandler {
     public static final String PACK_72 = "72WEEK";
 
     /* Constant value of field numberOfOutcomes that specifies Still Birth in Mcts Csv */
-    public static final String STILL_BIRTH_ZERO = "0";
+    public static final Integer STILL_BIRTH_ZERO = 0;
 
     /* Constant value of entryType field that specifies mother death in Mcts Csv */
     public static final String MOTHER_DEATH_NINE = "9";
@@ -134,7 +134,8 @@ public class MotherMctsCsvHandler {
                 uploadedStatus.incrementFailureCount();
 
             } catch (Exception e) {
-                errorDetails.setRecordDetails("Some Error Occurred");
+                logger.error("****Generic exception occured****", e);
+                errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
@@ -210,11 +211,23 @@ public class MotherMctsCsvHandler {
         motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(), false));
 
         motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
-        motherSubscriber.setStillBirth(STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos()));
+        motherSubscriber.setStillBirth(STILL_BIRTH_ZERO.equals(ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false)));
 
         String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
+        if(abortion!=null){
+            if(!MctsCsvHelper.checkValidAbortionValue(abortion)){
+                ParseDataHelper.raiseInvalidDataException("Abortion", abortion);
+            }
+        }
         motherSubscriber.setAbortion(!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion)));
-        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false)));
+        
+        String entryType = ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false);
+        if(entryType!=null){
+            if(!MctsCsvHelper.checkValidEntryType(entryType)){
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
+            }
+        }
+        motherSubscriber.setMotherDeath(MOTHER_DEATH_NINE.equalsIgnoreCase(entryType));
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
 
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
