@@ -162,7 +162,7 @@ public class RecordsProcessHelper {
         ParseDataHelper.validateAndParseInt("Language Location Code",
                 courseContentCsv.getLanguageLocationCode(), true);
 
-        ParseDataHelper.validateAndParseString("Contet Name",
+        ParseDataHelper.validateAndParseString("Content Name",
                 courseContentCsv.getContentName(), true);
 
         ParseDataHelper.validateAndParseInt("Content Duration",
@@ -232,7 +232,7 @@ public class RecordsProcessHelper {
                     metaData.indexOf(':')))) {
                 throw new DataValidationException(
                         null,
-                        ErrorCategoryConstants.INCONSISTENT_DATA,
+                        ErrorCategoryConstants.INVALID_DATA,
                         String.format(
                                 MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                                 courseContentCsv.getContentId()), "METADETA");
@@ -244,7 +244,7 @@ public class RecordsProcessHelper {
                 } else {
                     throw new DataValidationException(
                             null,
-                            ErrorCategoryConstants.INCONSISTENT_DATA,
+                            ErrorCategoryConstants.INVALID_DATA,
                             String.format(
                                     MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
                                     courseContentCsv.getContentId()),

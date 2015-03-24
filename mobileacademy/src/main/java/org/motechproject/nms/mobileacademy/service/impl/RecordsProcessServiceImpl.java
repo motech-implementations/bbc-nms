@@ -25,6 +25,7 @@ import org.motechproject.nms.mobileacademy.domain.QuestionContent;
 import org.motechproject.nms.mobileacademy.domain.QuizContent;
 import org.motechproject.nms.mobileacademy.domain.ScoreContent;
 import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
+import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
 import org.motechproject.nms.mobileacademy.service.CourseService;
@@ -40,6 +41,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 /**
  * This class contains the implementation for RecordsProcessService to process
@@ -58,6 +61,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private CourseProcessedContentService courseProcessedContentService;
 
     @Autowired
+    private ChapterContentDataService chapterContentDataService;
+
+    @Autowired
     private CourseService courseService;
 
     @Autowired
@@ -69,6 +75,40 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     @Override
     public String processRawRecords(List<CourseContentCsv> courseContentCsvs,
             String csvFileName) {
+
+        LOGGER.info("Record Processing Started for csv file: {}", csvFileName);
+
+        chapterContentDataService
+                .doInTransaction(new TransactionCallback<ChapterContent>() {
+
+                    List<CourseContentCsv> courseContentCsvs;
+
+                    String csvFileName;
+
+                    private TransactionCallback<ChapterContent> init(
+                            List<CourseContentCsv> courseContentCsvs,
+                            String csvFileName) {
+                        this.courseContentCsvs = courseContentCsvs;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public ChapterContent doInTransaction(
+                            TransactionStatus status) {
+                        ChapterContent transactionObject = null;
+                        processRawRecordsInTransaction(courseContentCsvs,
+                                csvFileName);
+                        return transactionObject;
+                    }
+                }.init(courseContentCsvs, csvFileName));
+
+        LOGGER.info("Record Processing complete for csv file: {}", csvFileName);
+        return "Records Processed Successfully";
+    }
+
+    public void processRawRecordsInTransaction(
+            List<CourseContentCsv> courseContentCsvs, String csvFileName) {
         DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus("",
                 csvFileName, timeOfUpload, 0, 0);
@@ -140,8 +180,6 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
 
         LOGGER.info("Finished processing CircleCsv-import success");
-
-        return "Records Processed Successfully";
     }
 
     /*
@@ -1107,5 +1145,4 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
         return false;
     }
-
 }

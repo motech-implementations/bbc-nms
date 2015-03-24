@@ -38,13 +38,15 @@ public class CourseController extends BaseController {
         if (course == null) {
             LOGGER.error("No Course Present in the System");
             LOGGER.debug("getMACourse: Ended");
-            return new ResponseEntity<String>(getJsonNode("failureReason",
+            return new ResponseEntity<String>(getJsonNode(
+                    MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.NO_COURSE_PRESENT),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error("No Course Present in the System");
             LOGGER.debug("getMACourse: Ended");
-            return new ResponseEntity<String>(getJsonNode("failureReason",
+            return new ResponseEntity<String>(getJsonNode(
+                    MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.COURSE_UPLOAD_ONGOING),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
@@ -64,20 +66,23 @@ public class CourseController extends BaseController {
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             LOGGER.debug("getMACourseVersion: Ended");
-            return new ResponseEntity<String>(getJsonNode("failureReason",
+            return new ResponseEntity<String>(getJsonNode(
+                    MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.NO_COURSE_PRESENT),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
             LOGGER.debug("getMACourseVersion: Ended");
-            return new ResponseEntity<String>(getJsonNode("failureReason",
+            return new ResponseEntity<String>(getJsonNode(
+                    MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.COURSE_UPLOAD_ONGOING),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             int courseVersion = courseService.getCurrentCourseVersion();
             LOGGER.debug("getMACourseVersion: Ended");
-            return new ResponseEntity<String>(getJsonNode("courseVersion",
-                    courseVersion), HttpStatus.OK);
+            return new ResponseEntity<String>(getJsonNode(
+                    MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
+                    HttpStatus.OK);
         }
     }
 

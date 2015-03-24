@@ -52,6 +52,8 @@ public class MobileAcademyConstants {
 
     public static final String END_MENU = "EndMenu";
 
+    /* Constants used in making the course JSON file */
+
     public static final String COURSE_KEY_VERSION = "courseVersion";
 
     public static final String COURSE_KEY_NAME = "name";
@@ -85,6 +87,8 @@ public class MobileAcademyConstants {
     public static final String COURSE_KEY_FILE = "file";
 
     public static final String COURSE_KEY_FILES = "files";
+
+    public static final String FAILURE_REASON = "failueReason";
 
     // 1 file for Chapter End Menu , 2 files For Lesson: Content and Menu file
     // 3 files For Question: content,correct answer and wrong Answer file
