@@ -28,7 +28,7 @@ public class Configuration {
     private Integer numMsgPerWeek;
 
     @Field(required = true)
-    private Integer nationalLanguageLocationCode;
+    private Integer nationalDefaultLanguageLocationCode;
     
     @Field(required = true)
     private Integer maxAllowedActiveBeneficiaryCount;
@@ -61,9 +61,8 @@ public class Configuration {
         return index;
     }
 
-    /* Hardcoded to ConfigurationConstants.CONFIGURATION_INDEX */
     public void setIndex(Long index) {
-        this.index = CONFIGURATION_INDEX;
+        this.index = index;
     }
 
     public Integer getNumMsgPerWeek() {
@@ -146,11 +145,11 @@ public class Configuration {
         this.retryDay3ObdPriority = retryDay3ObdPriority;
     }
 
-    public Integer getNationalLanguageLocationCode() {
-        return nationalLanguageLocationCode;
+    public Integer getNationalDefaultLanguageLocationCode() {
+        return nationalDefaultLanguageLocationCode;
     }
 
-    public void setNationalLanguageLocationCode(Integer nationalLanguageLocationCode) {
-        this.nationalLanguageLocationCode = nationalLanguageLocationCode;
+    public void setNationalDefaultLanguageLocationCode(Integer nationalDefaultLanguageLocationCode) {
+        this.nationalDefaultLanguageLocationCode = nationalDefaultLanguageLocationCode;
     }
 }

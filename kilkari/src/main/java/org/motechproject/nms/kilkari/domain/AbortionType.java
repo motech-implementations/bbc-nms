@@ -17,11 +17,16 @@ public enum AbortionType {
         return type;
     }
 
+    /** This Static method checks if a string is of AbortionType
+     *
+     * @param abortion string that is to be checked
+     * @return true if string is a valid value for abortion type else false
+     */
     public static boolean checkValidAbortionType (String abortion) {
         AbortionType[] abortionTypes = AbortionType.values();
         boolean foundAbortionType = false;
         for (AbortionType abortionType : abortionTypes) {
-            if(abortionType.toString().equalsIgnoreCase(abortion)){
+            if(abortionType.toString().equals(abortion)){
                 foundAbortionType = true;
                 break;
             }

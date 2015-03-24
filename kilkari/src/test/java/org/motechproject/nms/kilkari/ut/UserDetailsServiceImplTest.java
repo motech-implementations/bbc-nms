@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.ut;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -442,7 +441,7 @@ public class UserDetailsServiceImplTest {
 
     private Configuration createConfiguration(Integer nationLLCCode) {
         Configuration conf = new Configuration();
-        conf.setNationalLanguageLocationCode(nationLLCCode);
+        conf.setNationalDefaultLanguageLocationCode(nationLLCCode);
         return conf;
     }
 }

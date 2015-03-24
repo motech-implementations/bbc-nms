@@ -117,6 +117,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
                 ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
             } else {
                 frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
+                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             }
         }
     }
@@ -281,10 +282,10 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             } else {
                 userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
             }
-            userProfile.setCircle(circleCode);
             userProfile.setNmsId(frontLineWorker.getId());
             userProfile.setCreated(false);
             userProfile.setMsisdn(msisdn);
+            userProfile.setCircle(circleCode);
         } else {
             throw new Exception("Language Location could not be found using state and district");
         }

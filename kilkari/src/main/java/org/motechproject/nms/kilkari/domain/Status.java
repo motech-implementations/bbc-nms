@@ -9,5 +9,5 @@ public enum Status {
     PENDING_ACTIVATION, 
     ACTIVE, 
     DEACTIVATED, 
-    EXPIRED
+    EXPIRED;
 }
