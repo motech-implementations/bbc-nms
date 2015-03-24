@@ -1,9 +1,5 @@
 package org.motechproject.nms.kilkari.event.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
@@ -20,13 +16,16 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
@@ -76,7 +75,7 @@ public class ContentUploadCsvHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
 
-        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+        DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
         errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);

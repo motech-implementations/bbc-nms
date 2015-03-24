@@ -89,7 +89,7 @@ public class FrontLineWorker extends MdsEntity {
     public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, Long operatorId,
                            Long stateCode, State stateId, District districtId, Taluka talukaId,
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
-                           healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
+            healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
                            Status status, Integer languageLocationCodeId, Integer defaultLanguageLocationCodeId) {
         this.flwId = flwId;
         this.contactNo = contactNo;

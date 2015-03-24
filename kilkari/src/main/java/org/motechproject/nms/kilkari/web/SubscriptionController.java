@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.web;
 
-import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;

@@ -10,7 +10,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -58,7 +57,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         logger.info("Processing Csv file[{}]", csvFileName);
         BulkUploadStatus uploadedStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
-        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        DateTime timeOfUpload = new DateTime();
         errorDetails.setCsvName(csvFileName);
         errorDetails.setTimeOfUpload(timeOfUpload);
         errorDetails.setRecordType(RecordType.CHILD_MCTS);

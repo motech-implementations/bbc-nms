@@ -7,7 +7,6 @@ import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.RecordType;
-import org.motechproject.nms.util.helper.NmsUtils;
 
 /**
  * Test class to test the BulkUploadError.
@@ -38,7 +37,7 @@ public class BulkUploadErrorTest {
         bulkUploadError.setCsvName("Name.csv");
         Assert.assertEquals("Name.csv", bulkUploadError.getCsvName());
 
-        DateTime time = NmsUtils.getCurrentTimeStamp();
+        DateTime time = new DateTime();
         bulkUploadError.setTimeOfUpload(time);
         Assert.assertEquals(time, bulkUploadError.getTimeOfUpload());
 
@@ -49,7 +48,7 @@ public class BulkUploadErrorTest {
      */
     @Test
     public void shouldCreateBulkUploadErrorDeepCopy() {
-        DateTime time = NmsUtils.getCurrentTimeStamp();
+        DateTime time = new DateTime();
         BulkUploadError bulkUploadError = new BulkUploadError("Name.csv", time, RecordType.CIRCLE, "Record Detail", ErrorCategoryConstants.GENERAL_EXCEPTION, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
         BulkUploadError bulkUploadErrorDeepCopy = bulkUploadError.createDeepCopy();
         Assert.assertEquals(bulkUploadErrorDeepCopy.getCsvName(), bulkUploadError.getCsvName());
