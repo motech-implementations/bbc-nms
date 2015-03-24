@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
@@ -11,6 +12,8 @@ import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserProfileDetailsService userProfileDetailsService;
 
     private ConfigurationService configurationService;
+
+    private Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
 
     @Autowired
@@ -50,6 +55,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
+        populateFlwDetail(userProfileData);
+
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
 
         return userDetailApiResponse;
@@ -60,6 +67,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
     }
+
+    private void populateFlwDetail(UserProfile userProfileData) {
+
+        FlwDetail flwDetail = null;
+        flwDetail =  serviceConsumptionFlwService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
+        if ( null == flwDetail){
+            flwDetail = new FlwDetail();
+
+            flwDetail.setNmsFlwId(userProfileData.getNmsId());
+            flwDetail.setMsisdn(userProfileData.getMsisdn());
+            flwDetail.setLastAccessDate(DateTime.now());
+            flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
+            flwDetail.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
+            flwDetail.setWelcomePromptFlagCounter(ConfigurationConstants.ZERO);
+
+            serviceConsumptionFlwService.create(flwDetail);
+            logger.info("FlwDetail created successfully.");
+
+        }
+
+}
 
 
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) {
@@ -89,11 +117,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
             }
 
-        } else {
-            userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
-            userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
-        }
+        } 
         return userDetailApiResponse;
     }
 

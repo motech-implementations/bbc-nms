@@ -3,8 +3,6 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
-import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
@@ -15,6 +13,7 @@ import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,31 +37,26 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
     private Logger logger = LoggerFactory.getLogger(SaveCallDetailsServiceImpl.class);
 
     @Autowired
-    public SaveCallDetailsServiceImpl(ServiceConsumptionCallService serviceConsumptionCallService, ServiceConsumptionFlwService serviceConsumptionFlwService) {
+    public SaveCallDetailsServiceImpl(ServiceConsumptionCallService serviceConsumptionCallService, ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService) {
         this.serviceConsumptionCallService = serviceConsumptionCallService;
         this.serviceConsumptionFlwService = serviceConsumptionFlwService;
+        this.userProfileDetailsService = userProfileDetailsService;
     }
 
     @Override
     public void saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
-        UserProfile userProfileData = userProfileDetailsService.processUserDetails(saveCallDetailApiRequest.getCallingNumber(),
-                saveCallDetailApiRequest.getCircle(), saveCallDetailApiRequest.getOperator(), ServicesUsingFrontLineWorker.MOBILEKUNJI);
+        Long nmsId;
 
-        setCallDetail(userProfileData, saveCallDetailApiRequest);
-
-        setFlwDetail(userProfileData, saveCallDetailApiRequest);
+        userProfileDetailsService.validateOperator(saveCallDetailApiRequest.getOperator());
+        nmsId = updateFlwDetail(saveCallDetailApiRequest);
+        setCallDetail(nmsId,saveCallDetailApiRequest);
     }
 
-    private void setCallDetail(UserProfile userProfileData, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+    private void setCallDetail(Long nmsId,SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        CallDetail callDetail = new CallDetail();
-
-        callDetail.setCallId(saveCallDetailApiRequest.getCallId());
-        callDetail.setCallStartTime(saveCallDetailApiRequest.getStartTime());
-        callDetail.setCallEndTime(saveCallDetailApiRequest.getEndTime());
-        callDetail.setCircle(saveCallDetailApiRequest.getCircle());
-        callDetail.setNmsFlwId(userProfileData.getNmsId());
+        CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(),nmsId,saveCallDetailApiRequest.getCircle(),
+                saveCallDetailApiRequest.getCallStartTime(),saveCallDetailApiRequest.getCallEndTime());
 
         setCardContent(callDetail, saveCallDetailApiRequest);
         serviceConsumptionCallService.create(callDetail);
@@ -72,61 +66,40 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
     private void setCardContent(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        for (Iterator<CardContent> itr = saveCallDetailApiRequest.getCardContentList().iterator(); itr.hasNext(); ) {
+        for (Iterator<CardContent> itr = saveCallDetailApiRequest.getContent().iterator(); itr.hasNext(); ) {
             CardContent element = itr.next();
             callDetail.getCardContent().add(element);
         }
     }
 
-    private void setFlwDetail(UserProfile userProfileData, SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
+    private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
-        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
+        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByMsisdn(saveCallDetailApiRequest.getCallingNumber());
 
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         } else {
-            populateFlwDetail(userProfileData, saveCallDetailApiRequest);
+            ParseDataHelper.raiseInvalidDataException("FlwDetail","FlwDetail");
         }
+        return flwDetail.getNmsFlwId();
     }
 
+    private void updateFlwDetail(FlwDetail flw, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-    private void populateFlwDetail(UserProfile userProfileData, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+        if (checkNextTime(flw.getLastAccessDate())) {
 
-        FlwDetail flwDetail = new FlwDetail();
-
-        flwDetail.setNmsFlwId(userProfileData.getNmsId());
-        flwDetail.setMsisdn(userProfileData.getMsisdn());
-        flwDetail.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter());
-        flwDetail.setCurrentUsageInPulses(saveCallDetailApiRequest.getCurrentUsageInPulses());
-        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getStartTime()));
-
-        if (saveCallDetailApiRequest.getWelcomeMessageFlag()) {
-            flwDetail.setWelcomePromptFlagCounter(ConfigurationConstants.ONE);
+            flw.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
+            flw.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
         } else {
-            flwDetail.setWelcomePromptFlagCounter(ConfigurationConstants.ZERO);
+            flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
+            flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
         }
 
-        serviceConsumptionFlwService.create(flwDetail);
-
-        logger.info("FlwDetail created successfully.");
-    }
-
-    private void updateFlwDetail(FlwDetail updateFlwDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
-
-        if (checkNextTime(updateFlwDetail.getLastAccessDate())) {
-
-            updateFlwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-            updateFlwDetail.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
-        } else {
-            updateFlwDetail.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + updateFlwDetail.getEndOfUsagePrompt());
-            updateFlwDetail.setCurrentUsageInPulses(saveCallDetailApiRequest.getCurrentUsageInPulses() + updateFlwDetail.getCurrentUsageInPulses());
+        if (saveCallDetailApiRequest.getWelcomeMessagePromptFlag()) {
+            flw.setWelcomePromptFlagCounter(flw.getWelcomePromptFlagCounter() + ConfigurationConstants.ONE);
         }
 
-        if (saveCallDetailApiRequest.getWelcomeMessageFlag()) {
-            updateFlwDetail.setWelcomePromptFlagCounter(updateFlwDetail.getWelcomePromptFlagCounter() + ConfigurationConstants.ONE);
-        }
-
-        serviceConsumptionFlwService.update(updateFlwDetail);
+        serviceConsumptionFlwService.update(flw);
         logger.info("FlwDetail updated successfully.");
     }
 

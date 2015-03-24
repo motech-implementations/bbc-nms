@@ -23,33 +23,28 @@ public class SaveCallDetailApiRequest {
     private String circle;
 
     @JsonProperty
-    private Integer startTime;
+    private Long callStartTime;
 
     @JsonProperty
-    private Integer endTime;
+    private Long callEndTime;
 
     @JsonProperty
-    private Integer currentUsageInPulses;
+    private Integer callDurationInPulses;
 
     @JsonProperty
     private Integer endOfUsagePromptCounter;
 
     @JsonProperty
-    private Boolean welcomeMessageFlag;
+    private Integer callStatus;
 
     @JsonProperty
-    private String failureReason;
+    private Boolean welcomeMessagePromptFlag;
 
     @JsonProperty
-    private List<CardContent> cardContentList;
+    private String callDisconnectReason;
 
-    public List<CardContent> getCardContentList() {
-        return cardContentList;
-    }
-
-    public void setCardContentList(List<CardContent> cardContentList) {
-        this.cardContentList = cardContentList;
-    }
+    @JsonProperty
+    private List<CardContent> content;
 
     public String getCallingNumber() {
         return callingNumber;
@@ -83,28 +78,28 @@ public class SaveCallDetailApiRequest {
         this.circle = circle;
     }
 
-    public Integer getStartTime() {
-        return startTime;
+    public Long getCallStartTime() {
+        return callStartTime;
     }
 
-    public void setStartTime(Integer startTime) {
-        this.startTime = startTime;
+    public void setCallStartTime(Long callStartTime) {
+        this.callStartTime = callStartTime;
     }
 
-    public Integer getEndTime() {
-        return endTime;
+    public Long getCallEndTime() {
+        return callEndTime;
     }
 
-    public void setEndTime(Integer endTime) {
-        this.endTime = endTime;
+    public void setCallEndTime(Long callEndTime) {
+        this.callEndTime = callEndTime;
     }
 
-    public Integer getCurrentUsageInPulses() {
-        return currentUsageInPulses;
+    public Integer getCallDurationInPulses() {
+        return callDurationInPulses;
     }
 
-    public void setCurrentUsageInPulses(Integer currentUsageInPulses) {
-        this.currentUsageInPulses = currentUsageInPulses;
+    public void setCallDurationInPulses(Integer callDurationInPulses) {
+        this.callDurationInPulses = callDurationInPulses;
     }
 
     public Integer getEndOfUsagePromptCounter() {
@@ -115,20 +110,36 @@ public class SaveCallDetailApiRequest {
         this.endOfUsagePromptCounter = endOfUsagePromptCounter;
     }
 
-    public Boolean getWelcomeMessageFlag() {
-        return welcomeMessageFlag;
+    public Integer getCallStatus() {
+        return callStatus;
     }
 
-    public void setWelcomeMessageFlag(Boolean welcomeMessageFlag) {
-        this.welcomeMessageFlag = welcomeMessageFlag;
+    public void setCallStatus(Integer callStatus) {
+        this.callStatus = callStatus;
     }
 
-    public String getFailureReason() {
-        return failureReason;
+    public Boolean getWelcomeMessagePromptFlag() {
+        return welcomeMessagePromptFlag;
     }
 
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
+    public void setWelcomeMessagePromptFlag(Boolean welcomeMessagePromptFlag) {
+        this.welcomeMessagePromptFlag = welcomeMessagePromptFlag;
+    }
+
+    public String getCallDisconnectReason() {
+        return callDisconnectReason;
+    }
+
+    public void setCallDisconnectReason(String callDisconnectReason) {
+        this.callDisconnectReason = callDisconnectReason;
+    }
+
+    public List<CardContent> getContent() {
+        return content;
+    }
+
+    public void setContent(List<CardContent> content) {
+        this.content = content;
     }
 
     @Override
@@ -138,13 +149,14 @@ public class SaveCallDetailApiRequest {
                 ", callId='" + callId + '\'' +
                 ", operator='" + operator + '\'' +
                 ", circle='" + circle + '\'' +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", currentUsageInPulses=" + currentUsageInPulses +
+                ", callStartTime=" + callStartTime +
+                ", callEndTime=" + callEndTime +
+                ", callDurationInPulses=" + callDurationInPulses +
                 ", endOfUsagePromptCounter=" + endOfUsagePromptCounter +
-                ", welcomeMessageFlag=" + welcomeMessageFlag +
-                ", failureReason='" + failureReason + '\'' +
-                ", cardContentList=" + cardContentList +
+                ", callStatus=" + callStatus +
+                ", welcomeMessagePromptFlag=" + welcomeMessagePromptFlag +
+                ", callDisconnectReason='" + callDisconnectReason + '\'' +
+                ", content=" + content +
                 '}';
     }
 }

@@ -24,14 +24,23 @@ public class CallDetail extends MdsEntity {
     private String circle;
 
     @Field
-    private Integer callStartTime;
+    private Long callStartTime;
 
     @Field
-    private Integer callEndTime;
+    private Long callEndTime;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
     private Set<CardContent> cardContent;
+
+
+    public CallDetail(String callId, Long nmsFlwId, String circle, Long callStartTime, Long callEndTime) {
+        this.callId = callId;
+        this.nmsFlwId = nmsFlwId;
+        this.circle = circle;
+        this.callStartTime = callStartTime;
+        this.callEndTime = callEndTime;
+    }
 
     public String getCallId() {
         return callId;
@@ -57,19 +66,19 @@ public class CallDetail extends MdsEntity {
         this.circle = circle;
     }
 
-    public Integer getCallStartTime() {
+    public Long getCallStartTime() {
         return callStartTime;
     }
 
-    public void setCallStartTime(Integer callStartTime) {
+    public void setCallStartTime(Long callStartTime) {
         this.callStartTime = callStartTime;
     }
 
-    public Integer getCallEndTime() {
+    public Long getCallEndTime() {
         return callEndTime;
     }
 
-    public void setCallEndTime(Integer callEndTime) {
+    public void setCallEndTime(Long callEndTime) {
         this.callEndTime = callEndTime;
     }
 

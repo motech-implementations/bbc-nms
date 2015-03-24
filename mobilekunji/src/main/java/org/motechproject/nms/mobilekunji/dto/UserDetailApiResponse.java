@@ -1,21 +1,26 @@
 package org.motechproject.nms.mobilekunji.dto;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.io.Serializable;
 
 /**
  * API response object for user detail.
  */
+
+
 public class UserDetailApiResponse implements Serializable {
 
     @JsonProperty
     private String circle;
 
     @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer languageLocationCode;
 
     @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer defaultLanguageLocationCode;
 
     @JsonProperty
@@ -34,6 +39,7 @@ public class UserDetailApiResponse implements Serializable {
     private Integer maxAllowedEndOfUsagePrompt;
 
     @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String failureReason;
 
     public String getCircle() {
