@@ -106,7 +106,7 @@ public class CallerDataController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
                                                     String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseInt(callingNumber, callingNumber, true);
+        ParseDataHelper.validateAndTrimMsisdn(callingNumber, callingNumber);
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
         ParseDataHelper.validateAndParseLong(callId, callId, true);
