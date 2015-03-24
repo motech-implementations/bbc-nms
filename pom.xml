@@ -91,6 +91,12 @@
             <groupId>org.eclipse.gemini</groupId>
             <artifactId>org.eclipse.gemini.blueprint.core</artifactId>
         </dependency>
+        <!--HTTP-->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-web-util</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
         <!-- SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
