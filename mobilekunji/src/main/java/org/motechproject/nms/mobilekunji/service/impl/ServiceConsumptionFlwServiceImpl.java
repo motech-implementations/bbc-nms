@@ -39,4 +39,9 @@ public class ServiceConsumptionFlwServiceImpl implements ServiceConsumptionFlwSe
     public FlwDetail findServiceConsumptionByNmsFlwId(Long nmsFlwId) {
         return serviceConsumptionFlwRecordDataService.findServiceConsumptionByNmsFlwId(nmsFlwId);
     }
+
+    @Override
+    public FlwDetail findServiceConsumptionByMsisdn(String msisdn) {
+        return serviceConsumptionFlwRecordDataService.findServiceConsumptionByMsisdn(msisdn);
+    }
 }

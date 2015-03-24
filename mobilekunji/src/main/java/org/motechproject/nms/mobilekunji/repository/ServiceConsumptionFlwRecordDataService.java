@@ -12,4 +12,7 @@ public interface ServiceConsumptionFlwRecordDataService extends MotechDataServic
 
     @Lookup
     public FlwDetail findServiceConsumptionByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
+
+    @Lookup
+    public FlwDetail findServiceConsumptionByMsisdn(@LookupField(name = "msisdn") String msisdn);
 }

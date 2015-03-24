@@ -51,6 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
+
         return userDetailApiResponse;
     }
 
@@ -58,7 +59,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
-
     }
 
 

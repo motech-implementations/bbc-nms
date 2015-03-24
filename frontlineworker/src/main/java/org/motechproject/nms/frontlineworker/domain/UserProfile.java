@@ -11,6 +11,8 @@ public class UserProfile {
 
     private Long nmsId;
 
+    private String msisdn;
+
     private boolean isDefaultLanguageLocationCode;
 
     private Integer languageLocationCode;
@@ -31,6 +33,19 @@ public class UserProfile {
 
     public Long getNmsId() {
         return nmsId;
+    }
+
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public void setDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
+        this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
 
     public void setNmsId(Long nmsId) {
@@ -75,6 +90,20 @@ public class UserProfile {
 
     public void setMaxStateLevelCappingValue(Integer maxStateLevelCappingValue) {
         this.maxStateLevelCappingValue = maxStateLevelCappingValue;
+    }
+
+    @Override
+    public String toString() {
+        return "UserProfile{" +
+                "isCreated=" + isCreated +
+                ", nmsId=" + nmsId +
+                ", msisdn='" + msisdn + '\'' +
+                ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +
+                ", languageLocationCode=" + languageLocationCode +
+                ", defaultLanguageLocationCode=" + defaultLanguageLocationCode +
+                ", circle='" + circle + '\'' +
+                ", maxStateLevelCappingValue=" + maxStateLevelCappingValue +
+                '}';
     }
 }
 

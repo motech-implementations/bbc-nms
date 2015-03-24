@@ -16,4 +16,6 @@ public interface ServiceConsumptionFlwService {
 
     public FlwDetail findServiceConsumptionByNmsFlwId(Long nmsFlwId);
 
+    public FlwDetail findServiceConsumptionByMsisdn(String msisdn);
+
 }
