@@ -21,7 +21,7 @@ public class ConfigurationConstants {
 
     public static final Integer DEFAULT_END_OF_USAGE_MESSAGE = 0;
 
-    public static final Integer CURRENT_USAGE_IN_PULSES = 0;
+    public static final Integer DEFAULT_CURRENT_USAGE_IN_PULSES = 0;
 
     public static final int DEFAULT_CAPPING_TYPE = 0;
 

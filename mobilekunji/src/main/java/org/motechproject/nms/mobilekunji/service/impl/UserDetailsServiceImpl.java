@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
@@ -70,21 +71,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private void populateFlwDetail(UserProfile userProfileData) {
 
-        FlwDetail flwDetail = null;
-        flwDetail =  serviceConsumptionFlwService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
+        FlwDetail flwDetail  =  serviceConsumptionFlwService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
         if ( null == flwDetail){
+
             flwDetail = new FlwDetail();
 
             flwDetail.setNmsFlwId(userProfileData.getNmsId());
             flwDetail.setMsisdn(userProfileData.getMsisdn());
             flwDetail.setLastAccessDate(DateTime.now());
             flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-            flwDetail.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
+            flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
             flwDetail.setWelcomePromptFlagCounter(ConfigurationConstants.ZERO);
 
             serviceConsumptionFlwService.create(flwDetail);
             logger.info("FlwDetail created successfully.");
-
         }
 
 }
@@ -107,17 +107,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
 
-            if (configurationService.getConfiguration().getMaxWelcomeMessage() == flwDetail.getWelcomePromptFlagCounter()) {
-                userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
-            } else {
+            if (flwDetail.getWelcomePromptFlagCounter() <= configurationService.getConfiguration().getMaxWelcomeMessage()) {
                 userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
+            } else {
+                userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
             }
 
-            if (flwDetail.getLastAccessDate().isAfterNow() || flwDetail.getLastAccessDate().isBeforeNow()) {
+            if (checkNextTime(flwDetail.getLastAccessDate())) {
+                userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+            } else {
                 userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
             }
-
-        } 
+        }
         return userDetailApiResponse;
     }
 
@@ -135,6 +136,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
         }
+    }
+
+
+    public boolean checkNextTime(DateTime lastAccessTime) {
+        DateTime now = DateTime.now();
+
+        if (lastAccessTime != null) {
+            lastAccessTime = lastAccessTime.withZone(DateTimeZone.getDefault());
+            return lastAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+                    lastAccessTime.getYear() != now.getYear();
+        }
+        return false;
     }
 
 }

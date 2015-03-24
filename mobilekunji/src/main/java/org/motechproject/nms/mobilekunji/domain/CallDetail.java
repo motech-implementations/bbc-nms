@@ -5,6 +5,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -40,6 +41,7 @@ public class CallDetail extends MdsEntity {
         this.circle = circle;
         this.callStartTime = callStartTime;
         this.callEndTime = callEndTime;
+
     }
 
     public String getCallId() {
@@ -83,7 +85,11 @@ public class CallDetail extends MdsEntity {
     }
 
     public Set<CardContent> getCardContent() {
-        return cardContent;
+
+        if (cardContent == null){
+            cardContent = new HashSet<CardContent>();
+        }
+        return this.cardContent;
     }
 
     public void setCardContent(Set<CardContent> cardContent) {

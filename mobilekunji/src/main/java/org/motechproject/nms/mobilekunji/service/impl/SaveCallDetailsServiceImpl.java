@@ -2,7 +2,6 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
@@ -70,6 +69,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
             CardContent element = itr.next();
             callDetail.getCardContent().add(element);
         }
+        logger.info("CardContent added successfully.");
     }
 
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
@@ -86,32 +86,18 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
     private void updateFlwDetail(FlwDetail flw, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        if (checkNextTime(flw.getLastAccessDate())) {
 
-            flw.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-            flw.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
-        } else {
-            flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
-            flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
-        }
+       flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
+       flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
 
         if (saveCallDetailApiRequest.getWelcomeMessagePromptFlag()) {
             flw.setWelcomePromptFlagCounter(flw.getWelcomePromptFlagCounter() + ConfigurationConstants.ONE);
         }
-
+        flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
         serviceConsumptionFlwService.update(flw);
         logger.info("FlwDetail updated successfully.");
     }
 
-    public boolean checkNextTime(DateTime lastAccessTime) {
-        DateTime now = DateTime.now();
 
-        if (lastAccessTime != null) {
-            lastAccessTime = lastAccessTime.withZone(DateTimeZone.getDefault());
-            return lastAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
-                    lastAccessTime.getYear() != now.getYear();
-        }
-        return false;
-    }
 
 }

@@ -3,6 +3,7 @@ package org.motechproject.nms.mobilekunji.service.impl;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.repository.ServiceConsumptionCallRecordDataService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,11 @@ import org.springframework.stereotype.Service;
 public class ServiceConsumptionCallServiceImpl implements ServiceConsumptionCallService {
 
     private ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService;
+
+    @Autowired
+    public ServiceConsumptionCallServiceImpl(ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService) {
+        this.serviceConsumptionRecordDataService = serviceConsumptionRecordDataService;
+    }
 
     @Override
     public CallDetail create(CallDetail record) {
