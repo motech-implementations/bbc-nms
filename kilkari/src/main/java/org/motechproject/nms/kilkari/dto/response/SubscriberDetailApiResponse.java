@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.dto.response;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 import java.util.List;
@@ -9,12 +10,16 @@ import java.util.List;
  */
 public class SubscriberDetailApiResponse {
 
+    @JsonProperty
     String circle;
 
+    @JsonProperty
     Integer languageLocationCode;
 
+    @JsonProperty
     List<SubscriptionPack> subscriptionPackList;
 
+    @JsonProperty
     Integer defaultLanguageLocationCode;
 
     public String getCircle() {

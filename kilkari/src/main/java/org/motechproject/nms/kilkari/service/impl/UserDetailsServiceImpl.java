@@ -22,7 +22,7 @@ import java.util.List;
  * Implement business logic for finding subscriber details and identify Language
  * location code for the subscriber.
  */
-@Service("registrationServiceImpl")
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -105,6 +105,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             } else {
                 //if either state or district is null then get llcCode by circleCode.
                 getLanguageLocationCodeByCircleCode(circleCode, response);
+            }
+            if (response.getLanguageLocationCode() != null) {
+                subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
             }
         }
     }

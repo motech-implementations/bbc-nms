@@ -5,6 +5,22 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
+    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+        <property name="defaultURL" value="/kilkari"/>
+        <constructor-arg name="moduleName" value="kilkari"/>
+        <constructor-arg name="url" value="../kilkari/resources/index.html"/>
+        <constructor-arg name="angularModules">
+            <list>
+                <value>hello-world</value>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="i18n">
+            <map>
+                <entry key="messages" value="../kilkari/resources/messages/"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
     <osgi:service ref="motherMctsCsvService"
                   interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />
 
@@ -70,5 +86,8 @@
                     
 	<osgi:reference id="operatorService"
                     interface="org.motechproject.nms.masterdata.service.OperatorService"/>
+
+    <osgi:service ref="userDetailsService"
+                    interface="org.motechproject.nms.kilkari.service.UserDetailsService"/>
 
 </beans>
