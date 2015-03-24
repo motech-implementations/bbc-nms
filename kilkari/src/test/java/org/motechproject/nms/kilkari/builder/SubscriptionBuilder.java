@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.builder;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 
@@ -24,5 +25,18 @@ public class SubscriptionBuilder {
         subscription.setMsisdn(msisdn);
         return subscription;
     }
+
+    public SubscriptionCreateApiRequest buildSubscriptionApiRequest(String callingNumber,String operator,String circle,String callId,Integer languageLocationCode,String subscriptionPack) {
+        SubscriptionCreateApiRequest apiRequest = new SubscriptionCreateApiRequest();
+        apiRequest.setCallingNumber(callingNumber);
+        apiRequest.setOperator(operator);
+        apiRequest.setCircle(circle);
+        apiRequest.setCallId(callId);
+        apiRequest.setLanguageLocationCode(languageLocationCode);
+        apiRequest.setSubscriptionPack(subscriptionPack);
+        return apiRequest;
+    }
+
+    //public SubscriptionDeactivateApiRequest buildSubscriptionDeactivateApiRequest()
 
 }
