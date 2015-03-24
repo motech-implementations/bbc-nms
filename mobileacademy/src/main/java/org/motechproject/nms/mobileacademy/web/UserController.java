@@ -80,6 +80,7 @@ public class UserController extends BaseController {
      * @throws MissingServletRequestParameterException
      */
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
+    @ResponseBody
     public void setLanguageLocationCode(@RequestBody LlcRequest llcRequest)
             throws DataValidationException,
             MissingServletRequestParameterException {

@@ -1,13 +1,14 @@
 package org.motechproject.nms.kilkari.repository;
 
+import java.util.List;
+
+import javax.jdo.Query;
+
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-
-import javax.jdo.Query;
-import java.util.List;
 
 public class CustomQueries {
 
@@ -36,8 +37,7 @@ public class CustomQueries {
          * @return null need to only execute query
          */
         public Object execute(Query query) {
-            query.execute();
-            return null;
+            return query.execute();
         }
 
     }
@@ -56,12 +56,11 @@ public class CustomQueries {
         /**
          * This method executes the query passed.
          * @param query to be executed
-         * @return List of distinct subscription packs
+         * @return null need to only execute query
          */
         @Override
         public Object execute(Query query) {
-            query.execute();
-            return null;
+            return query.execute();
         }
 
         /**

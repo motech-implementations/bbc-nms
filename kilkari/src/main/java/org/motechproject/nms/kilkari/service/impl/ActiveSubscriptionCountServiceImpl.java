@@ -4,6 +4,7 @@ import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
+import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
     private ActiveSubscriptionCountDataService activeSubscriptionCountDataService;
     
     /**
-     * This method creates active user.
+     * This method creates active subscription count.
      * @param activeSubscriptionCount ActiveSubscriptionCount type object
-     * @return ActiveUser type object
+     * @return ActiveSubscriptionCount type object
      */
     @Override
     public ActiveSubscriptionCount create(ActiveSubscriptionCount activeSubscriptionCount) {
@@ -37,12 +38,32 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
     }
 
     /**
-     * Checks ActiveUserCount record exists
+     * Checks ActiveSubscriptionCount record exists
      * @return true if exists else false
      */
     @Override
     public Boolean isActiveSubscriptionCountPresent() {
         return (activeSubscriptionCountDataService.count() > Constants.ACTIVE_SUBSCRIPTION_COUNT_ZERO);
+    }
+
+    /**
+     * This method increments the active subscription count by one 
+     */
+    @Override
+    public void incrementActiveSubscriptionCount() {
+         /* TBD: As latest MDS Jar is not available in Nexus Repo
+        activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        */
+    }
+
+    /**
+     * This method decrements the active subscription count by one 
+     */
+    @Override
+    public void decrementActiveSubscriptionCount() {
+        /* TBD: As latest MDS Jar is not available in Nexus Repo
+        activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+        */
     }
 
 }

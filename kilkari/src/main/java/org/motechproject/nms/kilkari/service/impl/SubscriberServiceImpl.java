@@ -53,6 +53,30 @@ public class SubscriberServiceImpl implements SubscriberService {
     public Subscriber getSubscriberByMsisdn(String msisdn) {
         return subscriberDataService.findRecordByMsisdn(msisdn);
     }
+    
+    /**
+     * This method gets subscriber by msisdn and childMctsId
+     * @param msisdn String type object
+     * @param childMctsId String type object
+     * @return Subscriber type object
+     */
+    @Override
+    public Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId) {
+        return subscriberDataService.findRecordByMsisdnAndChildMctsId(msisdn, childMctsId);
+    }
+    
+    /**
+     * This method gets subscriber by msisdn and motherMctsId
+     * @param msisdn String type object
+     * @param motherMctsId String type object
+     * @return Subscriber type object
+     */
+    @Override
+    public Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId) {
+        return subscriberDataService.findRecordByMsisdnAndMotherMctsId(msisdn, motherMctsId);
+    }
+    
+    
 
 
 }

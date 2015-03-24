@@ -422,7 +422,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public int getCurrentCourseVersion() {
         Course course = getMtrainingCourse();
-        if (course == null) {
+        if (course == null || course.getState() == CourseUnitState.Inactive) {
             return -1;
         }
         DateTime date = course.getModificationDate();

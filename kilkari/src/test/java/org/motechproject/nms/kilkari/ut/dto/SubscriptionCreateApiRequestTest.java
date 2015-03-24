@@ -1,11 +1,14 @@
 package org.motechproject.nms.kilkari.ut.dto;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.helper.DataValidationException;
 
 public class SubscriptionCreateApiRequestTest {
 
@@ -48,6 +51,8 @@ public class SubscriptionCreateApiRequestTest {
         Assert.assertEquals(deactivationReason, subscriber.getDeactivationReason());
         Assert.assertEquals(subscriptionApiRequest.getCallingNumber(), subscriber.getMsisdn());
         Assert.assertEquals(subscriptionApiRequest.getLanguageLocationCode(), subscriber.getLanguageLocationCode());
+        Assert.assertNull(subscriber.getLmp());
+        Assert.assertNotNull(subscriber.getDob());
     }
 
     @Test
@@ -56,6 +61,7 @@ public class SubscriptionCreateApiRequestTest {
         Subscriber subscriber = new Subscriber();
         BeneficiaryType beneficiaryType = BeneficiaryType.MOTHER;
         DeactivationReason deactivationReason = DeactivationReason.NONE;
+        DateTime dateTime = new DateTime();
 
         subscriptionApiRequest.setSubscriptionPack("PACK_72_WEEKS");
         subscriber = subscriptionApiRequest.toSubscriber();
@@ -64,6 +70,25 @@ public class SubscriptionCreateApiRequestTest {
         Assert.assertEquals(deactivationReason, subscriber.getDeactivationReason());
         Assert.assertEquals(subscriptionApiRequest.getCallingNumber(), subscriber.getMsisdn());
         Assert.assertEquals(subscriptionApiRequest.getLanguageLocationCode(), subscriber.getLanguageLocationCode());
+        Assert.assertNotNull(subscriber.getLmp());
+        Assert.assertNull(subscriber.getDob());
+    }
+
+    @Test
+    public void shouldThrowDataValidationExceptionWhenLLCIsNull() {
+
+        subscriptionApiRequest.setSubscriptionPack("subscriptionPack");
+        subscriptionApiRequest.setCallId("callId");
+        subscriptionApiRequest.setCircle("circle");
+        subscriptionApiRequest.setCallingNumber("1234567890");
+        subscriptionApiRequest.setOperator("operator");
+
+        try {
+            subscriptionApiRequest.validateMandatoryParameters();
+        } catch (DataValidationException ex) {
+            Assert.assertTrue(ex instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
     }
 
 }

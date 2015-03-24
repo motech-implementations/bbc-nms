@@ -1,15 +1,23 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 
+import java.util.List;
+
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.*;
-import org.motechproject.nms.kilkari.initializer.Initializer;
-import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
-import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -18,8 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  *This class is used to perform crud operations on Subscription object
@@ -31,13 +37,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private SubscriptionDataService subscriptionDataService;
     
     @Autowired
-    private SubscriberDataService subscriberDataService;
+    private SubscriberService subscriberService;
     
     @Autowired
     private ConfigurationService configurationService;
     
     @Autowired
-    private ActiveSubscriptionCountDataService activeUserDataService;
+    private ActiveSubscriptionCountService activeSubscriptionCountService;
 
     @Autowired
     private CommonValidatorService commonValidatorService;
@@ -81,15 +87,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription = subscriptionDataService.getSubscriptionByMctsIdPackStatus(mctsId, packName, Status.PENDING_ACTIVATION, stateCode);
         }
         return subscription;
-    }
-
-    /**
-     * Gets actives users count
-     * @return long type object
-     */
-    @Override
-    public long getActiveUserCount() {
-        return activeUserDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getCount();
     }
 
     /**
@@ -280,22 +277,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
             throws NmsInternalServerError {
             Configuration configuration = configurationService.getConfiguration();
-            long activeUserCount = getActiveUserCount();
+            long activeUserCount = activeSubscriptionCountService.getActiveSubscriptionCount();
         /*If DeactivationReason is NONE then create Subscriber and subscription*/
         if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
             /* check for maximum allowed beneficiary */
             if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                 Subscriber dbSubscriber = null;
                 if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                    dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
+                    dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
                 } else {
-                    dbSubscriber = subscriberDataService.findRecordByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
+                    dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
                 }
 
                 if (dbSubscriber != null) {
                     updateDbSubscriber(subscriber, dbSubscriber);
                 } else {
-                    dbSubscriber = subscriberDataService.create(subscriber);
+                    dbSubscriber = subscriberService.create(subscriber);
                 }
 
                 createNewSubscription(subscriber, dbSubscriber, channel, operatorCode);
@@ -386,7 +383,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        activeSubscriptionCountService.incrementActiveSubscriptionCount();
         
         return newSubscription;
     }
@@ -415,9 +412,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeSubscriptionCountService.decrementActiveSubscriptionCount();
         } else {
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+            activeSubscriptionCountService.incrementActiveSubscriptionCount();
         }
     }
     
@@ -450,7 +447,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dbSubscriber.setBeneficiaryType(subscriber.getBeneficiaryType());
         dbSubscriber.setModifiedBy(subscriber.getModifiedBy());
 
-        subscriberDataService.update(dbSubscriber);
+        subscriberService.update(dbSubscriber);
 
     }
 
@@ -468,7 +465,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeSubscriptionCountService.decrementActiveSubscriptionCount();
         }
     }
 

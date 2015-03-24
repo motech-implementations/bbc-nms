@@ -31,5 +31,21 @@ public interface SubscriberService {
      * @return Subscriber type object
      */
     Subscriber getSubscriberByMsisdn(String msisdn);
+
+    /**
+     * This method gets subscriber by msisdn and childMctsId
+     * @param msisdn String type object
+     * @param childMctsId String type object
+     * @return Subscriber type object
+     */
+    Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId);
+
+    /**
+     * This method gets subscriber by msisdn and motherMctsId
+     * @param msisdn String type object
+     * @param motherMctsId String type object
+     * @return Subscriber type object
+     */
+    Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId);
     
 }

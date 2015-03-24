@@ -13,19 +13,19 @@ import javax.jdo.annotations.Unique;
 @Unique(name = "state_district_id", members = {"state_id", "district_id"})
 public class LanguageLocationCode extends MdsEntity {
 
-    @Field(required = true, name = "state_id")
+    @Field(required = true, name = "stateId")
     private State state;
 
     @Field(required = true)
     private Long stateCode;
 
-    @Field(required = true, name = "district_id")
+    @Field(required = true, name = "districtId")
     private District district;
 
     @Field(required = true)
     private Long districtCode;
 
-    @Field(required = true, name = "circle_id")
+    @Field(required = true, name = "circleId")
     private Circle circle;
 
     @Field(required = true)

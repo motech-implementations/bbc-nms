@@ -166,12 +166,12 @@ public class ContentUploadCsvHandler {
         newRecord.setContentId(ParseDataHelper.validateAndParseLong("contentId", record.getContentId(), true));
         newRecord.setContentName(ParseDataHelper.validateAndParseString("contentName", record.getContentName(), true));
 
-        String contentType = ParseDataHelper.validateAndParseString("contentType", record.getContentType(), true);
-        if (contentType.equals(ContentType.CONTENT.toString())) {
-            newRecord.setContentType(ContentType.CONTENT);
-        }
-        if (contentType.equals(ContentType.PROMPT.toString()))  {
-            newRecord.setContentType(ContentType.PROMPT);
+        String contentTypeString = ParseDataHelper.validateAndParseString("contentType", record.getContentType(), true);
+        ContentType contentType = ContentType.findByName(contentTypeString);
+        if (contentType!= null) {
+            newRecord.setContentType(contentType);
+        }else {
+            ParseDataHelper.raiseInvalidDataException("contentType", contentTypeString);
         }
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());

@@ -15,6 +15,10 @@ public final class Constants {
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
 
+    /* Logging related constants*/
+    public static final String NMS_PACKAGE_NAME = "org.motechproject.nms";
+    public static final String NMS_DEFAULT_LOG_LEVEL = "INFO";
+
     private Constants() {
 
     }

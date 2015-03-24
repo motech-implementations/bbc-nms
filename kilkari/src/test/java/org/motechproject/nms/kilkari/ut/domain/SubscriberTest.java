@@ -4,10 +4,7 @@ package org.motechproject.nms.kilkari.ut.domain;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.masterdata.domain.*;
 
 import java.util.Set;
@@ -26,10 +23,12 @@ public class SubscriberTest {
     Set<Subscription> subscriptionList = null;
     State state = null;
 
+    Subscriber subscriber = new Subscriber();
+
     @Test
     public void shouldSetValuesInSubscriber() {
 
-        Subscriber subscriber = createSubscriber();
+        subscriber = createSubscriber();
 
         Assert.assertEquals("name", subscriber.getName());
         Assert.assertEquals("aadharNumber", subscriber.getAadharNumber());
@@ -41,7 +40,7 @@ public class SubscriberTest {
         Assert.assertEquals(dateTime, subscriber.getDob());
         Assert.assertEquals(healthBlock, subscriber.getHealthBlock());
         Assert.assertTrue(12 == subscriber.getLanguageLocationCode());
-        Assert.assertEquals(dateTime, subscriber.getLmp());
+        Assert.assertEquals(dateTime.minus(3L), subscriber.getLmp());
         Assert.assertEquals("motherMctsId", subscriber.getMotherMctsId());
         Assert.assertEquals("msisdn",subscriber.getMsisdn());
         Assert.assertEquals(phc, subscriber.getPhc());
@@ -51,6 +50,68 @@ public class SubscriberTest {
         Assert.assertEquals(taluka, subscriber.getTaluka());
         Assert.assertEquals(village, subscriber.getVillage());
     }
+
+    @Test
+    public void shouldGetPackNamePACK_72_WEEKS() {
+
+        SubscriptionPack subscriptionPack = SubscriptionPack.PACK_72_WEEKS;
+
+        subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        Assert.assertEquals(subscriptionPack, subscriber.getSuitablePackName());
+    }
+
+    @Test
+    public void shouldGetPackNamePACK_48_WEEKS() {
+
+        SubscriptionPack subscriptionPack = SubscriptionPack.PACK_48_WEEKS;
+
+        subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        Assert.assertEquals(subscriptionPack, subscriber.getSuitablePackName());
+    }
+
+    @Test
+    public void shouldGetMotherMctsId() {
+
+        subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
+        subscriber.setChildMctsId("childMctsId");
+        subscriber.setMotherMctsId("motherMctsId");
+
+        Assert.assertEquals("motherMctsId", subscriber.getSuitableMctsId());
+    }
+
+    @Test
+    public void shouldGetchildMctsId() {
+
+        subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        subscriber.setChildMctsId("childMctsId");
+        subscriber.setMotherMctsId("motherMctsId");
+
+        Assert.assertEquals("childMctsId", subscriber.getSuitableMctsId());
+    }
+
+    @Test
+    public void shouldGetDob() {
+
+
+        subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        subscriber.setDob(dateTime);
+        subscriber.setLmp(dateTime.minus(3L));
+
+        Assert.assertEquals(dateTime, subscriber.getDob());
+    }
+
+    @Test
+    public void shouldGetLmp() {
+
+
+        subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        subscriber.setDob(dateTime);
+        subscriber.setLmp(dateTime.minus(3L));
+
+        Assert.assertEquals(dateTime.minus(3L), subscriber.getLmp());
+    }
+
+
     public Subscriber createSubscriber() {
 
         Subscriber subscriber = new Subscriber();
@@ -65,7 +126,7 @@ public class SubscriberTest {
         subscriber.setDob(dateTime);
         subscriber.setHealthBlock(healthBlock);
         subscriber.setLanguageLocationCode(12);
-        subscriber.setLmp(dateTime);
+        subscriber.setLmp(dateTime.minus(3L));
         subscriber.setMotherMctsId("motherMctsId");
         subscriber.setMsisdn("msisdn");
         subscriber.setPhc(phc);

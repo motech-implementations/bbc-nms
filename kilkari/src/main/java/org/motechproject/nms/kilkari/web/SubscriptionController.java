@@ -59,6 +59,7 @@ public class SubscriptionController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.DELETE)
+    @ResponseBody
     public void deactivateSubscription(@RequestBody SubscriptionDeactivateApiRequest apiRequest) throws DataValidationException{
         logger.info("*****deactivateSubscription is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
