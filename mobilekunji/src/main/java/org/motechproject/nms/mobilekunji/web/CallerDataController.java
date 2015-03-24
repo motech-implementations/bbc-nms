@@ -3,7 +3,6 @@ package org.motechproject.nms.mobilekunji.web;
 
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
-import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiResponse;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
@@ -51,7 +50,7 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
-            throws DataValidationException {
+            throws DataValidationException, Exception {
 
         log.info("getUserDetails: Started");
 
@@ -59,9 +58,9 @@ public class CallerDataController extends BaseController {
 
         validateCallId(callId);
 
-        validateInputDataForGetUserDetails(callingNumber, operator, circle,callId);
+        validateInputDataForGetUserDetails(callingNumber, operator, circle, callId);
 
-        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator,callId);
+        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator, callId);
 
         log.trace("getUserDetails:Ended");
 
@@ -70,21 +69,21 @@ public class CallerDataController extends BaseController {
 
     @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public SaveCallDetailApiResponse saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
+    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
 
         log.info("SaveCallDetails: Started");
 
         validateCallId(request.getCallId());
 
-        SaveCallDetailApiResponse saveCallDetailApiResponse = saveCallDetailsService.saveCallDetails(request);
+        saveCallDetailsService.saveCallDetails(request);
 
         log.trace("Save CallDetails:Ended");
-
-        return saveCallDetailApiResponse;
     }
 
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
-    public @ResponseBody void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+    public
+    @ResponseBody
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
 
         log.info("Update Language Location Code: Started");
 
@@ -115,7 +114,7 @@ public class CallerDataController extends BaseController {
 
     private void validateCallId(String callId) throws DataValidationException {
 
-        ParseDataHelper.validateAndTrimCallId("CallId",callId);
+        ParseDataHelper.validateAndTrimCallId("CallId", callId);
 
     }
 }

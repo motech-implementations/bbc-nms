@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.dto;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.mobilekunji.domain.CardContent;
 
 import java.util.List;
@@ -9,26 +10,37 @@ import java.util.List;
  */
 public class SaveCallDetailApiRequest {
 
+    @JsonProperty
     private String callingNumber;
 
+    @JsonProperty
     private String callId;
 
+    @JsonProperty
     private String operator;
 
+    @JsonProperty
     private String circle;
 
+    @JsonProperty
     private Integer startTime;
 
+    @JsonProperty
     private Integer endTime;
 
+    @JsonProperty
     private Integer currentUsageInPulses;
 
+    @JsonProperty
     private Integer endOfUsagePromptCounter;
 
+    @JsonProperty
     private Boolean welcomeMessageFlag;
 
+    @JsonProperty
     private String failureReason;
 
+    @JsonProperty
     private List<CardContent> cardContentList;
 
     public List<CardContent> getCardContentList() {

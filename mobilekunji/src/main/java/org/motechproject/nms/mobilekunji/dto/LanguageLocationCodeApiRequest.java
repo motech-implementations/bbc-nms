@@ -1,14 +1,19 @@
 package org.motechproject.nms.mobilekunji.dto;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * Created by abhishek on 23/2/15.
  */
 public class LanguageLocationCodeApiRequest {
 
+    @JsonProperty
     private String callingNumber;
 
+    @JsonProperty
     private Integer languageLocationCode;
 
+    @JsonProperty
     private String callId;
 
     public String getCallId() {

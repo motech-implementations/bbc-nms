@@ -73,19 +73,22 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
-        setNmsCappingValue(userDetailApiResponse, userProfile);
+        setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
 
         if (null != flwDetail) {
-            if(configurationService.getConfiguration().getMaxWelcomeMessage() == flwDetail.getWelcomePromptFlagCounter()) {
-            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
+
+            userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+
+            if (configurationService.getConfiguration().getMaxWelcomeMessage() == flwDetail.getWelcomePromptFlagCounter()) {
+                userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
             } else {
-            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
+                userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
             }
 
-            if(flwDetail.getLastAccessDate().isAfterNow() || flwDetail.getLastAccessDate().isBeforeNow()) {
+            if (flwDetail.getLastAccessDate().isAfterNow() || flwDetail.getLastAccessDate().isBeforeNow()) {
                 userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
-                userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
             }
+
         } else {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
             userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
@@ -94,7 +97,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetailApiResponse;
     }
 
-    private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
+    private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse, Integer stateLevelCappingValue) {
 
         switch (configurationService.getConfiguration().getCappingType()) {
 
@@ -106,7 +109,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNationalCapValue());
 
             case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
-                userDetailApiResponse.setMaxAllowedUsageInPulses(userProfile.getMaxStateLevelCappingValue());
+                userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
         }
     }
 

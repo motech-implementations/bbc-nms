@@ -1,7 +1,6 @@
 package org.motechproject.nms.mobilekunji.service;
 
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
-import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiResponse;
 import org.motechproject.nms.util.helper.DataValidationException;
 
 /**
@@ -9,5 +8,5 @@ import org.motechproject.nms.util.helper.DataValidationException;
  */
 public interface SaveCallDetailsService {
 
-    public SaveCallDetailApiResponse saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException;
+    public void saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException;
 }

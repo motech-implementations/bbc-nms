@@ -1,5 +1,7 @@
 package org.motechproject.nms.mobilekunji.dto;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -7,22 +9,31 @@ import java.io.Serializable;
  */
 public class UserDetailApiResponse implements Serializable {
 
+    @JsonProperty
     private String circle;
 
+    @JsonProperty
     private Integer languageLocationCode;
 
+    @JsonProperty
     private Integer defaultLanguageLocationCode;
 
+    @JsonProperty
     private Integer currentUsageInPulses;
 
+    @JsonProperty
     private Integer maxAllowedUsageInPulses;
 
+    @JsonProperty
     private Boolean welcomePromptFlag;
 
+    @JsonProperty
     private Integer endOfUsagePromptCounter;
 
+    @JsonProperty
     private Integer maxAllowedEndOfUsagePrompt;
 
+    @JsonProperty
     private String failureReason;
 
     public String getCircle() {
