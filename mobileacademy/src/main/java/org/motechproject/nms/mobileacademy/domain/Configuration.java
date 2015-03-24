@@ -1,7 +1,9 @@
 package org.motechproject.nms.mobileacademy.domain;
 
 import javax.jdo.annotations.Unique;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
@@ -12,12 +14,14 @@ import org.motechproject.mds.domain.MdsEntity;
  * Parameters.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class Configuration extends MdsEntity {
 
-    @Field(required = true)
-    @Size(min = 1, max = 1)
     @Unique
+    @Field(required = true)
+    @Min(1)
+    @Max(1)
+    @NotNull
     private Long index;
 
     @Field

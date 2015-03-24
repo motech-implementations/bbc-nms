@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
+import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
@@ -44,7 +45,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);
         UserProfile userProfile = userProfileDetailsService.processUserDetails(
-                msisdn, circle, operator);
+                msisdn, circle, operator,
+                ServicesUsingFrontLineWorker.MOBILEACADEMY);
         Configuration configuration = configurationService.getConfiguration();
         findLanguageLocationCodeForUser(userProfile, configuration, user);
         user.setCircle(userProfile.getCircle());
