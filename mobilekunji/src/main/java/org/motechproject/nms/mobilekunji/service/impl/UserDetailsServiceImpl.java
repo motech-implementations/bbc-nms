@@ -79,7 +79,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (null != serviceConsumptionFlw) {
             userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
             userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
-            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+//            TODO
+//            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
         } else {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
             userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
