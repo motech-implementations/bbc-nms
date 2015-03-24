@@ -68,7 +68,7 @@ public class CallerDataController extends BaseController {
         return userDetailApiResponse;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
     public SaveCallDetailApiResponse saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
 
