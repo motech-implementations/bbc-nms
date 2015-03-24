@@ -6,7 +6,8 @@ import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/** This class performs the UT of UserProfile.
+/**
+ * This class performs the UT of UserProfile.
  */
 public class UserProfileTest {
 
@@ -55,21 +56,21 @@ public class UserProfileTest {
     }
 
     @Test
-    public void testCircle(){
+    public void testCircle() {
 
         userProfile.setCircle("12");
         assertEquals("12", userProfile.getCircle());
     }
 
     @Test
-    public void testMaxStateLevelCappingValue(){
+    public void testMaxStateLevelCappingValue() {
 
         userProfile.setMaxStateLevelCappingValue(10);
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
     }
 
     @Test
-    public void testToString(){
+    public void testToString() {
 
         userProfile.setCreated(true);
         userProfile.setNmsId(12L);
@@ -82,11 +83,11 @@ public class UserProfileTest {
 
         assertEquals("UserProfile{" + "isCreated=" +
                         userProfile.isCreated() +
-                        ", nmsId=" + userProfile.getNmsId()+
+                        ", nmsId=" + userProfile.getNmsId() +
                         ", msisdn='" + userProfile.getMsisdn() + '\'' +
                         ", isDefaultLanguageLocationCode=" + userProfile.isDefaultLanguageLocationCode() +
                         ", languageLocationCode=" + userProfile.getLanguageLocationCode() +
-                        ", defaultLanguageLocationCode=" + userProfile.getDefaultLanguageLocationCode()+
+                        ", defaultLanguageLocationCode=" + userProfile.getDefaultLanguageLocationCode() +
                         ", circle='" + userProfile.getCircle() + '\'' +
                         ", maxStateLevelCappingValue=" + userProfile.getMaxStateLevelCappingValue() + "}",
                 userProfile.toString()

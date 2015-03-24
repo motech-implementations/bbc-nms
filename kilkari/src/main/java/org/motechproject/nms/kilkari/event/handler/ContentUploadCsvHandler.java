@@ -169,7 +169,8 @@ public class ContentUploadCsvHandler {
         String contentType = ParseDataHelper.validateAndParseString("contentType", record.getContentType(), true);
         if (contentType.equals(ContentType.CONTENT.toString())) {
             newRecord.setContentType(ContentType.CONTENT);
-        } else {
+        }
+        if (contentType.equals(ContentType.PROMPT.toString()))  {
             newRecord.setContentType(ContentType.PROMPT);
         }
         newRecord.setCreator(record.getCreator());

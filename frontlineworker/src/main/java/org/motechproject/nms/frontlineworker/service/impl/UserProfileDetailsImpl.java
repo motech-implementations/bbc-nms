@@ -65,7 +65,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
         if (frontLineWorker == null) {
 
-            userProfile = createUserProfile(msisdn, operator,circleCode, service);
+            userProfile = createUserProfile(msisdn, operator, circleCode, service);
 
         } else {
             Status status = frontLineWorker.getStatus();
@@ -84,7 +84,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
                     return userProfile;
 
                 case INVALID:
-                    userProfile = createUserProfile(msisdn, operator,circleCode, service);
+                    userProfile = createUserProfile(msisdn, operator, circleCode, service);
                     return userProfile;
             }
         }
@@ -121,6 +121,16 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         }
     }
 
+    @Override
+    public void validateOperator(String operatorCode) throws DataValidationException {
+        Operator operator = operatorService.getRecordByCode(operatorCode);
+
+        if (operator == null) {
+            ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
+        }
+    }
+
+
 
     /**
      * This procedure creates a new UserProfile when a call is made by a number which is not present in the Database
@@ -131,8 +141,8 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      * @param service    the module which is invoking the API
      * @throws DataValidationException , java.lang.Exception
      */
-    private UserProfile createUserProfile(String msisdn, Operator operator,  String circleCode,
-                                   ServicesUsingFrontLineWorker service) throws DataValidationException {
+    private UserProfile createUserProfile(String msisdn, Operator operator, String circleCode,
+                                          ServicesUsingFrontLineWorker service) throws DataValidationException {
 
         UserProfile userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
         FrontLineWorker frontLineWorker = new FrontLineWorker();
@@ -176,14 +186,13 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
     /**
      * This procedure generates the UserDetails of a record with the circle code given in the API call
      *
-     * @param msisdn          contact number of the front line worker whose details are to be fetched
-     *
-     * @param service         the module which is invoking the API
+     * @param msisdn  contact number of the front line worker whose details are to be fetched
+     * @param service the module which is invoking the API
      * @throws DataValidationException,java.lang.Exception
      * @circleCode the circle code deduced from the call
      */
     private UserProfile getUserDetailsByCircle(String msisdn,
-                                        String circleCode, ServicesUsingFrontLineWorker service) throws
+                                               String circleCode, ServicesUsingFrontLineWorker service) throws
             DataValidationException {
 
         UserProfile userProfile = new UserProfile();
@@ -191,7 +200,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode langLocCode = null;
         Long stateCode = null;
-        State state = null;
+
 
         languageLocationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (languageLocationCode != null) {
@@ -202,18 +211,10 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
             if (langLocCode != null) {
                 stateCode = langLocCode.getStateCode();
-                state = stateService.findRecordByStateCode(stateCode);
-                if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-                    userProfile.setMaxStateLevelCappingValue(state.getMaCapping());
-                } else {
-                    userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
-                }
-
+                userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             } else {
                 ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
-
             }
-
 
         } else {
             defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
@@ -225,13 +226,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
                 langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
                 if (langLocCode != null) {
                     stateCode = langLocCode.getStateCode();
-                    state = stateService.findRecordByStateCode(stateCode);
-                    if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-                        userProfile.setMaxStateLevelCappingValue(state.getMaCapping());
-                    } else {
-                        userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
-                    }
-
+                    userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
                 } else {
                     ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
                 }
@@ -259,14 +254,13 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      * @param msisdn          contact number of the front line worker whose details are to be fetched
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
-     * @throws DataValidationException,java.lang.Exception
+     * @throws DataValidationException
      * @circleCode the circle code deduced from the call
      */
     private UserProfile getUserDetailsForInactiveUser(String msisdn, FrontLineWorker frontLineWorker,
-                                               ServicesUsingFrontLineWorker service, String circleCode)
+                                                      ServicesUsingFrontLineWorker service, String circleCode)
             throws DataValidationException {
 
-        State state = null;
         Long stateCode = frontLineWorker.getStateCode();
         Long districtCode = frontLineWorker.getDistrictId().getDistrictCode();
         Integer languageLocationCode = null;
@@ -277,12 +271,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             userProfile.setLanguageLocationCode(languageLocationCode);
             userProfile.setDefaultLanguageLocationCode(null);
             userProfile.setIsDefaultLanguageLocationCode(false);
-            state = stateService.findRecordByStateCode(stateCode);
-            if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-                userProfile.setMaxStateLevelCappingValue(state.getMaCapping());
-            } else {
-                userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
-            }
+            userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setNmsId(frontLineWorker.getId());
             userProfile.setCreated(false);
             userProfile.setMsisdn(msisdn);
@@ -304,15 +293,13 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      * This procedure generated UserDetails for an ActiveUser using its state and district details
      *
      * @param msisdn          contact number of the front line worker whose details are to be fetched
-     * @param frontLineWorker the frontLineWorker found using the msisdn
-     *
+     * @param frontLineWorker the frontLineWorker found using the msisdn     *
      * @param service         the module which is invoking the API
      * @circleCode the circle code deduced from the call
      */
     private UserProfile getUserDetailsForActiveUser(String msisdn, FrontLineWorker frontLineWorker,
-                                             ServicesUsingFrontLineWorker service, String circleCode) {
+                                                    ServicesUsingFrontLineWorker service, String circleCode) {
 
-        State state = null;
         Integer languageLocationCode = null;
         Integer defaultLanguageLocationCode = null;
         UserProfile userProfile = new UserProfile();
@@ -323,13 +310,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
         userProfile.setLanguageLocationCode(languageLocationCode);
         userProfile.setDefaultLanguageLocationCode(defaultLanguageLocationCode);
-
-        state = stateService.findRecordByStateCode(stateCode);
-        if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-            userProfile.setMaxStateLevelCappingValue(state.getMaCapping());
-        } else {
-            userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
-        }
+        userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setCircle(circleCode);
         userProfile.setNmsId(frontLineWorker.getId());
         userProfile.setCreated(false);
@@ -351,18 +332,16 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      * @param msisdn          contact number of the front line worker whose details are to be fetched
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
-     * @throws DataValidationException,java.lang.Exception
+     * @throws DataValidationException
      * @circleCode the circle code deduced from the call
      */
     private UserProfile getUserDetailsForAnonymousUser(String msisdn, FrontLineWorker frontLineWorker,
-                                                ServicesUsingFrontLineWorker service, String circleCode)
+                                                       ServicesUsingFrontLineWorker service, String circleCode)
             throws DataValidationException {
         Integer languageLocationCode = null;
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode langLocCode = null;
         Long stateCode = null;
-        State state = null;
-
         UserProfile userProfile = new UserProfile();
 
         languageLocationCode = frontLineWorker.getLanguageLocationCodeId();
@@ -379,13 +358,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
         if (langLocCode != null) {
             stateCode = langLocCode.getStateCode();
-            state = stateService.findRecordByStateCode(stateCode);
-            if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-                userProfile.setMaxStateLevelCappingValue(state.getMaCapping());
-            } else {
-                userProfile.setMaxStateLevelCappingValue(state.getMkCapping());
-            }
-
+            userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setCircle(circleCode);
             userProfile.setNmsId(frontLineWorker.getId());
             userProfile.setCreated(false);
@@ -398,6 +371,22 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         return userProfile;
     }
 
-
+    /**
+     * This procedure generated UserDetails for an Anonymous Repeat User using its details stored by earlier calls
+     *
+     * @param stateCode the state code that will be used to find the Max state level capping
+     * @param service   the module which is invoking the API
+     */
+    private Integer findMaxCapping(Long stateCode, ServicesUsingFrontLineWorker service) {
+        State state = null;
+        Integer maxStateLevelCapping = null;
+        state = stateService.findRecordByStateCode(stateCode);
+        if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
+            maxStateLevelCapping = state.getMaCapping();
+        } else {
+            maxStateLevelCapping = state.getMkCapping();
+        }
+        return maxStateLevelCapping;
+    }
 
 }
