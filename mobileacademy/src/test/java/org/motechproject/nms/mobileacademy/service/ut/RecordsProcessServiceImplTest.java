@@ -32,8 +32,8 @@ import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
-import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
+import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.impl.RecordsProcessServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -213,35 +213,6 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
-     * This test case is used to Check the type of the record and mark the
-     * appropriate course flag.
-     */
-    @Test
-    public void testCheckRecordTypeAndMarkCourseFlag() {
-        Method method;
-        Record record = new Record();
-        record.setType(FileType.LESSON_CONTENT);
-        record.setChapterId(1);
-        record.setLessonId(1);
-        record.setFileName("Lesson Content File");
-        CourseFlag courseFlags = new CourseFlag();
-        try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "checkRecordTypeAndMarkCourseFlag", new Class[] {
-                            Record.class, CourseFlag.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] { record,
-                    courseFlags });
-            assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
-                    .isFlagForLessonContentFile());
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-        }
-
-    }
-
-    /*
      * This test case is used to Check the record for consistency and mark the
      * appropriate course flag.
      */
@@ -295,6 +266,11 @@ public class RecordsProcessServiceImplTest {
                     new Object[] { record, Arrays.asList(chapterContent),
                             courseFlags }));
 
+            record.setType(FileType.QUESTION_CONTENT);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, Arrays.asList(chapterContent),
+                            courseFlags }));
+
             record.setType(FileType.CORRECT_ANSWER);
             assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
                     new Object[] { record, Arrays.asList(chapterContent),
@@ -330,6 +306,11 @@ public class RecordsProcessServiceImplTest {
                     new Object[] { record, Arrays.asList(chapterContent),
                             courseFlags }));
 
+            record.setChapterId(15);
+            assertFalse((boolean) method.invoke(recordsProcessServiceImpl,
+                    new Object[] { record, Arrays.asList(chapterContent),
+                            courseFlags }));
+
         } catch (NoSuchMethodException | SecurityException
                 | IllegalAccessException | IllegalArgumentException
                 | InvocationTargetException e) {
@@ -360,8 +341,8 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
-     * this test case is used to validate raw content
-     * when provided with invalid meta data
+     * this test case is used to validate raw content when provided with invalid
+     * meta data
      */
     @Test
     public void testValidateRawContentwithInvalidMetaData() {
@@ -383,8 +364,8 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
-     * this test case is used to validate raw content
-     * when provided with out of bound index value for answer option
+     * this test case is used to validate raw content when provided with out of
+     * bound index value for answer option
      */
     @Test
     public void testValidateRawContentWithOutOfBoundAnswerIndex() {
@@ -522,8 +503,8 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
-     * this test case is used to validate content name
-     * when content name has lesson id has non numeric index
+     * this test case is used to validate content name when content name has
+     * lesson id has non numeric index
      */
     @Test
     public void testValidateContentNameWithNotNumericIndex() {
@@ -542,11 +523,20 @@ public class RecordsProcessServiceImplTest {
             flag = false;
         }
         assertFalse(flag);
+
+        flag = true;
+        courseContentCsv.setContentName("ChapterAB_LessonAB");
+        try {
+            RecordsProcessHelper.validateContentName(courseContentCsv, record);
+        } catch (DataValidationException e) {
+            flag = false;
+        }
+        assertFalse(flag);
     }
 
     /*
-     * this test case is used to validate the content name 
-     * when content name has chapter id out of bound
+     * this test case is used to validate the content name when content name has
+     * chapter id out of bound
      */
     @Test
     public void testValidateContentNameWithOutOfBoundIndex() {
@@ -578,6 +568,16 @@ public class RecordsProcessServiceImplTest {
         assertNull(record.getType());
         assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "LessonAB"));
         assertNull(record.getType());
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "ABCDEF02"));
+        assertNull(record.getType());
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "Lesson08"));
+        assertNull(record.getType());
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record,
+                "Question08"));
+        assertNull(record.getType());
+        assertFalse(RecordsProcessHelper.isTypeDeterminable(record, "Score08"));
+        assertNull(record.getType());
+
         RecordsProcessHelper.isTypeDeterminable(record, "Lesson01");
         assertSame(FileType.LESSON_CONTENT, record.getType());
     }
@@ -589,7 +589,6 @@ public class RecordsProcessServiceImplTest {
     @SuppressWarnings("serial")
     @Test
     public void testCheckTypeAndAddToChapterContent() {
-        Method method;
         Record record = new Record();
         record.setType(FileType.LESSON_CONTENT);
         record.setChapterId(1);
@@ -617,24 +616,20 @@ public class RecordsProcessServiceImplTest {
         lessons.add(new LessonContent(1, "lesson", "Ch1_l1.wav"));
         ChapterContent chapterContent = new ChapterContent(14, "content",
                 "ch1_l1.wav", lessons, scoreContent, quiz);
-        try {
-            method = RecordsProcessServiceImpl.class.getDeclaredMethod(
-                    "checkTypeAndAddToChapterContent", new Class[] {
-                            Record.class, List.class, CourseFlag.class });
-            method.setAccessible(true);
-            method.invoke(recordsProcessServiceImpl, new Object[] { record,
-                    Arrays.asList(chapterContent), courseFlags });
-            assertFalse(courseFlags.getChapterFlag(1).getLessonFlag(1)
-                    .isFlagForLessonContentFile());
+        RecordsProcessHelper.checkTypeAndAddToChapterContent(record,
+                Arrays.asList(chapterContent), courseFlags);
+        assertFalse(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                .isFlagForLessonContentFile());
 
-            chapterContent.setChapterNumber(1);
-            method.invoke(recordsProcessServiceImpl, new Object[] { record,
-                    Arrays.asList(chapterContent), courseFlags });
-            assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
-                    .isFlagForLessonContentFile());
-        } catch (NoSuchMethodException | SecurityException
-                | IllegalAccessException | IllegalArgumentException
-                | InvocationTargetException e) {
-        }
+        chapterContent.setChapterNumber(1);
+        RecordsProcessHelper.checkTypeAndAddToChapterContent(record,
+                Arrays.asList(chapterContent), courseFlags);
+        assertTrue(courseFlags.getChapterFlag(1).getLessonFlag(1)
+                .isFlagForLessonContentFile());
+
+        record.setChapterId(15);
+        RecordsProcessHelper.checkTypeAndAddToChapterContent(record,
+                Arrays.asList(chapterContent), courseFlags);
+        assertNull(courseFlags.getChapterFlag(15));
     }
 }

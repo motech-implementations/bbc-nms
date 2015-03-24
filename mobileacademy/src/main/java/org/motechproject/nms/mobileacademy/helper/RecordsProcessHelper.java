@@ -354,17 +354,14 @@ public class RecordsProcessHelper {
             String type, int index) {
         FileType fileType;
         fileType = FileType.getFor(type);
-        if (fileType == null) {
-            return false;
-        }
 
-        record.setType(fileType);
         if ((fileType == FileType.LESSON_CONTENT)
                 || (fileType == FileType.LESSON_END_MENU)) {
             if (!verifyRange(index, 1, MobileAcademyConstants.NUM_OF_LESSONS)) {
                 return false;
             }
             record.setLessonId(index);
+            record.setType(fileType);
             return true;
         } else if ((fileType == FileType.QUESTION_CONTENT)
                 || (fileType == FileType.CORRECT_ANSWER)
@@ -373,12 +370,14 @@ public class RecordsProcessHelper {
                 return false;
             }
             record.setQuestionId(index);
+            record.setType(fileType);
             return true;
         } else if (fileType == FileType.SCORE) {
             if (!verifyRange(index, 0, MobileAcademyConstants.NUM_OF_SCORES)) {
                 return false;
             }
             record.setScoreID(index);
+            record.setType(fileType);
             return true;
         } else {
             return false;
