@@ -234,10 +234,10 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     .parseInt(courseContentCsv
                                             .getLanguageLocationCode());
                             CourseProcessedContent courseProcessedContent = courseProcessedContentService
-                                    .getRecordforModification(courseContentCsv
-                                            .getCircle(), languageLocCode,
-                                            courseContentCsv.getContentName()
-                                                    .toUpperCase());
+                                    .getRecordforModification(
+                                            courseContentCsv.getCircle(),
+                                            languageLocCode,
+                                            courseContentCsv.getContentName());
 
                             if (courseProcessedContent != null) {
                                 int contentDuration = Integer
@@ -493,9 +493,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             int languageLocCode = Integer.parseInt(courseContentCsv
                     .getLanguageLocationCode());
             CourseProcessedContent courseProcessedContent = courseProcessedContentService
-                    .getRecordforModification(courseContentCsv.getCircle()
-                            .toUpperCase(), languageLocCode, contentName
-                            .toUpperCase());
+                    .getRecordforModification(courseContentCsv.getCircle(),
+                            languageLocCode, contentName);
             if (courseProcessedContent != null) {
                 courseProcessedContent.setContentFile(fileName);
                 courseProcessedContent.setContentDuration(Integer
