@@ -76,4 +76,6 @@ public interface LanguageLocationCodeService {
      * else returns the determined value of default Language Location Code.
      */
     Integer getDefaultLanguageLocationCodeByCircleCode(String circleCode);
+
+    LanguageLocationCode findLLCByCode(Integer code);
 }

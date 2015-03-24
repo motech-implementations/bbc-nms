@@ -50,7 +50,7 @@ public class SubscriptionController extends BaseController{
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
 
         apiRequest.validateMandatoryParameters();
-        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle());
+        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle(), apiRequest.getLanguageLocationCode());
         logger.trace("Finished processing createSubscription");
     }
 
