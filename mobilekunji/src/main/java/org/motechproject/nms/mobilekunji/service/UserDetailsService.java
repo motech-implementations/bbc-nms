@@ -20,6 +20,9 @@ public interface UserDetailsService {
      */
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, String callId) throws DataValidationException;
 
+    /**
+     * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
+     */
     public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException;
 
 }

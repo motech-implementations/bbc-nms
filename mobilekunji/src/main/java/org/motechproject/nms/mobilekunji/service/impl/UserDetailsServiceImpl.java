@@ -64,22 +64,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetailApiResponse;
     }
 
+    /**
+     * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
+     */
+    @Override
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
+
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
+    }
+
     private void fillDefaultFlwWithUserProfile(FlwDetail flwDetail, UserProfile userProfileData) {
 
-        flwDetail.setNmsFlwId(userProfileData.getSystemGeneratedFlwId());
+        flwDetail.setNmsFlwId(userProfileData.getNmsFlwId());
         flwDetail.setMsisdn(userProfileData.getMsisdn());
         flwDetail.setLastAccessDate(DateTime.now());
         flwDetail.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
         flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
-
-    }
-
-
-    @Override
-    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
-
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
     }
 
     private void populateFlwDetail(UserProfile userProfileData) {
@@ -109,7 +110,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getSystemGeneratedFlwId());
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getNmsFlwId());
         if (null != flwDetail) {
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
@@ -122,7 +123,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
             fillCurrentUsage(userDetailApiResponse, flwDetail);
         } else {
-            ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getSystemGeneratedFlwId().toString());
+            ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
         }
 
 
@@ -153,7 +154,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
         }
     }
-
 
     public boolean checkNextTime(DateTime lastAccessTime) {
         DateTime now = DateTime.now();
