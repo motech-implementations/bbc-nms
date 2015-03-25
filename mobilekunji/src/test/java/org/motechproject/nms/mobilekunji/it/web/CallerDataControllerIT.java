@@ -92,7 +92,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testGetUserDetails() throws DataValidationException {
+    public void testController() throws DataValidationException {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
