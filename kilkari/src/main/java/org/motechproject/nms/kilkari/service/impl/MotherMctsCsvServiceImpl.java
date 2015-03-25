@@ -35,12 +35,6 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     private LocationValidatorService locationValidator;
 
     @Autowired
-    private SubscriberService subscriberService;
-    
-    @Autowired
-    private ConfigurationService configurationService;
-    
-    @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);

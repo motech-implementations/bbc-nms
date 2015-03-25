@@ -37,12 +37,6 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    @Autowired
-    private SubscriberService subscriberService;
-    
-    @Autowired
-    private ConfigurationService configurationService;
-    
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
     public static final String CHILD_DEATH_NINE = "9";

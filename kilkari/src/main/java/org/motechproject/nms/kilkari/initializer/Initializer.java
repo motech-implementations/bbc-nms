@@ -26,7 +26,7 @@ public class Initializer {
     
     public static final Long DEFAULT_ACTIVEUSER_COUNT = 0L;
 
-    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEk = 1;
+    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEK = 1;
 
     public static final Integer DEFAULT_ALLOWED_BENEFICIARY_COUNT = 9718577;
 
@@ -75,7 +75,7 @@ public class Initializer {
             Configuration configuration = new Configuration();
             logger.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
-            configuration.setNumMsgPerWeek(DEFAULT_NUMBER_OF_MSG_PER_WEEk);
+            configuration.setNumMsgPerWeek(DEFAULT_NUMBER_OF_MSG_PER_WEEK);
             configuration.setMaxAllowedActiveBeneficiaryCount(DEFAULT_ALLOWED_BENEFICIARY_COUNT);
             configuration.setFreshObdServiceId(DEFAULT_FRESH_OBD_SERVICE_ID);
             configuration.setRetryDay1ObdServiceId(DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);

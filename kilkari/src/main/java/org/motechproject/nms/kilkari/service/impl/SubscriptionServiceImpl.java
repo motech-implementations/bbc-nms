@@ -320,6 +320,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
+    /**
+     * This method subscription through IVR
+     * @param subscriber object of type Susbcriber
+     * @param operatorCode String type
+     * @param circleCode String type
+     * @param llcCode Integer type
+     * @throws DataValidationException
+     */
     @Override
     public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode) throws DataValidationException{
         validateCircleLlcCodeAndOperator(circleCode, operatorCode, llcCode);
