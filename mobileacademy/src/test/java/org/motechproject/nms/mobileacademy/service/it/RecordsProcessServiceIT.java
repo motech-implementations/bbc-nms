@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 /**
  * /** Verify that csvRecordProcessService is present and functional
  */
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -96,7 +95,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * test Course Populate Success scenario
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -115,7 +114,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * test Course Populate For more Records
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -135,13 +134,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * test Course Populate For Less Records
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCoursePopulateForLessRecords() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
@@ -157,7 +155,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * find CourseContentCsv List From Csv
-     * 
+     *
      * @return List<CourseContentCsv>
      */
     private List<CourseContentCsv> findCourseRawContentListFromCsv(String llc) {
@@ -203,7 +201,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 courseContentCsv.setModifiedBy("Test modifier");
                 courseContentCsvs.add(courseContentCsvDataService
                         .create(courseContentCsv));
-
             }
         } catch (Exception e) {
             LOGGER.error("Exception occured", e);
@@ -219,13 +216,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * test Course Update Success scenario for one LLc
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCourseUpdateSuccessForOneLlc() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
@@ -237,7 +233,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // Update process
         String circle = courseRawContentUpdateRecord.getCircle();
         Integer languageLocationCode = Integer
@@ -251,8 +246,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentName.toUpperCase());
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentName);
         assertEquals(222, courseProcessedContent.getContentID().longValue());
         assertEquals(333, courseProcessedContent.getContentDuration()
                 .longValue());
@@ -261,13 +256,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     /**
      * test Course Update when update for only one LLc present while in course
      * processed have two llcs data- updating audio file
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCourseUpdateWhenOneLlcDataPresent() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -279,7 +273,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
@@ -290,7 +283,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
-
         // Update process for only one LLc
         String circle = courseRawContentUpdateRecord1.getCircle();
         Integer languageLocationCode = Integer
@@ -306,8 +298,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentName.toUpperCase());
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentName);
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
     }
@@ -319,7 +311,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateWithTwoLlcFail() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -331,7 +322,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc1);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
@@ -342,15 +332,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
-
         // Update File for both LLCs but with different audio files
         String circle = courseRawContentUpdateRecord1.getCircle();
-
         // original values before update
         String contentFileOriginal = courseRawContentUpdateRecord1
                 .getContentFile();
         String contentName = courseRawContentUpdateRecord1.getContentName();
-
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentFile("ch_test1_update.wav");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
@@ -358,23 +345,17 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .toString(llc2));
         courseRawContentUpdateRecord1.setContentFile("ch_test2_update.wav");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
-
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), llc1,
-                        contentName.toUpperCase());
+                .findByCircleLlcContentName(circle, llc1, contentName);
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
-
         courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), llc2,
-                        contentName.toUpperCase());
+                .findByCircleLlcContentName(circle, llc2, contentName);
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
-
         int correctAnswer = courseService.getCorrectAnswerOption(1, 1);
-
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
         courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
@@ -383,17 +364,13 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .setContentFile("Testing Correct Answer.wav");
         courseRawContentUpdateRecord1.setMetaData("correctAnswer:1");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
-
         courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
                 .toString(llc2));
         courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
         courseContentCsvs.add(courseRawContentUpdateRecord1);
-
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
-
         assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
-
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
         courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
@@ -402,16 +379,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .setContentFile("Testing Correct Answer.wav");
         courseRawContentUpdateRecord1.setMetaData("correctAnswer:2");
         courseContentCsvs.add(addNewRecord(courseRawContentUpdateRecord1));
-
         courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
                 .toString(llc2));
         courseContentCsvs.add(courseRawContentUpdateRecord1);
-
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
-
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
-
     }
 
     /*
@@ -421,9 +394,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseAddWithInconsistentData() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
-
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
@@ -432,7 +403,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
@@ -452,7 +422,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseAddWithDuplicateData() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -473,14 +442,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseAddWithOutOfBoundIndices() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
         courseContentCsvs.remove(0);
         courseRawContentUpdateRecord1.setContentName("Chapter15_Lesson01");
         courseContentCsvs.add(courseRawContentUpdateRecord1);
-
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         recordsProcessService.processRawRecords(courseContentCsvs,
@@ -493,13 +460,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     /**
      * test Course Update when update for two LLc present while in course
      * processed have two llcs data- updating audio file
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCourseUpdateWhenTwoLlcDataPresent() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -511,7 +477,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
@@ -522,7 +487,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
-
         // Update process for only one LLc
         String circle = courseRawContentUpdateRecord1.getCircle();
         Integer languageLocationCode = Integer
@@ -538,21 +502,20 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentName.toUpperCase());
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentName);
         CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), 20,
-                        contentName.toUpperCase());// For LLC 20
+                .findByCircleLlcContentName(circle, 20, contentName);// For LLC
+        // 20
         assertEquals("ch_test_update.wav",
                 courseProcessedContent1.getContentFile());
         assertEquals("ch_test_update.wav",
                 courseProcessedContent2.getContentFile());
-
     }
 
     /**
      * add New Record in course raw content table.
-     * 
+     *
      * @param courseRawContentParam
      * @return CourseContentCsv
      */
@@ -573,13 +536,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
 
     /**
      * test Update For All Records Of One Chapter
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testUpdateForAllRecordsOfOneChapter() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
@@ -589,9 +551,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // Update process
-
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs = findCourseRawContentUpdateListFromCsv();
         recordsProcessService.processRawRecords(courseContentCsvs,
@@ -609,31 +569,27 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .longValue());
         assertEquals("ch_test_update.wav",
                 courseProcessedContent1.getContentFile());
-
         assertEquals(222, courseProcessedContent2.getContentID().longValue());
         assertEquals(333, courseProcessedContent2.getContentDuration()
                 .longValue());
         assertEquals("ch_test_update.wav",
                 courseProcessedContent2.getContentFile());
-
         assertEquals(222, courseProcessedContent3.getContentID().longValue());
         assertEquals(333, courseProcessedContent3.getContentDuration()
                 .longValue());
         assertEquals("ch_test_update.wav",
                 courseProcessedContent3.getContentFile());
-
         assertEquals(222, courseProcessedContent4.getContentID().longValue());
         assertEquals(333, courseProcessedContent4.getContentDuration()
                 .longValue());
         assertEquals("ch_test_update.wav",
                 courseProcessedContent4.getContentFile());
-
     }
 
     /**
      * find CourseContentCsv List From Csv having updated records for chapter 1.
      * Updating contentId, duration and audio file name .
-     * 
+     *
      * @return List<CourseContentCsv>
      */
     private List<CourseContentCsv> findCourseRawContentUpdateListFromCsv() {
@@ -677,7 +633,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 courseContentCsv.setModifiedBy("Test modifier");
                 courseContentCsvs.add(courseContentCsvDataService
                         .create(courseContentCsv));
-
             }
         } catch (Exception e) {
             LOGGER.error("Exception occured", e);
@@ -694,14 +649,13 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     /**
      * test Course Update when update for two LLc present with different names
      * and course processed also have two LLCs data - updating audio file
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCourseUpdateWhenTwoLlcDataPresentAndFails()
             throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord1 = courseContentCsvs
                 .get(0);
@@ -713,10 +667,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
-
         Integer llc2 = Integer.parseInt(courseRawContents2.get(0)
                 .getLanguageLocationCode());
         long rawContentSize2 = courseRawContents2.size();
@@ -725,7 +677,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents2 = courseProcessedContentDataService
                 .findContentByLlc(llc2);
         assertEquals(rawContentSize2, courseProcessedContents2.size());
-
         // Update process for only one LLc
         String circle = courseRawContentUpdateRecord1.getCircle();
         Integer languageLocationCode = Integer
@@ -735,49 +686,37 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseRawContentUpdateRecord1.setContentFile("ch_test_update.wav");
         courseContentCsvs = new ArrayList<>();
         courseContentCsvs.add(courseRawContentUpdateRecord1);
-
         // add another update record for new llc
         courseRawContentUpdateRecord1.setLanguageLocationCode(llc2.toString());
         courseRawContentUpdateRecord1.setContentFile("ch_test_update1.wav");
         courseContentCsvs.add(courseRawContentUpdateRecord1);
-
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentName);
         String originalFileName = courseProcessedContent1.getContentFile();
-
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
-
         courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentName);
         CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), 20,
-                        contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, 20, contentName);
         String newFileName1 = courseProcessedContent1.getContentFile();
         String newFileName2 = courseProcessedContent2.getContentFile();
-
         assertEquals(newFileName1, originalFileName);
         assertEquals(newFileName2, originalFileName);
-
     }
 
     /**
      * test Course Add when add for new LLc comes with different file names than
      * the course already existing in CPC for a LLC
-     * 
+     *
      * @throws Exception
      */
     @Test
     public void testCourseAddWhenOneLlcDataPresentAndFails() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
-
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
@@ -786,12 +725,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // add other LLC records i.e 20
         List<CourseContentCsv> courseRawContents2 = findCourseRawContentListFromCsv("20");
         courseRawContents2.get((int) (rawContentSize - 2)).setContentFile(
                 "Dummy Test Case File");
-
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         courseProcessedContents = courseProcessedContentDataService
@@ -806,11 +743,10 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCoursePopulateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         courseContentCsvs.get(0).setLanguageLocationCode("sw");// LLC as string
         courseContentCsvs.get(1).setContentName("Test");// no underscore in
-                                                        // content name
+        // content name
         courseContentCsvs.get(2).setContentName("Chapter12_Lesson02");
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
@@ -826,7 +762,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testCourseUpdateFailForInvalidData() throws Exception {
         clearMobileAcademyData();
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
@@ -838,7 +773,6 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         // Update process
         String circle = courseRawContentUpdateRecord.getCircle();
         Integer languageLocationCode = Integer
@@ -851,10 +785,9 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(),
-                        languageLocationCode, contentNameUpdate.toUpperCase());
+                .findByCircleLlcContentName(circle, languageLocationCode,
+                        contentNameUpdate);
         assertNull(courseProcessedContent);
-
     }
 
     /*
@@ -877,9 +810,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-
         assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
-
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:2");
         courseRawContentUpdateRecord
@@ -888,11 +819,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(courseRawContentUpdateRecord);
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "Answer Option change.csv");
-
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), llc,
-                        contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, llc, contentName);
         assertEquals(courseProcessedContent.getContentFile(),
                 "File Changed for Question Content.wav");
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
@@ -920,13 +848,9 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), llc,
-                        contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, llc, contentName);
         fileName = courseProcessedContent.getContentFile();
-
         assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
-
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:02");
         courseRawContentUpdateRecord.setContentFile(fileName);
@@ -934,11 +858,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(courseRawContentUpdateRecord);
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "Answer Option change.csv");
-
         courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle.toUpperCase(), llc,
-                        contentName.toUpperCase());
-
+                .findByCircleLlcContentName(circle, llc, contentName);
         assertEquals(courseProcessedContent.getContentFile(), fileName);
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
     }

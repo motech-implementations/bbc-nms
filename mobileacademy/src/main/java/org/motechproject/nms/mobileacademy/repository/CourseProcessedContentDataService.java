@@ -29,15 +29,16 @@ public interface CourseProcessedContentDataService extends
 
     /**
      * find By Circle Llc and ContentName
-     * 
+     *
      * @param circle circle identifier
      * @param languageLocationCode LLC identifier
      * @param contentName content name
      * @return
      */
+    /* equalsIgnoreCase introduced as a fix for Bug ID:31 in bugzilla */
     @Lookup
     CourseProcessedContent findByCircleLlcContentName(
-            @LookupField(name = "circle") String circle,
+            @LookupField(name = "circle", customOperator = "equalsIgnoreCase()") String circle,
             @LookupField(name = "languageLocationCode") Integer languageLocationCode,
-            @LookupField(name = "contentName") String contentName);
+            @LookupField(name = "contentName", customOperator = "equalsIgnoreCase()") String contentName);
 }
