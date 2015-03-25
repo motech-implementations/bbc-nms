@@ -175,10 +175,10 @@ public final class ParseDataHelper {
 
         int msisdnLength = msisdn.length();
 
-        if (StringUtils.isNumeric(msisdn) && msisdnLength >= Constants.MSISDN_LENGTH) {
-            msisdn = msisdn.substring(msisdnLength - Constants.MSISDN_LENGTH, msisdnLength);
-        } else {
+        if (!StringUtils.isNumeric(msisdn) ||  msisdnLength < Constants.MSISDN_LENGTH) {
             ParseDataHelper.raiseInvalidDataException(fieldName, msisdn);
+        } else if (msisdnLength > Constants.MSISDN_LENGTH)  {
+            msisdn = msisdn.substring(msisdnLength - Constants.MSISDN_LENGTH, msisdnLength);
         }
         return msisdn;
     }
