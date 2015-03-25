@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface ContentUploadCsvService {
 
+    /**
+     * creates object fot the ContentUploadCsv
+     * @param contentUploadCsv
+     * @return ContentUploadCsv object
+     */
     public ContentUploadCsv createContentUploadCsv(ContentUploadCsv contentUploadCsv);
 
     /**

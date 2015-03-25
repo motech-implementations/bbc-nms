@@ -76,7 +76,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             flwDetail = new FlwDetail();
 
-            flwDetail.setNmsFlwId(userProfileData.getNmsId());
+            flwDetail.setNmsFlwId(userProfileData.getSystemGeneratedFlwId());
             flwDetail.setMsisdn(userProfileData.getMsisdn());
             flwDetail.setLastAccessDate(DateTime.now());
             flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
@@ -92,7 +92,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getSystemGeneratedFlwId());
 
         userDetailApiResponse.setCircle(userProfile.getCircle());
 
@@ -103,7 +103,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
-        userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
         setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
