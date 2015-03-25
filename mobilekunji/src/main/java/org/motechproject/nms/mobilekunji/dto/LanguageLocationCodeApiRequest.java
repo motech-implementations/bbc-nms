@@ -39,13 +39,4 @@ public class LanguageLocationCodeApiRequest {
     public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
-
-    @Override
-    public String toString() {
-        return "LanguageLocationCodeApiRequest{" +
-                "callingNumber='" + callingNumber + '\'' +
-                ", languageLocationCode=" + languageLocationCode +
-                ", callId='" + callId + '\'' +
-                '}';
-    }
 }

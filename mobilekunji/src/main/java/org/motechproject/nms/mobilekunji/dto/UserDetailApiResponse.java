@@ -112,15 +112,4 @@ public class UserDetailApiResponse {
         this.failureReason = failureReason;
     }
 
-    @Override
-    public String toString() {
-        String response;
-        response = "{'circle:'" + this.circle;
-        if (this.languageLocationCode != null) {
-            response = response + "languageLocationCode: " + this.languageLocationCode + " }";
-        } else {
-            response = response + "defaultLanguageLocationCode: " + this.defaultLanguageLocationCode + " }";
-        }
-        return response;
-    }
 }
