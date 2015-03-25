@@ -189,13 +189,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     public boolean checkNextTime(DateTime lastAccessTime) {
         DateTime now = DateTime.now();
+        boolean flag = false;
 
         if (lastAccessTime != null) {
             lastAccessTime = lastAccessTime.withZone(DateTimeZone.getDefault());
-            return lastAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
+            flag = lastAccessTime.getMonthOfYear() != now.getMonthOfYear() ||
                     lastAccessTime.getYear() != now.getYear();
         }
-        return false;
+        return flag;
     }
 
 }
