@@ -107,9 +107,13 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         } else {
-            ParseDataHelper.raiseInvalidDataException("CallingNumber ", saveCallDetailApiRequest.getCallingNumber().toString());
+            raiseInvalidDataException(saveCallDetailApiRequest.getCallingNumber());
         }
         return flwDetail.getNmsFlwId();
+    }
+
+    private void raiseInvalidDataException(String callingNumber) throws DataValidationException {
+        ParseDataHelper.raiseInvalidDataException("CallingNumber ", callingNumber);
     }
 
     /**
