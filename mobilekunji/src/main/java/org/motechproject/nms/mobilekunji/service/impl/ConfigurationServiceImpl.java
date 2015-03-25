@@ -29,7 +29,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public ConfigurationServiceImpl() {
     }
 
-
     @Override
     public void createConfiguration(Configuration configuration) {
         configurationDataService.create(configuration);

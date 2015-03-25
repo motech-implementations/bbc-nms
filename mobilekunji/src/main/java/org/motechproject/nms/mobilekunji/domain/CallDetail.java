@@ -22,26 +22,24 @@ public class CallDetail extends MdsEntity {
     private Long nmsFlwId;
 
     @Field
-    private String circle;
+    private String circleCode;
 
     @Field
-    private Long callStartTime;
+    private Long startTime;
 
     @Field
-    private Long callEndTime;
+    private Long endTime;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
     private Set<CardContent> cardContent;
 
-
-    public CallDetail(String callId, Long nmsFlwId, String circle, Long callStartTime, Long callEndTime) {
+    public CallDetail(String callId, Long nmsFlwId, String circleCode, Long startTime, Long endTime) {
         this.callId = callId;
         this.nmsFlwId = nmsFlwId;
-        this.circle = circle;
-        this.callStartTime = callStartTime;
-        this.callEndTime = callEndTime;
-
+        this.circleCode = circleCode;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
     public String getCallId() {
@@ -60,28 +58,28 @@ public class CallDetail extends MdsEntity {
         this.nmsFlwId = nmsFlwId;
     }
 
-    public String getCircle() {
-        return circle;
+    public String getCircleCode() {
+        return circleCode;
     }
 
-    public void setCircle(String circle) {
-        this.circle = circle;
+    public void setCircleCode(String circleCode) {
+        this.circleCode = circleCode;
     }
 
-    public Long getCallStartTime() {
-        return callStartTime;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setCallStartTime(Long callStartTime) {
-        this.callStartTime = callStartTime;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
     }
 
-    public Long getCallEndTime() {
-        return callEndTime;
+    public Long getEndTime() {
+        return endTime;
     }
 
-    public void setCallEndTime(Long callEndTime) {
-        this.callEndTime = callEndTime;
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
     }
 
     public Set<CardContent> getCardContent() {
@@ -99,11 +97,11 @@ public class CallDetail extends MdsEntity {
     @Override
     public String toString() {
         return "CallDetail{" +
-                "callId=" + callId +
+                "callId='" + callId + '\'' +
                 ", nmsFlwId=" + nmsFlwId +
-                ", circle='" + circle + '\'' +
-                ", callStartTime=" + callStartTime +
-                ", callEndTime=" + callEndTime +
+                ", circleCode='" + circleCode + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", cardContent=" + cardContent +
                 '}';
     }

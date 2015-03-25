@@ -3,14 +3,12 @@ package org.motechproject.nms.mobilekunji.dto;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import java.io.Serializable;
-
 /**
  * API response object for user detail.
  */
 
 
-public class UserDetailApiResponse implements Serializable {
+public class UserDetailApiResponse {
 
     @JsonProperty
     private String circle;
