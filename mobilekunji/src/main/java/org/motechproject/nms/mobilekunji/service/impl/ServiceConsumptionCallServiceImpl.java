@@ -1,6 +1,6 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
-import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionCall;
+import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.repository.ServiceConsumptionCallRecordDataService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ public class ServiceConsumptionCallServiceImpl implements ServiceConsumptionCall
     private ServiceConsumptionCallRecordDataService serviceConsumptionRecordDataService;
 
     @Override
-    public ServiceConsumptionCall create(ServiceConsumptionCall record) {
+    public CallDetail create(CallDetail record) {
         return this.serviceConsumptionRecordDataService.create(record);
     }
 
     @Override
-    public ServiceConsumptionCall update(ServiceConsumptionCall record) {
+    public CallDetail update(CallDetail record) {
         return this.serviceConsumptionRecordDataService.update(record);
     }
 
     @Override
-    public void delete(ServiceConsumptionCall record) {
+    public void delete(CallDetail record) {
         this.serviceConsumptionRecordDataService.delete(record);
     }
 }

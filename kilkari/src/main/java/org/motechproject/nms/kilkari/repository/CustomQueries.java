@@ -95,8 +95,7 @@ public class CustomQueries {
          */
         @Override
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
-            query.setFilter("msisdn == '" + msisdn + "'");
-            query.setFilter("status == " + Status.ACTIVE + "or" + " status == " + Status.PENDING_ACTIVATION);
+            query.setFilter("msisdn == '" + msisdn + "' && (status == '" + Status.ACTIVE + "' ||" + " status == '" + Status.PENDING_ACTIVATION + "')");
             query.setResult("DISTINCT " + resultParamName);
             return (List<SubscriptionPack>) query.execute();
         }

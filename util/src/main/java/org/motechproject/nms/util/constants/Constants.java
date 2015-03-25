@@ -8,6 +8,7 @@ public final class Constants {
 
     public static final String EMPTY_STRING = "";
     public static final int MSISDN_LENGTH = 10;
+    public static final int CALL_ID_LENGTH = 15;
 
     /* Csv event related constants */
     private static final String CSV_IMPORT_PREFIX = "csv-import.";

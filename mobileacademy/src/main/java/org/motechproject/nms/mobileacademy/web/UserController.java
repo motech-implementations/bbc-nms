@@ -8,6 +8,7 @@ import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,15 +46,16 @@ public class UserController extends BaseController {
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
      * @return User response object containing user details
-     * @throws DataValidationException
+     * @throws DataValidationException , Exception
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public @ResponseBody User getUserDetails(
+    @ResponseBody
+    public User getUserDetails(
             @RequestParam(value = UserController.REQUEST_PARAM_CALLING_NUMBER) String callingNumber,
             @RequestParam(value = UserController.REQUEST_PARAM_OPERATOR) String operator,
             @RequestParam(value = UserController.REQUEST_PARAM_CIRCLE) String circle,
             @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
-            throws DataValidationException {
+            throws DataValidationException, Exception {
         LOGGER.debug("getUserDetails: Started");
         LOGGER.info("Input request-"
                 + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
@@ -75,10 +77,12 @@ public class UserController extends BaseController {
      * 
      * @param llcRequest object contain input request
      * @throws DataValidationException
+     * @throws MissingServletRequestParameterException
      */
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public void setLanguageLocationCode(@RequestBody LlcRequest llcRequest)
-            throws DataValidationException {
+            throws DataValidationException,
+            MissingServletRequestParameterException {
         LOGGER.debug("setLanguageLocationCode: Started");
         LOGGER.info("Input request-"
                 + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
@@ -87,7 +91,6 @@ public class UserController extends BaseController {
                 + llcRequest.getLanguageLocationCode() + ", "
                 + UserController.REQUEST_PARAM_CALL_ID + ":"
                 + llcRequest.getCallId());
-        // TODO JSON
         validateInputDataForSetLlc(llcRequest);
         userDetailsService.setLanguageLocationCode(
                 llcRequest.getLanguageLocationCode(),
@@ -126,9 +129,20 @@ public class UserController extends BaseController {
      * 
      * @param llcRequest object contain input request
      * @throws DataValidationException
+     * @throws MissingServletRequestParameterException
      */
     private void validateInputDataForSetLlc(LlcRequest llcRequest)
-            throws DataValidationException {
+            throws DataValidationException,
+            MissingServletRequestParameterException {
+        if (llcRequest.getCallingNumber() == null) {
+            handleMissingJsonParamException(UserController.REQUEST_PARAM_CALLING_NUMBER);
+        }
+        if (llcRequest.getCallId() == null) {
+            handleMissingJsonParamException(UserController.REQUEST_PARAM_CALL_ID);
+        }
+        if (llcRequest.getLanguageLocationCode() == null) {
+            handleMissingJsonParamException(UserController.REQUEST_PARAM_LLC);
+        }
         ParseDataHelper.validateAndParseString(
                 UserController.REQUEST_PARAM_CALLING_NUMBER,
                 llcRequest.getCallingNumber(), true);

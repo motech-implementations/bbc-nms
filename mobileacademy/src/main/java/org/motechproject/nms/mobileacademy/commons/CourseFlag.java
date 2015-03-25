@@ -31,6 +31,7 @@ public class CourseFlag {
      */
     public ChapterFlag getChapterFlag(int chapterNo) {
         ChapterFlag returnChapterFlag = null;
+
         for (ChapterFlag chapterFlag : chapterFlags) {
             if (chapterFlag.getChapterNo() == chapterNo) {
                 return chapterFlag;

@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.web;
 
-import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
@@ -21,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class SubscriptionController extends BaseController{
 
+    Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
+
     private UserDetailsService userDetailsService;
 
     private SubscriptionService subscriptionService;
@@ -30,8 +31,6 @@ public class SubscriptionController extends BaseController{
         this.subscriptionService = subscriptionService;
         this.userDetailsService = userDetailsService;
     }
-
-    Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
     /**
      * Maps request subscription controller
@@ -46,11 +45,10 @@ public class SubscriptionController extends BaseController{
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
-        logger.debug("languageLocationCode : [" + apiRequest.getLanguageLocationCode().toString() + "]");
+        logger.debug(String.format("languageLocationCode : [%d]", apiRequest.getLanguageLocationCode()));
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
-
         apiRequest.validateMandatoryParameters();
-        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle());
+        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle(), apiRequest.getLanguageLocationCode());
         logger.trace("Finished processing createSubscription");
     }
 
@@ -67,7 +65,6 @@ public class SubscriptionController extends BaseController{
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
         logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId().toString() + "]");
-
         apiRequest.validateMandatoryParameter();
         subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId(),
                 apiRequest.getOperator(), apiRequest.getCircle());
@@ -81,7 +78,7 @@ public class SubscriptionController extends BaseController{
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
-                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException{
+                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException, Exception{
         logger.info("*****getSubscriberDetails is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + callingNumber + "]");
@@ -91,7 +88,6 @@ public class SubscriptionController extends BaseController{
         SubscriberDetailApiResponse response;
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
             response = userDetailsService.getSubscriberDetails(callingNumber, circle, operator);
-
         logger.trace("Finished processing getUserDetails");
         return response;
     }

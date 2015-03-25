@@ -1,5 +1,9 @@
 package org.motechproject.nms.mobilekunji.dto;
 
+import org.motechproject.nms.mobilekunji.domain.CardContent;
+
+import java.util.List;
+
 /**
  * Created by abhishek on 23/3/15.
  */
@@ -24,6 +28,16 @@ public class SaveCallDetailApiRequest {
     private Boolean welcomeMessageFlag;
 
     private String failureReason;
+
+    private List<CardContent> cardContentList;
+
+    public List<CardContent> getCardContentList() {
+        return cardContentList;
+    }
+
+    public void setCardContentList(List<CardContent> cardContentList) {
+        this.cardContentList = cardContentList;
+    }
 
     public String getCallingNumber() {
         return callingNumber;
@@ -118,6 +132,7 @@ public class SaveCallDetailApiRequest {
                 ", endOfUsagePromptCounter=" + endOfUsagePromptCounter +
                 ", welcomeMessageFlag=" + welcomeMessageFlag +
                 ", failureReason='" + failureReason + '\'' +
+                ", cardContentList=" + cardContentList +
                 '}';
     }
 }

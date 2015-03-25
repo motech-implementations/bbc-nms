@@ -20,8 +20,11 @@ import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -54,6 +57,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Autowired
     private CircleService circleService;
+
+    @Autowired
+    private LanguageLocationCodeService languageLocationCodeService;
     
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
@@ -306,9 +312,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     }
 
+    /**
+     * This method subscription through IVR
+     * @param subscriber object of type Susbcriber
+     * @param operatorCode String type
+     * @param circleCode String type
+     * @param llcCode Integer type
+     * @throws DataValidationException
+     */
     @Override
-    public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode) throws DataValidationException{
-        validateCircleAndOperator(circleCode, operatorCode);
+    public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode) throws DataValidationException{
+        validateCircleLlcCodeAndOperator(circleCode, operatorCode, llcCode);
         Subscriber dbSubscriber = null;
         if(subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
             dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
@@ -361,7 +375,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setMctsId(subscriber.getSuitableMctsId());
-        newSubscription.setStateCode(subscriber.getState().getStateCode());
+        if (subscriber.getState() != null) {
+            newSubscription.setStateCode(subscriber.getState().getStateCode());
+        }
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
@@ -447,7 +463,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode) throws DataValidationException{
-        validateCircleAndOperator(circleCode, operatorCode);
+        validateCircleLlcCodeAndOperator(circleCode, operatorCode, null);
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
@@ -462,7 +478,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param operatorCode code of the operator
      * @throws DataValidationException
      */
-    private void validateCircleAndOperator(String circleCode, String operatorCode) throws DataValidationException{
+    private void validateCircleLlcCodeAndOperator(String circleCode, String operatorCode, Integer llcCode) throws DataValidationException{
         if (operatorCode != null) {
             Operator operator = operatorService.getRecordByCode(operatorCode);
             if (operator == null) {
@@ -475,9 +491,18 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (circleCode != null) {
             Circle circle = circleService.getRecordByCode(circleCode);
             if (circle == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", operatorCode);
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", circleCode);
                 String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
                 throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
+            }
+        }
+
+        if (llcCode != null) {
+            LanguageLocationCode languageLocationCode = languageLocationCodeService.findLLCByCode(llcCode);
+            if (languageLocationCode == null) {
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", llcCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
             }
         }
     }

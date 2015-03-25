@@ -15,5 +15,5 @@ public interface UserDetailsService {
      * @return Subscriber detail response object
      */
     public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode, String operatorCode)
-    throws DataValidationException;
+    throws DataValidationException, Exception;
 }

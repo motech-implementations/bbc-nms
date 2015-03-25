@@ -92,6 +92,14 @@ public interface SubscriptionService {
     void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
             throws DataValidationException;
 
-    void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode)
+    /**
+     * This method subscription through IVR
+     * @param subscriber object of type Susbcriber
+     * @param operatorCode String type
+     * @param circleCode String type
+     * @param llcCode Integer type
+     * @throws DataValidationException
+     */
+    void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
         throws DataValidationException;
 }

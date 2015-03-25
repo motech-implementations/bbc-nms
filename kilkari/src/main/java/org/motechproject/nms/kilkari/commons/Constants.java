@@ -17,4 +17,6 @@ public class Constants {
     
     public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
             "Subscription to MSISDN already Exist";
+
+    public static final Long COUNT_ZERO = 0L;
 }

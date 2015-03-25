@@ -1,6 +1,5 @@
 package org.motechproject.nms.mobilekunji.domain;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -13,10 +12,10 @@ import java.util.Set;
  */
 
 @Entity(recordHistory = true)
-public class ServiceConsumptionCall extends MdsEntity {
+public class CallDetail extends MdsEntity {
 
     @Field
-    private Long callId;
+    private String callId;
 
     @Field
     private Long nmsFlwId;
@@ -25,20 +24,20 @@ public class ServiceConsumptionCall extends MdsEntity {
     private String circle;
 
     @Field
-    private DateTime callStartTime;
+    private Integer callStartTime;
 
     @Field
-    private DateTime callEndTime;
+    private Integer callEndTime;
 
     @Field
     @Persistent(defaultFetchGroup = "true")
     private Set<CardContent> cardContent;
 
-    public Long getCallId() {
+    public String getCallId() {
         return callId;
     }
 
-    public void setCallId(Long callId) {
+    public void setCallId(String callId) {
         this.callId = callId;
     }
 
@@ -58,19 +57,19 @@ public class ServiceConsumptionCall extends MdsEntity {
         this.circle = circle;
     }
 
-    public DateTime getCallStartTime() {
+    public Integer getCallStartTime() {
         return callStartTime;
     }
 
-    public void setCallStartTime(DateTime callStartTime) {
+    public void setCallStartTime(Integer callStartTime) {
         this.callStartTime = callStartTime;
     }
 
-    public DateTime getCallEndTime() {
+    public Integer getCallEndTime() {
         return callEndTime;
     }
 
-    public void setCallEndTime(DateTime callEndTime) {
+    public void setCallEndTime(Integer callEndTime) {
         this.callEndTime = callEndTime;
     }
 
@@ -84,7 +83,7 @@ public class ServiceConsumptionCall extends MdsEntity {
 
     @Override
     public String toString() {
-        return "ServiceConsumptionCall{" +
+        return "CallDetail{" +
                 "callId=" + callId +
                 ", nmsFlwId=" + nmsFlwId +
                 ", circle='" + circle + '\'' +

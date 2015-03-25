@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
 import org.motechproject.nms.kilkari.builder.LocationBuilder;
 import org.motechproject.nms.kilkari.builder.SubscriptionBuilder;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
@@ -71,12 +72,12 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-        subscriber = builder.buildSubscriber(msisdn, 123, null, null);
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -88,6 +89,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
             Assert.assertNull(response);
         }
     }
@@ -102,13 +105,13 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(), locationBuilder.buildDistrict());
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), locationBuilder.buildDistrict(1L, 1L) ,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
         when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(789);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -120,6 +123,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
             Assert.assertNull(response);
         }
     }
@@ -134,14 +139,14 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
         //create a subscriber with languageLocationCode.
-        subscriber = builder.buildSubscriber(msisdn, null, null, null);
+        subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
         when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
-        when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(333);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        //when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(333);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -151,9 +156,11 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response.getDefaultLanguageLocationCode());
             Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
             Assert.assertEquals(response.getCircle(), "AP");
-            Assert.assertTrue(response.getLanguageLocationCode() == 333);
+            Assert.assertNull(response.getLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertTrue(err.getCause() instanceof Exception);
         }
     }
 
@@ -167,17 +174,13 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
         //create a subscriber with languageLocationCode.
-        subscriber = builder.buildSubscriber(msisdn, null, null, null);
+        subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
         when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
-        when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
-        when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(555);
-        when(configurationService.isConfigurationPresent()).thenReturn(false);
-        doNothing().when(configurationService).createConfiguration(createConfiguration(555));
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -187,9 +190,11 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response.getLanguageLocationCode());
             Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
             Assert.assertEquals(response.getCircle(), "AP");
-            Assert.assertTrue(response.getDefaultLanguageLocationCode() == 555);
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertTrue(err.getCause() instanceof Exception);
         }
     }
 
@@ -203,16 +208,16 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
         //create a subscriber with languageLocationCode.
-        subscriber = builder.buildSubscriber(msisdn, null, null, null);
+        subscriber = builder.buildSubscriber(msisdn, null, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
         when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
         when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
-        when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
-        when(configurationService.getConfiguration()).thenReturn(createConfiguration(555));
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        //when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
+        //when(configurationService.getConfiguration()).thenReturn(createConfiguration(555));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -222,9 +227,11 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response.getLanguageLocationCode());
             Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
             Assert.assertEquals(response.getCircle(), "AP");
-            Assert.assertTrue(response.getDefaultLanguageLocationCode() == 555);
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertTrue(err.getCause() instanceof Exception);
         }
     }
 
@@ -236,7 +243,7 @@ public class UserDetailsServiceImplTest {
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(null);
         when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(123);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -248,6 +255,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
             Assert.assertNull(response);
         }
     }
@@ -261,7 +270,7 @@ public class UserDetailsServiceImplTest {
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(null);
         when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
         when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(555);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -273,6 +282,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertEquals(response.getDefaultLanguageLocationCode(), Integer.valueOf(555));
         } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
             Assert.assertNull(response);
         }
     }
@@ -287,7 +298,7 @@ public class UserDetailsServiceImplTest {
         when(llcService.getLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
         when(llcService.getDefaultLanguageLocationCodeByCircleCode("AP")).thenReturn(null);
         when(configurationService.getConfiguration()).thenReturn(createConfiguration(555));
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -300,6 +311,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getDefaultLanguageLocationCode(), Integer.valueOf(555));
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
         }
     }
 
@@ -309,12 +322,12 @@ public class UserDetailsServiceImplTest {
         SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
 
         //set the subscriber details
-        subscriber = builder.buildSubscriber(msisdn, 123, null, null);
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(null);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
         try {
@@ -327,6 +340,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
         }
     }
 
@@ -338,12 +353,12 @@ public class UserDetailsServiceImplTest {
         //set the subscriber details
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-        subscriber = builder.buildSubscriber(msisdn, 123, null, null);
+        subscriber = builder.buildSubscriber(msisdn, 123, null, null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
         when(operatorService.getRecordByCode("OC")).thenReturn(llcBuilder.buildOperator("OC", "XYZ"));
 
         //invoke the userDetailService.
@@ -356,6 +371,8 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
             Assert.assertNull(response);
         }
     }
@@ -376,6 +393,8 @@ public class UserDetailsServiceImplTest {
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        } catch (Exception err) {
+            Assert.assertNull(response);
         }
     }
 
@@ -395,6 +414,8 @@ public class UserDetailsServiceImplTest {
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        } catch (Exception err) {
+            Assert.assertNull(response);
         }
     }
 
@@ -404,7 +425,7 @@ public class UserDetailsServiceImplTest {
         SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
 
         //Stub the service methods
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP"));
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
         when(operatorService.getRecordByCode("OC")).thenReturn(null);
 
         //invoke the userDetailService.
@@ -414,6 +435,8 @@ public class UserDetailsServiceImplTest {
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        } catch (Exception err) {
+            Assert.assertNull(response);
         }
     }
 

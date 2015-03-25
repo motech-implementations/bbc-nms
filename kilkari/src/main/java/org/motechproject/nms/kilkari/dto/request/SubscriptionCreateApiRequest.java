@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.dto.request;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
@@ -14,12 +15,24 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
  * This class represents the Subscription Api request object
  */
 public class SubscriptionCreateApiRequest {
-    String callingNumber;
-    String operator;
-    String circle;
-    String callId;
-    Integer languageLocationCode;
-    String subscriptionPack;
+
+    @JsonProperty
+    private String callingNumber;
+
+    @JsonProperty
+    private String operator;
+
+    @JsonProperty
+    private String circle;
+
+    @JsonProperty
+    private String callId;
+
+    @JsonProperty
+    private Integer languageLocationCode;
+
+    @JsonProperty
+    private String subscriptionPack;
 
     public void setSubscriptionPack(String subscriptionPack) {
         this.subscriptionPack = subscriptionPack;

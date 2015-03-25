@@ -53,12 +53,7 @@ public class SubscriberServiceImpl implements SubscriberService {
      */
     @Override
     public Subscriber getSubscriberByMsisdn(String msisdn) {
-        List<Subscriber> subscribers;
-        subscribers =  subscriberDataService.findRecordByMsisdn(msisdn);
-        if(subscribers !=null && subscribers.size() > 0) {
-            return subscribers.get(0);
-        }
-        return null;
+        return subscriberDataService.findRecordByMsisdn(msisdn);
     }
 
 

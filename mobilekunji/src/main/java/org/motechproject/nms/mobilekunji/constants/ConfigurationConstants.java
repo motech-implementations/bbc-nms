@@ -15,9 +15,9 @@ public class ConfigurationConstants {
 
     public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 
-    public static final Boolean TRUE = true;
-
     public static final Boolean DEFAULT_WELCOME_PROMPT = true;
+
+    public static final Boolean FALSE = false;
 
     public static final Integer DEFAULT_END_OF_USAGE_MESSAGE = 0;
 
@@ -28,5 +28,7 @@ public class ConfigurationConstants {
     public static final int DEFAULT_NATIONAL_CAPPING_TYPE = 1;
 
     public static final int DEFAULT_STATE_CAPPING_TYPE = 2;
+
+    public static final int ZERO = 0;
 
 }

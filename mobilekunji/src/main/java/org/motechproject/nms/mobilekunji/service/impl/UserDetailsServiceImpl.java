@@ -1,11 +1,11 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
-import org.motechproject.nms.mobilekunji.domain.ServiceConsumptionFlw;
+import org.motechproject.nms.mobilekunji.domain.FlwDetail;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
@@ -44,22 +44,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return User detail response object
      */
     @Override
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, Long callId) throws DataValidationException {
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = null;
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
+
         return userDetailApiResponse;
     }
 
     @Override
-    public int updateLanguageLocationCode(String msisdn, Integer languageLocationCode) throws DataValidationException {
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
 
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(languageLocationCode, msisdn);
-
-        return HttpStatus.SC_OK;
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
     }
 
 
@@ -67,20 +66,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        ServiceConsumptionFlw serviceConsumptionFlw = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
 
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
-
-        //method for capping
-        setNmsCappingValue(userDetailApiResponse, userProfile);
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
-        if (null != serviceConsumptionFlw) {
-            userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
-            userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
-            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+        setNmsCappingValue(userDetailApiResponse, userProfile);
+
+        if (null != flwDetail) {
+            if(configurationService.getConfiguration().getMaxWelcomeMessage() == flwDetail.getWelcomePromptFlagCounter()) {
+            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
+            } else {
+            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
+            }
+
+            if(flwDetail.getLastAccessDate().isAfterNow() || flwDetail.getLastAccessDate().isBeforeNow()) {
+                userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
+                userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+            }
         } else {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
             userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);

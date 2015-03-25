@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.domain;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
@@ -9,7 +10,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity(recordHistory = true)
-public class ServiceConsumptionFlw extends MdsEntity {
+public class FlwDetail extends MdsEntity {
 
     @Field
     private Long nmsFlwId;
@@ -18,13 +19,32 @@ public class ServiceConsumptionFlw extends MdsEntity {
     private Integer endOfUsagePrompt;
 
     @Field
-    private Boolean welcomePromptFlag;
+    private Integer welcomePromptFlagCounter;
 
     @Field
     private Integer currentUsageInPulses;
 
     @Field
     private String msisdn;
+
+    @Field
+    private DateTime lastAccessDate;
+
+    public Integer getWelcomePromptFlagCounter() {
+        return welcomePromptFlagCounter;
+    }
+
+    public void setWelcomePromptFlagCounter(Integer welcomePromptFlagCounter) {
+        this.welcomePromptFlagCounter = welcomePromptFlagCounter;
+    }
+
+    public DateTime getLastAccessDate() {
+        return lastAccessDate;
+    }
+
+    public void setLastAccessDate(DateTime lastAccessDate) {
+        this.lastAccessDate = lastAccessDate;
+    }
 
     public Long getNmsFlwId() {
         return nmsFlwId;
@@ -50,13 +70,6 @@ public class ServiceConsumptionFlw extends MdsEntity {
         this.endOfUsagePrompt = endOfUsagePrompt;
     }
 
-    public Boolean getWelcomePromptFlag() {
-        return welcomePromptFlag;
-    }
-
-    public void setWelcomePromptFlag(Boolean welcomePromptFlag) {
-        this.welcomePromptFlag = welcomePromptFlag;
-    }
 
     public Integer getCurrentUsageInPulses() {
         return currentUsageInPulses;
@@ -68,12 +81,13 @@ public class ServiceConsumptionFlw extends MdsEntity {
 
     @Override
     public String toString() {
-        return "ServiceConsumptionFlw{" +
+        return "FlwDetail{" +
                 "nmsFlwId=" + nmsFlwId +
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
-                ", welcomePromptFlag=" + welcomePromptFlag +
+                ", welcomePromptFlagCounter=" + welcomePromptFlagCounter +
                 ", currentUsageInPulses=" + currentUsageInPulses +
-                ", msisdn=" + msisdn +
+                ", msisdn='" + msisdn + '\'' +
+                ", lastAccessDate=" + lastAccessDate +
                 '}';
     }
 }

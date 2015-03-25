@@ -1,10 +1,16 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import java.util.List;
+
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.service.CircleService;
@@ -15,8 +21,6 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * Implement business logic for finding subscriber details and identify Language
@@ -54,7 +58,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public SubscriberDetailApiResponse getSubscriberDetails(String msisdn, String circleCode, String operatorCode)
-            throws DataValidationException{
+            throws DataValidationException, Exception{
         validateCircleAndOperator(circleCode, operatorCode);
 
         SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
@@ -92,7 +96,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    private void getLanguageLocationCodeForSubscriber(String circleCode, Subscriber subscriber, SubscriberDetailApiResponse response) {
+    private void getLanguageLocationCodeForSubscriber(
+            String circleCode, Subscriber subscriber, SubscriberDetailApiResponse response) throws Exception{
         //if LanguageLocationCode for the subscriber record is present then set this is as LanguageLocationCode in response.
         if (subscriber.getLanguageLocationCode() != null) {
             response.setLanguageLocationCode(subscriber.getLanguageLocationCode());
@@ -100,25 +105,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             if (subscriber.getState() != null && subscriber.getDistrict() != null) {
                 //if llcCode is null then get it by state and district
-                getLLCCodeByStateDistrict(subscriber.getState().getStateCode(), subscriber.getDistrict().getDistrictCode(), circleCode, response);
-
-            } else {
-                //if either state or district is null then get llcCode by circleCode.
-                getLanguageLocationCodeByCircleCode(circleCode, response);
-            }
-            if (response.getLanguageLocationCode() != null) {
+                getLLCCodeByStateDistrict(subscriber.getState().getStateCode(), subscriber.getDistrict().getDistrictCode(), response);
                 subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
             }
         }
     }
 
-    private void getLLCCodeByStateDistrict(Long stateCode, Long districtCode, String circleCode, SubscriberDetailApiResponse response) {
+    private void getLLCCodeByStateDistrict(
+            Long stateCode, Long districtCode, SubscriberDetailApiResponse response) throws Exception{
         Integer llcCode = llcService.getLanguageLocationCodeByLocationCode(stateCode, districtCode);
         if (llcCode != null) {
             response.setLanguageLocationCode(llcCode);
         } else {
-            //get llcCode by circleCode if llcCode by state and district is null
-            getLanguageLocationCodeByCircleCode(circleCode, response);
+            throw new Exception("languageLocationCode could not be determined for stateCode : " + stateCode +" and districtCode " + districtCode);
+
         }
     }
 

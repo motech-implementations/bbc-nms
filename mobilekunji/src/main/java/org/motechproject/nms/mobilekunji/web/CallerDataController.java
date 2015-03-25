@@ -1,9 +1,9 @@
 package org.motechproject.nms.mobilekunji.web;
 
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiResponse;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class CallerDataController extends BaseController {
 
-
     private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
 
     private UserDetailsService userDetailsService;
+
     private SaveCallDetailsService saveCallDetailsService;
 
     @Autowired
-    public CallerDataController(UserDetailsService jobAidService, SaveCallDetailsService saveCallDetailsService) {
+    public CallerDataController(UserDetailsService userDetailsService, SaveCallDetailsService saveCallDetailsService) {
         this.saveCallDetailsService = saveCallDetailsService;
         this.userDetailsService = userDetailsService;
     }
@@ -52,31 +52,47 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
             throws DataValidationException {
+
         log.info("getUserDetails: Started");
+
         log.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
 
-        validateInputDataForGetUserDetails(callingNumber, operator, circle,
-                callId);
-        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator,
-                Long.parseLong(callId));
+        validateCallId(callId);
+
+        validateInputDataForGetUserDetails(callingNumber, operator, circle,callId);
+
+        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(callingNumber, circle, operator,callId);
+
         log.trace("getUserDetails:Ended");
+
         return userDetailApiResponse;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) {
+    public SaveCallDetailApiResponse saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
 
-        saveCallDetailsService.saveCallDetails();
+        log.info("SaveCallDetails: Started");
+
+        validateCallId(request.getCallId());
+
+        SaveCallDetailApiResponse saveCallDetailApiResponse = saveCallDetailsService.saveCallDetails(request);
+
+        log.trace("Save CallDetails:Ended");
+
+        return saveCallDetailApiResponse;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    int updateLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+    @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
+    public @ResponseBody void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
 
-        userDetailsService.updateLanguageLocationCode(request.getCallingNumber(), request.getLanguageLocationCode());
-        return HttpStatus.SC_OK;
+        log.info("Update Language Location Code: Started");
+
+        validateCallId(request.getCallId());
+
+        userDetailsService.setLanguageLocationCode(request);
+
+        log.trace("Update LanguageLocationCode:Ended");
     }
 
     /**
@@ -95,5 +111,11 @@ public class CallerDataController extends BaseController {
         ParseDataHelper.validateAndParseString(operator, operator, true);
         ParseDataHelper.validateAndParseString(circle, circle, true);
         ParseDataHelper.validateAndParseLong(callId, callId, true);
+    }
+
+    private void validateCallId(String callId) throws DataValidationException {
+
+        ParseDataHelper.validateAndTrimCallId("CallId",callId);
+
     }
 }

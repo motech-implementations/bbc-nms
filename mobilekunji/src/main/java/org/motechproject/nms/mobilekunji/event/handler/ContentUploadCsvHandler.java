@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
@@ -14,7 +15,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -77,7 +77,7 @@ public class ContentUploadCsvHandler {
         BulkUploadError errorDetails = new BulkUploadError();
         String userName = null;
         bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        bulkUploadStatus.setTimeOfUpload(new DateTime());
 
         //this loop processes each of the entries in the Content Upload Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -213,7 +213,7 @@ public class ContentUploadCsvHandler {
         BulkUploadError errorDetails = new BulkUploadError();
 
         errorDetails.setCsvName(csvFileName);
-        errorDetails.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        errorDetails.setTimeOfUpload(new DateTime());
         errorDetails.setRecordType(RecordType.CONTENT_UPLOAD_MK);
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);

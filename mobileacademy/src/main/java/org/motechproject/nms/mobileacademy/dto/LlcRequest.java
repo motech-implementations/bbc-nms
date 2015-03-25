@@ -1,16 +1,28 @@
 package org.motechproject.nms.mobileacademy.dto;
 
+import java.io.Serializable;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * LlcRequest object contain details required in set language location code API
  * request.
  *
  */
-public class LlcRequest {
+public class LlcRequest implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    @JsonProperty
     private String callingNumber;
 
+    @JsonProperty
     private String callId;
 
+    @JsonProperty
     private String languageLocationCode;
 
     public String getCallingNumber() {

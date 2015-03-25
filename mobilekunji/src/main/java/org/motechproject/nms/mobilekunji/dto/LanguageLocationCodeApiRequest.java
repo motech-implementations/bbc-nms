@@ -9,6 +9,16 @@ public class LanguageLocationCodeApiRequest {
 
     private Integer languageLocationCode;
 
+    private String callId;
+
+    public String getCallId() {
+        return callId;
+    }
+
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
+
     public String getCallingNumber() {
         return callingNumber;
     }
@@ -30,6 +40,7 @@ public class LanguageLocationCodeApiRequest {
         return "LanguageLocationCodeApiRequest{" +
                 "callingNumber='" + callingNumber + '\'' +
                 ", languageLocationCode=" + languageLocationCode +
+                ", callId='" + callId + '\'' +
                 '}';
     }
 }

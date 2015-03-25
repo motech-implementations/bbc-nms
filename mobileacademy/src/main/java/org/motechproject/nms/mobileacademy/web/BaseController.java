@@ -2,7 +2,9 @@ package org.motechproject.nms.mobileacademy.web;
 
 import org.apache.log4j.Logger;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,10 +31,13 @@ public class BaseController {
     protected ResponseEntity<String> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException exception,
             final WebRequest request) {
-        LOGGER.error(exception.getMessage(), exception);
+        LOGGER.error(exception.getMessage());
         String responseJson = "{\"failureReason\":\""
                 + exception.getParameterName() + ":Not Present\"}";
-        return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -49,7 +54,10 @@ public class BaseController {
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\""
                 + exception.getErroneousField() + ":Invalid Value\"}";
-        return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
     }
 
     /**
@@ -64,7 +72,20 @@ public class BaseController {
             final Exception exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"Internal Error\"}";
-        return new ResponseEntity<String>(responseJson,
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * handle exception if request JSON Parameter is missing
+     * 
+     * @param parameterName name of the parameter
+     * @throws MissingServletRequestParameterException
+     */
+    public void handleMissingJsonParamException(String parameterName)
+            throws MissingServletRequestParameterException {
+        throw new MissingServletRequestParameterException(parameterName, null);
     }
 }

@@ -15,7 +15,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
  */
 public interface SubscriberDataService extends MotechDataService<Subscriber> {
     @Lookup
-    List<Subscriber> findRecordByMsisdn(@LookupField(name = "msisdn") String msisdn);
+    Subscriber findRecordByMsisdn(@LookupField(name = "msisdn") String msisdn);
 
     @Lookup
     Subscriber findRecordByMsisdnAndChildMctsId(

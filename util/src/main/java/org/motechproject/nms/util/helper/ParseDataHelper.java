@@ -175,12 +175,25 @@ public final class ParseDataHelper {
 
         int msisdnLength = msisdn.length();
 
-        if (StringUtils.isNumeric(msisdn) && msisdnLength >= Constants.MSISDN_LENGTH) {
-            msisdn = msisdn.substring(msisdnLength - Constants.MSISDN_LENGTH, msisdnLength);
-        } else {
+        if (!StringUtils.isNumeric(msisdn) ||  msisdnLength < Constants.MSISDN_LENGTH) {
             ParseDataHelper.raiseInvalidDataException(fieldName, msisdn);
+        } else if (msisdnLength > Constants.MSISDN_LENGTH)  {
+            msisdn = msisdn.substring(msisdnLength - Constants.MSISDN_LENGTH, msisdnLength);
         }
         return msisdn;
+    }
+
+    public static Boolean validateAndTrimCallId(String fieldName,String callId) throws DataValidationException {
+
+        if (null != callId) {
+
+            if (callId.trim().length() == Constants.CALL_ID_LENGTH) {
+                return true;
+            } else {
+                ParseDataHelper.raiseInvalidDataException(fieldName,callId);
+            }
+        }
+        return false;
     }
 
     /**

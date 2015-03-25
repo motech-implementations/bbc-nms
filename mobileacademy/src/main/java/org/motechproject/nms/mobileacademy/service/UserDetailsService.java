@@ -16,10 +16,10 @@ public interface UserDetailsService {
      * @param operator operator of caller
      * @param circle Circle from where the call is originating.
      * @return User user response object
-     * @throws DataValidationException
+     * @throws DataValidationException, Exception
      */
     User findUserDetails(String callingNumber, String operator, String circle)
-            throws DataValidationException;
+            throws DataValidationException, Exception;
 
     /**
      * set Language Location Code for user

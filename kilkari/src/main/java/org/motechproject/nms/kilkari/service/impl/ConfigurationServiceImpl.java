@@ -1,6 +1,8 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,6 @@ import org.springframework.stereotype.Service;
  */
 @Service("configurationService")
 public class ConfigurationServiceImpl implements ConfigurationService {
-    
-    public static final Long CONFIGURATION_INDEX = 1L;
 
     @Autowired
     private ConfigurationDataService configurationDataService;
@@ -34,7 +34,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      */
     @Override
     public Configuration getConfiguration() {
-        return configurationDataService.findConfigurationByIndex(CONFIGURATION_INDEX);
+        return configurationDataService.findConfigurationByIndex(Initializer.CONFIGURATION_INDEX);
     }
 
     /**
@@ -43,6 +43,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      */
     @Override
     public Boolean isConfigurationPresent() {
-        return (getConfiguration() != null);
+        return (configurationDataService.count() > Constants.COUNT_ZERO);
     }
 }
