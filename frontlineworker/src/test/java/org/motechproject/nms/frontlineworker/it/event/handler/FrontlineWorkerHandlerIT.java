@@ -392,7 +392,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerStatusInvalidToValid Part 1
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "22222", "Jaya",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "2222222222", "Jaya",
                     "AWW", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "False", null);
 
@@ -402,7 +402,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerStatusInvalidToValid Part 2
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "22222", "Jaya2",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "2222222222", "Jaya2",
                     "AWW", "123", "1", "1234", "12345", "123456", "1234",
                     "1234", "1234", "True", null);
 
@@ -412,7 +412,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerStatusValidToInvalid Part 1
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "33333", "Sushma",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "3333333333", "Sushma",
                     "AWW", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -422,7 +422,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerStatusValidToInvalid Part 2
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "33333", "Sushma",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "3333333333", "Sushma",
                     "AWW", "123", "1", "1234", "12345", "123456", "1234",
                     "1234", "1234", "False", null);
 
@@ -432,7 +432,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerUpdationWithIsValidNull Part 1
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "44444", "Rekha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
                     "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -442,7 +442,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerUpdationWithIsValidNull Part 2
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "44444", "Rekha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
                     "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                     "1234", "1234", "True", null);
 
@@ -452,7 +452,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerUpdationWithNoFlwId Part 1
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("14", "12", "12345", "Jyoti",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("14", "12", "1234500000", "Jyoti",
                     "ANM", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -462,7 +462,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerUpdationWithNoFlwId Part 2
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv(null, "12", "12345", "Jyoti2",
+            frontLineWorkerCsv = new FrontLineWorkerCsv(null, "12", "1234500000", "Jyoti2",
                     "ANM", "123", "1", "1234", "12345", "123456", "1234",
                     "1234", "1234", "True", null);
 
@@ -472,7 +472,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerVillageWithoutTaluka
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990", "Anjali",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Anjali",
                     "USHA", "123", null, "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -483,7 +483,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerHealthBlockWithoutTaluka
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990", "Etasha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                     "USHA", "123", null, "1234", "12345", "123456", null,
                     "9876", "1234", "True", null);
 
@@ -493,7 +493,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerPhcWithoutHealthBlock
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990", "Etasha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                     "USHA", "123", "1", null, "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -504,7 +504,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerSubCentreWithoutPhc
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990", "Etasha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
                     "USHA", "123", "1", "1234", null, "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -558,7 +558,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
            /* // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInvalid
 
-           frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "22222", "Etasha",
+           frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "2222222222", "Etasha",
                                 "USHA", "123", "1", "1234", null, "123456", "1234",
                                 "9876", "1234", "True", "48");
 
@@ -569,7 +569,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive
 
-            frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "44444", "Etasha",
+            frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "4444444444", "Etasha",
                     "USHA", "123", "1", "1234", null, "123456", "1234",
                     "9876", "1234", "True", null);
 
@@ -804,10 +804,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
 
-        assertNotNull(flw);
-
+        assertNull(flw);
+/*
         assertTrue(4L == flw.getFlwId());
-        assertEquals("99905", flw.getContactNo());
+        assertEquals("9905454950", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
 
@@ -821,10 +821,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        /*assertEquals("Etasha", flw.getCreator());
+        *//*assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
-        assertEquals("Etasha", flw.getOwner());*/
-        assertEquals(Status.INACTIVE, flw.getStatus());
+        assertEquals("Etasha", flw.getOwner());*//*
+        assertEquals(Status.INACTIVE, flw.getStatus());*/
 
         // testFrontLineWorkerNoState
 
@@ -931,13 +931,13 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testFrontLineWorkerStatusInvalidToValid Part 1
 
-        flw = frontLineWorkerService.getFlwBycontactNo("22222");
+        flw = frontLineWorkerService.getFlwBycontactNo("2222222222");
         assertNotNull(flw);
         assertEquals(Status.INVALID, flw.getStatus());
 
         // testFrontLineWorkerStatusInvalidToValid Part 2
 
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("22222");
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("2222222222");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jaya", frontLineWorker.getName());
@@ -945,20 +945,20 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testFrontLineWorkerStatusValidToInvalid Part 1
 
-        flw = frontLineWorkerService.getFlwBycontactNo("33333");
+        flw = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(flw);
         //assertEquals(Status.INACTIVE, flw.getStatus());
 
         // testFrontLineWorkerStatusValidToInvalid Part 2
 
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("33333");
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INVALID, frontLineWorker.getStatus());
 
         // testFrontLineWorkerUpdationWithIsValidNull Part 1
 
-        flw = frontLineWorkerService.getFlwBycontactNo("44444");
+        flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
@@ -966,21 +966,21 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testFrontLineWorkerUpdationWithIsValidNull Part 2
 
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("44444");
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INACTIVE, frontLineWorker.getStatus());
 
         // testFrontLineWorkerUpdationWithNoFlwId Part 1
 
-        flw = frontLineWorkerService.getFlwBycontactNo("12345");
+        flw = frontLineWorkerService.getFlwBycontactNo("1234500000");
 
         assertNotNull(flw);
         assertTrue(14L == flw.getFlwId());
 
         // testFrontLineWorkerUpdationWithNoFlwId Part 2
 
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("12345");
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234500000");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti", frontLineWorker.getName());
@@ -988,22 +988,22 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testFrontLineWorkerVillageWithoutTaluka
 
-        flw = frontLineWorkerService.getFlwBycontactNo("9990");
+        flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
 
         // testFrontLineWorkerHealthBlockWithoutTaluka
 
-        flw = frontLineWorkerService.getFlwBycontactNo("9990");
+        flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
 
         // testFrontLineWorkerPhcWithoutHealthBlock
 
-        flw = frontLineWorkerService.getFlwBycontactNo("9990");
+        flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
 
         // testFrontLineWorkerSubCentreWithoutPhc
 
-        flw = frontLineWorkerService.getFlwBycontactNo("9990");
+        flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
 
         assertNull(flw);
 
@@ -1031,7 +1031,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive*/
 
-        flw = frontLineWorkerService.getFlwBycontactNo("44444");
+        flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(flw);
         FrontLineWorker flw2 = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
         assertNotNull(flw2);
@@ -2121,7 +2121,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("11");
-        frontLineWorkerCsv.setContactNo("22222");
+        frontLineWorkerCsv.setContactNo("2222222222");
         frontLineWorkerCsv.setType("AWW");
         frontLineWorkerCsv.setName("Jaya");
 
@@ -2153,7 +2153,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("22222");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("2222222222");
 
         assertNotNull(flw);
         assertEquals(Status.INVALID, flw.getStatus());
@@ -2161,7 +2161,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         //Updation
         FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
         frontLineWorkerCsvNew.setFlwId("11");
-        frontLineWorkerCsvNew.setContactNo("22222");
+        frontLineWorkerCsvNew.setContactNo("2222222222");
         frontLineWorkerCsvNew.setType("AWW");
         frontLineWorkerCsvNew.setName("Jaya2");//changed from Jaya to Jaya2
 
@@ -2195,7 +2195,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
         thrown.expect(DataValidationException.class);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("22222");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("2222222222");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jaya", frontLineWorker.getName());
@@ -2214,7 +2214,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("12");
-        frontLineWorkerCsv.setContactNo("33333");
+        frontLineWorkerCsv.setContactNo("3333333333");
         frontLineWorkerCsv.setType("AWW");
         frontLineWorkerCsv.setName("Sushma");
 
@@ -2246,7 +2246,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("33333");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("3333333333");
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
@@ -2254,7 +2254,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         //Updation
         FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
         frontLineWorkerCsvNew.setFlwId("12");
-        frontLineWorkerCsvNew.setContactNo("33333");
+        frontLineWorkerCsvNew.setContactNo("3333333333");
         frontLineWorkerCsvNew.setType("AWW");
         frontLineWorkerCsvNew.setName("Sushma");
 
@@ -2287,7 +2287,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("33333");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INVALID, frontLineWorker.getStatus());
@@ -2302,7 +2302,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorkerCsv frontLineWorkerCsv = new FrontLineWorkerCsv();
 
         frontLineWorkerCsv.setFlwId("13");
-        frontLineWorkerCsv.setContactNo("44444");
+        frontLineWorkerCsv.setContactNo("4444444444");
         frontLineWorkerCsv.setType("ASHA");
         frontLineWorkerCsv.setName("Rekha");
 
@@ -2335,7 +2335,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
-        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("44444");
+        FrontLineWorker flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
@@ -2345,7 +2345,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         FrontLineWorkerCsv frontLineWorkerCsvNew = new FrontLineWorkerCsv();
 
         frontLineWorkerCsvNew.setFlwId("13");
-        frontLineWorkerCsvNew.setContactNo("44444");
+        frontLineWorkerCsvNew.setContactNo("4444444444");
         frontLineWorkerCsvNew.setType("ASHA");
         frontLineWorkerCsvNew.setName("Rekha");
 
@@ -2378,7 +2378,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         MotechEvent motechEventNew = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters_new);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEventNew);
 
-        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("44444");
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INACTIVE, frontLineWorker.getStatus());
