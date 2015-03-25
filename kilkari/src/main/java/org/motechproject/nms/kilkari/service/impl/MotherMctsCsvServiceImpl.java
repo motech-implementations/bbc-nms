@@ -1,35 +1,23 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
-import org.apache.velocity.app.event.ReferenceInsertionEventHandler.referenceInsertExecutor;
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.domain.AbortionType;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -71,7 +59,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         logger.info("Processing Csv file[{}]", csvFileName);
         BulkUploadStatus uploadedStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
-        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        DateTime timeOfUpload = new DateTime();
         errorDetails.setCsvName(csvFileName);
         errorDetails.setTimeOfUpload(timeOfUpload);
         errorDetails.setRecordType(RecordType.MOTHER_MCTS);

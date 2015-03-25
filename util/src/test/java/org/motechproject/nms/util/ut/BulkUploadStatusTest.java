@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
-import org.motechproject.nms.util.helper.NmsUtils;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,7 +24,7 @@ public class BulkUploadStatusTest {
          String bulkUploadFileName = "csv-import.fileName";
          Integer numberOfFailedRecords = 82;
          Integer numberOfSuccessfulRecords = 3;
-         DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+         DateTime timeOfUpload = new DateTime();
 
          BulkUploadStatus bulkUploadStatus = new BulkUploadStatus(uploadedBy, bulkUploadFileName, timeOfUpload, numberOfFailedRecords, numberOfSuccessfulRecords);
 
@@ -61,7 +60,7 @@ public class BulkUploadStatusTest {
       */
      @Test
      public void shouldCreateBulkUploadStatusDeepCopy() {
-        DateTime time = NmsUtils.getCurrentTimeStamp();
+        DateTime time = new DateTime();
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus("user-name", "Name.csv", time, 3, 47);
         BulkUploadStatus bulkUploadStatusDeepCopy = bulkUploadStatus.createDeepCopy();
         Assert.assertEquals(bulkUploadStatusDeepCopy.getBulkUploadFileName(), bulkUploadStatus.getBulkUploadFileName());

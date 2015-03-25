@@ -1,5 +1,6 @@
 package org.motechproject.nms.frontlineworker.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.Designation;
@@ -9,13 +10,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -23,7 +18,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -100,7 +94,7 @@ public class FrontLineWorkerUploadHandler {
         Long nmsFlwId = null;
 
         bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        bulkUploadStatus.setTimeOfUpload(new DateTime());
 
         //this loop processes each of the entries in the Front Line Worker Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -500,7 +494,7 @@ public class FrontLineWorkerUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
         errorDetails.setCsvName(csvFileName);
-        errorDetails.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        errorDetails.setTimeOfUpload(new DateTime());
         errorDetails.setRecordType(RecordType.FRONT_LINE_WORKER);
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);

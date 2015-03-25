@@ -10,7 +10,6 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.repository.BulkUploadErrorDataService;
 import org.motechproject.nms.util.repository.BulkUploadStatusDataService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
@@ -66,7 +65,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
         Integer numberOfFailedRecords = 82;
         Integer numberOfSuccessfulRecords = 3;
         String userName = "abcdef";
-        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        DateTime timeOfUpload = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
         bulkUploadStatus.setBulkUploadFileName(bulkUploadFileName);
@@ -106,7 +105,7 @@ public class BulkUploadErrLogServiceIT extends BasePaxIT {
     public void shouldAddBulkUploadErrRecord() throws Exception {
         bulkUploadErrorDataService.deleteAll();
         String bulkUploadFileName = "csv-import.someFileName";
-        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        DateTime timeOfUpload = new DateTime();
         String recordDetails = "Some Record Details";
 
         BulkUploadError bulkUploadError = new BulkUploadError();
