@@ -54,11 +54,11 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
     @Override
     public UserProfile processUserDetails(String msisdn, String circleCode, String operatorCode,
                                           ServicesUsingFrontLineWorker service)
-            throws DataValidationException, Exception {
+            throws DataValidationException {
 
         UserProfile userProfile = new UserProfile();
-        FrontLineWorker frontLineWorker = new FrontLineWorker();
-        Operator operator = new Operator();
+        FrontLineWorker frontLineWorker = null;
+        Operator operator = null;
 
         operator = validateParams(msisdn, operatorCode, service);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
@@ -133,7 +133,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      * @throws DataValidationException , java.lang.Exception
      */
     private void createUserProfile(String msisdn, Operator operator, UserProfile userProfile, String circleCode,
-                                   ServicesUsingFrontLineWorker service) throws DataValidationException, Exception {
+                                   ServicesUsingFrontLineWorker service) throws DataValidationException {
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(msisdn);
@@ -182,7 +182,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      */
     private void getUserDetailsByCircle(String msisdn, FrontLineWorker frontLineWorker, UserProfile userProfile,
                                         String circleCode, ServicesUsingFrontLineWorker service) throws
-            DataValidationException, Exception {
+            DataValidationException {
         Integer languageLocationCode = null;
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode langLocCode = null;
@@ -207,7 +207,8 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
                 frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
                 frontLineWorker.setDefaultLanguageLocationCodeId(null);
             } else {
-                throw new Exception("Language Location could not be found using state and district");
+                ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+
             }
 
 
@@ -230,7 +231,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
                     frontLineWorker.setDefaultLanguageLocationCodeId(defaultLanguageLocationCode);
                     frontLineWorker.setLanguageLocationCodeId(null);
                 } else {
-                    throw new Exception("Language Location could not be found using state and district");
+                    ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
                 }
 
 
@@ -264,7 +265,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      */
     private void getUserDetailsForInactiveUser(String msisdn, FrontLineWorker frontLineWorker, UserProfile userProfile,
                                                ServicesUsingFrontLineWorker service, String circleCode)
-            throws DataValidationException, Exception {
+            throws DataValidationException {
 
         State state = null;
         Long stateCode = frontLineWorker.getStateCode();
@@ -287,7 +288,8 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             userProfile.setMsisdn(msisdn);
             userProfile.setCircle(circleCode);
         } else {
-            throw new Exception("Language Location could not be found using state and district");
+            ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
+
         }
 
         frontLineWorker.setStatus(Status.ACTIVE);
@@ -350,7 +352,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
      */
     private void getUserDetailsForAnonymousUser(String msisdn, FrontLineWorker frontLineWorker, UserProfile userProfile,
                                                 ServicesUsingFrontLineWorker service, String circleCode)
-            throws DataValidationException, Exception {
+            throws DataValidationException {
         Integer languageLocationCode = null;
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode langLocCode = null;
@@ -383,7 +385,9 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             userProfile.setCreated(false);
             userProfile.setMsisdn(msisdn);
         } else {
-            throw new Exception("Language Location could not be found using circle and Language Location code");
+
+            ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+
         }
     }
 
