@@ -1,14 +1,12 @@
 package org.motechproject.nms.kilkari.repository;
 
-import javax.jdo.Query;
-
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
+import javax.jdo.Query;
 import java.util.List;
 
 public class CustomQueries {

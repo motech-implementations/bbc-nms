@@ -24,8 +24,8 @@ public class ConfigurationTest {
         configuration.setMaxAllowedActiveBeneficiaryCount(20);
         Assert.assertTrue(20 == configuration.getMaxAllowedActiveBeneficiaryCount());
 
-        configuration.setNationalLanguageLocationCode(123);
-        Assert.assertTrue(123 == configuration.getNationalLanguageLocationCode());
+        configuration.setNationalDefaultLanguageLocationCode(123);
+        Assert.assertTrue(123 == configuration.getNationalDefaultLanguageLocationCode());
 
         configuration.setNumMsgPerWeek(10);
         Assert.assertTrue(10 == configuration.getNumMsgPerWeek());

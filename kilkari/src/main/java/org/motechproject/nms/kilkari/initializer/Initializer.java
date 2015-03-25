@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.initializer;
 
-import javax.annotation.PostConstruct;
-
 import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
@@ -10,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 /**
  * The purpose of this class is to perform initialization for Kilkari Service.
@@ -86,7 +86,7 @@ public class Initializer {
             configuration.setRetryDay1ObdPriority(DEFAULT_RETRY_DAY1_OBD_PRIORITY);
             configuration.setRetryDay2ObdPriority(DEFAULT_RETRY_DAY2_OBD_PRIORITY);
             configuration.setRetryDay3ObdPriority(DEFAULT_RETRY_DAY3_OBD_PRIORITY);
-            configuration.setNationalLanguageLocationCode(DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE);
+            configuration.setNationalDefaultLanguageLocationCode(DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE);
             configurationService.createConfiguration(configuration);
             
         }

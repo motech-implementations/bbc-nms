@@ -6,8 +6,6 @@ import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * This class is used to create,delete and get Subscriber object
  */

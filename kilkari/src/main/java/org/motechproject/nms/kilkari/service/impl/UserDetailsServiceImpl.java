@@ -1,16 +1,10 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.kilkari.service.UserDetailsService;
+import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.service.CircleService;
@@ -21,6 +15,8 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Implement business logic for finding subscriber details and identify Language
@@ -71,7 +67,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             List<SubscriptionPack> activePackList = subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn);
             response.setSubscriptionPackList(activePackList);
 
-            getLanguageLocationCodeForSubscriber(circleCode, subscriber, response);
+            getLanguageLocationCodeForSubscriber(subscriber, response);
         }
         else {
             //if subscriber does not exist for msisdn then get llcCode by circle.
@@ -91,13 +87,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             } else {
                 //case when circle is unknown i,e 99
                 Configuration configuration = configurationService.getConfiguration();
-                response.setDefaultLanguageLocationCode(configuration.getNationalLanguageLocationCode());
+                response.setDefaultLanguageLocationCode(configuration.getNationalDefaultLanguageLocationCode());
             }
         }
     }
 
     private void getLanguageLocationCodeForSubscriber(
-            String circleCode, Subscriber subscriber, SubscriberDetailApiResponse response) throws Exception{
+            Subscriber subscriber, SubscriberDetailApiResponse response) throws Exception{
         //if LanguageLocationCode for the subscriber record is present then set this is as LanguageLocationCode in response.
         if (subscriber.getLanguageLocationCode() != null) {
             response.setLanguageLocationCode(subscriber.getLanguageLocationCode());

@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.repository;
 
-import java.util.List;
-
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;

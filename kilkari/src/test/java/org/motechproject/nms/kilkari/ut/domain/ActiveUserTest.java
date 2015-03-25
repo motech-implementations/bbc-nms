@@ -3,14 +3,14 @@ package org.motechproject.nms.kilkari.ut.domain;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.kilkari.domain.ActiveUser;
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 
 public class ActiveUserTest {
 
     @Test
     public void shouldSetValuesInActiveUser() {
 
-        ActiveUser activeUser = new ActiveUser();
+        ActiveSubscriptionCount activeUser = new ActiveSubscriptionCount();
         Long activeUserCount = 1L;
         Long index = 1L;
 

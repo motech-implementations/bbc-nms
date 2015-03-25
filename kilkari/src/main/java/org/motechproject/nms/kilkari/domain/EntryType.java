@@ -1,7 +1,6 @@
 package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.ParseDataHelper;
 
 public enum EntryType {
     ACTIVE("1"), 
@@ -18,7 +17,12 @@ public enum EntryType {
     public String toString(){
         return value;
     }
-    
+
+    /** This Static method checks if a string is of EntryType
+     *
+     * @param entry string that is to be checked
+     * @return true if string is a valid value for entry type else false
+     */
     public static boolean checkValidEntryType (String entry) throws DataValidationException{
         EntryType[] entryTypes = EntryType.values();
         boolean foundEntryType = false;
