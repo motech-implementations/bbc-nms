@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.it.web;
 
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -80,5 +81,15 @@ public class TestHelper {
         configuration.setNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);
 
         return configuration;
+    }
+
+    public static LanguageLocationCodeApiRequest getLanguageLocationCodeRequest() {
+
+        LanguageLocationCodeApiRequest request = new LanguageLocationCodeApiRequest();
+        request.setCallId("111111111111111");
+        request.setCallingNumber("9810179788");
+        request.setLanguageLocationCode(29);
+
+        return request;
     }
 }

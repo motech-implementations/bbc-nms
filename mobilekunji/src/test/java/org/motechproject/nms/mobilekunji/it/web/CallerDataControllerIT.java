@@ -3,9 +3,12 @@ package org.motechproject.nms.mobilekunji.it.web;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
@@ -56,6 +59,9 @@ public class CallerDataControllerIT extends BasePaxIT {
     private LanguageLocationCodeService languageLocationCodeService;
 
     @Inject
+    private FrontLineWorkerService frontLineWorkerService;
+
+    @Inject
     private ConfigurationService configurationService;
 
     private CallerDataController controller;
@@ -103,6 +109,20 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
+        FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        flwWorker.setLanguageLocationCodeId(33);
+        frontLineWorkerService.updateFrontLineWorker(flwWorker);
+
+        LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
+
+        controller.setLanguageLocationCode(languageLocationCodeApiRequest);
+
+        flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        assertNotNull(flwWorker);
+        assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
+
     }
+
+
 
 }
