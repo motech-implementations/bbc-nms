@@ -16,6 +16,11 @@ import org.motechproject.nms.mobilekunji.domain.CallDetail;
  */
 public interface CallDetailRecordDataService extends MotechDataService<CallDetail> {
 
+    /**
+     * Finds call details by its nmsFlwId
+     * @param nmsFlwId
+     * @return CallDetail
+     */
     @Lookup
     public CallDetail findCallDetailByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
 }

@@ -13,9 +13,20 @@ import org.motechproject.nms.mobilekunji.domain.FlwDetail;
  */
 public interface FlwDetailRecordDataService extends MotechDataService<FlwDetail> {
 
-    @Lookup
-    public FlwDetail findServiceConsumptionByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
 
+    /**
+     * Finds the FlwDetail record by its nmsFlwId
+     * @param nmsFlwId
+     * @return FlwDetail
+     */
     @Lookup
-    public FlwDetail findServiceConsumptionByMsisdn(@LookupField(name = "msisdn") String msisdn);
+    public FlwDetail findFlwDetailByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
+
+    /**
+     * Finds the FlwDetail record by its msisdn
+     * @param msisdn
+     * @return FlwDetail
+     */
+    @Lookup
+    public FlwDetail findFlwDetailByMsisdn(@LookupField(name = "msisdn") String msisdn);
 }

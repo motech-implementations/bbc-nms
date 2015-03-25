@@ -97,11 +97,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void populateFlwDetail(UserProfile userProfileData) {
 
         if (userProfileData.isCreated()) {
-            FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
+            FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
             if (null == flwDetail) {
 
                 flwDetail = new FlwDetail();
-
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
                 flwDetailService.create(flwDetail);
                 logger.info("FlwDetail created successfully.");
@@ -124,7 +123,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getNmsFlwId());
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfile.getNmsFlwId());
         if (null != flwDetail) {
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
