@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.joda.time.DateTime;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
@@ -41,8 +42,6 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
-    public static final String CHILD_DEATH_NINE = "9";
-
     /**
      * This method process ChildMctsCsv
      * @param csvFileName String type object
@@ -134,8 +133,14 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
         /* Set the appropriate Deactivation Reason */
         String entryType = ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false);
-        childSubscriber.setDeactivationReason(setDeactivateForStillBirth(entryType));
+        checkValidEntryType(entryType);
 
+        if(Constants.CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false))){
+            childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
+        } else {
+            childSubscriber.setDeactivationReason(DeactivationReason.NONE);
+        }
+        
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
         childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
         childSubscriber.setCreator(childMctsCsv.getCreator());
@@ -144,25 +149,14 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         logger.trace("mapChildMctsToSubscriber method finished");
         return childSubscriber;
     }
-    
-    private DeactivationReason setDeactivateForStillBirth (String entryType) throws DataValidationException {
-        
-        DeactivationReason deactivationReason = null;
+
+    private void checkValidEntryType(String entryType) throws DataValidationException {
         if (entryType!=null) {
             boolean foundEntryType = EntryType.checkValidEntryType(entryType);
-            if(foundEntryType){
-                if(CHILD_DEATH_NINE.equalsIgnoreCase(entryType)){
-                    deactivationReason = DeactivationReason.CHILD_DEATH;
-                } else {
-                    deactivationReason = DeactivationReason.NONE;
-                }
-            } else{
-                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
-            }
-        } else {
-            deactivationReason = DeactivationReason.NONE;
-        }
-        return deactivationReason;
+            if(!foundEntryType){
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType); 
+            } 
+        } 
     }
 
 

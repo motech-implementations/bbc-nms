@@ -227,7 +227,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
-        
         ChildMctsCsv childCsv = new ChildMctsCsv();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000038");

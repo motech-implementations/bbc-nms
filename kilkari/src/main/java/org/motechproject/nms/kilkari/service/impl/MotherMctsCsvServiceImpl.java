@@ -1,7 +1,16 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.commons.Constants;
+import org.motechproject.nms.kilkari.domain.AbortionType;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.EntryType;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.LocationValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
@@ -18,8 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -41,10 +48,6 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
-    public static final Integer STILL_BIRTH_ZERO = 0;
-    public static final String MOTHER_DEATH_NINE = "9";
-    public static final String ABORTION_NONE = "none";
-
     /**
      * this method process the mother record
      * @param csvFileName String type object
@@ -143,11 +146,11 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         checkValidAbortionType(abortion);
         
         /* Set the appropriate Deactivation Reason */
-        if (STILL_BIRTH_ZERO.equals(ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false))) {
+        if (Constants.STILL_BIRTH_ZERO.equals(ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
-        } else if (!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion))) {
+        } else if (!(abortion == null || Constants.ABORTION_NONE.equalsIgnoreCase(abortion))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
-        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
+        } else if (Constants.MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
         } else {
             motherSubscriber.setDeactivationReason(DeactivationReason.NONE);

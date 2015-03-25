@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkari.event.handler;
 
+import java.util.List;
+import java.util.Map;
+
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
@@ -9,8 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import static org.motechproject.nms.kilkari.commons.Constants.MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT;
 
 /**
  * This class is used to handle the success
@@ -21,7 +23,6 @@ public class MotherMctsCsvHandler {
 
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
     private MotherMctsCsvService motherMctsCsvService;
-    private static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
     
     
     @Autowired

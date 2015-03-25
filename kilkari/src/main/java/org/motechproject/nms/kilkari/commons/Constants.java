@@ -19,4 +19,15 @@ public class Constants {
             "Subscription to MSISDN already Exist";
 
     public static final Long COUNT_ZERO = 0L;
+    
+    public static final String CHILD_DEATH_NINE = "9";
+    
+    public static final Integer STILL_BIRTH_ZERO = 0;
+    
+    public static final String MOTHER_DEATH_NINE = "9";
+    
+    public static final String ABORTION_NONE = "none";
+    
+    public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
+    
 }
