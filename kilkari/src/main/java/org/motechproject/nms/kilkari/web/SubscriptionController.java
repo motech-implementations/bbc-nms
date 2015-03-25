@@ -81,7 +81,7 @@ public class SubscriptionController extends BaseController {
     @ResponseBody
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
                                        @RequestParam String circle, @RequestParam String callId)
-            throws DataValidationException, Exception {
+            throws DataValidationException, NmsInternalServerError {
         logger.info("*****getSubscriberDetails is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + callingNumber + "]");

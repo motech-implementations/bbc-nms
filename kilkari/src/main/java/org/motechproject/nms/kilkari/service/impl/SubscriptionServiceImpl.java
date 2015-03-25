@@ -89,7 +89,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public long getActiveUserCount() {
-        return activeUserDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getActiveUserCount();
+        return activeUserDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getCount();
     }
 
     /**
@@ -267,7 +267,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel)
             throws NmsInternalServerError {
-        createNewSubscriberAndSubscription(subscriber, channel, null, null);
+        createNewSubscriberAndSubscription(subscriber, channel, null);
     }
 
     /**
@@ -277,8 +277,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param operatorCode String type object
      * @throws DataValidationException
      */
-    private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode,
-                                                   String circleCode)
+    private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
             throws NmsInternalServerError {
             Configuration configuration = configurationService.getConfiguration();
             long activeUserCount = getActiveUserCount();
@@ -322,7 +321,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (dbSubscriber != null) {
             updateDbSubscriber(subscriber, dbSubscriber);
         } else {
-            createNewSubscriberAndSubscription(subscriber, Channel.IVR, operatorCode, circleCode);
+            createNewSubscriberAndSubscription(subscriber, Channel.IVR, operatorCode);
         }
     }
     

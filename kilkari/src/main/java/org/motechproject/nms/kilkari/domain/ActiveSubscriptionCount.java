@@ -36,11 +36,11 @@ public class ActiveSubscriptionCount {
         this.index = index;
     }
 
-    public Long getActiveUserCount() {
+    public Long getCount() {
         return count;
     }
 
-    public void setActiveUserCount(Long activeUserCount) {
+    public void setCount(Long activeUserCount) {
         this.count = activeUserCount;
     }
 

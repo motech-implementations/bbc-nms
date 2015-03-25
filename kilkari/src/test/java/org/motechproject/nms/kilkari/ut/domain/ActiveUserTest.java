@@ -14,8 +14,8 @@ public class ActiveUserTest {
         Long activeUserCount = 1L;
         Long index = 1L;
 
-        activeUser.setActiveUserCount(activeUserCount);
-        Assert.assertEquals(activeUserCount,activeUser.getActiveUserCount());
+        activeUser.setCount(activeUserCount);
+        Assert.assertEquals(activeUserCount,activeUser.getCount());
 
         activeUser.setIndex(index);
         Assert.assertEquals(index,activeUser.getIndex());

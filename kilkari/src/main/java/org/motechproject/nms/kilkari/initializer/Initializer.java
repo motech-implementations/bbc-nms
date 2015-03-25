@@ -96,7 +96,7 @@ public class Initializer {
             ActiveSubscriptionCount activeUser = new ActiveSubscriptionCount();
             logger.info("Creating ActiveUser with default values");
             activeUser.setIndex(ACTIVEUSER_INDEX);
-            activeUser.setActiveUserCount(DEFAULT_ACTIVEUSER_COUNT);
+            activeUser.setCount(DEFAULT_ACTIVEUSER_COUNT);
             activeSubscriptionCountService.create(activeUser); 
         }
     }
