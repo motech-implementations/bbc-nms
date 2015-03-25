@@ -59,7 +59,7 @@ public class ConfigurationServiceIT extends BasePaxIT {
         configuration = configurationService.getConfiguration();
 
         assertNotNull(configuration);
-        assertTrue(0 == configuration.getCappingType());
+        assertNotNull(configuration.getCappingType());
         assertTrue(0 == configuration.getNationalCapValue());
         assertTrue(2 == configuration.getMaxEndofusageMessage());
         assertTrue(1 == configuration.getNationalDefaultLanguageLocationCode());
