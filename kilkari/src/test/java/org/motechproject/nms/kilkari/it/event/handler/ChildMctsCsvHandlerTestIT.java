@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -403,6 +404,19 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         activeSubscriptionCountDataService.update(activeUser);
         
     } 
+    
+    
+    @Test
+    public void testUploadedIdNotInDatabase() throws Exception {
+        logger.info("Inside  testUploadedIdNotInDatabase");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        Long uploadedId = new Random().nextLong();
+        uploadedIds.add(uploadedId);
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        assertNull(motherMctsCsvDataService.findById(uploadedId));
+        
+    }
     
    
 }

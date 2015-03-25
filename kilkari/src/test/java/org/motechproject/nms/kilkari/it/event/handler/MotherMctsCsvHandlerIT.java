@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 /**
@@ -334,6 +335,18 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         assertFalse(subscription.getStatus()==updateSubs.getStatus());
         assertTrue(subscription.getSubscriber().getName().equals(updateSubs.getSubscriber().getName()));
+    }
+    
+    @Test
+    public void testUploadedIdNotInDatabase() throws Exception {
+        logger.info("Inside  testUploadedIdNotInDatabase");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        Long uploadedId = new Random().nextLong();
+        uploadedIds.add(uploadedId);
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds);
+        assertNull(motherMctsCsvDataService.findById(uploadedId));
+        
     }
     
     
