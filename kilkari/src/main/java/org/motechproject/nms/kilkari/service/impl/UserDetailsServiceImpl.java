@@ -38,9 +38,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private ConfigurationService configurationService;
 
     @Autowired
-    private ActiveSubscriptionCountService activeSubscriptionCountService;
-
-    @Autowired
     private OperatorService operatorService;
 
     @Autowired

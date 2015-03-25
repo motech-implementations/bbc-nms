@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
@@ -13,14 +14,12 @@ import org.springframework.stereotype.Service;
 @Service("activeSubscriptionCountService")
 public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCountService {
 
-    private final Long COUNT_ZERO = 0L;
-    
     @Autowired
     private ActiveSubscriptionCountDataService activeSubscriptionCountDataService;
     
     /**
      * This method creates active user.
-     * @param activeUser ActiveUser type object
+     * @param activeSubscriptionCount ActiveSubscriptionCount type object
      * @return ActiveUser type object
      */
     @Override
@@ -43,8 +42,7 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
      */
     @Override
     public Boolean isActiveSubscriptionCountPresent() {
-        return (activeSubscriptionCountDataService.count() > COUNT_ZERO);
-        
+        return (activeSubscriptionCountDataService.count() > Constants.COUNT_ZERO);
     }
 
 }
