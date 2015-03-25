@@ -103,33 +103,6 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
-
-
-        //for wrong msisdn
-        UserDetailApiResponse userDetailApiResponseM1 = controller.getUserDetails("1", "AL", "DL", "111111111111111");
-        //for not numeric msisdn
-        UserDetailApiResponse userDetailApiResponseM2 = controller.getUserDetails("ABCKD", "AL", "DL", "111111111111111");
-        //for bigger length of msisdn
-        UserDetailApiResponse userDetailApiResponseM3 = controller.getUserDetails("12222222222222", "AL", "DL", "111111111111111");
-
-        //for wrong operator
-        UserDetailApiResponse userDetailApiResponseO1 = controller.getUserDetails("9810179788", "98", "DL", "111111111111111");
-        //for null operator value
-        UserDetailApiResponse userDetailApiResponse02 = controller.getUserDetails("9810179788", null, "DL", "111111111111111");
-
-        //for wrong circle
-        UserDetailApiResponse userDetailApiResponseC1 = controller.getUserDetails("9810179788", "AL", "8", "111111111111111");
-        //for null circle code
-        UserDetailApiResponse userDetailApiResponseC2 = controller.getUserDetails("9810179788", "AL", null, "111111111111111");
-
-        //for wrong callid
-        UserDetailApiResponse userDetailApiResponseCID1 = controller.getUserDetails("9810179788", "AL", "DL", "001");
-        //for null callid
-        UserDetailApiResponse userDetailApiResponseCID2 = controller.getUserDetails("9810179788", "AL", "DL", null);
-
     }
-
-
-
-
+    
 }
