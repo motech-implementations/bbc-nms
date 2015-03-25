@@ -124,6 +124,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For State Level Capping Type
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
         configurationService.updateConfiguration(configurationData);
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
 
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
