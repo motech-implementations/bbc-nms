@@ -64,7 +64,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetailApiResponse;
     }
 
-    private void fillDefaultFlwWithUserProfile(FlwDetail flwDetail ,UserProfile userProfileData){
+    private void fillDefaultFlwWithUserProfile(FlwDetail flwDetail, UserProfile userProfileData) {
 
         flwDetail.setNmsFlwId(userProfileData.getSystemGeneratedFlwId());
         flwDetail.setMsisdn(userProfileData.getMsisdn());
@@ -85,19 +85,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void populateFlwDetail(UserProfile userProfileData) {
 
 
-
-        if(userProfileData.isCreated()) {
+        if (userProfileData.isCreated()) {
             FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
             if (null == flwDetail) {
 
                 flwDetail = new FlwDetail();
 
-                fillDefaultFlwWithUserProfile(flwDetail,userProfileData);
+                fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
 
                 flwDetailService.create(flwDetail);
                 logger.info("FlwDetail created successfully.");
-            }
-            else {
+            } else {
 
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
                 flwDetailService.update(flwDetail);
@@ -116,24 +114,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
-            if(userProfile.isDefaultLanguageLocationCode()){
+            if (userProfile.isDefaultLanguageLocationCode()) {
                 userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
             } else {
                 userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
             }
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
-            fillCurrentUsage(userDetailApiResponse,flwDetail);
+            fillCurrentUsage(userDetailApiResponse, flwDetail);
         } else {
-            ParseDataHelper.raiseInvalidDataException("flwNmsId",userProfile.getSystemGeneratedFlwId().toString());
+            ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getSystemGeneratedFlwId().toString());
         }
-
 
 
         return userDetailApiResponse;
     }
 
 
-    private void fillCurrentUsage(UserDetailApiResponse userDetailApiResponse,FlwDetail flwDetail){
+    private void fillCurrentUsage(UserDetailApiResponse userDetailApiResponse, FlwDetail flwDetail) {
         if (checkNextTime(flwDetail.getLastAccessDate())) {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         } else {

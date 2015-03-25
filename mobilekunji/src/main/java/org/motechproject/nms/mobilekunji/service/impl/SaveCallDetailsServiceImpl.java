@@ -56,15 +56,15 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
         Long nmsId = updateFlwDetail(saveCallDetailApiRequest);
 
-        setCallDetail(nmsId,saveCallDetailApiRequest);
+        setCallDetail(nmsId, saveCallDetailApiRequest);
 
         logger.info("Save CallDetail executed successfully.");
     }
 
-    private void setCallDetail(Long nmsId,SaveCallDetailApiRequest saveCallDetailApiRequest) {
+    private void setCallDetail(Long nmsId, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(),nmsId,saveCallDetailApiRequest.getCircle(),
-                saveCallDetailApiRequest.getCallStartTime(),saveCallDetailApiRequest.getCallEndTime());
+        CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), nmsId, saveCallDetailApiRequest.getCircle(),
+                saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime());
 
         setCardContent(callDetail, saveCallDetailApiRequest);
         callDetailService.create(callDetail);
@@ -88,7 +88,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         } else {
-            ParseDataHelper.raiseInvalidDataException("CallingNumber ",saveCallDetailApiRequest.getCallingNumber().toString());
+            ParseDataHelper.raiseInvalidDataException("CallingNumber ", saveCallDetailApiRequest.getCallingNumber().toString());
         }
         return flwDetail.getNmsFlwId();
     }
@@ -96,13 +96,13 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
     private void updateFlwDetail(FlwDetail flw, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
 
-       flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
-       flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
-       flw.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
-       flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
-       flwDetailService.update(flw);
+        flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
+        flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
+        flw.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
+        flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
+        flwDetailService.update(flw);
 
-       logger.info("FlwDetail updated successfully.");
+        logger.info("FlwDetail updated successfully.");
     }
 
 }

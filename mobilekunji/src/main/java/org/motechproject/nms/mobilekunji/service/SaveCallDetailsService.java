@@ -10,6 +10,7 @@ public interface SaveCallDetailsService {
 
     /**
      * Saves Call details of the user
+     *
      * @param saveCallDetailApiRequest
      * @throws DataValidationException
      */

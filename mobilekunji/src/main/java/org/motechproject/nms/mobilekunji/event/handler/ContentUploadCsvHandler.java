@@ -205,8 +205,8 @@ public class ContentUploadCsvHandler {
 
     private void validateCardNumber(String cardNumber) throws DataValidationException {
 
-        if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS){
-            ParseDataHelper.raiseInvalidDataException("Card number",cardNumber);
+        if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
+            ParseDataHelper.raiseInvalidDataException("Card number", cardNumber);
         }
 
     }

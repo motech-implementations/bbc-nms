@@ -84,7 +84,7 @@ public class CallDetail extends MdsEntity {
 
     public Set<CardDetail> getCardDetail() {
 
-        if (cardDetail == null){
+        if (cardDetail == null) {
             cardDetail = new HashSet<CardDetail>();
         }
         return this.cardDetail;

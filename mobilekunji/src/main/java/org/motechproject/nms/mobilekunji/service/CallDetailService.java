@@ -10,6 +10,7 @@ public interface CallDetailService {
 
     /**
      * Creates record object for CallDetails
+     *
      * @param record
      * @return CallDetail
      */
@@ -17,6 +18,7 @@ public interface CallDetailService {
 
     /**
      * Updates the record of CallDetail
+     *
      * @param record
      * @return CallDetail
      */
@@ -24,6 +26,7 @@ public interface CallDetailService {
 
     /**
      * Deletes the CallDetail record
+     *
      * @param record
      */
     public void delete(CallDetail record);

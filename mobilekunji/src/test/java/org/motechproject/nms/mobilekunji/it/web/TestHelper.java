@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.*;
-import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.DEFAULT_MAX_NATIONAL_CAPITAL_VALUE;
 
 /**
  * Created by abhishek on 25/3/15.
