@@ -88,8 +88,6 @@ public class Initializer {
             configuration.setNationalLanguageLocationCode(DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE);
             configurationService.createConfiguration(configuration);
             
-            
-            
         }
         
  if (!activeUserService.isActiveUserCountPresent()) {

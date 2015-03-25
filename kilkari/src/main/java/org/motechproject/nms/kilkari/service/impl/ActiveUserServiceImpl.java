@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ActiveUser;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Service;
 @Service("activeUserService")
 public class ActiveUserServiceImpl implements ActiveUserService {
 
-    private final Long COUNT_ZERO = 0L;
-    
     @Autowired
     private ActiveUserDataService activeUserDataService;
     
@@ -43,8 +42,7 @@ public class ActiveUserServiceImpl implements ActiveUserService {
      */
     @Override
     public Boolean isActiveUserCountPresent() {
-        return (activeUserDataService.count() > COUNT_ZERO);
-        
+        return (activeUserDataService.count() > Constants.COUNT_ZERO);
     }
 
 }
