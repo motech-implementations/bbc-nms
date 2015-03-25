@@ -1,7 +1,6 @@
 package org.motechproject.nms.kilkari.repository;
 
 import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
@@ -34,9 +33,8 @@ public class CustomQueries {
          * @param query to be executed
          * @return null need to only execute query
          */
-        @Override
-        public Object execute(Query query) {
-            //query.execute();
+        public Object execute(Query query, InstanceSecurityRestriction restriction) {
+            //TBD: After Discussion
             return null;
         }
     }
@@ -59,7 +57,7 @@ public class CustomQueries {
          */
         @Override
         public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            //query.execute();
+            //TBD: After Discussion
             return null;
         }
 
