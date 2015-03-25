@@ -26,6 +26,7 @@ import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -34,7 +35,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
-import java.util.List;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -101,7 +101,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         try {
             subscriptionController.createSubscription(apiRequest);
 
-        } catch (DataValidationException e) {
+        } catch (DataValidationException | NmsInternalServerError e) {
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
     }
@@ -116,7 +116,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         try {
             subscriptionController.createSubscription(apiRequest);
 
-        } catch (DataValidationException e) {
+        } catch (DataValidationException | NmsInternalServerError e) {
             e.printStackTrace();
         }
         Subscriber subscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null);

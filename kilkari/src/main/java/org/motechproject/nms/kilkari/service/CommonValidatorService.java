@@ -6,16 +6,17 @@ import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.helper.DataValidationException;
 
 /**
- * This interface provides methods to validate locations
+ * This interface provides methods to validate values against
+ * Master Data entities
  */
-public interface LocationValidatorService {
+public interface CommonValidatorService {
     
     /**
      *  This method is used to fetch state from DB based stateCode
      * 
      *  @param stateCode csv uploaded stateCode
      */
-    public State stateConsistencyCheck(Long stateCode) throws DataValidationException;
+    public State checkAndGetState(Long stateCode) throws DataValidationException;
 
     /**
      *  This method is used to fetch district from DB based on stateId and districtCode
@@ -23,7 +24,7 @@ public interface LocationValidatorService {
      *  @param state State Object
      *  @param districtCode csv uploaded districtCode
      */
-    public District districtConsistencyCheck(State state, Long districtCode) throws DataValidationException;
+    public District checkAndGetDistrict(State state, Long districtCode) throws DataValidationException;
     
     /**
      *  This method is used to fetch Taluka from DB 
@@ -32,7 +33,7 @@ public interface LocationValidatorService {
      *  @param district District object
      *  @param talukaCode csv uploaded districtCode
      */
-    public Taluka talukaConsistencyCheck(District district, Long talukaCode) throws DataValidationException;
+    public Taluka checkAndGetTaluka(District district, Long talukaCode) throws DataValidationException;
     
     /**
      *  This method is used to fetch Health Block from DB 
@@ -42,8 +43,8 @@ public interface LocationValidatorService {
      *  @param taluka Taluka object
      *  @param talukaCode csv uploaded healthBlockCode
      */
-    public HealthBlock healthBlockConsistencyCheck(Long talukaCode,
-            Taluka taluka, Long healthBlockCode) throws DataValidationException;
+    public HealthBlock checkAndGetHealthBlock(Long talukaCode,
+                                              Taluka taluka, Long healthBlockCode) throws DataValidationException;
 
 
     /**
@@ -54,8 +55,8 @@ public interface LocationValidatorService {
      *  @param healthBlock HealthBlock Object
      *  @param phcCode csv uploaded phcCode
      */
-    public HealthFacility phcConsistencyCheck(Long healthBlockCode, 
-            HealthBlock healthBlock, Long phcCode)
+    public HealthFacility checkAndGetPhc(Long healthBlockCode,
+                                         HealthBlock healthBlock, Long phcCode)
             throws DataValidationException;
     
     /**
@@ -66,8 +67,8 @@ public interface LocationValidatorService {
      *  @param healthFacility HealthFacility Object
      *  @param subCenterCode csv uploaded subCenterCode
      */
-    public HealthSubFacility subCenterCodeCheck(Long phcCode,
-            HealthFacility healthFacility, Long subCenterCode)
+    public HealthSubFacility checkAndGetSubCenter(Long phcCode,
+                                                  HealthFacility healthFacility, Long subCenterCode)
             throws DataValidationException;
 
     /**
@@ -78,7 +79,7 @@ public interface LocationValidatorService {
      *  @param villageCode csv uploaded districtCode
      */
 
-    public Village villageConsistencyCheck(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
+    public Village checkAndGetVillage(Long talukaCode, Taluka taluka, Long villageCode) throws DataValidationException;
 
     /**
      * This method validates and map location to subscriber
@@ -90,4 +91,39 @@ public interface LocationValidatorService {
     public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException;
 
+    /**
+     * Validates the entry type value and raises exception if not valid
+     * @param entryType string to be validated
+     * @throws DataValidationException
+     */
+    void checkValidEntryType(String entryType) throws DataValidationException;
+
+    /**
+     * Validates the Abortion type value and raises exception if not valid
+     * @param abortion string to be validated
+     * @throws DataValidationException
+     */
+    void checkValidAbortionType(String abortion) throws DataValidationException;
+
+
+    /**
+     * This method validate the operatorCode from database
+     * @param operatorCode code of the operator
+     * @throws DataValidationException
+     */
+    void validateOperator(String operatorCode) throws DataValidationException;
+
+    /**
+     * This method validate the circleCode from database
+     * @param circleCode code of the circle
+     * @throws DataValidationException
+     */
+    void validateCircle(String circleCode) throws DataValidationException;
+
+    /**
+     * This method validate the languageLocationCode from database
+     * @param llcCode value of the languageLocationCode
+     * @throws DataValidationException
+     */
+    public void validateLanguageLocationCode(Integer llcCode) throws DataValidationException;
 }

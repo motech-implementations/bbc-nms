@@ -23,8 +23,8 @@
     <osgi:service ref="subscriberService"
                   interface="org.motechproject.nms.kilkari.service.SubscriberService" />
                   
-    <osgi:service ref="locationValidatorService"
-                  interface="org.motechproject.nms.kilkari.service.LocationValidatorService" />  
+    <osgi:service ref="commonValidatorService"
+                  interface="org.motechproject.nms.kilkari.service.CommonValidatorService" />
                   
     <osgi:service ref="configurationService"
                   interface="org.motechproject.nms.kilkari.service.ConfigurationService" />

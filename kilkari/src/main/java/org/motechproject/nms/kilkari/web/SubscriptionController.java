@@ -6,6 +6,7 @@ import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * and get subscriber details
  */
 @Controller
-public class SubscriptionController extends BaseController{
+public class SubscriptionController extends BaseController {
 
     Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
@@ -38,7 +39,8 @@ public class SubscriptionController extends BaseController{
      */
     @RequestMapping(value = "/subscription", method = RequestMethod.POST)
     @ResponseBody
-    public void createSubscription(@RequestBody SubscriptionCreateApiRequest apiRequest) throws DataValidationException{
+    public void createSubscription(@RequestBody SubscriptionCreateApiRequest apiRequest)
+            throws DataValidationException, NmsInternalServerError {
         logger.info("*****createSubscription is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + apiRequest.getCallingNumber() + "]");
@@ -78,7 +80,8 @@ public class SubscriptionController extends BaseController{
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
-                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException, Exception{
+                                       @RequestParam String circle, @RequestParam String callId)
+            throws DataValidationException, Exception {
         logger.info("*****getSubscriberDetails is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + callingNumber + "]");

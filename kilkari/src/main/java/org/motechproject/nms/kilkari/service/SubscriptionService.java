@@ -5,6 +5,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 
 import java.util.List;
 
@@ -62,18 +63,7 @@ public interface SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      */
     void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
-            throws DataValidationException;
-
-    /**
-     * creates new subscriber and subscription
-     * @param subscriber Subscriber type object
-     * @param channel Channel type object
-     * @param operatorCode String type object
-     * @param circleCode String type object
-     * @throws DataValidationException
-     */
-    void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
-            throws DataValidationException;
+            throws DataValidationException, NmsInternalServerError;
 
     /**
      *  This method is used to insert/update subscription and subscriber
@@ -81,7 +71,7 @@ public interface SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      */
     void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
-            throws DataValidationException;
+            throws DataValidationException, NmsInternalServerError;
 
     /**
      * This method deactivates the subscription corresponding to subscriptionId
@@ -101,5 +91,5 @@ public interface SubscriptionService {
      * @throws DataValidationException
      */
     void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
-        throws DataValidationException;
+        throws DataValidationException, NmsInternalServerError;
 }

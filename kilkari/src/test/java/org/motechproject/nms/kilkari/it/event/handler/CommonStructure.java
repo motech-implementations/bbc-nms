@@ -4,11 +4,8 @@ import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.event.handler.ChildMctsCsvHandler;
-import org.motechproject.nms.kilkari.event.handler.MotherMctsCsvHandler;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.*;
@@ -22,7 +19,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertNull;
 
@@ -71,7 +70,7 @@ public class CommonStructure extends BasePaxIT {
     protected ConfigurationService configurationService;
     
     @Inject
-    protected LocationValidatorService locationValidatorService;
+    protected CommonValidatorService commonValidatorService;
 
     private static boolean setUpIsDone = false;
     

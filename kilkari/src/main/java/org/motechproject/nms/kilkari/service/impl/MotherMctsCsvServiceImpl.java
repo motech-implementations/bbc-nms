@@ -1,18 +1,10 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.AbortionType;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -21,12 +13,15 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -41,7 +36,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     private SubscriptionService subscriptionService;
 
     @Autowired
-    private LocationValidatorService locationValidator;
+    private CommonValidatorService commonValidatorService;
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -56,7 +51,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     @Override
     public void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);
-        BulkUploadStatus uploadedStatus = new BulkUploadStatus();
+        BulkUploadStatus motherCsvUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
         DateTime timeOfUpload = new DateTime();
         errorDetails.setCsvName(csvFileName);
@@ -75,14 +70,14 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                     userName = motherMctsCsv.getOwner();
                     Subscriber subscriber = mapMotherMctsToSubscriber(motherMctsCsv);
                     subscriptionService.handleMctsSubscriptionRequestForMother(subscriber, Channel.MCTS);
-                    uploadedStatus.incrementSuccessCount();
+                    motherCsvUploadStatus.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetails.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                     logger.error("Record not found for uploaded id [{}]", id);
-                    uploadedStatus.incrementFailureCount();
+                    motherCsvUploadStatus.incrementFailureCount();
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
@@ -92,7 +87,16 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
 
-                uploadedStatus.incrementFailureCount();
+                motherCsvUploadStatus.incrementFailureCount();
+
+            } catch (NmsInternalServerError dve) {
+                logger.warn("DataValidationException ::::", dve.getMessage());
+                errorDetails.setRecordDetails(motherMctsCsv.toString());
+                errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                errorDetails.setErrorDescription(dve.getMessage());
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+
+                motherCsvUploadStatus.incrementFailureCount();
 
             } catch (Exception e) {
                 errorDetails.setRecordDetails("Some Error Occurred");
@@ -100,7 +104,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 logger.error("**** Generic Exception Raised *****:", e);
-                uploadedStatus.incrementFailureCount();
+                motherCsvUploadStatus.incrementFailureCount();
             }finally {
                 logger.debug("Inside finally");
                 if (motherMctsCsv != null) {
@@ -109,11 +113,11 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 }
             }
         }
-        uploadedStatus.setUploadedBy(userName);
-        uploadedStatus.setBulkUploadFileName(csvFileName);
-        uploadedStatus.setTimeOfUpload(timeOfUpload);
+        motherCsvUploadStatus.setUploadedBy(userName);
+        motherCsvUploadStatus.setBulkUploadFileName(csvFileName);
+        motherCsvUploadStatus.setTimeOfUpload(timeOfUpload);
         
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadedStatus);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(motherCsvUploadStatus);
         logger.info("Processed Csv file[{}]", csvFileName);
     }
     
@@ -128,7 +132,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         Subscriber motherSubscriber = new Subscriber();
 
         logger.trace("mapMotherMctsToSubscriber method start");
-        motherSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
+        motherSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
         String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
         motherSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
@@ -140,17 +144,18 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
 
         /* Check appropriate value of entryType and abortion*/
+        Integer outcomeNos = ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false);
         String entryType = ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false);
-        checkValidEntryType(entryType);
+        commonValidatorService.checkValidEntryType(entryType);
         String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
-        checkValidAbortionType(abortion);
+        commonValidatorService.checkValidAbortionType(abortion);
         
         /* Set the appropriate Deactivation Reason */
-        if (Constants.STILL_BIRTH_ZERO.equals(ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false))) {
+        if (Constants.STILL_BIRTH_ZERO.equals(outcomeNos)) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
-        } else if (!(abortion == null || Constants.ABORTION_NONE.equalsIgnoreCase(abortion))) {
+        } else if (!(abortion == null || AbortionType.NONE.toString().equalsIgnoreCase(abortion))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
-        } else if (Constants.MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
+        } else if (EntryType.DEATH.toString().equalsIgnoreCase(entryType)) {
             motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
         } else {
             motherSubscriber.setDeactivationReason(DeactivationReason.NONE);
@@ -164,22 +169,4 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         return motherSubscriber;
     }
 
-    private void checkValidAbortionType(String abortion) throws DataValidationException {
-        if(abortion!=null){
-            boolean foundAbortionType = AbortionType.checkValidAbortionType(abortion);
-            if(!foundAbortionType){
-                ParseDataHelper.raiseInvalidDataException("Abortion", abortion); 
-            }
-        }
-    }
-
-    private void checkValidEntryType(String entryType) throws DataValidationException {
-        if (entryType!=null) {
-            boolean foundEntryType = EntryType.checkValidEntryType(entryType);
-            if(!foundEntryType){
-                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType); 
-            } 
-        } 
-    }
-    
 }

@@ -6,7 +6,6 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 import javax.jdo.Query;
-
 import java.util.List;
 
 public class CustomQueries {

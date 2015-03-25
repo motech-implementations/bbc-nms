@@ -7,13 +7,11 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.event.handler.ChildMctsCsvHandler;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.*;
-import org.motechproject.nms.kilkari.service.impl.LocationValidatorServiceImpl;
+import org.motechproject.nms.kilkari.service.impl.CommonValidatorServiceImpl;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -22,18 +20,13 @@ import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.mockito.Mockito.when;
 
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
 
-public class LocationValidatorServiceTest {
+public class CommonValidatorServiceTest {
 
     @Mock
     private StateRecordsDataService stateRecordsDataService;
@@ -78,18 +71,18 @@ public class LocationValidatorServiceTest {
     protected ConfigurationService configurationService;
 
     @Mock
-    protected LocationValidatorService locationValidatorService;
+    protected CommonValidatorService commonValidatorService;
 
     @Mock
     protected LocationService locationService;
 
     @InjectMocks
-    LocationValidatorServiceImpl locationValidtorService;
+    CommonValidatorServiceImpl commonValidatorService1;
 
     @Before
     public void init() {
 
-        locationValidtorService = new LocationValidatorServiceImpl();
+        commonValidatorService1 = new CommonValidatorServiceImpl();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -105,7 +98,7 @@ public class LocationValidatorServiceTest {
         State returnedState = null;
 
         try {
-            returnedState = locationValidtorService.stateConsistencyCheck(1L);
+            returnedState = commonValidatorService1.checkAndGetState(1L);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -119,7 +112,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getStateByCode(1L)).thenReturn(null);
 
         try {
-            state = locationValidtorService.stateConsistencyCheck(1L);
+            state = commonValidatorService1.checkAndGetState(1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -135,7 +128,7 @@ public class LocationValidatorServiceTest {
         State state = new State();
         state.setId(1L);
         try {
-            district = locationValidtorService.districtConsistencyCheck(state, 1L);
+            district = commonValidatorService1.checkAndGetDistrict(state, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -151,7 +144,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getTalukaByCode(1L, 1L)).thenReturn(null);
 
         try {
-            taluka = locationValidtorService.talukaConsistencyCheck(district,1L);
+            taluka = commonValidatorService1.checkAndGetTaluka(district, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -165,7 +158,7 @@ public class LocationValidatorServiceTest {
         District district = new District();
 
         try {
-            taluka = locationValidtorService.talukaConsistencyCheck(district,null);
+            taluka = commonValidatorService1.checkAndGetTaluka(district, null);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -180,7 +173,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getHealthBlockByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, taluka, 1L);
+            healthBlock = commonValidatorService1.checkAndGetHealthBlock(1L, taluka, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -193,7 +186,7 @@ public class LocationValidatorServiceTest {
         HealthBlock healthBlock = null;
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, null, 1L);
+            healthBlock = commonValidatorService1.checkAndGetHealthBlock(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -207,7 +200,7 @@ public class LocationValidatorServiceTest {
         Taluka taluka = new Taluka();
 
         try {
-            healthBlock = locationValidtorService.healthBlockConsistencyCheck(1L, taluka, null);
+            healthBlock = commonValidatorService1.checkAndGetHealthBlock(1L, taluka, null);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -221,7 +214,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthFacility = locationValidtorService.phcConsistencyCheck(1L, healthBlock, 1L);
+            healthFacility = commonValidatorService1.checkAndGetPhc(1L, healthBlock, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -235,7 +228,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getHealthFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthFacility = locationValidtorService.phcConsistencyCheck(1L, null, 1L);
+            healthFacility = commonValidatorService1.checkAndGetPhc(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -249,7 +242,7 @@ public class LocationValidatorServiceTest {
         HealthBlock healthBlock = new HealthBlock();
 
         try {
-            healthFacility = locationValidtorService.phcConsistencyCheck(1L, healthBlock, null);
+            healthFacility = commonValidatorService1.checkAndGetPhc(1L, healthBlock, null);
         } catch (Exception e) {
 
             Assert.fail();
@@ -264,7 +257,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthSubFacility = locationValidtorService.subCenterCodeCheck(1L, healthFacility, 1L);
+            healthSubFacility = commonValidatorService1.checkAndGetSubCenter(1L, healthFacility, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -278,7 +271,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getHealthSubFacilityByCode(1L, 1L)).thenReturn(null);
 
         try {
-            healthSubFacility = locationValidtorService.subCenterCodeCheck(1L, null, 1L);
+            healthSubFacility = commonValidatorService1.checkAndGetSubCenter(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -292,7 +285,7 @@ public class LocationValidatorServiceTest {
         HealthFacility healthFacility = new HealthFacility();
 
         try {
-            healthSubFacility = locationValidtorService.subCenterCodeCheck(1L, healthFacility, null);
+            healthSubFacility = commonValidatorService1.checkAndGetSubCenter(1L, healthFacility, null);
         } catch (Exception e) {
             Assert.fail();
         }
@@ -306,7 +299,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(1L, taluka, 1L);
+            village = commonValidatorService1.checkAndGetVillage(1L, taluka, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -320,7 +313,7 @@ public class LocationValidatorServiceTest {
         when(locationService.getVillageByCode(1L, 1L)).thenReturn(null);
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(1L, null, 1L);
+            village = commonValidatorService1.checkAndGetVillage(1L, null, 1L);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
@@ -335,7 +328,7 @@ public class LocationValidatorServiceTest {
 
 
         try {
-            village = locationValidtorService.villageConsistencyCheck(1L, taluka, null);
+            village = commonValidatorService1.checkAndGetVillage(1L, taluka, null);
         } catch (Exception e) {
             Assert.fail();
         }

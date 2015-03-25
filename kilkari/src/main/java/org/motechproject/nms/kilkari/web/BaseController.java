@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.web;
 
 import org.apache.log4j.Logger;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -59,7 +60,7 @@ public class BaseController {
      * @param request
      * @return ResponseEntity<String>
      */
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = { NmsInternalServerError.class, Exception.class })
     public ResponseEntity<String> handleGeneralExceptions(
             final Exception exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);

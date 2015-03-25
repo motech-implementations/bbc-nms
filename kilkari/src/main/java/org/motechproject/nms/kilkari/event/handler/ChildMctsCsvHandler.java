@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static org.motechproject.nms.kilkari.commons.Constants.CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT;
+
 /**
  * This class is used to handle the success
  * event of csv upload of ChildMcts
@@ -21,8 +23,7 @@ public class ChildMctsCsvHandler {
 
     private ChildMctsCsvService childMctsCsvService;
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandler.class);
-    private static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.ChildMctsCsv.csv-import.success";
-    
+
     @Autowired
     public ChildMctsCsvHandler(ChildMctsCsvService childMctsCsvService){
         

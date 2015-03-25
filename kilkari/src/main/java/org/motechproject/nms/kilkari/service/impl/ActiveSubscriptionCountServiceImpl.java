@@ -42,7 +42,7 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
      */
     @Override
     public Boolean isActiveSubscriptionCountPresent() {
-        return (activeSubscriptionCountDataService.count() > Constants.COUNT_ZERO);
+        return (activeSubscriptionCountDataService.count() > Constants.ACTIVE_SUBSCRIPTION_COUNT_ZERO);
     }
 
 }

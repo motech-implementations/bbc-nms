@@ -8,17 +8,12 @@ import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataServi
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.service.CircleService;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
-import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
-import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +40,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private ActiveSubscriptionCountDataService activeUserDataService;
 
     @Autowired
-    private OperatorService operatorService;
+    private CommonValidatorService commonValidatorService;
 
-    @Autowired
-    private CircleService circleService;
-
-    @Autowired
-    private LanguageLocationCodeService languageLocationCodeService;
-    
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
     /**
@@ -132,7 +121,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      */
     @Override
-    public void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel) throws DataValidationException {
+    public void handleMctsSubscriptionRequestForChild(Subscriber subscriber, Channel channel)
+            throws DataValidationException, NmsInternalServerError {
 
         /*
         Create new subscriber and subscription if there is no existing record for childMctsId or motherMctsId
@@ -220,7 +210,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param subscriber csv uploaded subscriber
      */
     @Override
-    public void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel) throws DataValidationException {
+    public void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
+            throws DataValidationException, NmsInternalServerError {
 
         /*
         Create a new Subscriber and Subscription record in NMS database, if
@@ -275,7 +266,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel)
-            throws DataValidationException {
+            throws NmsInternalServerError {
         createNewSubscriberAndSubscription(subscriber, channel, null, null);
     }
 
@@ -286,9 +277,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param operatorCode String type object
      * @throws DataValidationException
      */
-    @Override
-    public void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode, String circleCode)
-            throws DataValidationException {
+    private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode,
+                                                   String circleCode)
+            throws NmsInternalServerError {
             Configuration configuration = configurationService.getConfiguration();
             long activeUserCount = getActiveUserCount();
         /* check for maximum allowed beneficiary */
@@ -298,8 +289,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     createNewSubscription(subscriber, newSubscriber, channel, operatorCode);
                 }
             } else {
-                logger.info("Reached maximum beneficiary count, can't add any more");
-                throw new DataValidationException("Beneficiary Count Exceeded" ,"Beneficiary Count Exceeded" , null);
+                logger.info("Reached maximum Active Subscriptions Count, can't add any more");
+                throw new NmsInternalServerError("Active Subscriptions Count Exceeded",
+                        ErrorCategoryConstants.INCONSISTENT_DATA,
+                        "Active Subscriptions Count Exceeded");
             }
 
     }
@@ -313,8 +306,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @throws DataValidationException
      */
     @Override
-    public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode) throws DataValidationException{
-        validateCircleLlcCodeAndOperator(circleCode, operatorCode, llcCode);
+    public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode,
+                                             Integer llcCode) throws DataValidationException, NmsInternalServerError {
+        commonValidatorService.validateCircle(circleCode);
+        commonValidatorService.validateOperator(operatorCode);
+        commonValidatorService.validateLanguageLocationCode(llcCode);
+
         Subscriber dbSubscriber = null;
         if(subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
             dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
@@ -336,7 +333,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param dbSubscription database Subscription
      *  @param dbSubscriber database subscriber
      */
-    private void updateDbSubscriberAndSubscription(Subscriber subscriber, Subscription dbSubscription, Subscriber dbSubscriber, Channel channel) {
+    private void updateDbSubscriberAndSubscription(Subscriber subscriber, Subscription dbSubscription,
+                                                   Subscriber dbSubscriber, Channel channel) {
         
         if (subscriber.getDeactivationReason() != DeactivationReason.NONE) {
             updateDbSubscription(subscriber, dbSubscription, true, subscriber.getDeactivationReason());
@@ -361,7 +359,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param operatorCode code of the operator
      *  @param dbSubscriber database subscriber
      */
-    private Subscription createNewSubscription(Subscriber subscriber, Subscriber dbSubscriber, Channel channel, String operatorCode) {
+    private Subscription createNewSubscription(Subscriber subscriber, Subscriber dbSubscriber, Channel channel,
+                                               String operatorCode) {
 
         Subscription newSubscription = new Subscription();
 
@@ -454,8 +453,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param subscriptionId Long type object
      */
     @Override
-    public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode) throws DataValidationException{
-        validateCircleLlcCodeAndOperator(circleCode, operatorCode, null);
+    public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
+            throws DataValidationException{
+        commonValidatorService.validateCircle(circleCode);
+        commonValidatorService.validateOperator(operatorCode);
+
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
@@ -464,38 +466,4 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
-    /**
-     * This method validate the operatorCode and circleCode from database
-     * @param circleCode code of the circle
-     * @param operatorCode code of the operator
-     * @throws DataValidationException
-     */
-    private void validateCircleLlcCodeAndOperator(String circleCode, String operatorCode, Integer llcCode) throws DataValidationException{
-        if (operatorCode != null) {
-            Operator operator = operatorService.getRecordByCode(operatorCode);
-            if (operator == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "operatorCode", operatorCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "operatorCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "operatorCode");
-            }
-        }
-
-        if (circleCode != null) {
-            Circle circle = circleService.getRecordByCode(circleCode);
-            if (circle == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", circleCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
-            }
-        }
-
-        if (llcCode != null) {
-            LanguageLocationCode languageLocationCode = languageLocationCodeService.findLLCByCode(llcCode);
-            if (languageLocationCode == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", llcCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
-            }
-        }
-    }
 }

@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 import org.motechproject.nms.kilkari.event.handler.ContentUploadCsvHandler;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -38,6 +39,9 @@ public class ContentUploadCsvHandlerTest extends TestCase {
 
     @Mock
     private ContentUploadCsvService contentUploadCsvService;
+
+    @Mock
+    private CommonValidatorService commonValidatorService;
 
     private ContentUploadCsvHandler handler;
 

@@ -43,6 +43,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
      */
     @Override
     public Boolean isConfigurationPresent() {
-        return (configurationDataService.count() > Constants.COUNT_ZERO);
+        return (configurationDataService.count() > Constants.ACTIVE_SUBSCRIPTION_COUNT_ZERO);
     }
 }

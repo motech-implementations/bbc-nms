@@ -1,11 +1,10 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
-import org.motechproject.nms.kilkari.service.LocationValidatorService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -13,6 +12,7 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     private SubscriptionService subscriptionService;
 
     @Autowired
-    private LocationValidatorService locationValidator;
+    private CommonValidatorService commonValidatorService;
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
@@ -50,7 +50,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     @Override
     public void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);
-        BulkUploadStatus uploadedStatus = new BulkUploadStatus();
+        BulkUploadStatus childCsvUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
         DateTime timeOfUpload = new DateTime();
         errorDetails.setCsvName(csvFileName);
@@ -70,23 +70,32 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                     userName = childMctsCsv.getOwner();
                     Subscriber subscriber = mapChildMctsToSubscriber(childMctsCsv);
                     subscriptionService.handleMctsSubscriptionRequestForChild(subscriber, Channel.MCTS);
-                    uploadedStatus.incrementSuccessCount();
+                    childCsvUploadStatus.incrementSuccessCount();
                 } else {
                     errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
                     errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
                     errorDetails.setRecordDetails("Record is null");
                     bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                     logger.error("Record not found for uploaded id [{}]", id);
-                    uploadedStatus.incrementFailureCount();
+                    childCsvUploadStatus.incrementFailureCount();
                 }
                 logger.info("Processed record id[{}]", id);
+            } catch (NmsInternalServerError dve) {
+                logger.warn("DataValidationException ::::", dve.getMessage());
+                errorDetails.setRecordDetails(childMctsCsv.toString());
+                errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
+                errorDetails.setErrorDescription(dve.getMessage());
+                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+
+                childCsvUploadStatus.incrementFailureCount();
+
             } catch (DataValidationException dve) {
                 logger.warn("DataValidationException ::::", dve.getMessage());
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                uploadedStatus.incrementFailureCount();
+                childCsvUploadStatus.incrementFailureCount();
 
             } catch (Exception e) {
                 errorDetails.setRecordDetails("Some Error Occurred");
@@ -94,7 +103,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 logger.error("**** Generic Exception Raised *****:", e);
-                uploadedStatus.incrementFailureCount();
+                childCsvUploadStatus.incrementFailureCount();
                 
             } finally {
                 if (childMctsCsv != null) {
@@ -102,11 +111,11 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 }
             }
         }
-        uploadedStatus.setUploadedBy(userName);
-        uploadedStatus.setBulkUploadFileName(csvFileName);
-        uploadedStatus.setTimeOfUpload(timeOfUpload);
+        childCsvUploadStatus.setUploadedBy(userName);
+        childCsvUploadStatus.setBulkUploadFileName(csvFileName);
+        childCsvUploadStatus.setTimeOfUpload(timeOfUpload);
         
-        bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadedStatus);
+        bulkUploadErrLogService.writeBulkUploadProcessingSummary(childCsvUploadStatus);
         logger.info("Processed Csv file[{}]", csvFileName);
     }
     
@@ -121,7 +130,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         Subscriber childSubscriber = new Subscriber();
         
         logger.trace("mapChildMctsToSubscriber method start");
-        childSubscriber = locationValidator.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
+        childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
 
         String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
         childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
@@ -133,9 +142,9 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
         /* Set the appropriate Deactivation Reason */
         String entryType = ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false);
-        checkValidEntryType(entryType);
+        commonValidatorService.checkValidEntryType(entryType);
 
-        if(Constants.CHILD_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false))){
+        if(EntryType.DEATH.toString().equalsIgnoreCase(entryType)) {
             childSubscriber.setDeactivationReason(DeactivationReason.CHILD_DEATH);
         } else {
             childSubscriber.setDeactivationReason(DeactivationReason.NONE);
@@ -150,14 +159,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         return childSubscriber;
     }
 
-    private void checkValidEntryType(String entryType) throws DataValidationException {
-        if (entryType!=null) {
-            boolean foundEntryType = EntryType.checkValidEntryType(entryType);
-            if(!foundEntryType){
-                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType); 
-            } 
-        } 
-    }
+
 
 
 }
