@@ -14,7 +14,7 @@ public interface UserProfileDetailsService {
 
     public UserProfile processUserDetails(String msisdn, String circle, String operatorCode,
                                           ServicesUsingFrontLineWorker service)
-            throws Exception;
+            throws DataValidationException;
 
     public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
             throws DataValidationException;
