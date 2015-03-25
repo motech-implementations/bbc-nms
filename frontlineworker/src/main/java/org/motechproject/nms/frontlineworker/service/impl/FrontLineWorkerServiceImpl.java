@@ -34,6 +34,11 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     }
 
     @Override
+    public void deleteFrontLineWorker(FrontLineWorker frontLineWorker) {
+        frontLineWorkerRecordDataService.delete(frontLineWorker);
+    }
+
+    @Override
     public FrontLineWorker getFlwBycontactNo(String contactNo) {
         return frontLineWorkerRecordDataService.getFlwByContactNo(contactNo);
     }

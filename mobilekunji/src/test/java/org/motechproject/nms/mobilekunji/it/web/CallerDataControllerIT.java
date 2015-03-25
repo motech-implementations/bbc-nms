@@ -15,6 +15,7 @@ import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.*;
 import org.motechproject.nms.mobilekunji.web.CallerDataController;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -25,9 +26,9 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by abhishek on 25/3/15.
@@ -116,6 +117,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
+        //Update Language Location Code
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         flwWorker.setLanguageLocationCodeId(33);
         frontLineWorkerService.updateFrontLineWorker(flwWorker);
@@ -128,6 +130,10 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
 
+//        // This case is used to check
+//        frontLineWorkerService.deleteFrontLineWorker(flwWorker);
+//        UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
         controller.saveCallDetails(saveCallDetailApiRequest);
 
@@ -136,6 +142,16 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         assertNotNull(flwDetail);
         assertNotNull(callDetail);
+
+        /* This case is for Calling Number not existing in FlwDetail
+        * In this case InvalidDataException Occurs
+        */
+        try {
+            saveCallDetailApiRequest.setCallingNumber("8888888888");
+            controller.saveCallDetails(saveCallDetailApiRequest);
+        }  catch (DataValidationException e) {
+        assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+    }
     }
 
 }

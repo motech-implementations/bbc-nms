@@ -15,6 +15,8 @@ public interface FrontLineWorkerService {
 
     public void updateFrontLineWorker(FrontLineWorker frontLineWorker);
 
+    public void deleteFrontLineWorker(FrontLineWorker frontLineWorker);
+
     public FrontLineWorker getFlwBycontactNo(String contactNo);
 
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode);
