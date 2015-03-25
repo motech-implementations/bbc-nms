@@ -45,7 +45,7 @@ public class SubscriptionController extends BaseController{
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
-        logger.debug("languageLocationCode : [" + apiRequest.getLanguageLocationCode().toString() + "]");
+        logger.debug(String.format("languageLocationCode : [%d]", apiRequest.getLanguageLocationCode()));
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
 
         apiRequest.validateMandatoryParameters();

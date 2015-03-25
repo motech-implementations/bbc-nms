@@ -13,19 +13,19 @@ public class SubscriberDetailApiResponse {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    String circle;
+    private String circle;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    Integer languageLocationCode;
+    private Integer languageLocationCode;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    List<SubscriptionPack> subscriptionPackList;
+    private List<SubscriptionPack> subscriptionPackList;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    Integer defaultLanguageLocationCode;
+    private Integer defaultLanguageLocationCode;
 
     public String getCircle() {
         return circle;

@@ -17,22 +17,22 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 public class SubscriptionCreateApiRequest {
 
     @JsonProperty
-    String callingNumber;
+    private String callingNumber;
 
     @JsonProperty
-    String operator;
+    private String operator;
 
     @JsonProperty
-    String circle;
+    private String circle;
 
     @JsonProperty
-    String callId;
+    private String callId;
 
     @JsonProperty
-    Integer languageLocationCode;
+    private Integer languageLocationCode;
 
     @JsonProperty
-    String subscriptionPack;
+    private String subscriptionPack;
 
     public void setSubscriptionPack(String subscriptionPack) {
         this.subscriptionPack = subscriptionPack;

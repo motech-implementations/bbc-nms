@@ -491,7 +491,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (circleCode != null) {
             Circle circle = circleService.getRecordByCode(circleCode);
             if (circle == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", operatorCode);
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", circleCode);
                 String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
                 throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
             }
@@ -500,7 +500,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (llcCode != null) {
             LanguageLocationCode languageLocationCode = languageLocationCodeService.findLLCByCode(llcCode);
             if (languageLocationCode == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", operatorCode);
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", llcCode);
                 String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
                 throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
             }
