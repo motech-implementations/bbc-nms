@@ -117,6 +117,9 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For Default National Capping
         Configuration configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
+        flwDetailService.update(flwDetail);
         configurationService.updateConfiguration(configurationData);
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
@@ -124,11 +127,16 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For State Level Capping Type and Next Date Condition
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
         configurationService.updateConfiguration(configurationData);
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusMonths(2));
         flwDetailService.update(flwDetail);
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+
+        //For Null Access Date
+        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail.setLastAccessDate(null);
+        flwDetailService.update(flwDetail);
 
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
