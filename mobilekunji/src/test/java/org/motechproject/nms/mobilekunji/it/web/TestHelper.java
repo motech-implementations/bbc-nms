@@ -14,7 +14,7 @@ import java.util.Set;
 import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.*;
 
 /**
- * Created by abhishek on 25/3/15.
+ * This is a helper class in which data is set for test class.
  */
 public class TestHelper {
 

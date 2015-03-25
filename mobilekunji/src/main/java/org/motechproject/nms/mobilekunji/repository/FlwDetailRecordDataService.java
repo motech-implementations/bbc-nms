@@ -6,7 +6,10 @@ import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 
 /**
- * Created by abhishek on 13/3/15.
+ * Interface for repository that persists simple records and allows CRUD.
+ * MotechDataService base class will provide the implementation of this class as well
+ * as methods for adding, deleting, saving and finding all instances.  In this class we
+ * define and custom lookups we may need. it will be used to find ServiceConsumption by nmsFlwId or Msisdn
  */
 public interface FlwDetailRecordDataService extends MotechDataService<FlwDetail> {
 
