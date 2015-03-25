@@ -49,4 +49,11 @@ public class LlcRequest implements Serializable {
         this.languageLocationCode = languageLocationCode;
     }
 
+    @Override
+    public String toString() {
+        return "LlcRequest{callingNumber=" + callingNumber + ", callId="
+                + callId + ", languageLocationCode=" + languageLocationCode
+                + "}";
+    }
+
 }

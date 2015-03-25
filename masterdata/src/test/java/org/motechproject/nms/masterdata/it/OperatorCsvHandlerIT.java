@@ -117,12 +117,7 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
-        for (Long id : createdIds) {
-            Operator operator = operatorDataService.findById(id);
-            if (operator != null) {
-                operatorService.delete(operator);
-            }
-        }
+        operatorDataService.deleteAll();
         createdIds.clear();
     }
 }

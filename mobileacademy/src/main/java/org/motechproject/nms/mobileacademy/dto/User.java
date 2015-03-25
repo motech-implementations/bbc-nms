@@ -101,4 +101,15 @@ public class User implements Serializable {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
+    @Override
+    public String toString() {
+        return "User{circle=" + circle + ", languageLocationCode="
+                + languageLocationCode + ", defaultLanguageLocationCode="
+                + defaultLanguageLocationCode + ", currentUsageInPulses="
+                + currentUsageInPulses + ", maxAllowedUsageInPulses="
+                + maxAllowedUsageInPulses + ", endOfUsagePromptCounter="
+                + endOfUsagePromptCounter + ", maxAllowedEndOfUsagePrompt="
+                + maxAllowedEndOfUsagePrompt + "}";
+    }
+
 }

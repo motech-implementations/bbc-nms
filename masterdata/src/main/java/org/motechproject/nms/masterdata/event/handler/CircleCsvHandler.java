@@ -66,14 +66,10 @@ public class CircleCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-        errorDetail.setCsvName(csvFileName);
-        errorDetail.setTimeOfUpload(timeStamp);
-        errorDetail.setRecordType(RecordType.CIRCLE);
 
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-        uploadStatus.setBulkUploadFileName(csvFileName);
-        uploadStatus.setTimeOfUpload(timeStamp);
 
+        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.CIRCLE);
         for (Long id : createdIds) {
             try {
                 record = circleCsvService.getRecord(id);
@@ -96,17 +92,17 @@ public class CircleCsvHandler {
                 } else {
                     logger.error("Record not found in the CircleCsv table with id {}", id);
 
-                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
             } catch (DataValidationException ex) {
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ex.getErrorDesc(),ex.getErrorCode(),record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
 
             } catch (Exception e) {
                 logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
 
             } finally {

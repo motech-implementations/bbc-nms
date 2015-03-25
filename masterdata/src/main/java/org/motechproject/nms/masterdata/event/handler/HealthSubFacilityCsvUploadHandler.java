@@ -79,13 +79,10 @@ public class HealthSubFacilityCsvUploadHandler {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-        bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(timeStamp);
 
         BulkUploadError errorDetails = new BulkUploadError();
-        errorDetails.setCsvName(csvFileName);
-        errorDetails.setRecordType(RecordType.HEALTH_SUB_FACILITY);
-        errorDetails.setTimeOfUpload(timeStamp);
+
+        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.HEALTH_SUB_FACILITY);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         HealthSubFacilityCsv healthSubFacilityCsvRecord = null;
@@ -104,17 +101,17 @@ public class HealthSubFacilityCsvUploadHandler {
                 } else {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
 
-                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,dataValidationException.getErroneousField(),dataValidationException.getErrorCode(),healthSubFacilityCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), healthSubFacilityCsvRecord.toString());
 
             } catch (Exception e) {
 
-                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {

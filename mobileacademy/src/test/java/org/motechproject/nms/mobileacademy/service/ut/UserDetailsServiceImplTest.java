@@ -69,8 +69,8 @@ public class UserDetailsServiceImplTest {
         userProfile.setCircle("A");
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
-        userProfile.setDefaultLanguageLocationCode(1);
-        userProfile.setNmsId(11l);
+        userProfile.setLanguageLocationCode(1);
+        userProfile.setSystemGeneratedFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -89,7 +89,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getNmsId());
+        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -144,8 +144,8 @@ public class UserDetailsServiceImplTest {
         userProfile.setCircle("A");
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
-        userProfile.setDefaultLanguageLocationCode(null);
-        userProfile.setNmsId(11l);
+        userProfile.setLanguageLocationCode(null);
+        userProfile.setSystemGeneratedFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -164,7 +164,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getNmsId());
+        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -220,7 +220,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(null);
-        userProfile.setNmsId(11l);
+        userProfile.setSystemGeneratedFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -239,7 +239,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getNmsId());
+        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -296,7 +296,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(2);
-        userProfile.setNmsId(11l);
+        userProfile.setSystemGeneratedFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
         Configuration configuration = new Configuration();
@@ -316,7 +316,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getNmsId());
+        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -371,7 +371,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(2);
-        userProfile.setNmsId(11l);
+        userProfile.setSystemGeneratedFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
         Configuration configuration = new Configuration();
@@ -391,7 +391,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getNmsId());
+        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
