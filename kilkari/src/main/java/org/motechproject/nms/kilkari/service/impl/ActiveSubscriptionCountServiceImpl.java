@@ -32,7 +32,7 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
      * @return Long type object
      */
     @Override
-    public Long getActiveUserCount() {
+    public Long getActiveSubscriptionCount() {
         return activeSubscriptionCountDataService.findActiveSubscriptionCountByIndex(Initializer.ACTIVEUSER_INDEX).getCount();
     }
 

@@ -20,7 +20,7 @@ public interface ActiveSubscriptionCountService {
      * finds active user count by index
      * @return Long type object
      */
-    Long getActiveUserCount();
+    Long getActiveSubscriptionCount();
     
     
     /**

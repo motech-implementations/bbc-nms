@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.repository;
 
 import org.motechproject.mds.query.QueryExecution;
+import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
@@ -16,9 +17,10 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    QueryExecution {
+    SqlQueryExecution {
 
-        private final String incrementQuery = "UPDATE KILKARI_ACTIVEUSER SET activeUserCount = activeUserCount + 1 WHERE index = 1";
+        private final String incrementQuery = "UPDATE KILKARI_ACTIVESUBSCRIPTIONCOUNT "
+                + "SET count = count + 1 WHERE KILKARI_ACTIVESUBSCRIPTIONCOUNT.index = 1";
 
         /**
          * This method returns the increment query string
@@ -33,8 +35,8 @@ public class CustomQueries {
          * @param query to be executed
          * @return null need to only execute query
          */
-        public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            //TBD: After Discussion
+        public Object execute(Query query) {
+            query.execute();
             return null;
         }
 
@@ -46,10 +48,10 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountDecrementQuery implements
-    QueryExecution {
+    SqlQueryExecution {
 
-        private final String decrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
-                "SET activeUserCount = activeUserCount - 1 WHERE index = 1";
+        private final String decrementQuery = "UPDATE KILKARI_ACTIVESUBSCRIPTIONCOUNT " +
+                "SET count = count - 1 WHERE KILKARI_ACTIVESUBSCRIPTIONCOUNT.index = 1";
 
         /**
          * This method executes the query passed.
@@ -57,8 +59,8 @@ public class CustomQueries {
          * @return List of distinct subscription packs
          */
         @Override
-        public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            //TBD: After Discussion
+        public Object execute(Query query) {
+            query.execute();
             return null;
         }
 

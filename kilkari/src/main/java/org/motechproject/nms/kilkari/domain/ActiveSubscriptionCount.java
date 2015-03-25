@@ -40,8 +40,8 @@ public class ActiveSubscriptionCount {
         return count;
     }
 
-    public void setCount(Long activeUserCount) {
-        this.count = activeUserCount;
+    public void setCount(Long count) {
+        this.count = count;
     }
 
 }

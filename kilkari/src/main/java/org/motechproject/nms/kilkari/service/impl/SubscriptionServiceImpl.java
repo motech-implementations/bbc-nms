@@ -379,7 +379,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -408,9 +408,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
-            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         } else {
-            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         }
     }
     
@@ -461,7 +461,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
-            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         }
     }
 
