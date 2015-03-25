@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 4/3/15.
+ * This class is used to test(IT) the operations of ConfigurationService
  */
 
 
@@ -61,8 +61,8 @@ public class ConfigurationServiceIT extends BasePaxIT {
         assertNotNull(configuration);
         assertTrue(0 == configuration.getCappingType());
         assertTrue(0 == configuration.getNationalCapValue());
-        assertTrue(1 == configuration.getMaxWelcomeMessage());
         assertTrue(2 == configuration.getMaxEndofusageMessage());
+        assertTrue(1 == configuration.getNationalDefaultLanguageLocationCode());
         assertTrue(1L == configuration.getIndex());
 
     }

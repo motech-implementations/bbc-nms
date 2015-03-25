@@ -9,15 +9,11 @@ public class ConfigurationConstants {
 
     public static final Integer DEFAULT_MAX_NATIONAL_CAPITAL_VALUE = 0;
 
-    public static final Integer DEFAULT_MAX_WELCOME_MESSAGE = 1;
-
     public static final Integer DEFAULT_MAX_END_OF_USAGE_MESSAGE = 2;
 
     public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
 
-    public static final Boolean DEFAULT_WELCOME_PROMPT = true;
-
-    public static final Boolean FALSE = false;
+    public static final Boolean DEFAULT_WELCOME_PROMPT = false;
 
     public static final Integer DEFAULT_END_OF_USAGE_MESSAGE = 0;
 
@@ -29,10 +25,7 @@ public class ConfigurationConstants {
 
     public static final int DEFAULT_STATE_CAPPING_TYPE = 2;
 
-    public static final int ZERO = 0;
+    public static final Integer DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = 1;
 
-    public static final int ONE = 1;
-
-    public static final int TWO = 1;
-
+    public static final Integer MAX_CARD_DIGITS = 2;
 }

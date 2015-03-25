@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.service.impl;
+package org.motechproject.nms.masterdata.ut.service.impl;
 
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -10,6 +10,7 @@ import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.impl.LanguageLocationCodeServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

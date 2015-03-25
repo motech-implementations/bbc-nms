@@ -77,7 +77,6 @@ public class TestHelper {
 
         configuration.setIndex(CONFIGURATION_INDEX);
         configuration.setCappingType(DEFAULT_CAPPING_TYPE);
-        configuration.setMaxWelcomeMessage(DEFAULT_MAX_WELCOME_MESSAGE);
         configuration.setMaxEndofusageMessage(DEFAULT_MAX_END_OF_USAGE_MESSAGE);
         configuration.setNationalCapValue(DEFAULT_MAX_NATIONAL_CAPITAL_VALUE);
 

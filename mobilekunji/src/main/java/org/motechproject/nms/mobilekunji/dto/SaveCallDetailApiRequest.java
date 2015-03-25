@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobilekunji.dto;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.motechproject.nms.mobilekunji.domain.CardContent;
+import org.motechproject.nms.mobilekunji.domain.CardDetail;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class SaveCallDetailApiRequest {
     private String callDisconnectReason;
 
     @JsonProperty
-    private List<CardContent> content;
+    private List<CardDetail> content;
 
     public String getCallingNumber() {
         return callingNumber;
@@ -134,11 +134,11 @@ public class SaveCallDetailApiRequest {
         this.callDisconnectReason = callDisconnectReason;
     }
 
-    public List<CardContent> getContent() {
+    public List<CardDetail> getContent() {
         return content;
     }
 
-    public void setContent(List<CardContent> content) {
+    public void setContent(List<CardDetail> content) {
         this.content = content;
     }
 

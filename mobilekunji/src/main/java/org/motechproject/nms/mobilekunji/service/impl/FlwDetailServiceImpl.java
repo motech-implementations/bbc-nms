@@ -20,7 +20,6 @@ public class FlwDetailServiceImpl implements FlwDetailService {
         this.flwDetailRecordDataService = flwDetailRecordDataService;
     }
 
-
     /**
      * Creates the object for FlwDetail
      *

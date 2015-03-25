@@ -32,7 +32,7 @@ public class CallDetail extends MdsEntity {
 
     @Field
     @Persistent(defaultFetchGroup = "true")
-    private Set<CardContent> cardContent;
+    private Set<CardDetail> cardDetail;
 
     public CallDetail(String callId, Long nmsFlwId, String circleCode, Long startTime, Long endTime) {
         this.callId = callId;
@@ -82,16 +82,16 @@ public class CallDetail extends MdsEntity {
         this.endTime = endTime;
     }
 
-    public Set<CardContent> getCardContent() {
+    public Set<CardDetail> getCardDetail() {
 
-        if (cardContent == null){
-            cardContent = new HashSet<CardContent>();
+        if (cardDetail == null){
+            cardDetail = new HashSet<CardDetail>();
         }
-        return this.cardContent;
+        return this.cardDetail;
     }
 
-    public void setCardContent(Set<CardContent> cardContent) {
-        this.cardContent = cardContent;
+    public void setCardDetail(Set<CardDetail> cardContent) {
+        this.cardDetail = cardContent;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class CallDetail extends MdsEntity {
                 ", circleCode='" + circleCode + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", cardContent=" + cardContent +
+                ", cardContent=" + cardDetail +
                 '}';
     }
 }

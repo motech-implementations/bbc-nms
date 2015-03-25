@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.service.impl;
+package org.motechproject.nms.masterdata.ut.service.impl;
 
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService;
+import org.motechproject.nms.masterdata.service.impl.LanguageLocationCodeCsvServiceImpl;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
