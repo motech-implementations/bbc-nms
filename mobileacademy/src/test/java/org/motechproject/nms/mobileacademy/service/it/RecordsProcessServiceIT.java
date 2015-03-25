@@ -251,8 +251,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
         assertEquals(222, courseProcessedContent.getContentID().longValue());
         assertEquals(333, courseProcessedContent.getContentDuration()
                 .longValue());
@@ -306,8 +306,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
     }
@@ -362,12 +362,14 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, llc1, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), llc1,
+                        contentName.toUpperCase());
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
 
         courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, llc2, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), llc2,
+                        contentName.toUpperCase());
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
 
@@ -536,11 +538,11 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
         CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, 20, contentName);// For LLC
-                                                                     // 20
+                .findByCircleLlcContentName(circle.toUpperCase(), 20,
+                        contentName.toUpperCase());// For LLC 20
         assertEquals("ch_test_update.wav",
                 courseProcessedContent1.getContentFile());
         assertEquals("ch_test_update.wav",
@@ -740,8 +742,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(courseRawContentUpdateRecord1);
 
         CourseProcessedContent courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
 
         String originalFileName = courseProcessedContent1.getContentFile();
 
@@ -749,11 +751,12 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 "CourseContentCsv.csv");
 
         courseProcessedContent1 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentName.toUpperCase());
 
         CourseProcessedContent courseProcessedContent2 = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, 20, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), 20,
+                        contentName.toUpperCase());
 
         String newFileName1 = courseProcessedContent1.getContentFile();
         String newFileName2 = courseProcessedContent2.getContentFile();
@@ -848,8 +851,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, languageLocationCode,
-                        contentNameUpdate);
+                .findByCircleLlcContentName(circle.toUpperCase(),
+                        languageLocationCode, contentNameUpdate.toUpperCase());
         assertNull(courseProcessedContent);
 
     }
@@ -887,7 +890,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 "Answer Option change.csv");
 
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, llc, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
 
         assertEquals(courseProcessedContent.getContentFile(),
                 "File Changed for Question Content.wav");
@@ -916,7 +920,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, llc, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
 
         fileName = courseProcessedContent.getContentFile();
 
@@ -931,7 +936,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 "Answer Option change.csv");
 
         courseProcessedContent = courseProcessedContentDataService
-                .findByCircleLlcContentName(circle, llc, contentName);
+                .findByCircleLlcContentName(circle.toUpperCase(), llc,
+                        contentName.toUpperCase());
 
         assertEquals(courseProcessedContent.getContentFile(), fileName);
         assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
