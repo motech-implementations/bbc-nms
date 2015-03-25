@@ -25,6 +25,9 @@
         
      <osgi:service ref="ConfigurationServiceMa"
         interface="org.motechproject.nms.mobileacademy.service.ConfigurationService" />
+        
+      <osgi:service ref="FlwUsageDetailService"
+        interface="org.motechproject.nms.mobileacademy.service.FlwUsageDetailService" />
 
 
     <osgi:reference id="CourseProcessedContentDataService"

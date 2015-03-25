@@ -8,8 +8,8 @@ import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.Configuration;
 import org.motechproject.nms.mobileacademy.domain.FlwUsageDetail;
 import org.motechproject.nms.mobileacademy.dto.User;
-import org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService;
 import org.motechproject.nms.mobileacademy.service.ConfigurationService;
+import org.motechproject.nms.mobileacademy.service.FlwUsageDetailService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
@@ -30,7 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private ConfigurationService configurationService;
 
     @Autowired
-    private FlwUsageDetailDataService flwUsageDetailDataService;
+    private FlwUsageDetailService flwUsageDetailService;
 
     /*
      * (non-Javadoc)
@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public User findUserDetails(String callingNumber, String operator,
-            String circle) throws DataValidationException {
+            String circle) throws DataValidationException, Exception {
         User user = new User();// response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);
@@ -69,7 +69,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return FlwUsageDetail
      */
     private FlwUsageDetail findFlwUsageInfo(Long flwId) {
-        FlwUsageDetail flwUsageDetail = flwUsageDetailDataService
+        FlwUsageDetail flwUsageDetail = flwUsageDetailService
                 .findByFlwId(flwId);
         if (flwUsageDetail == null) {
             // TODO in save call detail api
@@ -77,7 +77,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             flwUsageDetail.setFlwId(flwId);
             flwUsageDetail.setCurrentUsageInPulses(0);
             flwUsageDetail.setEndOfUsagePromptCounter(0);
-            flwUsageDetail = flwUsageDetailDataService.create(flwUsageDetail);
+            flwUsageDetail = flwUsageDetailService
+                    .createFlwUsageRecord(flwUsageDetail);
         }
         return flwUsageDetail;
 
@@ -97,12 +98,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (CappingType.NO_CAPPING.getValue().equals(
                 configuration.getCappingType())) {
             maxAllowedUsageInPulses = MobileAcademyConstants.MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED;
-        } else if (CappingType.STATE_CAPPING.equals(configuration
-                .getCappingType())) {
+        } else if (CappingType.STATE_CAPPING.getValue().equals(
+                configuration.getCappingType())) {
             maxAllowedUsageInPulses = userProfile
                     .getMaxStateLevelCappingValue();
-        } else if (CappingType.NATIONAL_CAPPING.equals(configuration
-                .getCappingType())) {
+        } else if (CappingType.NATIONAL_CAPPING.getValue().equals(
+                configuration.getCappingType())) {
             maxAllowedUsageInPulses = configuration.getNationalCapValue();
         }
         return maxAllowedUsageInPulses;
@@ -119,24 +120,31 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     private void findLanguageLocationCodeForUser(UserProfile userProfile,
             Configuration configuration, User user) {
+        boolean nationalDefaultLlc = false;
         if (MobileAcademyConstants.UNKNOWN_CIRCLE_CODE.equals(userProfile
                 .getCircle())) {
-            // set national default using configuration for unknown circle
-            user.setDefaultLanguageLocationCode(configuration
-                    .getDefaultLanguageLocationCode());
+            nationalDefaultLlc = true;
         } else {
             if (userProfile.isDefaultLanguageLocationCode()) {
                 if (userProfile.getDefaultLanguageLocationCode() != null) {
                     user.setDefaultLanguageLocationCode(userProfile
                             .getDefaultLanguageLocationCode());
                 } else {
-                    user.setDefaultLanguageLocationCode(configuration
-                            .getDefaultLanguageLocationCode());
+                    nationalDefaultLlc = true;
                 }
             } else {
-                user.setLanguageLocationCode(userProfile
-                        .getLanguageLocationCode());
+                if (userProfile.getLanguageLocationCode() != null) {
+                    user.setLanguageLocationCode(userProfile
+                            .getLanguageLocationCode());
+                } else {
+                    nationalDefaultLlc = true;
+                }
             }
+        }
+        if (nationalDefaultLlc) {
+            // set national default language location code
+            user.setDefaultLanguageLocationCode(configuration
+                    .getDefaultLanguageLocationCode());
         }
     }
 

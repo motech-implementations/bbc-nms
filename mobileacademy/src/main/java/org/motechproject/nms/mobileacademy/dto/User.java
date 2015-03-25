@@ -1,23 +1,47 @@
 package org.motechproject.nms.mobileacademy.dto;
 
+import java.io.Serializable;
+
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 /**
  * User object contain details required in get user detail API response.
  *
  */
-public class User {
+public class User implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private String circle;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer languageLocationCode;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer defaultLanguageLocationCode;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer currentUsageInPulses;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer maxAllowedUsageInPulses;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer endOfUsagePromptCounter;
 
+    @JsonProperty
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     private Integer maxAllowedEndOfUsagePrompt;
 
     public String getCircle() {
