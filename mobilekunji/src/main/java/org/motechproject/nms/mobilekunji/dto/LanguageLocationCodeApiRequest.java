@@ -3,7 +3,7 @@ package org.motechproject.nms.mobilekunji.dto;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * Created by abhishek on 23/2/15.
+ * API request for Language Location Code
  */
 public class LanguageLocationCodeApiRequest {
 

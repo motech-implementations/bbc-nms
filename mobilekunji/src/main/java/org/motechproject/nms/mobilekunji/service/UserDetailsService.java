@@ -4,6 +4,9 @@ import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.util.helper.DataValidationException;
 
+/**
+ * The purpose of this class is to provide methods to create, delete and update the service level User Details.
+ */
 public interface UserDetailsService {
 
     /**

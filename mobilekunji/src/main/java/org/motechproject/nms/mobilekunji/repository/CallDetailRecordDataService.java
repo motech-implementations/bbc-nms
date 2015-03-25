@@ -6,5 +6,5 @@ import org.motechproject.nms.mobilekunji.domain.CallDetail;
 /**
  * Created by abhishek on 13/3/15.
  */
-public interface ServiceConsumptionCallRecordDataService extends MotechDataService<CallDetail> {
+public interface CallDetailRecordDataService extends MotechDataService<CallDetail> {
 }

@@ -5,15 +5,28 @@ import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
 import java.util.List;
 
 /**
- * Created by abhishek on 13/3/15.
+ * The purpose of this class is to provide methods to create, delete and retrieve  record of ContentUploadCsv.
  */
 public interface ContentUploadCsvService {
 
     public ContentUploadCsv createContentUploadCsv(ContentUploadCsv contentUploadCsv);
 
+    /**
+     * Finds the record of content  upload Csv by its Id
+     * @param id
+     * @return ContentUploadCsv
+     */
     public ContentUploadCsv findByIdInCsv(Long id);
 
+    /**
+     * Deletes records from contentUpload Csv
+     * @param contentUploadCsv
+     */
     public void deleteFromCsv(ContentUploadCsv contentUploadCsv);
 
+    /**
+     * Retrieves the records from Csv
+     * @return List of ContentUploadCsv
+     */
     public List<ContentUploadCsv> retrieveAllFromCsv();
 }

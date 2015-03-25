@@ -20,11 +20,11 @@
     <osgi:service ref="saveCallDetailsService"
                   interface="org.motechproject.nms.mobilekunji.service.SaveCallDetailsService"/>
 
-    <osgi:service ref="serviceConsumptionFlwService"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService"/>
+    <osgi:service ref="flwDetailService"
+                  interface="org.motechproject.nms.mobilekunji.service.FlwDetailService"/>
 
-    <osgi:service ref="serviceConsumptionCallService"
-                  interface="org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService"/>
+    <osgi:service ref="callDetailService"
+                  interface="org.motechproject.nms.mobilekunji.service.CallDetailService"/>
 
     <osgi:service ref="configurationService"
                   interface="org.motechproject.nms.mobilekunji.service.ConfigurationService"/>
@@ -46,10 +46,10 @@
                     interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
 
     <osgi:reference id="serviceConsumptionRecordsDataService"
-                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConsumptionCallRecordDataService"/>
+                    interface="org.motechproject.nms.mobilekunji.repository.CallDetailRecordDataService"/>
 
     <osgi:reference id="serviceConsumptionFlwRecordsDataService"
-                    interface="org.motechproject.nms.mobilekunji.repository.ServiceConsumptionFlwRecordDataService"/>
+                    interface="org.motechproject.nms.mobilekunji.repository.FlwDetailRecordDataService"/>
 
     <osgi:reference id="userProfileDetailsService"
                     interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
