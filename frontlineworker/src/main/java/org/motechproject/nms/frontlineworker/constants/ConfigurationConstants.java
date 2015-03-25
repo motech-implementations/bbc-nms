@@ -9,6 +9,8 @@ public final class ConfigurationConstants {
     
     public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.FrontLineWorkerCsv.csv-import.success";
 
+    public static final int CAPPING_NOT_FOUND_BY_STATE = -1;
+
     private ConfigurationConstants() {
     }
 }

@@ -1,29 +1,12 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
-import org.motechproject.nms.mobileacademy.commons.ContentType;
-import org.motechproject.nms.mobileacademy.commons.CourseFlag;
-import org.motechproject.nms.mobileacademy.commons.FileType;
-import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
-import org.motechproject.nms.mobileacademy.commons.OperatorDetails;
-import org.motechproject.nms.mobileacademy.commons.Record;
-import org.motechproject.nms.mobileacademy.domain.ChapterContent;
-import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
-import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
-import org.motechproject.nms.mobileacademy.domain.LessonContent;
-import org.motechproject.nms.mobileacademy.domain.QuestionContent;
-import org.motechproject.nms.mobileacademy.domain.QuizContent;
-import org.motechproject.nms.mobileacademy.domain.ScoreContent;
+import org.motechproject.nms.mobileacademy.commons.*;
+import org.motechproject.nms.mobileacademy.domain.*;
 import org.motechproject.nms.mobileacademy.helper.RecordsProcessHelper;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
@@ -35,7 +18,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
+
+import java.util.*;
 
 /**
  * This class contains the implementation for RecordsProcessService to process
@@ -109,7 +93,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
     public void processRawRecordsInTransaction(
             List<CourseContentCsv> courseContentCsvs, String csvFileName) {
-        DateTime timeOfUpload = NmsUtils.getCurrentTimeStamp();
+        DateTime timeOfUpload = new DateTime();
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus("",
                 csvFileName, timeOfUpload, 0, 0);
 

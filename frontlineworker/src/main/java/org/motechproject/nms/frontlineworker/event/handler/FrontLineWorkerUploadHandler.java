@@ -1,5 +1,6 @@
 package org.motechproject.nms.frontlineworker.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.Designation;
@@ -9,13 +10,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -23,7 +18,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -100,7 +94,7 @@ public class FrontLineWorkerUploadHandler {
         Long nmsFlwId = null;
 
         bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        bulkUploadStatus.setTimeOfUpload(new DateTime());
 
         //this loop processes each of the entries in the Front Line Worker Csv and performs operation(DEL/ADD/MOD)
         // on the record and also deleted each record after processing from the Csv. If some error occurs in any
@@ -139,36 +133,54 @@ public class FrontLineWorkerUploadHandler {
                         logger.debug("Successful creation of new front line worker");
 
                     } else {
-                        Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
-                        Status status = dbRecord.getStatus();
-                        if (valid == null) {
-                            frontLineWorker.setStatus(dbRecord.getStatus());
-                            updateDbRecord(frontLineWorker, dbRecord);
-                            bulkUploadStatus.incrementSuccessCount();
-                            logger.debug("Record updated successfully for Flw with valid = null");
-                        } else {
-                            if (valid == true) {
-                                if (status == Status.INVALID) {
-                                    bulkUploadStatus.incrementFailureCount();
-                                    //Bug 38
-                                    errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA,
-                                            String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
-                                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                                    logger.warn("Status change try from invalid to valid for id : {}", id);
-                                } else {
-                                    frontLineWorker.setStatus(dbRecord.getStatus());
-                                    updateDbRecord(frontLineWorker, dbRecord);
-                                    bulkUploadStatus.incrementSuccessCount();
-                                    logger.debug("Record updated successfully for Flw with valid = true");
-
+                        if(dbRecord.getStatus() == Status.INVALID) {
+                            ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
+                        }
+                        else {
+                            Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
+                            Status status = dbRecord.getStatus();
+                            if (valid == null) {
+                                if(Status.ANONYMOUS == dbRecord.getStatus()) {
+                                    frontLineWorker.setStatus(Status.ACTIVE);
                                 }
-                            } else {
-                                frontLineWorker.setStatus(Status.INVALID);
+                                else {
+                                    frontLineWorker.setStatus(dbRecord.getStatus());
+                                }
+
                                 updateDbRecord(frontLineWorker, dbRecord);
                                 bulkUploadStatus.incrementSuccessCount();
-                                logger.debug("Record updated successfully for Flw with valid = false");
+                                logger.debug("Record updated successfully for Flw with valid = null");
+                            } else {
+                                if (valid == true) {
+                                    if (status == Status.INVALID) {
+                                        bulkUploadStatus.incrementFailureCount();
+                                        //Bug 38
+                                        errorDetails = populateErrorDetails(csvFileName, record.toString(),
+                                                ErrorCategoryConstants.INCONSISTENT_DATA,
+                                                String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
+                                        bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
+                                        logger.warn("Status change try from invalid to valid for id : {}", id);
+                                    } else {
+                                        if(Status.ANONYMOUS == dbRecord.getStatus()) {
+                                            frontLineWorker.setStatus(Status.ACTIVE);
+                                        }
+                                        else {
+                                            frontLineWorker.setStatus(dbRecord.getStatus());
+                                        }
+                                        updateDbRecord(frontLineWorker, dbRecord);
+                                        bulkUploadStatus.incrementSuccessCount();
+                                        logger.debug("Record updated successfully for Flw with valid = true");
+
+                                    }
+                                } else {
+                                    frontLineWorker.setStatus(Status.INVALID);
+                                    updateDbRecord(frontLineWorker, dbRecord);
+                                    bulkUploadStatus.incrementSuccessCount();
+                                    logger.debug("Record updated successfully for Flw with valid = false");
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -189,7 +201,9 @@ public class FrontLineWorkerUploadHandler {
             } catch (Exception e) {
                 bulkUploadStatus.incrementFailureCount();
                 logger.error("Exception occur : {}", e.getStackTrace());
-                errorDetails = populateErrorDetails(csvFileName, record.toString(), ErrorCategoryConstants.INCONSISTENT_DATA, ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION);
+                errorDetails = populateErrorDetails(csvFileName, record.toString(),
+                        ErrorCategoryConstants.GENERAL_EXCEPTION,
+                        ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
             } finally {
                 if (null != record) {
@@ -251,9 +265,7 @@ public class FrontLineWorkerUploadHandler {
     private void validateFrontLineWorker(FrontLineWorkerCsv record, FrontLineWorker frontLineWorker) throws DataValidationException {
 
         String contactNo;
-        String finalContactNo;
         String designation;
-        int contactNoLength;
         State state = null;
         District district = null;
         Long districtCode = null;
@@ -280,10 +292,8 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setHealthFacilityId(healthFacilityConsistencyCheck(frontLineWorker.getHealthBlockId(), record.getPhcCode()));
         frontLineWorker.setHealthSubFacilityId(healthSubFacilityConsistencyCheck(frontLineWorker.getHealthFacilityId(), record.getSubCentreCode()));
 
-        contactNo = ParseDataHelper.validateAndParseString("Contact Number", record.getContactNo(), true);
-        contactNoLength = contactNo.length();
-        finalContactNo = (contactNoLength > ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH ? contactNo.substring(contactNoLength - ConfigurationConstants.FLW_CONTACT_NUMBER_LENGTH) : contactNo);
-        frontLineWorker.setContactNo(finalContactNo);
+        contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", record.getContactNo());
+        frontLineWorker.setContactNo(contactNo);
 
         //Bug 28
         designation = ParseDataHelper.validateAndParseString("Flw Type", record.getType(), true);
@@ -500,7 +510,7 @@ public class FrontLineWorkerUploadHandler {
 
         BulkUploadError errorDetails = new BulkUploadError();
         errorDetails.setCsvName(csvFileName);
-        errorDetails.setTimeOfUpload(NmsUtils.getCurrentTimeStamp());
+        errorDetails.setTimeOfUpload(new DateTime());
         errorDetails.setRecordType(RecordType.FRONT_LINE_WORKER);
         errorDetails.setRecordDetails(id);
         errorDetails.setErrorCategory(errorCategory);
@@ -525,6 +535,7 @@ public class FrontLineWorkerUploadHandler {
             if (dbRecord == null) {
                 ParseDataHelper.raiseInvalidDataException("nmsFlwId", id.toString());
             }
+
 
         } else {
             Long stateCode = frontLineWorker.getStateCode();

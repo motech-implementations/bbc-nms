@@ -192,4 +192,9 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
         return llc;
     }
 
+    @Override
+    public LanguageLocationCode findLLCByCode(Integer code) {
+        return languageLocationCodeDataService.findLLCByCode(code);
+    }
+
 }

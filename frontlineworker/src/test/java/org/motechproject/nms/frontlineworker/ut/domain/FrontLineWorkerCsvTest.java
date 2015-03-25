@@ -32,4 +32,84 @@ public class FrontLineWorkerCsvTest {
         assertEquals("Contact No[1234]", frontLineWorkerCsv.toString());
     }
 
+    @Test
+    public void testShouldSetWithName() {
+        frontLineWorkerCsv.setName("Etasha");
+        assertEquals("Etasha", frontLineWorkerCsv.getName());
+    }
+
+    @Test
+    public void testShouldSetWithType() {
+        frontLineWorkerCsv.setType("USHA");
+        assertEquals("USHA", frontLineWorkerCsv.getType());
+    }
+
+    @Test
+    public void testShouldSetWithTalukaCode() {
+        frontLineWorkerCsv.setTalukaCode("1");
+        assertEquals("1", frontLineWorkerCsv.getTalukaCode());
+    }
+
+    @Test
+    public void testShouldSetWithPhcCode() {
+        frontLineWorkerCsv.setPhcCode("1234");
+        assertEquals("1234", frontLineWorkerCsv.getPhcCode());
+    }
+
+    @Test
+    public void testShouldSetWithSubCentreCode() {
+        frontLineWorkerCsv.setSubCentreCode("12345");
+        assertEquals("12345", frontLineWorkerCsv.getSubCentreCode());
+    }
+
+    @Test
+    public void testShouldSetWithVillageCode() {
+        frontLineWorkerCsv.setVillageCode("1234");
+        assertEquals("1234", frontLineWorkerCsv.getVillageCode());
+    }
+
+    @Test
+    public void testShouldSetWithAshaNumber() {
+        frontLineWorkerCsv.setAshaNumber("9876");
+        assertEquals("9876", frontLineWorkerCsv.getAshaNumber());
+    }
+
+    @Test
+    public void testShouldSetWithAdhaarNo() {
+        frontLineWorkerCsv.setAdhaarNo("1234");
+        assertEquals("1234", frontLineWorkerCsv.getAdhaarNo());
+    }
+
+    @Test
+    public void testShouldSetWithIsValid() {
+        frontLineWorkerCsv.setIsValid("True");
+        assertEquals("True", frontLineWorkerCsv.getIsValid());
+    }
+
+    @Test
+    public void testShouldSetWithNmsFlwId() {
+        frontLineWorkerCsv.setNmsFlwId("null");
+        assertEquals("null", frontLineWorkerCsv.getNmsFlwId());
+    }
+
+    @Test
+    public void testShouldSetWithHealthBlockCode() {
+        frontLineWorkerCsv.setHealthBlockCode("1234");
+        assertEquals("1234", frontLineWorkerCsv.getHealthBlockCode());
+    }
+
+    @Test
+    public void testShouldSetWithDistrictCode() {
+        frontLineWorkerCsv.setDistrictCode("1234");
+        assertEquals("1234", frontLineWorkerCsv.getDistrictCode());
+    }
+
+    @Test
+    public void testShouldSetWithStateCode() {
+        frontLineWorkerCsv.setStateCode("12");
+        assertEquals("12", frontLineWorkerCsv.getStateCode());
+    }
+
+
 }
+

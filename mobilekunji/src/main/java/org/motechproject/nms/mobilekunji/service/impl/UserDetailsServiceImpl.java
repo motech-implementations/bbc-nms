@@ -51,6 +51,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
+
         return userDetailApiResponse;
     }
 
@@ -58,7 +59,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
-
     }
 
 
@@ -66,20 +66,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        FlwDetail serviceConsumptionFlw = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
 
         userDetailApiResponse.setCircle(userProfile.getCircle());
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
         userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
-
-        //method for capping
-        setNmsCappingValue(userDetailApiResponse, userProfile);
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
-        if (null != serviceConsumptionFlw) {
-            userDetailApiResponse.setCurrentUsageInPulses(serviceConsumptionFlw.getCurrentUsageInPulses());
-            userDetailApiResponse.setEndOfUsagePromptCounter(serviceConsumptionFlw.getEndOfUsagePrompt());
-            userDetailApiResponse.setWelcomePromptFlag(serviceConsumptionFlw.getWelcomePromptFlag());
+        setNmsCappingValue(userDetailApiResponse, userProfile);
+
+        if (null != flwDetail) {
+            if(configurationService.getConfiguration().getMaxWelcomeMessage() == flwDetail.getWelcomePromptFlagCounter()) {
+            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.FALSE);
+            } else {
+            userDetailApiResponse.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
+            }
+
+            if(flwDetail.getLastAccessDate().isAfterNow() || flwDetail.getLastAccessDate().isBeforeNow()) {
+                userDetailApiResponse.setCurrentUsageInPulses(flwDetail.getCurrentUsageInPulses());
+                userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+            }
         } else {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.CURRENT_USAGE_IN_PULSES);
             userDetailApiResponse.setEndOfUsagePromptCounter(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);

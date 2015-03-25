@@ -63,7 +63,7 @@ public class BaseController {
     public ResponseEntity<String> handleGeneralExceptions(
             final Exception exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }

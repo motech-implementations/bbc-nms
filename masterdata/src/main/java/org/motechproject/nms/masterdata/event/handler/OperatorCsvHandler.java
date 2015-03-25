@@ -14,7 +14,6 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.NmsUtils;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
@@ -66,7 +65,7 @@ public class OperatorCsvHandler {
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
-        DateTime timeStamp = NmsUtils.getCurrentTimeStamp();
+        DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
         errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);

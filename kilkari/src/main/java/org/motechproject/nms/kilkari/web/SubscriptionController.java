@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.web;
 
-import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
@@ -50,7 +49,7 @@ public class SubscriptionController extends BaseController{
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
 
         apiRequest.validateMandatoryParameters();
-        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle());
+        subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle(), apiRequest.getLanguageLocationCode());
         logger.trace("Finished processing createSubscription");
     }
 
@@ -81,7 +80,7 @@ public class SubscriptionController extends BaseController{
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
-                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException{
+                                       @RequestParam String circle, @RequestParam String callId) throws DataValidationException, Exception{
         logger.info("*****getSubscriberDetails is invoked******");
         logger.debug("***************Deactivate Subscription Request Parameter*****************");
         logger.debug("callingNumber : [" + callingNumber + "]");

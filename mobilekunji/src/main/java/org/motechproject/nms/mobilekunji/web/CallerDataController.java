@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class CallerDataController extends BaseController {
 
-
     private static Logger log = LoggerFactory.getLogger(CallerDataController.class);
 
     private UserDetailsService userDetailsService;
+
     private SaveCallDetailsService saveCallDetailsService;
 
     @Autowired
@@ -68,7 +68,7 @@ public class CallerDataController extends BaseController {
         return userDetailApiResponse;
     }
 
-    @RequestMapping(value = "/user", method = RequestMethod.POST)
+    @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
     public SaveCallDetailApiResponse saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
 
@@ -76,9 +76,7 @@ public class CallerDataController extends BaseController {
 
         validateCallId(request.getCallId());
 
-        UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(request.getCallingNumber(), request.getCircle(), request.getOperator(), request.getCallId());
-
-        SaveCallDetailApiResponse saveCallDetailApiResponse = saveCallDetailsService.saveCallDetails(userDetailApiResponse, request);
+        SaveCallDetailApiResponse saveCallDetailApiResponse = saveCallDetailsService.saveCallDetails(request);
 
         log.trace("Save CallDetails:Ended");
 

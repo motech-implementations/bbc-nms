@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.dto.request;
 
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -10,10 +11,19 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
  */
 public class SubscriptionDeactivateApiRequest {
 
+    @JsonProperty
     private String calledNumber;
+
+    @JsonProperty
     private String operator;
+
+    @JsonProperty
     private String circle;
+
+    @JsonProperty
     private String callId;
+
+    @JsonProperty
     private Long subscriptionId;
 
     public String getCalledNumber() {
