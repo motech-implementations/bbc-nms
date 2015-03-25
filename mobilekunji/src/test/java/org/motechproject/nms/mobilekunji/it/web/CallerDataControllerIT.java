@@ -138,6 +138,8 @@ public class CallerDataControllerIT extends BasePaxIT {
         flwDetail.setLastAccessDate(null);
         flwDetailService.update(flwDetail);
 
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
         assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
