@@ -31,7 +31,7 @@ public enum EntryType {
             return foundEntryType;
         }
         for (EntryType entryType : entryTypes) {
-            if(entryType.toString().equalsIgnoreCase(entry)){
+            if(entryType.toString().equals(entry)){
                 foundEntryType = true;
                 break;
             }

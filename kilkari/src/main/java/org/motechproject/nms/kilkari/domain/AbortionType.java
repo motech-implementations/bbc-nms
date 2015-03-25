@@ -25,8 +25,12 @@ public enum AbortionType {
     public static boolean checkValidAbortionType (String abortion) {
         AbortionType[] abortionTypes = AbortionType.values();
         boolean foundAbortionType = false;
+        if(abortion == null) {
+            foundAbortionType = true;
+            return foundAbortionType;
+        }
         for (AbortionType abortionType : abortionTypes) {
-            if(abortionType.toString().equals(abortion)){
+            if(abortionType.toString().equalsIgnoreCase(abortion)){
                 foundAbortionType = true;
                 break;
             }

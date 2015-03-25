@@ -83,10 +83,10 @@ public class CommonStructure extends BasePaxIT {
             createState();
             createDistrict();
             createTaluka();
-            createHealthBlock();
-            createHealthFacility();
-            createHealthSubFacility();
-            createVillage();
+            //createHealthBlock();
+            //createHealthFacility();
+            //createHealthSubFacility();
+            //createVillage();
         }
         // do the setup
         setUpIsDone = true;
@@ -232,10 +232,10 @@ public class CommonStructure extends BasePaxIT {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
-        csv.setHealthBlockCode("1");
-        csv.setPhcCode("1");
-        csv.setSubCentreCode("1");
-        csv.setVillageCode("1");
+        //csv.setHealthBlockCode("1");
+        //csv.setPhcCode("1");
+        //csv.setSubCentreCode("1");
+        //csv.setVillageCode("1");
         csv.setName("test");
         csv.setLmpDate("2014-12-01 08:08:08");
         csv.setAbortion("NONE");
@@ -260,10 +260,10 @@ public class CommonStructure extends BasePaxIT {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
-        csv.setHealthBlockCode("1");
-        csv.setPhcCode("1");
-        csv.setSubCentreCode("1");
-        csv.setVillageCode("1");
+        //csv.setHealthBlockCode("1");
+        //csv.setPhcCode("1");
+        //csv.setSubCentreCode("1");
+        //csv.setVillageCode("1");
         csv.setMotherName("motherName");
         csv.setBirthdate("2001-01-01 00:00:00");
         csv.setEntryType("2");
