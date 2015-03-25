@@ -46,12 +46,12 @@ public class SubscriptionCreateApiRequest {
         this.callingNumber = callingNumber;
     }
 
-    public String getOperator() {
-        return operator;
+    public String getCallId() {
+        return callId;
     }
 
-    public void setOperator(String operator) {
-        this.operator = operator;
+    public void setCallId(String callId) {
+        this.callId = callId;
     }
 
     public String getCircle() {
@@ -62,12 +62,12 @@ public class SubscriptionCreateApiRequest {
         this.circle = circle;
     }
 
-    public String getCallId() {
-        return callId;
+    public String getOperator() {
+        return operator;
     }
 
-    public void setCallId(String callId) {
-        this.callId = callId;
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
     public Integer getLanguageLocationCode() {
