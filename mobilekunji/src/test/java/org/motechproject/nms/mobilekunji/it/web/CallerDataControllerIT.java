@@ -121,11 +121,14 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
 
-        //For State Level Capping Type
+        //For State Level Capping Type and Next Date Condition
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
         configurationService.updateConfiguration(configurationData);
-        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusMonths(2));
+        flwDetailService.update(flwDetail);
 
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
 
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
@@ -133,20 +136,21 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
+
+
         //Update Language Location Code
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         flwWorker.setLanguageLocationCodeId(33);
         frontLineWorkerService.updateFrontLineWorker(flwWorker);
-
         LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
-
         controller.setLanguageLocationCode(languageLocationCodeApiRequest);
-
         flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
 
-//        // This case is used to update FlwDetail
+        /*
+        This case is added to check whether FlwDetail is Updated or Not
+        */
         frontLineWorkerService.deleteFrontLineWorker(flwWorker);
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
         assertNotNull(userDetailApiResponse);
@@ -157,7 +161,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
         controller.saveCallDetails(saveCallDetailApiRequest);
 
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByNmsId(flwDetail.getNmsFlwId());
 
         assertNotNull(flwDetail);
