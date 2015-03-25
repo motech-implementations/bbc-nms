@@ -1,10 +1,14 @@
 package org.motechproject.nms.mobilekunji.it.web;
 
 import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.mobilekunji.domain.CardDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.motechproject.nms.mobilekunji.constants.ConfigurationConstants.*;
@@ -91,5 +95,40 @@ public class TestHelper {
         request.setLanguageLocationCode(29);
 
         return request;
+    }
+
+    public static SaveCallDetailApiRequest getSaveCallDetailApiRequest() {
+
+        SaveCallDetailApiRequest request = new SaveCallDetailApiRequest();
+
+        request.setContent(getCardDetailList());
+        request.setCallId("234000011111111");
+        request.setCallingNumber("9810179788");
+        request.setOperator("AL");
+        request.setCircle("DL");
+        request.setCallDurationInPulses(60);
+        request.setEndOfUsagePromptCounter(0);
+        request.setWelcomeMessagePromptFlag(false);
+        request.setCallDisconnectReason("1");
+        request.setCallStartTime(1427372125L);
+        request.setCallEndTime(1427372128L);
+
+        return request;
+    }
+
+    public static List<CardDetail> getCardDetailList() {
+
+        List<CardDetail> cardDetailList = new ArrayList<>();
+
+        CardDetail cardDetail = new CardDetail();
+        cardDetail.setMkCardNumber(1);
+        cardDetail.setAudioFileName("Yellowfever.wav");
+        cardDetail.setContentName("YellowFever");
+        cardDetail.setEndTime(1222222221);
+        cardDetail.setStartTime(1200000000);
+
+        cardDetailList.add(cardDetail);
+
+        return cardDetailList;
     }
 }

@@ -52,4 +52,15 @@ public class CallDetailServiceImpl implements CallDetailService {
         this.callDetailRecordDataService.delete(record);
     }
 
+    /**
+     * Finds the service consumption details of Flw by its msisdn
+     *
+     * @param nmsFlwId
+     * @return CallDetail
+     */
+    @Override
+    public CallDetail findCallDetailByNmsId(Long nmsFlwId) {
+        return callDetailRecordDataService.findCallDetailByNmsFlwId(nmsFlwId);
+    }
+
 }

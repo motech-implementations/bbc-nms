@@ -30,4 +30,12 @@ public interface CallDetailService {
      * @param record
      */
     public void delete(CallDetail record);
+
+    /**
+     * Finds the service consumption details of Flw by its msisdn
+     *
+     * @param nmsFlwId
+     * @return CallDetail
+     */
+    public CallDetail findCallDetailByNmsId(Long nmsFlwId);
 }

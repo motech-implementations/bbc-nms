@@ -8,11 +8,12 @@ import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
+import org.motechproject.nms.mobilekunji.domain.CallDetail;
+import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
+import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
-import org.motechproject.nms.mobilekunji.service.ConfigurationService;
-import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
-import org.motechproject.nms.mobilekunji.service.UserDetailsService;
+import org.motechproject.nms.mobilekunji.service.*;
 import org.motechproject.nms.mobilekunji.web.CallerDataController;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -63,6 +64,12 @@ public class CallerDataControllerIT extends BasePaxIT {
 
     @Inject
     private ConfigurationService configurationService;
+
+    @Inject
+    private FlwDetailService flwDetailService;
+
+    @Inject
+    private CallDetailService callDetailService;
 
     private CallerDataController controller;
 
@@ -121,8 +128,14 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
 
+        SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
+        controller.saveCallDetails(saveCallDetailApiRequest);
+
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        CallDetail callDetail = callDetailService.findCallDetailByNmsId(flwDetail.getNmsFlwId());
+
+        assertNotNull(flwDetail);
+        assertNotNull(callDetail);
     }
-
-
 
 }
