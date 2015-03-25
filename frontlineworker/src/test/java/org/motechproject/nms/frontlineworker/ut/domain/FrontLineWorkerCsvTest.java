@@ -55,16 +55,19 @@ public class FrontLineWorkerCsvTest {
         frontLineWorkerCsv.setPhcCode("1234");
         assertEquals("1234", frontLineWorkerCsv.getPhcCode());
     }
+
     @Test
     public void testShouldSetWithSubCentreCode() {
         frontLineWorkerCsv.setSubCentreCode("12345");
         assertEquals("12345", frontLineWorkerCsv.getSubCentreCode());
     }
+
     @Test
     public void testShouldSetWithVillageCode() {
         frontLineWorkerCsv.setVillageCode("1234");
         assertEquals("1234", frontLineWorkerCsv.getVillageCode());
     }
+
     @Test
     public void testShouldSetWithAshaNumber() {
         frontLineWorkerCsv.setAshaNumber("9876");
@@ -106,8 +109,6 @@ public class FrontLineWorkerCsvTest {
         frontLineWorkerCsv.setStateCode("12");
         assertEquals("12", frontLineWorkerCsv.getStateCode());
     }
-
-
 
 
 }
