@@ -55,7 +55,7 @@ public class UserController extends BaseController {
             @RequestParam(value = UserController.REQUEST_PARAM_OPERATOR) String operator,
             @RequestParam(value = UserController.REQUEST_PARAM_CIRCLE) String circle,
             @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
-            throws DataValidationException, Exception {
+            throws DataValidationException {
         LOGGER.debug("getUserDetails: Started");
         LOGGER.info("Input request-"
                 + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
@@ -66,7 +66,7 @@ public class UserController extends BaseController {
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
         User user = userDetailsService.findUserDetails(callingNumber, operator,
-                circle);
+                circle, callId);
         LOGGER.debug("getUserDetails: Ended");
         return user;
 
@@ -94,7 +94,7 @@ public class UserController extends BaseController {
         validateInputDataForSetLlc(llcRequest);
         userDetailsService.setLanguageLocationCode(
                 llcRequest.getLanguageLocationCode(),
-                llcRequest.getCallingNumber());
+                llcRequest.getCallingNumber(), llcRequest.getCallId());
         LOGGER.debug("setLanguageLocationCode: Ended");
 
     }

@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.service.impl;
 
+import org.apache.log4j.Logger;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
@@ -32,15 +33,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private FlwUsageDetailService flwUsageDetailService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.UserDetailsService#
-     * findUserDetails(java.lang.String, java.lang.String, java.lang.String)
-     */
+    private static final Logger LOGGER = Logger
+            .getLogger(UserDetailsServiceImpl.class);
+
     @Override
     public User findUserDetails(String callingNumber, String operator,
-            String circle) throws DataValidationException, Exception {
+            String circle, String callId) throws DataValidationException {
         User user = new User();// response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);
@@ -59,6 +57,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         user.setCurrentUsageInPulses(flwUsageDetail.getCurrentUsageInPulses());
         user.setEndOfUsagePromptCounter(flwUsageDetail
                 .getEndOfUsagePromptCounter());
+        LOGGER.debug("user Details retrieved for callingNumber("
+                + callingNumber + ") and callId(" + callId + ")are - llc:"
+                + user.getLanguageLocationCode() + ", defaultllc:"
+                + user.getDefaultLanguageLocationCode() + ", Currentusage:"
+                + user.getCurrentUsageInPulses());
         return user;
     }
 
@@ -98,21 +101,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (CappingType.NO_CAPPING.getValue().equals(
                 configuration.getCappingType())) {
             maxAllowedUsageInPulses = MobileAcademyConstants.MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED;
+        } else if (CappingType.NATIONAL_CAPPING.getValue().equals(
+                configuration.getCappingType())) {
+            maxAllowedUsageInPulses = configuration.getNationalCapValue();
         } else if (CappingType.STATE_CAPPING.getValue().equals(
                 configuration.getCappingType())) {
             maxAllowedUsageInPulses = userProfile
                     .getMaxStateLevelCappingValue();
-        } else if (CappingType.NATIONAL_CAPPING.getValue().equals(
-                configuration.getCappingType())) {
-            maxAllowedUsageInPulses = configuration.getNationalCapValue();
         }
         return maxAllowedUsageInPulses;
 
     }
 
     /**
-     * determine and set Language Location Code for User as per circle and LLC
-     * fields returned by FLW.
+     * determine and set Language Location Code for User using
+     * isDefaultLanguageLocationCode field returned by FLW.
      * 
      * @param userProfile UserProfile object
      * @param configuration Configuration object
@@ -121,24 +124,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void findLanguageLocationCodeForUser(UserProfile userProfile,
             Configuration configuration, User user) {
         boolean nationalDefaultLlc = false;
-        if (MobileAcademyConstants.UNKNOWN_CIRCLE_CODE.equals(userProfile
-                .getCircle())) {
-            nationalDefaultLlc = true;
-        } else {
-            if (userProfile.isDefaultLanguageLocationCode()) {
-                if (userProfile.getDefaultLanguageLocationCode() != null) {
-                    user.setDefaultLanguageLocationCode(userProfile
-                            .getDefaultLanguageLocationCode());
-                } else {
-                    nationalDefaultLlc = true;
-                }
+        if (userProfile.isDefaultLanguageLocationCode()) {
+            if (userProfile.getDefaultLanguageLocationCode() != null) {
+                user.setDefaultLanguageLocationCode(userProfile
+                        .getDefaultLanguageLocationCode());
             } else {
-                if (userProfile.getLanguageLocationCode() != null) {
-                    user.setLanguageLocationCode(userProfile
-                            .getLanguageLocationCode());
-                } else {
-                    nationalDefaultLlc = true;
-                }
+                nationalDefaultLlc = true;
+            }
+        } else {
+            if (userProfile.getLanguageLocationCode() != null) {
+                user.setLanguageLocationCode(userProfile
+                        .getLanguageLocationCode());
+            } else {
+                nationalDefaultLlc = true;
             }
         }
         if (nationalDefaultLlc) {
@@ -148,19 +146,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.motechproject.nms.mobileacademy.service.UserDetailsService#
-     * setLanguageLocationCode(java.lang.String, java.lang.String)
-     */
     @Override
     public void setLanguageLocationCode(String languageLocationCode,
-            String callingNumber) throws DataValidationException {
+            String callingNumber, String callId) throws DataValidationException {
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(
                 Integer.parseInt(languageLocationCode), msisdn);
+        LOGGER.debug("Llc updated  for callingNumber:" + callingNumber
+                + ", callId:" + callId + ", llc:" + languageLocationCode);
 
     }
 }

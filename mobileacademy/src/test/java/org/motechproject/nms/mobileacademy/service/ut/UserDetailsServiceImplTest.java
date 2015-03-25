@@ -63,6 +63,7 @@ public class UserDetailsServiceImplTest {
         String callingNumber = "9990632906";
         String operator = "A";
         String circle = "UP";
+        String callId = "123456789";
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
@@ -103,7 +104,7 @@ public class UserDetailsServiceImplTest {
 
         try {
             User userResponse = userDetailsService.findUserDetails(
-                    callingNumber, operator, circle);
+                    callingNumber, operator, circle, callId);
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
@@ -137,6 +138,7 @@ public class UserDetailsServiceImplTest {
         String callingNumber = "9990632906";
         String operator = "A";
         String circle = "UP";
+        String callId = "123456789";
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
@@ -177,7 +179,7 @@ public class UserDetailsServiceImplTest {
 
         try {
             User userResponse = userDetailsService.findUserDetails(
-                    callingNumber, operator, circle);
+                    callingNumber, operator, circle, callId);
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
@@ -211,6 +213,7 @@ public class UserDetailsServiceImplTest {
         String callingNumber = "9990632906";
         String operator = "A";
         String circle = "UP";
+        String callId = "123456789";
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
@@ -251,7 +254,7 @@ public class UserDetailsServiceImplTest {
 
         try {
             User userResponse = userDetailsService.findUserDetails(
-                    callingNumber, operator, circle);
+                    callingNumber, operator, circle, callId);
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
@@ -286,6 +289,7 @@ public class UserDetailsServiceImplTest {
         String callingNumber = "9990632906";
         String operator = "A";
         String circle = "UP";
+        String callId = "123456789";
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
@@ -327,7 +331,7 @@ public class UserDetailsServiceImplTest {
 
         try {
             User userResponse = userDetailsService.findUserDetails(
-                    callingNumber, operator, circle);
+                    callingNumber, operator, circle, callId);
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
@@ -354,12 +358,13 @@ public class UserDetailsServiceImplTest {
      * @throws Exception
      */
     @Test
-    public void testFindUserDetailsForUnkownCircleAndNationalCapping()
+    public void testFindUserDetailsForNationalCapping()
             throws DataValidationException, Exception {
         // set the input details
         String callingNumber = "9990632906";
         String operator = "99";
         String circle = "UP";
+        String callId = "123456789";
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("99");
@@ -401,11 +406,10 @@ public class UserDetailsServiceImplTest {
 
         try {
             User userResponse = userDetailsService.findUserDetails(
-                    callingNumber, operator, circle);
+                    callingNumber, operator, circle, callId);
             // Assertions
-            assertEquals("99", userResponse.getCircle());
-            assertTrue(121 == userResponse.getDefaultLanguageLocationCode());
-            assertEquals(null, userResponse.getLanguageLocationCode());
+            assertEquals(null, userResponse.getDefaultLanguageLocationCode());
+            assertTrue(2 == userResponse.getLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -431,6 +435,7 @@ public class UserDetailsServiceImplTest {
             DataValidationException {
         String languageLocationCode = "1";
         String callingNumber = "9990635906";
+        String callId = "123456789";
         UserProfileDetailsService userProfileDetailsServiceSpy = Mockito
                 .spy(new UserProfileDetailsImpl());
         Mockito.doNothing()
@@ -439,7 +444,7 @@ public class UserDetailsServiceImplTest {
                         Integer.parseInt(languageLocationCode), callingNumber);
         try {
             userDetailsService.setLanguageLocationCode(languageLocationCode,
-                    callingNumber);
+                    callingNumber, callId);
         } catch (DataValidationException e) {
             assertFalse(true);
         } catch (Exception e) {
