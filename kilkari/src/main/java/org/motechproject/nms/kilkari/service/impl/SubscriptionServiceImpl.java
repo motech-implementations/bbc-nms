@@ -375,7 +375,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setMctsId(subscriber.getSuitableMctsId());
-        newSubscription.setStateCode(subscriber.getState().getStateCode());
+        if (subscriber.getState() != null) {
+            newSubscription.setStateCode(subscriber.getState().getStateCode());
+        }
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
