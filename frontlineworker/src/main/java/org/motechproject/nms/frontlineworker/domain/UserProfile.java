@@ -35,37 +35,12 @@ public class UserProfile {
         return nmsId;
     }
 
-
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
-
-    public void setDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
-        this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
-    }
-
-    public void setNmsId(Long nmsId) {
-        this.nmsId = nmsId;
-    }
-
     public boolean isDefaultLanguageLocationCode() {
         return isDefaultLanguageLocationCode;
     }
 
     public void setIsDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
-    }
-
-    public Integer getLanguageLocationCode() {
-        return languageLocationCode;
-    }
-
-    public void setLanguageLocationCode(Integer languageLocationCode) {
-        this.languageLocationCode = languageLocationCode;
     }
 
     public Integer getDefaultLanguageLocationCode() {
@@ -75,6 +50,29 @@ public class UserProfile {
     public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
+
+    public void setNmsId(Long nmsId) {
+
+        this.nmsId = nmsId;
+    }
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
+    }
+
+
+    public Integer getLanguageLocationCode() {
+        return languageLocationCode;
+    }
+
+    public void setLanguageLocationCode(Integer languageLocationCode) {
+        this.languageLocationCode = languageLocationCode;
+    }
+
+
 
     public String getCircle() {
         return circle;
@@ -105,6 +103,7 @@ public class UserProfile {
                 ", maxStateLevelCappingValue=" + maxStateLevelCappingValue +
                 '}';
     }
+
 }
 
 
