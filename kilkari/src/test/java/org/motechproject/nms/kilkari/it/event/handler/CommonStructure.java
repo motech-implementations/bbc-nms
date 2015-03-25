@@ -276,8 +276,7 @@ public class CommonStructure extends BasePaxIT {
 
     @After
     public void tearDown() {
-                    deleteAll();
-
+        deleteAll();
         setUpIsDone = false;
     }
     

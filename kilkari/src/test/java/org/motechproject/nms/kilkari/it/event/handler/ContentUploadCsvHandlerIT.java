@@ -81,9 +81,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        llcDataService.deleteAll();
-        circleDataService.deleteAll();
-        contentUploadDataService.deleteAll();
+        tearDown();
     }
 
     @Test
@@ -253,7 +251,6 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     public void tearDown() {
         contentUploadDataService.deleteAll();
         llcDataService.deleteAll();
-        districtService.deleteAll();
         stateService.deleteAll();
         circleDataService.deleteAll();
     }

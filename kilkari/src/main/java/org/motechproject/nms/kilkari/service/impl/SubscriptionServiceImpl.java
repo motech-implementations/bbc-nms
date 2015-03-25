@@ -381,7 +381,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -412,7 +412,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (statusFlag) {
             activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         } else {
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         }
     }
     

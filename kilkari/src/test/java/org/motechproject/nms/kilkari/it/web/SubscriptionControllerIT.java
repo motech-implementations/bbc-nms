@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.it.web;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,6 +81,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     SubscriptionBuilder subscriptionBuilder = new SubscriptionBuilder();
     LocationBuilder locationBuilder = new LocationBuilder();
 
+    @After
     @Before
     public void setUp() {
         subscriptionDataService.deleteAll();

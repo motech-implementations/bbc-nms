@@ -17,7 +17,7 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    SqlQueryExecution {
+    QueryExecution {
 
         private final String incrementQuery = "UPDATE KILKARI_ACTIVEUSER SET activeUserCount = activeUserCount + 1 WHERE index = 1";
 
