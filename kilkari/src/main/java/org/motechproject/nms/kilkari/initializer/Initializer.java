@@ -1,14 +1,15 @@
 package org.motechproject.nms.kilkari.initializer;
 
-import org.motechproject.nms.kilkari.domain.ActiveUser;
+import javax.annotation.PostConstruct;
+
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Configuration;
-import org.motechproject.nms.kilkari.service.ActiveUserService;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javax.annotation.PostConstruct;
 
 /**
  * The purpose of this class is to perform initialization for Kilkari Service.
@@ -50,13 +51,13 @@ public class Initializer {
 
     private ConfigurationService configurationService;
     
-    private ActiveUserService activeUserService;
+    private ActiveSubscriptionCountService activeSubscriptionCountService;
 
 
     @Autowired
-    public Initializer(ConfigurationService configurationService, ActiveUserService activeUserService) {
+    public Initializer(ConfigurationService configurationService, ActiveSubscriptionCountService activeSubscriptionCountService) {
         this.configurationService = configurationService;
-        this.activeUserService = activeUserService;
+        this.activeSubscriptionCountService = activeSubscriptionCountService;
     }
 
     /**
@@ -92,13 +93,13 @@ public class Initializer {
             
         }
         
- if (!activeUserService.isActiveUserCountPresent()) {
+        if (!activeSubscriptionCountService.isActiveSubscriptionCountPresent()) {
             
-            ActiveUser activeUser = new ActiveUser();
+            ActiveSubscriptionCount activeUser = new ActiveSubscriptionCount();
             logger.info("Creating ActiveUser with default values");
             activeUser.setIndex(ACTIVEUSER_INDEX);
             activeUser.setActiveUserCount(DEFAULT_ACTIVEUSER_COUNT);
-            activeUserService.create(activeUser); 
+            activeSubscriptionCountService.create(activeUser); 
         }
     }
 

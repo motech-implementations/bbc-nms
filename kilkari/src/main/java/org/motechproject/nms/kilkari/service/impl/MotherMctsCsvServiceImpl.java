@@ -2,7 +2,6 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
-import org.apache.velocity.app.event.ReferenceInsertionEventHandler.referenceInsertExecutor;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
@@ -57,7 +56,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
-    public static final String STILL_BIRTH_ZERO = "0";
+    public static final Integer STILL_BIRTH_ZERO = 0;
     public static final String MOTHER_DEATH_NINE = "9";
     public static final String ABORTION_NONE = "none";
 
@@ -152,19 +151,22 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(),false));
         motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
 
-        /* Set the appropriate Deactivation Reason */
+        /* Check appropriate value of entryType and abortion*/
         String entryType = ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false);
-        motherSubscriber.setDeactivationReason(setDeactivateForStillBirth(motherSubscriber, entryType));
-        
+        checkValidEntryType(entryType);
         String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
-        motherSubscriber.setDeactivationReason(setDeactivateForAbortion(motherSubscriber, abortion));
+        checkValidAbortionType(abortion);
         
-        if (STILL_BIRTH_ZERO.equalsIgnoreCase(motherMctsCsv.getOutcomeNos())) {
+        /* Set the appropriate Deactivation Reason */
+        if (STILL_BIRTH_ZERO.equals(ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false))) {
             motherSubscriber.setDeactivationReason(DeactivationReason.STILL_BIRTH);
+        } else if (!(abortion == null || ABORTION_NONE.equalsIgnoreCase(abortion))) {
+            motherSubscriber.setDeactivationReason(DeactivationReason.ABORTION);
+        } else if (MOTHER_DEATH_NINE.equalsIgnoreCase(ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false))) {
+            motherSubscriber.setDeactivationReason(DeactivationReason.MOTHER_DEATH);
         } else {
             motherSubscriber.setDeactivationReason(DeactivationReason.NONE);
         }
-        
         motherSubscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         motherSubscriber.setModifiedBy(motherMctsCsv.getModifiedBy());
         motherSubscriber.setCreator(motherMctsCsv.getCreator());
@@ -174,45 +176,22 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         return motherSubscriber;
     }
 
-    private DeactivationReason setDeactivateForAbortion(Subscriber motherSubscriber,
-            String abortion) throws DataValidationException {
-        DeactivationReason deactivationReason = null;
+    private void checkValidAbortionType(String abortion) throws DataValidationException {
         if(abortion!=null){
-            boolean foundAbortionType = AbortionType.checkAbortionType(abortion);
-            if(foundAbortionType){
-                if(ABORTION_NONE.equalsIgnoreCase(abortion)){
-                    deactivationReason = DeactivationReason.ABORTION;
-                } else {
-                    deactivationReason = DeactivationReason.NONE;
-                }
-            } else {
-                ParseDataHelper.raiseInvalidDataException("Abortion", abortion);
+            boolean foundAbortionType = AbortionType.checkValidAbortionType(abortion);
+            if(!foundAbortionType){
+                ParseDataHelper.raiseInvalidDataException("Abortion", abortion); 
             }
-        } else {
-            deactivationReason = DeactivationReason.ABORTION;
         }
-        return deactivationReason;
     }
 
-    private DeactivationReason setDeactivateForStillBirth(Subscriber motherSubscriber,
-            String entryType) throws DataValidationException {
-        
-        DeactivationReason deactivationReason = null;
+    private void checkValidEntryType(String entryType) throws DataValidationException {
         if (entryType!=null) {
             boolean foundEntryType = EntryType.checkValidEntryType(entryType);
-            if(foundEntryType){
-                if(MOTHER_DEATH_NINE.equalsIgnoreCase(entryType)){
-                    deactivationReason = DeactivationReason.MOTHER_DEATH;
-                } else {
-                    deactivationReason = DeactivationReason.NONE;
-                }
-            } else{
-                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
-            }
-        } else {
-            deactivationReason = DeactivationReason.NONE;
-        }
-        return deactivationReason;
+            if(!foundEntryType){
+                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType); 
+            } 
+        } 
     }
     
 }

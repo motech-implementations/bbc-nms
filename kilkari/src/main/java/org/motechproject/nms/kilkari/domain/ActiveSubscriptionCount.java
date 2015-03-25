@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * or completed.
  */
 @Entity
-public class ActiveUser {
+public class ActiveSubscriptionCount {
 
     @Unique
     @Field(required = true)
@@ -26,7 +26,7 @@ public class ActiveUser {
     private Long index;
     
     @Field(required = true)
-    private Long activeUserCount;
+    private Long count;
 
     public Long getIndex() {
         return index;
@@ -37,11 +37,11 @@ public class ActiveUser {
     }
 
     public Long getActiveUserCount() {
-        return activeUserCount;
+        return count;
     }
 
     public void setActiveUserCount(Long activeUserCount) {
-        this.activeUserCount = activeUserCount;
+        this.count = activeUserCount;
     }
 
 }

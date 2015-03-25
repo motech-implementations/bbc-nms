@@ -17,7 +17,7 @@ public enum AbortionType {
         return type;
     }
 
-    public static boolean checkAbortionType (String abortion) {
+    public static boolean checkValidAbortionType (String abortion) {
         AbortionType[] abortionTypes = AbortionType.values();
         boolean foundAbortionType = false;
         for (AbortionType abortionType : abortionTypes) {

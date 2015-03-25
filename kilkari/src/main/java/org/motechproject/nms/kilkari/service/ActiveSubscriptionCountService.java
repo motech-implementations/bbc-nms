@@ -1,11 +1,12 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.domain.ActiveUser;
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
+
 
 /**
  * This interface provide methods to creates and get active user count
  */
-public interface ActiveUserService {
+public interface ActiveSubscriptionCountService {
 
 
     /**
@@ -13,7 +14,7 @@ public interface ActiveUserService {
      * @param activeUser ActiveUser type object
      * @return ActiveUser type object
      */
-    ActiveUser create(ActiveUser activeUser);
+    ActiveSubscriptionCount create(ActiveSubscriptionCount activeSubscriptionCount);
 
     /**
      * finds active user count by index
@@ -26,6 +27,6 @@ public interface ActiveUserService {
      * Checks ActiveUserCount record exists
      * @return true if exists else false
      */
-    Boolean isActiveUserCountPresent();
+    Boolean isActiveSubscriptionCountPresent();
 
 }

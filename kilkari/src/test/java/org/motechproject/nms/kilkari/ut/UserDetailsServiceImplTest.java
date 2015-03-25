@@ -1,5 +1,12 @@
 package org.motechproject.nms.kilkari.ut;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -11,7 +18,7 @@ import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
-import org.motechproject.nms.kilkari.service.ActiveUserService;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
@@ -21,13 +28,6 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserDetailsServiceImplTest {
     @Mock
@@ -43,7 +43,7 @@ public class UserDetailsServiceImplTest {
     private ConfigurationService configurationService;
 
     @Mock
-    private ActiveUserService activeUserService;
+    private ActiveSubscriptionCountService activeSubscriptionCountService;
 
     @Mock
     private CircleService circleService;

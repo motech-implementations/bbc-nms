@@ -3,8 +3,7 @@ package org.motechproject.nms.kilkari.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.kilkari.domain.ActiveUser;
-import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -12,8 +11,8 @@ import org.motechproject.nms.kilkari.domain.Configuration;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface ActiveUserDataService extends MotechDataService<ActiveUser> {
+public interface ActiveSubscriptionCountDataService extends MotechDataService<ActiveSubscriptionCount> {
 
     @Lookup
-    ActiveUser findActiveUserCountByIndex(@LookupField(name = "index") Long index);
+    ActiveSubscriptionCount findActiveSubscriptionCountByIndex(@LookupField(name = "index") Long index);
 }

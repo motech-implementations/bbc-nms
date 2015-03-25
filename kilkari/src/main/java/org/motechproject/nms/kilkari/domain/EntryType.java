@@ -6,8 +6,8 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 public enum EntryType {
     ACTIVE("1"), 
     DEATH("9"),
-    MigratedIn("2"),
-    MigratedOut("3");
+    MIGRATED_IN("2"),
+    MIGRATED_OUT("3");
     
     private String value;
 
@@ -22,6 +22,10 @@ public enum EntryType {
     public static boolean checkValidEntryType (String entry) throws DataValidationException{
         EntryType[] entryTypes = EntryType.values();
         boolean foundEntryType = false;
+        if(entry == null) {
+            foundEntryType = true;
+            return foundEntryType;
+        }
         for (EntryType entryType : entryTypes) {
             if(entryType.toString().equalsIgnoreCase(entry)){
                 foundEntryType = true;

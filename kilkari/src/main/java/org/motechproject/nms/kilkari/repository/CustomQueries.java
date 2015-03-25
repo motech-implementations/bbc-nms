@@ -5,7 +5,7 @@ import javax.jdo.Query;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
-import org.motechproject.nms.kilkari.domain.ActiveUser;
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
@@ -19,23 +19,9 @@ public class CustomQueries {
      *
      */
     public static class ActiveUserCountIncrementQuery implements
-    QueryExecution {
+    SqlQueryExecution {
 
-        private final String incrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
-                "SET activeUserCount = activeUserCount + 1 WHERE index = 1";
-
-        /**
-         * This method executes the query passed.
-         * @param query to be executed
-         * @return List of distinct subscription packs
-         */
-        @Override
-        public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            /*
-             * Todo : to be implemented in next review request
-             */
-            return null;
-        }
+        private final String incrementQuery = "UPDATE KILKARI_ACTIVEUSER SET activeUserCount = activeUserCount + 1 WHERE index = 1";
 
         /**
          * This method returns the increment query string
@@ -43,6 +29,17 @@ public class CustomQueries {
          */
         public String getSqlQuery() {
             return incrementQuery;
+        }
+
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @return null need to only execute query
+         */
+        @Override
+        public Object execute(Query query) {
+            //query.execute();
+            return null;
         }
     }
 
@@ -53,7 +50,7 @@ public class CustomQueries {
      */
     public static class ActiveUserCountDecrementQuery implements
     QueryExecution {
-        
+
         private final String decrementQuery = "UPDATE org.motechproject.nms.kilkari.domain.ActiveUser " +
                 "SET activeUserCount = activeUserCount - 1 WHERE index = 1";
 
@@ -64,9 +61,7 @@ public class CustomQueries {
          */
         @Override
         public Object execute(Query query, InstanceSecurityRestriction restriction) {
-            /*
-             * Todo : to be implemented in next review request
-             */
+            //query.execute();
             return null;
         }
 
@@ -77,7 +72,7 @@ public class CustomQueries {
         public String getSqlQuery() {
             return decrementQuery;
         }
-        
+
     }
 
     /**

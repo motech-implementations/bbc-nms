@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.service.impl;
 
 import java.util.List;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.Configuration;
@@ -12,7 +13,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.initializer.Initializer;
-import org.motechproject.nms.kilkari.repository.ActiveUserDataService;
+import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -46,7 +47,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private ConfigurationService configurationService;
     
     @Autowired
-    private ActiveUserDataService activeUserDataService;
+    private ActiveSubscriptionCountDataService activeUserDataService;
 
     @Autowired
     private OperatorService operatorService;
@@ -56,15 +57,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     private static Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class);
     
-    public static final String PACK_48 = "48WEEK";
-    public static final String PACK_72 = "72WEEK";
-    
-    public static final String SUBSCRIPTION_EXIST_ERR_DESC =
-            "Upload Unsuccessful as Subscription to MSISDN already Exist";
-    public static final String SUBSCRIPTION_EXIST_EXCEPTION_MSG =
-            "Subscription to MSISDN already Exist";
-
-
     /**
      * Deletes all subscriptions
      */
@@ -110,7 +102,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public long getActiveUserCount() {
-        return activeUserDataService.findActiveUserCountByIndex(Initializer.CONFIGURATION_INDEX).getActiveUserCount();
+        return activeUserDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getActiveUserCount();
     }
 
     /**
@@ -217,8 +209,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
-                throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
-                        ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
+                throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
+                        ErrorCategoryConstants.INCONSISTENT_DATA, Constants.SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
         }
     }
@@ -258,28 +250,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
         Subscription dbSubscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack);
         if (dbSubscription == null) {
-            logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), PACK_72);
+            logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS);
             /* Find subscription from database based on mctsid, packName, status */
             dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), pack, subscriber.getState().getStateCode());
             if (dbSubscription == null) {
-                logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), PACK_72);
+                logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), SubscriptionPack.PACK_72_WEEKS);
                 createNewSubscriberAndSubscription(subscriber, channel);
                 
             } else { /* Record found based on mctsid than update subscriber and subscription */
-                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), PACK_72, Status.ACTIVE);
+                logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel);
             }
         } else {
-            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
+            logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getMotherMctsId())) {
-                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), PACK_72, Status.ACTIVE);
+                logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel);
 
             } else {
-                throw new DataValidationException(SUBSCRIPTION_EXIST_EXCEPTION_MSG,
-                        ErrorCategoryConstants.INCONSISTENT_DATA, SUBSCRIPTION_EXIST_ERR_DESC, "");
+                throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
+                        ErrorCategoryConstants.INCONSISTENT_DATA, Constants.SUBSCRIPTION_EXIST_ERR_DESC, "");
             }
         }
     }
@@ -381,7 +373,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -412,7 +404,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (statusFlag) {
             activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         } else {
-            activeUserDataService.executeQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         }
     }
     
