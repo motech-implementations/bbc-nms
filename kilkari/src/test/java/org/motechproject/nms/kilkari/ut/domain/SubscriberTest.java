@@ -97,18 +97,18 @@ public class SubscriberTest {
         subscriber.setDob(dateTime);
         subscriber.setLmp(dateTime.minus(3L));
 
-        Assert.assertEquals(dateTime, subscriber.getDob());
+        Assert.assertEquals(dateTime, subscriber.getDobLmp());
     }
 
     @Test
     public void shouldGetLmp() {
 
 
-        subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
+        subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
         subscriber.setDob(dateTime);
         subscriber.setLmp(dateTime.minus(3L));
 
-        Assert.assertEquals(dateTime.minus(3L), subscriber.getLmp());
+        Assert.assertEquals(dateTime.minus(3L), subscriber.getDobLmp());
     }
 
 

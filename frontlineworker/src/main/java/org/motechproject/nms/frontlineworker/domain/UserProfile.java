@@ -9,15 +9,13 @@ public class UserProfile {
 
     private boolean isCreated;
 
-    private Long nmsId;
+    private Long systemGeneratedFlwId;
 
     private String msisdn;
 
     private boolean isDefaultLanguageLocationCode;
 
     private Integer languageLocationCode;
-
-    private Integer defaultLanguageLocationCode;
 
     private String circle;
 
@@ -31,8 +29,8 @@ public class UserProfile {
         this.isCreated = isCreated;
     }
 
-    public Long getNmsId() {
-        return nmsId;
+    public Long getSystemGeneratedFlwId() {
+        return systemGeneratedFlwId;
     }
 
     public boolean isDefaultLanguageLocationCode() {
@@ -43,17 +41,9 @@ public class UserProfile {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
-        return defaultLanguageLocationCode;
-    }
+    public void setSystemGeneratedFlwId(Long systemGeneratedFlwId) {
 
-    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
-        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
-    }
-
-    public void setNmsId(Long nmsId) {
-
-        this.nmsId = nmsId;
+        this.systemGeneratedFlwId = systemGeneratedFlwId;
     }
 
     public String getMsisdn() {
@@ -94,11 +84,10 @@ public class UserProfile {
     public String toString() {
         return "UserProfile{" +
                 "isCreated=" + isCreated +
-                ", nmsId=" + nmsId +
+                ", systemGeneratedFlwId=" + systemGeneratedFlwId +
                 ", msisdn='" + msisdn + '\'' +
                 ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +
                 ", languageLocationCode=" + languageLocationCode +
-                ", defaultLanguageLocationCode=" + defaultLanguageLocationCode +
                 ", circle='" + circle + '\'' +
                 ", maxStateLevelCappingValue=" + maxStateLevelCappingValue +
                 '}';

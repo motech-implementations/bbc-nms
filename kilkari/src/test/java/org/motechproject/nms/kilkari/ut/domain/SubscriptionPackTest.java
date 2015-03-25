@@ -36,4 +36,12 @@ public class SubscriptionPackTest {
         Assert.assertTrue(48 == subscriptionPack.getDuration());
     }
 
+    @Test
+    public void shouldFindSubscriptionPackByName() {
+
+        SubscriptionPack subscriptionPack = SubscriptionPack.PACK_48_WEEKS;
+        Assert.assertEquals(null, SubscriptionPack.findByName(null));
+        Assert.assertEquals(null, SubscriptionPack.findByName("invalidPackName"));
+        Assert.assertEquals(subscriptionPack, SubscriptionPack.findByName("pack_48_weeks"));
+    }
 }

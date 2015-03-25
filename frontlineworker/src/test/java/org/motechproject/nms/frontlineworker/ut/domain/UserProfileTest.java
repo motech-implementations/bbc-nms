@@ -23,8 +23,8 @@ public class UserProfileTest {
     @Test
     public void testNmsId() {
 
-        userProfile.setNmsId(12L);
-        assertTrue(12L == userProfile.getNmsId());
+        userProfile.setSystemGeneratedFlwId(12L);
+        assertTrue(12L == userProfile.getSystemGeneratedFlwId());
     }
 
     @Test
@@ -49,13 +49,6 @@ public class UserProfileTest {
     }
 
     @Test
-    public void testDefaultLanguageLocationCode() {
-
-        userProfile.setDefaultLanguageLocationCode(123);
-        assertTrue(123 == userProfile.getDefaultLanguageLocationCode());
-    }
-
-    @Test
     public void testCircle() {
 
         userProfile.setCircle("12");
@@ -73,21 +66,19 @@ public class UserProfileTest {
     public void testToString() {
 
         userProfile.setCreated(true);
-        userProfile.setNmsId(12L);
+        userProfile.setSystemGeneratedFlwId(12L);
         userProfile.setMsisdn("1234567890");
         userProfile.setIsDefaultLanguageLocationCode(true);
         userProfile.setLanguageLocationCode(1234);
-        userProfile.setDefaultLanguageLocationCode(123);
         userProfile.setCircle("12");
         userProfile.setMaxStateLevelCappingValue(10);
 
         assertEquals("UserProfile{" + "isCreated=" +
                         userProfile.isCreated() +
-                        ", nmsId=" + userProfile.getNmsId() +
+                        ", systemGeneratedFlwId=" + userProfile.getSystemGeneratedFlwId() +
                         ", msisdn='" + userProfile.getMsisdn() + '\'' +
                         ", isDefaultLanguageLocationCode=" + userProfile.isDefaultLanguageLocationCode() +
                         ", languageLocationCode=" + userProfile.getLanguageLocationCode() +
-                        ", defaultLanguageLocationCode=" + userProfile.getDefaultLanguageLocationCode() +
                         ", circle='" + userProfile.getCircle() + '\'' +
                         ", maxStateLevelCappingValue=" + userProfile.getMaxStateLevelCappingValue() + "}",
                 userProfile.toString()

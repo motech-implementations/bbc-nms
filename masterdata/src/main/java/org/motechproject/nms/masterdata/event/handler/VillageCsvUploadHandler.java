@@ -56,7 +56,6 @@ public class VillageCsvUploadHandler {
     /**
      * This method handle the event which is raised after csv is uploaded successfully.
      * this method also populates the records in Village table after checking its validity.
-     *
      * @param motechEvent This is the object from which required parameters are fetched.
      */
     @MotechListener(subjects = {LocationConstants.VILLAGE_CSV_SUCCESS})
@@ -96,25 +95,18 @@ public class VillageCsvUploadHandler {
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Village Temporary Entity");
-                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetails.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                    bulkUploadStatus.incrementFailureCount();
+                    ErrorLog.errorLog(errorDetails,bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
-                errorDetails.setRecordDetails(villageCsvRecord.toString());
-                errorDetails.setErrorCategory(dataValidationException.getErrorCode());
-                errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,dataValidationException.getErroneousField(),dataValidationException.getErrorCode(),villageCsvRecord.toString());
+
             } catch (Exception e) {
-                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
-                errorDetails.setRecordDetails("Exception occurred");
-                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
+
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != villageCsvRecord) {
