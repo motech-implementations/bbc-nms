@@ -40,6 +40,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     /**
+     * Create MobileKunji Service configuration
+     *
+     * @param configuration object to update
+     */
+    @Override
+    public void updateConfiguration(Configuration configuration) {
+        configurationDataService.update(configuration);
+    }
+
+    /**
      * get service configuration object
      *
      * @return object corresponding to service configuration

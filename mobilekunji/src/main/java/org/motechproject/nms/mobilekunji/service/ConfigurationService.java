@@ -15,6 +15,13 @@ public interface ConfigurationService {
     void createConfiguration(Configuration configuration);
 
     /**
+     * Create MobileKunji Service configuration
+     *
+     * @param configuration object to update
+     */
+    void updateConfiguration(Configuration configuration);
+
+    /**
      * get service configuration object
      *
      * @return object corresponding to service configuration

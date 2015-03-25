@@ -9,6 +9,7 @@ import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
+import org.motechproject.nms.mobilekunji.domain.Configuration;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
@@ -28,7 +29,8 @@ import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by abhishek on 25/3/15.
@@ -111,6 +113,18 @@ public class CallerDataControllerIT extends BasePaxIT {
         languageLocationCodeService.create(languageLocationCodeData);
 
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+
+        //For Default National Capping
+        Configuration configurationData = configurationService.getConfiguration();
+        configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+
+        //For State Level Capping Type
+        configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
         assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
@@ -151,9 +165,10 @@ public class CallerDataControllerIT extends BasePaxIT {
         * In this case InvalidDataException Occurs
         */
         try {
-            saveCallDetailApiRequest.setCallingNumber("8888888888");
-            controller.saveCallDetails(saveCallDetailApiRequest);
-        }  catch (DataValidationException e) {
+        saveCallDetailApiRequest.setCallingNumber("8888888888");
+        controller.saveCallDetails(saveCallDetailApiRequest);
+        }
+        catch (DataValidationException e) {
         assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
     }
     }

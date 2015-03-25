@@ -170,9 +170,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
             case ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(configurationService.getConfiguration().getNationalCapValue());
+                break;
 
             case ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE:
                 userDetailApiResponse.setMaxAllowedUsageInPulses(stateLevelCappingValue);
+                break;
         }
     }
 
