@@ -155,7 +155,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         assertEquals("Content", contentUpload.getContentName());
         assertEquals(ContentType.PROMPT, contentUpload.getContentType());
         assertEquals("NewFile", contentUpload.getContentFile());
-        assertTrue(10 == contentUpload.getCardNumber());
+        assertTrue("10".equals(contentUpload.getCardNumber()));
         assertTrue(120 == contentUpload.getContentDuration());
         assertEquals("Etasha", contentUpload.getCreator());
         assertEquals("Etasha", contentUpload.getModifiedBy());
