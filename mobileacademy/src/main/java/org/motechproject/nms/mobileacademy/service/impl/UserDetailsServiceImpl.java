@@ -50,7 +50,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         Configuration configuration = configurationService.getConfiguration();
         FlwUsageDetail flwUsageDetail = findFlwUsageInfo(userProfile
-                .getSystemGeneratedFlwId());
+                .getNmsFlwId());
         determineLanguageLocationCodeForUser(userProfile, configuration, user);
         Integer maxAllowedUsageInPulses = findMaxAllowedUsageInPulses(
                 userProfile, configuration);
@@ -122,7 +122,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * 
      * @param userProfile UserProfile object
      * @param configuration Configuration object
-     * @param User User object for updating LLC or default LLC
+     * @param user User object for updating LLC or default LLC
      */
     private void determineLanguageLocationCodeForUser(UserProfile userProfile,
             Configuration configuration, User user) {
