@@ -35,7 +35,6 @@ import java.util.Map;
 @Component
 public class ContentUploadCsvHandler {
 
-    //@Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private ContentUploadService contentUploadService;
@@ -89,24 +88,17 @@ public class ContentUploadCsvHandler {
                 if (record != null) {
                     logger.info("Record found in Csv database");
                     userName = record.getOwner();
-
                     ContentUpload newRecord = mapContentUploadFrom(record);
-
                     ContentUpload dbRecord = contentUploadService.findRecordByContentId(newRecord.getContentId());
 
                     if (dbRecord == null) {
-
                         contentUploadService.createContentUpload(newRecord);
                         bulkUploadStatus.incrementSuccessCount();
-
-
                     } else {
 
                         mappDbRecordWithCsvrecord(newRecord, dbRecord);
                         contentUploadService.updateContentUpload(dbRecord);
                         bulkUploadStatus.incrementSuccessCount();
-
-
                     }
                 }
 
@@ -181,8 +173,6 @@ public class ContentUploadCsvHandler {
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
 
-
-        //Bug24
         if (ContentType.of(content) != ContentType.CONTENT && ContentType.of(content) != ContentType.PROMPT) {
             ParseDataHelper.raiseInvalidDataException("Content Type", "Invalid");
         }
@@ -208,7 +198,6 @@ public class ContentUploadCsvHandler {
         if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
             ParseDataHelper.raiseInvalidDataException("Card number", cardNumber);
         }
-
     }
 
     /**
@@ -221,7 +210,6 @@ public class ContentUploadCsvHandler {
     private BulkUploadError setErrorDetails(String csvFileName, String id, String errorCategory, String errorDescription) {
 
         BulkUploadError errorDetails = new BulkUploadError();
-
         errorDetails.setCsvName(csvFileName);
         errorDetails.setTimeOfUpload(new DateTime());
         errorDetails.setRecordType(RecordType.CONTENT_UPLOAD_MK);
@@ -231,6 +219,4 @@ public class ContentUploadCsvHandler {
 
         return errorDetails;
     }
-
-
 }

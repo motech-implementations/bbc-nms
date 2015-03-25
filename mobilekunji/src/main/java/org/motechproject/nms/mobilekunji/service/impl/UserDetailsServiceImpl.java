@@ -91,6 +91,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Populate FlwDetail
+     *
      * @param userProfileData
      */
     private void populateFlwDetail(UserProfile userProfileData) {
@@ -116,6 +117,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * fill User Detail Response
+     *
      * @param userProfile
      */
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) throws DataValidationException {
@@ -144,6 +146,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * fill Current Usage In Pulses
+     *
      * @param userDetailApiResponse
      * @param flwDetail
      */
@@ -157,6 +160,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Set Maximum Allowed Usage in Pulses on the basis of Capping Type
+     *
      * @param userDetailApiResponse
      * @param stateLevelCappingValue
      */
@@ -180,6 +184,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     /**
      * Check Next Month and Year and return boolean on that basis
+     *
      * @param lastAccessTime
      */
     public boolean checkNextTime(DateTime lastAccessTime) {

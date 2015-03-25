@@ -18,15 +18,15 @@ public class CallDetailTest {
     @Before
     public void init() {
         initMocks(this);
-        callDetail = new CallDetail("111111111111111",29L,"DL",12L,34L);
+        callDetail = new CallDetail("111111111111111", 29L, "DL", 12L, 34L);
     }
 
     @Test
     public void TestCardDetail() {
 
-       callDetail.setCardDetail(null);
-       assertNotNull(callDetail);
-       assertNotNull(callDetail.getCardDetail());
-       assertNotNull(callDetail.getCardDetail().size() == 0);
+        callDetail.setCardDetail(null);
+        assertNotNull(callDetail);
+        assertNotNull(callDetail.getCardDetail());
+        assertNotNull(callDetail.getCardDetail().size() == 0);
     }
 }

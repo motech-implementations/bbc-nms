@@ -126,6 +126,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         configurationService.updateConfiguration(configurationData);
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
 
+
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
         assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
@@ -145,10 +146,10 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
 
-//        // This case is used to check
-//        frontLineWorkerService.deleteFrontLineWorker(flwWorker);
-//        UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
-
+//        // This case is used to update FlwDetail
+        frontLineWorkerService.deleteFrontLineWorker(flwWorker);
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
+        assertNotNull(userDetailApiResponse);
 
         /*
         This case is used to Test SaveCallDetail
@@ -166,12 +167,11 @@ public class CallerDataControllerIT extends BasePaxIT {
         * In this case InvalidDataException Occurs
         */
         try {
-        saveCallDetailApiRequest.setCallingNumber("8888888888");
-        controller.saveCallDetails(saveCallDetailApiRequest);
+            saveCallDetailApiRequest.setCallingNumber("8888888888");
+            controller.saveCallDetails(saveCallDetailApiRequest);
+        } catch (DataValidationException e) {
+            assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
-        catch (DataValidationException e) {
-        assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
-    }
     }
 
 }
