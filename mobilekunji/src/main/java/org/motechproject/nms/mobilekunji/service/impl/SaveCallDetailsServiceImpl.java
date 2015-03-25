@@ -61,6 +61,12 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         logger.info("Save CallDetail executed successfully.");
     }
 
+    /**
+     * Saves Call details of the user
+     *
+     * @param saveCallDetailApiRequest
+     * @param nmsId
+     */
     private void setCallDetail(Long nmsId, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
         CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), nmsId, saveCallDetailApiRequest.getCircle(),
@@ -72,6 +78,13 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         logger.info("CallDetail created successfully.");
     }
 
+    /**
+     * set CardContent of the CallDetail
+     *
+     * @param callDetail
+     * @param saveCallDetailApiRequest
+     * @throws org.motechproject.nms.util.helper.DataValidationException
+     */
     private void setCardContent(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
         for (Iterator<CardDetail> itr = saveCallDetailApiRequest.getContent().iterator(); itr.hasNext(); ) {
@@ -81,6 +94,12 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         logger.info("CardDetail added successfully.");
     }
 
+    /**
+     * Update FlwDetail
+     *
+     * @param saveCallDetailApiRequest
+     * @throws org.motechproject.nms.util.helper.DataValidationException
+     */
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
         FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(saveCallDetailApiRequest.getCallingNumber());
@@ -93,14 +112,19 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         return flwDetail.getNmsFlwId();
     }
 
-    private void updateFlwDetail(FlwDetail flw, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+    /**
+     * Update FlwDetail
+     *
+     * @param saveCallDetailApiRequest
+     * @param flwDetail
+     */
+    private void updateFlwDetail(FlwDetail flwDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-
-        flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
-        flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
-        flw.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
-        flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
-        flwDetailService.update(flw);
+        flwDetail.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flwDetail.getEndOfUsagePrompt());
+        flwDetail.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flwDetail.getCurrentUsageInPulses());
+        flwDetail.setWelcomePromptFlag(saveCallDetailApiRequest.getWelcomeMessagePromptFlag());
+        flwDetail.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
+        flwDetailService.update(flwDetail);
 
         logger.info("FlwDetail updated successfully.");
     }

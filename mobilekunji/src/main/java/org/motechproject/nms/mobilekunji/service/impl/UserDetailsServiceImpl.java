@@ -73,6 +73,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
     }
 
+    /**
+     * Saves Call details of the user
+     *
+     * @param flwDetail
+     * @param userProfileData
+     */
     private void fillDefaultFlwWithUserProfile(FlwDetail flwDetail, UserProfile userProfileData) {
 
         flwDetail.setNmsFlwId(userProfileData.getNmsFlwId());
@@ -83,8 +89,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
     }
 
+    /**
+     * Populate FlwDetail
+     * @param userProfileData
+     */
     private void populateFlwDetail(UserProfile userProfileData) {
-
 
         if (userProfileData.isCreated()) {
             FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
@@ -93,7 +102,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 flwDetail = new FlwDetail();
 
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
-
                 flwDetailService.create(flwDetail);
                 logger.info("FlwDetail created successfully.");
             } else {
@@ -106,6 +114,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    /**
+     * fill User Detail Response
+     * @param userProfile
+     */
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
@@ -121,7 +133,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
             }
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
-            fillCurrentUsage(userDetailApiResponse, flwDetail);
+            fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
         } else {
             ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
         }
@@ -130,8 +142,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return userDetailApiResponse;
     }
 
-
-    private void fillCurrentUsage(UserDetailApiResponse userDetailApiResponse, FlwDetail flwDetail) {
+    /**
+     * fill Current Usage In Pulses
+     * @param userDetailApiResponse
+     * @param flwDetail
+     */
+    private void fillCurrentUsageInPulses(UserDetailApiResponse userDetailApiResponse, FlwDetail flwDetail) {
         if (checkNextTime(flwDetail.getLastAccessDate())) {
             userDetailApiResponse.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         } else {
@@ -139,6 +155,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    /**
+     * Set Maximum Allowed Usage in Pulses on the basis of Capping Type
+     * @param userDetailApiResponse
+     * @param stateLevelCappingValue
+     */
     private void setNmsCappingValue(UserDetailApiResponse userDetailApiResponse, Integer stateLevelCappingValue) {
 
         switch (configurationService.getConfiguration().getCappingType()) {
@@ -155,6 +176,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
     }
 
+    /**
+     * Check Next Month and Year and return boolean on that basis
+     * @param lastAccessTime
+     */
     public boolean checkNextTime(DateTime lastAccessTime) {
         DateTime now = DateTime.now();
 

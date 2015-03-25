@@ -104,5 +104,5 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
     }
-    
+
 }

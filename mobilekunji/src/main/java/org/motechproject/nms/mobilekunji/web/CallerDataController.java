@@ -67,29 +67,41 @@ public class CallerDataController extends BaseController {
         return userDetailApiResponse;
     }
 
+    /**
+     * SaveCallDetails
+     *
+     * @param saveCallDetailApiRequest
+     * @throws DataValidationException
+     */
     @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest request) throws DataValidationException {
+    public void saveCallDetails(@RequestBody SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
         log.info("SaveCallDetails: Started");
 
-        validateCallId(request.getCallId());
+        validateCallId(saveCallDetailApiRequest.getCallId());
 
-        saveCallDetailsService.saveCallDetails(request);
+        saveCallDetailsService.saveCallDetails(saveCallDetailApiRequest);
 
         log.trace("Save CallDetails:Ended");
     }
 
+    /**
+     * setLanguageLocationCode
+     *
+     * @param languageLocationCodeApiRequest
+     * @throws DataValidationException
+     */
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public
     @ResponseBody
-    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest request) throws DataValidationException {
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest) throws DataValidationException {
 
         log.info("Update Language Location Code: Started");
 
-        validateCallId(request.getCallId());
+        validateCallId(languageLocationCodeApiRequest.getCallId());
 
-        userDetailsService.setLanguageLocationCode(request);
+        userDetailsService.setLanguageLocationCode(languageLocationCodeApiRequest);
 
         log.trace("Update LanguageLocationCode:Ended");
     }
@@ -112,9 +124,14 @@ public class CallerDataController extends BaseController {
         ParseDataHelper.validateAndParseLong(callId, callId, true);
     }
 
+    /**
+     * validate 15 Digit CallId
+     *
+     * @param callId
+     * @throws DataValidationException
+     */
     private void validateCallId(String callId) throws DataValidationException {
 
         ParseDataHelper.validateLengthOfCallId("CallId", callId);
-
     }
 }
