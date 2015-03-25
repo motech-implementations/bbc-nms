@@ -51,6 +51,14 @@ public class CircleServiceImpl implements CircleService {
     }
 
     /**
+     * delete All Circle type object
+     */
+    @Override
+    public void deleteAll() {
+        circleDataService.deleteAll();
+    }
+
+    /**
      * get Circle record for given Circle Census code
      *
      * @param circleCode Circle Census Code

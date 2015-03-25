@@ -30,6 +30,11 @@ public interface OperatorService {
     void delete(Operator record);
 
     /**
+     * delete All Operator type object
+     */
+    void deleteAll();
+
+    /**
      * get Operator record for given Operator Census code
      *
      * @param operatorCode Operator Census Code

@@ -51,6 +51,14 @@ public class OperatorServiceImpl implements OperatorService {
     }
 
     /**
+     * delete All Operator type object
+     */
+    @Override
+    public void deleteAll() {
+        operatorDataService.deleteAll();
+    }
+
+    /**
      * get Operator record for given Operator Census code
      *
      * @param code Operator Census Code

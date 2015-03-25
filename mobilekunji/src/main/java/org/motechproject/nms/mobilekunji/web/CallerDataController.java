@@ -50,7 +50,7 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId)
-            throws DataValidationException, Exception {
+            throws DataValidationException {
 
         log.info("getUserDetails: Started");
 

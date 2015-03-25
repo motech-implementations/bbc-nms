@@ -32,6 +32,11 @@ public interface LanguageLocationCodeService {
     void delete(LanguageLocationCode record);
 
     /**
+     * deletes All LanguageLocationCode from database
+     */
+    void deleteAll();
+
+    /**
      * This method returns the language location code record for a location
      *
      * @param stateCode    code of the state

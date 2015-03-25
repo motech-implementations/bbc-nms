@@ -116,6 +116,14 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     /**
+     * deletes All LanguageLocationCode from database
+     */
+    @Override
+    public void deleteAll() {
+        languageLocationCodeDataService.deleteAll();
+    }
+
+    /**
      * This method returns the language location code record for a location
      *
      * @param stateCode    code of the state

@@ -30,6 +30,11 @@ public interface CircleService {
     void delete(Circle record);
 
     /**
+     * delete All Circle type object
+     */
+    void deleteAll();
+
+    /**
      * get Circle record for given Circle Census code
      *
      * @param circleCode Circle Census Code
