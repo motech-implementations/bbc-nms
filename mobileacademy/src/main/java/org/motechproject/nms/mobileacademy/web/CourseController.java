@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * To be implemented in next review cycle
  * 
- * UserController handles following requests i.e Get User, Set language location
- * code, Save Call details.
+ * CourseController handles requests for Get Course and get Course version
  *
  */
 @Controller
@@ -29,69 +27,90 @@ public class CourseController extends BaseController {
     private CourseService courseService;
 
     /**
-     * Get MA Course in JSON format
+     * Get Course API
+     * 
+     * @return the current course in system in JSON format
      */
-    @RequestMapping(value = "/getMACourse", method = RequestMethod.GET)
-    public ResponseEntity<String> getMACourse() {
-        LOGGER.debug("getMACourse: Started");
+    @RequestMapping(value = "/course", method = RequestMethod.GET)
+    public ResponseEntity<String> getCourse() {
+        LOGGER.info("getMACourse: Started");
         Course course = courseService.getMtrainingCourse();
+        /* Case: when there is no course present in the system */
         if (course == null) {
-            LOGGER.error("No Course Present in the System");
-            LOGGER.debug("getMACourse: Ended");
+            LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
+            LOGGER.info("getMACourse: Ended");
             return new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.NO_COURSE_PRESENT),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (course.getState() == CourseUnitState.Inactive) {
-            LOGGER.error("No Course Present in the System");
-            LOGGER.debug("getMACourse: Ended");
+        }
+        /* Case: when the course upload is ongoing and state is inactive */
+        else if (course.getState() == CourseUnitState.Inactive) {
+            LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
+            LOGGER.info("getMACourse: Ended");
             return new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.COURSE_UPLOAD_ONGOING),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
+        }
+        /* Case: when the course is present and its state is active */
+        else {
             String courseJson = courseService.getCourseJson();
-            LOGGER.debug("getMACourse: Ended");
+            LOGGER.info("getMACourse: Ended");
             return new ResponseEntity<String>(courseJson, HttpStatus.OK);
         }
     }
 
     /**
-     * Get Current MA Course version
+     * Get Course Version API
+     * 
+     * @return the version of the current course in the system in Integer
      */
-    @RequestMapping(value = "/getMACourseVersion", method = RequestMethod.GET)
-    public ResponseEntity<String> getMACourseVersion() {
-        LOGGER.debug("getMACourseVersion: Started");
+    @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
+    public ResponseEntity<String> getCourseVersion() {
+        LOGGER.info("getMACourseVersion: Started");
         Course course = courseService.getMtrainingCourse();
+
+        /* Case: when there is no course present in the system */
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-            LOGGER.debug("getMACourseVersion: Ended");
+            LOGGER.info("getMACourseVersion: Ended");
             return new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.NO_COURSE_PRESENT),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (course.getState() == CourseUnitState.Inactive) {
+        }
+        /* Case: when the course upload is ongoing and state is inactive */
+        else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-            LOGGER.debug("getMACourseVersion: Ended");
+            LOGGER.info("getMACourseVersion: Ended");
             return new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.FAILURE_REASON,
                     MobileAcademyConstants.COURSE_UPLOAD_ONGOING),
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        } else {
+        }
+        /* Case: when the course is present and its state is active */
+        else {
             int courseVersion = courseService.getCurrentCourseVersion();
-            LOGGER.debug("getMACourseVersion: Ended");
+            LOGGER.info("getMACourseVersion: Ended");
             return new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
                     HttpStatus.OK);
         }
     }
 
+    /*
+     * This provides a JSON node in form of key-value node for string value
+     */
     private String getJsonNode(String key, String value) {
         String response;
         response = "{\"" + key + "\":\"" + value + "\"}";
         return response;
     }
 
+    /*
+     * This provides a JSON node in form of key-value node for integer value
+     */
     private String getJsonNode(String key, int value) {
         String response;
         response = "{\"" + key + "\":" + value + "}";

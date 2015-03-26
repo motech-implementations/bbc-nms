@@ -419,12 +419,30 @@ public class CourseServiceImpl implements CourseService {
         chapterContentDataService.create(chapterContent);
     }
 
-    // To be implemented in next review cycle
+    @Override
+    public int getCurrentCourseVersion() {
+        Course course = getMtrainingCourse();
+        if (course == null) {
+            return -1;
+        }
+        DateTime date = course.getModificationDate();
+        return (int) (date.getMillis() / MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
+    }
+
+    @Override
+    public void updateCourseVersion(String username) {
+        Course course = getMtrainingCourse();
+        if (course != null) {
+            course.setModificationDate(DateTime.now());
+            course.setModifiedBy(username);
+            mTrainingService.updateCourse(course);
+        }
+    }
+
     @Override
     public String getCourseJson() {
         Course course = getMtrainingCourse();
         if (course == null) {
-            // TODO condition for empty Json
             return "{\" \":\" \"}";
         }
         List<ChapterContent> chapterContents = getAllChapterContents();
@@ -800,26 +818,4 @@ public class CourseServiceImpl implements CourseService {
         }
         return node;
     }
-
-    // To be implemented in next review cycle
-    @Override
-    public int getCurrentCourseVersion() {
-        Course course = getMtrainingCourse();
-        if (course == null) {
-            return -1;
-        }
-        DateTime date = course.getModificationDate();
-        return (int) (date.getMillis() / 1000);
-    }
-
-    @Override
-    public void updateCourseVersion(String username) {
-        Course course = getMtrainingCourse();
-        if (course != null) {
-            course.setModificationDate(DateTime.now());
-            course.setModifiedBy(username);
-            mTrainingService.updateCourse(course);
-        }
-    }
-
 }
