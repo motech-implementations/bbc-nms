@@ -281,18 +281,36 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throws NmsInternalServerError {
             Configuration configuration = configurationService.getConfiguration();
             long activeUserCount = getActiveUserCount();
-        /* check for maximum allowed beneficiary */
+        /*If DeactivationReason is NONE then create Subscriber and subscription*/
+        if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
+            /* check for maximum allowed beneficiary */
             if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
-                Subscriber newSubscriber = subscriberDataService.create(subscriber);
-                if (newSubscriber.getDeactivationReason() == DeactivationReason.NONE) {
-                    createNewSubscription(subscriber, newSubscriber, channel, operatorCode);
+                Subscriber dbSubscriber = null;
+                if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
+                    dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
+                } else {
+                    dbSubscriber = subscriberDataService.findRecordByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
                 }
+
+                if (dbSubscriber != null) {
+                    updateDbSubscriber(subscriber, dbSubscriber);
+                } else {
+                    dbSubscriber = subscriberDataService.create(subscriber);
+                }
+
+                createNewSubscription(subscriber, dbSubscriber, channel, operatorCode);
             } else {
                 logger.info("Reached maximum Active Subscriptions Count, can't add any more");
                 throw new NmsInternalServerError("Active Subscriptions Count Exceeded",
                         ErrorCategoryConstants.INCONSISTENT_DATA,
                         "Active Subscriptions Count Exceeded");
             }
+        } else {
+            logger.warn("Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription");
+            throw new NmsInternalServerError("Active Subscriptions Count Exceeded",
+                    ErrorCategoryConstants.INCONSISTENT_DATA,
+                    "Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription");
+        }
 
     }
 
@@ -311,18 +329,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         commonValidatorService.validateOperator(operatorCode);
         commonValidatorService.validateLanguageLocationCode(llcCode);
 
-        Subscriber dbSubscriber = null;
-        if(subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-            dbSubscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
-        } else {
-            dbSubscriber = subscriberDataService.findRecordByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
-        }
-
-        if (dbSubscriber != null) {
-            updateDbSubscriber(subscriber, dbSubscriber);
-        } else {
-            createNewSubscriberAndSubscription(subscriber, Channel.IVR, operatorCode);
-        }
+        createNewSubscriberAndSubscription(subscriber, Channel.IVR, operatorCode);
     }
     
     /**
