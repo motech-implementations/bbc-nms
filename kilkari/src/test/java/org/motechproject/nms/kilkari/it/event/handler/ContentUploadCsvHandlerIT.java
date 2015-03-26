@@ -152,20 +152,24 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         circle.setName("MotechEventCreateTest");
         circle.setCode("circleCode");
         circleDataService.create(circle);
-
+        Circle dbCircle = circleDataService.create(circle);
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
         stateService.create(state);
-
+        State dbState = stateService.create(state);
         //create district with districtCode "1" and stateCode "1"
         District district = new District();
         district.setStateCode(1L);
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        districtService.create(district);
+        State stateData = stateService.findRecordByStateCode(district.getStateCode());
+        stateData.getDistrict().add(district);
+        stateService.update(stateData);
+
+        District dbDistrict = districtService.findDistrictByParentCode(1L, 1L);
 
         LanguageLocationCode llc = new LanguageLocationCode();
         llc.setCircleCode("circleCode");
@@ -175,9 +179,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setLanguageKK("LanguageKK");
         llc.setLanguageMA("LanguageMA");
         llc.setLanguageMK("LanguageMK");
-        llc.setCircle(circle);
-        llc.setDistrict(district);
-        llc.setState(state);
+        llc.setCircle(dbCircle);
+        llc.setDistrict(dbDistrict);
+        llc.setState(dbState);
         languageLocationCodeService.create(llc);
 
         ContentUploadCsv contentCsv = new ContentUploadCsv();
