@@ -12,8 +12,22 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.HealthBlockService;
+import org.motechproject.nms.masterdata.service.HealthFacilityService;
+import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
+import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.VillageService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -91,7 +105,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
 
-    private State state = null ;
+    private State state = null;
 
     private District district = null;
 
@@ -132,7 +146,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             System.out.println("");
             //state = new State();
             //district = new District();
-           // circle = new Circle();
+            // circle = new Circle();
             state = testHelper.createState();
             stateService.create(state);
             assertNotNull(state);
@@ -558,7 +572,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
             //nms generated id is null in update record
             frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456","1234",
+                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", null);
 
             frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -566,7 +580,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             uploadedIds.add(frontLineWorkerCsvdb.getId());
 
             frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456","1234",
+                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
                     "9876", "1234", "True", "0001");
 
             frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
@@ -626,7 +640,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         setUpIsDone = true;
 
     }
-
 
 
     @Test
@@ -928,7 +941,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flw = frontLineWorkerService.getFlwBycontactNo("8888888888");
         assertNotNull(flw);
         assertTrue(null != flw.getId());
-        assertTrue(0001L !=flw.getId());
+        assertTrue(0001L != flw.getId());
 
 
 /*        // test FrontLineWorker ContactNo doesnt exist, Flw and State already present, Hence Updation case
@@ -961,5 +974,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
 
     }
+
 }
 

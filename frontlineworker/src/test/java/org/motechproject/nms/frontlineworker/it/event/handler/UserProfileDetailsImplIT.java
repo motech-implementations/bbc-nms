@@ -12,8 +12,16 @@ import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -62,7 +70,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
     private static boolean setUpIsDone = false;
 
-    private State state = null ;
+    private State state = null;
 
     private District district = null;
 
@@ -119,9 +127,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             // Record 1 defaultLanguageLocationCodeId is null And Status is ACTIVE
 
-            frontLineWorker = new FrontLineWorker(150L,"1234512345", "Rashi", Designation.USHA,
-                              123L, 12L, stateData, district, null, null, null,
-                              null, null, null, null, Status.ACTIVE, 123, null);
+            frontLineWorker = new FrontLineWorker(150L, "1234512345", "Rashi", Designation.USHA,
+                    123L, 12L, stateData, district, null, null, null,
+                    null, null, null, null, Status.ACTIVE, 123, null);
 
             frontLineWorker.setCreator("Etasha");
             frontLineWorker.setModifiedBy("Etasha");
