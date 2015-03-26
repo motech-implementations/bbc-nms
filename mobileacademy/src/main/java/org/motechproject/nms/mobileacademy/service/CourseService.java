@@ -196,8 +196,8 @@ public interface CourseService {
     public String getCourseJson();
 
     /**
-     * Used to get the current course version returns -1 if there is no course
-     * in the system
+     * Used to get the current course version, returns -1 if there is no active
+     * course in the system
      * 
      * @return Course Version in long
      */
