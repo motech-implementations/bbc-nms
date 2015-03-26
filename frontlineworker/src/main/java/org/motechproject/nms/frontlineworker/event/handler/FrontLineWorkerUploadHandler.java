@@ -244,7 +244,6 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setHealthSubFacilityId(frontLineWorker.getHealthSubFacilityId());
 
         dbRecord.setFlwId(frontLineWorker.getFlwId());
-        dbRecord.setId(frontLineWorker.getId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
 
