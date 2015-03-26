@@ -126,9 +126,11 @@ public class MobileAcademyConstants {
 
     public static final String LOG_MSG_NEW_FILE_NAME = "new file name: {}";
 
-    public static final String NO_COURSE_PRESENT = "No Course Present in the System";
+    public static final String NO_COURSE_PRESENT = "Course not available";
 
-    public static final String COURSE_UPLOAD_ONGOING = "Course upload is ongoing in the system";
+    public static final String COURSE_UPLOAD_ONGOING = "Course upload ongoing";
+
+    public final static int MILLIS_TO_SEC_CONVERTER = 1000;
 
     /* Mobile academy service configuration parameters -Start */
 

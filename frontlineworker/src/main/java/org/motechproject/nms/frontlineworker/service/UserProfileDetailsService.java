@@ -19,4 +19,6 @@ public interface UserProfileDetailsService {
     public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
             throws DataValidationException;
 
+    public void validateOperator(String operatorCode) throws DataValidationException;
+
 }

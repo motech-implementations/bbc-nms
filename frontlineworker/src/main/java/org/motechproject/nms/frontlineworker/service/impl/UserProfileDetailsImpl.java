@@ -121,6 +121,16 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         }
     }
 
+    @Override
+    public void validateOperator(String operatorCode) throws DataValidationException {
+        Operator operator = operatorService.getRecordByCode(operatorCode);
+
+        if (operator == null) {
+            ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
+        }
+    }
+
+
 
     /**
      * This procedure creates a new UserProfile when a call is made by a number which is not present in the Database
