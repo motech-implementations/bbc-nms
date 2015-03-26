@@ -10,7 +10,13 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -133,17 +139,15 @@ public class FrontLineWorkerUploadHandler {
                         logger.debug("Successful creation of new front line worker");
 
                     } else {
-                        if(dbRecord.getStatus() == Status.INVALID) {
+                        if (dbRecord.getStatus() == Status.INVALID) {
                             ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
-                        }
-                        else {
+                        } else {
                             Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
                             Status status = dbRecord.getStatus();
                             if (valid == null) {
-                                if(Status.ANONYMOUS == dbRecord.getStatus()) {
+                                if (Status.ANONYMOUS == dbRecord.getStatus()) {
                                     frontLineWorker.setStatus(Status.ACTIVE);
-                                }
-                                else {
+                                } else {
                                     frontLineWorker.setStatus(dbRecord.getStatus());
                                 }
 
@@ -161,10 +165,9 @@ public class FrontLineWorkerUploadHandler {
                                         bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                                         logger.warn("Status change try from invalid to valid for id : {}", id);
                                     } else {
-                                        if(Status.ANONYMOUS == dbRecord.getStatus()) {
+                                        if (Status.ANONYMOUS == dbRecord.getStatus()) {
                                             frontLineWorker.setStatus(Status.ACTIVE);
-                                        }
-                                        else {
+                                        } else {
                                             frontLineWorker.setStatus(dbRecord.getStatus());
                                         }
                                         updateDbRecord(frontLineWorker, dbRecord);

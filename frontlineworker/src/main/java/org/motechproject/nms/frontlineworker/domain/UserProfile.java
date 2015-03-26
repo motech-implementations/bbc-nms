@@ -55,6 +55,7 @@ public class UserProfile {
 
         this.nmsId = nmsId;
     }
+
     public String getMsisdn() {
         return msisdn;
     }
@@ -71,7 +72,6 @@ public class UserProfile {
     public void setLanguageLocationCode(Integer languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
-
 
 
     public String getCircle() {
