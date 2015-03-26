@@ -329,7 +329,7 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
 
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
-        frontLineWorker.setId(ParseDataHelper.validateAndParseLong("Nms Flw Id", record.getNmsFlwId(), false));
+        frontLineWorker.setId(ParseDataHelper.validateAndParseLong("Nms Flw Id", record.getSystemGeneratedFlwId(), false));
         frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
 

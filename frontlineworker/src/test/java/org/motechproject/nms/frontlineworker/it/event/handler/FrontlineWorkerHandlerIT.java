@@ -513,8 +513,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             assertNotNull(frontLineWorkerCsvdb);
             uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-            //nms generated id is null
- /*           frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "000", "Rashi",
+            //nms generated id is null in update record
+            frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
                     "USHA", "123", "1", "1234", "12345", "123456","1234",
                     "9876", "1234", "True", null);
 
@@ -522,31 +522,26 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             assertNotNull(frontLineWorkerCsvdb);
             uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-            FrontLineWorker frontLineWorker = new FrontLineWorker(10L,"8888888888", "Rashi", Designation.USHA, null,
-                    12L, state, district, null, null, null, null, null,"9876", "1234", Status.INACTIVE, null, null);
+            frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
+                    "USHA", "123", "1", "1234", "12345", "123456","1234",
+                    "9876", "1234", "True", "0001");
 
-            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+            assertNotNull(frontLineWorkerCsvdb);
+            uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-            public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, Long operatorId,
-                    Long stateCode, State stateId, District districtId, Taluka talukaId,
-                    HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
-                    healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
-                    Status status, Integer languageLocationCodeId, Integer defaultLanguageLocationCodeId) {*/
-
-
-            // testFrontLineWorkerContactNoIsDifferent
-
-            frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "8826575961", "Etasha",
+            // test FrontLineWorker ContactNo doesnt exist, Flw and State already present
+/*
+            frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "8826575961", "Etasha",
                     "USHA", "123", "1", "1234", null, "123456", "1234",
-                    "9876", "1234", "True", null);
+                    "9876", "1234", "True", null);*/
 
 
             frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
             assertNotNull(frontLineWorkerCsvdb);
             uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-            // testFrontLineWorkerFlwIdIsDifferent
-
+            // test Front Line Worker flw id doesnt exist, Contact No already present. hence failure case
             frontLineWorkerCsv = new FrontLineWorkerCsv("25", "12", "9990545494", "Etasha",
                     "USHA", "123", "1", "1234", null, "123456", "1234",
                     "9876", "1234", "True", null);
@@ -567,7 +562,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             assertNotNull(frontLineWorkerCsvdb);
             uploadedIds.add(frontLineWorkerCsvdb.getId());*/
 
-            // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive
+            // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive...diff records
 
             frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "4444444444", "Etasha",
                     "USHA", "123", "1", "1234", null, "123456", "1234",
@@ -1007,21 +1002,24 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertNull(flw);
 
-        /*//nms generated id is null
+        //nms generated id is null in update record
 
         flw = frontLineWorkerService.getFlwBycontactNo("8888888888");
         assertNotNull(flw);
-        assertTrue(null == flw.getId());
-*/
-        // testFrontLineWorkerPhoneNoIsDifferent
+        assertTrue(null != flw.getId());
+        assertTrue(0001L !=flw.getId());
 
+
+/*        // test FrontLineWorker ContactNo doesnt exist, Flw and State already present, Hence Updation case
         flw = frontLineWorkerService.getFlwBycontactNo("8826575961");
-        assertNull(flw);
+        assertNotNull(flw);
+        assertTrue(12L == flw.getFlwId());*/
 
-        // testFrontLineWorkerFlwIdIsDifferent
 
+        // test Front Line Worker flw id doesnt exist, Contact No already present. hence failure case
         flw = frontLineWorkerService.getFlwBycontactNo("9990545494");
         assertNotNull(flw);
+        assertTrue(25L != flw.getFlwId());
 
         /*// testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInvalid
 
