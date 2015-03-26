@@ -59,15 +59,15 @@ public class CourseController extends BaseController {
     public ResponseEntity<String> getCourseVersion() {
         LOGGER.info("getCourseVersion: Started");
         Course course = courseService.getMtrainingCourse();
+        int courseVersion = courseService.getCurrentCourseVersion();
         ResponseEntity<String> respose;
-        if (course == null) {
+        if (course == null || courseVersion == -1) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             respose = getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
         } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
             respose = getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
         } else {
-            int courseVersion = courseService.getCurrentCourseVersion();
             respose = new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
                     HttpStatus.OK);
