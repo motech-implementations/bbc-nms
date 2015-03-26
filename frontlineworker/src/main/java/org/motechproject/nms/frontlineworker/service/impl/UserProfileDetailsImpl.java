@@ -111,7 +111,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         if (languageLocationCodeByParam == null) {
             ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
         } else {
-            frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
+            frontLineWorker = frontLineWorkerService.getFlwBycontactNo(validatedMsisdn);
             if (frontLineWorker == null) {
                 ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
             } else {
@@ -129,7 +129,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
             ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
         }
     }
-
 
 
     /**
