@@ -37,7 +37,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private ConfigurationService configurationService;
     
     @Autowired
-    private ActiveSubscriptionCountDataService activeUserDataService;
+    private ActiveSubscriptionCountDataService activeSubscriptionCountDataService;
 
     @Autowired
     private CommonValidatorService commonValidatorService;
@@ -89,7 +89,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public long getActiveUserCount() {
-        return activeUserDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getCount();
+        return activeSubscriptionCountDataService.findActiveSubscriptionCountByIndex(Initializer.CONFIGURATION_INDEX).getCount();
     }
 
     /**
@@ -386,7 +386,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setSubscriber(dbSubscriber);
 
         newSubscription =  subscriptionDataService.create(newSubscription);
-        activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         
         return newSubscription;
     }
@@ -415,9 +415,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         } else {
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+            activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
         }
     }
     
@@ -468,7 +468,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
             subscriptionDataService.update(subscription);
-            activeUserDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+            activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
         }
     }
 

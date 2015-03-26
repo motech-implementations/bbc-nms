@@ -71,9 +71,6 @@
 	<osgi:reference id="operatorService"
                     interface="org.motechproject.nms.masterdata.service.OperatorService"/>
 
-    <osgi:reference id="languageLocationCodeService"
-                    interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
-
     <osgi:service ref="userDetailsService"
                     interface="org.motechproject.nms.kilkari.service.UserDetailsService"/>
 
