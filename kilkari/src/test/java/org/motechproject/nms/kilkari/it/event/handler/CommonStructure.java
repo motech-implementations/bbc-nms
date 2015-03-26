@@ -241,8 +241,8 @@ public class CommonStructure extends BasePaxIT {
         csv.setAbortion("None");
         csv.setOutcomeNos("2");
         csv.setAge("30");
-        csv.setEntryType("Birth");
-        csv.setAadharNo("123456789876");
+        csv.setEntryType("1");
+        //csv.setAadharNo("123456789876");
         return csv;
     }
     
@@ -292,7 +292,7 @@ public class CommonStructure extends BasePaxIT {
         csv.setVillageCode("1");
         csv.setMotherName("motherName");
         csv.setBirthdate("2001-01-01 00:00:00");
-        csv.setEntryType("Death");
+        csv.setEntryType("1");
         csv.setCreator("Deepak");
         csv.setOwner("Deepak");
         csv.setModifiedBy("Deepak");

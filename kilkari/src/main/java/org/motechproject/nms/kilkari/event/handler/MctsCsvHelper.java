@@ -87,13 +87,13 @@ public final class MctsCsvHelper {
     static boolean checkValidEntryType(String entryType) {
         boolean isRightEntryType = false;
 
-        if(entryType.equalsIgnoreCase(ACTIVE_ENTRY)){
+        if(entryType.equals(ACTIVE_ENTRY)){
             isRightEntryType = true;
-        }else if (entryType.equalsIgnoreCase(DEATH_ENTRY)) {
+        }else if (entryType.equals(DEATH_ENTRY)) {
             isRightEntryType = true;
-        }else if (entryType.equalsIgnoreCase(MIGRATED_IN_ENTRY)) {
+        }else if (entryType.equals(MIGRATED_IN_ENTRY)) {
             isRightEntryType = true;
-        }else if (entryType.equalsIgnoreCase(MIGRATED_OUT_ENTRY)) {
+        }else if (entryType.equals(MIGRATED_OUT_ENTRY)) {
             isRightEntryType = true;
         }
         return isRightEntryType;
