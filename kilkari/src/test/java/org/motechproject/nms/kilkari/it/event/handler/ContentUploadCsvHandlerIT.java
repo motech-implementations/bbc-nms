@@ -77,7 +77,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     @Inject
     private LanguageLocationCodeDataService llcDataService;
 
-    List<Long> createdIds = new ArrayList<Long>();
+
 
     @Before
     public void setUp() {
@@ -88,9 +88,12 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     public void shouldCreateContentUploadRecordsAfterCsvUpload() throws Exception {
         ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
-        preSetup();
+
+        List<Long> createdIds = new ArrayList<Long>();
+        Long id = preSetup();
 
 
+        createdIds.add(id);
         csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
 
         Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(0)));
@@ -109,7 +112,13 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
 
-        preSetup();
+        List<Long> createdIds = new ArrayList<Long>();
+        Long id = preSetup();
+        createdIds.add(id);
+        csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
+        Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(0)));
+        createdIds.remove(0);
+
 
         ContentUploadCsv csv = new ContentUploadCsv();
         csv.setLanguageLocationCode("123");
@@ -124,7 +133,6 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
         Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(0)));
-        Assert.assertNull(contentUploadCsvService.getRecord(createdIds.get(1)));
 
         ContentUpload record = contentUploadService.getRecordByContentId(1L);
         Assert.assertTrue(record.getContentDuration() == 100);
@@ -140,6 +148,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
 
+        List<Long> createdIds = new ArrayList<Long>();
         createdIds.add(1L);
         csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
     }
@@ -193,6 +202,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentCsv.setContentDuration("10");
         contentCsv.setContentId("1");
         ContentUploadCsv dbCsv = contentUploadCsvDataService.create(contentCsv);
+
+        List<Long> createdIds = new ArrayList<Long>();
         createdIds.add(dbCsv.getId());
 
 
@@ -206,7 +217,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
-    public void preSetup() {
+    public Long preSetup() {
         Circle circle = new Circle();
         circle.setName("MotechEventCreateTest");
         circle.setCode("circleCode");
@@ -253,7 +264,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentCsv.setContentDuration("10");
         contentCsv.setContentId("1");
         ContentUploadCsv dbCsv = contentUploadCsvDataService.create(contentCsv);
-        createdIds.add(dbCsv.getId());
+        return dbCsv.getId();
     }
 
     @After
