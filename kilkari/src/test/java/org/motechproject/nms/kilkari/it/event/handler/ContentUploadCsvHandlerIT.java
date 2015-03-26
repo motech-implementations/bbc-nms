@@ -160,13 +160,11 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("MotechEventCreateTest");
         circle.setCode("circleCode");
-        circleDataService.create(circle);
         Circle dbCircle = circleDataService.create(circle);
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
-        stateService.create(state);
         State dbState = stateService.create(state);
         //create district with districtCode "1" and stateCode "1"
         District district = new District();
@@ -174,9 +172,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        State stateData = stateService.findRecordByStateCode(district.getStateCode());
-        stateData.getDistrict().add(district);
-        stateService.update(stateData);
+        dbState = stateService.findRecordByStateCode(district.getStateCode());
+        dbState.getDistrict().add(district);
+        stateService.update(dbState);
 
         District dbDistrict = districtService.findDistrictByParentCode(1L, 1L);
 
@@ -235,9 +233,9 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        State stateData = stateService.findRecordByStateCode(district.getStateCode());
-        stateData.getDistrict().add(district);
-        stateService.update(stateData);
+        dbState = stateService.findRecordByStateCode(district.getStateCode());
+        dbState.getDistrict().add(district);
+        stateService.update(dbState);
 
         District dbDistrict = districtService.findDistrictByParentCode(1L, 1L);
 
