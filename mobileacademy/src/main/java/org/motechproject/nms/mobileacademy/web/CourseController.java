@@ -35,20 +35,15 @@ public class CourseController extends BaseController {
     public ResponseEntity<String> getCourse() {
         LOGGER.info("getCourse: Started");
         Course course = courseService.getMtrainingCourse();
-        /* In case of no course present */
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             LOGGER.info("getCourse: Ended");
             return getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
-        }
-        /* In case of course upload in progress, course state inactive */
-        else if (course.getState() == CourseUnitState.Inactive) {
+        } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
             LOGGER.info("getCourse: Ended");
             return getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-        }
-        /* In the case when course is present and its state is active */
-        else {
+        } else {
             String courseJson = courseService.getCourseJson();
             LOGGER.info("getCourse: Ended");
             return new ResponseEntity<String>(courseJson, HttpStatus.OK);
@@ -64,20 +59,15 @@ public class CourseController extends BaseController {
     public ResponseEntity<String> getCourseVersion() {
         LOGGER.info("getCourseVersion: Started");
         Course course = courseService.getMtrainingCourse();
-        /* Case: when there is no course present in the system */
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             LOGGER.info("getCourseVersion: Ended");
             return getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
-        }
-        /* Case: when the course upload is ongoing and state is inactive */
-        else if (course.getState() == CourseUnitState.Inactive) {
+        } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
             LOGGER.info("getCourseVersion: Ended");
             return getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-        }
-        /* Case: when the course is present and its state is active */
-        else {
+        } else {
             int courseVersion = courseService.getCurrentCourseVersion();
             LOGGER.info("getCourseVersion: Ended");
             return new ResponseEntity<String>(getJsonNode(
