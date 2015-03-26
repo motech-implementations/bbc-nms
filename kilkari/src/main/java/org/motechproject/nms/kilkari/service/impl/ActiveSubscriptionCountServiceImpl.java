@@ -51,7 +51,9 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
      */
     @Override
     public void incrementActiveSubscriptionCount() {
+         /* TBD: As latest MDS Jar is not available in Nexus Repo
         activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
+        */
     }
 
     /**
@@ -59,7 +61,9 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
      */
     @Override
     public void decrementActiveSubscriptionCount() {
+        /* TBD: As latest MDS Jar is not available in Nexus Repo
         activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
+        */
     }
 
 }

@@ -107,8 +107,8 @@ public class SubscriptionCreateApiRequest {
      * @throws DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameters() throws DataValidationException{
-        ParseDataHelper.validateAndTrimMsisdn("callingNumber",
-                ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true));
+        String msisdn = ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true);
+        ParseDataHelper.validateAndTrimMsisdn("callingNumber", msisdn);
         ParseDataHelper.validateAndParseString("operator", operator, true);
         ParseDataHelper.validateAndParseString("circle", circle, true);
         ParseDataHelper.validateAndParseString("callId", callId, true);

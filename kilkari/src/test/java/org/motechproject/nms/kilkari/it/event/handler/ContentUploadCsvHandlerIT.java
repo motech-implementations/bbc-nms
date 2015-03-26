@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
 import org.motechproject.nms.kilkari.event.handler.ContentUploadCsvHandler;
@@ -96,7 +97,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         ContentUpload record = contentUploadService.getRecordByContentId(1L);
         Assert.assertTrue(record.getContentDuration() == 10);
-        Assert.assertEquals(record.getContentType().name(), "PROMPT");
+        Assert.assertEquals(record.getContentType(), ContentType.PROMPT);
         Assert.assertEquals(record.getContentName(), "contentName");
         Assert.assertTrue(record.getLanguageLocationCode().toString().equals("123"));
         Assert.assertEquals(record.getCircleCode(), "circleCode");
@@ -112,7 +113,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         ContentUploadCsv csv = new ContentUploadCsv();
         csv.setLanguageLocationCode("123");
-        csv.setContentType("contentTypeChanged");
+        csv.setContentType("CONTENT");
         csv.setContentFile("contentFileChanged");
         csv.setCircleCode("circleCode");
         csv.setContentName("contentNameChanged");
@@ -127,7 +128,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         ContentUpload record = contentUploadService.getRecordByContentId(1L);
         Assert.assertTrue(record.getContentDuration() == 100);
-        Assert.assertEquals(record.getContentType().name(), "PROMPT");
+        Assert.assertEquals(record.getContentType(), ContentType.CONTENT);
         Assert.assertEquals(record.getContentName(), "contentNameChanged");
         Assert.assertTrue(record.getLanguageLocationCode().toString().equals("123"));
         Assert.assertEquals(record.getCircleCode(), "circleCode");
@@ -181,7 +182,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         ContentUploadCsv contentCsv = new ContentUploadCsv();
         contentCsv.setLanguageLocationCode("123@@@@");
-        contentCsv.setContentType("contentType");
+        contentCsv.setContentType("Prompt");
         contentCsv.setContentFile("contentFile");
         contentCsv.setCircleCode("circleCode");
         contentCsv.setContentName("contentName");
@@ -205,13 +206,13 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("MotechEventCreateTest");
         circle.setCode("circleCode");
-        circleDataService.create(circle);
+        Circle dbCircle = circleDataService.create(circle);
 
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
-        stateService.create(state);
+        State dbState = stateService.create(state);
 
         //create district with districtCode "1" and stateCode "1"
         District district = new District();
@@ -219,7 +220,12 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        districtService.create(district);
+        State stateData = stateService.findRecordByStateCode(district.getStateCode());
+        stateData.getDistrict().add(district);
+        stateService.update(stateData);
+
+        District dbDistrict = districtService.findDistrictByParentCode(1L, 1L);
+
 
         LanguageLocationCode llc = new LanguageLocationCode();
         llc.setCircleCode("circleCode");
@@ -229,14 +235,14 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setLanguageKK("LanguageKK");
         llc.setLanguageMA("LanguageMA");
         llc.setLanguageMK("LanguageMK");
-        llc.setCircle(circle);
-        llc.setDistrict(district);
-        llc.setState(state);
+        llc.setCircle(dbCircle);
+        llc.setDistrict(dbDistrict);
+        llc.setState(dbState);
         languageLocationCodeService.create(llc);
 
         ContentUploadCsv contentCsv = new ContentUploadCsv();
         contentCsv.setLanguageLocationCode("123");
-        contentCsv.setContentType("contentType");
+        contentCsv.setContentType("Prompt");
         contentCsv.setContentFile("contentFile");
         contentCsv.setCircleCode("circleCode");
         contentCsv.setContentName("contentName");

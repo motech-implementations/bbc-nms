@@ -37,8 +37,7 @@ public class CustomQueries {
          * @return null need to only execute query
          */
         public Object execute(Query query) {
-            /* TBD */
-            return null;
+            return query.execute();
         }
 
     }
@@ -61,8 +60,7 @@ public class CustomQueries {
          */
         @Override
         public Object execute(Query query) {
-            /* TBD */ 
-            return null;
+            return query.execute();
         }
 
         /**
