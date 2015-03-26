@@ -248,10 +248,7 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
 
-        dbRecord.setCreator(frontLineWorker.getCreator());
-        dbRecord.setModificationDate(frontLineWorker.getModificationDate());
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
-        dbRecord.setCreationDate(frontLineWorker.getCreationDate());
         dbRecord.setOwner(frontLineWorker.getOwner());
         frontLineWorkerService.updateFrontLineWorker(dbRecord);
     }
@@ -342,8 +339,6 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
         frontLineWorker.setOwner(record.getOwner());
-        frontLineWorker.setModificationDate(record.getModificationDate());
-        frontLineWorker.setCreationDate(record.getCreationDate());
 
         logger.debug("mapFrontLineWorkerFrom process end");
     }
