@@ -34,20 +34,20 @@ public class CourseController extends BaseController {
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public ResponseEntity<String> getCourse() {
         LOGGER.info("getCourse: Started");
+        ResponseEntity<String> respose;
         Course course = courseService.getMtrainingCourse();
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-            LOGGER.info("getCourse: Ended");
-            return getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
+            respose = getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
         } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-            LOGGER.info("getCourse: Ended");
-            return getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
+            respose = getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
         } else {
             String courseJson = courseService.getCourseJson();
-            LOGGER.info("getCourse: Ended");
-            return new ResponseEntity<String>(courseJson, HttpStatus.OK);
+            respose = new ResponseEntity<String>(courseJson, HttpStatus.OK);
         }
+        LOGGER.info("getCourse: Ended");
+        return respose;
     }
 
     /**
@@ -59,21 +59,21 @@ public class CourseController extends BaseController {
     public ResponseEntity<String> getCourseVersion() {
         LOGGER.info("getCourseVersion: Started");
         Course course = courseService.getMtrainingCourse();
+        ResponseEntity<String> respose;
         if (course == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-            LOGGER.info("getCourseVersion: Ended");
-            return getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
+            respose = getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
         } else if (course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-            LOGGER.info("getCourseVersion: Ended");
-            return getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
+            respose = getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
         } else {
             int courseVersion = courseService.getCurrentCourseVersion();
-            LOGGER.info("getCourseVersion: Ended");
-            return new ResponseEntity<String>(getJsonNode(
+            respose = new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
                     HttpStatus.OK);
         }
+        LOGGER.info("getCourseVersion: Ended");
+        return respose;
     }
 
     /*
