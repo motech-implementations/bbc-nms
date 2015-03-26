@@ -72,9 +72,9 @@ public class InitializerIT extends BasePaxIT {
         Assert.assertEquals(configuration.getRetryDay3ObdPriority(), Initializer.DEFAULT_RETRY_DAY3_OBD_PRIORITY);
         Assert.assertEquals(configuration.getRetryDay3ObdServiceId(), Initializer.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
 
-        Long expectedActiveUserCount = Initializer.DEFAULT_ACTIVEUSER_COUNT;
-        Long actualActiveUserCount = activeSubscriptionCountService.getActiveSubscriptionCount();
-        //Assert.assertTrue(expectedActiveUserCount == actualActiveUserCount);
+        Long expectedActiveSubscriptionCount = Initializer.DEFAULT_ACTIVEUSER_COUNT;
+        Long actualActiveSubscriptionCount = activeSubscriptionCountService.getActiveSubscriptionCount();
+        Assert.assertTrue(expectedActiveSubscriptionCount == actualActiveSubscriptionCount);
     }
 
 }

@@ -32,12 +32,6 @@ public interface SubscriptionService {
     Subscription getActiveSubscriptionByMctsIdPack(String mctsId, SubscriptionPack packName, Long stateCode);
 
     /**
-     * Gets actives users count
-     * @return long type object
-     */
-    long getActiveUserCount();
-
-    /**
      * Get subscription by mctsId and state code
      * @param mctsId String type object
      * @param id Long type object
