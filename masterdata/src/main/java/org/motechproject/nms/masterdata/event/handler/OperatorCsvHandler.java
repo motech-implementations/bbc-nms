@@ -67,13 +67,15 @@ public class OperatorCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-        errorDetail.setCsvName(csvFileName);
+     /*   errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);
         errorDetail.setRecordType(RecordType.OPERATOR);
-
+*/
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-        uploadStatus.setBulkUploadFileName(csvFileName);
+  /*      uploadStatus.setBulkUploadFileName(csvFileName);
         uploadStatus.setTimeOfUpload(timeStamp);
+*/
+        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.OPERATOR);
 
         for (Long id : createdIds) {
             try {
@@ -95,17 +97,17 @@ public class OperatorCsvHandler {
 
                 } else {
                     logger.error("Record not found in the OperatorCsv table with id {}", id);
-                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
             } catch (DataValidationException ex) {
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ex.getErrorDesc(),ex.getErrorCode(),record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
 
             } catch (Exception e) {
                 logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Some Error Occurred");
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Some Error Occurred");
 
             } finally {
                 if (null != record) {

@@ -70,13 +70,15 @@ public class DistrictCsvUploadHandler {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-        bulkUploadStatus.setBulkUploadFileName(csvFileName);
+       /* bulkUploadStatus.setBulkUploadFileName(csvFileName);
         bulkUploadStatus.setTimeOfUpload(timeStamp);
-
+*/
         BulkUploadError errorDetails = new BulkUploadError();
-        errorDetails.setCsvName(csvFileName);
+  /*      errorDetails.setCsvName(csvFileName);
         errorDetails.setRecordType(RecordType.DISTRICT);
-        errorDetails.setTimeOfUpload(timeStamp);
+        errorDetails.setTimeOfUpload(timeStamp);*/
+        ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.DISTRICT);
+
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         DistrictCsv districtCsvRecord = null;
@@ -94,16 +96,16 @@ public class DistrictCsvUploadHandler {
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in District Temporary Entity");
-                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,dataValidationException.getErroneousField(),dataValidationException.getErrorCode(),districtCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), districtCsvRecord.toString());
             } catch (Exception e) {
 
-                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != districtCsvRecord) {

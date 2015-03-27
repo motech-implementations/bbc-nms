@@ -75,13 +75,15 @@ public class LanguageLocationCodeCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-        errorDetail.setCsvName(csvFileName);
+       /* errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);
         errorDetail.setRecordType(RecordType.LANGUAGE_LOCATION_CODE);
-
+*/
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-        uploadStatus.setBulkUploadFileName(csvFileName);
+  /*      uploadStatus.setBulkUploadFileName(csvFileName);
         uploadStatus.setTimeOfUpload(timeStamp);
+*/
+        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.LANGUAGE_LOCATION_CODE);
 
         for (Long id : createdIds) {
             try {
@@ -105,17 +107,17 @@ public class LanguageLocationCodeCsvHandler {
                     uploadStatus.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the LanguageLocationCodeCsv table with id {}", id);
-                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
             } catch (DataValidationException ex) {
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ex.getErrorDesc(),ex.getErrorCode(),record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
 
             } catch (Exception e) {
                 logger.error("LANGUAGE_LOCATION_CSV_SUCCESS processing receive Exception exception, message: {}", e);
 
-                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Some Error Occurred");
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Some Error Occurred");
 
             } finally {
                 if (null != record) {
