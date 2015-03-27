@@ -208,6 +208,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         languageLocationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (languageLocationCode != null) {
+            //unique language location code is found for the provided circle
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setLanguageLocationCode(languageLocationCode);
 
@@ -222,6 +223,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         } else {
             defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
             if (defaultLanguageLocationCode != null) {
+                //no or multiple language location codes is found for the provided circle. here default language location
+                // code is fetched from circle
                 userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
                 userProfile.setIsDefaultLanguageLocationCode(true);
 
@@ -235,6 +238,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
 
             } else {
+                //here the default language location code for circle is also not found.
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(null);
                 userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
