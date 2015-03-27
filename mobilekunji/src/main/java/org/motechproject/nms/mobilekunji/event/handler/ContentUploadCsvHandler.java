@@ -176,8 +176,8 @@ public class ContentUploadCsvHandler {
         languageLocationCode = ParseDataHelper.validateAndParseInt("Language Location Code", record.getLanguageLocationCode(), true);
         contentName = ParseDataHelper.validateAndParseString("Conteny name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
-        validateCardNumber(record.getCardNumber());
         cardNumber = ParseDataHelper.validateAndParseString("Card number", record.getCardNumber(), true);
+        validateCardNumber(record.getCardNumber());
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
 
