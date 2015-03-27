@@ -114,7 +114,7 @@ public class CallerDataController extends BaseController {
 
     private void validateCallId(String callId) throws DataValidationException {
 
-        ParseDataHelper.validateAndTrimCallId("CallId", callId);
+        ParseDataHelper.validateLengthOfCallId("CallId", callId);
 
     }
 }

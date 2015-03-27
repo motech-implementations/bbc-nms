@@ -677,4 +677,135 @@ public class ParseDataHelperTest {
         Assert.assertNotNull(boolValue);
 
     }
+
+    /**
+     * Test case to test validateLengthOfCallId for
+     * validating CallId for its length when input callId is null.
+     * In this case validation is expected to fail and method
+     * should return false.
+     */
+    @Test
+    public void shouldReturnFalseForNullInCallId() {
+
+        String field = null;
+        String fieldName = "callId";
+        Boolean returnVal = null;
+
+        try {
+            returnVal = ParseDataHelper.validateLengthOfCallId(fieldName, field);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertFalse(returnVal);
+    }
+
+    /**
+     * Test case to test validateLengthOfCallId for
+     * validating CallId when its length is not as expected.
+     */
+    @Test
+    public void shouldThrowExceptionForCallIdWithInvalidLength() {
+
+        String field = "  1234543214526376524395876474745   ";
+        String fieldName = "callId";
+
+        try {
+            ParseDataHelper.validateLengthOfCallId(fieldName, field);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
+    }
+
+    /**
+     * Test case to test validateLengthOfCallId for validating
+     * CallId when its length is same as it is expected.
+     */
+    @Test
+    public void shouldReturnTrueForCallIdWithValidLength() {
+
+        StringBuffer callId = new StringBuffer();
+
+        for( int length = 0; length < Constants.CALL_ID_LENGTH; length++) {
+            callId.append("1");
+        }
+        callId.append("  ");
+
+        String field = callId.toString();
+        String fieldName = "callId";
+        Boolean returnVal = null;
+
+        try {
+            returnVal = ParseDataHelper.validateLengthOfCallId(fieldName, field);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertTrue(returnVal);
+    }
+
+
+    /**
+     * Test case to validate Msisdn when length of Msisdn
+     * is less than what is expected.
+     * DataValidationException with cause INVALID_DATA is expected.
+     */
+    @Test
+    public void shouldRaiseExceptionWhenMsisdnLengthIsLessThanExpected() {
+        String fieldName = "Msisdn";
+        String msisdn = "987654";
+
+        try {
+            ParseDataHelper.validateAndTrimMsisdn(fieldName, msisdn);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
+    }
+
+    /**
+     * Test case to validate Msisdn when length of Msisdn
+     * is equal to what is expected but the value is not numeric.
+     * DataValidationException with cause INVALID_DATA is expected.
+     */
+    @Test
+    public void shouldValidateMsisdnForNonNumericValue() {
+        String fieldName = "Msisdn";
+        String msisdn = "98abcdef98";
+
+        try {
+            ParseDataHelper.validateAndTrimMsisdn(fieldName, msisdn);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
+    }
+
+    /**
+     * Test case to validate Msisdn when length of Msisdn
+     * is equal to what is expected but the value is numeric.
+     * No exception should be thrown and
+     * returned Msisdn should be same as input Msisdn.
+     */
+    @Test
+    public void shouldValidateMsisdnForNumericValue() {
+        String fieldName = "Msisdn";
+        String returnedMsisdn = null;
+
+        StringBuffer msisdn = new StringBuffer();
+
+        for( int length = 0; length < Constants.MSISDN_LENGTH; length++) {
+            msisdn.append("9");
+        }
+
+        try {
+            returnedMsisdn = ParseDataHelper.validateAndTrimMsisdn(fieldName, msisdn.toString());
+        } catch (Exception e) {
+            Assert.fail();
+        }
+
+        Assert.assertEquals(msisdn.toString(), returnedMsisdn);
+    }
+
 }
