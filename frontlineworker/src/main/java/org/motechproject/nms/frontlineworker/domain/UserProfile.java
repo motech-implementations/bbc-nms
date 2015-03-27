@@ -9,7 +9,7 @@ public class UserProfile {
 
     private boolean isCreated;
 
-    private Long systemGeneratedFlwId;
+    private Long nmsFlwId;
 
     private String msisdn;
 
@@ -29,8 +29,8 @@ public class UserProfile {
         this.isCreated = isCreated;
     }
 
-    public Long getSystemGeneratedFlwId() {
-        return systemGeneratedFlwId;
+    public Long getNmsFlwId() {
+        return nmsFlwId;
     }
 
     public boolean isDefaultLanguageLocationCode() {
@@ -41,9 +41,9 @@ public class UserProfile {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
     }
 
-    public void setSystemGeneratedFlwId(Long systemGeneratedFlwId) {
+    public void setNmsFlwId(Long nmsFlwId) {
 
-        this.systemGeneratedFlwId = systemGeneratedFlwId;
+        this.nmsFlwId = nmsFlwId;
     }
 
     public String getMsisdn() {
@@ -84,7 +84,7 @@ public class UserProfile {
     public String toString() {
         return "UserProfile{" +
                 "isCreated=" + isCreated +
-                ", systemGeneratedFlwId=" + systemGeneratedFlwId +
+                ", nmsFlwId=" + nmsFlwId +
                 ", msisdn='" + msisdn + '\'' +
                 ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +
                 ", languageLocationCode=" + languageLocationCode +

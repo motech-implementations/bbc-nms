@@ -143,10 +143,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
 
         if (!setUpIsDone) {
-            System.out.println("");
-            //state = new State();
-            //district = new District();
-            // circle = new Circle();
             state = testHelper.createState();
             stateService.create(state);
             assertNotNull(state);
@@ -698,9 +694,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
-        /*assertEquals("Etasha", flw.getCreator());
-        assertEquals("Etasha", flw.getModifiedBy());
-        assertEquals("Etasha", flw.getOwner());*/
         assertEquals(Status.INACTIVE, flw.getStatus());
 
         // testFrontLineWorkerValidDataLargerphnNo
@@ -734,26 +727,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
 
         assertNull(flw);
-/*
-        assertTrue(4L == flw.getFlwId());
-        assertEquals("9905454950", flw.getContactNo());
-        assertEquals(Designation.USHA, flw.getDesignation());
-        assertEquals("Etasha", flw.getName());
-
-        assertTrue(12L == flw.getStateCode());
-        assertTrue(123L == flw.getDistrictId().getDistrictCode());
-        assertTrue(1L == flw.getTalukaId().getTalukaCode());
-        assertTrue(1234L == flw.getVillageId().getVillageCode());
-        assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
-        assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
-        assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-
-        assertEquals("1234", flw.getAdhaarNumber());
-        assertEquals("9876", flw.getAshaNumber());
-        *//*assertEquals("Etasha", flw.getCreator());
-        assertEquals("Etasha", flw.getModifiedBy());
-        assertEquals("Etasha", flw.getOwner());*//*
-        assertEquals(Status.INACTIVE, flw.getStatus());*/
 
         // testFrontLineWorkerNoState
 
@@ -891,7 +864,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
-        //assertEquals("9876", flw.getAshaNumber());
 
         // testFrontLineWorkerUpdationWithIsValidNull Part 2
 

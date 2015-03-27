@@ -88,8 +88,8 @@ public class FrontLineWorkerCsvTest {
 
     @Test
     public void testShouldSetWithNmsFlwId() {
-        frontLineWorkerCsv.setSystemGeneratedFlwId("null");
-        assertEquals("null", frontLineWorkerCsv.getSystemGeneratedFlwId());
+        frontLineWorkerCsv.setNmsFlwId("null");
+        assertEquals("null", frontLineWorkerCsv.getNmsFlwId());
     }
 
     @Test

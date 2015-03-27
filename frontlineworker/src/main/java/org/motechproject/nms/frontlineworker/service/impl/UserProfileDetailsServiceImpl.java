@@ -121,6 +121,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         }
     }
 
+    /**
+     * This procedure implements the API validateOperator which is used to validate the Operator of the call
+     *
+     * @param operatorCode the operator code deduced by the call
+     * @throws DataValidationException
+     */
     @Override
     public void validateOperator(String operatorCode) throws DataValidationException {
         Operator operator = operatorService.getRecordByCode(operatorCode);
@@ -150,7 +156,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
-        userProfile.setSystemGeneratedFlwId(frontLineWorker.getId());
+        userProfile.setNmsFlwId(frontLineWorker.getId());
         return userProfile;
     }
 
@@ -266,7 +272,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setLanguageLocationCode(languageLocationCode);
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-            userProfile.setSystemGeneratedFlwId(frontLineWorker.getId());
+            userProfile.setNmsFlwId(frontLineWorker.getId());
             userProfile.setCreated(true);
             userProfile.setMsisdn(msisdn);
             userProfile.setCircle(circleCode);
@@ -310,7 +316,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setCircle(circleCode);
-        userProfile.setSystemGeneratedFlwId(frontLineWorker.getId());
+        userProfile.setNmsFlwId(frontLineWorker.getId());
         userProfile.setCreated(false);
         userProfile.setMsisdn(msisdn);
 
@@ -357,7 +363,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             stateCode = langLocCode.getStateCode();
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setCircle(circleCode);
-            userProfile.setSystemGeneratedFlwId(frontLineWorker.getId());
+            userProfile.setNmsFlwId(frontLineWorker.getId());
             userProfile.setCreated(false);
             userProfile.setMsisdn(msisdn);
         } else {
