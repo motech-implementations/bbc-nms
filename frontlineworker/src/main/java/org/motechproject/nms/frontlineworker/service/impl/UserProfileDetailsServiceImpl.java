@@ -267,7 +267,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setSystemGeneratedFlwId(frontLineWorker.getId());
-            userProfile.setCreated(false);
+            userProfile.setCreated(true);
             userProfile.setMsisdn(msisdn);
             userProfile.setCircle(circleCode);
         } else {
