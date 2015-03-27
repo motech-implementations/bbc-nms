@@ -1,9 +1,23 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -11,11 +25,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -269,6 +278,102 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(subscription);
         assertNotNull(updateSubs);
         assertFalse(subscription.getMsisdn().equals(updateSubs.getMsisdn()));
+    }
+    
+    
+    @Test
+    public void shouldDecactivateMotherAndDeleteSubscriberBasedDiffMsisdnSameChildMcts() throws Exception {
+        logger.info("Inside  createDeleteOperation");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000042");
+        csv.setIdNo("42");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        ChildMctsCsv childCsv = new ChildMctsCsv();
+        childCsv = createChildMcts(childCsv);
+        childCsv.setWhomPhoneNo("1000000043");
+        childCsv.setIdNo("43");
+        childCsv.setEntryType("1");
+        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        uploadedIds.add(dbCsv1.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        uploadedIds.clear();
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
+        
+        
+        ChildMctsCsv childCsv2 = new ChildMctsCsv();
+        childCsv2 = createChildMcts(childCsv2);
+        childCsv2.setWhomPhoneNo("10000000401");
+        childCsv2.setIdNo("43");
+        childCsv2.setMotherId("42");
+        childCsv2.setEntryType("1");
+        ChildMctsCsv dbCsv2 = childMctsCsvDataService.create(childCsv2);
+        uploadedIds.add(dbCsv2.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        uploadedIds.clear();
+        
+        Subscription subscriptionFirst = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        assertNotNull(subscriptionFirst.getSubscriber());
+        assertTrue(subscriptionFirst.getMctsId().equals(csv.getIdNo()));
+        assertTrue(subscriptionFirst.getStatus() == Status.DEACTIVATED);
+        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_CHANGED);
+        assertTrue(subscriptionFirst.getSubscriber().getId() == updateSubs.getSubscriber().getId());
+        assertNotNull(updateSubs);
+    }
+    
+    
+    @Test
+    public void shouldDecactivateMotherAndDeleteSubscriberBasedSameMsisdn() throws Exception {
+        logger.info("Inside  createDeleteOperation");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000045");
+        csv.setIdNo("45");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        
+        ChildMctsCsv childCsv = new ChildMctsCsv();
+        childCsv = createChildMcts(childCsv);
+        childCsv.setWhomPhoneNo("1000000046");
+        childCsv.setIdNo("46");
+        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        uploadedIds.add(dbCsv1.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        uploadedIds.clear();
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
+        
+        
+        ChildMctsCsv childCsv2 = new ChildMctsCsv();
+        childCsv2 = createChildMcts(childCsv2);
+        childCsv2.setWhomPhoneNo("1000000046");
+        childCsv2.setIdNo("46");
+        childCsv2.setMotherId("45");
+        childCsv2.setEntryType("1");
+        ChildMctsCsv dbCsv2 = childMctsCsvDataService.create(childCsv2);
+        uploadedIds.add(dbCsv2.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds);
+        uploadedIds.clear();
+        
+        Subscription subscriptionFirst = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        assertNotNull(subscriptionFirst.getSubscriber());
+        assertTrue(subscriptionFirst.getMctsId().equals(csv.getIdNo()));
+        assertTrue(subscriptionFirst.getStatus() == Status.DEACTIVATED);
+        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_CHANGED);
+        assertTrue(subscriptionFirst.getSubscriber().getId() == updateSubs.getSubscriber().getId());
+        assertNotNull(updateSubs);
     }
     
    

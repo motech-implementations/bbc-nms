@@ -170,6 +170,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         State state = locationBuilder.buildState(1L, districts);
         stateService.create(state);
 
+
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
         LanguageLocationCode record = llcBuilder.buildLLCCode(state, circle, district, 29);

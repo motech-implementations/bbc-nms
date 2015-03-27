@@ -76,6 +76,14 @@ public class SubscriberServiceImpl implements SubscriberService {
         return subscriberDataService.findRecordByMsisdnAndMotherMctsId(msisdn, motherMctsId);
     }
     
+    /**
+     * Deletes specified subscriber record from database
+     * @param subscriber Subscriber type object
+     */
+    @Override
+    public void delete(Subscriber subscriber) {
+        subscriberDataService.delete(subscriber);
+    }
     
 
 

@@ -47,5 +47,11 @@ public interface SubscriberService {
      * @return Subscriber type object
      */
     Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId);
+
+    /**
+     * Deletes specified subscriber record from database
+     * @param subscriber Subscriber type object
+     */
+    void delete(Subscriber subscriber);
     
 }

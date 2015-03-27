@@ -172,7 +172,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 } else {  /* Record found based on mctsid(MotherMcts) than */ 
                     logger.info("Found active subscription from database for BeneficeryType[{}] based on otherMctsId[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
                     Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                    //set deactivate reason in dbSubscriber
+                    /* set deactivate reason in dbSubscriber */
                     updateDbSubscription(subscriber, dbSubscription, true, DeactivationReason.PACK_CHANGED);
                     
                     if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
@@ -186,16 +186,36 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid(ChildMcts) than */
                 logger.info("Found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                motherRecordHandling(subscriber, otherPack, otherMctsId, dbSubscriber);
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getSuitableMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
+                motherRecordHandling(subscriber, otherPack, otherMctsId, dbSubscriber);
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
                         ErrorCategoryConstants.INCONSISTENT_DATA, Constants.SUBSCRIPTION_EXIST_ERR_DESC, "");
+            }
+        }
+    }
+
+    private void motherRecordHandling(Subscriber subscriber,
+            SubscriptionPack otherPack, String otherMctsId,
+            Subscriber dbSubscriber) {
+        if(subscriber.getMotherMctsId() != null) {
+            Subscription dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getState().getStateCode());
+            if(dbSubscription != null){
+                Subscriber dbMotherSubscriber = dbSubscription.getSubscriber();
+                if(dbMotherSubscriber!=null) {
+                    dbSubscription.setStatus(Status.DEACTIVATED);
+                    dbSubscription.setDeactivationReason(DeactivationReason.PACK_CHANGED);
+                    dbSubscriber.getSubscriptionList().add(dbSubscription);
+                    dbMotherSubscriber.getSubscriptionList().clear();
+                    subscriberService.delete(dbMotherSubscriber);
+                }
             }
         }
     }
