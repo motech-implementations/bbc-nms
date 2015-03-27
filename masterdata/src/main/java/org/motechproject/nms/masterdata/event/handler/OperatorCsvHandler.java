@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class handles the csv upload for success and failure events for OperatorCsv.
+ * This class handles the csv upload for success and failure events for Operator Csv.
  */
 @Component
 public class OperatorCsvHandler {
@@ -95,25 +95,18 @@ public class OperatorCsvHandler {
 
                 } else {
                     logger.error("Record not found in the OperatorCsv table with id {}", id);
-                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetail.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                    uploadStatus.incrementFailureCount();
+                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+
                 }
             } catch (DataValidationException ex) {
-                errorDetail.setErrorCategory(ex.getErrorCode());
-                errorDetail.setRecordDetails(record.toString());
-                errorDetail.setErrorDescription(ex.getErrorDesc());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                uploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ex.getErrorDesc(),ex.getErrorCode(),record.toString());
+
             } catch (Exception e) {
                 logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
-                errorDetail.setRecordDetails("Some Error Occurred");
-                errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                uploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetail,uploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Some Error Occurred");
+
             } finally {
                 if (null != record) {
                     operatorCsvService.delete(record);

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class handles the csv upload for success and failure events for HealthBlockCsv.
+ * This class handles the csv upload for success and failure events for Health Block Csv.
  */
 @Component
 public class HealthBlockCsvUploadHandler {
@@ -95,25 +95,16 @@ public class HealthBlockCsvUploadHandler {
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in HealthBlock Temporary Entity");
-                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetails.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                    bulkUploadStatus.incrementFailureCount();
+                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
-                errorDetails.setRecordDetails(healthBlockCsvRecord.toString());
-                errorDetails.setErrorCategory(dataValidationException.getErrorCode());
-                errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,dataValidationException.getErroneousField(),dataValidationException.getErrorCode(),healthBlockCsvRecord.toString());
             } catch (Exception e) {
-                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
-                errorDetails.setRecordDetails("Exception occurred");
-                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
 
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {

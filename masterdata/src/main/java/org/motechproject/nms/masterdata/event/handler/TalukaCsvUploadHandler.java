@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class handles the csv upload for success and failure events for TalukaCsv.
+ * This class handles the csv upload for success and failure events for Taluka Csv.
  */
 @Component
 public class TalukaCsvUploadHandler {
@@ -99,25 +99,18 @@ public class TalukaCsvUploadHandler {
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Taluka Temporary Entity");
-                    errorDetails.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetails.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetails.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                    bulkUploadStatus.incrementFailureCount();
+                    ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION,ErrorCategoryConstants.CSV_RECORD_MISSING,"Record is null");
+
                 }
             } catch (DataValidationException dataValidationException) {
                 logger.error("TALUKA_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
-                errorDetails.setRecordDetails(talukaCsvRecord.toString());
-                errorDetails.setErrorCategory(dataValidationException.getErrorCode());
-                errorDetails.setErrorDescription(dataValidationException.getErroneousField());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,dataValidationException.getErroneousField(),dataValidationException.getErrorCode(),talukaCsvRecord.toString());
+
             } catch (Exception e) {
-                errorDetails.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
-                errorDetails.setRecordDetails("Exception occurred");
-                errorDetails.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                bulkUploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetails,bulkUploadStatus,bulkUploadErrLogService,ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION,ErrorCategoryConstants.GENERAL_EXCEPTION,"Exception occurred");
+
                 logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
                 if (null != talukaCsvRecord) {
