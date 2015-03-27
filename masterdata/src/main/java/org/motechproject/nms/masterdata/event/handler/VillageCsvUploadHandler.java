@@ -71,14 +71,9 @@ public class VillageCsvUploadHandler {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-       /* bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(timeStamp);
-*/
+
         BulkUploadError errorDetails = new BulkUploadError();
-  /*      errorDetails.setCsvName(csvFileName);
-        errorDetails.setRecordType(RecordType.VILLAGE);
-        errorDetails.setTimeOfUpload(timeStamp);
-*/
+
         ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.VILLAGE);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");

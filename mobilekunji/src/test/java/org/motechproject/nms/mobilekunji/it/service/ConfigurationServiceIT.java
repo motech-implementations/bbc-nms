@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by abhishek on 4/3/15.
+ * This class is used to test(IT) the operations of ConfigurationService
  */
 
 

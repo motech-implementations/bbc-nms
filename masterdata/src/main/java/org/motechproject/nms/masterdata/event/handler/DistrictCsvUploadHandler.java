@@ -70,13 +70,9 @@ public class DistrictCsvUploadHandler {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
-       /* bulkUploadStatus.setBulkUploadFileName(csvFileName);
-        bulkUploadStatus.setTimeOfUpload(timeStamp);
-*/
+
         BulkUploadError errorDetails = new BulkUploadError();
-  /*      errorDetails.setCsvName(csvFileName);
-        errorDetails.setRecordType(RecordType.DISTRICT);
-        errorDetails.setTimeOfUpload(timeStamp);*/
+
         ErrorLog.setErrorDetails(errorDetails,bulkUploadStatus,csvFileName,timeStamp, RecordType.DISTRICT);
 
 
