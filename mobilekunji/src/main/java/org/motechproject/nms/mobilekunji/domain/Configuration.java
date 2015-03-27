@@ -27,10 +27,18 @@ public class Configuration extends MdsEntity {
     private Integer nationalCapValue;
 
     @Field(required = true)
-    private Integer maxWelcomeMessage;
+    private Integer maxEndofusageMessage;
 
     @Field(required = true)
-    private Integer maxEndofusageMessage;
+    private Integer nationalDefaultLanguageLocationCode;
+
+    public Integer getNationalDefaultLanguageLocationCode() {
+        return nationalDefaultLanguageLocationCode;
+    }
+
+    public void setNationalDefaultLanguageLocationCode(Integer nationalDefaultLanguageLocationCode) {
+        this.nationalDefaultLanguageLocationCode = nationalDefaultLanguageLocationCode;
+    }
 
     public Long getIndex() {
         return index;
@@ -54,14 +62,6 @@ public class Configuration extends MdsEntity {
 
     public void setNationalCapValue(Integer nationalCapValue) {
         this.nationalCapValue = nationalCapValue;
-    }
-
-    public Integer getMaxWelcomeMessage() {
-        return maxWelcomeMessage;
-    }
-
-    public void setMaxWelcomeMessage(Integer maxWelcomeMessage) {
-        this.maxWelcomeMessage = maxWelcomeMessage;
     }
 
     public Integer getMaxEndofusageMessage() {

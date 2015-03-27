@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.service.impl;
+package org.motechproject.nms.masterdata.ut.service.impl;
 
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
+import org.motechproject.nms.masterdata.service.impl.CircleServiceImpl;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;

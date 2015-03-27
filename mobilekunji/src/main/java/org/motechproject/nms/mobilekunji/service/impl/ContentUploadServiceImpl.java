@@ -15,16 +15,32 @@ public class ContentUploadServiceImpl implements ContentUploadService {
     @Autowired
     ContentUploadRecordDataService contentUploadRecordDataService;
 
+    /**
+     * Creates record object for ContentUpload
+     *
+     * @param contentUpload
+     */
     @Override
     public void createContentUpload(ContentUpload contentUpload) {
         contentUploadRecordDataService.create(contentUpload);
     }
 
+    /**
+     * Update record of ContentUpload
+     *
+     * @param contentUpload
+     */
     @Override
     public void updateContentUpload(ContentUpload contentUpload) {
         contentUploadRecordDataService.update(contentUpload);
     }
 
+    /**
+     * Finds records of ContentUpload by its Id
+     *
+     * @param contentId
+     * @return ContentUpload
+     */
     @Override
     public ContentUpload findRecordByContentId(Integer contentId) {
         return contentUploadRecordDataService.findRecordByContentId(contentId);

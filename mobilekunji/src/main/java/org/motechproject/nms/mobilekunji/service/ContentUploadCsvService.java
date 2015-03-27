@@ -11,6 +11,7 @@ public interface ContentUploadCsvService {
 
     /**
      * creates object fot the ContentUploadCsv
+     *
      * @param contentUploadCsv
      * @return ContentUploadCsv object
      */
@@ -18,6 +19,7 @@ public interface ContentUploadCsvService {
 
     /**
      * Finds the record of content  upload Csv by its Id
+     *
      * @param id
      * @return ContentUploadCsv
      */
@@ -25,12 +27,14 @@ public interface ContentUploadCsvService {
 
     /**
      * Deletes records from contentUpload Csv
+     *
      * @param contentUploadCsv
      */
     public void deleteFromCsv(ContentUploadCsv contentUploadCsv);
 
     /**
      * Retrieves the records from Csv
+     *
      * @return List of ContentUploadCsv
      */
     public List<ContentUploadCsv> retrieveAllFromCsv();

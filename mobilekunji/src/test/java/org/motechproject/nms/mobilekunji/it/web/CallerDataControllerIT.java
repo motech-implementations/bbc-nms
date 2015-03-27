@@ -61,8 +61,9 @@ public class CallerDataControllerIT extends BasePaxIT {
 
     @Before
     public void setUp() {
-        controller = new CallerDataController(userDetailsService,saveCallDetailsService);
+        controller = new CallerDataController(userDetailsService, saveCallDetailsService);
     }
+
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(userDetailsService);
@@ -77,7 +78,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     public void testGetUserDetails() throws DataValidationException {
 
         State stateData = TestHelper.getStateData();
-        District districtData =TestHelper.getDistrictData();
+        District districtData = TestHelper.getDistrictData();
         stateData.getDistrict().add(districtData);
         stateService.create(stateData);
 

@@ -1,7 +1,7 @@
 package org.motechproject.nms.mobilekunji.repository;
 
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.mobilekunji.domain.CardContent;
+import org.motechproject.nms.mobilekunji.domain.CardDetail;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -9,7 +9,7 @@ import org.motechproject.nms.mobilekunji.domain.CardContent;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface CardContentDataService extends MotechDataService<CardContent> {
+public interface CardContentDataService extends MotechDataService<CardDetail> {
 }
 
 

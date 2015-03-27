@@ -10,6 +10,7 @@ public interface FlwDetailService {
 
     /**
      * Creates the object for FlwDetail
+     *
      * @param record
      * @return FlwDetail
      */
@@ -17,6 +18,7 @@ public interface FlwDetailService {
 
     /**
      * Updates the Flw Details
+     *
      * @param record
      * @return FlwDetail
      */
@@ -24,12 +26,14 @@ public interface FlwDetailService {
 
     /**
      * Deletes the FlwDetail record
+     *
      * @param record
      */
     public void delete(FlwDetail record);
 
     /**
      * Finds service consumption details of Flw by its Id
+     *
      * @param nmsFlwId
      * @return FlwDetail
      */
@@ -37,6 +41,7 @@ public interface FlwDetailService {
 
     /**
      * Finds the service consumption details of Flw by its msisdn
+     *
      * @param msisdn
      * @return FlwDetail
      */

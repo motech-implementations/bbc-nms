@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.service.impl;
+package org.motechproject.nms.masterdata.ut.service.impl;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.it.TestHelper;
 import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.service.impl.LocationServiceImpl;
 
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;

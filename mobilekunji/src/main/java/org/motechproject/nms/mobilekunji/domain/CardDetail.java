@@ -5,14 +5,14 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * This class Models data for CardContent records
+ * This class Models data for CardDetail records
  */
 
 @Entity(recordHistory = true)
-public class CardContent extends MdsEntity {
+public class CardDetail extends MdsEntity {
 
     @Field
-    private Integer mkcardNumber;
+    private Integer mkCardNumber;
 
     @Field
     private String contentName;
@@ -26,13 +26,12 @@ public class CardContent extends MdsEntity {
     @Field
     private Integer endTime;
 
-
-    public Integer getMkcardNumber() {
-        return mkcardNumber;
+    public Integer getMkCardNumber() {
+        return mkCardNumber;
     }
 
-    public void setMkcardNumber(Integer mkcardNumber) {
-        this.mkcardNumber = mkcardNumber;
+    public void setMkCardNumber(Integer mkCardNumber) {
+        this.mkCardNumber = mkCardNumber;
     }
 
     public String getContentName() {
@@ -69,8 +68,8 @@ public class CardContent extends MdsEntity {
 
     @Override
     public String toString() {
-        return "CardContent{" +
-                "mkcardNumber=" + mkcardNumber +
+        return "CardDetail{" +
+                "mkcardNumber=" + mkCardNumber +
                 ", contentName='" + contentName + '\'' +
                 ", audioFileName='" + audioFileName + '\'' +
                 ", startTime=" + startTime +

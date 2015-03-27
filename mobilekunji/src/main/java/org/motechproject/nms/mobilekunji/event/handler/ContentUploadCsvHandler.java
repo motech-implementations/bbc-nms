@@ -168,7 +168,7 @@ public class ContentUploadCsvHandler {
         String contentName = null;
         String content = null;
         String contentFile = null;
-        Integer cardNumber = null;
+        String cardNumber = null;
         Integer contentDuration = null;
 
         contentId = ParseDataHelper.validateAndParseInt("Content Id", record.getContentId(), true);
@@ -176,9 +176,11 @@ public class ContentUploadCsvHandler {
         languageLocationCode = ParseDataHelper.validateAndParseInt("Language Location Code", record.getLanguageLocationCode(), true);
         contentName = ParseDataHelper.validateAndParseString("Conteny name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
-        cardNumber = ParseDataHelper.validateAndParseInt("Card number", record.getCardNumber(), true);
+        validateCardNumber(record.getCardNumber());
+        cardNumber = ParseDataHelper.validateAndParseString("Card number", record.getCardNumber(), true);
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
+
 
         //Bug24
         if (ContentType.of(content) != ContentType.CONTENT && ContentType.of(content) != ContentType.PROMPT) {
@@ -198,6 +200,14 @@ public class ContentUploadCsvHandler {
         newRecord.setOwner(record.getOwner());
         logger.info("mapContentUploadFrom process end");
         return newRecord;
+
+    }
+
+    private void validateCardNumber(String cardNumber) throws DataValidationException {
+
+        if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
+            ParseDataHelper.raiseInvalidDataException("Card number", cardNumber);
+        }
 
     }
 

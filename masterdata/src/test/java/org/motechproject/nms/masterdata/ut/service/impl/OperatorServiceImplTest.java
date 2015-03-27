@@ -1,4 +1,4 @@
-package org.motechproject.nms.masterdata.service.impl;
+package org.motechproject.nms.masterdata.ut.service.impl;
 
 import junit.framework.TestCase;
 import org.junit.Before;
@@ -6,6 +6,7 @@ import org.mockito.Mock;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.repository.OperatorDataService;
 import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.impl.OperatorServiceImpl;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
