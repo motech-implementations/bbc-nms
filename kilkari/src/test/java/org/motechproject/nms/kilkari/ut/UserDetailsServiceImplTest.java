@@ -14,6 +14,7 @@ import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.kilkari.service.impl.UserDetailsServiceImpl;
+import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.OperatorService;
@@ -22,7 +23,9 @@ import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -103,8 +106,12 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
+        District district = locationBuilder.buildDistrict(1L, 1L);
+        Set<District> districts = new LinkedHashSet<>();
+        districts.add(district);
+
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), locationBuilder.buildDistrict(1L, 1L) ,BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), district ,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
@@ -137,8 +144,12 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
+        District district = locationBuilder.buildDistrict(1L, 1L);
+        Set<District> districts = new LinkedHashSet<>();
+        districts.add(district);
+
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), null, BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), null, BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
@@ -482,8 +493,12 @@ public class UserDetailsServiceImplTest {
         activePackList.add(SubscriptionPack.PACK_48_WEEKS);
         activePackList.add(SubscriptionPack.PACK_72_WEEKS);
 
+        District district = locationBuilder.buildDistrict(1L, 1L);
+        Set<District> districts = new LinkedHashSet<>();
+        districts.add(district);
+
         //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), locationBuilder.buildDistrict(1L, 1L) ,BeneficiaryType.CHILD);
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L, districts), district ,BeneficiaryType.CHILD);
 
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);

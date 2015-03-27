@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.it.web;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,6 +36,8 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -94,7 +97,6 @@ public class SubscriptionControllerIT extends BasePaxIT {
 
     @Test
     public void shouldThrowDataValidationExceptionWhenInvalidCallingNumber()  {
-
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
         SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("123456780","operatorCode","circleCode","testCallId",29,"PACK_48_WEEKS");
@@ -151,6 +153,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     }
 
     public void preSetUp() {
+        Set<District> districts = new LinkedHashSet<>();
         //create circle with code "testCode"
         Circle circle = llcBuilder.buildCircle(123,"circleCode", "test");
         circleService.create(circle);
@@ -158,13 +161,14 @@ public class SubscriptionControllerIT extends BasePaxIT {
         Operator operator = llcBuilder.buildOperator("operatorCode","teatOperator");
         operatorService.create(operator);
 
-        //create state with stateCode "1"
-        State state = locationBuilder.buildState(1L);
-        stateService.create(state);
-
         //create district with districtCode "1" and stateCode "1"
         District district = locationBuilder.buildDistrict(1L, 1L);
-        districtService.create(district);
+        District dbDistrict = districtService.create(district);
+        districts.add(dbDistrict);
+
+        //create state with stateCode "1"
+        State state = locationBuilder.buildState(1L, districts);
+        stateService.create(state);
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
