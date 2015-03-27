@@ -80,19 +80,4 @@ public class InitializerIT extends BasePaxIT {
         Long actualActiveSubscriptionCount = activeSubscriptionCountService.getActiveSubscriptionCount();
         Assert.assertTrue(expectedActiveSubscriptionCount == actualActiveSubscriptionCount);
     }
-    
-    @Test
-    public void shouldInitializeConfiguration() {
-
-        Configuration configuration = configurationService.getConfiguration();
-        configurationDataService.delete(configuration);
-        ActiveSubscriptionCount activeUser = activeSubscriptionCountDataService.findActiveSubscriptionCountByIndex(1L);
-        activeSubscriptionCountDataService.delete(activeUser);
-        
-        initializer.initializeConfiguration();
-        
-        Assert.assertNotNull(configurationService.getConfiguration());
-        Assert.assertNotNull(activeSubscriptionCountDataService.findActiveSubscriptionCountByIndex(1L));
-        
-    }
 }

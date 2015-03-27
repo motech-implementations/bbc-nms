@@ -304,16 +304,4 @@ public class CommonStructure extends BasePaxIT {
         setUpIsDone = false;
     }
     
-    @Test
-    public void testUploadedIdNotInDatabase() throws Exception {
-        logger.info("Inside  createDeleteOperation");
-        
-        List<Long> uploadedIds = new ArrayList<Long>();
-        Long uploadedId = new Random().nextLong();
-        uploadedIds.add(uploadedId);
-        callMotherMctsCsvHandlerSuccessEvent(uploadedIds);
-        assertNull(motherMctsCsvDataService.findById(uploadedId));
-        
-    }
-    
 }
