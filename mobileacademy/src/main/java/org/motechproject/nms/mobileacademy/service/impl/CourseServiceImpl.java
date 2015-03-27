@@ -51,6 +51,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Course populateMtrainingCourseData(OperatorDetails operatorDetails) {
         List<Chapter> chapters = new ArrayList<>();
+        LOGGER.info("populating course protoype in mTraining");
         for (int chapterCount = 1; chapterCount <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCount++) {
             List<Lesson> lessons = new ArrayList<>();
             for (int lessonCount = 1; lessonCount <= MobileAcademyConstants.NUM_OF_LESSONS; lessonCount++) {
@@ -94,7 +95,7 @@ public class CourseServiceImpl implements CourseService {
         course.setModifiedBy(operatorDetails.getModifiedBy());
         course.setOwner(operatorDetails.getOwner());
         mTrainingService.createCourse(course);
-        LOGGER.info("Course Structure in Mtraining Populated");
+        LOGGER.info("Course Structure in Mtraining Populated with course state Inactive");
         return course;
     }
 
@@ -160,6 +161,7 @@ public class CourseServiceImpl implements CourseService {
             course.setState(courseUnitState);
             course.setModifiedBy(operatorDetails.getModifiedBy());
             mTrainingService.updateCourse(course);
+            LOGGER.info("Course State updated to:{}", courseUnitState);
         }
     }
 
@@ -175,6 +177,9 @@ public class CourseServiceImpl implements CourseService {
                     question.setAnswer(answer);
                     quiz.setModifiedBy(operatorDetails.getModifiedBy());
                     mTrainingService.updateQuiz(quiz);
+                    LOGGER.info(
+                            "Correct Answer option Updated for {} {} to:{}",
+                            chapterName, questionName, answer);
                     break;
                 }
             }
@@ -227,6 +232,16 @@ public class CourseServiceImpl implements CourseService {
                             chapterContent.setModifiedBy(operatorDetails
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            if (type.equalsIgnoreCase(MobileAcademyConstants.CONTENT_MENU)) {
+                                LOGGER.info(
+                                        "Menu file for Chapter{} Lesson{} updated to:{}",
+                                        chapterId, lessonId, fileName);
+                            } else if (type
+                                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_LESSON)) {
+                                LOGGER.info(
+                                        "Content file for Chapter{} Lesson{} updated to:{}",
+                                        chapterId, lessonId, fileName);
+                            }
                             break outer;
                         }
                     }
@@ -277,6 +292,22 @@ public class CourseServiceImpl implements CourseService {
                             chapterContent.setModifiedBy(operatorDetails
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            if (type.equalsIgnoreCase(MobileAcademyConstants.CONTENT_QUESTION)) {
+                                LOGGER.info(
+                                        "Question Content file for Chapter{} Question{} updated to:{}",
+                                        chapterId, questionId, fileName);
+                            } else if (type
+                                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_WRONG_ANSWER)) {
+                                LOGGER.info(
+                                        "Wrong Answer file for Chapter{} Question{} updated to:{}",
+                                        chapterId, questionId, fileName);
+                            } else if (type
+                                    .equalsIgnoreCase(MobileAcademyConstants.CONTENT_CORRECT_ANSWER)) {
+                                LOGGER.info(
+                                        "Correct Answer file for Chapter{} Question{} updated to:{}",
+                                        chapterId, questionId, fileName);
+                            }
+
                             break outer;
                         }
                     }
@@ -328,6 +359,9 @@ public class CourseServiceImpl implements CourseService {
                             chapterContent.setModifiedBy(operatorDetails
                                     .getModifiedBy());
                             chapterContentDataService.update(chapterContent);
+                            LOGGER.info(
+                                    "Content file for Chapter{} Score{} updated to:{}",
+                                    chapterId, scoreId, fileName);
                             break outer;
                         }
                     }
@@ -366,6 +400,9 @@ public class CourseServiceImpl implements CourseService {
                         chapterContent.setModifiedBy(operatorDetails
                                 .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
+                        LOGGER.info(
+                                "Content file for ChapterEndMenu{} updated to:{}",
+                                chapterId, fileName);
                         break;
                     }
                 }
@@ -407,6 +444,9 @@ public class CourseServiceImpl implements CourseService {
                         chapterContent.setModifiedBy(operatorDetails
                                 .getModifiedBy());
                         chapterContentDataService.update(chapterContent);
+                        LOGGER.info(
+                                "Header file for quiz of Chapter{} updated to:{}",
+                                chapterId, fileName);
                         break;
                     }
                 }
@@ -426,6 +466,8 @@ public class CourseServiceImpl implements CourseService {
             return -1;
         }
         DateTime date = course.getModificationDate();
+        LOGGER.debug("Course version returned :{} in milliSeconds",
+                date.getMillis());
         return (int) (date.getMillis() / MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
     }
 
@@ -433,18 +475,20 @@ public class CourseServiceImpl implements CourseService {
     public void updateCourseVersion(String username) {
         Course course = getMtrainingCourse();
         if (course != null) {
-            course.setModificationDate(DateTime.now());
             course.setModifiedBy(username);
             mTrainingService.updateCourse(course);
+            LOGGER.info("Course version updated successfully");
         }
     }
 
     @Override
     public String getCourseJson() {
-        Course course = getMtrainingCourse();
-        if (course == null) {
-            return "{\" \":\" \"}";
-        }
+        /*
+         * It is assumed that controller will check for condition in which no
+         * course is present in the system, so this method is called only if
+         * there is a course in system
+         */
+        LOGGER.trace("getCourseJSON: started");
         List<ChapterContent> chapterContents = getAllChapterContents();
         JsonObject courseJsonObject = new JsonObject();
         courseJsonObject.addProperty(MobileAcademyConstants.COURSE_KEY_NAME,
@@ -455,6 +499,7 @@ public class CourseServiceImpl implements CourseService {
 
         courseJsonObject.add(MobileAcademyConstants.COURSE_KEY_CHAPTERS,
                 generateChapterListJson(chapterContents));
+        LOGGER.trace("Course Json returned successfully from getCourseJSON");
 
         return courseJsonObject.toString();
     }
@@ -472,6 +517,7 @@ public class CourseServiceImpl implements CourseService {
         for (int chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
             chapterListJson
                     .add(generateChapterJson(chapterNo, chapterContents));
+            LOGGER.trace("Chapter-{} added in course Json", chapterNo);
         }
         return chapterListJson;
     }
@@ -497,9 +543,10 @@ public class CourseServiceImpl implements CourseService {
                 generateContentForChapter(chapterNo, chapterContents));
         courseJson.add(MobileAcademyConstants.COURSE_KEY_LESSONS,
                 generateLessonListForChapter(chapterNo, chapterContents));
+        LOGGER.trace("lessons for Chapter-{} added in course Json", chapterNo);
         courseJson.add(MobileAcademyConstants.COURSE_KEY_QUIZ,
                 generateQuizForChapter(chapterNo, chapterContents));
-
+        LOGGER.trace("quiz for Chapter-{} added in course Json", chapterNo);
         return courseJson;
     }
 
@@ -799,7 +846,7 @@ public class CourseServiceImpl implements CourseService {
      * 
      * @param files
      * 
-     * @return This function returns a Json node with "id" and "file" key in
+     * @return This function returns a JSON node with "id" and "file" key in
      * that. If the list of files contain more than one file, key will be
      * "files" instead of "file"
      */
