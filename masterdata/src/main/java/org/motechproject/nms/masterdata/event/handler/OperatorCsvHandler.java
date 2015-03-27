@@ -67,14 +67,9 @@ public class OperatorCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-     /*   errorDetail.setCsvName(csvFileName);
-        errorDetail.setTimeOfUpload(timeStamp);
-        errorDetail.setRecordType(RecordType.OPERATOR);
-*/
+
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-  /*      uploadStatus.setBulkUploadFileName(csvFileName);
-        uploadStatus.setTimeOfUpload(timeStamp);
-*/
+
         ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.OPERATOR);
 
         for (Long id : createdIds) {

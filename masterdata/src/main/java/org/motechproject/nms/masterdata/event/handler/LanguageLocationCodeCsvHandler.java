@@ -75,14 +75,9 @@ public class LanguageLocationCodeCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-       /* errorDetail.setCsvName(csvFileName);
-        errorDetail.setTimeOfUpload(timeStamp);
-        errorDetail.setRecordType(RecordType.LANGUAGE_LOCATION_CODE);
-*/
+
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-  /*      uploadStatus.setBulkUploadFileName(csvFileName);
-        uploadStatus.setTimeOfUpload(timeStamp);
-*/
+
         ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.LANGUAGE_LOCATION_CODE);
 
         for (Long id : createdIds) {
