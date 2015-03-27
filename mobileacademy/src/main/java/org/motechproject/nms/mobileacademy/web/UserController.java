@@ -57,7 +57,7 @@ public class UserController extends BaseController {
             @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
             throws DataValidationException {
         LOGGER.debug("getUserDetails: Started");
-        LOGGER.info("Input request-"
+        LOGGER.debug("Input request-"
                 + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
                 + callingNumber + ", " + UserController.REQUEST_PARAM_OPERATOR
                 + ":" + operator + ", " + UserController.REQUEST_PARAM_CIRCLE
@@ -67,6 +67,7 @@ public class UserController extends BaseController {
                 callId);
         User user = userDetailsService.findUserDetails(callingNumber, operator,
                 circle, callId);
+        LOGGER.debug("Output Response: " + user);
         LOGGER.debug("getUserDetails: Ended");
         return user;
 
@@ -85,13 +86,7 @@ public class UserController extends BaseController {
             throws DataValidationException,
             MissingServletRequestParameterException {
         LOGGER.debug("setLanguageLocationCode: Started");
-        LOGGER.info("Input request-"
-                + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
-                + llcRequest.getCallingNumber() + ", "
-                + UserController.REQUEST_PARAM_LLC + ":"
-                + llcRequest.getLanguageLocationCode() + ", "
-                + UserController.REQUEST_PARAM_CALL_ID + ":"
-                + llcRequest.getCallId());
+        LOGGER.debug("Input request: " + llcRequest);
         validateInputDataForSetLlc(llcRequest);
         userDetailsService.setLanguageLocationCode(
                 llcRequest.getLanguageLocationCode(),

@@ -1,5 +1,7 @@
 package org.motechproject.nms.mobileacademy.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.http.HttpHeaders;
@@ -8,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 
 /**
  * BaseController class contain handlers for exceptions that occur in
@@ -30,7 +31,8 @@ public class BaseController {
     @ExceptionHandler(value = { MissingServletRequestParameterException.class })
     protected ResponseEntity<String> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException exception,
-            final WebRequest request) {
+            final HttpServletRequest request) {
+        logRequestDetails(request);
         LOGGER.error(exception.getMessage());
         String responseJson = "{\"failureReason\":\""
                 + exception.getParameterName() + ":Not Present\"}";
@@ -50,7 +52,9 @@ public class BaseController {
      */
     @ExceptionHandler(value = { DataValidationException.class })
     public ResponseEntity<String> handleDataValidationException(
-            final DataValidationException exception, final WebRequest request) {
+            final DataValidationException exception,
+            final HttpServletRequest request) {
+        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\""
                 + exception.getErroneousField() + ":Invalid Value\"}";
@@ -69,7 +73,8 @@ public class BaseController {
      */
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<String> handleGeneralExceptions(
-            final Exception exception, final WebRequest request) {
+            final Exception exception, final HttpServletRequest request) {
+        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"Internal Error\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -87,5 +92,18 @@ public class BaseController {
     public void handleMissingJsonParamException(String parameterName)
             throws MissingServletRequestParameterException {
         throw new MissingServletRequestParameterException(parameterName, null);
+    }
+
+    /**
+     * Log incoming Request Details
+     * 
+     * @param request
+     */
+    private void logRequestDetails(final HttpServletRequest request) {
+        StringBuilder details = new StringBuilder("Request Details:\n");
+        details.append("URL: " + request.getRequestURL() + "\n");
+        details.append("Content Type: " + request.getContentType() + "\n");
+        details.append("Parameter Map: " + request.getParameterMap() + "\n");
+        LOGGER.error(details.toString());
     }
 }

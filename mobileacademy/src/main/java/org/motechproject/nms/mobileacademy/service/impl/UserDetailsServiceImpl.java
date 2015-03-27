@@ -39,29 +39,29 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public User findUserDetails(String callingNumber, String operator,
             String circle, String callId) throws DataValidationException {
-        User user = new User();// response DTO
+        User user = new User();// user detail response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);
+        // Get User Information using FLW Service
         UserProfile userProfile = userProfileDetailsService.processUserDetails(
                 msisdn, circle, operator,
                 ServicesUsingFrontLineWorker.MOBILEACADEMY);
+        LOGGER.trace("User Information Returned From FLW: " + userProfile);
+
         Configuration configuration = configurationService.getConfiguration();
-        findLanguageLocationCodeForUser(userProfile, configuration, user);
+        FlwUsageDetail flwUsageDetail = findFlwUsageInfo(userProfile
+                .getSystemGeneratedFlwId());
+        determineLanguageLocationCodeForUser(userProfile, configuration, user);
+        Integer maxAllowedUsageInPulses = findMaxAllowedUsageInPulses(
+                userProfile, configuration);
+
         user.setCircle(userProfile.getCircle());
         user.setMaxAllowedEndOfUsagePrompt(configuration
                 .getMaxAllowedEndOfUsagePrompt());
-        Integer maxAllowedUsageInPulses = findMaxAllowedUsageInPulses(
-                userProfile, configuration);
         user.setMaxAllowedUsageInPulses(maxAllowedUsageInPulses);
-        FlwUsageDetail flwUsageDetail = findFlwUsageInfo(userProfile.getNmsId());
         user.setCurrentUsageInPulses(flwUsageDetail.getCurrentUsageInPulses());
         user.setEndOfUsagePromptCounter(flwUsageDetail
                 .getEndOfUsagePromptCounter());
-        LOGGER.debug("user Details retrieved for callingNumber("
-                + callingNumber + ") and callId(" + callId + ")are - llc:"
-                + user.getLanguageLocationCode() + ", defaultllc:"
-                + user.getDefaultLanguageLocationCode() + ", Currentusage:"
-                + user.getCurrentUsageInPulses());
         return user;
     }
 
@@ -75,7 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         FlwUsageDetail flwUsageDetail = flwUsageDetailService
                 .findByFlwId(flwId);
         if (flwUsageDetail == null) {
-            // TODO in save call detail api
+            // TODO in save call detail API sprint 1504
             flwUsageDetail = new FlwUsageDetail();
             flwUsageDetail.setFlwId(flwId);
             flwUsageDetail.setCurrentUsageInPulses(0);
@@ -114,20 +114,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * determine and set Language Location Code for User using
-     * isDefaultLanguageLocationCode field returned by FLW.
+     * determine Language Location Code for User using
+     * isDefaultLanguageLocationCode field returned by FLW. If it is true then
+     * set defaultLanguageLocationCode or false then set languageLocationCode
+     * using field languageLocationCode. If it is not found then set national
+     * default using configuration.
      * 
      * @param userProfile UserProfile object
      * @param configuration Configuration object
-     * @param User User object
+     * @param User User object for updating LLC or default LLC
      */
-    private void findLanguageLocationCodeForUser(UserProfile userProfile,
+    private void determineLanguageLocationCodeForUser(UserProfile userProfile,
             Configuration configuration, User user) {
         boolean nationalDefaultLlc = false;
         if (userProfile.isDefaultLanguageLocationCode()) {
-            if (userProfile.getDefaultLanguageLocationCode() != null) {
+            if (userProfile.getLanguageLocationCode() != null) {
                 user.setDefaultLanguageLocationCode(userProfile
-                        .getDefaultLanguageLocationCode());
+                        .getLanguageLocationCode());
             } else {
                 nationalDefaultLlc = true;
             }
