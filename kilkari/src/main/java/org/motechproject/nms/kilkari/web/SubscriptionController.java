@@ -110,6 +110,6 @@ public class SubscriptionController extends BaseController {
                 ParseDataHelper.validateAndParseString("callingNumber", msisdn, true));
         ParseDataHelper.validateAndParseString("operator", operator, true);
         ParseDataHelper.validateAndParseString("circle", circle, true);
-        ParseDataHelper.validateAndParseString("callId", callId, true);
+        ParseDataHelper.validateAndTrimCallId("callId", callId);
     }
 }

@@ -112,11 +112,11 @@ public class SubscriptionCreateApiRequest {
         ParseDataHelper.validateAndParseString("operator", operator, true);
         ParseDataHelper.validateAndParseString("circle", circle, true);
         ParseDataHelper.validateAndParseString("callId", callId, true);
-        ParseDataHelper.validateAndParseString("subscriptionPack", subscriptionPack, true);
+        if(SubscriptionPack.findByName(subscriptionPack) == null) {
+            ParseDataHelper.raiseInvalidDataException("subscriptionPack", subscriptionPack);
+        }
         if (languageLocationCode == null) {
-            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", languageLocationCode);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
-            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
+            ParseDataHelper.raiseInvalidDataException("languageLocationCode", null);
         }
     }
 }
