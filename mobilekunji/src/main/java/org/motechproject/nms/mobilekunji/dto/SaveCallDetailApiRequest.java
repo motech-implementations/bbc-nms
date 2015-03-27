@@ -6,7 +6,7 @@ import org.motechproject.nms.mobilekunji.domain.CardContent;
 import java.util.List;
 
 /**
- * Created by abhishek on 23/3/15.
+ * API request for save call details
  */
 public class SaveCallDetailApiRequest {
 

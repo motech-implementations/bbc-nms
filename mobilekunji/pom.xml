@@ -99,6 +99,7 @@
                             org.motechproject.nms.mobilekunji.event.handler;version=${project.version},
                             org.motechproject.nms.mobilekunji.domain;version=${project.version},
                             org.motechproject.nms.mobilekunji.web;version=${project.version},
+                            org.motechproject.nms.mobilekunji.dto;version=${project.version},
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

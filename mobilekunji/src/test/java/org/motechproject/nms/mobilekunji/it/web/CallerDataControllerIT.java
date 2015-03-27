@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
@@ -21,6 +22,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by abhishek on 25/3/15.
@@ -94,20 +96,10 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
         assertNotNull(userDetailApiResponse);
-//        assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
-//        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
-//        assertTrue(userDetailApiResponse.getMaxAllowedUsageInPulses() == ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
-//        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
-//        assertTrue(userDetailApiResponse.getWelcomePromptFlag());
+        assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
+        assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());
+        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+        assertTrue(userDetailApiResponse.getWelcomePromptFlag());
     }
-
-//    @After
-//    public void tearDown() {
-//        stateService.deleteAll();
-//        districtService.deleteAll();
-//        circleService.deleteAll();
-//        operatorService.deleteAll();
-//        languageLocationCodeService.deleteAll();
-//    }
 
 }

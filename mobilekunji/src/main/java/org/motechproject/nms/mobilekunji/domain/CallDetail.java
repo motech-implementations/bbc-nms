@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class Models data records provided in the Service Consumption Call
+ * This class Models data records provided in the CallDetail
  */
 
 @Entity(recordHistory = true)

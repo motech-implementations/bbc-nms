@@ -33,7 +33,7 @@ public class CourseController extends BaseController {
      */
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     public ResponseEntity<String> getCourse() {
-        LOGGER.info("getCourse: Started");
+        LOGGER.debug("getCourse: Started");
         ResponseEntity<String> respose;
         Course course = courseService.getMtrainingCourse();
         if (course == null) {
@@ -46,7 +46,7 @@ public class CourseController extends BaseController {
             String courseJson = courseService.getCourseJson();
             respose = new ResponseEntity<String>(courseJson, HttpStatus.OK);
         }
-        LOGGER.info("getCourse: Ended");
+        LOGGER.debug("getCourse: Ended");
         return respose;
     }
 
@@ -57,7 +57,7 @@ public class CourseController extends BaseController {
      */
     @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
     public ResponseEntity<String> getCourseVersion() {
-        LOGGER.info("getCourseVersion: Started");
+        LOGGER.debug("getCourseVersion: Started");
         Course course = courseService.getMtrainingCourse();
         int courseVersion = courseService.getCurrentCourseVersion();
         ResponseEntity<String> respose;
@@ -72,7 +72,7 @@ public class CourseController extends BaseController {
                     MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
                     HttpStatus.OK);
         }
-        LOGGER.info("getCourseVersion: Ended");
+        LOGGER.debug("getCourseVersion: Ended");
         return respose;
     }
 

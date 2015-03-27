@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class handles the csv upload for success and failure events for CircleCsv.
+ * This class handles the csv upload for success and failure events for Circle Csv.
  */
 @Component
 public class CircleCsvHandler {
@@ -66,14 +66,15 @@ public class CircleCsvHandler {
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
-        errorDetail.setCsvName(csvFileName);
+       /* errorDetail.setCsvName(csvFileName);
         errorDetail.setTimeOfUpload(timeStamp);
         errorDetail.setRecordType(RecordType.CIRCLE);
-
+*/
         BulkUploadStatus uploadStatus = new BulkUploadStatus();
-        uploadStatus.setBulkUploadFileName(csvFileName);
+  /*      uploadStatus.setBulkUploadFileName(csvFileName);
         uploadStatus.setTimeOfUpload(timeStamp);
-
+*/
+        ErrorLog.setErrorDetails(errorDetail,uploadStatus,csvFileName,timeStamp, RecordType.CIRCLE);
         for (Long id : createdIds) {
             try {
                 record = circleCsvService.getRecord(id);
@@ -95,25 +96,20 @@ public class CircleCsvHandler {
                     uploadStatus.incrementSuccessCount();
                 } else {
                     logger.error("Record not found in the CircleCsv table with id {}", id);
-                    errorDetail.setErrorDescription(ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION);
-                    errorDetail.setErrorCategory(ErrorCategoryConstants.CSV_RECORD_MISSING);
-                    errorDetail.setRecordDetails("Record is null");
-                    bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                    uploadStatus.incrementFailureCount();
+
+                    ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
+
                 }
             } catch (DataValidationException ex) {
-                errorDetail.setErrorCategory(ex.getErrorCode());
-                errorDetail.setRecordDetails(record.toString());
-                errorDetail.setErrorDescription(ex.getErrorDesc());
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                uploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
+
             } catch (Exception e) {
                 logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
-                errorDetail.setErrorCategory(ErrorCategoryConstants.GENERAL_EXCEPTION);
-                errorDetail.setRecordDetails("Exception occurred");
-                errorDetail.setErrorDescription(ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
-                bulkUploadErrLogService.writeBulkUploadErrLog(errorDetail);
-                uploadStatus.incrementFailureCount();
+
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
+
+
             } finally {
                 if (null != record) {
                     circleCsvService.delete(record);

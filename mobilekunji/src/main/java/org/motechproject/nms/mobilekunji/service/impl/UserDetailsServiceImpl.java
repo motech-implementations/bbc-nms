@@ -10,7 +10,7 @@ import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.ConfigurationService;
-import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
+import org.motechproject.nms.mobilekunji.service.FlwDetailService;
 import org.motechproject.nms.mobilekunji.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private ServiceConsumptionFlwService serviceConsumptionFlwService;
+    private FlwDetailService flwDetailService;
 
     private UserProfileDetailsService userProfileDetailsService;
 
@@ -34,8 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     @Autowired
-    public UserDetailsServiceImpl(ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService, ConfigurationService configurationService) {
-        this.serviceConsumptionFlwService = serviceConsumptionFlwService;
+    public UserDetailsServiceImpl(FlwDetailService flwDetailService, UserProfileDetailsService userProfileDetailsService, ConfigurationService configurationService) {
+        this.flwDetailService = flwDetailService;
         this.userProfileDetailsService = userProfileDetailsService;
         this.configurationService = configurationService;
     }
@@ -71,34 +71,38 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private void populateFlwDetail(UserProfile userProfileData) {
 
-        FlwDetail flwDetail  =  serviceConsumptionFlwService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
+        FlwDetail flwDetail  =  flwDetailService.findServiceConsumptionByMsisdn(userProfileData.getMsisdn());
         if ( null == flwDetail){
 
             flwDetail = new FlwDetail();
 
-            flwDetail.setNmsFlwId(userProfileData.getNmsId());
+            flwDetail.setNmsFlwId(userProfileData.getSystemGeneratedFlwId());
             flwDetail.setMsisdn(userProfileData.getMsisdn());
             flwDetail.setLastAccessDate(DateTime.now());
             flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_MESSAGE);
             flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
             flwDetail.setWelcomePromptFlagCounter(ConfigurationConstants.ZERO);
 
-            serviceConsumptionFlwService.create(flwDetail);
+            flwDetailService.create(flwDetail);
             logger.info("FlwDetail created successfully.");
         }
-
-}
-
+    }
 
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
-        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByNmsFlwId(userProfile.getNmsId());
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByNmsFlwId(userProfile.getSystemGeneratedFlwId());
 
         userDetailApiResponse.setCircle(userProfile.getCircle());
+
+        if(userProfile.isDefaultLanguageLocationCode()){
+            userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getLanguageLocationCode());
+        } else {
+            userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
+        }
+
         userDetailApiResponse.setLanguageLocationCode(userProfile.getLanguageLocationCode());
-        userDetailApiResponse.setDefaultLanguageLocationCode(userProfile.getDefaultLanguageLocationCode());
         userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
 
         setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());

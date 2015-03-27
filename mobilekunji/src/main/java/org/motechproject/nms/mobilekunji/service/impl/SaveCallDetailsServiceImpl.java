@@ -8,9 +8,9 @@ import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.CardContent;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
+import org.motechproject.nms.mobilekunji.service.CallDetailService;
+import org.motechproject.nms.mobilekunji.service.FlwDetailService;
 import org.motechproject.nms.mobilekunji.service.SaveCallDetailsService;
-import org.motechproject.nms.mobilekunji.service.ServiceConsumptionCallService;
-import org.motechproject.nms.mobilekunji.service.ServiceConsumptionFlwService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.slf4j.Logger;
@@ -27,24 +27,29 @@ import java.util.Iterator;
 @Service("saveCallDetailsService")
 public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
-    private ServiceConsumptionCallService serviceConsumptionCallService;
+    private CallDetailService callDetailService;
 
-    private ServiceConsumptionFlwService serviceConsumptionFlwService;
+    private FlwDetailService flwDetailService;
 
     private UserProfileDetailsService userProfileDetailsService;
 
     private Logger logger = LoggerFactory.getLogger(SaveCallDetailsServiceImpl.class);
 
     @Autowired
-    public SaveCallDetailsServiceImpl(ServiceConsumptionCallService serviceConsumptionCallService, ServiceConsumptionFlwService serviceConsumptionFlwService, UserProfileDetailsService userProfileDetailsService) {
-        this.serviceConsumptionCallService = serviceConsumptionCallService;
-        this.serviceConsumptionFlwService = serviceConsumptionFlwService;
+    public SaveCallDetailsServiceImpl(CallDetailService callDetailService, FlwDetailService flwDetailService, UserProfileDetailsService userProfileDetailsService) {
+        this.callDetailService = callDetailService;
+        this.flwDetailService = flwDetailService;
         this.userProfileDetailsService = userProfileDetailsService;
     }
 
+    /**
+     * Saves Call details of the user
+     *
+     * @param saveCallDetailApiRequest
+     * @throws org.motechproject.nms.util.helper.DataValidationException
+     */
     @Override
     public void saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
-
         Long nmsId;
 
         userProfileDetailsService.validateOperator(saveCallDetailApiRequest.getOperator());
@@ -58,7 +63,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
                 saveCallDetailApiRequest.getCallStartTime(),saveCallDetailApiRequest.getCallEndTime());
 
         setCardContent(callDetail, saveCallDetailApiRequest);
-        serviceConsumptionCallService.create(callDetail);
+        callDetailService.create(callDetail);
 
         logger.info("CallDetail created successfully.");
     }
@@ -74,7 +79,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
-        FlwDetail flwDetail = serviceConsumptionFlwService.findServiceConsumptionByMsisdn(saveCallDetailApiRequest.getCallingNumber());
+        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(saveCallDetailApiRequest.getCallingNumber());
 
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
@@ -90,14 +95,13 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
        flw.setEndOfUsagePrompt(saveCallDetailApiRequest.getEndOfUsagePromptCounter() + flw.getEndOfUsagePrompt());
        flw.setCurrentUsageInPulses(saveCallDetailApiRequest.getCallDurationInPulses() + flw.getCurrentUsageInPulses());
 
-        if (saveCallDetailApiRequest.getWelcomeMessagePromptFlag()) {
+       if (saveCallDetailApiRequest.getWelcomeMessagePromptFlag()) {
             flw.setWelcomePromptFlagCounter(flw.getWelcomePromptFlagCounter() + ConfigurationConstants.ONE);
-        }
-        flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
-        serviceConsumptionFlwService.update(flw);
-        logger.info("FlwDetail updated successfully.");
+       }
+       flw.setLastAccessDate(new DateTime(saveCallDetailApiRequest.getCallStartTime()));
+       flwDetailService.update(flw);
+
+       logger.info("FlwDetail updated successfully.");
     }
-
-
 
 }

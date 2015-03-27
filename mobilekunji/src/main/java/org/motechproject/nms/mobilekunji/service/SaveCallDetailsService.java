@@ -8,5 +8,10 @@ import org.motechproject.nms.util.helper.DataValidationException;
  */
 public interface SaveCallDetailsService {
 
+    /**
+     * Saves Call details of the user
+     * @param saveCallDetailApiRequest
+     * @throws DataValidationException
+     */
     public void saveCallDetails(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException;
 }
