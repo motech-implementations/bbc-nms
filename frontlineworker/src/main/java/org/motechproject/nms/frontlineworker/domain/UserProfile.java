@@ -17,8 +17,6 @@ public class UserProfile {
 
     private Integer languageLocationCode;
 
-    private Integer defaultLanguageLocationCode;
-
     private String circle;
 
     private Integer maxStateLevelCappingValue;
@@ -41,14 +39,6 @@ public class UserProfile {
 
     public void setIsDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
-    }
-
-    public Integer getDefaultLanguageLocationCode() {
-        return defaultLanguageLocationCode;
-    }
-
-    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
-        this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
     public void setNmsId(Long nmsId) {
@@ -98,7 +88,6 @@ public class UserProfile {
                 ", msisdn='" + msisdn + '\'' +
                 ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +
                 ", languageLocationCode=" + languageLocationCode +
-                ", defaultLanguageLocationCode=" + defaultLanguageLocationCode +
                 ", circle='" + circle + '\'' +
                 ", maxStateLevelCappingValue=" + maxStateLevelCappingValue +
                 '}';

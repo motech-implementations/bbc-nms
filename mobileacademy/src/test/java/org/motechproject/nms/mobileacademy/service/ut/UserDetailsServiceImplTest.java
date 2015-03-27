@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsImpl;
+import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.Configuration;
@@ -437,7 +437,7 @@ public class UserDetailsServiceImplTest {
         String callingNumber = "9990635906";
         String callId = "123456789";
         UserProfileDetailsService userProfileDetailsServiceSpy = Mockito
-                .spy(new UserProfileDetailsImpl());
+                .spy(new UserProfileDetailsServiceImpl());
         Mockito.doNothing()
                 .when(userProfileDetailsServiceSpy)
                 .updateLanguageLocationCodeFromMsisdn(

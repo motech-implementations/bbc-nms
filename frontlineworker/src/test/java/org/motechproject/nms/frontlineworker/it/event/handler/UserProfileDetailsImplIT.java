@@ -11,7 +11,7 @@ import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsImpl;
+import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
@@ -66,7 +66,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     @Inject
     private FrontLineWorkerCsvService frontLineWorkerCsvService;
 
-    private UserProfileDetailsImpl userProfileDetailsImpl;
+    private UserProfileDetailsServiceImpl userProfileDetailsImpl;
 
     private static boolean setUpIsDone = false;
 
@@ -86,10 +86,6 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     public void setUp() {
 
         if (!setUpIsDone) {
-            System.out.println("");
-/*            state = new State();
-            district = new District();
-            circle = new Circle();*/
             state = testHelper.createState();
             stateService.create(state);
             assertNotNull(state);
@@ -158,12 +154,11 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals("12", userProfile.getCircle());
         assertEquals("1234512345", userProfile.getMsisdn());
         assertTrue(123 == userProfile.getLanguageLocationCode());
-        assertTrue(null == userProfile.getDefaultLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
-      }
+    }
 
 }
 

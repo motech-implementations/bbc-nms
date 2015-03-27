@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
  * This class provides the implementation of User Profile Details interface.
  */
 @Service("userProfileDetailsService")
-public class UserProfileDetailsImpl implements UserProfileDetailsService {
+public class UserProfileDetailsServiceImpl implements UserProfileDetailsService {
 
     @Autowired
     FrontLineWorkerService frontLineWorkerService;
@@ -148,7 +148,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         frontLineWorker.setContactNo(msisdn);
         frontLineWorker.setOperatorId(operator.getId());
         frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
-        frontLineWorker.setDefaultLanguageLocationCodeId(userProfile.getDefaultLanguageLocationCode());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
         userProfile.setNmsId(frontLineWorker.getId());
@@ -203,7 +202,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
         languageLocationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (languageLocationCode != null) {
-            userProfile.setDefaultLanguageLocationCode(null);
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setLanguageLocationCode(languageLocationCode);
 
@@ -218,8 +216,7 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         } else {
             defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
             if (defaultLanguageLocationCode != null) {
-                userProfile.setLanguageLocationCode(null);
-                userProfile.setDefaultLanguageLocationCode(defaultLanguageLocationCode);
+                userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
                 userProfile.setIsDefaultLanguageLocationCode(true);
 
                 langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
@@ -232,7 +229,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
 
 
             } else {
-                userProfile.setDefaultLanguageLocationCode(null);
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(null);
                 userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
@@ -268,7 +264,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         languageLocationCode = languageLocationCodeService.getLanguageLocationCodeByLocationCode(stateCode, districtCode);
         if (languageLocationCode != null) {
             userProfile.setLanguageLocationCode(languageLocationCode);
-            userProfile.setDefaultLanguageLocationCode(null);
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setNmsId(frontLineWorker.getId());
@@ -307,8 +302,13 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         languageLocationCode = frontLineWorker.getLanguageLocationCodeId();
         defaultLanguageLocationCode = frontLineWorker.getDefaultLanguageLocationCodeId();
 
-        userProfile.setLanguageLocationCode(languageLocationCode);
-        userProfile.setDefaultLanguageLocationCode(defaultLanguageLocationCode);
+        if (languageLocationCode != null) {
+            userProfile.setLanguageLocationCode(languageLocationCode);
+        }
+        else {
+            userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
+        }
+
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setCircle(circleCode);
         userProfile.setNmsId(frontLineWorker.getId());
@@ -347,7 +347,6 @@ public class UserProfileDetailsImpl implements UserProfileDetailsService {
         defaultLanguageLocationCode = frontLineWorker.getDefaultLanguageLocationCodeId();
 
         userProfile.setLanguageLocationCode(languageLocationCode);
-        userProfile.setDefaultLanguageLocationCode(defaultLanguageLocationCode);
         if (languageLocationCode == null) {
             userProfile.setIsDefaultLanguageLocationCode(true);
         } else {
