@@ -1,10 +1,5 @@
 package org.motechproject.nms.mobileacademy.service.ut;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.when;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -25,6 +20,9 @@ import org.motechproject.nms.mobileacademy.service.FlwUsageDetailService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.mobileacademy.service.impl.UserDetailsServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 /**
  * class contain unit test cases of UserDetailsServiceImpl.java
@@ -70,7 +68,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
         userProfile.setLanguageLocationCode(1);
-        userProfile.setSystemGeneratedFlwId(11l);
+        userProfile.setNmsFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -89,7 +87,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -145,7 +143,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
         userProfile.setLanguageLocationCode(null);
-        userProfile.setSystemGeneratedFlwId(11l);
+        userProfile.setNmsFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -164,7 +162,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -220,7 +218,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(null);
-        userProfile.setSystemGeneratedFlwId(11l);
+        userProfile.setNmsFlwId(11l);
 
         Configuration configuration = new Configuration();
         configuration
@@ -239,7 +237,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -296,7 +294,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(2);
-        userProfile.setSystemGeneratedFlwId(11l);
+        userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
         Configuration configuration = new Configuration();
@@ -316,7 +314,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
@@ -371,7 +369,7 @@ public class UserDetailsServiceImplTest {
         userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(2);
-        userProfile.setSystemGeneratedFlwId(11l);
+        userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
         Configuration configuration = new Configuration();
@@ -391,7 +389,7 @@ public class UserDetailsServiceImplTest {
                 .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
 
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
-        flwUsageDetail.setFlwId(userProfile.getSystemGeneratedFlwId());
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
 
