@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.it;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
@@ -117,14 +118,10 @@ public class CircleCsvHandlerIT extends BasePaxIT {
         return new MotechEvent(LocationConstants.CIRCLE_CSV_SUCCESS, params);
     }
 
+    @Before
     @After
     public void tearDown() {
-        for (Long id : createdIds) {
-            Circle circle = circleDataService.findById(id);
-            if (circle != null) {
-                circleService.delete(circle);
-            }
-        }
+        circleDataService.deleteAll();
         createdIds.clear();
     }
 }

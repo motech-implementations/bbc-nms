@@ -232,27 +232,9 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
-        for (Long id : createdIds) {
-            LanguageLocationCode ll = llcDataService.findById(id);
-
-            if (ll != null) {
-                Circle circle = circleService.getRecordByCode(ll.getCircleCode());
-                State state = locationService.getStateByCode(ll.getStateCode());
-                District district = null;
-                if (state != null) {
-                    district = locationService.getDistrictByCode(state.getStateCode(), ll.getDistrictCode());
-                    stateService.delete(state);
-                }
-
-                llcDataService.delete(ll);
-                if (circle != null) {
-                    circleService.delete(circle);
-                }
-                if (district != null) {
-                    districtService.delete(district);
-                }
-            }
-        }
+        stateService.deleteAll();
+        circleDataService.deleteAll();
+        languageLocationCodeService.deleteAll();
         createdIds.clear();
     }
 }
