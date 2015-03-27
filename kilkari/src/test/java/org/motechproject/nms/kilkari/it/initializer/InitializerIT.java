@@ -36,7 +36,7 @@ public class InitializerIT extends BasePaxIT {
     private ConfigurationDataService configurationDataService;
     
     @Inject
-    private ActiveSubscriptionCountService activeSubscriptionCountService;
+    protected ActiveSubscriptionCountService activeSubscriptionCountService;
 
 
     private Initializer initializer;

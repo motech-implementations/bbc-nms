@@ -4,7 +4,6 @@ import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
-import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Channel;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
@@ -36,7 +37,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandlerTestIT.class);
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
-        logger.info("Inside createSubscriptionSubscriberTest");
+        logger.info("Inside shouldCreateSubscriptionSubscriberTest");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -58,7 +59,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedSameMsisdnDifferentMcts() throws Exception {
-        logger.info("Inside createSameMsisdnDifferentMcts");
+        logger.info("Inside shouldUpdateBasedSameMsisdnDifferentMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -86,7 +87,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedSameMsisdnSameMcts() throws Exception {
-        logger.info("Inside createSameMsisdnSameMcts");
+        logger.info("Inside shouldUpdateBasedSameMsisdnSameMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -118,7 +119,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
-        logger.info("Inside createDifferentMsisdnSameMcts");
+        logger.info("Inside shouldUpdateBasedDifferentMsisdnSameMcts");
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -152,7 +153,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedChildDeath() throws Exception {
-        logger.info("Inside createDifferentMsisdnSameMcts");
+        logger.info("Inside shouldUpdateBasedChildDeath");
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
         csv = createChildMcts(csv);
@@ -187,7 +188,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Ignore
     public void shouldUpdateBasedDeleteOperation() throws Exception {
-        logger.info("Inside  createDeleteOperation");
+        logger.info("Inside  shouldUpdateBasedDeleteOperation");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         ChildMctsCsv csv = new ChildMctsCsv();
@@ -216,7 +217,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts() throws Exception {
-        logger.info("Inside  createDeleteOperation");
+        logger.info("Inside  shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -250,7 +251,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMctsTrueChildDeath() throws Exception {
-        logger.info("Inside  createDeleteOperation");
+        logger.info("Inside  shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMctsTrueChildDeath");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -283,7 +284,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldDecactivateMotherAndDeleteSubscriberBasedDiffMsisdnSameChildMcts() throws Exception {
-        logger.info("Inside  createDeleteOperation");
+        logger.info("Inside  shouldDecactivateMotherAndDeleteSubscriberBasedDiffMsisdnSameChildMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -331,7 +332,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     
     @Test
     public void shouldDecactivateMotherAndDeleteSubscriberBasedSameMsisdn() throws Exception {
-        logger.info("Inside  createDeleteOperation");
+        logger.info("Inside  shouldDecactivateMotherAndDeleteSubscriberBasedSameMsisdn");
         
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
@@ -375,6 +376,33 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertTrue(subscriptionFirst.getSubscriber().getId() == updateSubs.getSubscriber().getId());
         assertNotNull(updateSubs);
     }
+    
+    
+    @Test
+    public void checkMaximumAllowedBeneficery() throws Exception {
+        logger.info("Inside checkMaximumAllowedBeneficery");
+        
+        ActiveSubscriptionCount activeUser = activeSubscriptionCountDataService.findActiveSubscriptionCountByIndex(1L);
+        activeUser.setCount(9718577L);
+        activeUser = activeSubscriptionCountDataService.update(activeUser);
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        ChildMctsCsv csv = new ChildMctsCsv();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("10000000048");
+        csv.setIdNo("48");
+        
+        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
+        
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        assertNull(dbSubscription);
+        
+        activeUser.setCount(0L);
+        activeSubscriptionCountDataService.update(activeUser);
+        
+    } 
     
    
 }

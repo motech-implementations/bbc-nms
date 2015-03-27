@@ -186,14 +186,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid(ChildMcts) than */
                 logger.info("Found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                motherRecordHandling(subscriber, otherPack, otherMctsId, dbSubscriber);
+                handleMotherRecordIfFoundInChildCsvRecord(subscriber, otherPack, otherMctsId, dbSubscriber);
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getSuitableMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                motherRecordHandling(subscriber, otherPack, otherMctsId, dbSubscriber);
+                handleMotherRecordIfFoundInChildCsvRecord(subscriber, otherPack, otherMctsId, dbSubscriber);
                 updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
@@ -202,7 +202,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
-    private void motherRecordHandling(Subscriber subscriber,
+    /**
+     * This method deactivate subscription of mother record, delete mother subscriber 
+     * and link deactivated mother record with child subscriber
+     *  
+     * @param subscriber csv uploaded Subscriber object
+     * @param otherPack mother subscription pack name
+     * @param otherMctsId motherMctsId
+     * @param dbSubscriber Subscriber type Object
+     */
+    private void handleMotherRecordIfFoundInChildCsvRecord(Subscriber subscriber,
             SubscriptionPack otherPack, String otherMctsId,
             Subscriber dbSubscriber) {
         if(subscriber.getMotherMctsId() != null) {
@@ -225,9 +234,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  This method is used to insert/update subscription and subscriber
      * 
      *  @param subscriber csv uploaded subscriber
+     *  @param channel Channel type object
      */
     @Override
-    public void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel)
+    public void handleMctsSubscriptionRequestForMother(Subscriber subscriber, Channel channel )
             throws DataValidationException, NmsInternalServerError {
 
         /*
@@ -484,6 +494,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {
             subscription.setStatus(Status.DEACTIVATED);
+            subscription.setDeactivationReason(DeactivationReason.USER_DEACTIVATED);
             subscriptionDataService.update(subscription);
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
         }
