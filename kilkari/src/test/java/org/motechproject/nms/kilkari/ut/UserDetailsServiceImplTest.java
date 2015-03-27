@@ -19,6 +19,7 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,6 +121,40 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
             Assert.assertEquals(response.getCircle(), "AP");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertNull(response);
+        }
+    }
+
+    @Test
+    public void shouldGetAllSubscriberDetailsWhenLlcCodeIsDeterminedByStateAndNullDistrict() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //set the subscriber details
+        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
+        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+
+        //create a subscriber with languageLocationCode, state and district.
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), null, BeneficiaryType.CHILD);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
+        when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
+
+            //Do Assertions.
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertNull(response.getLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
         } catch (Exception err) {
@@ -437,6 +472,45 @@ public class UserDetailsServiceImplTest {
             Assert.assertNull(response);
         }
     }
+
+    @Test
+    public void shouldThrowErrorWhenLlcCodeIsDeterminedByStateAndDistrictIsNull() {
+        initMocks(this);
+        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
+
+        //set the subscriber details
+        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
+        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
+
+        //create a subscriber with languageLocationCode, state and district.
+        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), locationBuilder.buildDistrict(1L, 1L) ,BeneficiaryType.CHILD);
+
+        //Stub the service methods
+        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
+        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
+        when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
+        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
+
+        //invoke the userDetailService.
+        try {
+            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
+
+            //Do Assertions.
+            Assert.assertNull(response.getLanguageLocationCode());
+            Assert.assertEquals(response.getSubscriptionPackList(), activePackList);
+            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertNull(response.getDefaultLanguageLocationCode());
+        } catch (DataValidationException ex) {
+            Assert.assertNull(response);
+        } catch (Exception err) {
+            Assert.assertTrue(err instanceof NmsInternalServerError);
+            Assert.assertEquals(((NmsInternalServerError) err).getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(((NmsInternalServerError)err).getMessage() , "languageLocationCode could not be determined for stateCode : "
+                    + 1L +" and districtCode " + 1l);
+        }
+    }
+
+
 
     private Configuration createConfiguration(Integer nationLLCCode) {
         Configuration conf = new Configuration();
