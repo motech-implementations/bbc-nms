@@ -343,13 +343,11 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                                        ServicesUsingFrontLineWorker service, String circleCode)
             throws DataValidationException {
         Integer languageLocationCode = null;
-        Integer defaultLanguageLocationCode = null;
         LanguageLocationCode langLocCode = null;
         Long stateCode = null;
         UserProfile userProfile = new UserProfile();
 
         languageLocationCode = frontLineWorker.getLanguageLocationCodeId();
-        defaultLanguageLocationCode = frontLineWorker.getDefaultLanguageLocationCodeId();
 
         userProfile.setLanguageLocationCode(languageLocationCode);
         if (languageLocationCode == null) {
