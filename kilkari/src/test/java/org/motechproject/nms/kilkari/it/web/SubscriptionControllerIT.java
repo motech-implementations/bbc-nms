@@ -153,23 +153,23 @@ public class SubscriptionControllerIT extends BasePaxIT {
     }
 
     public void preSetUp() {
-        Set<District> districts = new LinkedHashSet<>();
         //create circle with code "testCode"
         Circle circle = llcBuilder.buildCircle(123,"circleCode", "test");
         circleService.create(circle);
 
-        Operator operator = llcBuilder.buildOperator("operatorCode","teatOperator");
+        Operator operator = llcBuilder.buildOperator("operatorCode","testOperator");
         operatorService.create(operator);
+
+        //create state with stateCode "1"
+        State state = locationBuilder.buildState(1L);
+        state = stateService.create(state);
 
         //create district with districtCode "1" and stateCode "1"
         District district = locationBuilder.buildDistrict(1L, 1L);
-        District dbDistrict = districtService.create(district);
-        districts.add(dbDistrict);
+        state.getDistrict().add(district);
+        stateService.update(state);
 
-        //create state with stateCode "1"
-        State state = locationBuilder.buildState(1L, districts);
-        stateService.create(state);
-
+        district = districtService.findDistrictByParentCode(1L, 1L);
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
