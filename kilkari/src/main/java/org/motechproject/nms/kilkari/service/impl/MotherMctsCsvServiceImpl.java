@@ -134,20 +134,20 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         logger.trace("mapMotherMctsToSubscriber method start");
         motherSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(motherMctsCsv, motherSubscriber);
         
-        String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", motherMctsCsv.getWhomPhoneNo(), true);
-        motherSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
+        String msisdn = ParseDataHelper.validateAndParseString(Constants.WHOM_PHONE_NUM, motherMctsCsv.getWhomPhoneNo(), true);
+        motherSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn(Constants.WHOM_PHONE_NUM, msisdn));
         
-        motherSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("idNo", motherMctsCsv.getIdNo(), true));
-        motherSubscriber.setAge(ParseDataHelper.validateAndParseInt("Age", motherMctsCsv.getAge(), false));
-        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString("AAdhar Num", motherMctsCsv.getAadharNo(), false));
-        motherSubscriber.setName(ParseDataHelper.validateAndParseString("Name", motherMctsCsv.getName(),false));
-        motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate("Lmp Date", motherMctsCsv.getLmpDate(), true));
+        motherSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, motherMctsCsv.getIdNo(), true));
+        motherSubscriber.setAge(ParseDataHelper.validateAndParseInt(Constants.AGE, motherMctsCsv.getAge(), false));
+        motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString(Constants.AADHAR_NUM, motherMctsCsv.getAadharNo(), false));
+        motherSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.NAME, motherMctsCsv.getName(),false));
+        motherSubscriber.setLmp(ParseDataHelper.validateAndParseDate(Constants.LMP_DATE, motherMctsCsv.getLmpDate(), true));
 
         /* Check appropriate value of entryType and abortion*/
-        Integer outcomeNos = ParseDataHelper.validateAndParseInt("OutcomeNos", motherMctsCsv.getOutcomeNos(), false);
-        String entryType = ParseDataHelper.validateAndParseString("Entry Type", motherMctsCsv.getEntryType(), false);
+        Integer outcomeNos = ParseDataHelper.validateAndParseInt(Constants.OUTCOME_NOS, motherMctsCsv.getOutcomeNos(), false);
+        String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, motherMctsCsv.getEntryType(), false);
         commonValidatorService.checkValidEntryType(entryType);
-        String abortion = ParseDataHelper.validateAndParseString("Abortion", motherMctsCsv.getAbortion(), false);
+        String abortion = ParseDataHelper.validateAndParseString(Constants.ABORTION, motherMctsCsv.getAbortion(), false);
         commonValidatorService.checkValidAbortionType(abortion);
         
         /* Set the appropriate Deactivation Reason */

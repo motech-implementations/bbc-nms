@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.joda.time.DateTime;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
@@ -132,16 +133,16 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         logger.trace("mapChildMctsToSubscriber method start");
         childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
 
-        String msisdn = ParseDataHelper.validateAndParseString("Whom Phone Num", childMctsCsv.getWhomPhoneNo(), true);
-        childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn("Whom Phone Num", msisdn));
+        String msisdn = ParseDataHelper.validateAndParseString(Constants.WHOM_PHONE_NUM, childMctsCsv.getWhomPhoneNo(), true);
+        childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn(Constants.WHOM_PHONE_NUM, msisdn));
         
-        childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString("idNo", childMctsCsv.getIdNo(), true));
-        childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString("Mother Id", childMctsCsv.getMotherId(), false));
-        childSubscriber.setName(ParseDataHelper.validateAndParseString("Mother Name", childMctsCsv.getMotherName(), false));
-        childSubscriber.setDob(ParseDataHelper.validateAndParseDate("Birth Date", childMctsCsv.getBirthdate(), true));
+        childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, childMctsCsv.getIdNo(), true));
+        childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, childMctsCsv.getMotherId(), false));
+        childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, childMctsCsv.getMotherName(), false));
+        childSubscriber.setDob(ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true));
 
         /* Set the appropriate Deactivation Reason */
-        String entryType = ParseDataHelper.validateAndParseString("Entry Type", childMctsCsv.getEntryType(), false);
+        String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, childMctsCsv.getEntryType(), false);
         commonValidatorService.checkValidEntryType(entryType);
 
         if(EntryType.DEATH.toString().equalsIgnoreCase(entryType)) {

@@ -46,23 +46,21 @@ public class ActiveSubscriptionCountServiceImpl implements ActiveSubscriptionCou
     }
 
     /**
-     * This method increments the active subscription count by one 
+     * TBD : For active subscription count perspective we just made a structure to increment Active Subscription
+     * and method will be implemented in next scalability requirement. currently it is under discussion
      */
     @Override
     public void incrementActiveSubscriptionCount() {
-         /* TBD: As latest MDS Jar is not available in Nexus Repo
-        activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountIncrementQuery());
-        */
+         
     }
 
     /**
-     * This method decrements the active subscription count by one 
+     * TBD : For active subscription count perspective we just made a structure to decrement Active Subscription
+     * and method will be implemented in next scalability requirement. currently it is under discussion
      */
     @Override
     public void decrementActiveSubscriptionCount() {
-        /* TBD: As latest MDS Jar is not available in Nexus Repo
-        activeSubscriptionCountDataService.executeSQLQuery(new CustomQueries.ActiveUserCountDecrementQuery());
-        */
+        
     }
 
 }
