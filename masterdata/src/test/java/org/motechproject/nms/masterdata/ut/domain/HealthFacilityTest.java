@@ -64,6 +64,14 @@ public class HealthFacilityTest {
     }
 
     @Test
+    public void TestEqualsWithSameTalukaCode()
+    {
+        HealthFacility healthFacility = getHealthFacilityDataWithDifferentTalukaCode();
+
+        assertTrue(getHealthFacilityDataWithDifferentTalukaCode().equals(healthFacility));
+    }
+
+    @Test
     public void testEqualsWithDifferentHealthBlockCode() {
 
         HealthFacility healthFacility = TestHelper.getHealthFacilityData();

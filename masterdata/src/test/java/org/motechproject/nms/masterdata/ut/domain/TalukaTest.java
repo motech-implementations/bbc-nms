@@ -64,6 +64,14 @@ public class TalukaTest {
     }
 
     @Test
+    public void testEqualsWithSameTalukaCode()
+    {
+        Taluka taluka = getTalukaDataWithDifferentTalukaCode();
+
+        assertTrue(getTalukaDataWithDifferentTalukaCode().equals(taluka));
+    }
+
+    @Test
     public void testToString() {
         Taluka taluka = TestHelper.getTalukaData();
         assertNotNull(taluka.toString());

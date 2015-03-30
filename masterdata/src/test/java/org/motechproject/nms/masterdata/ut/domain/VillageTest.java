@@ -60,7 +60,7 @@ public class VillageTest {
 
         Village village = getVillageData();
 
-        assertFalse(getVillageDataWithDifferentTalukaCode().equals(village));
+        assertTrue(getVillageData().equals(village));
     }
 
     @Test
@@ -69,6 +69,14 @@ public class VillageTest {
         Village village = getVillageData();
 
         assertFalse(getVillageDataWithDifferentVillageCode().equals(village));
+    }
+
+    @Test
+    public void testEqualsWithSameVillageCode()
+    {
+        Village village = getVillageData();
+
+        assertTrue(getVillageData().equals(village));
     }
 
     @Test
