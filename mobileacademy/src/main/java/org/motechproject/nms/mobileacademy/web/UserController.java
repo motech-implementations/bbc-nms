@@ -1,6 +1,7 @@
 package org.motechproject.nms.mobileacademy.web;
 
 import org.apache.log4j.Logger;
+import org.motechproject.nms.mobileacademy.dto.CallDetails;
 import org.motechproject.nms.mobileacademy.dto.LlcRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
@@ -93,6 +94,23 @@ public class UserController extends BaseController {
                 llcRequest.getCallingNumber(), llcRequest.getCallId());
         LOGGER.debug("setLanguageLocationCode: Ended");
 
+    }
+
+    /**
+     * Save Call Details API
+     * 
+     * @param callDetails object contain input request
+     * @throws MissingServletRequestParameterException
+     */
+    // This is just a placeholder for save call details API.
+    // actual implementation would be done in sprint 1504
+    @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
+    @ResponseBody
+    public void saveCallDetails(@RequestBody CallDetails callDetails)
+            throws MissingServletRequestParameterException {
+        LOGGER.debug("saveCallDetails: Started");
+        LOGGER.debug("Input request: " + callDetails);
+        LOGGER.debug("saveCallDetails: Ended");
     }
 
     /**
