@@ -117,7 +117,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For Default National Capping
         Configuration configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
         flwDetailService.update(flwDetail);
         configurationService.updateConfiguration(configurationData);
@@ -127,14 +127,14 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For State Level Capping Type and Next Date Condition
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
         configurationService.updateConfiguration(configurationData);
-        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusMonths(2));
         flwDetailService.update(flwDetail);
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111");
 
         //For Null Access Date
-        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(null);
         flwDetailService.update(flwDetail);
 
@@ -171,7 +171,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
         controller.saveCallDetails(saveCallDetailApiRequest);
 
-        flwDetail = flwDetailService.findServiceConsumptionByMsisdn("9810179788");
+        flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByNmsId(flwDetail.getNmsFlwId());
 
         assertNotNull(flwDetail);
