@@ -357,7 +357,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             }
 
         }
-        stateCode = languageLocationCode.getStateCode();
+
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setNmsFlwId(frontLineWorker.getId());
         userProfile.setCreated(false);
