@@ -404,10 +404,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 userProfile.setNmsFlwId(frontLineWorker.getId());
                 userProfile.setCreated(false);
                 userProfile.setMsisdn(msisdn);
-                if (frontLineWorker.getOperatorCode() != operator.getCode()) {
-                    frontLineWorker.setOperatorCode(operator.getCode());
-                    frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
-                }
+
+                frontLineWorker.setOperatorCode(operator.getCode());
+                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             } else {
                 ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
 
@@ -420,7 +419,19 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 frontLineWorker.setOperatorCode(operator.getCode());
                 frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             } else {
-                userProfile = createUserProfile(msisdn, operator, circleCode, service);
+
+                userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
+                userProfile.setNmsFlwId(frontLineWorker.getId());
+                userProfile.setCreated(false);
+
+                frontLineWorker.setOperatorCode(operator.getCode());
+                if (userProfile.isDefaultLanguageLocationCode() != true) {
+                    frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+                    frontLineWorker.setCircleCode(userProfile.getCircle());
+                }
+
+                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
+
             }
 
 
