@@ -58,6 +58,16 @@ public final class Constants {
     public static final String BIRTH_DATE = "Birth Date";
 
     public static final String MOTHER_NAME = "Mother Name";
+    
+    public static final String CONTENT_TYPE = "Content Type";
+
+    public static final String CONTENT_NAME = "Content Name";
+
+    public static final String CONTENT_ID = "Content Id";
+
+    public static final String CONTENT_FILE = "Content File";
+
+    public static final String CONTENT_DURATION = "Content Duration";
 
     /* Constants for Location fields  */
     public static final String VILLAGE_CODE = "Village Code";
@@ -74,10 +84,10 @@ public final class Constants {
 
     public static final String STATE_CODE = "State Code";
     
-    public static final String OPERATOR_CODE = "operatorCode";
+    public static final String OPERATOR_CODE = "Operator Code";
 
-    public static final String LANGUAGE_LOCATION_CODE = "languageLocationCode";
+    public static final String LANGUAGE_LOCATION_CODE = "LanguageLocation Code";
 
-    public static final String CIRCLE_CODE = "circleCode";
+    public static final String CIRCLE_CODE = "Circle Code";
 
 }

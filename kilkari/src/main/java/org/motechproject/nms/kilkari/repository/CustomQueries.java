@@ -5,7 +5,6 @@ import java.util.List;
 import javax.jdo.Query;
 
 import org.motechproject.mds.query.QueryExecution;
-import org.motechproject.mds.query.SqlQueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;

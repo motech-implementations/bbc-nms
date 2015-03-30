@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
@@ -147,31 +148,31 @@ public class ContentUploadCsvHandler {
     private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
         ContentUpload newRecord = new ContentUpload();
 
-        String circleCode = ParseDataHelper.validateAndParseString("circleCode", record.getCircleCode(), true);
+        String circleCode = ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, record.getCircleCode(), true);
         if (circleService.getRecordByCode(circleCode)!= null) {
             newRecord.setCircleCode(circleCode);
         } else {
-            ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+            ParseDataHelper.raiseInvalidDataException(Constants.CIRCLE_CODE, circleCode);
         }
 
-        Integer llc = ParseDataHelper.validateAndParseInt("LanguageLocationCode", record.getLanguageLocationCode(), true);
+        Integer llc = ParseDataHelper.validateAndParseInt(Constants.LANGUAGE_LOCATION_CODE, record.getLanguageLocationCode(), true);
         if (languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, llc) != null) {
             newRecord.setLanguageLocationCode(llc);
         } else {
             ParseDataHelper.raiseInvalidDataException("languageLocationCode and/or circleCode", record.getLanguageLocationCode());
         }
 
-        newRecord.setContentDuration(ParseDataHelper.validateAndParseInt("contentDuration", record.getContentDuration(), true));
-        newRecord.setContentFile(ParseDataHelper.validateAndParseString("contentFile", record.getContentFile(), true));
-        newRecord.setContentId(ParseDataHelper.validateAndParseLong("contentId", record.getContentId(), true));
-        newRecord.setContentName(ParseDataHelper.validateAndParseString("contentName", record.getContentName(), true));
+        newRecord.setContentDuration(ParseDataHelper.validateAndParseInt(Constants.CONTENT_DURATION, record.getContentDuration(), true));
+        newRecord.setContentFile(ParseDataHelper.validateAndParseString(Constants.CONTENT_FILE, record.getContentFile(), true));
+        newRecord.setContentId(ParseDataHelper.validateAndParseLong(Constants.CONTENT_ID, record.getContentId(), true));
+        newRecord.setContentName(ParseDataHelper.validateAndParseString(Constants.CONTENT_NAME, record.getContentName(), true));
 
-        String contentTypeString = ParseDataHelper.validateAndParseString("contentType", record.getContentType(), true);
+        String contentTypeString = ParseDataHelper.validateAndParseString(Constants.CONTENT_TYPE, record.getContentType(), true);
         ContentType contentType = ContentType.findByName(contentTypeString);
         if (contentType!= null) {
             newRecord.setContentType(contentType);
         }else {
-            ParseDataHelper.raiseInvalidDataException("contentType", contentTypeString);
+            ParseDataHelper.raiseInvalidDataException(Constants.CONTENT_TYPE, contentTypeString);
         }
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
