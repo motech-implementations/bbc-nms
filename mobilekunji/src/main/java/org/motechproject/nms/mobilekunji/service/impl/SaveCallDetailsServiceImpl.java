@@ -102,7 +102,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      */
     private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
-        FlwDetail flwDetail = flwDetailService.findServiceConsumptionByMsisdn(saveCallDetailApiRequest.getCallingNumber());
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(saveCallDetailApiRequest.getCallingNumber());
 
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);

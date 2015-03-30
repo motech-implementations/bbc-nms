@@ -158,9 +158,6 @@ public class CourseServiceIT extends BasePaxIT {
         clearMobileAcademyData();
         assertEquals(-1, courseService.getCurrentCourseVersion());
 
-        String blankJson = "{\" \":\" \"}";
-        assertEquals(blankJson, courseService.getCourseJson());
-
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());

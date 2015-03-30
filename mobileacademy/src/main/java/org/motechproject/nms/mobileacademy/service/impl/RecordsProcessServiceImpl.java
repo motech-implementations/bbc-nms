@@ -110,11 +110,14 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 csvFileName, timeOfUpload, 0, 0);
         BulkUploadError bulkUploadError = new BulkUploadError(csvFileName,
                 timeOfUpload, RecordType.COURSE_CONTENT, "", "", "");
+
         Map<Integer, List<CourseContentCsv>> mapForAddRecords = new HashMap<Integer, List<CourseContentCsv>>();
         Map<String, List<CourseContentCsv>> mapForModifyRecords = new HashMap<String, List<CourseContentCsv>>();
+
         List<Integer> listOfExistingLlc = courseProcessedContentService
                 .getListOfAllExistingLlcs();
         OperatorDetails operatorDetails = new OperatorDetails();
+
         if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
             // set user details from first record
             operatorDetails.setCreator(courseContentCsvs.get(0).getCreator());
@@ -122,6 +125,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             operatorDetails.setModifiedBy(courseContentCsvs.get(0)
                     .getModifiedBy());
             operatorDetails.setOwner(courseContentCsvs.get(0).getOwner());
+
             Iterator<CourseContentCsv> recordIterator = courseContentCsvs
                     .iterator();
             while (recordIterator.hasNext()) {
@@ -378,6 +382,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 LOGGER.warn("Course not modified for content name: {}",
                         contentName);
                 LOGGER.warn("Records for all exisiting LLCs not recieved");
+
                 bulkUploadError.setRecordDetails(contentName);
                 bulkUploadError
                         .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
@@ -385,6 +390,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         MobileAcademyConstants.INSUFFICIENT_RECORDS_FOR_MODIFY,
                         contentName));
                 bulkUploadErrLogService.writeBulkUploadErrLog(bulkUploadError);
+
                 deleteCourseRawContentsByList(
                         mapForModifyRecords.get(contentName), true,
                         bulkUploadStatus);

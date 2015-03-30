@@ -37,7 +37,7 @@ public interface FlwDetailService {
      * @param nmsFlwId
      * @return FlwDetail
      */
-    public FlwDetail findServiceConsumptionByNmsFlwId(Long nmsFlwId);
+    public FlwDetail findFlwDetailByNmsFlwId(Long nmsFlwId);
 
     /**
      * Finds the service consumption details of Flw by its msisdn
@@ -45,6 +45,6 @@ public interface FlwDetailService {
      * @param msisdn
      * @return FlwDetail
      */
-    public FlwDetail findServiceConsumptionByMsisdn(String msisdn);
+    public FlwDetail findFlwDetailByMsisdn(String msisdn);
 
 }

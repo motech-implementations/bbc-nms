@@ -177,9 +177,6 @@ public class CourseServiceImpl implements CourseService {
                     question.setAnswer(answer);
                     quiz.setModifiedBy(operatorDetails.getModifiedBy());
                     mTrainingService.updateQuiz(quiz);
-                    LOGGER.info(
-                            "Correct Answer option Updated for {} {} to:{}",
-                            chapterName, questionName, answer);
                     break;
                 }
             }
@@ -499,7 +496,7 @@ public class CourseServiceImpl implements CourseService {
 
         courseJsonObject.add(MobileAcademyConstants.COURSE_KEY_CHAPTERS,
                 generateChapterListJson(chapterContents));
-        LOGGER.trace("Course Json returned successfully from getCourseJSON");
+        LOGGER.debug("Course Json returned successfully from getCourseJSON");
 
         return courseJsonObject.toString();
     }

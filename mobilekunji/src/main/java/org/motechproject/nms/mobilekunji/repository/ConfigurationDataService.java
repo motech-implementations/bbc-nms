@@ -12,6 +12,12 @@ import org.motechproject.nms.mobilekunji.domain.Configuration;
  * define and custom lookups we may need.
  */
 public interface ConfigurationDataService extends MotechDataService<Configuration> {
+
+    /**
+     * Finds the configuration details by its index
+     * @param index
+     * @return Configuration
+     */
     @Lookup
     Configuration findRecordByIndex(@LookupField(name = "index") Long index);
 }

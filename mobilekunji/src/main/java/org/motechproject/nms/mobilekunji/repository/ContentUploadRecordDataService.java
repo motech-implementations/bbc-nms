@@ -13,6 +13,12 @@ import org.motechproject.nms.mobilekunji.domain.ContentUpload;
  */
 public interface ContentUploadRecordDataService extends MotechDataService<ContentUpload> {
 
+
+    /**
+     * Finds the content upload record by its contentId
+     * @param id
+     * @return ContentUpload
+     */
     @Lookup
     ContentUpload findRecordByContentId(@LookupField(name = "contentId") Integer id);
 }

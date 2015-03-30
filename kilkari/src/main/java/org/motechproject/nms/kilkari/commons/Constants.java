@@ -33,4 +33,51 @@ public final class Constants {
     public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
 
     public static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.ChildMctsCsv.csv-import.success";
+    
+    /* Constants for Csv fields */
+    public static final String WHOM_PHONE_NUM = "Whom Phone Num";
+    
+    public static final String ABORTION = "Abortion";
+
+    public static final String ENTRY_TYPE = "Entry Type";
+
+    public static final String OUTCOME_NOS = "OutcomeNos";
+
+    public static final String LMP_DATE = "Lmp Date";
+
+    public static final String NAME = "Name";
+
+    public static final String AADHAR_NUM = "Aadhar Num";
+
+    public static final String AGE = "Age";
+
+    public static final String ID_NO = "idNo";
+    
+    public static final String MOTHER_ID = "Mother Id";
+    
+    public static final String BIRTH_DATE = "Birth Date";
+
+    public static final String MOTHER_NAME = "Mother Name";
+
+    /* Constants for Location fields  */
+    public static final String VILLAGE_CODE = "Village Code";
+
+    public static final String SUB_CENTERED_CODE = "Sub centered Code";
+
+    public static final String PHC_CODE = "Phc Code";
+
+    public static final String HEALTH_BLOCK_CODE = "Health Block Code";
+
+    public static final String TALUKA_CODE = "Taluka Code";
+
+    public static final String DISTRICT_CODE = "District Code";
+
+    public static final String STATE_CODE = "State Code";
+    
+    public static final String OPERATOR_CODE = "operatorCode";
+
+    public static final String LANGUAGE_LOCATION_CODE = "languageLocationCode";
+
+    public static final String CIRCLE_CODE = "circleCode";
+
 }

@@ -59,8 +59,8 @@ public class FlwDetailServiceImpl implements FlwDetailService {
      * @return FlwDetail
      */
     @Override
-    public FlwDetail findServiceConsumptionByNmsFlwId(Long nmsFlwId) {
-        return flwDetailRecordDataService.findServiceConsumptionByNmsFlwId(nmsFlwId);
+    public FlwDetail findFlwDetailByNmsFlwId(Long nmsFlwId) {
+        return flwDetailRecordDataService.findFlwDetailByNmsFlwId(nmsFlwId);
     }
 
     /**
@@ -70,8 +70,8 @@ public class FlwDetailServiceImpl implements FlwDetailService {
      * @return FlwDetail
      */
     @Override
-    public FlwDetail findServiceConsumptionByMsisdn(String msisdn) {
-        return flwDetailRecordDataService.findServiceConsumptionByMsisdn(msisdn);
+    public FlwDetail findFlwDetailByMsisdn(String msisdn) {
+        return flwDetailRecordDataService.findFlwDetailByMsisdn(msisdn);
     }
 
 }

@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.EntryType;
 import org.motechproject.nms.kilkari.domain.MctsCsv;
@@ -44,7 +45,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
     public State checkAndGetState(Long stateCode) throws DataValidationException {
         State state = locationService.getStateByCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
+            ParseDataHelper.raiseInvalidDataException(Constants.STATE_CODE, stateCode.toString());
         }
         return state;
     }
@@ -58,7 +59,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
     public District checkAndGetDistrict(State state, Long districtCode) throws DataValidationException {
         District district = locationService.getDistrictByCode(state.getId(), districtCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District Code", districtCode.toString());
+            ParseDataHelper.raiseInvalidDataException(Constants.DISTRICT_CODE, districtCode.toString());
         }
         return district;
     }
@@ -75,7 +76,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if (talukaCode != null) {
             taluka = locationService.getTalukaByCode(district.getId(), talukaCode);
             if (taluka == null) {
-                ParseDataHelper.raiseInvalidDataException("Taluka Code", talukaCode.toString());
+                ParseDataHelper.raiseInvalidDataException(Constants.TALUKA_CODE, talukaCode.toString());
             }
         }
         return taluka;
@@ -96,10 +97,10 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             if (taluka != null) {
                 healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
                 if (healthBlock == null) {
-                    ParseDataHelper.raiseInvalidDataException("Block Code", healthBlockCode.toString());
+                    ParseDataHelper.raiseInvalidDataException(Constants.HEALTH_BLOCK_CODE, healthBlockCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode.toString());
+                ParseDataHelper.raiseMissingDataException(Constants.TALUKA_CODE, talukaCode.toString());
             }
         }
         return healthBlock;
@@ -122,10 +123,10 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             if (healthBlock != null) {
                 healthFacility = locationService.getHealthFacilityByCode(healthBlock.getId(), phcCode);
                 if (healthFacility == null) {
-                    ParseDataHelper.raiseInvalidDataException("Phc Code", phcCode.toString());
+                    ParseDataHelper.raiseInvalidDataException(Constants.PHC_CODE, phcCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Block Code", healthBlockCode.toString()); //Missing Block ID
+                ParseDataHelper.raiseMissingDataException(Constants.HEALTH_BLOCK_CODE, healthBlockCode.toString()); //Missing Block ID
             }
         }
         return healthFacility;
@@ -147,10 +148,10 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             if (healthFacility != null) {
                 healthSubFacility = locationService.getHealthSubFacilityByCode(healthFacility.getId(), subCenterCode);
                 if (healthSubFacility == null) {
-                    ParseDataHelper.raiseInvalidDataException("Sub centered Code", subCenterCode.toString());
+                    ParseDataHelper.raiseInvalidDataException(Constants.SUB_CENTERED_CODE, subCenterCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Phc Code", phcCode.toString());
+                ParseDataHelper.raiseMissingDataException(Constants.PHC_CODE, phcCode.toString());
             }
         }
         return healthSubFacility;
@@ -169,10 +170,10 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             if (taluka != null) {
                 village = locationService.getVillageByCode(taluka.getId(), villageCode);
                 if (village == null) {
-                    ParseDataHelper.raiseInvalidDataException("Village Code", villageCode.toString());
+                    ParseDataHelper.raiseInvalidDataException(Constants.VILLAGE_CODE, villageCode.toString());
                 }
             } else {
-                ParseDataHelper.raiseMissingDataException("Taluka Code", talukaCode.toString());
+                ParseDataHelper.raiseMissingDataException(Constants.TALUKA_CODE, talukaCode.toString());
             }
         }
         return village;
@@ -189,25 +190,25 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
     public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException {
         
-        Long stateCode = ParseDataHelper.validateAndParseLong("State Code", mctsCsv.getStateCode(),  true);
+        Long stateCode = ParseDataHelper.validateAndParseLong(Constants.STATE_CODE, mctsCsv.getStateCode(),  true);
         State state = checkAndGetState(stateCode);
 
-        Long districtCode = ParseDataHelper.validateAndParseLong("District Code", mctsCsv.getDistrictCode(), true);
+        Long districtCode = ParseDataHelper.validateAndParseLong(Constants.DISTRICT_CODE, mctsCsv.getDistrictCode(), true);
         District district = checkAndGetDistrict(state, districtCode);
 
-        Long talukaCode = ParseDataHelper.validateAndParseLong("Taluka Code", mctsCsv.getTalukaCode(), false);
+        Long talukaCode = ParseDataHelper.validateAndParseLong(Constants.TALUKA_CODE, mctsCsv.getTalukaCode(), false);
         Taluka taluka = checkAndGetTaluka(district, talukaCode);
 
-        Long healthBlockCode = ParseDataHelper.validateAndParseLong("Health Block Code", mctsCsv.getHealthBlockCode(), false);
+        Long healthBlockCode = ParseDataHelper.validateAndParseLong(Constants.HEALTH_BLOCK_CODE, mctsCsv.getHealthBlockCode(), false);
         HealthBlock healthBlock = checkAndGetHealthBlock(talukaCode, taluka, healthBlockCode);
 
-        Long phcCode = ParseDataHelper.validateAndParseLong("Phc Code", mctsCsv.getPhcCode(), false);
+        Long phcCode = ParseDataHelper.validateAndParseLong(Constants.PHC_CODE, mctsCsv.getPhcCode(), false);
         HealthFacility healthFacility = checkAndGetPhc(healthBlockCode, healthBlock, phcCode);
 
-        Long subCenterCode = ParseDataHelper.validateAndParseLong("Sub centered Code", mctsCsv.getSubCentreCode(), false);
+        Long subCenterCode = ParseDataHelper.validateAndParseLong(Constants.SUB_CENTERED_CODE, mctsCsv.getSubCentreCode(), false);
         HealthSubFacility healthSubFacility = checkAndGetSubCenter(phcCode, healthFacility, subCenterCode);
 
-        Long villageCode = ParseDataHelper.validateAndParseLong("Village Code", mctsCsv.getVillageCode(), false);
+        Long villageCode = ParseDataHelper.validateAndParseLong(Constants.VILLAGE_CODE, mctsCsv.getVillageCode(), false);
         Village village = checkAndGetVillage(talukaCode, taluka, villageCode);
 
         subscriber.setState(state);
@@ -230,7 +231,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if (entryType!=null) {
             boolean foundEntryType = EntryType.checkValidEntryType(entryType);
             if(!foundEntryType){
-                ParseDataHelper.raiseInvalidDataException("Entry Type", entryType);
+                ParseDataHelper.raiseInvalidDataException(Constants.ENTRY_TYPE, entryType);
             }
         }
     }
@@ -245,7 +246,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if(abortion!=null){
             boolean foundAbortionType = AbortionType.checkValidAbortionType(abortion);
             if(!foundAbortionType){
-                ParseDataHelper.raiseInvalidDataException("Abortion", abortion);
+                ParseDataHelper.raiseInvalidDataException(Constants.ABORTION, abortion);
             }
         }
     }
@@ -260,9 +261,9 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if (operatorCode != null) {
             Operator operator = operatorService.getRecordByCode(operatorCode);
             if (operator == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "operatorCode", operatorCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "operatorCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "operatorCode");
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.OPERATOR_CODE, operatorCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.OPERATOR_CODE);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.OPERATOR_CODE);
             }
         }
     }
@@ -277,9 +278,9 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if (circleCode != null) {
             Circle circle = circleService.getRecordByCode(circleCode);
             if (circle == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "circleCode", circleCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "circleCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "circleCode");
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.CIRCLE_CODE, circleCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.CIRCLE_CODE);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.CIRCLE_CODE);
             }
         }
     }
@@ -294,9 +295,9 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         if (llcCode != null) {
             LanguageLocationCode languageLocationCode = languageLocationCodeService.findLLCByCode(llcCode);
             if (languageLocationCode == null) {
-                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "languageLocationCode", llcCode);
-                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "languageLocationCode");
-                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "languageLocationCode");
+                String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.LANGUAGE_LOCATION_CODE, llcCode);
+                String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.LANGUAGE_LOCATION_CODE);
+                throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.LANGUAGE_LOCATION_CODE);
             }
         }
     }
