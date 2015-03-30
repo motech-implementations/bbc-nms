@@ -516,7 +516,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             userProfile = userProfileDetailsService.processUserDetails("1234123412", "circleCode", "12345", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
         // Record 14 status is ANONYMOUS and LanguageLocationCodeId is not null and not present in database, circleCode is null.
@@ -525,7 +525,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             userProfile = userProfileDetailsService.processUserDetails("9999998888", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
     }
@@ -570,7 +570,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     }
 
     @Test
-    public void testValidateOperator() throws DataValidationException{
+    public void testValidateOperator() throws DataValidationException {
 
         // Record 18 Operator is present in Database
 

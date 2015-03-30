@@ -7,6 +7,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.State;
@@ -39,6 +40,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
     @Autowired
     StateService stateService;
+
+    private String circleCodeString = "circle Code";
 
 
     /**
@@ -208,6 +211,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode languageLocationCode = null;
         Long stateCode = null;
+        Circle circle = null;
 
 
         locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
@@ -222,7 +226,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
                 userProfile.setCircle(languageLocationCode.getCircleCode());
             } else {
-                ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
             }
 
         } else {
@@ -240,7 +244,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
                     userProfile.setCircle(null);
                 } else {
-                    ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                    ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
                 }
 
 
@@ -249,7 +253,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(null);
                 userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
-                userProfile.setCircle(null);
+                circle = circleService.getRecordByCode(ConfigurationConstants.UNKNOWN_CIRCLE);
+                userProfile.setCircle(circle.getCode());
 
             }
         }
@@ -339,7 +344,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     frontLineWorker.setCircleCode(circleCode);
 
                 } else {
-                    ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                    ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
 
                 }
             } else {
@@ -408,7 +413,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 frontLineWorker.setOperatorCode(operator.getCode());
                 frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             } else {
-                ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
 
             }
         } else {
@@ -459,7 +464,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
 
         if (langLocCode == null) {
-            ParseDataHelper.raiseInvalidDataException("circleCode", circleCode);
+            ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
         } else {
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setLanguageLocationCode(langLocCode.getLanguageLocationCode());

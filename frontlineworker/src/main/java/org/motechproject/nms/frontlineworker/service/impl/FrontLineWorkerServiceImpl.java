@@ -44,8 +44,8 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     @Override
     public FrontLineWorker getFlwBycontactNo(String contactNo) {
 
-        FrontLineWorker validFrontLineWorker = null;
         FrontLineWorker firstFrontLineWorker = null;
+        FrontLineWorker validFrontLineWorker = null;
         List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.getFlwByContactNo(contactNo);
         if (frontLineWorkerList.size() >= 1) {
             firstFrontLineWorker = frontLineWorkerList.get(0);
@@ -56,10 +56,10 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
                 }
             }
 
-            if (validFrontLineWorker != null) {
-                return validFrontLineWorker;
-            } else {
+            if (validFrontLineWorker == null) {
                 return firstFrontLineWorker;
+            } else {
+                return validFrontLineWorker;
             }
         }
 
