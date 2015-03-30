@@ -41,8 +41,8 @@ public class FrontLineWorkerTest {
 
     @Test
     public void testOperatorId() {
-        frontLineWorker.setOperatorId(123L);
-        assertTrue(123L == frontLineWorker.getOperatorId());
+        frontLineWorker.setOperatorCode("123");
+        assertEquals("123", frontLineWorker.getOperatorCode());
     }
 
     @Test

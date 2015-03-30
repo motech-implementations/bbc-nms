@@ -36,7 +36,7 @@ public class FrontLineWorker extends MdsEntity {
     private Designation designation;
 
     @Field
-    private Long operatorId;
+    private String operatorCode;
 
     @UIDisplayable(position = 4)
     private Long stateCode;
@@ -84,7 +84,7 @@ public class FrontLineWorker extends MdsEntity {
     public FrontLineWorker() {
     }
 
-    public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, Long operatorId,
+    public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, String operatorCode,
                            Long stateCode, State stateId, District districtId, Taluka talukaId,
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
             healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
@@ -93,7 +93,7 @@ public class FrontLineWorker extends MdsEntity {
         this.contactNo = contactNo;
         this.name = name;
         this.designation = designation;
-        this.operatorId = operatorId;
+        this.operatorCode = operatorCode;
         this.stateCode = stateCode;
         this.stateId = stateId;
         this.districtId = districtId;
@@ -141,12 +141,12 @@ public class FrontLineWorker extends MdsEntity {
         this.designation = designation;
     }
 
-    public Long getOperatorId() {
-        return operatorId;
+    public String getOperatorCode() {
+        return operatorCode;
     }
 
-    public void setOperatorId(Long operatorId) {
-        this.operatorId = operatorId;
+    public void setOperatorCode(String operatorCode) {
+        this.operatorCode = operatorCode;
     }
 
     public Long getStateCode() {
