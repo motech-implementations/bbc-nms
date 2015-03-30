@@ -13,8 +13,16 @@ import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -113,7 +121,6 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             operator = testHelper.createOperator();
             operatorService.create(operator);
             assertNotNull(operator);
-
 
 
             FrontLineWorker frontLineWorker;
@@ -492,7 +499,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     }
 
     @Test
-     public void testUpdateLanguageLocationCodeFromMsisdn() throws DataValidationException{
+    public void testUpdateLanguageLocationCodeFromMsisdn() throws DataValidationException {
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         UserProfile userProfile = new UserProfile();
@@ -504,7 +511,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(234, "1121121121");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1121121121");
@@ -525,7 +532,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1414141414");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
         // Record 16 Operator is present in Database
@@ -538,7 +545,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             userProfileDetailsService.validateOperator("1234");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
 

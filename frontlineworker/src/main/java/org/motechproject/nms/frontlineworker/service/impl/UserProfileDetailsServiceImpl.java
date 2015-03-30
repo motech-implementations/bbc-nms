@@ -107,13 +107,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         FrontLineWorker frontLineWorker = null;
         validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
 
-        languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
-        if (languageLocationCodeByParam == null) {
-            ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo(validatedMsisdn);
+        if (frontLineWorker == null) {
+            ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
         } else {
-            frontLineWorker = frontLineWorkerService.getFlwBycontactNo(validatedMsisdn);
-            if (frontLineWorker == null) {
-                ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
+            languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
+            if (languageLocationCodeByParam == null) {
+                ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
             } else {
                 frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
                 frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
