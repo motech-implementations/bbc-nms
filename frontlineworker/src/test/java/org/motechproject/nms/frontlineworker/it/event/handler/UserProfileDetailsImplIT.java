@@ -121,9 +121,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             FrontLineWorker frontLineWorker;
             FrontLineWorker frontLineWorkerdb;
 
-            // Record 1 defaultLanguageLocationCodeId is null And Status is ACTIVE
+            // Record 1 LanguageLocationCodeId is not null, circleCode is Null And Status is ACTIVE
 
-            frontLineWorker = new FrontLineWorker(150L, "1234512345", "Rashi", Designation.USHA,
+            frontLineWorker = new FrontLineWorker(1500L, "1234512345", "Rashi", Designation.USHA,
                     "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.ACTIVE, 123, null);
 
@@ -135,20 +135,30 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234512345");
             assertNotNull(frontLineWorkerdb);
 
-            // Record 2 LanguageLocationCodeId is null And Status is ACTIVE
-/*
-            frontLineWorker = new FrontLineWorker(1500L, "1212121212", "Rashi", Designation.USHA,
-                    123L, 12L, stateData, district, null, null, null,
-                    null, null, null, null, Status.ACTIVE, null, 123);
+            // Record 2 LanguageLocationCodeId is not null, circleCode is not Null And Status is ACTIVE
+
+            frontLineWorker = new FrontLineWorker(1501L, "1212121212", "Rashi", Designation.USHA,
+                    "123", 12L, stateData, district, null, null, null,
+                    null, null, null, null, Status.ACTIVE, 123, "circleCode");
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1212121212");
-            assertNotNull(frontLineWorkerdb);*/
+            assertNotNull(frontLineWorkerdb);
 
 
-            // Record 3 Status is INACTIVE AND defaultLanguageLocationCodeId and LLC is null
+            // Record 3 LanguageLocationCodeId is null, circleCode is Null And Status is ACTIVE
 
-            frontLineWorker = new FrontLineWorker(1501L, "2121212121", "Etasha", Designation.ASHA,
+            frontLineWorker = new FrontLineWorker(1502L, "9999999999", "Rashi", Designation.USHA,
+                    "123", 12L, stateData, district, null, null, null,
+                    null, null, null, null, Status.ACTIVE, null, null);
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9999999999");
+            assertNotNull(frontLineWorkerdb);
+
+            // Record 4 Status is INACTIVE AND LanguageLocationCodeId is null
+
+            frontLineWorker = new FrontLineWorker(1503L, "2121212121", "Etasha", Designation.ASHA,
                     "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.INACTIVE, null, null);
 
@@ -156,14 +166,56 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("2121212121");
             assertNotNull(frontLineWorkerdb);
 
-            // Record 4 status is ANONYMOUS
+            // Record 5 Status is INACTIVE AND LanguageLocationCodeId is not null
 
-            frontLineWorker = new FrontLineWorker(1508L, "1234567890", "Rashi", Designation.USHA,
+            frontLineWorker = new FrontLineWorker(1504L, "8888888888", "Etasha", Designation.ASHA,
+                    "123", 12L, stateData, district, null, null, null,
+                    null, null, null, null, Status.INACTIVE, 123, null);
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("8888888888");
+            assertNotNull(frontLineWorkerdb);
+
+            // Record 6 status is ANONYMOUS LanguageLocationCodeId is not null, Circlecode is null.
+
+            frontLineWorker = new FrontLineWorker(1505L, "1234567890", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
                     null, null, null, null, Status.ANONYMOUS, 123, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234567890");
+            assertNotNull(frontLineWorkerdb);
+
+          /*  // Record 7 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is not null.
+
+            frontLineWorker = new FrontLineWorker(1506L, "1234567899", "Rashi", Designation.USHA,
+                    "123", 12L, null, null, null, null, null,
+                    null, null, null, null, Status.ANONYMOUS, null, "circleCode");
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234567899");
+            assertNotNull(frontLineWorkerdb);
+*/
+            // Record 8 status is ANONYMOUS LanguageLocationCodeId is not null, Circlecode is not null.
+
+            frontLineWorker = new FrontLineWorker(1507L, "1234567999", "Rashi", Designation.USHA,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, Status.ANONYMOUS, 123, "circleCode");
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234567999");
+            assertNotNull(frontLineWorkerdb);
+
+            // Record 9 PhoneNo is not present in Database.
+
+            // Record 10 status is INVALID and LanguageLocationCode, circleCode is not Null
+
+            frontLineWorker = new FrontLineWorker(1508L, "9876543210", "Rashi", Designation.USHA,
+                    "123", 12L, stateData, district, null, null, null,
+                    null, null, null, null, Status.INVALID, 123, "circleCode");
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9876543210");
             assertNotNull(frontLineWorkerdb);
 
         }
@@ -177,8 +229,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     public void testUserProfileDetailsAll() throws DataValidationException {
 
         UserProfile userProfile;
+        FrontLineWorker frontLineWorker;
 
-        // Record 1 defaultLanguageLocationCodeId is null
+        // Record 1 LanguageLocationCodeId is not null, circleCode is Null And Status is ACTIVE
 
         userProfile = userProfileDetailsService.processUserDetails("1234512345", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
@@ -189,9 +242,16 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234512345");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
 
-        // Record 2 LanguageLocationCodeId is null
-/*
+
+         //  Record 2 LanguageLocationCodeId is not null, circleCode is not Null And Status is ACTIVE
+
         userProfile = userProfileDetailsService.processUserDetails("1212121212", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
         assertEquals("circleCode", userProfile.getCircle());
@@ -199,9 +259,34 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertTrue(123 == userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
-        assertEquals(true, userProfile.isDefaultLanguageLocationCode());*/
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
-        // Record 3 status is INACTIVE AND LanguageLocationCodeId and LLC is null
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1212121212");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
+        // Record 3 LanguageLocationCodeId is null, circleCode is Null And Status is ACTIVE
+
+        userProfile = userProfileDetailsService.processUserDetails("9999999999", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals("circleCode", userProfile.getCircle());
+        assertEquals("9999999999", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(false, userProfile.isCreated());
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9999999999");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
+        // Record 4 status is INACTIVE AND LanguageLocationCodeId is null
 
         userProfile = userProfileDetailsService.processUserDetails("2121212121", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
@@ -212,8 +297,32 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("2121212121");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
 
-        // Record 4 status is ANONYMOUS
+        // Record 5 Status is INACTIVE AND LanguageLocationCodeId is not null
+
+        userProfile = userProfileDetailsService.processUserDetails("8888888888", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals("circleCode", userProfile.getCircle());
+        assertEquals("8888888888", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(true, userProfile.isCreated());
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("8888888888");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
+        // Record 6 status is ANONYMOUS and LanguageLocationCodeId is  null, Circlecode is null.
 
         userProfile = userProfileDetailsService.processUserDetails("1234567890", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
@@ -224,7 +333,51 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
-        // Record 5 PhoneNo is not present in Database.
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+/*
+        // Record 7 status is ANONYMOUS LanguageLocationCodeId is not null, Circlecode is not null.
+
+        userProfile = userProfileDetailsService.processUserDetails("1234567899", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals("circleCode", userProfile.getCircle());
+        assertEquals("1234567899", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(false, userProfile.isCreated());
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567899");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());*/
+
+        // Record 8 status is ANONYMOUS LanguageLocationCodeId is not null, Circlecode is not null.
+
+        userProfile = userProfileDetailsService.processUserDetails("1234567999", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals("circleCode", userProfile.getCircle());
+        assertEquals("1234567999", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(false, userProfile.isCreated());
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567999");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
+
+        // Record 9 PhoneNo is not present in Database.
 
         userProfile = userProfileDetailsService.processUserDetails("1231231231", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
@@ -234,5 +387,31 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
+        // Record 10 status is INVALID and LanguageLocationCode, circleCode is not null.
+
+        userProfile = userProfileDetailsService.processUserDetails("9876543210", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals("circleCode", userProfile.getCircle());
+        assertEquals("9876543210", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(true, userProfile.isCreated());
+        assertEquals(false, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9876543210");
+        assertNotNull(frontLineWorker);
+        assertEquals("circleCode", frontLineWorker.getCircleCode());
+        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.INVALID, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
+
     }
 }
