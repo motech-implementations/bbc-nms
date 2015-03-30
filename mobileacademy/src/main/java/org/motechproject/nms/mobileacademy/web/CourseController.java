@@ -39,6 +39,7 @@ public class CourseController extends BaseController {
      * @return the current course in system in JSON format
      */
     @RequestMapping(value = "/course", method = RequestMethod.GET)
+    @ResponseBody
     public String getCourse() throws InternalException {
         LOGGER.debug("getCourse: Started");
         Course course = courseService.getMtrainingCourse();
@@ -58,6 +59,7 @@ public class CourseController extends BaseController {
      * @return the version of the current course in the system in Integer
      */
     @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
+    @ResponseBody
     public String getCourseVersion() throws InternalException {
         LOGGER.debug("getCourseVersion: Started");
         Integer courseVersion = courseService.getCurrentCourseVersion();
