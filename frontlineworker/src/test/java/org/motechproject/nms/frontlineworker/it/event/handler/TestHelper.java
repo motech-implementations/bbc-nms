@@ -119,7 +119,7 @@ public class TestHelper {
 
     public Circle createCircle() {
         circle.setName("circleName");
-        circle.setCode("circlecode");
+        circle.setCode("circleCode");
         circle.setCreator("Etasha");
         circle.setOwner("Etasha");
         circle.setModifiedBy("Etasha");

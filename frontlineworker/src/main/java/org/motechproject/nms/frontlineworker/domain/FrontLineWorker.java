@@ -78,9 +78,7 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private Integer languageLocationCodeId = null;
 
-    @UIDisplayable(position = 7)
-    @Field
-    private Integer defaultLanguageLocationCodeId = null;
+    private String circleCode = null;
 
 
     public FrontLineWorker() {
@@ -90,7 +88,7 @@ public class FrontLineWorker extends MdsEntity {
                            Long stateCode, State stateId, District districtId, Taluka talukaId,
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
             healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
-                           Status status, Integer languageLocationCodeId, Integer defaultLanguageLocationCodeId) {
+                           Status status, Integer languageLocationCodeId, String circleCode) {
         this.flwId = flwId;
         this.contactNo = contactNo;
         this.name = name;
@@ -108,7 +106,7 @@ public class FrontLineWorker extends MdsEntity {
         this.adhaarNumber = adhaarNumber;
         this.status = status;
         this.languageLocationCodeId = languageLocationCodeId;
-        this.defaultLanguageLocationCodeId = defaultLanguageLocationCodeId;
+        this.circleCode = circleCode;
     }
 
     public Long getFlwId() {
@@ -247,11 +245,11 @@ public class FrontLineWorker extends MdsEntity {
         this.languageLocationCodeId = languageLocationCodeId;
     }
 
-    public Integer getDefaultLanguageLocationCodeId() {
-        return defaultLanguageLocationCodeId;
+    public String getCircleCode() {
+        return circleCode;
     }
 
-    public void setDefaultLanguageLocationCodeId(Integer defaultLanguageLocationCodeId) {
-        this.defaultLanguageLocationCodeId = defaultLanguageLocationCodeId;
+    public void setCircleCode(String circleCode) {
+        this.circleCode = circleCode;
     }
 }

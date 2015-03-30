@@ -75,10 +75,4 @@ public class FrontLineWorkerTest {
         assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
     }
 
-    @Test
-    public void testDefaultLanguageLocationCodeId() {
-        frontLineWorker.setDefaultLanguageLocationCodeId(123);
-        assertTrue(123 == frontLineWorker.getDefaultLanguageLocationCodeId());
-    }
-
 }
