@@ -457,14 +457,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public int getCurrentCourseVersion() {
+    public Integer getCurrentCourseVersion() {
         Course course = getMtrainingCourse();
         if (course == null || course.getState() == CourseUnitState.Inactive) {
-            return -1;
+            return null;
         }
         DateTime date = course.getModificationDate();
         LOGGER.debug("Course version returned :{} in milliSeconds",
                 date.getMillis());
+
         return (int) (date.getMillis() / MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
     }
 

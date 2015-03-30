@@ -1,7 +1,5 @@
 package org.motechproject.nms.mobileacademy.web;
 
-import java.util.Enumeration;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -67,6 +65,27 @@ public class BaseController {
     }
 
     /**
+     * Handle Internal exception i.e. course not present or course upload is
+     * ongoing
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { InternalException.class })
+    public ResponseEntity<String> handleInternalException(
+            final InternalException exception, final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
+                + "\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * Handle General Exceptions occur on server side i.e null pointer(500)
      *
      * @param exception
@@ -97,33 +116,15 @@ public class BaseController {
     }
 
     /**
-     * Log incoming Request Details in case exception occur.
+     * Log incoming Request Details
      * 
      * @param request
      */
     private void logRequestDetails(final HttpServletRequest request) {
-        try {
-            StringBuilder details = new StringBuilder("Request Details:\n");
-            details.append("URL: " + request.getRequestURL() + "\n");
-            details.append("Method Type: " + request.getMethod() + "  ");
-            details.append("Content Type: " + request.getContentType() + "\n");
-            // Log request parameters for get request
-            if ("GET".equalsIgnoreCase(request.getMethod())) {
-                details.append("Query Parameters:\n");
-                Enumeration<?> params = request.getParameterNames();
-                while (params.hasMoreElements()) {
-                    String paramName = (String) params.nextElement();
-                    details.append(paramName + ":"
-                            + request.getParameter(paramName) + " ");
-                }
-                details.append("\n");
-            }
-            LOGGER.error(details.toString());
-        } catch (Exception e) {
-            LOGGER.error(
-                    "Error occured while finding Input Request details for logging",
-                    e);
-        }
+        StringBuilder details = new StringBuilder("Request Details:\n");
+        details.append("URL: " + request.getRequestURL() + "\n");
+        details.append("Content Type: " + request.getContentType() + "\n");
+        details.append("Parameter Map: " + request.getParameterMap() + "\n");
+        LOGGER.error(details.toString());
     }
-
 }
