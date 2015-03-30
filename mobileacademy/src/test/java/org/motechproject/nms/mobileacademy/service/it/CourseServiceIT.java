@@ -116,7 +116,7 @@ public class CourseServiceIT extends BasePaxIT {
     @Test
     public void testGetCurrentCourseVersion() {
         clearMobileAcademyData();
-        assertEquals(-1, courseService.getCurrentCourseVersion());
+        assertNull(courseService.getCurrentCourseVersion());
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
 
@@ -131,7 +131,7 @@ public class CourseServiceIT extends BasePaxIT {
     @Test
     public void testUpdateCourseVersion() {
         clearMobileAcademyData();
-        assertEquals(-1, courseService.getCurrentCourseVersion());
+        assertNull(courseService.getCurrentCourseVersion());
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
 
@@ -156,7 +156,7 @@ public class CourseServiceIT extends BasePaxIT {
     @Test
     public void testGetCourseJson() {
         clearMobileAcademyData();
-        assertEquals(-1, courseService.getCurrentCourseVersion());
+        assertNull(courseService.getCurrentCourseVersion());
 
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)

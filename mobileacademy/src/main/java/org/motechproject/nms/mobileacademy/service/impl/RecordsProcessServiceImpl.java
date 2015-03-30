@@ -118,7 +118,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 .getListOfAllExistingLlcs();
         OperatorDetails operatorDetails = new OperatorDetails();
 
-        if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
+        if (CollectionUtils.isNotEmpty(courseContentCsvs)
+                && listOfExistingLlc != null) {
             // set user details from first record
             operatorDetails.setCreator(courseContentCsvs.get(0).getCreator());
             bulkUploadStatus.setUploadedBy(operatorDetails.getCreator());
@@ -146,13 +147,22 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 }
                 int languageLocCode = Integer.parseInt(courseContentCsv
                         .getLanguageLocationCode());
+                /*
+                 * If LLC corresponding to record exists, consider the record
+                 * for modification of course
+                 */
                 if (listOfExistingLlc.contains(languageLocCode)) {
                     RecordsProcessHelper.putRecordInModifyMap(
                             mapForModifyRecords, courseContentCsv);
                     LOGGER.debug(
                             "Record moved to Modify Map for Content ID: {}",
                             courseContentCsv.getContentId());
-                } else {
+                }
+                /*
+                 * If LLC corresponding to record doesn'tt exist, consider the
+                 * record for addition of course
+                 */
+                else {
                     RecordsProcessHelper.putRecordInAddMap(mapForAddRecords,
                             courseContentCsv);
                     LOGGER.debug(
@@ -162,10 +172,12 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 recordIterator.remove();
             }
         }
+
         processAddRecords(mapForAddRecords, bulkUploadError, bulkUploadStatus,
                 operatorDetails);
         processModificationRecords(mapForModifyRecords, bulkUploadError,
                 bulkUploadStatus, operatorDetails);
+
         bulkUploadErrLogService
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
         LOGGER.info("Finished processing CircleCsv-import success");
@@ -180,64 +192,76 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
             OperatorDetails operatorDetails) {
         if (!mapForModifyRecords.isEmpty()) {
+            /* Iterator for different content names */
             Iterator<String> contentNamesIterator = mapForModifyRecords
                     .keySet().iterator();
             while (contentNamesIterator.hasNext()) {
                 String contentName = contentNamesIterator.next();
-                List<CourseContentCsv> courseContentCsvs = mapForModifyRecords
+                List<CourseContentCsv> csvRecordList = mapForModifyRecords
                         .get(contentName);
-                if (CollectionUtils.isNotEmpty(courseContentCsvs)) {
-                    Iterator<CourseContentCsv> courseRawContentsIterator = courseContentCsvs
+                if (CollectionUtils.isNotEmpty(csvRecordList)) {
+                    /*
+                     * Iterator for records of different LLCs for a specific
+                     * content name
+                     */
+                    Iterator<CourseContentCsv> csvRecordIterator = csvRecordList
                             .iterator();
 
-                    while (courseRawContentsIterator.hasNext()) {
-                        CourseContentCsv courseContentCsv = courseRawContentsIterator
-                                .next();
+                    while (csvRecordIterator.hasNext()) {
+                        CourseContentCsv csvRecord = csvRecordIterator.next();
                         Record record = new Record();
                         try {
-                            RecordsProcessHelper.validateRawContent(
-                                    courseContentCsv, record);
+                            RecordsProcessHelper.validateRawContent(csvRecord,
+                                    record);
                         } catch (DataValidationException exc) {
                             LOGGER.warn(
                                     "Record Validation failed for content ID: {}",
-                                    courseContentCsv.getContentId());
+                                    csvRecord.getContentId());
                             RecordsProcessHelper.processError(bulkUploadError,
-                                    exc, courseContentCsv.getContentId());
+                                    exc, csvRecord.getContentId());
                             bulkUploadErrLogService
                                     .writeBulkUploadErrLog(bulkUploadError);
                             bulkUploadStatus.incrementFailureCount();
-                            courseRawContentsIterator.remove();
-                            courseContentCsvService.delete(courseContentCsv);
+                            csvRecordIterator.remove();
+                            courseContentCsvService.delete(csvRecord);
                             continue;
                         }
+
+                        /*
+                         * If Record is changing the Audio File name or correct
+                         * answer option for a question, process it at last. Let
+                         * them remain on map
+                         */
                         if (isRecordChangingTheFileName(record)
                                 || isRecordChangingTheAnswerOption(record)) {
                             continue;
-                        } else {
-                            int languageLocCode = Integer
-                                    .parseInt(courseContentCsv
-                                            .getLanguageLocationCode());
+                        }
+                        /*
+                         * Records corresponding to ContentID and Duration
+                         * change will be processed here.
+                         */
+                        else {
+                            int languageLocCode = Integer.parseInt(csvRecord
+                                    .getLanguageLocationCode());
                             CourseProcessedContent courseProcessedContent = courseProcessedContentService
                                     .getRecordforModification(
-                                            courseContentCsv.getCircle(),
+                                            csvRecord.getCircle(),
                                             languageLocCode,
-                                            courseContentCsv.getContentName());
+                                            csvRecord.getContentName());
                             if (courseProcessedContent != null) {
                                 int contentDuration = Integer
-                                        .parseInt(courseContentCsv
+                                        .parseInt(csvRecord
                                                 .getContentDuration());
-                                int contentId = Integer
-                                        .parseInt(courseContentCsv
-                                                .getContentId());
+                                int contentId = Integer.parseInt(csvRecord
+                                        .getContentId());
                                 if ((courseProcessedContent
                                         .getContentDuration() != contentDuration)
                                         && (courseProcessedContent
                                                 .getContentID() != contentId)) {
                                     LOGGER.info(
                                             "ContentID and duration updated for content name: {}, LLC: {}",
-                                            courseContentCsv.getContentName(),
-                                            courseContentCsv
-                                                    .getLanguageLocationCode());
+                                            csvRecord.getContentName(),
+                                            csvRecord.getLanguageLocationCode());
                                     courseProcessedContent
                                             .setContentDuration(contentDuration);
                                     courseProcessedContent
@@ -250,13 +274,13 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                 }
                             }
                             bulkUploadStatus.incrementSuccessCount();
-                            courseRawContentsIterator.remove();
-                            courseContentCsvService.delete(courseContentCsv);
+                            csvRecordIterator.remove();
+                            courseContentCsvService.delete(csvRecord);
                         }
                     }
                 }
-                courseContentCsvs = mapForModifyRecords.get(contentName);
-                if (CollectionUtils.isEmpty(courseContentCsvs)) {
+                csvRecordList = mapForModifyRecords.get(contentName);
+                if (CollectionUtils.isEmpty(csvRecordList)) {
                     contentNamesIterator.remove();
                 }
             }

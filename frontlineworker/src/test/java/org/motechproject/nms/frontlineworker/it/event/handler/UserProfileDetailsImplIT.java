@@ -124,7 +124,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             // Record 1 defaultLanguageLocationCodeId is null And Status is ACTIVE
 
             frontLineWorker = new FrontLineWorker(150L, "1234512345", "Rashi", Designation.USHA,
-                    123L, 12L, stateData, district, null, null, null,
+                    "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.ACTIVE, 123, null);
 
             frontLineWorker.setCreator("Etasha");
@@ -149,7 +149,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             // Record 3 Status is INACTIVE AND defaultLanguageLocationCodeId and LLC is null
 
             frontLineWorker = new FrontLineWorker(1501L, "2121212121", "Etasha", Designation.ASHA,
-                    123L, 12L, stateData, district, null, null, null,
+                    "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.INACTIVE, null, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
