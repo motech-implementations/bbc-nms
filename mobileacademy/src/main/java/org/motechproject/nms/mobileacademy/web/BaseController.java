@@ -67,6 +67,27 @@ public class BaseController {
     }
 
     /**
+     * Handle Internal exception i.e. course not present or course upload is
+     * ongoing
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { InternalException.class })
+    public ResponseEntity<String> handleInternalException(
+            final InternalException exception, final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
+                + "\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * Handle General Exceptions occur on server side i.e null pointer(500)
      *
      * @param exception
