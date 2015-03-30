@@ -36,12 +36,9 @@ public class CourseController extends BaseController {
         LOGGER.debug("getCourse: Started");
         ResponseEntity<String> respose;
         Course course = courseService.getMtrainingCourse();
-        if (course == null) {
+        if (course == null || course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             respose = getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
-        } else if (course.getState() == CourseUnitState.Inactive) {
-            LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-            respose = getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
         } else {
             String courseJson = courseService.getCourseJson();
             respose = new ResponseEntity<String>(courseJson, HttpStatus.OK);
@@ -58,15 +55,11 @@ public class CourseController extends BaseController {
     @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
     public ResponseEntity<String> getCourseVersion() {
         LOGGER.debug("getCourseVersion: Started");
-        Course course = courseService.getMtrainingCourse();
         int courseVersion = courseService.getCurrentCourseVersion();
         ResponseEntity<String> respose;
-        if (course == null || courseVersion == -1) {
+        if (courseVersion == -1) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
             respose = getErrorResponse(MobileAcademyConstants.NO_COURSE_PRESENT);
-        } else if (course.getState() == CourseUnitState.Inactive) {
-            LOGGER.error(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
-            respose = getErrorResponse(MobileAcademyConstants.COURSE_UPLOAD_ONGOING);
         } else {
             respose = new ResponseEntity<String>(getJsonNode(
                     MobileAcademyConstants.COURSE_KEY_VERSION, courseVersion),
