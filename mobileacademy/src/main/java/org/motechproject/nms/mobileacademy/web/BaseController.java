@@ -1,5 +1,7 @@
 package org.motechproject.nms.mobileacademy.web;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -95,15 +97,33 @@ public class BaseController {
     }
 
     /**
-     * Log incoming Request Details
+     * Log incoming Request Details in case exception occur.
      * 
      * @param request
      */
     private void logRequestDetails(final HttpServletRequest request) {
-        StringBuilder details = new StringBuilder("Request Details:\n");
-        details.append("URL: " + request.getRequestURL() + "\n");
-        details.append("Content Type: " + request.getContentType() + "\n");
-        details.append("Parameter Map: " + request.getParameterMap() + "\n");
-        LOGGER.error(details.toString());
+        try {
+            StringBuilder details = new StringBuilder("Request Details:\n");
+            details.append("URL: " + request.getRequestURL() + "\n");
+            details.append("Method Type: " + request.getMethod() + "  ");
+            details.append("Content Type: " + request.getContentType() + "\n");
+            // Log request parameters for get request
+            if ("GET".equalsIgnoreCase(request.getMethod())) {
+                details.append("Query Parameters:\n");
+                Enumeration<?> params = request.getParameterNames();
+                while (params.hasMoreElements()) {
+                    String paramName = (String) params.nextElement();
+                    details.append(paramName + ":"
+                            + request.getParameter(paramName) + " ");
+                }
+                details.append("\n");
+            }
+            LOGGER.error(details.toString());
+        } catch (Exception e) {
+            LOGGER.error(
+                    "Error occured while finding Input Request details for logging",
+                    e);
+        }
     }
+
 }
