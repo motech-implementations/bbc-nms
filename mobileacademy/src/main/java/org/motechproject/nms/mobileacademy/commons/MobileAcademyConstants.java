@@ -98,8 +98,6 @@ public class MobileAcademyConstants {
 
     public static final String COURSE_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.mobileacademy.CourseContentCsv.csv-import.success";
 
-    public static final String COURSE_CSV_UPLOAD_FAILURE_EVENT = "mds.crud.mobileacademy.CourseContentCsv.csv-import.failure";
-
     public static final String TWO_DIGIT_INTEGER_FORMAT = "%02d";
 
     public static final String INCONSISTENT_DATA_MESSAGE = "inconsistent data for [ %s ]";
