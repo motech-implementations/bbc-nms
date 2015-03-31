@@ -473,7 +473,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
 
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1231231231");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
         assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
