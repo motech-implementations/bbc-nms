@@ -423,6 +423,81 @@ public class UserDetailsServiceImplTest {
     }
 
     /**
+     * test Find User Details when Default Llc is false, llc value is not null
+     * and national capping in enabled and national cap value is null.
+     * 
+     * @throws DataValidationException
+     * @throws Exception
+     */
+    @Test
+    public void testFindUserDetailsForNationalCappingWhenValueIsnull()
+            throws DataValidationException, Exception {
+        // set the input details
+        String callingNumber = "9990632906";
+        String operator = "99";
+        String circle = "UP";
+        String callId = "123456789";
+        // Stub the service methods and responses
+        UserProfile userProfile = new UserProfile();
+        userProfile.setCircle("99");
+        userProfile.setCreated(true);
+        userProfile.setIsDefaultLanguageLocationCode(false);// default false
+        userProfile.setLanguageLocationCode(2);
+        userProfile.setNmsFlwId(11l);
+        userProfile.setMaxStateLevelCappingValue(5);// capping
+
+        Configuration configuration = new Configuration();
+        configuration
+                .setIndex(MobileAcademyConstants.CONFIG_DEFAULT_RECORD_INDEX);
+        // national capping
+        configuration.setCappingType(CappingType.NATIONAL_CAPPING.getValue());
+        configuration
+                .setCourseQualifyingScore(MobileAcademyConstants.CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE);
+        // national default llc
+        configuration.setDefaultLanguageLocationCode(121);
+        configuration
+                .setMaxAllowedEndOfUsagePrompt(MobileAcademyConstants.CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT);
+        // National cap value set to null
+        configuration.setNationalCapValue(null);
+        configuration
+                .setSmsSenderAddress(MobileAcademyConstants.CONFIG_DEFAULT_SMS_SENDER_ADDRESS);
+
+        FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
+        flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
+        flwUsageDetail.setCurrentUsageInPulses(0);
+        flwUsageDetail.setEndOfUsagePromptCounter(0);
+
+        when(
+                userProfileDetailsService.processUserDetails(callingNumber,
+                        circle, operator,
+                        ServicesUsingFrontLineWorker.MOBILEACADEMY))
+                .thenReturn(userProfile);
+        when(configurationService.getConfiguration()).thenReturn(configuration);
+
+        when(flwUsageDetailService.findByFlwId(11l)).thenReturn(flwUsageDetail);
+
+        try {
+            User userResponse = userDetailsService.findUserDetails(
+                    callingNumber, operator, circle, callId);
+            // Assertions
+            assertEquals(null, userResponse.getDefaultLanguageLocationCode());
+            assertTrue(2 == userResponse.getLanguageLocationCode());
+            assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
+                    userResponse.getCurrentUsageInPulses());
+            assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
+                    userResponse.getEndOfUsagePromptCounter());
+            assertEquals(configuration.getMaxAllowedEndOfUsagePrompt(),
+                    userResponse.getMaxAllowedEndOfUsagePrompt());
+            assertTrue(MobileAcademyConstants.MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED == userResponse
+                    .getMaxAllowedUsageInPulses());
+        } catch (DataValidationException e) {
+            assertFalse(true);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
+
+    /**
      * test Set Language Location Code
      * 
      * @throws NumberFormatException
