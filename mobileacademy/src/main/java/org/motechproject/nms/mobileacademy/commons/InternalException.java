@@ -1,4 +1,4 @@
-package org.motechproject.nms.mobileacademy.web;
+package org.motechproject.nms.mobileacademy.commons;
 
 
 public class InternalException extends Exception {

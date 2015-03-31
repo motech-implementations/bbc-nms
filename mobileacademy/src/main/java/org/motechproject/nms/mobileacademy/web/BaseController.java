@@ -5,6 +5,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.motechproject.nms.mobileacademy.commons.InternalException;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

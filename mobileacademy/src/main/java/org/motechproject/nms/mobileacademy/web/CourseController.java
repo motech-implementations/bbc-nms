@@ -3,6 +3,7 @@ package org.motechproject.nms.mobileacademy.web;
 import org.apache.log4j.Logger;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.nms.mobileacademy.commons.InternalException;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.dto.BookmarkWithScore;
 import org.motechproject.nms.mobileacademy.service.CourseService;
