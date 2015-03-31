@@ -252,6 +252,10 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             assertNotNull(frontLineWorkerdb);
 
             // Record 15
+
+            // Record 16 Operator is present in Database
+
+            // Record 17 Operator is not present in Database
         }
         // do the setup
         setUpIsDone = true;
@@ -261,7 +265,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
 
     @Test
-    public void testUserDetailsAll() throws DataValidationException {
+    public void testprocessUserDetailsAll() throws DataValidationException {
 
         UserProfile userProfile;
         FrontLineWorker frontLineWorker;
@@ -495,6 +499,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
 
         // Record 13 LanguageLocationCode not Exist in Database.
+
         try {
             userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(234, "1121121121");
         } catch (Exception e) {
@@ -514,7 +519,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
 
-        // Record 15
+        // Record 15 LanguageLocationCode should Exist but FrontlineWorker constructor not present..
 
         try {
             userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1414141414");
@@ -523,13 +528,18 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
-        // Record 16
+        // Record 16 Operator is present in Database
 
+        userProfileDetailsService.validateOperator("123");
 
+        // Record 17 Operator is not present in Database
 
-
-
-
+        try {
+            userProfileDetailsService.validateOperator("1234");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
 
 
     }
