@@ -75,7 +75,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      */
     private Integer executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query) {
 
-        /* get the list of distinct MA languageLocationCodes for the circle */
+        /* get the list of distinct languageLocationCodes for the circle */
         List<Integer> llcList = languageLocationCodeDataService.executeQuery(query);
 
         /* If a unique languageLocationCode is found then return it else return null */
@@ -169,7 +169,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     /**
-     * This method returns the value of MA language location code for a circle
+     * This method returns the value of language location code for a circle
      *
      * @param circleCode code of the circle for which language location code is to determined
      * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
@@ -182,7 +182,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     /**
-     * This method returns the value of default MA language location code for a circle
+     * This method returns the value of default language location code for a circle
      *
      * @param circleCode code of the circle for which default language location code is to determined
      * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,

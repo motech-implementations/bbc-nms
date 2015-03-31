@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.it;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -136,6 +137,11 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
 
     private void clearId() {
         createdIds.clear();
+    }
+
+    @After
+    public void tearDown() {
+        stateService.deleteAll();
     }
 
     private void createHealthSubFacilityCsvData(HealthSubFacilityCsv csvData) {
