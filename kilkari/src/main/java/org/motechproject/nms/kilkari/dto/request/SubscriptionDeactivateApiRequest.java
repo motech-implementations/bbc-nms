@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.dto.request;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -71,15 +72,15 @@ public class SubscriptionDeactivateApiRequest {
      * @throws DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameter() throws DataValidationException{
-        ParseDataHelper.validateAndTrimMsisdn("calledNumber",
-                ParseDataHelper.validateAndParseString("calledNumber", calledNumber, true));
-        ParseDataHelper.validateAndParseString("operator", operator, true);
-        ParseDataHelper.validateAndParseString("circle", circle, true);
-        ParseDataHelper.validateAndParseString("callId", callId, true);
+        calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER,
+                ParseDataHelper.validateAndParseString(Constants.CALLED_NUMBER, calledNumber, true));
+        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
         if (subscriptionId == null) {
-            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, "subscriptionId", subscriptionId);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, "subscriptionId");
-            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, "subscriptionId");
+            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.SUBSCRIPTION_ID, subscriptionId);
+            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.SUBSCRIPTION_ID);
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.SUBSCRIPTION_ID);
         }
     }
 }

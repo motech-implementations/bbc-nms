@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.web;
 
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
@@ -41,8 +42,8 @@ public class SubscriptionController extends BaseController {
     @ResponseBody
     public void createSubscription(@RequestBody SubscriptionCreateApiRequest apiRequest)
             throws DataValidationException, NmsInternalServerError {
-        logger.info("*****createSubscription is invoked******");
-        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("createSubscription: started");
+        logger.debug("createSubscription Request Parameters");
         logger.debug("callingNumber : [" + apiRequest.getCallingNumber() + "]");
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
@@ -51,7 +52,7 @@ public class SubscriptionController extends BaseController {
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
         apiRequest.validateMandatoryParameters();
         subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle(), apiRequest.getLanguageLocationCode());
-        logger.trace("Finished processing createSubscription");
+        logger.trace("createSubscription: End");
     }
 
     /**
@@ -61,8 +62,8 @@ public class SubscriptionController extends BaseController {
     @RequestMapping(value = "/subscription", method = RequestMethod.DELETE)
     @ResponseBody
     public void deactivateSubscription(@RequestBody SubscriptionDeactivateApiRequest apiRequest) throws DataValidationException{
-        logger.info("*****deactivateSubscription is invoked******");
-        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("deactivateSubscription: started");
+        logger.debug("DeactivateSubscription Request Parameters");
         logger.debug("calledNumber : [" + apiRequest.getCalledNumber() + "]");
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
@@ -71,7 +72,7 @@ public class SubscriptionController extends BaseController {
         apiRequest.validateMandatoryParameter();
         subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId(),
                 apiRequest.getOperator(), apiRequest.getCircle());
-        logger.trace("Finished processing deactivateSubscription");
+        logger.trace("deactivateSubscription: End");
     }
 
     /**
@@ -83,8 +84,8 @@ public class SubscriptionController extends BaseController {
     public SubscriberDetailApiResponse getSubscriberDetails(@RequestParam String callingNumber, @RequestParam String operator,
                                        @RequestParam String circle, @RequestParam String callId)
             throws DataValidationException, NmsInternalServerError {
-        logger.info("*****getSubscriberDetails is invoked******");
-        logger.debug("***************Deactivate Subscription Request Parameter*****************");
+        logger.debug("getSubscriberDetails: started");
+        logger.debug("getSubscriberDetails Request Parameters");
         logger.debug("callingNumber : [" + callingNumber + "]");
         logger.debug("operator : [" + operator + "]");
         logger.debug("circle : [" + circle + "]");
@@ -92,7 +93,7 @@ public class SubscriptionController extends BaseController {
         SubscriberDetailApiResponse response;
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
             response = userDetailsService.getSubscriberDetails(callingNumber, circle, operator);
-        logger.trace("Finished processing getUserDetails");
+        logger.trace("getUserDetails: End");
         return response;
     }
 
@@ -106,10 +107,11 @@ public class SubscriptionController extends BaseController {
      */
     public void validateSubscriberDetailsRequestParams(
             String msisdn, String operator, String circle, String callId) throws DataValidationException {
-        ParseDataHelper.validateAndTrimMsisdn("callingNumber",
-                ParseDataHelper.validateAndParseString("callingNumber", msisdn, true));
-        ParseDataHelper.validateAndParseString("operator", operator, true);
-        ParseDataHelper.validateAndParseString("circle", circle, true);
-        ParseDataHelper.validateLengthOfCallId("callId", callId);
+        msisdn = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, msisdn, true));
+        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,
+                ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
     }
 }

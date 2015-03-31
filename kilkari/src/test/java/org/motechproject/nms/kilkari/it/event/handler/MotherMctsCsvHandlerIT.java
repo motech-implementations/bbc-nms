@@ -327,7 +327,6 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv1 = createMotherMcts(csv1);
         csv1.setWhomPhoneNo("1000000013");
         csv1.setIdNo("7");
-        csv1.setOperation("Del");
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid

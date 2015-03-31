@@ -12,9 +12,6 @@ import org.motechproject.mds.domain.MdsEntity;
 public class MctsCsv extends MdsEntity {
     
     @Field
-    private String operation;
-
-    @Field
     private String stateCode;
 
     @Field
@@ -43,14 +40,6 @@ public class MctsCsv extends MdsEntity {
     
     @Field
     private String entryType;
-
-    public String getOperation() {
-        return operation;
-    }
-
-    public void setOperation(String operation) {
-        this.operation = operation;
-    }
 
     public String getStateCode() {
         return stateCode;

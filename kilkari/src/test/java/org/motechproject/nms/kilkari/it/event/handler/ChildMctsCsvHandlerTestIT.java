@@ -206,7 +206,6 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("43");
         csv1.setIdNo("42");
-        csv1.setOperation("Del");
         ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid

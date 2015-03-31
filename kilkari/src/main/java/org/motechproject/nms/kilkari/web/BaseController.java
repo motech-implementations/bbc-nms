@@ -63,6 +63,7 @@ public class BaseController {
     @ExceptionHandler(value = { NmsInternalServerError.class, Exception.class })
     public ResponseEntity<String> handleGeneralExceptions(
             final Exception exception, final WebRequest request) {
+
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
         return new ResponseEntity<String>(responseJson,

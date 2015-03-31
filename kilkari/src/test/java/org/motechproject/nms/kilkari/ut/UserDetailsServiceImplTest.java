@@ -120,7 +120,7 @@ public class UserDetailsServiceImplTest {
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
-        when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(789);
+        when(llcService.getRecordByLocationCode(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, 789, "circleCode"));
         when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
@@ -130,7 +130,7 @@ public class UserDetailsServiceImplTest {
             //Do Assertions.
             Assert.assertTrue(response.getLanguageLocationCode() == 789);
             Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
-            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertEquals(response.getCircle(), "circleCode");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);
@@ -514,7 +514,7 @@ public class UserDetailsServiceImplTest {
         //Stub the service methods
         when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
         when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
-        when(llcService.getLanguageLocationCodeByLocationCode(1L, 1L)).thenReturn(null);
+        when(llcService.getRecordByLocationCode(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, null, "circleCode"));
         when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
 
         //invoke the userDetailService.
@@ -524,7 +524,7 @@ public class UserDetailsServiceImplTest {
             //Do Assertions.
             Assert.assertNull(response.getLanguageLocationCode());
             Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
-            Assert.assertEquals(response.getCircle(), "AP");
+            Assert.assertEquals(response.getCircle(), "circleCode");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
         } catch (DataValidationException ex) {
             Assert.assertNull(response);

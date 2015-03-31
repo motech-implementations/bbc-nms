@@ -113,7 +113,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         preSetUp();
         BeneficiaryType beneficiaryType;
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"48WeeksPack");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111",29,"48WeeksPack");
 
         try {
             subscriptionController.createSubscription(apiRequest);

@@ -24,9 +24,6 @@ public class MctsCsvTest {
         mctsCsv.setIdNo("idNo");
         Assert.assertEquals("idNo",mctsCsv.getIdNo());
 
-        mctsCsv.setOperation("operation");
-        Assert.assertEquals("operation",mctsCsv.getOperation());
-
         mctsCsv.setPhcCode("phcCode");
         Assert.assertEquals("phcCode",mctsCsv.getPhcCode());
 

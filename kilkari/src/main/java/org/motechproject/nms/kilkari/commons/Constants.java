@@ -90,4 +90,13 @@ public final class Constants {
 
     public static final String CIRCLE_CODE = "Circle Code";
 
+    public static final String CALL_ID = "Call Id";
+
+    public static final String CALLED_NUMBER = "Called Number";
+
+    public static final String SUBSCRIPTION_ID = "Subscription Id";
+
+    public static final String SUBSCRIPTION_PACK = "Subscription Pack";
+
+    public static final String CALLING_NUMBER = "Calling Number";
 }

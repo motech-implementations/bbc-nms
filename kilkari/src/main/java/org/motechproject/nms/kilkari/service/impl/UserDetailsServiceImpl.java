@@ -5,6 +5,7 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -108,9 +109,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private void getLLCCodeByStateDistrict(
             Long stateCode, Long districtCode, SubscriberDetailApiResponse response) throws NmsInternalServerError {
-        Integer llcCode = llcService.getLanguageLocationCodeByLocationCode(stateCode, districtCode);
-        if (llcCode != null) {
-            response.setLanguageLocationCode(llcCode);
+        LanguageLocationCode llcCodeRecord = llcService.getRecordByLocationCode(stateCode, districtCode);
+        if (llcCodeRecord != null) {
+            response.setLanguageLocationCode(llcCodeRecord.getLanguageLocationCode());
+            response.setCircle(llcCodeRecord.getCircleCode());
         } else {
             String errMessage = "languageLocationCode could not be determined for stateCode : "
                     + stateCode +" and districtCode " + districtCode;

@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkari.dto.request;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
@@ -81,7 +82,7 @@ public class SubscriptionCreateApiRequest {
     }
 
     /**
-     * This method creates a subscriber object by subscrition api request
+     * This method creates a subscriber object by subscription api request
      * @return subscriber type object
      */
     public Subscriber toSubscriber() {
@@ -105,16 +106,18 @@ public class SubscriptionCreateApiRequest {
      * @throws DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameters() throws DataValidationException{
-        String msisdn = ParseDataHelper.validateAndParseString("callingNumber", callingNumber, true);
-        ParseDataHelper.validateAndTrimMsisdn("callingNumber", msisdn);
-        ParseDataHelper.validateAndParseString("operator", operator, true);
-        ParseDataHelper.validateAndParseString("circle", circle, true);
-        ParseDataHelper.validateAndParseString("callId", callId, true);
+        callingNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, callingNumber, true));
+        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,
+                ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
+
         if(SubscriptionPack.findByName(subscriptionPack) == null) {
-            ParseDataHelper.raiseInvalidDataException("subscriptionPack", subscriptionPack);
+            ParseDataHelper.raiseInvalidDataException(Constants.SUBSCRIPTION_PACK, subscriptionPack);
         }
         if (languageLocationCode == null) {
-            ParseDataHelper.raiseInvalidDataException("languageLocationCode", null);
+            ParseDataHelper.raiseInvalidDataException(Constants.LANGUAGE_LOCATION_CODE, null);
         }
     }
 }

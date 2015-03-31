@@ -365,6 +365,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode,
                                              Integer llcCode) throws DataValidationException, NmsInternalServerError {
+        SubscriptionPack pack = null;
+        if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
+           pack = SubscriptionPack.PACK_48_WEEKS;
+        } else {
+            pack = SubscriptionPack.PACK_72_WEEKS;
+        }
+        Subscription subscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack);
+        if (subscription != null) {
+            String errMessage = String.format("Subscription already exists for msisdn : %s and SubscriptionPack : %s", subscriber.getMsisdn(), pack.toString());
+            throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+        }
         commonValidatorService.validateCircle(circleCode);
         commonValidatorService.validateOperator(operatorCode);
         commonValidatorService.validateLanguageLocationCode(llcCode);
