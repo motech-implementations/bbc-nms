@@ -62,11 +62,14 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
         languageLocationCodeData.setStateCode(123L);
         languageLocationCodeData.setDistrictCode(345L);
         languageLocationCodeData.setLanguageLocationCode(100);
+        LanguageLocationCodeServiceImpl languageLocationCodeServiceImpl=new LanguageLocationCodeServiceImpl(languageLocationCodeDataService,circleService);
 
         when(languageLocationCodeDataService.findByLocationCode(123L, 345L)).thenReturn(languageLocationCodeData);
 
         assertNotNull(languageLocationCodeService.getRecordByLocationCode(123L, 345L).getLanguageLocationCode());
         assertTrue(100 == languageLocationCodeService.getRecordByLocationCode(123L, 345L).getLanguageLocationCode());
+        assertEquals(0, Integer.compare(languageLocationCodeData.getLanguageLocationCode(), languageLocationCodeServiceImpl.getLanguageLocationCodeByLocationCode(languageLocationCodeData.getStateCode(), languageLocationCodeData.getDistrictCode())));
+        assertEquals(1,Integer.compare(123, languageLocationCodeServiceImpl.getLanguageLocationCodeByLocationCode(languageLocationCodeData.getStateCode(), languageLocationCodeData.getDistrictCode())));
 
     }
 
@@ -94,4 +97,19 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
         assertNotNull(languageLocationCodeService.getLanguageLocationCodeByCircleCode("anyString"));
         assertTrue(100 == languageLocationCodeService.getLanguageLocationCodeByCircleCode("anyString"));
     }
+
+    @Test
+    public  void testExecuteUniqueLanguageLocationCodeQuery()
+    {
+        LanguageLocationCode languageLocationCodeData = new LanguageLocationCode();
+        languageLocationCodeData.setId(1L);
+        languageLocationCodeData.setStateCode(123L);
+        languageLocationCodeData.setDistrictCode(345L);
+        languageLocationCodeData.setLanguageLocationCode(100);
+        LanguageLocationCodeServiceImpl languageLocationCodeServiceImpl=new LanguageLocationCodeServiceImpl(languageLocationCodeDataService,circleService);
+
+        assertNull(languageLocationCodeServiceImpl.getLanguageLocationCodeByCircleCode(languageLocationCodeData.getCircleCode()));
+    }
+
+
 }
