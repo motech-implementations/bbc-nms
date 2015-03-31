@@ -8,19 +8,27 @@ import org.motechproject.nms.kilkari.commons.Constants;
  */
 public enum SubscriptionPack  {
     
-    PACK_72_WEEKS("pack_72_weeks"),
-    PACK_48_WEEKS("pack_48_weeks");
+    PACK_72_WEEKS("72WeeksPack"),
+    PACK_48_WEEKS("48WeeksPack");
 
     private String value;
 
-    SubscriptionPack(String value) {
+    private SubscriptionPack(String value) {
         this.value = value;
     }
 
+    /**
+     * This method returns the start week number for the pack
+     * @return
+     */
     public Integer getStartWeekNumber() {
         return PACK_72_WEEKS.equals(this)? Constants.START_WEEK_OF_72_WEEK_PACK:Constants.START_WEEK_OF_48_WEEK_PACK;
     }
 
+    /**
+     * This method return the duration in number of weeks for the pack
+     * @return
+     */
     public Integer getDuration() {
         return PACK_72_WEEKS.equals(this)?Constants.DURATION_OF_72_WEEK_PACK:Constants.DURATION_OF_48_WEEK_PACK;
     }
@@ -41,4 +49,9 @@ public enum SubscriptionPack  {
         }
         return subscriptionPackReturn;
     }
+
+    public String getValue() {
+        return value;
+    }
+
 }

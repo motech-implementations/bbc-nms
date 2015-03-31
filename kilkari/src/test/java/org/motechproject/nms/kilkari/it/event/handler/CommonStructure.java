@@ -118,11 +118,12 @@ public class CommonStructure extends BasePaxIT {
 
     private void deleteAll() {
         try {
-            subscriberService.deleteAll();
-        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
-        try {
             subscriptionService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        try {
+            subscriberService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+
         try {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}

@@ -90,10 +90,10 @@ public class SubscriptionCreateApiRequest {
         subscriber.setDeactivationReason(DeactivationReason.NONE);
 
         subscriber.setLanguageLocationCode(this.languageLocationCode);
-        if (this.subscriptionPack.equals(SubscriptionPack.PACK_48_WEEKS.toString())) {
+        if (this.subscriptionPack.equals(SubscriptionPack.PACK_48_WEEKS.getValue())) {
             subscriber.setBeneficiaryType(BeneficiaryType.CHILD);
             subscriber.setDob(new DateTime());
-        }else if (this.subscriptionPack.equals(SubscriptionPack.PACK_72_WEEKS.toString())) {
+        }else if (this.subscriptionPack.equals(SubscriptionPack.PACK_72_WEEKS.getValue())) {
             subscriber.setBeneficiaryType(BeneficiaryType.MOTHER);
             subscriber.setLmp(new DateTime().minusMonths(3));
         }

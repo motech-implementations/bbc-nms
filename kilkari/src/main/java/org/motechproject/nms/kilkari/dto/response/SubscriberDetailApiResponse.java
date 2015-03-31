@@ -21,7 +21,7 @@ public class SubscriberDetailApiResponse {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private List<SubscriptionPack> subscriptionPackList;
+    private List<String> subscriptionPackList;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -51,11 +51,11 @@ public class SubscriberDetailApiResponse {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 
-    public List<SubscriptionPack> getSubscriptionPackList() {
+    public List<String> getSubscriptionPackList() {
         return subscriptionPackList;
     }
 
-    public void setSubscriptionPackList(List<SubscriptionPack> subscriptionPackList) {
+    public void setSubscriptionPackList(List<String> subscriptionPackList) {
         this.subscriptionPackList = subscriptionPackList;
     }
 }
