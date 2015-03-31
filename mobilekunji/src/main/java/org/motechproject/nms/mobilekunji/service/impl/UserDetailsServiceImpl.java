@@ -76,7 +76,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         logger.info("Update LanguageLocationCode Entered successfully.");
 
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(), request.getCallingNumber());
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(),
+                ParseDataHelper.validateAndTrimMsisdn(
+                        "CallingNumber", request.getCallingNumber()));
 
         logger.info("LanguageLocationCode executed successfully.");
     }
