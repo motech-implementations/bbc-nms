@@ -68,7 +68,6 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
     @Before
     public void setUp() {
         llcDataService.deleteAll();
-        districtService.deleteAll();
         stateService.deleteAll();
         circleDataService.deleteAll();
     }
@@ -153,13 +152,13 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         circle.setName("name");
         circle.setCode("testCode");
         circle.setDefaultLanguageLocationCode(123);
-        circleService.create(circle);
+        circle = circleService.create(circle);
 
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
-        stateService.create(state);
+        state = stateService.create(state);
 
         //create district with districtCode "1" and stateCode "1"
         District district = new District();
@@ -167,7 +166,11 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        districtService.create(district);
+        state = stateService.findRecordByStateCode(district.getStateCode());
+        state.getDistrict().add(district);
+        stateService.update(state);
+
+        district = districtService.findDistrictByParentCode(1L, 1L);
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
@@ -199,13 +202,13 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         circle.setName("testCircle");
         circle.setCode("testCode");
         circle.setDefaultLanguageLocationCode(123);
-        circleService.create(circle);
+        circle = circleService.create(circle);
 
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
-        stateService.create(state);
+        state = stateService.create(state);
 
         //create district with districtCode "1" and stateCode "1"
         District district = new District();
@@ -213,7 +216,11 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        districtService.create(district);
+        state = stateService.findRecordByStateCode(district.getStateCode());
+        state.getDistrict().add(district);
+        stateService.update(state);
+
+        district = districtService.findDistrictByParentCode(1L, 1L);
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
@@ -232,9 +239,9 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
+        languageLocationCodeService.deleteAll();
         stateService.deleteAll();
         circleDataService.deleteAll();
-        languageLocationCodeService.deleteAll();
         createdIds.clear();
     }
 }

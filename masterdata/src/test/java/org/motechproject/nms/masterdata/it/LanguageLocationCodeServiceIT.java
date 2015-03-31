@@ -49,7 +49,6 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
     @Before
     public void setUp() {
         languageLocationCodeDataService.deleteAll();
-        districtService.deleteAll();
         stateService.deleteAll();
         circleDataService.deleteAll();
     }
@@ -120,20 +119,20 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         circle.setName("testCircle");
         circle.setCode("testCode");
         circle.setDefaultLanguageLocationCode(123);
-        circleService.create(circle);
+        circle = circleService.create(circle);
 
         //create circle with code "validCode"
         Circle circle2 = new Circle();
         circle2.setName("testCircle");
         circle2.setCode("validCode");
         circle2.setDefaultLanguageLocationCode(321);
-        circleService.create(circle2);
+        circle2 = circleService.create(circle2);
 
         //create State with statecode "1"
         State state = new State();
         state.setName("testState");
         state.setStateCode(1L);
-        stateService.create(state);
+        state = stateService.create(state);
 
 
         //create district with districtCode "1" and stateCode "1"
@@ -142,8 +141,11 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         district.setName("testDistrict");
         district.setDistrictCode(1L);
         district.setStateCode(1L);
-        districtService.create(district);
+        state = stateService.findRecordByStateCode(district.getStateCode());
+        state.getDistrict().add(district);
+        stateService.update(state);
 
+        district = districtService.findDistrictByParentCode(1L, 1L);
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
         LanguageLocationCode record = new LanguageLocationCode();

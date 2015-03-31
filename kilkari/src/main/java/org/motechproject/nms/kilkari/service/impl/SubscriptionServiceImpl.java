@@ -2,7 +2,6 @@ package org.motechproject.nms.kilkari.service.impl;
 
 
 import java.util.List;
-
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Channel;
@@ -313,10 +312,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             /* check for maximum allowed beneficiary */
             if (activeUserCount < configuration.getMaxAllowedActiveBeneficiaryCount()) {
                 Subscriber dbSubscriber = null;
-                if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                    dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
-                } else {
-                    dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
+
+                /* If MCTS upload then check if there is an existing subscriber for same MSISDN that may be
+                having completed or deactivated packs */
+                if (channel == Channel.MCTS) {
+                    if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), subscriber.getChildMctsId());
+                    } else {
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), subscriber.getMotherMctsId());
+                    }
+                }
+
+                /* Check if there is any subscriber with same MSISDN who has subscribed through IVR */
+                if (dbSubscriber != null) {
+                    if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
+                    } else {
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
+                    }
                 }
 
                 if (dbSubscriber != null) {
