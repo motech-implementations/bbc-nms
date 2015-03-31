@@ -17,8 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Iterator;
-
 /**
  * This class provides the implementation of SaveCallDetailsService
  */
@@ -72,7 +70,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), nmsId, saveCallDetailApiRequest.getCircle(),
                 saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime());
 
-        setCardContent(callDetail, saveCallDetailApiRequest);
+        setCardDetail(callDetail, saveCallDetailApiRequest);
         callDetailService.create(callDetail);
 
         logger.info("CallDetail created successfully.");
@@ -85,10 +83,9 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      * @param saveCallDetailApiRequest
      * @throws org.motechproject.nms.util.helper.DataValidationException
      */
-    private void setCardContent(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+    private void setCardDetail(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        for (Iterator<CardDetail> itr = saveCallDetailApiRequest.getContent().iterator(); itr.hasNext(); ) {
-            CardDetail element = itr.next();
+        for(CardDetail element: saveCallDetailApiRequest.getContent()) {
             callDetail.getCardDetail().add(element);
         }
         logger.info("CardDetail added successfully.");
@@ -107,13 +104,9 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         } else {
-            raiseInvalidDataException(saveCallDetailApiRequest.getCallingNumber());
+            ParseDataHelper.raiseInvalidDataException("CallingNumber ", saveCallDetailApiRequest.getCallingNumber());
         }
         return flwDetail.getNmsFlwId();
-    }
-
-    private void raiseInvalidDataException(String callingNumber) throws DataValidationException {
-        ParseDataHelper.raiseInvalidDataException("CallingNumber ", callingNumber);
     }
 
     /**
