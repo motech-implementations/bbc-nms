@@ -75,7 +75,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
             switch (status) {
                 case INACTIVE:
-                    userProfile = getUserDetailsForInactiveUser(msisdn, operator, frontLineWorker, service, circleCode);
+                    userProfile = getUserDetailsForInactiveUser(msisdn, operator, frontLineWorker, service);
                     return userProfile;
 
                 case ANONYMOUS:
@@ -272,11 +272,10 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param operator        the operator by which the call is generated
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
-     * @param circleCode      the circle code deduced from the call
      * @throws DataValidationException
      */
     private UserProfile getUserDetailsForInactiveUser(String msisdn, Operator operator, FrontLineWorker frontLineWorker,
-                                                      ServicesUsingFrontLineWorker service, String circleCode)
+                                                      ServicesUsingFrontLineWorker service)
             throws DataValidationException {
 
         Long stateCode = frontLineWorker.getStateCode();

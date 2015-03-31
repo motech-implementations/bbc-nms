@@ -245,7 +245,6 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
 
 
-
             frontLineWorker = new FrontLineWorker(1512L, "8989898989", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
                     null, null, null, null, Status.ANONYMOUS, null, null);
@@ -253,8 +252,6 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("8989898989");
             assertNotNull(frontLineWorkerdb);
-
-
 
 
             // Record 15 LanguageLocationCode not Exist in Database.
@@ -300,7 +297,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         UserProfile userProfile;
         FrontLineWorker frontLineWorker;
-        LanguageLocationCode languageLocationCodeTemp = null;
+        LanguageLocationCode languageLocationCodeTemp = new LanguageLocationCode();
 
         // Record 1 LanguageLocationCodeId is not null, circleCode is Null And Status is ACTIVE
 
@@ -531,18 +528,25 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         }
 
         // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
-
-        languageLocationCodeTemp.setDistrict(district);
         languageLocationCodeTemp.setState(stateData);
+        languageLocationCodeTemp.setDistrict(district);
         languageLocationCodeTemp.setCircle(circle);
-        languageLocationCodeTemp.setCircleCode(circle.getCode());
-        languageLocationCodeTemp.setDistrictCode(district.getDistrictCode());
-        languageLocationCodeTemp.setStateCode(stateData.getStateCode());
-
+        languageLocationCode.setCircleCode(circle.getCode());
+        languageLocationCode.setDistrictCode(district.getDistrictCode());
+        languageLocationCode.setStateCode(stateData.getStateCode());
+        languageLocationCodeTemp.setLanguageLocationCode(1234);
+        languageLocationCodeTemp.setLanguageMA("LanguageMA");
+        languageLocationCodeTemp.setLanguageMK("LanguageMK");
+        languageLocationCodeTemp.setLanguageKK("LanguageKK");
+        languageLocationCodeTemp.setStateCode(1L);
+        languageLocationCodeTemp.setDistrictCode(2L);
+        languageLocationCodeTemp.setCircleCode("circleCode");
+        languageLocationCodeTemp.setCreator("Etasha");
+        languageLocationCodeTemp.setOwner("Etasha");
+        languageLocationCodeTemp.setModifiedBy("Etasha");
 
         languageLocationCodeService.create(languageLocationCodeTemp);
         assertNotNull(languageLocationCodeTemp);
-
 
         userProfile = userProfileDetailsService.processUserDetails("8989898989", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
 
@@ -615,8 +619,6 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
-
-
 
 
     }
