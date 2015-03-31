@@ -203,8 +203,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     /**
-     * This method deactivate subscription of mother record, delete mother subscriber 
-     * and link deactivated mother record with child subscriber
+     * This method deactivates subscription of mother record, deletes mother subscriber
+     * and links deactivated subscription of mother with child subscriber
      *  
      * @param subscriber csv uploaded Subscriber object
      * @param otherPack mother subscription pack name
@@ -404,7 +404,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
+
+        /* Initial state is always Pending Activation */
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
+
+        /* Deactivation reason in Subscription creation is None */
         newSubscription.setDeactivationReason(DeactivationReason.NONE);
         newSubscription.setOperatorCode(operatorCode);
         newSubscription.setModifiedBy(subscriber.getModifiedBy());
@@ -429,7 +433,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         
         dbSubscription.setDeactivationReason(deactivationReason);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
-        if(DeactivationReason.PACK_CHANGED!=deactivationReason) {
+        if(DeactivationReason.PACK_CHANGED != deactivationReason) {
             dbSubscription.setMctsId(subscriber.getSuitableMctsId());
         }
         dbSubscription.setStateCode(subscriber.getState().getStateCode());

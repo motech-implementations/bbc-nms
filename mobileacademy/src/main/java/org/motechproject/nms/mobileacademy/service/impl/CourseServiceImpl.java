@@ -576,7 +576,7 @@ public class CourseServiceImpl implements CourseService {
     private JsonArray generateQuestionListForQuiz(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonArray questionsJsonArray = new JsonArray();
-        for (int questionNo = 1; questionNo < MobileAcademyConstants.NUM_OF_QUESTIONS; questionNo++) {
+        for (int questionNo = 1; questionNo <= MobileAcademyConstants.NUM_OF_QUESTIONS; questionNo++) {
             questionsJsonArray.add(generateQuestionJson(chapterNo, questionNo,
                     chapterContents));
         }
@@ -640,23 +640,23 @@ public class CourseServiceImpl implements CourseService {
                 + String.format(
                         MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                         questionNo);
-        contentJson.addProperty(MobileAcademyConstants.COURSE_KEY_NAME,
+        contentJson.addProperty(MobileAcademyConstants.COURSE_KEY_ID,
                 nameString);
 
         audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
                 MobileAcademyConstants.CONTENT_QUESTION).getAudioFile();
-        contentJson.add(MobileAcademyConstants.COURSE_KEY_QUESTION,
-                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+        contentJson.addProperty(MobileAcademyConstants.COURSE_KEY_QUESTION,
+                audioFile);
 
         audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
                 MobileAcademyConstants.CONTENT_CORRECT_ANSWER).getAudioFile();
-        contentJson.add(MobileAcademyConstants.COURSE_KEY_CORRECT_ANSWER,
-                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+        contentJson.addProperty(
+                MobileAcademyConstants.COURSE_KEY_CORRECT_ANSWER, audioFile);
 
         audioFile = getQuestionContent(chapterContents, chapterNo, questionNo,
                 MobileAcademyConstants.CONTENT_WRONG_ANSWER).getAudioFile();
-        contentJson.add(MobileAcademyConstants.COURSE_KEY_WRONG_ANSWER,
-                generateIdFileNode(nameString, Arrays.asList(audioFile)));
+        contentJson.addProperty(MobileAcademyConstants.COURSE_KEY_WRONG_ANSWER,
+                audioFile);
 
         return contentJson;
     }
@@ -680,10 +680,10 @@ public class CourseServiceImpl implements CourseService {
                         MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                         chapterNo)
                 + MobileAcademyConstants.UNDERSCORE_DELIMITER
-                + MobileAcademyConstants.CONTENT_QUIZ_HEADER;
+                + MobileAcademyConstants.COURSE_KEY_QUIZ_HEADER;
 
         audioFile = getQuizContent(chapterContents, chapterNo,
-                MobileAcademyConstants.CONTENT_QUIZ_HEADER).getAudioFile();
+                MobileAcademyConstants.COURSE_KEY_QUIZ_HEADER).getAudioFile();
 
         contentJson.add(MobileAcademyConstants.COURSE_KEY_MENU,
                 generateIdFileNode(idString, Arrays.asList(audioFile)));
@@ -701,7 +701,7 @@ public class CourseServiceImpl implements CourseService {
     private JsonArray generateLessonListForChapter(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonArray lessonJsonArray = new JsonArray();
-        for (int lessonNo = 1; lessonNo < MobileAcademyConstants.NUM_OF_LESSONS; lessonNo++) {
+        for (int lessonNo = 1; lessonNo <= MobileAcademyConstants.NUM_OF_LESSONS; lessonNo++) {
             lessonJsonArray.add(generateLessonJson(chapterNo, lessonNo,
                     chapterContents));
         }
@@ -797,26 +797,27 @@ public class CourseServiceImpl implements CourseService {
         String idString;
         String audioFile;
 
-        List<String> scoreFiles = getScoreFiles(chapterNo, chapterContents);
         idString = MobileAcademyConstants.CHAPTER
                 + String.format(
                         MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                         chapterNo)
                 + MobileAcademyConstants.UNDERSCORE_DELIMITER
                 + MobileAcademyConstants.END_MENU;
+        audioFile = getChapterContent(chapterContents, chapterNo,
+                MobileAcademyConstants.CONTENT_MENU).getAudioFile();
         contentJson.add(MobileAcademyConstants.COURSE_KEY_MENU,
-                generateIdFileNode(idString, scoreFiles));
+                generateIdFileNode(idString, Arrays.asList(audioFile)));
 
         idString = MobileAcademyConstants.CHAPTER
                 + String.format(
                         MobileAcademyConstants.TWO_DIGIT_INTEGER_FORMAT,
                         chapterNo)
                 + MobileAcademyConstants.UNDERSCORE_DELIMITER
-                + MobileAcademyConstants.SCORE;
-        audioFile = getChapterContent(chapterContents, chapterNo,
-                MobileAcademyConstants.CONTENT_MENU).getAudioFile();
-        contentJson.add(MobileAcademyConstants.COURSE_KEY_SCORE,
-                generateIdFileNode(idString, Arrays.asList(audioFile)));
+                + MobileAcademyConstants.COURSE_KEY_SCORE;
+        List<String> scoreFiles = getScoreFiles(chapterNo, chapterContents);
+
+        contentJson.add(MobileAcademyConstants.SCORE,
+                generateIdFileNode(idString, scoreFiles));
 
         return contentJson;
     }

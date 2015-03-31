@@ -80,13 +80,15 @@ public class MobileAcademyConstants {
 
     public static final String COURSE_KEY_MENU = "menu";
 
-    public static final String COURSE_KEY_SCORE = "score";
+    public static final String COURSE_KEY_SCORE = "Score";
 
     public static final String COURSE_KEY_ID = "id";
 
     public static final String COURSE_KEY_FILE = "file";
 
     public static final String COURSE_KEY_FILES = "files";
+
+    public static final String COURSE_KEY_QUIZ_HEADER = "QuizHeader";
 
     public static final String FAILURE_REASON = "failueReason";
 
