@@ -99,7 +99,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldThrowDataValidationExceptionWhenInvalidCallingNumber()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("123456780","operatorCode","circleCode","testCallId",29,"PACK_48_WEEKS");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("123456780","operatorCode","circleCode","testCallId",29,"48WeeksPack");
         try {
             subscriptionController.createSubscription(apiRequest);
 
@@ -113,7 +113,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         preSetUp();
         BeneficiaryType beneficiaryType;
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"PACK_48_WEEKS");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"48WeeksPack");
 
         try {
             subscriptionController.createSubscription(apiRequest);
@@ -135,7 +135,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldDeactivateSubscription()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"PACK_48_WEEKS");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"48WeeksPack");
 
         subscriberService.create(subscriptionBuilder.buildSubscriber("1234567890", 29, BeneficiaryType.CHILD));
         Subscription subscription = subscriptionDataService.create(subscriptionBuilder.buildSubscription("1234567890", Channel.IVR, Status.PENDING_ACTIVATION));
