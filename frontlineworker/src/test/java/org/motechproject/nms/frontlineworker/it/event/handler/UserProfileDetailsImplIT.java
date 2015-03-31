@@ -142,7 +142,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             // Record 2 LanguageLocationCodeId is not null, circleCode is not Null And Status is ACTIVE
 
-            frontLineWorker = new FrontLineWorker(1501L, "1212121212", "Rashi", Designation.USHA,
+            frontLineWorker = new FrontLineWorker(1501L, "1212121212", "Rashi", Designation.ASHA,
                     "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.ACTIVE, 123, "circleCode");
 
@@ -153,7 +153,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             // Record 3 LanguageLocationCodeId is null, circleCode is Null And Status is ACTIVE
 
-            frontLineWorker = new FrontLineWorker(1502L, "9999999999", "Rashi", Designation.USHA,
+            frontLineWorker = new FrontLineWorker(1502L, "9999999999", "Rashi", Designation.ANM,
                     "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.ACTIVE, null, null);
 
@@ -163,7 +163,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             // Record 4 Status is INACTIVE AND LanguageLocationCodeId is null
 
-            frontLineWorker = new FrontLineWorker(1503L, "2121212121", "Etasha", Designation.ASHA,
+            frontLineWorker = new FrontLineWorker(1503L, "2121212121", "Etasha", Designation.AWW,
                     "123", 12L, stateData, district, null, null, null,
                     null, null, null, null, Status.INACTIVE, null, null);
 
@@ -242,8 +242,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
                     null, null, null, null, null, null, null,
                     null, null, null, null, Status.ANONYMOUS, null, null);
 
-            // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
-
+            // Record 14 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
 
             frontLineWorker = new FrontLineWorker(1512L, "8989898989", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
@@ -527,7 +526,8 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
-        // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
+        // Record 14 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
+
         languageLocationCodeTemp.setState(stateData);
         languageLocationCodeTemp.setDistrict(district);
         languageLocationCodeTemp.setCircle(circle);
@@ -563,6 +563,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         //assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
+
+
+
     }
 
     @Test
