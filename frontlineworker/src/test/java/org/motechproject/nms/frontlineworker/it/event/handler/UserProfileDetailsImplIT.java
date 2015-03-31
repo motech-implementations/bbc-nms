@@ -238,14 +238,24 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             // Record 13 operatorCode is not present in Database.
 
-            // Record 14 status is ANONYMOUS LanguageLocationCodeId is not null,and not present in Database, Circlecode is null.
-
-            frontLineWorker = new FrontLineWorker(1505L, "9999998888", "Rashi", Designation.USHA,
+            frontLineWorker = new FrontLineWorker(1513L, "1234123412", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
-                    null, null, null, null, Status.ANONYMOUS, 12345, null);
+                    null, null, null, null, Status.ANONYMOUS, null, null);
+
+            // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
+
+
+
+            frontLineWorker = new FrontLineWorker(1512L, "8989898989", "Rashi", Designation.USHA,
+                    null, null, null, null, null, null, null,
+                    null, null, null, null, Status.ANONYMOUS, null, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
-            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9999998888");
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("8989898989");
+            assertNotNull(frontLineWorkerdb);
+
+
+
 
             // Record 15 LanguageLocationCode not Exist in Database.
 
@@ -290,6 +300,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         UserProfile userProfile;
         FrontLineWorker frontLineWorker;
+        LanguageLocationCode languageLocationCodeTemp = null;
 
         // Record 1 LanguageLocationCodeId is not null, circleCode is Null And Status is ACTIVE
 
@@ -519,15 +530,35 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
 
-        // Record 14 status is ANONYMOUS and LanguageLocationCodeId is not null and not present in database, circleCode is null.
+        // Record 20 status is ANONYMOUS LanguageLocationCodeId is null, Circlecode is null.
 
-        try {
-            userProfile = userProfileDetailsService.processUserDetails("9999998888", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
-        }
+        languageLocationCodeTemp.setDistrict(district);
+        languageLocationCodeTemp.setState(stateData);
+        languageLocationCodeTemp.setCircle(circle);
+        languageLocationCodeTemp.setCircleCode(circle.getCode());
+        languageLocationCodeTemp.setDistrictCode(district.getDistrictCode());
+        languageLocationCodeTemp.setStateCode(stateData.getStateCode());
 
+
+        languageLocationCodeService.create(languageLocationCodeTemp);
+        assertNotNull(languageLocationCodeTemp);
+
+
+        userProfile = userProfileDetailsService.processUserDetails("8989898989", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+
+        assertEquals(null, userProfile.getCircle());
+        assertEquals("8989898989", userProfile.getMsisdn());
+        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
+        assertEquals(false, userProfile.isCreated());
+        assertEquals(true, userProfile.isDefaultLanguageLocationCode());
+
+        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("8989898989");
+        assertNotNull(frontLineWorker);
+        assertEquals(null, frontLineWorker.getCircleCode());
+        //assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
+        assertEquals("123", frontLineWorker.getOperatorCode());
     }
 
     @Test
@@ -584,6 +615,8 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
+
+
 
 
     }
