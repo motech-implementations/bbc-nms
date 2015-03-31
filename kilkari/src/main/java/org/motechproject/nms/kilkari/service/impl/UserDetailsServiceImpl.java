@@ -98,9 +98,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             response.setLanguageLocationCode(subscriber.getLanguageLocationCode());
 
         } else {
-            if (subscriber.getState() != null && subscriber.getDistrict() != null) {
+            if (subscriber.getDistrict() != null) {
                 //if llcCode is null then get it by state and district
-                getLLCCodeByStateDistrict(subscriber.getState().getStateCode(),
+                getLLCCodeByStateDistrict(subscriber.getDistrict().getStateCode(),
                         subscriber.getDistrict().getDistrictCode(), response);
                 subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
             }

@@ -144,7 +144,11 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @return returns null if record not found, else return the languageLocationCode object.
      */
     public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode) {
-        return languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
+        List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
+        if (locationCodeList != null && !locationCodeList.isEmpty()) {
+            return locationCodeList.get(0);
+        }
+        return null;
     }
 
     /**
@@ -202,7 +206,11 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
 
     @Override
     public LanguageLocationCode findLLCByCode(Integer code) {
-        return languageLocationCodeDataService.findLLCByCode(code);
+        List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findLLCByCode(code);
+        if (locationCodeList != null && !locationCodeList.isEmpty()) {
+            return locationCodeList.get(0);
+        }
+        return null;
     }
 
 }

@@ -41,10 +41,10 @@ public interface LanguageLocationCodeDataService extends MotechDataService<Langu
      * @return LanguageLocationCode
      */
     @Lookup
-    LanguageLocationCode findByCircleCodeAndLangLocCode(@LookupField(name = "circleCode") String circleCode,
+    List<LanguageLocationCode> findByCircleCodeAndLangLocCode(@LookupField(name = "circleCode") String circleCode,
                                                         @LookupField(name = "languageLocationCode")
                                                         Integer languageLocationCode);
 
     @Lookup
-    LanguageLocationCode findLLCByCode(@LookupField(name = "languageLocationCode") Integer code);
+    List<LanguageLocationCode> findLLCByCode(@LookupField(name = "languageLocationCode") Integer code);
 }

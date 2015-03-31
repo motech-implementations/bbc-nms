@@ -2,7 +2,6 @@ package org.motechproject.nms.kilkari.dto.response;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
 import java.util.List;
 

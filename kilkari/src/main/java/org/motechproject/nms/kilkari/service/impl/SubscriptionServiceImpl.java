@@ -373,7 +373,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         Subscription subscription = getActiveSubscriptionByMsisdnPack(subscriber.getMsisdn(), pack);
         if (subscription != null) {
-            String errMessage = String.format("Subscription already exists for msisdn : %s and SubscriptionPack : %s", subscriber.getMsisdn(), pack.toString());
+            String errMessage = String.format("Subscription already exists for msisdn : %s and SubscriptionPack : %s", subscriber.getMsisdn(), pack.getValue());
             throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
         }
         commonValidatorService.validateCircle(circleCode);
