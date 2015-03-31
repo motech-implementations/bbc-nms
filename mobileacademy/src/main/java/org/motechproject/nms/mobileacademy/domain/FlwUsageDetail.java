@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * FlwUsageDetail object refer to mobile academy usage by front line worker
  *
  */
-@Entity(recordHistory = true)
+@Entity
 public class FlwUsageDetail extends MdsEntity {
 
     @Field

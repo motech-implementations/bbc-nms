@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * Score content object to refer scores of a chapter.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class ScoreContent extends MdsEntity {
 
     @Field

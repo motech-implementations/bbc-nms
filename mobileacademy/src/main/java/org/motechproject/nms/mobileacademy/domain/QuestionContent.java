@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * QuestionContent object to refer question related data.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class QuestionContent extends MdsEntity {
 
     @Field

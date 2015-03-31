@@ -9,7 +9,7 @@ import org.motechproject.nms.mobileacademy.commons.ContentType;
  * CSV.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class CourseProcessedContent extends MdsEntity {
 
     private Integer contentID;

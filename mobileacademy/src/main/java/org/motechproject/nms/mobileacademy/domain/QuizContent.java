@@ -11,7 +11,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * QuizContent object to refer quiz related data.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class QuizContent extends MdsEntity {
 
     @Field

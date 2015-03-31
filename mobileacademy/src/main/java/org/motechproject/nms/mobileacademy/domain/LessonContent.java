@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * LessonContent object to refer lesson related data.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class LessonContent extends MdsEntity {
 
     @Field

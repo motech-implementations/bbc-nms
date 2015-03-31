@@ -11,7 +11,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * ChapterContent object to refer chapter related data.
  *
  */
-@Entity
+@Entity(recordHistory = true)
 public class ChapterContent extends MdsEntity {
 
     @Field
