@@ -59,8 +59,8 @@ public class VillageTest {
     public void testEqualsWithDifferentTalukaCode() {
 
         Village village = getVillageData();
-
-        assertTrue(getVillageData().equals(village));
+        village.setTalukaCode(7L);
+        assertFalse(getVillageData().equals(village));
     }
 
     @Test
