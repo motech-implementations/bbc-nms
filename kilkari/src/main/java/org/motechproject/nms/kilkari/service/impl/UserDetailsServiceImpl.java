@@ -103,6 +103,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 getLLCCodeByStateDistrict(subscriber.getDistrict().getStateCode(),
                         subscriber.getDistrict().getDistrictCode(), response);
                 subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
+                subscriberService.update(subscriber);
             }
         }
     }

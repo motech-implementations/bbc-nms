@@ -82,7 +82,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 }
                 logger.info("Processed record id[{}]", id);
             } catch (NmsInternalServerError dve) {
-                logger.warn("DataValidationException ::::", dve.getMessage());
+                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
                 errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                 errorDetails.setErrorDescription(dve.getMessage());
@@ -91,8 +91,8 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 childCsvUploadStatus.incrementFailureCount();
 
             } catch (DataValidationException dve) {
-                logger.warn("DataValidationException ::::", dve.getMessage());
-                errorDetails.setRecordDetails(childMctsCsv.toString());
+                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
+                        errorDetails.setRecordDetails(childMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);

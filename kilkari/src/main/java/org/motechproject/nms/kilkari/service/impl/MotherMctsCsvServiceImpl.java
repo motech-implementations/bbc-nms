@@ -81,7 +81,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 }
                 logger.info("Processing finished for record id[{}]", id);
             } catch (DataValidationException dve) {
-                logger.warn("DataValidationException ::::", dve.getMessage());
+                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
                 errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
@@ -90,8 +90,8 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 motherCsvUploadStatus.incrementFailureCount();
 
             } catch (NmsInternalServerError dve) {
-                logger.warn("DataValidationException ::::", dve.getMessage());
-                errorDetails.setRecordDetails(motherMctsCsv.toString());
+                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
+                        errorDetails.setRecordDetails(motherMctsCsv.toString());
                 errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                 errorDetails.setErrorDescription(dve.getMessage());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
