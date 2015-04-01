@@ -7,7 +7,6 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
-import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.State;
@@ -61,7 +60,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         UserProfile userProfile = null;
         FrontLineWorker frontLineWorker = null;
-        Operator operator = null;
 
         validateParams(msisdn, operatorCode, service);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
@@ -115,7 +113,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         if (frontLineWorker == null) {
             ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
         } else {
-            //languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
             circleCode = frontLineWorker.getCircleCode();
             if (circleCode == ConfigurationConstants.UNKNOWN_CIRCLE) {
                 ParseDataHelper.raiseInvalidDataException("circle Code of Front line worker", circleCode);
@@ -215,8 +212,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         Integer defaultLanguageLocationCode = null;
         LanguageLocationCode languageLocationCode = null;
         Long stateCode = null;
-        Circle circle = null;
-
 
         locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (locationCode != null) {
