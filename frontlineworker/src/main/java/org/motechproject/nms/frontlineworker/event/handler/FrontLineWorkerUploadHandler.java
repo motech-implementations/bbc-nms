@@ -555,7 +555,12 @@ public class FrontLineWorkerUploadHandler {
                 }
                 //updation of existing record
                 else {
-                    return dbRecordByContactNo;
+                    if (frontLineWorker.getFlwId() == null && dbRecordByContactNo.getFlwId() != null) {
+                        ParseDataHelper.raiseInvalidDataException("FlwId", null);
+                    } else {
+                        return dbRecordByContactNo;
+                    }
+
                 }
 
             } else {

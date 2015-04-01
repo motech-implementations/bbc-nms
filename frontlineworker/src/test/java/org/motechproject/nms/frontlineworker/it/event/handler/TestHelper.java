@@ -146,24 +146,6 @@ public class TestHelper {
         return languageLocationCode;
     }
 
-    public LanguageLocationCode createLanguageLocationCodeTemp() {
-        LanguageLocationCode languageLocationCode = new LanguageLocationCode();
-        languageLocationCode.setState(state);
-        languageLocationCode.setDistrict(district);
-        languageLocationCode.setCircle(circle);
-        languageLocationCode.setLanguageLocationCode(1234);
-        languageLocationCode.setLanguageMA("LanguageMA");
-        languageLocationCode.setLanguageMK("LanguageMK");
-        languageLocationCode.setLanguageKK("LanguageKK");
-        languageLocationCode.setStateCode(1L);
-        languageLocationCode.setDistrictCode(2L);
-        languageLocationCode.setCircleCode("circleCode");
-        languageLocationCode.setCreator("Etasha");
-        languageLocationCode.setOwner("Etasha");
-        languageLocationCode.setModifiedBy("Etasha");
-        return languageLocationCode;
-    }
-
     public Operator createOperator() {
         Operator operator = new Operator();
         operator.setName("operatorName");

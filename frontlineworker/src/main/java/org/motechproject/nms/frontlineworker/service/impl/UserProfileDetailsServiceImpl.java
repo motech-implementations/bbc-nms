@@ -63,31 +63,31 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         FrontLineWorker frontLineWorker = null;
         Operator operator = null;
 
-        operator = validateParams(msisdn, operatorCode, service);
+        validateParams(msisdn, operatorCode, service);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
 
         if (frontLineWorker == null) {
 
-            userProfile = createUserProfile(msisdn, operator, circleCode, service);
+            userProfile = createUserProfile(msisdn, operatorCode, circleCode, service);
 
         } else {
             Status status = frontLineWorker.getStatus();
 
             switch (status) {
                 case INACTIVE:
-                    userProfile = getUserDetailsForInactiveUser(msisdn, operator, frontLineWorker, service);
+                    userProfile = getUserDetailsForInactiveUser(msisdn, operatorCode, frontLineWorker, service);
                     return userProfile;
 
                 case ANONYMOUS:
-                    userProfile = getUserDetailsForAnonymousUser(msisdn, operator, frontLineWorker, service, circleCode);
+                    userProfile = getUserDetailsForAnonymousUser(msisdn, operatorCode, frontLineWorker, service, circleCode);
                     return userProfile;
 
                 case ACTIVE:
-                    userProfile = getUserDetailsForActiveUser(msisdn, operator, frontLineWorker, service, circleCode);
+                    userProfile = getUserDetailsForActiveUser(msisdn, operatorCode, frontLineWorker, service, circleCode);
                     return userProfile;
 
                 case INVALID:
-                    userProfile = createUserProfile(msisdn, operator, circleCode, service);
+                    userProfile = createUserProfile(msisdn, operatorCode, circleCode, service);
                     return userProfile;
             }
         }
@@ -109,18 +109,26 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         LanguageLocationCode languageLocationCodeByParam = null;
         FrontLineWorker frontLineWorker = null;
         validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
+        String circleCode = null;
 
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(validatedMsisdn);
         if (frontLineWorker == null) {
             ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
         } else {
-            languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
-            if (languageLocationCodeByParam == null) {
-                ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+            //languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
+            circleCode = frontLineWorker.getCircleCode();
+            if (circleCode == ConfigurationConstants.UNKNOWN_CIRCLE) {
+                ParseDataHelper.raiseInvalidDataException("circle Code of Front line worker", circleCode);
             } else {
-                frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
-                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
+                languageLocationCodeByParam = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
+                if (languageLocationCodeByParam == null) {
+                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+                } else {
+                    frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
+                    frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
+                }
             }
+
         }
     }
 
@@ -143,26 +151,24 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     /**
      * This procedure creates a new UserProfile when a call is made by a number which is not present in the Database
      *
-     * @param msisdn     contact number of the front line worker whose details are to be fetched
-     * @param operator   the operator by which the call is generated
-     * @param circleCode the circle code deduced from the call
-     * @param service    the module which is invoking the API
+     * @param msisdn       contact number of the front line worker whose details are to be fetched
+     * @param operatorCode the operator by which the call is generated
+     * @param circleCode   the circle code deduced from the call
+     * @param service      the module which is invoking the API
      * @throws DataValidationException , java.lang.Exception
      */
-    private UserProfile createUserProfile(String msisdn, Operator operator, String circleCode,
+    private UserProfile createUserProfile(String msisdn, String operatorCode, String circleCode,
                                           ServicesUsingFrontLineWorker service) throws DataValidationException {
 
         UserProfile userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(msisdn);
-        frontLineWorker.setOperatorCode(operator.getCode());
-        if (userProfile.isDefaultLanguageLocationCode() != true) {
-            frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
-            frontLineWorker.setCircleCode(userProfile.getCircle());
-        }
-
+        frontLineWorker.setOperatorCode(operatorCode);
+        frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+        frontLineWorker.setCircleCode(userProfile.getCircle());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+
         userProfile.setNmsFlwId(frontLineWorker.getId());
         return userProfile;
     }
@@ -176,8 +182,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param service      the module which is invoking the API
      * @throws DataValidationException
      */
-    private Operator validateParams(String msisdn, String operatorCode,
-                                    ServicesUsingFrontLineWorker service) throws DataValidationException {
+    private void validateParams(String msisdn, String operatorCode,
+                                ServicesUsingFrontLineWorker service) throws DataValidationException {
 
         msisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
 
@@ -190,8 +196,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         if (service != ServicesUsingFrontLineWorker.MOBILEACADEMY && service != ServicesUsingFrontLineWorker.MOBILEKUNJI) {
             ParseDataHelper.raiseInvalidDataException("service", service.toString());
         }
-
-        return operator;
     }
 
     /**
@@ -217,11 +221,10 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (locationCode != null) {
             //unique language location code is found for the provided circle
-            userProfile.setIsDefaultLanguageLocationCode(false);
-            userProfile.setLanguageLocationCode(locationCode);
-
             languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
             if (languageLocationCode != null) {
+                userProfile.setIsDefaultLanguageLocationCode(false);
+                userProfile.setLanguageLocationCode(locationCode);
                 stateCode = languageLocationCode.getStateCode();
                 userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
                 userProfile.setCircle(languageLocationCode.getCircleCode());
@@ -234,15 +237,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             if (defaultLanguageLocationCode != null) {
                 //no or multiple language location codes is found for the provided circle. here default language location
                 // code is fetched from circle
-                userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
-                userProfile.setIsDefaultLanguageLocationCode(true);
-
-
                 languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
                 if (languageLocationCode != null) {
+                    userProfile.setIsDefaultLanguageLocationCode(true);
+                    userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
                     stateCode = languageLocationCode.getStateCode();
                     userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-                    userProfile.setCircle(null);
+                    userProfile.setCircle(languageLocationCode.getCircleCode());
                 } else {
                     ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
                 }
@@ -253,8 +254,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(null);
                 userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
-                circle = circleService.getRecordByCode(ConfigurationConstants.UNKNOWN_CIRCLE);
-                userProfile.setCircle(circle.getCode());
+                userProfile.setCircle(circleCode);
 
             }
         }
@@ -269,12 +269,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * This procedure generated UserDetails for an InactiveUser using its state and district details
      *
      * @param msisdn          contact number of the front line worker whose details are to be fetched
-     * @param operator        the operator by which the call is generated
+     * @param operatorCode    the operator by which the call is generated
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
      * @throws DataValidationException
      */
-    private UserProfile getUserDetailsForInactiveUser(String msisdn, Operator operator, FrontLineWorker frontLineWorker,
+    private UserProfile getUserDetailsForInactiveUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                       ServicesUsingFrontLineWorker service)
             throws DataValidationException {
 
@@ -299,8 +299,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         frontLineWorker.setStatus(Status.ACTIVE);
         frontLineWorker.setLanguageLocationCodeId(languageLocationCode.getLanguageLocationCode());
-        frontLineWorker.setCircleCode(languageLocationCode.getCircle().getCode());
-        frontLineWorker.setOperatorCode(operator.getCode());
+        frontLineWorker.setCircleCode(languageLocationCode.getCircleCode());
+        frontLineWorker.setOperatorCode(operatorCode);
         frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
 
         return userProfile;
@@ -310,13 +310,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * This procedure generated UserDetails for an ActiveUser using its state and district details
      *
      * @param msisdn          contact number of the front line worker whose details are to be fetched
-     * @param operator        the operator by which the call is generated
+     * @param operatorCode    the operator by which the call is generated
      * @param frontLineWorker the frontLineWorker found using the msisdn     *
      * @param service         the module which is invoking the API
      * @param circleCode      the circle code deduced from the call
      * @throws DataValidationException
      */
-    private UserProfile getUserDetailsForActiveUser(String msisdn, Operator operator, FrontLineWorker frontLineWorker,
+    private UserProfile getUserDetailsForActiveUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                     ServicesUsingFrontLineWorker service, String circleCode)
             throws DataValidationException {
 
@@ -331,22 +331,11 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         locationCode = frontLineWorker.getLanguageLocationCodeId();
         circle = frontLineWorker.getCircleCode();
 
-        if (locationCode != null && circle != null) {
+        if (locationCode != null && circle != ConfigurationConstants.UNKNOWN_CIRCLE) {
             userProfile.setLanguageLocationCode(locationCode);
             userProfile.setCircle(circle);
         } else {
-            if (locationCode != null && circle == null) {
-                languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
-                if (languageLocationCode != null) {
-                    userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
-                    userProfile.setCircle(circleCode);
-                    frontLineWorker.setCircleCode(circleCode);
-
-                } else {
-                    ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
-
-                }
-            } else {
+            if (locationCode == null && circle == ConfigurationConstants.UNKNOWN_CIRCLE) {
                 languageLocationCode = languageLocationCodeService.getRecordByLocationCode(stateCode,
                         districtCode);
                 if (languageLocationCode != null) {
@@ -358,17 +347,29 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
 
                 }
+            } else {
+                languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode,
+                        locationCode);
+                if (languageLocationCode == null) {
+                    ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                } else {
+                    userProfile.setLanguageLocationCode(locationCode);
+                    userProfile.setCircle(circleCode);
+
+                    frontLineWorker.setCircleCode(languageLocationCode.getCircleCode());
+
+                }
             }
 
-        }
 
+        }
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setNmsFlwId(frontLineWorker.getId());
         userProfile.setCreated(false);
         userProfile.setMsisdn(msisdn);
         userProfile.setIsDefaultLanguageLocationCode(false);
 
-        frontLineWorker.setOperatorCode(operator.getCode());
+        frontLineWorker.setOperatorCode(operatorCode);
         frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
 
         return userProfile;
@@ -379,13 +380,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * This procedure generated UserDetails for an Anonymous Repeat User using its details stored by earlier calls
      *
      * @param msisdn          contact number of the front line worker whose details are to be fetched
-     * @param operator        the operator by which the call is generated
+     * @param operatorCode    the operator by which the call is generated
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
      * @param circleCode      the circle code deduced from the call
      * @throws DataValidationException
      */
-    private UserProfile getUserDetailsForAnonymousUser(String msisdn, Operator operator, FrontLineWorker frontLineWorker,
+    private UserProfile getUserDetailsForAnonymousUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                        ServicesUsingFrontLineWorker service, String circleCode)
             throws DataValidationException {
         Integer languageLocationCode = null;
@@ -397,8 +398,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         circle = frontLineWorker.getCircleCode();
         languageLocationCode = frontLineWorker.getLanguageLocationCodeId();
 
-        if (circle != null && languageLocationCode != null) {
-            langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
+        if (circle != ConfigurationConstants.UNKNOWN_CIRCLE && languageLocationCode != null) {
+            langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circle, languageLocationCode);
             if (langLocCode != null) {
                 userProfile.setIsDefaultLanguageLocationCode(false);
                 stateCode = langLocCode.getStateCode();
@@ -409,73 +410,26 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 userProfile.setCreated(false);
                 userProfile.setMsisdn(msisdn);
 
-                frontLineWorker.setOperatorCode(operator.getCode());
+                frontLineWorker.setOperatorCode(operatorCode);
                 frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             } else {
                 ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
 
             }
         } else {
-            if (languageLocationCode != null) {
-                userProfile = generateUserProfileUsingLLC(msisdn, circleCode, service, languageLocationCode);
-                userProfile.setNmsFlwId(frontLineWorker.getId());
-                frontLineWorker.setCircleCode(userProfile.getCircle());
-                frontLineWorker.setOperatorCode(operator.getCode());
-                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
-            } else {
-
-                userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
-                userProfile.setNmsFlwId(frontLineWorker.getId());
-                userProfile.setCreated(false);
-
-                frontLineWorker.setOperatorCode(operator.getCode());
-                if (userProfile.isDefaultLanguageLocationCode() != true) {
-                    frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
-                    frontLineWorker.setCircleCode(userProfile.getCircle());
-                }
-
-                frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
-
-            }
-
-
-        }
-
-        return userProfile;
-    }
-
-    /**
-     * This procedure generated UserDetails for an Anonymous Repeat User using its details stored by earlier calls
-     *
-     * @param msisdn               contact number of the front line worker whose details are to be fetched
-     * @param circleCode           the circle code deduced from the call
-     * @param service              the module which is invoking the API
-     * @param languageLocationCode the language location code saved in front line worker record
-     * @throws DataValidationException
-     */
-    private UserProfile generateUserProfileUsingLLC(String msisdn, String circleCode,
-                                                    ServicesUsingFrontLineWorker service, Integer languageLocationCode)
-            throws DataValidationException {
-
-        LanguageLocationCode langLocCode = null;
-        UserProfile userProfile = new UserProfile();
-        Long stateCode = null;
-        langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
-
-        if (langLocCode == null) {
-            ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
-        } else {
-            userProfile.setIsDefaultLanguageLocationCode(false);
-            userProfile.setLanguageLocationCode(langLocCode.getLanguageLocationCode());
-            stateCode = langLocCode.getStateCode();
-            userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-            userProfile.setCircle(langLocCode.getCircleCode());
+            userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
+            userProfile.setNmsFlwId(frontLineWorker.getId());
             userProfile.setCreated(false);
-            userProfile.setMsisdn(msisdn);
+
+            frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+            frontLineWorker.setCircleCode(userProfile.getCircle());
+            frontLineWorker.setOperatorCode(operatorCode);
+            frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
         }
 
         return userProfile;
     }
+
 
     /**
      * This procedure generated UserDetails for an Anonymous Repeat User using its details stored by earlier calls
