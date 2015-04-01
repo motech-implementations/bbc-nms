@@ -71,6 +71,15 @@ public class VillageTest {
         assertFalse(getVillageDataWithDifferentVillageCode().equals(village));
     }
 
+
+    @Test
+    public void testEqualsWithSameVillageCode() {
+
+        Village village = getVillageData();
+
+        assertTrue(getVillageData().equals(village));
+    }
+
     @Test
     public void testEqualsWithSameTalukaCode() {
         Village village = getVillageData();
