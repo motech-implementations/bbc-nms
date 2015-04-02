@@ -111,7 +111,6 @@ public class SubscriptionControllerIT extends BasePaxIT {
     @Test
     public void shouldCreateSubscriberAndSubscriptionWithBeneficiaryTypeChild()  {
         preSetUp();
-        BeneficiaryType beneficiaryType;
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
         SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111",29,"48WeeksPack");
 
@@ -123,9 +122,29 @@ public class SubscriptionControllerIT extends BasePaxIT {
         }
         Subscriber subscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null, null);
         Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus("1234567890", SubscriptionPack.PACK_48_WEEKS, Status.PENDING_ACTIVATION);
-        beneficiaryType = BeneficiaryType.CHILD;
         Assert.assertNotNull(subscriber);
-        Assert.assertEquals(beneficiaryType,subscriber.getBeneficiaryType());
+        Assert.assertEquals(BeneficiaryType.CHILD,subscriber.getBeneficiaryType());
+        Assert.assertEquals("1234567890", subscriber.getMsisdn());
+        Assert.assertEquals(null, subscriber.getDeactivationReason());
+        Assert.assertNotNull(subscription);
+    }
+
+    @Test
+    public void shouldCreateSubscriberAndSubscriptionWithBeneficiaryTypeMother()  {
+        preSetUp();
+        SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111",29,"72WeeksPack");
+
+        try {
+            subscriptionController.createSubscription(apiRequest);
+
+        } catch (DataValidationException | NmsInternalServerError e) {
+            e.printStackTrace();
+        }
+        Subscriber subscriber = subscriberDataService.findRecordByMsisdnAndMotherMctsId("1234567890", null, null);
+        Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus("1234567890", SubscriptionPack.PACK_72_WEEKS, Status.PENDING_ACTIVATION);
+        Assert.assertNotNull(subscriber);
+        Assert.assertEquals(BeneficiaryType.MOTHER,subscriber.getBeneficiaryType());
         Assert.assertEquals("1234567890", subscriber.getMsisdn());
         Assert.assertEquals(null, subscriber.getDeactivationReason());
         Assert.assertNotNull(subscription);
