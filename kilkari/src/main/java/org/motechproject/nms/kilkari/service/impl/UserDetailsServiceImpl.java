@@ -59,7 +59,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             List<String> activePackNameList = null;
             //get list of subscription packs for the subscriber.
             List<SubscriptionPack> activePackList = subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn);
-            if (activePackList != null) {
+            if (activePackList != null && !activePackList.isEmpty()) {
                 activePackNameList = new ArrayList<String>();
                 for (SubscriptionPack activePack : activePackList) {
                     activePackNameList.add(activePack.getValue());
