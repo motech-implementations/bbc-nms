@@ -94,8 +94,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void getLanguageLocationCodeForSubscriber(
             Subscriber subscriber, SubscriberDetailApiResponse response) throws NmsInternalServerError {
         //if LanguageLocationCode for the subscriber record is present then set this is as LanguageLocationCode in response.
-        if (subscriber.getLanguageLocationCode() != null) {
-            response.setLanguageLocationCode(subscriber.getLanguageLocationCode());
+        Integer llcCode = subscriber.getLanguageLocationCode();
+        if (llcCode != null) {
+            response.setLanguageLocationCode(llcCode);
+            //if llcCode found then update the circle in response object.
+            LanguageLocationCode record = llcService.findLLCByCode(llcCode);
+            if (record != null) {
+                response.setCircle(record.getCircleCode());
+            }
 
         } else {
             if (subscriber.getDistrict() != null) {
