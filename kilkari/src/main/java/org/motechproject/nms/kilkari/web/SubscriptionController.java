@@ -92,7 +92,7 @@ public class SubscriptionController extends BaseController {
         logger.debug("callId : [" + callId + "]");
         SubscriberDetailApiResponse response;
             validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
-            response = userDetailsService.getSubscriberDetails(callingNumber, circle, operator);
+            response = userDetailsService.getSubscriberDetails(ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,callingNumber), circle, operator);
         logger.trace("getUserDetails: End");
         return response;
     }
@@ -107,8 +107,7 @@ public class SubscriptionController extends BaseController {
      */
     public void validateSubscriberDetailsRequestParams(
             String msisdn, String operator, String circle, String callId) throws DataValidationException {
-        msisdn = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,
-                ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, msisdn, true));
+        ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, msisdn, true);
         ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
         ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,
