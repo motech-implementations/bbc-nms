@@ -121,7 +121,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         } catch (DataValidationException | NmsInternalServerError e) {
             e.printStackTrace();
         }
-        Subscriber subscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null);
+        Subscriber subscriber = subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null, null);
         Subscription subscription = subscriptionDataService.getSubscriptionByMsisdnPackStatus("1234567890", SubscriptionPack.PACK_48_WEEKS, Status.PENDING_ACTIVATION);
         beneficiaryType = BeneficiaryType.CHILD;
         Assert.assertNotNull(subscriber);
@@ -147,7 +147,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
             e.printStackTrace();
         }
         Subscription dbSubscription = subscriptionDataService.findById(subscription.getId());
-        Assert.assertNotNull(subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null));
+        Assert.assertNotNull(subscriberDataService.findRecordByMsisdnAndChildMctsId("1234567890",null, null));
         Assert.assertNotNull(dbSubscription);
         Assert.assertEquals(dbSubscription.getStatus(), Status.DEACTIVATED);
     }

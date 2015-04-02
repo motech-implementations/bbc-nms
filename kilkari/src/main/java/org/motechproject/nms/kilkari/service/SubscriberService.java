@@ -38,7 +38,7 @@ public interface SubscriberService {
      * @param childMctsId String type object
      * @return Subscriber type object
      */
-    Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId);
+    Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId, Long stateCode);
 
     /**
      * This method gets subscriber by msisdn and motherMctsId
@@ -46,7 +46,7 @@ public interface SubscriberService {
      * @param motherMctsId String type object
      * @return Subscriber type object
      */
-    Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId);
+    Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId, Long stateCode);
 
     /**
      * Deletes specified subscriber record from database

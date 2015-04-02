@@ -307,18 +307,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 having completed or deactivated packs */
                 if (channel == Channel.MCTS) {
                     if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), subscriber.getChildMctsId());
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(),
+                                subscriber.getChildMctsId(), subscriber.getStateCode());
                     } else {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), subscriber.getMotherMctsId());
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(),
+                                subscriber.getMotherMctsId(), subscriber.getStateCode());
                     }
                 }
 
                 /* Check if there is any subscriber with same MSISDN who has subscribed through IVR */
                 if (dbSubscriber == null) {
                     if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(), null);
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(),
+                                null, null);
                     } else {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(), null);
+                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(),
+                                null, null);
                     }
                 }
 
@@ -413,7 +417,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setMctsId(subscriber.getSuitableMctsId());
         if (subscriber.getState() != null) {
-            newSubscription.setStateCode(subscriber.getState().getStateCode());
+            newSubscription.setStateCode(subscriber.getStateCode());
         }
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
@@ -483,6 +487,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         dbSubscriber.setMsisdn(subscriber.getMsisdn());
         dbSubscriber.setName(subscriber.getName());
         dbSubscriber.setState(subscriber.getState());
+        dbSubscriber.setStateCode(subscriber.getStateCode());
         dbSubscriber.setDistrict(subscriber.getDistrict());
         dbSubscriber.setTaluka(subscriber.getTaluka());
         dbSubscriber.setHealthBlock(subscriber.getHealthBlock());

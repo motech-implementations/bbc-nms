@@ -212,6 +212,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         Village village = checkAndGetVillage(talukaCode, taluka, villageCode);
 
         subscriber.setState(state);
+        subscriber.setStateCode(stateCode);
         subscriber.setDistrict(district);
         subscriber.setTaluka(taluka);
         subscriber.setHealthBlock(healthBlock);
