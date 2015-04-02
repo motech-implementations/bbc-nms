@@ -176,14 +176,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 logger.info("Found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 handleMotherRecordIfFoundInChildCsvRecord(subscriber, otherPack, otherMctsId, dbSubscriber);
-                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             }
         } else { /* Record found based on msisdn than */
             logger.info("Found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), subscriber.getMsisdn(), pack.toString(), Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getSuitableMctsId())) {
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
                 handleMotherRecordIfFoundInChildCsvRecord(subscriber, otherPack, otherMctsId, dbSubscriber);
-                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel); /* update subscriber and subscription info */
+                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber); /* update subscriber and subscription info */
             } else { /* can't subscribe subscription for two phone num. */
                 throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
                         ErrorCategoryConstants.INCONSISTENT_DATA, Constants.SUBSCRIPTION_EXIST_ERR_DESC, "");
@@ -265,14 +265,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else { /* Record found based on mctsid than update subscriber and subscription */
                 logger.info("Found active subscription from database based on Mothermctsid[{}], packName[{}], status[{}]", subscriber.getMotherMctsId(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel);
+                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber);
             }
         } else {
             logger.info("Found active subscription from database based on msisdn[{}], packName[{}], status[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
             if (dbSubscription.getMctsId() == null || dbSubscription.getMctsId().equals(subscriber.getMotherMctsId())) {
                 logger.info("Found matching msisdn [{}], packName[{}], status[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS, Status.ACTIVE);
                 Subscriber dbSubscriber = dbSubscription.getSubscriber();
-                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber, channel);
+                updateDbSubscriberAndSubscription(subscriber, dbSubscription, dbSubscriber);
 
             } else {
                 throw new DataValidationException(Constants.SUBSCRIPTION_EXIST_EXCEPTION_MSG,
@@ -375,13 +375,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     /**
      *  This method is used to update subscriber and subscription
-     * 
-     *  @param subscriber csv uploaded subscriber
+     *   @param subscriber csv uploaded subscriber
      *  @param dbSubscription database Subscription
-     *  @param dbSubscriber database subscriber
+     * @param dbSubscriber database subscriber
      */
     private void updateDbSubscriberAndSubscription(Subscriber subscriber, Subscription dbSubscription,
-                                                   Subscriber dbSubscriber, Channel channel) {
+                                                   Subscriber dbSubscriber) {
         
         if (subscriber.getDeactivationReason() != DeactivationReason.NONE) {
             updateDbSubscription(subscriber, dbSubscription, true, subscriber.getDeactivationReason());

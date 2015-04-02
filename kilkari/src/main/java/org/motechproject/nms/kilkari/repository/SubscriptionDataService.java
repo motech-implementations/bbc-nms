@@ -7,8 +7,6 @@ import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 
-import java.util.List;
-
 /**
  * Interface for repository that persists simple records and allows CRUD.
  * MotechDataService base class will provide the implementation of this class as well

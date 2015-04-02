@@ -139,8 +139,12 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, childMctsCsv.getMotherId(), false));
         childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, childMctsCsv.getMotherName(), false));
-        childSubscriber.setDob(ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true));
-
+        DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true);
+        if (dob.isAfter(DateTime.now())) {
+            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
+        } else {
+            childSubscriber.setDob(dob);
+        }
         /* Set the appropriate Deactivation Reason */
         String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, childMctsCsv.getEntryType(), false);
         commonValidatorService.checkValidEntryType(entryType);
