@@ -651,6 +651,46 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
+        // testFrontLineWorkerTaluka not present in CSV.
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+                "USHA", "123", "2", "1234", "12345", "123456", null,
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+        // testFrontLineWorkerVillage not present in CSV.
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "123456",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+        // testFrontLineWorker Taluka-Village combination not present in CSV.
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+                "USHA", "123", "2", "1234", "12345", "123456", "1234",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+        // testFrontLineWorker Taluka is null, Village is non null.
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+                "USHA", "123", "", "1234", "12345", "123456", "1234",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
 
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
@@ -980,6 +1020,14 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("8484848484");
         assertNotNull(frontLineWorker);
         assertTrue(104L == frontLineWorker.getFlwId());
+
+        // testFrontLineWorkerTaluka not present in CSV.
+        // testFrontLineWorkerVillage not present in CSV.
+        // testFrontLineWorker Taluka-Village combination not present in CSV.
+
+        flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
+        assertNull(flw);
+
 
         List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
