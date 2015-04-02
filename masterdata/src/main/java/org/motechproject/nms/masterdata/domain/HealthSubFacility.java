@@ -5,6 +5,9 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * This class Models data for HealthSubFacility location records
  */
@@ -137,12 +140,14 @@ public class HealthSubFacility extends MdsEntity {
      */
     @Override
     public int hashCode() {
+        List<Long> Llist=new ArrayList<Long>();
         int result = stateCode.hashCode();
-        result = 31 * result + districtCode.hashCode();
-        result = 31 * result + talukaCode.hashCode();
-        result = 31 * result + healthBlockCode.hashCode();
-        result = 31 * result + healthFacilityCode.hashCode();
-        result = 31 * result + healthSubFacilityCode.hashCode();
+        Llist.add(districtCode);
+        Llist.add(talukaCode);
+        Llist.add(healthBlockCode);
+        Llist.add(healthFacilityCode);
+        Llist.add(healthSubFacilityCode);
+        result=HashCode.hashCode(Llist,result);
         return result;
     }
 
