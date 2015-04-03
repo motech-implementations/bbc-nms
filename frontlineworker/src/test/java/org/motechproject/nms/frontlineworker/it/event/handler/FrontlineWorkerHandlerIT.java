@@ -804,6 +804,58 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
+
+        // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
+        frontLineWorkerCsv = new FrontLineWorkerCsv("15", "12", "3737373737", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                "9876", "1234", "false", null);// status is invalid.
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("16", "12", "3737373737", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+
+        // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null, present
+        // in different records and record fetched by contact number is invalid
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("17", "12", "4747474747", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("18", "12", "5757575757", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                "9876", "1234", "false", null);//status is invalid.
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+
+        frontLineWorkerCsv = new FrontLineWorkerCsv("17", "12", "5757575757", "Etasha",
+                "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                "9876", "1234", "true", null);
+
+        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
+        assertNotNull(frontLineWorkerCsvdb);
+        uploadedIds.add(frontLineWorkerCsvdb.getId());
+
+
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
@@ -1141,6 +1193,19 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(flw);
         assertEquals(Designation.ASHA, flw.getDesignation());
         assertTrue(6L == flw.getFlwId());
+
+        // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
+
+        flw = frontLineWorkerService.getFlwBycontactNo("3737373737");
+        assertNotNull(flw);
+        assertTrue(16L == flw.getFlwId());
+
+        // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null, present
+        // in different records and record fetched by contact number is invalid
+
+        flw = frontLineWorkerService.getFlwBycontactNo("5757575757");
+        assertNotNull(flw);
+        assertTrue(17L == flw.getFlwId());
 
         List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
