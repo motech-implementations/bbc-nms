@@ -5,6 +5,8 @@ import org.motechproject.nms.frontlineworker.repository.CustomQueries;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.RemoveInvalidRecords;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ public class RemoveInvalidRecordsImpl implements RemoveInvalidRecords {
     FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
 
     FrontLineWorkerService frontLineWorkerService;
+
+    private static Logger logger = LoggerFactory.getLogger(RemoveInvalidRecordsImpl.class);
 
     @Autowired
     public RemoveInvalidRecordsImpl(FrontLineWorkerRecordDataService frontLineWorkerRecordDataService, FrontLineWorkerService frontLineWorkerService) {
@@ -37,10 +41,13 @@ public class RemoveInvalidRecordsImpl implements RemoveInvalidRecords {
     public void deleteInvalidFrontLineWorkerRecords() {
         List<FrontLineWorker> frontLineWorkerListToBeDeleted = invalidFrontLineWorkerList();
 
-        for (FrontLineWorker frontLineWorker : frontLineWorkerListToBeDeleted) {
-            frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
+        if(frontLineWorkerListToBeDeleted != null){
+            for (FrontLineWorker frontLineWorker : frontLineWorkerListToBeDeleted) {
+                frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
+            }
         }
-
-
+        else {
+            logger.debug("No invalid record found which is older than the purgeDate");
+        }
     }
 }
