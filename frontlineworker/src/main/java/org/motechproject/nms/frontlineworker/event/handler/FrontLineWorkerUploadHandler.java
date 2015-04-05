@@ -455,12 +455,11 @@ public class FrontLineWorkerUploadHandler {
         contactNo = ParseDataHelper.validateAndTrimMsisdn(CONTACT_NUMBER, ParseDataHelper.validateAndParseString(CONTACT_NUMBER, record.getContactNo(), true));
         frontLineWorker.setContactNo(contactNo);
 
-        if (record.getAlternateContactNo() != null) {
+        if(!ParseDataHelper.isNullOrEmpty(record.getAlternateContactNo())) {
             alternateContactNo = ParseDataHelper.validateAndTrimMsisdn("Alternate Number", record.getAlternateContactNo());
             frontLineWorker.setAlternateContactNo(alternateContactNo);
         }
-
-        if (record.getOldMobileNo() != null) {
+        if(!ParseDataHelper.isNullOrEmpty(record.getOldMobileNo())) {
             oldMobileNo = ParseDataHelper.validateAndTrimMsisdn("Old Mobile Number", record.getOldMobileNo());
             frontLineWorker.setOldMobileNo(oldMobileNo);
         }
