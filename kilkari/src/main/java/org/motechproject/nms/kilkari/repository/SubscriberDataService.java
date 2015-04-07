@@ -27,4 +27,15 @@ public interface SubscriberDataService extends MotechDataService<Subscriber> {
             @LookupField(name = "motherMctsId") String motherMctsId,
             @LookupField(name =  "stateCode") Long stateCode);
 
+
+    @Lookup
+    Subscriber findRecordByChildMctsId(
+            @LookupField(name = "childMctsId") String childMctsId,
+            @LookupField(name =  "stateCode") Long stateCode);
+
+    @Lookup
+    Subscriber findRecordByMotherMctsId(
+            @LookupField(name = "motherMctsId") String motherMctsId,
+            @LookupField(name =  "stateCode") Long stateCode);
+
 }

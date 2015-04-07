@@ -307,11 +307,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 having completed or deactivated packs */
                 if (channel == Channel.MCTS) {
                     if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(),
-                                subscriber.getChildMctsId(), subscriber.getStateCode());
+                        dbSubscriber = subscriberService.getSubscriberByChildMctsId(subscriber.getChildMctsId(),
+                                subscriber.getStateCode());
                     } else {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(),
-                                subscriber.getMotherMctsId(), subscriber.getStateCode());
+                        dbSubscriber = subscriberService.getSubscriberByMotherMctsId(subscriber.getMotherMctsId(),
+                                subscriber.getStateCode());
                     }
                 }
 

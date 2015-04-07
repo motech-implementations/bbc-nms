@@ -53,5 +53,8 @@ public interface SubscriberService {
      * @param subscriber Subscriber type object
      */
     void delete(Subscriber subscriber);
-    
+
+    Subscriber getSubscriberByChildMctsId(String childMctsId, Long stateCode);
+
+    Subscriber getSubscriberByMotherMctsId(String motherMctsId, Long stateCode);
 }

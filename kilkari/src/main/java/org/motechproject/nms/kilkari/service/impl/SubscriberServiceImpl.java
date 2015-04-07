@@ -84,7 +84,26 @@ public class SubscriberServiceImpl implements SubscriberService {
     public void delete(Subscriber subscriber) {
         subscriberDataService.delete(subscriber);
     }
-    
 
+
+    /**
+     * This method gets subscriber by childMctsId
+     * @param childMctsId String type object
+     * @return Subscriber type object
+     */
+    @Override
+    public Subscriber getSubscriberByChildMctsId(String childMctsId, Long stateCode) {
+        return subscriberDataService.findRecordByChildMctsId(childMctsId, stateCode);
+    }
+
+    /**
+     * This method gets subscriber by motherMctsId
+     * @param motherMctsId String type object
+     * @return Subscriber type object
+     */
+    @Override
+    public Subscriber getSubscriberByMotherMctsId(String motherMctsId, Long stateCode) {
+        return subscriberDataService.findRecordByMotherMctsId(motherMctsId, stateCode);
+    }
 
 }
