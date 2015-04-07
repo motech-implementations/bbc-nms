@@ -261,6 +261,16 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         // Record 16 Operator is not present in Database
 
+        // Record 17 Circle doesn't Exist in Database.
+
+        frontLineWorker = new FrontLineWorker(1517L, "5050505050", "Rashi", Designation.USHA,
+                null, null, stateData, district, null, null, null,
+                null, null, null, null, Status.ANONYMOUS, null, null);
+
+
+        frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+        frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("5050505050");
+        assertNotNull(frontLineWorkerdb);
     }
 
     
@@ -488,6 +498,17 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertEquals("circleCode", frontLineWorker.getCircleCode());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
+
+
+        // Record 17 Circle doesn't Exist in Database.
+
+        try {
+            userProfile = userProfileDetailsService.processUserDetails("5050505050", "invalidCircle", "123",
+                    ServicesUsingFrontLineWorker.MOBILEACADEMY);
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+        }
 
 
     }

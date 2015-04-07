@@ -776,35 +776,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
-        // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in same Record
-
-        frontLineWorkerCsv = new FrontLineWorkerCsv("6", "12", "1717171717", "Etasha",
-                "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "true", null);
-
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
-
-        frontLineWorkerCsv = new FrontLineWorkerCsv("6", "12", "1717171717", "Etasha",
-                "ASHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "true", null);
-
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
-
-        // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in different Record
-
-        frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "1717171717", "Etasha",
-                "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                "9876", "1234", "true", null);
-
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
-
-
         // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
         frontLineWorkerCsv = new FrontLineWorkerCsv("15", "12", "3737373737", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
@@ -1183,14 +1154,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-
-        // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in same Record
-        // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in different Record
-
-        flw = frontLineWorkerService.getFlwBycontactNo("1717171717");
-        assertNotNull(flw);
-        assertEquals(Designation.ASHA, flw.getDesignation());
-        assertTrue(6L == flw.getFlwId());
 
         // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
 

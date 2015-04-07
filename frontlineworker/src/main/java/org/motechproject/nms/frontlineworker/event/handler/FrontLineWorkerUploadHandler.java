@@ -443,19 +443,19 @@ public class FrontLineWorkerUploadHandler {
      */
     private HealthBlock healthBlockConsistencyCheck(Taluka taluka, String record) throws DataValidationException {
 
-        Long healthclockCode;
+        Long healthBlockCode;
         HealthBlock healthBlock = null;
 
-        healthclockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record, false);
-        if (healthclockCode != null) {
+        healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record, false);
+        if (healthBlockCode != null) {
             if (taluka != null) {
-                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthclockCode);
+                healthBlock = locationService.getHealthBlockByCode(taluka.getId(), healthBlockCode);
                 if (healthBlock == null) {
-                    logger.warn("Record not found for HealthBlock ID[{}]", healthclockCode);
+                    logger.warn("Record not found for HealthBlock ID[{}]", healthBlockCode);
                     ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
                 }
             } else {
-                logger.warn("HealthBlock ID[{}] present without Taluka", healthclockCode);
+                logger.warn("HealthBlock ID[{}] present without Taluka", healthBlockCode);
                 ParseDataHelper.raiseInvalidDataException("HealthBlock", record);
             }
         }
