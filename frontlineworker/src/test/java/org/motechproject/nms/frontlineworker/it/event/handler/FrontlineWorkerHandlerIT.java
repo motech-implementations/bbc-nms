@@ -815,7 +815,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         uploadedIds.add(frontLineWorkerCsvdb.getId());
 
 
-
         frontLineWorkerCsv = new FrontLineWorkerCsv("16", "12", "3737373737", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
@@ -835,7 +834,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
         assertNotNull(frontLineWorkerCsvdb);
         uploadedIds.add(frontLineWorkerCsvdb.getId());
-
 
 
         frontLineWorkerCsv = new FrontLineWorkerCsv("18", "12", "5757575757", "Etasha",

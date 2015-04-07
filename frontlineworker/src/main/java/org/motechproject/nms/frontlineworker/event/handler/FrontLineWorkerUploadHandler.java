@@ -144,7 +144,7 @@ public class FrontLineWorkerUploadHandler {
 
                         //creation scenario
                         logger.debug("New front line worker creation starts");
-                        successfulCreate(frontLineWorker, dbRecord, bulkUploadStatus, "Successful creation of new front line worker");
+                        successfulCreate(frontLineWorker, bulkUploadStatus, "Successful creation of new front line worker");
 
 
                     } else {
@@ -154,7 +154,6 @@ public class FrontLineWorkerUploadHandler {
                             ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
                         } else {
                             Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
-                            Status status = dbRecord.getStatus();
                             if (valid == null || valid == true) {
                                 frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
                                 successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = " + valid.toString());
@@ -222,12 +221,11 @@ public class FrontLineWorkerUploadHandler {
      * This method maps fields of generated front line worker object to front line worker object that
      * is to be saved in Database.
      *
-     * @param frontLineWorker  the frontLineWorker object which is to be mapped to the db object
-     * @param dbRecord         the record which will be written in db
+     * @param frontLineWorker  the frontLineWorker object which is to be stored in database
      * @param bulkUploadStatus object to provide the status of create scenario
      * @param log              log to be generated for create scenario
      */
-    private void successfulCreate(FrontLineWorker frontLineWorker, FrontLineWorker dbRecord, BulkUploadStatus bulkUploadStatus, String log) {
+    private void successfulCreate(FrontLineWorker frontLineWorker, BulkUploadStatus bulkUploadStatus, String log) {
 
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
         bulkUploadStatus.incrementSuccessCount();
