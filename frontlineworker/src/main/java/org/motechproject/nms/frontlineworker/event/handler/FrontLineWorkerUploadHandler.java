@@ -110,22 +110,31 @@ public class FrontLineWorkerUploadHandler {
                 logger.debug("Processing uploaded id : {}", id);
                 record = frontLineWorkerCsvService.findByIdInCsv(id);
                 if (record != null) {
+                    //Record is found in Csv
                     userName = record.getOwner();
                     logger.debug("Record found in Csv database");
 
                     FrontLineWorker frontLineWorker = new FrontLineWorker();
+                    //Apply validations on the values entered in the CSV
                     validateFrontLineWorker(record, frontLineWorker);
+
+                    //Map values entered for the record in CSV to FrontLineWorker
                     mapFrontLineWorkerFrom(record, frontLineWorker);
 
                     nmsFlwId = frontLineWorker.getId();
 
+                    //to verify whether it is a creation case, update case of invalid case
                     FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker);
                     Long flw = ParseDataHelper.validateAndParseLong("flwId", record.getFlwId(), false);
 
+                    //in case of update, if flwId was present earlier and absent in latest record, exception is
+                    // to be thrown
                     if (flw == null && dbRecord.getFlwId() != null) {
                         ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
                     }
 
+                    //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
+                    // in database, then exception is to be thrown
                     if (dbRecord != null && dbRecord.getId() != nmsFlwId && nmsFlwId != null) {
 
                         ParseDataHelper.raiseInvalidDataException("NMS Flw Id", "Incorrect");
@@ -133,55 +142,29 @@ public class FrontLineWorkerUploadHandler {
 
                     if (dbRecord == null) {
 
+                        //creation scenario
                         logger.debug("New front line worker creation starts");
-                        frontLineWorkerService.createFrontLineWorker(frontLineWorker);
-                        bulkUploadStatus.incrementSuccessCount();
-                        logger.debug("Successful creation of new front line worker");
+                        successfulCreate(frontLineWorker, dbRecord, bulkUploadStatus, "Successful creation of new front line worker");
+
 
                     } else {
+                        //updation scenario
                         if (dbRecord.getStatus() == Status.INVALID) {
+                            //Invalid record is tried to be updated
                             ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
                         } else {
                             Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", record.getIsValid(), false);
                             Status status = dbRecord.getStatus();
-                            if (valid == null) {
-                                if (Status.ANONYMOUS == dbRecord.getStatus()) {
-                                    frontLineWorker.setStatus(Status.ACTIVE);
-                                } else {
-                                    frontLineWorker.setStatus(dbRecord.getStatus());
-                                }
+                            if (valid == null || valid == true) {
+                                frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
+                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = " + valid.toString());
 
-                                updateDbRecord(frontLineWorker, dbRecord);
-                                bulkUploadStatus.incrementSuccessCount();
-                                logger.debug("Record updated successfully for Flw with valid = null");
                             } else {
-                                if (valid == true) {
-                                    if (status == Status.INVALID) {
-                                        bulkUploadStatus.incrementFailureCount();
-                                        //Bug 38
-                                        errorDetails = populateErrorDetails(csvFileName, record.toString(),
-                                                ErrorCategoryConstants.INCONSISTENT_DATA,
-                                                String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, "Status"));
-                                        bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
-                                        logger.warn("Status change try from invalid to valid for id : {}", id);
-                                    } else {
-                                        if (Status.ANONYMOUS == dbRecord.getStatus()) {
-                                            frontLineWorker.setStatus(Status.ACTIVE);
-                                        } else {
-                                            frontLineWorker.setStatus(dbRecord.getStatus());
-                                        }
-                                        updateDbRecord(frontLineWorker, dbRecord);
-                                        bulkUploadStatus.incrementSuccessCount();
-                                        logger.debug("Record updated successfully for Flw with valid = true");
+                                frontLineWorker.setStatus(Status.INVALID);
+                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = false");
 
-                                    }
-                                } else {
-                                    frontLineWorker.setStatus(Status.INVALID);
-                                    updateDbRecord(frontLineWorker, dbRecord);
-                                    bulkUploadStatus.incrementSuccessCount();
-                                    logger.debug("Record updated successfully for Flw with valid = false");
-                                }
                             }
+
                         }
 
                     }
@@ -217,6 +200,56 @@ public class FrontLineWorkerUploadHandler {
         bulkUploadStatus.setUploadedBy(userName);
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
         logger.debug("Success[flwDataHandlerSuccess] method finished for FrontLineWorkerCsv");
+    }
+
+    /**
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
+     *
+     * @param status status of frontLineWorker present in database
+     * @return status       updated status that is to be saved in databse
+     */
+
+    private Status setStatusWhenValid(Status status) {
+        if (Status.ANONYMOUS == status) {
+            return Status.ACTIVE;
+        } else {
+            return status;
+        }
+    }
+
+    /**
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
+     *
+     * @param frontLineWorker  the frontLineWorker object which is to be mapped to the db object
+     * @param dbRecord         the record which will be written in db
+     * @param bulkUploadStatus object to provide the status of create scenario
+     * @param log              log to be generated for create scenario
+     */
+    private void successfulCreate(FrontLineWorker frontLineWorker, FrontLineWorker dbRecord, BulkUploadStatus bulkUploadStatus, String log) {
+
+        frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+        bulkUploadStatus.incrementSuccessCount();
+        logger.debug(log);
+
+
+    }
+
+    /**
+     * This method maps fields of generated front line worker object to front line worker object that
+     * is to be saved in Database.
+     *
+     * @param frontLineWorker  the frontLineWorker object which is to be mapped to the db object
+     * @param dbRecord         the record which will be updated in db
+     * @param bulkUploadStatus object to provide the status of update scenario
+     * @param log              log to be generated for update scenario
+     */
+    private void successfulUpdate(FrontLineWorker frontLineWorker, FrontLineWorker dbRecord, BulkUploadStatus bulkUploadStatus, String log) {
+
+        updateDbRecord(frontLineWorker, dbRecord);
+        bulkUploadStatus.incrementSuccessCount();
+        logger.debug(log);
     }
 
     /**

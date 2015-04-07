@@ -1,6 +1,8 @@
 package org.motechproject.nms.frontlineworker.it.event.handler;
 
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
@@ -12,8 +14,16 @@ import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -251,9 +261,8 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         // Record 16 Operator is not present in Database
 
-   }
+    }
 
-    
     
     @Test
     public void testprocessUserDetails() throws DataValidationException {

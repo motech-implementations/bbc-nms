@@ -12,8 +12,22 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.HealthBlockService;
+import org.motechproject.nms.masterdata.service.HealthFacilityService;
+import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
+import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.VillageService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -793,10 +807,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
-        }
+    }
 
-
-    
     
     @Test
     public void testFrontLineWorkerAll() {
@@ -1088,11 +1100,11 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         // testvalid  is null contactNo and FlwId exist
 
-        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(1L,12L);
+        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(1L, 12L);
         assertNotNull(flw);
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        assertEquals("9990545494",flw.getContactNo());
+        assertEquals("9990545494", flw.getContactNo());
 
         // testFrontLineWorkerCreation flwId not present in CSV and new record insertion
         // testFrontLineWorker Update Flw ID provided in record where fleID was originally null
