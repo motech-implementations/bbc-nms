@@ -7,6 +7,7 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.State;
@@ -61,7 +62,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         UserProfile userProfile = null;
         FrontLineWorker frontLineWorker = null;
 
-        validateParams(msisdn, operatorCode, service);
+        validateParams(msisdn, operatorCode, circleCode, service);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
 
         if (frontLineWorker == null) {
@@ -144,6 +145,35 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         }
     }
 
+    /**
+     * This procedure validates the circle code sent in the API call
+     *
+     * @param circleCode the circle code deduced by the call
+     * @throws DataValidationException
+     */
+    private void validateCircle(String circleCode) throws DataValidationException {
+
+        Circle circle = circleService.getRecordByCode(circleCode);
+
+        if (circle == null) {
+            ParseDataHelper.raiseInvalidDataException("circleCode", circleCode);
+        }
+
+    }
+
+    /**
+     * This procedure validates the service sent in the API call
+     *
+     * @param service the service deduced by the call
+     * @throws DataValidationException
+     */
+    private void validateService(ServicesUsingFrontLineWorker service) throws DataValidationException {
+
+        if (service != ServicesUsingFrontLineWorker.MOBILEACADEMY && service != ServicesUsingFrontLineWorker.MOBILEKUNJI) {
+            ParseDataHelper.raiseInvalidDataException("service", service.toString());
+        }
+
+    }
 
     /**
      * This procedure creates a new UserProfile when a call is made by a number which is not present in the Database
@@ -177,24 +207,22 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      *
      * @param msisdn       contact number of the front line worker whose details are to be fetched
      * @param operatorCode the operator code deduced by the call
+     * @param circleCode   the circle code deduced by the call
      * @param service      the module which is invoking the API
      * @throws DataValidationException
      */
-    private void validateParams(String msisdn, String operatorCode,
+    private void validateParams(String msisdn, String operatorCode, String circleCode,
                                 ServicesUsingFrontLineWorker service) throws DataValidationException {
 
         msisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
+        validateOperator(operatorCode);
 
-        Operator operator = operatorService.getRecordByCode(operatorCode);
+        validateCircle(circleCode);
 
-        if (operator == null) {
-            ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
-        }
+        validateService(service);
 
-        if (service != ServicesUsingFrontLineWorker.MOBILEACADEMY && service != ServicesUsingFrontLineWorker.MOBILEKUNJI) {
-            ParseDataHelper.raiseInvalidDataException("service", service.toString());
-        }
     }
+
 
     /**
      * This procedure generates the UserDetails of a record with the circle code given in the API call
