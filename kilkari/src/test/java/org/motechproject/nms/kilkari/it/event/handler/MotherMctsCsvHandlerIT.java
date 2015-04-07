@@ -347,6 +347,57 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertNull(motherMctsCsvDataService.findById(uploadedId));
         
     }
-    
-    
+
+    @Test
+    public void shouldUpdateDeactivatedSubscriber() throws Exception {
+        logger.info("Inside createSameMsisdnSameMcts");
+
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000014");
+        csv.setIdNo("14");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("1000000014");
+        csv1.setIdNo("14");
+        csv1.setAbortion(null);
+        csv1.setOutcomeNos("1");
+        csv1.setEntryType("9");
+        csv1.setName("testing");
+
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        uploadedIds.clear();
+
+        MotherMctsCsv csv2 = new MotherMctsCsv();
+        csv2 = createMotherMcts(csv2);
+        csv2.setWhomPhoneNo("1000000015");
+        csv2.setIdNo("14");
+        csv2.setAbortion(null);
+        csv2.setOutcomeNos("1");
+        csv2.setEntryType("1");
+        csv2.setName("testing1");
+
+        MotherMctsCsv dbCsv2 = motherMctsCsvDataService.create(csv2);
+        uploadedIds.add(dbCsv2.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        Subscriber subs2 = subscriberService.getSubscriberByMsisdn(csv2.getWhomPhoneNo());
+
+        assertNotNull(subscription);
+        assertNotNull(subscription.getSubscriber());
+        assertNotNull(subs2);
+        assertFalse(subscription.getMsisdn()==subs2.getMsisdn());
+
+    }
+
+
+
 }
