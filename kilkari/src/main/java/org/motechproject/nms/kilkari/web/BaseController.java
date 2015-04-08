@@ -5,6 +5,7 @@ import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -68,5 +69,21 @@ public class BaseController {
         String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handle custom data validation exception i.e. not numeric ,not in range
+     * (400)
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { HttpMessageNotReadableException.class })
+    public ResponseEntity<String> handleMessageNotReadableException(
+            final HttpMessageNotReadableException exception, final WebRequest request) {
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
+        return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
     }
 }
