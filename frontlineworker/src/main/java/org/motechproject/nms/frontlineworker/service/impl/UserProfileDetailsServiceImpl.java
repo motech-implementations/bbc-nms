@@ -15,8 +15,12 @@ import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +47,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
     private String circleCodeString = "circle Code";
 
+    private static Logger logger = LoggerFactory.getLogger(UserProfileDetailsServiceImpl.class);
 
     /**
      * This procedure implements the API processUserDetails which is used to get the User Details of FrontLine worker
@@ -52,13 +57,14 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param circleCode   the circle code deduced from the call
      * @param operatorCode the operator code deduced by the call
      * @param service      the module which is invoking the API
-     * @throws DataValidationException , java.lang.Exception
+     * @throws DataValidationException , NmsInternalServerError
      */
     @Override
     public UserProfile processUserDetails(String msisdn, String circleCode, String operatorCode,
                                           ServicesUsingFrontLineWorker service)
-            throws DataValidationException {
+            throws DataValidationException, NmsInternalServerError {
 
+        logger.debug("processUserDetails API start");
         UserProfile userProfile = null;
         FrontLineWorker frontLineWorker = null;
 
@@ -86,10 +92,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     return userProfile;
 
                 case INVALID:
+                    logger.debug("Existing user is invalid. New User profile to be created");
                     userProfile = createUserProfile(msisdn, operatorCode, circleCode, service);
                     return userProfile;
             }
         }
+        logger.debug("processUserDetails API ends");
         return userProfile;
     }
 
@@ -104,6 +112,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     @Override
     public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
             throws DataValidationException {
+
+        logger.debug("updateLanguageLocationCodeFromMsisdn API start");
         String validatedMsisdn = null;
         LanguageLocationCode languageLocationCodeByParam = null;
         FrontLineWorker frontLineWorker = null;
@@ -128,6 +138,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             }
 
         }
+
+        logger.debug("updateLanguageLocationCodeFromMsisdn API ends");
     }
 
     /**
@@ -138,11 +150,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      */
     @Override
     public void validateOperator(String operatorCode) throws DataValidationException {
-        Operator operator = operatorService.getRecordByCode(operatorCode);
 
+        logger.debug("Operator validation start");
+        Operator operator = operatorService.getRecordByCode(operatorCode);
         if (operator == null) {
             ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
         }
+        logger.debug("Operator validation ends");
     }
 
     /**
@@ -187,6 +201,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     private UserProfile createUserProfile(String msisdn, String operatorCode, String circleCode,
                                           ServicesUsingFrontLineWorker service) throws DataValidationException {
 
+        logger.debug("New User Profile to be created with msisdn = {}, operatorCode = {}, circleCode = {}, service " +
+                "= {} ", msisdn, operatorCode, circleCode, service);
+
         UserProfile userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(msisdn);
@@ -198,6 +215,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         userProfile.setCreated(true);
 
         userProfile.setNmsFlwId(frontLineWorker.getId());
+        logger.debug("New user profile created");
         return userProfile;
     }
 
@@ -233,8 +251,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param circleCode the circle code deduced from the call
      * @throws DataValidationException,java.lang.Exception
      */
-    private UserProfile getUserDetailsByCircle(String msisdn, String circleCode, ServicesUsingFrontLineWorker service)
-            throws DataValidationException {
+    private UserProfile getUserDetailsByCircle(String msisdn, String circleCode, ServicesUsingFrontLineWorker service) {
 
         UserProfile userProfile = new UserProfile();
         Integer locationCode = null;
@@ -245,6 +262,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
         if (locationCode != null) {
             //unique language location code is found for the provided circle
+            logger.debug("language location code found by circle = {}", locationCode);
             languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setLanguageLocationCode(locationCode);
@@ -258,6 +276,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             if (defaultLanguageLocationCode != null) {
                 //no or multiple language location codes is found for the provided circle. here default language location
                 // code is fetched from circle
+                logger.debug("default language location code found by circle = {}", defaultLanguageLocationCode);
                 languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
@@ -268,6 +287,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
             } else {
                 //here the default language location code for circle is also not found.
+                logger.debug("both language location code and default language location code not found");
                 userProfile.setIsDefaultLanguageLocationCode(true);
                 userProfile.setLanguageLocationCode(null);
                 userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
@@ -288,12 +308,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param operatorCode    the operator by which the call is generated
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
-     * @throws DataValidationException
+     * @throws NmsInternalServerError
      */
     private UserProfile getUserDetailsForInactiveUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                       ServicesUsingFrontLineWorker service)
-            throws DataValidationException {
-
+            throws NmsInternalServerError {
+        logger.debug("User details to be found for inactive user");
         Long stateCode = frontLineWorker.getStateCode();
         Long districtCode = frontLineWorker.getDistrictId().getDistrictCode();
         LanguageLocationCode languageLocationCode = null;
@@ -301,6 +321,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         languageLocationCode = languageLocationCodeService.getRecordByLocationCode(stateCode, districtCode);
         if (languageLocationCode != null) {
+            logger.debug("language location code found by state and district = {}", languageLocationCode);
             userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
@@ -309,8 +330,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setMsisdn(msisdn);
             userProfile.setCircle(languageLocationCode.getCircleCode());
         } else {
-            ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
-
+            String errMessage = String.format("Language Location code not found for state : %s and district : %s", stateCode, districtCode);
+            throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
         }
 
         frontLineWorker.setStatus(Status.ACTIVE);
@@ -330,12 +351,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param frontLineWorker the frontLineWorker found using the msisdn     *
      * @param service         the module which is invoking the API
      * @param circleCode      the circle code deduced from the call
-     * @throws DataValidationException
+     * @throws NmsInternalServerError
      */
     private UserProfile getUserDetailsForActiveUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                     ServicesUsingFrontLineWorker service, String circleCode)
-            throws DataValidationException {
-
+            throws NmsInternalServerError {
+        logger.debug("User details to be found for active user");
         Integer locationCode = null;
         UserProfile userProfile = new UserProfile();
         String circle = null;
@@ -348,6 +369,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         circle = frontLineWorker.getCircleCode();
 
         if (locationCode != null && circle != ConfigurationConstants.UNKNOWN_CIRCLE) {
+            logger.debug(" Language Location code = {}, Circle Code = {}", locationCode, circle);
             userProfile.setLanguageLocationCode(locationCode);
             userProfile.setCircle(circle);
         } else {
@@ -355,20 +377,24 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 languageLocationCode = languageLocationCodeService.getRecordByLocationCode(stateCode,
                         districtCode);
                 if (languageLocationCode != null) {
+                    logger.debug("Language Location code found by state and district = {}",
+                            languageLocationCode.getLanguageLocationCode());
                     userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
                     userProfile.setCircle(languageLocationCode.getCircleCode());
                     frontLineWorker.setCircleCode(languageLocationCode.getCircleCode());
                     frontLineWorker.setLanguageLocationCodeId(languageLocationCode.getLanguageLocationCode());
                 } else {
-                    ParseDataHelper.raiseInvalidDataException("State Code", stateCode.toString());
-
+                    String errMessage = String.format("Language Location code not found for state : %s and district : %s", stateCode, districtCode);
+                    throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
                 }
             } else {
                 languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode,
                         locationCode);
                 if (languageLocationCode == null) {
-                    ParseDataHelper.raiseInvalidDataException("Circle Code", circleCode);
+                    String errMessage = String.format("Language Location code not found for circle : %s", circleCode);
+                    throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
                 } else {
+                    logger.debug("Language Location code found by circle = {}", languageLocationCode.getLanguageLocationCode());
                     userProfile.setLanguageLocationCode(locationCode);
                     userProfile.setCircle(circleCode);
 
@@ -400,11 +426,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param frontLineWorker the frontLineWorker found using the msisdn
      * @param service         the module which is invoking the API
      * @param circleCode      the circle code deduced from the call
-     * @throws DataValidationException
+     * @throws NmsInternalServerError
      */
     private UserProfile getUserDetailsForAnonymousUser(String msisdn, String operatorCode, FrontLineWorker frontLineWorker,
                                                        ServicesUsingFrontLineWorker service, String circleCode)
-            throws DataValidationException {
+            throws NmsInternalServerError {
+        logger.debug("User details to be found for anonymous user");
         Integer languageLocationCode = null;
         LanguageLocationCode langLocCode = null;
         Long stateCode = null;
@@ -417,6 +444,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         if (circle != ConfigurationConstants.UNKNOWN_CIRCLE && languageLocationCode != null) {
             langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circle, languageLocationCode);
             if (langLocCode != null) {
+                logger.debug(" Language Location code = {}, Circle Code = {}", languageLocationCode, circle);
                 userProfile.setIsDefaultLanguageLocationCode(false);
                 stateCode = langLocCode.getStateCode();
                 userProfile.setLanguageLocationCode(languageLocationCode);
@@ -429,7 +457,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 frontLineWorker.setOperatorCode(operatorCode);
                 frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
             } else {
-                ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
+                String errMessage = String.format("Language Location code not found for circle : %s", circle);
+                throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
             }
         } else {
