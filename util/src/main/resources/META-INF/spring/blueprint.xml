@@ -15,7 +15,4 @@
     <osgi:reference id="bulkUploadErrorDataService"
                     interface="org.motechproject.nms.util.repository.BulkUploadErrorDataService"/>
 
-    <osgi:reference id="serverLogService"
-                    interface="org.motechproject.osgi.web.service.ServerLogService"/>
-
 </beans>
