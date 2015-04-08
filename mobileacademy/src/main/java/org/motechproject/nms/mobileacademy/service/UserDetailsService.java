@@ -2,6 +2,7 @@ package org.motechproject.nms.mobileacademy.service;
 
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 
 /**
  * UserDetailsService interface contains methods to retrieve data required by
@@ -17,10 +18,11 @@ public interface UserDetailsService {
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
      * @return User user response object
-     * @throws DataValidationException
+     * @throws DataValidationException,NmsInternalServerError
      */
     User findUserDetails(String callingNumber, String operator, String circle,
-            String callId) throws DataValidationException;
+            String callId) throws DataValidationException,
+            NmsInternalServerError;
 
     /**
      * set Language Location Code for user

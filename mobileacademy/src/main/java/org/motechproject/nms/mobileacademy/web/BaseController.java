@@ -5,8 +5,8 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.motechproject.nms.mobileacademy.commons.InternalException;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,15 +69,16 @@ public class BaseController {
 
     /**
      * Handle Internal exception i.e. course not present or course upload is
-     * ongoing
+     * ongoing or other business exceptions.
      *
      * @param exception
      * @param request
      * @return ResponseEntity<String>
      */
-    @ExceptionHandler(value = { InternalException.class })
+    @ExceptionHandler(value = { NmsInternalServerError.class })
     public ResponseEntity<String> handleInternalException(
-            final InternalException exception, final HttpServletRequest request) {
+            final NmsInternalServerError exception,
+            final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"" + exception.getMessage()

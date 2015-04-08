@@ -13,6 +13,7 @@ import org.motechproject.nms.mobileacademy.service.ConfigurationService;
 import org.motechproject.nms.mobileacademy.service.FlwUsageDetailService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public User findUserDetails(String callingNumber, String operator,
-            String circle, String callId) throws DataValidationException {
+            String circle, String callId) throws DataValidationException,
+            NmsInternalServerError {
         User user = new User();// user detail response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber",
                 callingNumber);

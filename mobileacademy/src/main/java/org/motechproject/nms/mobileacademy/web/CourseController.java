@@ -3,10 +3,10 @@ package org.motechproject.nms.mobileacademy.web;
 import org.apache.log4j.Logger;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
-import org.motechproject.nms.mobileacademy.commons.InternalException;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.dto.BookmarkWithScore;
 import org.motechproject.nms.mobileacademy.service.CourseService;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -41,12 +41,12 @@ public class CourseController extends BaseController {
      */
     @RequestMapping(value = "/course", method = RequestMethod.GET)
     @ResponseBody
-    public String getCourse() throws InternalException {
+    public String getCourse() throws NmsInternalServerError {
         LOGGER.debug("getCourse: Started");
         Course course = courseService.getMtrainingCourse();
         if (course == null || course.getState() == CourseUnitState.Inactive) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-            throw new InternalException(
+            throw new NmsInternalServerError(
                     MobileAcademyConstants.NO_COURSE_PRESENT);
         } else {
             LOGGER.debug("getCourse: Ended");
@@ -61,12 +61,12 @@ public class CourseController extends BaseController {
      */
     @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
     @ResponseBody
-    public String getCourseVersion() throws InternalException {
+    public String getCourseVersion() throws NmsInternalServerError {
         LOGGER.debug("getCourseVersion: Started");
         Integer courseVersion = courseService.getCurrentCourseVersion();
         if (courseVersion == null) {
             LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-            throw new InternalException(
+            throw new NmsInternalServerError(
                     MobileAcademyConstants.NO_COURSE_PRESENT);
         } else {
             LOGGER.debug("getCourseVersion: Ended");

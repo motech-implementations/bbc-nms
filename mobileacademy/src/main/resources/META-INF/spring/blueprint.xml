@@ -56,6 +56,7 @@
         
     <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
         <property name="defaultURL" value="/mobileacademy"/>
+        <property name="moduleName" value="mobileacademy"/>
     </bean>
 
 </beans>
