@@ -246,15 +246,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         if (locationCode != null) {
             //unique language location code is found for the provided circle
             languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
-            if (languageLocationCode != null) {
-                userProfile.setIsDefaultLanguageLocationCode(false);
-                userProfile.setLanguageLocationCode(locationCode);
-                stateCode = languageLocationCode.getStateCode();
-                userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-                userProfile.setCircle(languageLocationCode.getCircleCode());
-            } else {
-                ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
-            }
+            userProfile.setIsDefaultLanguageLocationCode(false);
+            userProfile.setLanguageLocationCode(locationCode);
+            stateCode = languageLocationCode.getStateCode();
+            userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
+            userProfile.setCircle(languageLocationCode.getCircleCode());
+
 
         } else {
             defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
@@ -262,15 +259,11 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 //no or multiple language location codes is found for the provided circle. here default language location
                 // code is fetched from circle
                 languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
-                if (languageLocationCode != null) {
-                    userProfile.setIsDefaultLanguageLocationCode(true);
-                    userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
-                    stateCode = languageLocationCode.getStateCode();
-                    userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-                    userProfile.setCircle(languageLocationCode.getCircleCode());
-                } else {
-                    ParseDataHelper.raiseInvalidDataException(circleCodeString, circleCode);
-                }
+                userProfile.setIsDefaultLanguageLocationCode(true);
+                userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
+                stateCode = languageLocationCode.getStateCode();
+                userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
+                userProfile.setCircle(languageLocationCode.getCircleCode());
 
 
             } else {
