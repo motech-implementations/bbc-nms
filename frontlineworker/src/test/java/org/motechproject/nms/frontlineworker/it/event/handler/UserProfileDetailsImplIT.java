@@ -26,6 +26,7 @@ import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -275,7 +276,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
     
     @Test
-    public void testprocessUserDetails() throws DataValidationException {
+    public void testprocessUserDetails() throws DataValidationException, NmsInternalServerError {
         
         UserProfile userProfile;
         FrontLineWorker frontLineWorker;
