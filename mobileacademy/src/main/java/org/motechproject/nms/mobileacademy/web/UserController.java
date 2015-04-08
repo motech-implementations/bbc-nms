@@ -6,6 +6,7 @@ import org.motechproject.nms.mobileacademy.dto.LlcRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,7 +48,7 @@ public class UserController extends BaseController {
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
      * @return User response object containing user details
-     * @throws DataValidationException , Exception
+     * @throws DataValidationException , NmsInternalServerError
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
@@ -56,7 +57,7 @@ public class UserController extends BaseController {
             @RequestParam(value = UserController.REQUEST_PARAM_OPERATOR) String operator,
             @RequestParam(value = UserController.REQUEST_PARAM_CIRCLE) String circle,
             @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
-            throws DataValidationException {
+            throws DataValidationException, NmsInternalServerError {
         LOGGER.debug("getUserDetails: Started");
         LOGGER.debug("Input request-"
                 + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
