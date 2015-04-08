@@ -2,12 +2,14 @@ package org.motechproject.nms.mobilekunji.web;
 
 import org.apache.log4j.Logger;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
@@ -62,6 +64,23 @@ public class BaseController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
                 HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle General Exceptions occur on server side i.e null pointer(500)
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { NmsInternalServerError.class, Exception.class })
+    public ResponseEntity<String> handleGeneralExceptions(
+            final Exception exception, final WebRequest request) {
+
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
+        return new ResponseEntity<String>(responseJson,
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
