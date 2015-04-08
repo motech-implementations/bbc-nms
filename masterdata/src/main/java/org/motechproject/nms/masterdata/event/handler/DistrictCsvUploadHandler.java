@@ -153,6 +153,7 @@ public class DistrictCsvUploadHandler {
 
     private void updateDistrict(District existDistrictData, District districtData) {
         existDistrictData.setName(districtData.getName());
+        existDistrictData.setModifiedBy(districtData.getModifiedBy());
         districtService.update(existDistrictData);
     }
 }

@@ -149,6 +149,7 @@ public class StateCsvUploadHandler {
         stateExistData.setName(stateData.getName());
         stateExistData.setMaCapping(stateData.getMaCapping());
         stateExistData.setMkCapping(stateData.getMkCapping());
+        stateExistData.setModifiedBy(stateData.getModifiedBy());
 
         stateService.update(stateExistData);
     }

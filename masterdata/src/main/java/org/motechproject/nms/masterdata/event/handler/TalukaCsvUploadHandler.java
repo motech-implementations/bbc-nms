@@ -168,6 +168,7 @@ public class TalukaCsvUploadHandler {
 
     private void updateTaluka(Taluka existTalukaData, Taluka talukaData) {
         existTalukaData.setName(talukaData.getName());
+        existTalukaData.setModifiedBy(talukaData.getModifiedBy());
         talukaService.update(existTalukaData);
     }
 }

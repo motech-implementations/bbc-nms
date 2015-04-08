@@ -18,6 +18,7 @@ import org.motechproject.nms.mobilekunji.service.*;
 import org.motechproject.nms.mobilekunji.web.CallerDataController;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -94,7 +95,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testController() throws DataValidationException {
+    public void testController() throws DataValidationException, NmsInternalServerError {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
