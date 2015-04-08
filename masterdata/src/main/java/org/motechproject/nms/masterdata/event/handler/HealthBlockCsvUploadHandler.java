@@ -174,6 +174,7 @@ public class HealthBlockCsvUploadHandler {
 
     private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
         existHealthBlockData.setName(healthBlockData.getName());
+        existHealthBlockData.setModifiedBy(healthBlockData.getModifiedBy());
         healthBlockService.update(existHealthBlockData);
     }
 }

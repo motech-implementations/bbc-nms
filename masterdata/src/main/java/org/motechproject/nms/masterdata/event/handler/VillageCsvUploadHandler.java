@@ -175,6 +175,7 @@ public class VillageCsvUploadHandler {
 
     private void updateVillage(Village existVillageData, Village villageData) {
         existVillageData.setName(villageData.getName());
+        existVillageData.setModifiedBy(villageData.getModifiedBy());
         villageService.update(existVillageData);
     }
 }

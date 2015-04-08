@@ -193,6 +193,7 @@ public class HealthFacilityCsvUploadHandler {
     private void updateHealthFacilityData(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
         existHealthFacilityData.setHealthFacilityType(healthFacilityData.getHealthFacilityType());
+        existHealthFacilityData.setModifiedBy(healthFacilityData.getModifiedBy());
         healthFacilityService.update(existHealthFacilityData);
     }
 }
