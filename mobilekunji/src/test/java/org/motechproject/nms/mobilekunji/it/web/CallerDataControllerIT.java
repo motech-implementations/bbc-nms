@@ -123,7 +123,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
         flwDetailService.update(flwDetail);
-        configurationService.updateConfiguration(configurationData);us
+        configurationService.updateConfiguration(configurationData);
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
 
