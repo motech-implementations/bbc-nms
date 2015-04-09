@@ -83,7 +83,7 @@ public class BaseController {
     public ResponseEntity<String> handleMessageNotReadableException(
             final HttpMessageNotReadableException exception, final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + exception.getMessage() +"}";
+        String responseJson = "{\"failureReason\":\"" + "Could not read Json" +"}";
         return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
     }
 }
