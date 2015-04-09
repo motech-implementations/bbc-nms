@@ -124,6 +124,25 @@ public class RecordsProcessServiceImplTest {
     }
 
     /*
+     * this test case is used to validate schema when provided with invalid
+     * Content Type.
+     */
+    @Test
+    public void testValidateSchemaForInvalidContentType() {
+        Boolean flag = true;
+        CourseContentCsv courseContentCsv = new CourseContentCsv("100014",
+                "AP", "XX", "Chapter01_Lesson01", "ABC", "ch1_l1.wav", "150",
+                "");
+
+        try {
+            RecordsProcessHelper.validateSchema(courseContentCsv);
+        } catch (DataValidationException e) {
+            flag = false;
+        }
+        assertFalse(flag);
+    }
+
+    /*
      * this test case is used to validate schema when provided with Empty
      * ContentName.
      */

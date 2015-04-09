@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.motechproject.nms.mobileacademy.commons.ContentType;
 import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
@@ -61,7 +62,7 @@ public class RecordsProcessHelper {
     public static void putRecordInModifyMap(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             CourseContentCsv courseContentCsv) {
-        String key = courseContentCsv.getContentName();
+        String key = courseContentCsv.getContentName().toUpperCase();
         if (mapForModifyRecords.containsKey(key)) {
             mapForModifyRecords.get(key).add(courseContentCsv);
         } else {
@@ -165,6 +166,9 @@ public class RecordsProcessHelper {
         ParseDataHelper.validateAndParseString("Content Name",
                 courseContentCsv.getContentName(), true);
 
+        ParseDataHelper.validateAndParseString("Content Type",
+                courseContentCsv.getContentName(), true);
+
         ParseDataHelper.validateAndParseInt("Content Duration",
                 courseContentCsv.getContentDuration(), true);
 
@@ -224,6 +228,8 @@ public class RecordsProcessHelper {
 
         validateContentName(courseContentCsv, record);
 
+        validateContentType(courseContentCsv);
+
         if (record.getType() == FileType.QUESTION_CONTENT) {
             String metaData = ParseDataHelper.validateAndParseString(
                     "METADETA", courseContentCsv.getMetaData(), true);
@@ -254,6 +260,21 @@ public class RecordsProcessHelper {
         }
 
         record.setFileName(courseContentCsv.getContentFile());
+    }
+
+    /*
+     * This function validates the content Type in a CourseContentCsv Record. If
+     * the content Type is anything other than CONTENT or PROMPT, it throws an
+     * error.
+     */
+    public static void validateContentType(CourseContentCsv courseContentCsv)
+            throws DataValidationException {
+        if (ContentType.findByName(courseContentCsv.getContentType()) == null) {
+            throw new DataValidationException(null,
+                    ErrorCategoryConstants.INVALID_DATA, String.format(
+                            MobileAcademyConstants.INVALID_CONTENT_TYPE,
+                            courseContentCsv.getContentId()), "Content Type");
+        }
     }
 
     /*

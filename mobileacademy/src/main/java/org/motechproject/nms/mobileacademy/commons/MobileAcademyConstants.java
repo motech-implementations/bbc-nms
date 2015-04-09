@@ -121,6 +121,8 @@ public class MobileAcademyConstants {
     public static final String INCOMPLETE_RECORDS_FOR_DEL = "Incomplete Records for deleting the course for Language Location Code: [ %d ]. Hence Aborting the Course Deletion process for this Language location code.";
 
     public static final String CONTENT_NAME = "Content Name";
+    
+    public static final String INVALID_CONTENT_TYPE = "Invalid Content Type for [ %s ]";
 
     public static final String LOG_MSG_ORIGINAL_FILE_NAME = "original file name: {}";
 

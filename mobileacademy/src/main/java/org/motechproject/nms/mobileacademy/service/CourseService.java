@@ -185,7 +185,7 @@ public interface CourseService {
      * @param questionNo refers to index of question in a chapter.. 1,2..4
      * @return correct answer option of the question
      */
-    public int getCorrectAnswerOption(Integer chapterNo, Integer questionNo);
+    public Integer getCorrectAnswerOption(Integer chapterNo, Integer questionNo);
 
     /**
      * Used to get the current course structure in JSON format Returns empty
@@ -209,4 +209,5 @@ public interface CourseService {
      * @param username: user who has modified the course
      */
     public void updateCourseVersion(String username);
+
 }

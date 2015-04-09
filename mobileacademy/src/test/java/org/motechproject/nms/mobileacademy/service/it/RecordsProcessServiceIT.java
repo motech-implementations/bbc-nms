@@ -355,7 +355,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .findByCircleLlcContentName(circle, llc2, contentName);
         assertEquals(contentFileOriginal,
                 courseProcessedContent.getContentFile());
-        int correctAnswer = courseService.getCorrectAnswerOption(1, 1);
+        Integer correctAnswer = courseService.getCorrectAnswerOption(1, 1);
         courseContentCsvs = new ArrayList<>();
         courseRawContentUpdateRecord1.setContentName("Chapter01_Question01");
         courseRawContentUpdateRecord1.setLanguageLocationCode(Integer
@@ -384,7 +384,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseContentCsvs.add(courseRawContentUpdateRecord1);
         recordsProcessService.processRawRecords(courseContentCsvs,
                 "CourseContentCsv.csv");
-        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
+        correctAnswer = 2;
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
     }
 
     /*
@@ -802,6 +803,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
                 .get(0);
         String circle = courseRawContentUpdateRecord.getCircle();
+        Integer correctAnswer;
         Integer llc = Integer.parseInt(courseContentCsvs.get(0)
                 .getLanguageLocationCode());
         long rawContentSize = courseContentCsvs.size();
@@ -810,7 +812,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
                 .findContentByLlc(llc);
         assertEquals(rawContentSize, courseProcessedContents.size());
-        assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
+        correctAnswer = 1;
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:2");
         courseRawContentUpdateRecord
@@ -823,7 +826,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
                 .findByCircleLlcContentName(circle, llc, contentName);
         assertEquals(courseProcessedContent.getContentFile(),
                 "File Changed for Question Content.wav");
-        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
+        correctAnswer = 2;
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
     }
 
     /*
@@ -833,6 +837,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
     @Test
     public void testModificationWithNoChangeInRecord() throws Exception {
         clearMobileAcademyData();
+        Integer correctAnswer;
         String contentName = "Chapter01_Question01";
         List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
         CourseContentCsv courseRawContentUpdateRecord = courseContentCsvs
@@ -850,7 +855,8 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         CourseProcessedContent courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle, llc, contentName);
         fileName = courseProcessedContent.getContentFile();
-        assertEquals(1, courseService.getCorrectAnswerOption(1, 1));
+        correctAnswer = 1;
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
         courseRawContentUpdateRecord.setContentName(contentName);
         courseRawContentUpdateRecord.setMetaData("correctAnswer:02");
         courseRawContentUpdateRecord.setContentFile(fileName);
@@ -861,6 +867,7 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         courseProcessedContent = courseProcessedContentDataService
                 .findByCircleLlcContentName(circle, llc, contentName);
         assertEquals(courseProcessedContent.getContentFile(), fileName);
-        assertEquals(2, courseService.getCorrectAnswerOption(1, 1));
+        correctAnswer = 2;
+        assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
     }
 }

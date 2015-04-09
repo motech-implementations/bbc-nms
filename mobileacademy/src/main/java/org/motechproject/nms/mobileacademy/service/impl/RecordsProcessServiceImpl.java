@@ -180,7 +180,6 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
         bulkUploadErrLogService
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
-        LOGGER.info("Finished processing CircleCsv-import success");
     }
 
     /*
@@ -674,8 +673,6 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                     }
                     Course course = courseService.getMtrainingCourse();
                     if (course == null) {
-                        course = courseService
-                                .populateMtrainingCourseData(operatorDetails);
                         populateCourseStructure = true;
                     }
                     answerOptionRecordList.clear();
@@ -768,6 +765,10 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         }
                         // Update Course
                         if (populateCourseStructure) {
+                            // Generate course in Mtraining now
+                            course = courseService
+                                    .populateMtrainingCourseData(operatorDetails);
+
                             for (int chapterCounter = 0; chapterCounter < MobileAcademyConstants.NUM_OF_CHAPTERS; chapterCounter++) {
                                 ChapterContent chapterContent = chapterContents
                                         .get(chapterCounter);
@@ -801,6 +802,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         LOGGER.warn(
                                 "Record for complete course haven't arrived to add the course for LLC: {}",
                                 languageLocCode);
+
                         deleteCourseRawContentsByList(courseContentCsvs, true,
                                 bulkUploadStatus);
                     }
@@ -1060,14 +1062,12 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
     private void updateRecordInContentProcessedTable(
             CourseContentCsv courseContentCsv, OperatorDetails operatorDetails) {
         String metaData = "";
-        ContentType contentType = ContentType.CONTENT;
-        if (StringUtils.isNotEmpty(courseContentCsv.getMetaData())) {
+        ContentType contentType;
+        if (StringUtils.isNotBlank(courseContentCsv.getMetaData())) {
             metaData = courseContentCsv.getMetaData().toUpperCase();
         }
-        if (StringUtils.isNotEmpty(courseContentCsv.getContentType())) {
-            contentType = ContentType.findByName(courseContentCsv
-                    .getContentType());
-        }
+        contentType = ContentType.findByName(courseContentCsv.getContentType());
+
         CourseProcessedContent courseProcessedContent = new CourseProcessedContent(
                 Integer.parseInt(courseContentCsv.getContentId()),
                 courseContentCsv.getCircle().toUpperCase(),
