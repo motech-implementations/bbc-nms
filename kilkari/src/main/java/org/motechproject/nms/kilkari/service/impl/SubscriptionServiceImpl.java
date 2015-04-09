@@ -210,7 +210,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 if(dbMotherSubscriber!=null) {
                     dbSubscription.setStatus(Status.DEACTIVATED);
                     dbSubscription.setDeactivationReason(DeactivationReason.PACK_CHANGED);
-                    dbSubscriber.getSubscriptionList().add(dbSubscription);
+                    dbSubscriber.getSubscriptionList().addAll(dbMotherSubscriber.getSubscriptionList());
                     dbMotherSubscriber.getSubscriptionList().clear();
                     subscriberService.delete(dbMotherSubscriber);
                 }
