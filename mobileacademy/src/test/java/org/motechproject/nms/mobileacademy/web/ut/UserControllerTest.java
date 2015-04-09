@@ -48,7 +48,7 @@ public class UserControllerTest {
         String callingNumber = "9990632906";
         String operator = "A";
         String circle = "UP";
-        String callId = "123456789";
+        String callId = "123456789123456";
         // Stub the service methods and responses
         User user = new User();
         user.setCircle(circle);
@@ -84,7 +84,7 @@ public class UserControllerTest {
         // set the input details
         String operator = "A";
         String circle = "UP";
-        String callId = "123456789";
+        String callId = "123456789123456";
         // Stub the service methods and responses
         User user = new User();
         user.setCircle(circle);
@@ -117,7 +117,7 @@ public class UserControllerTest {
         String callingNumber = "99906asdaA";// String value
         String operator = "A";
         String circle = "UP";
-        String callId = "123456789";
+        String callId = "123456789123456";
         // Stub the service methods and responses
         User user = new User();
         user.setCircle(circle);
@@ -151,7 +151,7 @@ public class UserControllerTest {
         String callingNumber = "999063290";// 9 length
         String operator = "A";
         String circle = "UP";
-        String callId = "123456789";
+        String callId = "123456789123456";
         // Stub the service methods and responses
         User user = new User();
         user.setCircle(circle);
@@ -181,12 +181,14 @@ public class UserControllerTest {
 
     @Test
     public void testSetLanguageLocationCodeSuccess() {
-        String inputJson = "{\"callingNumber\":\"9990632906\" ,\"callId\":232323421424,\"languageLocationCode\":1}";
+        String inputJson = "{\"callingNumber\":\"9990632906\" ,\"callId\":123456789123456,\"languageLocationCode\":1}";
         try {
             UserDetailsService userDetailsServiceSpy = Mockito
                     .spy(new UserDetailsServiceImpl());
-            Mockito.doNothing().when(userDetailsServiceSpy)
-                    .setLanguageLocationCode("1", "9990632906", "232323421424");
+            Mockito.doNothing()
+                    .when(userDetailsServiceSpy)
+                    .setLanguageLocationCode("1", "9990632906",
+                            "123456789123456");
             mockMvc.perform(
                     post("/languageLocationCode").contentType(
                             MediaType.APPLICATION_JSON).body(

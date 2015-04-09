@@ -135,8 +135,11 @@ public class UserController extends BaseController {
                 UserController.REQUEST_PARAM_OPERATOR, operator, true);
         ParseDataHelper.validateAndParseString(
                 UserController.REQUEST_PARAM_CIRCLE, circle, true);
-        ParseDataHelper.validateAndParseLong(
-                UserController.REQUEST_PARAM_CALL_ID, callId, true);
+        ParseDataHelper.validateLengthOfCallId(
+                UserController.REQUEST_PARAM_CALL_ID, ParseDataHelper
+                        .validateAndParseString(
+                                UserController.REQUEST_PARAM_CALL_ID, callId,
+                                true));
     }
 
     /**
@@ -164,9 +167,11 @@ public class UserController extends BaseController {
         ParseDataHelper.validateAndTrimMsisdn(
                 UserController.REQUEST_PARAM_CALLING_NUMBER,
                 llcRequest.getCallingNumber());
-        ParseDataHelper.validateAndParseLong(
-                UserController.REQUEST_PARAM_CALL_ID, llcRequest.getCallId(),
-                true);
+        ParseDataHelper.validateLengthOfCallId(
+                UserController.REQUEST_PARAM_CALL_ID, ParseDataHelper
+                        .validateAndParseString(
+                                UserController.REQUEST_PARAM_CALL_ID,
+                                llcRequest.getCallId(), true));
         ParseDataHelper.validateAndParseInt(UserController.REQUEST_PARAM_LLC,
                 llcRequest.getLanguageLocationCode(), true);
     }

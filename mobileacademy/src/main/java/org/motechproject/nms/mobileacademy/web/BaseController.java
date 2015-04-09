@@ -11,6 +11,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -39,6 +41,47 @@ public class BaseController {
         LOGGER.error(exception.getMessage());
         String responseJson = "{\"failureReason\":\""
                 + exception.getParameterName() + ":Not Present\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle invalid HTTP request messages i.e. invalid JSON request
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { HttpMessageNotReadableException.class })
+    public ResponseEntity<String> handleHttpMessageNotReadableException(
+            final HttpMessageNotReadableException exception,
+            final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"" + "Invalid JSON\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Handle invalid HTTP content Type
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = { HttpMediaTypeNotSupportedException.class })
+    public ResponseEntity<String> handleHttpMediaTypeNotSupportedException(
+            final HttpMediaTypeNotSupportedException exception,
+            final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\""
+                + "Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
