@@ -66,7 +66,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         UserProfile userProfile = null;
         FrontLineWorker frontLineWorker = null;
 
-        validateParams(msisdn, operatorCode, circleCode, service);
+        msisdn = validateParams(msisdn, operatorCode, circleCode, service);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(msisdn);
 
         if (frontLineWorker == null) {
@@ -227,15 +227,18 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param service      the module which is invoking the API
      * @throws DataValidationException
      */
-    private void validateParams(String msisdn, String operatorCode, String circleCode,
-                                ServicesUsingFrontLineWorker service) throws DataValidationException {
+    private String validateParams(String msisdn, String operatorCode, String circleCode,
+                                  ServicesUsingFrontLineWorker service) throws DataValidationException {
+        String validatedMsisdn = null;
 
-        msisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
+        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
         validateOperator(operatorCode);
 
         validateCircle(circleCode);
 
         validateService(service);
+
+        return validatedMsisdn;
 
     }
 
