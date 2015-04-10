@@ -124,6 +124,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Integer getCorrectAnswerOption(Integer chapterNo, Integer questionNo) {
+        Integer correctAnswer = null;
         List<Chapter> chapters = mTrainingService
                 .getChapterByName(MobileAcademyConstants.CHAPTER
                         + String.format(
@@ -144,11 +145,12 @@ public class CourseServiceImpl implements CourseService {
                                                 questionNo))) {
                     String answer = question.getAnswer();
 
-                    return Integer.valueOf(answer);
+                    correctAnswer = Integer.valueOf(answer);
+                    break;
                 }
             }
         }
-        return null;
+        return correctAnswer;
     }
 
     @Override

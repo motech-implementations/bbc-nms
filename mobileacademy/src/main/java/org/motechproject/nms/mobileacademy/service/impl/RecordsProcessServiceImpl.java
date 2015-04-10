@@ -514,6 +514,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 if (flagForUpdatingMetaData) {
                     courseProcessedContent
                             .setMetadata(MobileAcademyConstants.CONTENT_CORRECT_ANSWER
+                                    .toUpperCase()
                                     + ":"
                                     + Integer.toString(correctAnswerOption));
                 }
