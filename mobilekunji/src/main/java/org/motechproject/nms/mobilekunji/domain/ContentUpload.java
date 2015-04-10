@@ -32,7 +32,7 @@ public class ContentUpload extends MdsEntity {
     private String contentFile;
 
     @Field(required = true)
-    private String cardNumber;
+    private Integer cardNumber;
 
     @Field(required = true)
     private Integer contentDuration;
@@ -41,7 +41,7 @@ public class ContentUpload extends MdsEntity {
 
     }
 
-    public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, String cardNumber, Integer contentDuration) {
+    public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, Integer cardNumber, Integer contentDuration) {
         this.contentId = contentId;
         this.circleCode = circleCode;
         this.languageLocationCode = languageLocationCode;
@@ -100,11 +100,11 @@ public class ContentUpload extends MdsEntity {
         this.contentFile = contentFile;
     }
 
-    public String getCardNumber() {
+    public Integer getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(Integer cardNumber) {
         this.cardNumber = cardNumber;
     }
 
