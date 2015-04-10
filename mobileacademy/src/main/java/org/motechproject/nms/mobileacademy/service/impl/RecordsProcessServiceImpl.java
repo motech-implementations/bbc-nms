@@ -139,8 +139,11 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 try {
                     RecordsProcessHelper.validateSchema(courseContentCsv);
                 } catch (DataValidationException ex) {
-                    RecordsProcessHelper.processError(bulkUploadError, ex,
-                            courseContentCsv.getContentId());
+                    RecordsProcessHelper.processError(
+                            bulkUploadError,
+                            ex,
+                            String.format("ContentID: %s",
+                                    courseContentCsv.getContentId()));
                     bulkUploadErrLogService
                             .writeBulkUploadErrLog(bulkUploadError);
                     bulkUploadStatus.incrementFailureCount();
@@ -221,8 +224,11 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             LOGGER.warn(
                                     "Record Validation failed for content ID: {}",
                                     csvRecord.getContentId());
-                            RecordsProcessHelper.processError(bulkUploadError,
-                                    exc, csvRecord.getContentId());
+                            RecordsProcessHelper.processError(
+                                    bulkUploadError,
+                                    exc,
+                                    String.format("ContentID: %s",
+                                            csvRecord.getContentId()));
                             bulkUploadErrLogService
                                     .writeBulkUploadErrLog(bulkUploadError);
                             bulkUploadStatus.incrementFailureCount();
@@ -248,10 +254,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             int languageLocCode = Integer.parseInt(csvRecord
                                     .getLanguageLocationCode());
                             CourseProcessedContent courseProcessedContent = courseProcessedContentService
-                                    .getRecordforModification(
-                                            csvRecord.getCircle(),
-                                            languageLocCode,
-                                            csvRecord.getContentName());
+                                    .getRecordforModification(csvRecord
+                                            .getCircle(), languageLocCode,
+                                            csvRecord.getContentName().trim());
                             if (courseProcessedContent != null) {
                                 int contentDuration = Integer
                                         .parseInt(csvRecord
@@ -260,7 +265,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                         .getContentId());
                                 if ((courseProcessedContent
                                         .getContentDuration() != contentDuration)
-                                        && (courseProcessedContent
+                                        || (courseProcessedContent
                                                 .getContentID() != contentId)) {
                                     LOGGER.info(
                                             "ContentID and duration updated for content name: {}, LLC: {}",
@@ -319,7 +324,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 LOGGER.warn(
                         "Records corresponding to all the existing LLCs not received for modification against content name: {}",
                         contentName);
-                bulkUploadError.setRecordDetails(contentName);
+                bulkUploadError.setRecordDetails(String.format(
+                        "ContentName: %s", contentName));
                 bulkUploadError
                         .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                 bulkUploadError.setErrorDescription(String.format(
@@ -379,8 +385,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                     }
                 }
                 if (flagForAbortingModification) {
-                    bulkUploadError.setRecordDetails(courseContentCsv
-                            .getContentId());
+                    bulkUploadError.setRecordDetails(String.format(
+                            "Content ID: %s", courseContentCsv.getContentId()));
                     bulkUploadError
                             .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                     bulkUploadError
@@ -411,7 +417,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         contentName);
                 LOGGER.warn("Records for all exisiting LLCs not recieved");
 
-                bulkUploadError.setRecordDetails(contentName);
+                bulkUploadError.setRecordDetails(String.format(
+                        "Content Name: %s", contentName));
                 bulkUploadError
                         .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                 bulkUploadError.setErrorDescription(String.format(
@@ -684,8 +691,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                 languageLocCode);
                         deleteCourseRawContentsByList(courseContentCsvs, true,
                                 bulkUploadStatus);
-                        bulkUploadError.setRecordDetails(languageLocCode
-                                .toString());
+                        bulkUploadError.setRecordDetails(String.format(
+                                "LLC: %d", languageLocCode));
                         bulkUploadError
                                 .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                         bulkUploadError
@@ -723,11 +730,13 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     "Record validation failed for content ID: {}",
                                     courseContentCsv.getContentId());
                             RecordsProcessHelper.processError(bulkUploadError,
-                                    exc, courseContentCsv.getContentId());
+                                    exc, String.format("ContentID: %s",
+                                            courseContentCsv.getContentId()));
                             bulkUploadErrLogService
                                     .writeBulkUploadErrLog(bulkUploadError);
-                            bulkUploadError.setRecordDetails(courseContentCsv
-                                    .getContentId());
+                            bulkUploadError.setRecordDetails(String.format(
+                                    "Content ID: %s",
+                                    courseContentCsv.getContentId()));
                             bulkUploadError
                                     .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                             bulkUploadError
@@ -754,9 +763,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                 LOGGER.info(
                                         "Record with content ID: {} is not consistent with the data already existing in the system",
                                         courseContentCsv.getContentId());
-                                bulkUploadError
-                                        .setRecordDetails(courseContentCsv
-                                                .getContentId());
+                                bulkUploadError.setRecordDetails(String.format(
+                                        "Content ID: %s",
+                                        courseContentCsv.getContentId()));
                                 bulkUploadError
                                         .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                                 bulkUploadError
@@ -815,8 +824,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         LOGGER.info("Course Added successfully for LLC: {}",
                                 languageLocCode);
                     } else {
-                        bulkUploadError.setRecordDetails(languageLocCode
-                                .toString());
+                        bulkUploadError.setRecordDetails(String.format(
+                                "LLC: %d", languageLocCode));
                         bulkUploadError
                                 .setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
                         bulkUploadError
@@ -1098,8 +1107,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 Integer.parseInt(courseContentCsv.getContentId()),
                 courseContentCsv.getCircle().toUpperCase(),
                 Integer.parseInt(courseContentCsv.getLanguageLocationCode()),
-                courseContentCsv.getContentName().toUpperCase(), contentType,
-                courseContentCsv.getContentFile(),
+                courseContentCsv.getContentName().toUpperCase().trim(),
+                contentType, courseContentCsv.getContentFile(),
                 Integer.parseInt(courseContentCsv.getContentDuration()),
                 metaData);
         courseProcessedContent.setCreator(operatorDetails.getCreator());

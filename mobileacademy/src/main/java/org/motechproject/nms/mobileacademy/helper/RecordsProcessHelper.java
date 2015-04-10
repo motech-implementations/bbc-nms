@@ -177,9 +177,9 @@ public class RecordsProcessHelper {
     }
 
     public static void processError(BulkUploadError errorDetail,
-            DataValidationException ex, String contentId) {
+            DataValidationException ex, String recordIdentifier) {
         errorDetail.setErrorCategory(ex.getErrorCode());
-        errorDetail.setRecordDetails(contentId);
+        errorDetail.setRecordDetails(recordIdentifier);
         errorDetail.setErrorDescription(ex.getErrorDesc());
     }
 
@@ -236,30 +236,37 @@ public class RecordsProcessHelper {
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
-                throw new DataValidationException(
-                        null,
-                        ErrorCategoryConstants.INVALID_DATA,
-                        String.format(
-                                MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                                courseContentCsv.getContentId()), "METADETA");
+                ParseDataHelper.raiseInvalidDataException("METADETA",
+                        courseContentCsv.getMetaData());
             } else {
                 int answerNo = ParseDataHelper.validateAndParseInt("",
                         metaData.substring(metaData.indexOf(':') + 1), true);
                 if (verifyRange(answerNo, 1, 2)) {
                     record.setAnswerId(answerNo);
                 } else {
-                    throw new DataValidationException(
-                            null,
-                            ErrorCategoryConstants.INVALID_DATA,
-                            String.format(
-                                    MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                                    courseContentCsv.getContentId()),
-                            "METADETA");
+                    ParseDataHelper.raiseInvalidDataException("METADETA",
+                            courseContentCsv.getMetaData());
                 }
             }
         }
 
         record.setFileName(courseContentCsv.getContentFile());
+    }
+
+    /*
+     * @param fieldName Name of the field in which data is inconsistent
+     * 
+     * @param message To be displayed. after the message it will show "in
+     * field<fieldName>"
+     * 
+     * @throws DataValidationException
+     */
+    public static void raiseInconsistentDataException(String fieldName,
+            String message) throws DataValidationException {
+
+        String errDesc = message + " in field [" + fieldName + "]";
+        throw new DataValidationException(null,
+                ErrorCategoryConstants.INCONSISTENT_DATA, errDesc, "");
     }
 
     /*
@@ -270,10 +277,8 @@ public class RecordsProcessHelper {
     public static void validateContentType(CourseContentCsv courseContentCsv)
             throws DataValidationException {
         if (ContentType.findByName(courseContentCsv.getContentType()) == null) {
-            throw new DataValidationException(null,
-                    ErrorCategoryConstants.INVALID_DATA, String.format(
-                            MobileAcademyConstants.INVALID_CONTENT_TYPE,
-                            courseContentCsv.getContentId()), "Content Type");
+            ParseDataHelper.raiseInvalidDataException("Content Type",
+                    courseContentCsv.getContentType());
         }
     }
 
@@ -288,11 +293,8 @@ public class RecordsProcessHelper {
         String contentName = courseContentCsv.getContentName().trim();
         boolean recordDataValidation = true;
         if (contentName.indexOf('_') == -1) {
-            throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
-                            MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                            courseContentCsv.getContentId()),
-                    MobileAcademyConstants.CONTENT_NAME);
+            raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
+                    ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
         String chapterString = contentName.substring(0,
@@ -302,11 +304,11 @@ public class RecordsProcessHelper {
         if (StringUtils.isBlank(subString)
                 || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
                         chapterString.length() - 2))) {
-            throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+
+            raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
+                    String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                            courseContentCsv.getContentId()),
-                    MobileAcademyConstants.CONTENT_NAME);
+                            courseContentCsv.getContentId()));
         }
 
         try {
@@ -314,11 +316,10 @@ public class RecordsProcessHelper {
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
             LOGGER.debug(exception.getMessage(), exception);
-            throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+            raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
+                    String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                            courseContentCsv.getContentId()),
-                    MobileAcademyConstants.CONTENT_NAME);
+                            courseContentCsv.getContentId()));
         }
 
         if (!verifyRange(record.getChapterId(), 1,
@@ -327,11 +328,10 @@ public class RecordsProcessHelper {
         }
 
         if ((!recordDataValidation) || (!isTypeDeterminable(record, subString))) {
-            throw new DataValidationException(null,
-                    ErrorCategoryConstants.INCONSISTENT_DATA, String.format(
+            raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
+                    String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
-                            courseContentCsv.getContentId()),
-                    MobileAcademyConstants.CONTENT_NAME);
+                            courseContentCsv.getContentId()));
         }
 
     }
