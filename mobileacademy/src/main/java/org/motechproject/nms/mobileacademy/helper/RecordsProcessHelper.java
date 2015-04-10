@@ -167,7 +167,7 @@ public class RecordsProcessHelper {
                 courseContentCsv.getContentName(), true);
 
         ParseDataHelper.validateAndParseString("Content Type",
-                courseContentCsv.getContentName(), true);
+                courseContentCsv.getContentType(), true);
 
         ParseDataHelper.validateAndParseInt("Content Duration",
                 courseContentCsv.getContentDuration(), true);

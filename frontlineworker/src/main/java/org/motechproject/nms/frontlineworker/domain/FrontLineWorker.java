@@ -116,7 +116,7 @@ public class FrontLineWorker extends MdsEntity {
     public void setFlwId(Long flwId) {
         this.flwId = flwId;
     }
-
+    
     public String getContactNo() {
         return contactNo;
     }
