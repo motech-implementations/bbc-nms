@@ -45,8 +45,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     @Autowired
     StateService stateService;
 
-    private String circleCodeString = "circle Code";
-
     private static Logger logger = LoggerFactory.getLogger(UserProfileDetailsServiceImpl.class);
 
     /**
