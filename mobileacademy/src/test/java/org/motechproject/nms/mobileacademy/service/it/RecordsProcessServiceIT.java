@@ -870,4 +870,66 @@ public class RecordsProcessServiceIT extends BasePaxIT {
         correctAnswer = 2;
         assertEquals(correctAnswer, courseService.getCorrectAnswerOption(1, 1));
     }
+
+    /*
+     * this test case is used to test answer option update for multiple LLCs at
+     * one go.
+     */
+    @Test
+    public void testAnswerOptionChangeForMultipleLlc() throws Exception {
+        clearMobileAcademyData();
+        List<CourseContentCsv> courseContentCsvs = findCourseRawContentListFromCsv(null);
+
+        Integer llc1 = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize = courseContentCsvs.size();
+        recordsProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc1);
+        assertEquals(rawContentSize, courseProcessedContents.size());
+
+        // add other LLC records i.e 20
+        courseContentCsvs = findCourseRawContentListFromCsv("20");
+        Integer llc2 = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize2 = courseContentCsvs.size();
+        recordsProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc2);
+        assertEquals(rawContentSize2, courseProcessedContents.size());
+
+        // add other LLC records i.e 30
+        courseContentCsvs = findCourseRawContentListFromCsv("30");
+        Integer llc3 = Integer.parseInt(courseContentCsvs.get(0)
+                .getLanguageLocationCode());
+        long rawContentSize3 = courseContentCsvs.size();
+        recordsProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+        courseProcessedContents = courseProcessedContentDataService
+                .findContentByLlc(llc2);
+        assertEquals(rawContentSize3, courseProcessedContents.size());
+
+        // Will update the correct answer option for Question 2 of Chapter 01
+        // from 2 to 1
+        int correctAnswer = courseService.getCorrectAnswerOption(1, 2);
+
+        courseContentCsvs = new ArrayList<CourseContentCsv>();
+        courseContentCsvs.add(new CourseContentCsv("100014", "AP", llc1
+                .toString(), "Chapter01_Question02", "Content", "ch1_q2.wav",
+                "150", "correctAnswer:1"));
+        courseContentCsvs.add(new CourseContentCsv("100015", "AP", llc2
+                .toString(), "Chapter01_Question02", "Content", "ch1_q2.wav",
+                "150", "correctAnswer:1"));
+        courseContentCsvs.add(new CourseContentCsv("100016", "AP", llc3
+                .toString(), "Chapter01_Question02", "Content", "ch1_q2.wav",
+                "150", "correctAnswer:1"));
+
+        recordsProcessService.processRawRecords(courseContentCsvs,
+                "CourseContentCsv.csv");
+
+        correctAnswer = courseService.getCorrectAnswerOption(1, 2);
+        assertEquals(1, correctAnswer);
+    }
 }
