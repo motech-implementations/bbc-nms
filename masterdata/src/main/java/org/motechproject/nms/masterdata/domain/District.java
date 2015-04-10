@@ -6,7 +6,6 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -21,7 +20,6 @@ public class District extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
-    @Persistent(defaultFetchGroup = "true")
     private Set<Taluka> taluka;
 
     @Field
