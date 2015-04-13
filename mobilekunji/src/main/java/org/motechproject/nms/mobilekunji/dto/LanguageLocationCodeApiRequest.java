@@ -54,13 +54,17 @@ public class LanguageLocationCodeApiRequest {
 
     /**
      * Validates mandatory value parameter and non null values
+     *
      * @throws org.motechproject.nms.util.helper.DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameters() throws DataValidationException {
 
-        ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true);
-        ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,callingNumber);
-        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID, callId);
-        ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID,callId,true);
+        callingNumber = ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
+
+        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
+
+        ParseDataHelper.validateAndParseInt(ConfigurationConstants.LANGUAGE_LOCATION_CODE,languageLocationCode.toString(), true);
     }
 }
