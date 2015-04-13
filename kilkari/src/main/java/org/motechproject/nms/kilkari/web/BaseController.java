@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.web;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpHeaders;
@@ -53,9 +54,16 @@ public class BaseController {
     @ExceptionHandler(value = { DataValidationException.class })
     public ResponseEntity<String> handleDataValidationException(
             final DataValidationException exception, final WebRequest request) {
+        String responseJson = null;
+        if (exception.getErrorCode().equals(ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
+            responseJson = "{\"failureReason\":\""
+                    + exception.getErroneousField() + ":Mandatory Parameter Missing\"}";
+        } else {
+            responseJson = "{\"failureReason\":\""
+                    + exception.getErroneousField() + ":Invalid Value\"}";
+        }
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
-                + exception.getErroneousField() + ":Invalid Value\"}";
+
         return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
     }
 
