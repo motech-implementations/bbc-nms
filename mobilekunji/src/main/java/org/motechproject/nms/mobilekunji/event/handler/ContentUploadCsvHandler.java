@@ -3,6 +3,7 @@ package org.motechproject.nms.mobilekunji.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.mobilekunji.CommonValidator;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
@@ -47,14 +48,11 @@ public class ContentUploadCsvHandler {
 
     private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
 
-
     @Autowired
-    public ContentUploadCsvHandler(ContentUploadCsvService contentUploadCsvService,
-                                   BulkUploadErrLogService bulkUploadErrLogService,
-                                   ContentUploadService contentUploadService) {
-        this.contentUploadCsvService = contentUploadCsvService;
+    public ContentUploadCsvHandler(BulkUploadErrLogService bulkUploadErrLogService, ContentUploadService contentUploadService, ContentUploadCsvService contentUploadCsvService) {
         this.bulkUploadErrLogService = bulkUploadErrLogService;
         this.contentUploadService = contentUploadService;
+        this.contentUploadCsvService = contentUploadCsvService;
     }
 
     /**
@@ -171,7 +169,7 @@ public class ContentUploadCsvHandler {
 
         cardNumber = record.getCardNumber();
         ParseDataHelper.validateAndParseInt("Card number", cardNumber, true);
-        validateCardNumber(cardNumber.toString());
+        CommonValidator.validateCardNumber(cardNumber.toString());
 
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
         content = ParseDataHelper.validateAndParseString("Content Type", record.getContentType(), true);
@@ -194,13 +192,6 @@ public class ContentUploadCsvHandler {
         logger.info("mapContentUploadFrom process end");
         return newRecord;
 
-    }
-
-    private void validateCardNumber(String cardNumber) throws DataValidationException {
-
-        if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
-            ParseDataHelper.raiseInvalidDataException("Card number", cardNumber);
-        }
     }
 
     /**

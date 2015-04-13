@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.web;
 
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
@@ -32,8 +33,8 @@ public class CallerDataController extends BaseController {
 
     @Autowired
     public CallerDataController(UserDetailsService userDetailsService, SaveCallDetailsService saveCallDetailsService) {
-        this.saveCallDetailsService = saveCallDetailsService;
         this.userDetailsService = userDetailsService;
+        this.saveCallDetailsService = saveCallDetailsService;
     }
 
     /**
@@ -91,6 +92,7 @@ public class CallerDataController extends BaseController {
         logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
 
         saveCallDetailApiRequest.validateMandatoryParameters();
+        saveCallDetailApiRequest.validateCardDetailParameters();
 
         long startTime = System.currentTimeMillis();
 
@@ -152,6 +154,6 @@ public class CallerDataController extends BaseController {
      */
     private void validateCallId(String callId) throws DataValidationException {
 
-        ParseDataHelper.validateLengthOfCallId("CallId", callId);
+        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID, callId);
     }
 }
