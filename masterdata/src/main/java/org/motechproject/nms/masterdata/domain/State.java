@@ -54,13 +54,6 @@ public class State extends MdsEntity {
     private String IsWhiteListEnable;
 
 
-
-
-
-
-
-
-
     public State() {
     }
 

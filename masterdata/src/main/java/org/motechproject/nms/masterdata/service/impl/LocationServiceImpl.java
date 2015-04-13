@@ -241,4 +241,48 @@ public class LocationServiceImpl implements LocationService {
 
         return getStateByCode(stateCode).getMkCapping();
     }
+
+    /**
+     * Check whether MK is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public boolean isMkDeployed(Long stateCode) {
+
+        State state=getStateByCode(stateCode);
+        if(state.getIsMkDeployed().equals("true"))
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Check whether MA is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public boolean isMadeployed(Long stateCode) {
+        State state=getStateByCode(stateCode);
+        if(state.getIsMaDeployed().equals("true"))
+            return true;
+        return false;
+    }
+
+    /**
+     * Check whether KK is deployed on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    @Override
+    public boolean isKkDeployed(Long stateCode) {
+        State state=getStateByCode(stateCode);
+        if(state.getIsKkDeployed().equals("true"))
+            return true;
+        return false;
+    }
 }

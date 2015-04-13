@@ -36,15 +36,15 @@ public class StateCsv extends MdsEntity {
     @Field(defaultValue = "true")
     private String isWhiteListEnable;
 
-    public StateCsv(String name, String stateCode, String maCapping, String mkCapping,String isMkDeployed,String isMaDeployed,String isKkDeployed,String isWhiteListEnable) {
+    public StateCsv(String name, String stateCode, String maCapping, String mkCapping, String isMkDeployed, String isMaDeployed, String isKkDeployed, String isWhiteListEnable) {
         this.name = name;
         this.stateCode = stateCode;
         this.maCapping = maCapping;
         this.mkCapping = mkCapping;
-        this.isMkDeployed=isMkDeployed;
-        this.isMaDeployed=isMaDeployed;
-        this.isKkDeployed=isKkDeployed;
-        this.isWhiteListEnable=isWhiteListEnable;
+        this.isMkDeployed = isMkDeployed;
+        this.isMaDeployed = isMaDeployed;
+        this.isKkDeployed = isKkDeployed;
+        this.isWhiteListEnable = isWhiteListEnable;
     }
 
     public String getName() {
@@ -133,13 +133,4 @@ public class StateCsv extends MdsEntity {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "StateCsv{" +
-//                "name='" + name + '\'' +
-//                ", stateCode='" + stateCode + '\'' +
-//                ", maCapping='" + maCapping + '\'' +
-//                ", mkCapping='" + mkCapping + '\'' +
-//                '}';
-//    }
 }

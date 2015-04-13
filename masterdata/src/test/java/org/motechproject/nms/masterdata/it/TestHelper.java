@@ -14,7 +14,7 @@ public class TestHelper {
 
     public static StateCsv getStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("UP", "123", null, null);
+        StateCsv stateCsvData = new StateCsv("UP", "123", null, null, "true", "true", "true", "true");
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -23,7 +23,7 @@ public class TestHelper {
 
     public static StateCsv getInvalidStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("Bihar", "abc123", null, null);
+        StateCsv stateCsvData = new StateCsv("Bihar", "abc123", null, null, "true", "true", "true", "true");
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
@@ -32,7 +32,7 @@ public class TestHelper {
 
     public static StateCsv getUpdatedStateCsvData() {
 
-        StateCsv stateCsvData = new StateCsv("UK", "123", null, null);
+        StateCsv stateCsvData = new StateCsv("UK", "123", null, null, "true", "true", "true", "true");
         stateCsvData.setOwner("balvinder");
         stateCsvData.setCreator("balvinder");
         stateCsvData.setModifiedBy("balvinder");
