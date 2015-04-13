@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 
 /**
@@ -33,20 +34,15 @@ public interface SubscriberService {
     Subscriber getSubscriberByMsisdn(String msisdn);
 
     /**
-     * This method gets subscriber by msisdn and childMctsId
-     * @param msisdn String type object
-     * @param childMctsId String type object
-     * @return Subscriber type object
-     */
-    Subscriber getSubscriberByMsisdnAndChildMctsId(String msisdn, String childMctsId, Long stateCode);
-
-    /**
-     * This method gets subscriber by msisdn and motherMctsId
+     * This method gets subscriber by msisdn, childMctsId, motherMctsId, stateCode, beneficiaryType
      * @param msisdn String type object
      * @param motherMctsId String type object
+     * @param childMctsId String type object
+     * @param stateCode String type object
+     * @param beneficiaryType BeneficiaryType type object
      * @return Subscriber type object
      */
-    Subscriber getSubscriberByMsisdnAndMotherMctsId(String msisdn, String motherMctsId, Long stateCode);
+    Subscriber getSubscriberByMsisdnMotherMctsIdChildMctsIdStateCodeAndBeneficiaryType(String msisdn, String motherMctsId, String childMctsId, Long stateCode, BeneficiaryType beneficiaryType);
 
     /**
      * Deletes specified subscriber record from database
@@ -54,7 +50,19 @@ public interface SubscriberService {
      */
     void delete(Subscriber subscriber);
 
+    /**
+     * This method gets subscriber by childMctsId and stateCode
+     * @param childMctsId String type object
+     * @param stateCode String type object
+     * @return Subscriber type object
+     */
     Subscriber getSubscriberByChildMctsId(String childMctsId, Long stateCode);
 
+    /**
+     * This method gets subscriber by motherMctsId and stateCode
+     * @param motherMctsId String type object
+     * @param stateCode String type object
+     * @return Subscriber type object
+     */
     Subscriber getSubscriberByMotherMctsId(String motherMctsId, Long stateCode);
 }

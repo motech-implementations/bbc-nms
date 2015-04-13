@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.repository;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 
 /**
@@ -16,17 +17,12 @@ public interface SubscriberDataService extends MotechDataService<Subscriber> {
     Subscriber findRecordByMsisdn(@LookupField(name = "msisdn") String msisdn);
 
     @Lookup
-    Subscriber findRecordByMsisdnAndChildMctsId(
-            @LookupField(name = "msisdn") String msisdn,
-            @LookupField(name = "childMctsId") String childMctsId,
-            @LookupField(name =  "stateCode") Long stateCode);
-
-    @Lookup
-    Subscriber findRecordByMsisdnAndMotherMctsId(
+    Subscriber findRecordByMsisdnMotherMctsIdChildMctsIdStateCodeAndBeneficiaryType(
             @LookupField(name = "msisdn") String msisdn,
             @LookupField(name = "motherMctsId") String motherMctsId,
-            @LookupField(name =  "stateCode") Long stateCode);
-
+            @LookupField(name = "childMctsId") String childMctsId,
+            @LookupField(name =  "stateCode") Long stateCode,
+            @LookupField(name =  "beneficiaryType") BeneficiaryType beneficiaryType);
 
     @Lookup
     Subscriber findRecordByChildMctsId(

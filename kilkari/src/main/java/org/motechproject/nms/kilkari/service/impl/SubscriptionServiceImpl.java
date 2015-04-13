@@ -317,13 +317,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
                 /* Check if there is any subscriber with same MSISDN who has subscribed through IVR */
                 if (dbSubscriber == null) {
-                    if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndChildMctsId(subscriber.getMsisdn(),
-                                null, null);
-                    } else {
-                        dbSubscriber = subscriberService.getSubscriberByMsisdnAndMotherMctsId(subscriber.getMsisdn(),
-                                null, null);
-                    }
+                    dbSubscriber = subscriberService.getSubscriberByMsisdnMotherMctsIdChildMctsIdStateCodeAndBeneficiaryType(
+                    		subscriber.getMsisdn(), null, null, null, subscriber.getBeneficiaryType());
                 }
 
                 if (dbSubscriber != null) {
