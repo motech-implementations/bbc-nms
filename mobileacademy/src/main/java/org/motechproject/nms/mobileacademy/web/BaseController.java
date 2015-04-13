@@ -62,7 +62,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{" + FAILURE_REASON + ":\"" + "Invalid JSON\"}";
+        String responseJson = "{" + FAILURE_REASON + ":\"Invalid JSON\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -82,8 +82,8 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{" + FAILURE_REASON + ":\""
-                + "Invalid Content Type\"}";
+        String responseJson = "{" + FAILURE_REASON
+                + ":\"Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
