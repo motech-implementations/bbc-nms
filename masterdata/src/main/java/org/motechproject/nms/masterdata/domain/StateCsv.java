@@ -23,12 +23,28 @@ public class StateCsv extends MdsEntity {
     @Field(defaultValue = "-1")
     private String mkCapping;
 
+    @Field(defaultValue = "true")
+    private String isMkDeployed;
 
-    public StateCsv(String name, String stateCode, String maCapping, String mkCapping) {
+
+    @Field(defaultValue = "true")
+    private String isMaDeployed;
+
+    @Field(defaultValue = "true")
+    private String isKkDeployed;
+
+    @Field(defaultValue = "true")
+    private String isWhiteListEnable;
+
+    public StateCsv(String name, String stateCode, String maCapping, String mkCapping,String isMkDeployed,String isMaDeployed,String isKkDeployed,String isWhiteListEnable) {
         this.name = name;
         this.stateCode = stateCode;
         this.maCapping = maCapping;
         this.mkCapping = mkCapping;
+        this.isMkDeployed=isMkDeployed;
+        this.isMaDeployed=isMaDeployed;
+        this.isKkDeployed=isKkDeployed;
+        this.isWhiteListEnable=isWhiteListEnable;
     }
 
     public String getName() {
@@ -63,12 +79,44 @@ public class StateCsv extends MdsEntity {
         this.mkCapping = mkCapping;
     }
 
+    public String getIsWhiteListEnable() {
+        return isWhiteListEnable;
+    }
+
+    public void setIsWhiteListEnable(String isWhiteListEnable) {
+        this.isWhiteListEnable = isWhiteListEnable;
+    }
+
+    public String getIsMkDeployed() {
+        return isMkDeployed;
+    }
+
+    public void setIsMkDeployed(String isMkDeployed) {
+        this.isMkDeployed = isMkDeployed;
+    }
+
+    public String getIsMaDeployed() {
+        return isMaDeployed;
+    }
+
+    public void setIsMaDeployed(String isMaDeployed) {
+        this.isMaDeployed = isMaDeployed;
+    }
+
+    public String getIsKkDeployed() {
+        return isKkDeployed;
+    }
+
+    public void setIsKkDeployed(String isKkDeployed) {
+        this.isKkDeployed = isKkDeployed;
+    }
+
     /**
-     * This method override the toString method to create string for state code
-     * District, maCapping and mkCapping for the instance variables
+     * This method override the toString method to create string for state code,
+     * isMkDeployed, isMaDeployed, isKkDeployed, isWhiteListEnable, maCapping and mkCapping for the instance variables
      *
-     * @return The string of the state code
-     * District, maCapping and mkCapping  for the instance variables
+     * @return The string of the state code,isMkDeployed, isMaDeployed, isKkDeployed,
+     * isWhiteListEnable, maCapping and mkCapping  for the instance variables
      */
     @Override
     public String toString() {
@@ -77,6 +125,21 @@ public class StateCsv extends MdsEntity {
                 ", stateCode='" + stateCode + '\'' +
                 ", maCapping='" + maCapping + '\'' +
                 ", mkCapping='" + mkCapping + '\'' +
+                ", isMkDeployed='" + isMkDeployed + '\'' +
+                ", isMaDeployed='" + isMaDeployed + '\'' +
+                ", isKkDeployed='" + isKkDeployed + '\'' +
+                ", isWhiteListEnable='" + isWhiteListEnable + '\'' +
                 '}';
     }
+
+
+//    @Override
+//    public String toString() {
+//        return "StateCsv{" +
+//                "name='" + name + '\'' +
+//                ", stateCode='" + stateCode + '\'' +
+//                ", maCapping='" + maCapping + '\'' +
+//                ", mkCapping='" + mkCapping + '\'' +
+//                '}';
+//    }
 }

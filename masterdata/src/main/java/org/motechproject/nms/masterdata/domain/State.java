@@ -6,6 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
+import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -24,6 +25,7 @@ public class State extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
+    @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
     @Field
@@ -33,6 +35,31 @@ public class State extends MdsEntity {
     @Field
     @UIDisplayable(position = 3)
     private Integer mkCapping;
+
+
+    @Field
+    @UIDisplayable(position = 4)
+    private String IsMkDeployed;
+
+    @Field
+    @UIDisplayable(position = 5)
+    private String IsMaDeployed;
+
+    @Field
+    @UIDisplayable(position = 6)
+    private String IsKkDeployed;
+
+    @Field
+    @UIDisplayable(position = 7)
+    private String IsWhiteListEnable;
+
+
+
+
+
+
+
+
 
     public State() {
     }
@@ -77,6 +104,39 @@ public class State extends MdsEntity {
         this.maCapping = maCapping;
     }
 
+    public String getIsWhiteListEnable() {
+        return IsWhiteListEnable;
+    }
+
+    public void setIsWhiteListEnable(String isWhiteListEnable) {
+        IsWhiteListEnable = isWhiteListEnable;
+    }
+
+    public String getIsMaDeployed() {
+        return IsMaDeployed;
+    }
+
+    public void setIsMaDeployed(String isMaDeployed) {
+        IsMaDeployed = isMaDeployed;
+    }
+
+    public String getIsMkDeployed() {
+        return IsMkDeployed;
+    }
+
+    public void setIsMkDeployed(String isMkDeployed) {
+        IsMkDeployed = isMkDeployed;
+    }
+
+    public String getIsKkDeployed() {
+        return IsKkDeployed;
+    }
+
+    public void setIsKkDeployed(String isKkDeployed) {
+        IsKkDeployed = isKkDeployed;
+    }
+
+
     /**
      * This method override the toString method to create string for name, state code
      * District, maCapping and mkCapping for the instance variables
@@ -92,6 +152,10 @@ public class State extends MdsEntity {
                 ", district=" + district +
                 ", maCapping=" + maCapping +
                 ", mkCapping=" + mkCapping +
+                ", IsMkDeployed='" + IsMkDeployed + '\'' +
+                ", IsMaDeployed='" + IsMaDeployed + '\'' +
+                ", IsKkDeployed='" + IsKkDeployed + '\'' +
+                ", IsWhiteListEnable='" + IsWhiteListEnable + '\'' +
                 '}';
     }
 }

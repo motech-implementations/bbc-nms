@@ -118,11 +118,19 @@ public class StateCsvUploadHandler {
         Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
         Integer maCapping = ParseDataHelper.validateAndParseInt("maCapping", record.getMaCapping(), false);
         Integer mkCapping = ParseDataHelper.validateAndParseInt("mkCapping", record.getMkCapping(), false);
+        Boolean isMkdeployed = ParseDataHelper.validateAndParseBoolean("IsMkDeployed", record.getIsMkDeployed(), false);
+        Boolean isMadeployed = ParseDataHelper.validateAndParseBoolean("IsMaDeployed", record.getIsMaDeployed(), false);
+        Boolean isWhiteListEnable = ParseDataHelper.validateAndParseBoolean("IsWhiteListEnable", record.getIsWhiteListEnable(), false);
+        Boolean isKkdeployed = ParseDataHelper.validateAndParseBoolean("IsKkDeployed", record.getIsKkDeployed(), false);
 
         newRecord.setName(stateName);
         newRecord.setStateCode(stateCode);
         newRecord.setMaCapping(maCapping);
         newRecord.setMkCapping(mkCapping);
+        newRecord.setIsMkDeployed(isMkdeployed.toString());
+        newRecord.setIsMaDeployed(isMadeployed.toString());
+        newRecord.setIsKkDeployed(isKkdeployed.toString());
+        newRecord.setIsWhiteListEnable(isWhiteListEnable.toString());
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
@@ -149,7 +157,12 @@ public class StateCsvUploadHandler {
         stateExistData.setName(stateData.getName());
         stateExistData.setMaCapping(stateData.getMaCapping());
         stateExistData.setMkCapping(stateData.getMkCapping());
+        stateExistData.setIsMkDeployed(stateData.getIsMkDeployed());
+        stateExistData.setIsMaDeployed(stateData.getIsMaDeployed());
+        stateExistData.setIsKkDeployed(stateData.getIsKkDeployed());
+        stateExistData.setIsWhiteListEnable(stateData.getIsWhiteListEnable());
         stateExistData.setModifiedBy(stateData.getModifiedBy());
+
 
         stateService.update(stateExistData);
     }
