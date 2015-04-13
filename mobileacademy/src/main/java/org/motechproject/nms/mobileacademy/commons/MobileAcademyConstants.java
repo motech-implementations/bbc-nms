@@ -90,8 +90,6 @@ public class MobileAcademyConstants {
 
     public static final String COURSE_KEY_QUIZ_HEADER = "QuizHeader";
 
-    public static final String FAILURE_REASON = "failueReason";
-
     // 1 file for Chapter End Menu , 2 files For Lesson: Content and Menu file
     // 3 files For Question: content,correct answer and wrong Answer file
     // 1 file For Quiz Header in each Quiz
@@ -121,7 +119,7 @@ public class MobileAcademyConstants {
     public static final String INCOMPLETE_RECORDS_FOR_DEL = "Incomplete Records for deleting the course for Language Location Code: [ %d ]. Hence Aborting the Course Deletion process for this Language location code.";
 
     public static final String CONTENT_NAME = "Content Name";
-    
+
     public static final String INVALID_CONTENT_TYPE = "Invalid Content Type for [ %s ]";
 
     public static final String LOG_MSG_ORIGINAL_FILE_NAME = "original file name: {}";

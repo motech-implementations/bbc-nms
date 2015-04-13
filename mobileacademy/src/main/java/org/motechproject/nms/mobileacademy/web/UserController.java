@@ -53,18 +53,16 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
     public User getUserDetails(
-            @RequestParam(value = UserController.REQUEST_PARAM_CALLING_NUMBER) String callingNumber,
-            @RequestParam(value = UserController.REQUEST_PARAM_OPERATOR) String operator,
-            @RequestParam(value = UserController.REQUEST_PARAM_CIRCLE) String circle,
-            @RequestParam(value = UserController.REQUEST_PARAM_CALL_ID) String callId)
+            @RequestParam(value = REQUEST_PARAM_CALLING_NUMBER) String callingNumber,
+            @RequestParam(value = REQUEST_PARAM_OPERATOR) String operator,
+            @RequestParam(value = REQUEST_PARAM_CIRCLE) String circle,
+            @RequestParam(value = REQUEST_PARAM_CALL_ID) String callId)
             throws DataValidationException, NmsInternalServerError {
         LOGGER.debug("getUserDetails: Started");
-        LOGGER.debug("Input request-"
-                + UserController.REQUEST_PARAM_CALLING_NUMBER + ":"
-                + callingNumber + ", " + UserController.REQUEST_PARAM_OPERATOR
-                + ":" + operator + ", " + UserController.REQUEST_PARAM_CIRCLE
-                + ":" + circle + ", " + UserController.REQUEST_PARAM_CALL_ID
-                + ":" + callId);
+        LOGGER.debug("Input request-" + REQUEST_PARAM_CALLING_NUMBER + ":"
+                + callingNumber + ", " + REQUEST_PARAM_OPERATOR + ":"
+                + operator + ", " + REQUEST_PARAM_CIRCLE + ":" + circle + ", "
+                + REQUEST_PARAM_CALL_ID + ":" + callId);
         validateInputDataForGetUserDetails(callingNumber, operator, circle,
                 callId);
         User user = userDetailsService.findUserDetails(callingNumber, operator,
@@ -126,20 +124,17 @@ public class UserController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
             String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(
-                UserController.REQUEST_PARAM_CALLING_NUMBER, callingNumber,
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALLING_NUMBER,
+                callingNumber, true);
+        ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
+                callingNumber);
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_OPERATOR,
+                operator, true);
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CIRCLE, circle,
                 true);
-        ParseDataHelper.validateAndTrimMsisdn(
-                UserController.REQUEST_PARAM_CALLING_NUMBER, callingNumber);
-        ParseDataHelper.validateAndParseString(
-                UserController.REQUEST_PARAM_OPERATOR, operator, true);
-        ParseDataHelper.validateAndParseString(
-                UserController.REQUEST_PARAM_CIRCLE, circle, true);
-        ParseDataHelper.validateLengthOfCallId(
-                UserController.REQUEST_PARAM_CALL_ID, ParseDataHelper
-                        .validateAndParseString(
-                                UserController.REQUEST_PARAM_CALL_ID, callId,
-                                true));
+        ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
+                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
+                        callId, true));
     }
 
     /**
@@ -152,27 +147,21 @@ public class UserController extends BaseController {
     private void validateInputDataForSetLlc(LlcRequest llcRequest)
             throws DataValidationException,
             MissingServletRequestParameterException {
-        if (llcRequest.getCallingNumber() == null) {
-            handleMissingJsonParamException(UserController.REQUEST_PARAM_CALLING_NUMBER);
-        }
-        if (llcRequest.getCallId() == null) {
-            handleMissingJsonParamException(UserController.REQUEST_PARAM_CALL_ID);
-        }
-        if (llcRequest.getLanguageLocationCode() == null) {
-            handleMissingJsonParamException(UserController.REQUEST_PARAM_LLC);
-        }
-        ParseDataHelper.validateAndParseString(
-                UserController.REQUEST_PARAM_CALLING_NUMBER,
-                llcRequest.getCallingNumber(), true);
-        ParseDataHelper.validateAndTrimMsisdn(
-                UserController.REQUEST_PARAM_CALLING_NUMBER,
+
+        checkParameterMissing(REQUEST_PARAM_CALLING_NUMBER,
                 llcRequest.getCallingNumber());
-        ParseDataHelper.validateLengthOfCallId(
-                UserController.REQUEST_PARAM_CALL_ID, ParseDataHelper
-                        .validateAndParseString(
-                                UserController.REQUEST_PARAM_CALL_ID,
-                                llcRequest.getCallId(), true));
-        ParseDataHelper.validateAndParseInt(UserController.REQUEST_PARAM_LLC,
+        checkParameterMissing(REQUEST_PARAM_CALL_ID, llcRequest.getCallId());
+        checkParameterMissing(REQUEST_PARAM_LLC,
+                llcRequest.getLanguageLocationCode());
+
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALLING_NUMBER,
+                llcRequest.getCallingNumber(), true);
+        ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
+                llcRequest.getCallingNumber());
+        ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
+                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
+                        llcRequest.getCallId(), true));
+        ParseDataHelper.validateAndParseInt(REQUEST_PARAM_LLC,
                 llcRequest.getLanguageLocationCode(), true);
     }
 }

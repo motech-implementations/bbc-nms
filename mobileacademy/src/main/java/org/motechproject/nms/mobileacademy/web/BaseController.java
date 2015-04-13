@@ -26,6 +26,8 @@ public class BaseController {
 
     private static final Logger LOGGER = Logger.getLogger(BaseController.class);
 
+    private static final String FAILURE_REASON = "\"failureReason\"";
+
     /**
      * Handle Missing Servlet Request Parameters (400)
      *
@@ -39,7 +41,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage());
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = "{" + FAILURE_REASON + ":\""
                 + exception.getParameterName() + ":Not Present\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -60,7 +62,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + "Invalid JSON\"}";
+        String responseJson = "{" + FAILURE_REASON + ":\"" + "Invalid JSON\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -80,7 +82,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = "{" + FAILURE_REASON + ":\""
                 + "Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -102,7 +104,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = "{" + FAILURE_REASON + ":\""
                 + exception.getErroneousField() + ":Invalid Value\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -124,8 +126,8 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
-                + "\"}";
+        String responseJson = "{" + FAILURE_REASON + ":\""
+                + exception.getMessage() + "\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -144,7 +146,7 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = "{" + FAILURE_REASON + ":\"Internal Error\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -152,14 +154,20 @@ public class BaseController {
     }
 
     /**
-     * handle exception if request JSON Parameter is missing
+     * if parameter is missing i.e value is null then throw
+     * MissingServletRequestParameterException
      * 
      * @param parameterName name of the parameter
+     * @param parameterValue value of the parameter
      * @throws MissingServletRequestParameterException
      */
-    public void handleMissingJsonParamException(String parameterName)
+    public void checkParameterMissing(String parameterName,
+            String parameterValue)
             throws MissingServletRequestParameterException {
-        throw new MissingServletRequestParameterException(parameterName, null);
+        if (parameterValue == null) {
+            throw new MissingServletRequestParameterException(parameterName,
+                    null);
+        }
     }
 
     /**

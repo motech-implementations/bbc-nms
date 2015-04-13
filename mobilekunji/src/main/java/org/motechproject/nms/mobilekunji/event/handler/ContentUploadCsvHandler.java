@@ -160,7 +160,7 @@ public class ContentUploadCsvHandler {
         String contentName = null;
         String content = null;
         String contentFile = null;
-        Integer cardNumber = null;
+        String cardNumber = null;
         Integer contentDuration = null;
 
         contentId = ParseDataHelper.validateAndParseInt("Content Id", record.getContentId(), true);
@@ -169,7 +169,8 @@ public class ContentUploadCsvHandler {
         contentName = ParseDataHelper.validateAndParseString("Content name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
 
-        cardNumber = ParseDataHelper.validateAndParseInt("Card number", record.getCardNumber(), true);
+        cardNumber = record.getCardNumber();
+        ParseDataHelper.validateAndParseInt("Card number", cardNumber, true);
         validateCardNumber(cardNumber.toString());
 
         contentDuration = ParseDataHelper.validateAndParseInt("Content Duration", record.getContentDuration(), true);
@@ -197,7 +198,7 @@ public class ContentUploadCsvHandler {
 
     private void validateCardNumber(String cardNumber) throws DataValidationException {
 
-        if (cardNumber.length() > ConfigurationConstants.MAX_CARD_DIGITS) {
+        if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
             ParseDataHelper.raiseInvalidDataException("Card number", cardNumber);
         }
     }

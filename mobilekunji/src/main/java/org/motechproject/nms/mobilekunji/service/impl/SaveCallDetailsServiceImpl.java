@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * This class provides the implementation of SaveCallDetailsService
  */
@@ -70,7 +72,10 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), nmsId, saveCallDetailApiRequest.getCircle(),
                 saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime());
 
-        setCardDetail(callDetail, saveCallDetailApiRequest);
+        if (null != saveCallDetailApiRequest.getContent() && !saveCallDetailApiRequest.getContent().isEmpty()) {
+
+            setCardDetail(callDetail, saveCallDetailApiRequest.getContent());
+        }
         callDetailService.create(callDetail);
 
         logger.info("CallDetail created successfully.");
@@ -80,12 +85,12 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      * set CardContent of the CallDetail
      *
      * @param callDetail
-     * @param saveCallDetailApiRequest
+     * @param list
      * @throws DataValidationException
      */
-    private void setCardDetail(CallDetail callDetail, SaveCallDetailApiRequest saveCallDetailApiRequest) {
+    private void setCardDetail(CallDetail callDetail, List<CardDetail> list) {
 
-        for (CardDetail element : saveCallDetailApiRequest.getContent()) {
+        for (CardDetail element : list) {
             callDetail.getCardDetail().add(element);
         }
         logger.info("CardDetail added successfully.");
