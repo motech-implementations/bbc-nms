@@ -31,8 +31,9 @@ public class ConfigurationConstants {
 
     public static final Integer MAX_CARD_DIGITS = 2;
 
-    public static final Boolean TRUE = true;
-
-    public static final Boolean FALSE = false;
     public static final String LOG_SEPERATOR = "|";
+
+    public static final String CALLING_NUMBER = "Calling Number";
+
+    public static final String CALL_ID = "Call Id";
 }

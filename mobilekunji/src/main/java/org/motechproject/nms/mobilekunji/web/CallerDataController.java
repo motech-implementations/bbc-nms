@@ -89,9 +89,10 @@ public class CallerDataController extends BaseController {
 
         logger.debug("SaveCallDetails: started");
         logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
-        long startTime = System.currentTimeMillis();
 
-        validateCallId(saveCallDetailApiRequest.getCallId());
+        saveCallDetailApiRequest.validateMandatoryParameters();
+
+        long startTime = System.currentTimeMillis();
 
         saveCallDetailsService.saveCallDetails(saveCallDetailApiRequest);
 
@@ -115,9 +116,9 @@ public class CallerDataController extends BaseController {
         logger.debug("SetLanguageLocationCode: started");
         logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());
 
-        long startTime = System.currentTimeMillis();
+        languageLocationCodeApiRequest.validateMandatoryParameters();
 
-        validateCallId(languageLocationCodeApiRequest.getCallId());
+        long startTime = System.currentTimeMillis();
 
         userDetailsService.setLanguageLocationCode(languageLocationCodeApiRequest);
 
