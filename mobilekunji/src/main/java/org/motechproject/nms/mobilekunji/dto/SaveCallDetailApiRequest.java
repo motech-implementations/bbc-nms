@@ -170,10 +170,11 @@ public class SaveCallDetailApiRequest {
      */
     public void validateMandatoryParameters() throws DataValidationException {
 
-        ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER, callingNumber);
-        ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true);
-        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID, callId);
-        ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID,callId,true);
+        callingNumber = ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
+
+        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
 
         ParseDataHelper.validateAndParseString(ConfigurationConstants.OPERATOR_CODE,operator,true);
         ParseDataHelper.validateAndParseString(ConfigurationConstants.CIRCLE_CODE,operator,true);
