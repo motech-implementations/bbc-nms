@@ -96,32 +96,36 @@ public interface LocationService {
     Integer getMkCappingByCode(Long stateCode);
 
     /**
-     * Check whether MK is deployed on the the State or not by its State Code
+     * Check whether MK service is deployed in the the State or not by its State Code
+     *
      * @param stateCode
      * @return true/false
      */
 
-    boolean isMkDeployed(Long stateCode);
-
-    /**
-     * Check whether MA is deployed on the the State or not by its State Code
-     * @param stateCode
-     * @return true/false
-     */
-    boolean isMadeployed(Long stateCode);
+    Boolean getMkServiceDeployedByCode(Long stateCode);
 
     /**
-     * Check whether KK is deployed on the the State or not by its State Code
+     * Check whether MA service is deployed in the the State or not by its State Code
+     *
      * @param stateCode
      * @return true/false
      */
-    boolean isKkDeployed(Long stateCode);
+    Boolean getMaServiceDeployedByCode(Long stateCode);
 
     /**
-     * Check whether White List for msisdn is enabled on the the State or not by its State Code
+     * Check whether KK service is deployed in the the State or not by its State Code
+     *
      * @param stateCode
      * @return true/false
      */
-    boolean isWhiteListEnabled(Long stateCode);
+    Boolean getKkServiceDeployedByCode(Long stateCode);
+
+    /**
+     * Check whether White List for msisdn is enabled in the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    Boolean getWhiteListingEnableStatusByCode(Long stateCode);
 
 }
