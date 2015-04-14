@@ -1,8 +1,17 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.AbortionType;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.EntryType;
+import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
@@ -20,8 +29,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -44,12 +53,43 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvServiceImpl.class);
     
     /**
-     * this method process the mother record
+     * This method process the mother csv records under transaction means
+     * if single records fails whole transaction is rolled back 
+     * if all records process successfully data is committed
+     * 
      * @param csvFileName String type object
      * @param uploadedIDs List type object
      */
     @Override
     public void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs){
+        
+        motherMctsCsvDataService.doInTransaction(new TransactionCallback<MotherMctsCsv>() {
+            
+            private String csvFileName;
+            private List<Long> uploadedIDs;
+            
+            private TransactionCallback<MotherMctsCsv> init(String csvFileName, List<Long> uploadedIDs) {
+                this.csvFileName = csvFileName;
+                this.uploadedIDs = uploadedIDs;
+                return this;
+            }
+            
+            @Override
+            public MotherMctsCsv doInTransaction(TransactionStatus arg0) {
+                processMotherMctsCsvInTransaction(csvFileName, uploadedIDs);
+                return null;
+            }
+        }.init(csvFileName, uploadedIDs));
+        
+    }
+    
+    /**
+     * This method process the mother record
+     * 
+     * @param csvFileName String type object
+     * @param uploadedIDs List type object
+     */
+    public void processMotherMctsCsvInTransaction(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);
         BulkUploadStatus motherCsvUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -142,7 +182,9 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString(Constants.AADHAR_NUM, motherMctsCsv.getAadharNo(), false));
         motherSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.NAME, motherMctsCsv.getName(),false));
         DateTime lmp = ParseDataHelper.validateAndParseDate(Constants.LMP_DATE, motherMctsCsv.getLmpDate(), true);
-        if (lmp.isAfter(DateTime.now())) {
+        DateTime currDate = DateTime.now();
+        int days = Days.daysBetween(currDate, lmp).getDays();
+        if (days < 0 && (days/Constants.DAYS_IN_WEEK) > Constants.DURATION_OF_72_WEEK_PACK) {
             ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
         } else {
             motherSubscriber.setLmp(lmp);

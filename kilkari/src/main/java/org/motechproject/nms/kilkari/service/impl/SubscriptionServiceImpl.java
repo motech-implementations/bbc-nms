@@ -352,10 +352,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode,
-                                             Integer llcCode) throws DataValidationException, NmsInternalServerError {
+            Integer llcCode) throws DataValidationException, NmsInternalServerError {
         SubscriptionPack pack = null;
         if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-           pack = SubscriptionPack.PACK_48_WEEKS;
+            pack = SubscriptionPack.PACK_48_WEEKS;
         } else {
             pack = SubscriptionPack.PACK_72_WEEKS;
         }
@@ -515,5 +515,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
         }
     }
-
+    
+    public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
+        Subscription subscription = subscriptionDataService.findById(subscriptionId);
+        if (subscription != null) {
+            if(subscription.getChannel()==Channel.IVR && reason == DeactivationReason.MSISDN_IN_DND){
+                return;
+            }
+            subscription.setStatus(Status.DEACTIVATED);
+            subscription.setDeactivationReason(reason);
+            subscriptionDataService.update(subscription);
+            activeSubscriptionCountService.decrementActiveSubscriptionCount();
+        } else {
+            logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
+        }
+    }
+    
 }

@@ -53,7 +53,7 @@ public interface SubscriberService {
     /**
      * This method gets subscriber by childMctsId and stateCode
      * @param childMctsId String type object
-     * @param stateCode String type object
+     * @param stateCode Long type object
      * @return Subscriber type object
      */
     Subscriber getSubscriberByChildMctsId(String childMctsId, Long stateCode);
@@ -61,8 +61,9 @@ public interface SubscriberService {
     /**
      * This method gets subscriber by motherMctsId and stateCode
      * @param motherMctsId String type object
-     * @param stateCode String type object
+     * @param stateCode Long type object
      * @return Subscriber type object
      */
     Subscriber getSubscriberByMotherMctsId(String motherMctsId, Long stateCode);
+
 }
