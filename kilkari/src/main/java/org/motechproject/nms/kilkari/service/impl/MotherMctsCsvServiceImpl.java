@@ -41,7 +41,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
     
-    private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvServiceImpl.class);
     
     /**
      * this method process the mother record
@@ -89,11 +89,11 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
 
                 motherCsvUploadStatus.incrementFailureCount();
 
-            } catch (NmsInternalServerError dve) {
-                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
+            } catch (NmsInternalServerError nise) {
+                logger.warn("NmsInternalServerError :::: [{}]", nise.getMessage());
                         errorDetails.setRecordDetails(motherMctsCsv.toString());
-                errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
-                errorDetails.setErrorDescription(dve.getMessage());
+                errorDetails.setErrorCategory(nise.getErrorCode());
+                errorDetails.setErrorDescription(nise.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
 
                 motherCsvUploadStatus.incrementFailureCount();

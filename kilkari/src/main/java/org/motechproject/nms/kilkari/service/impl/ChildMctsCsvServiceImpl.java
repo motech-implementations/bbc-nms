@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.apache.velocity.runtime.parser.node.GetExecutor;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
@@ -81,11 +82,11 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                     childCsvUploadStatus.incrementFailureCount();
                 }
                 logger.info("Processed record id[{}]", id);
-            } catch (NmsInternalServerError dve) {
-                logger.warn("DataValidationException :::: [{}]", dve.getMessage());
+            } catch (NmsInternalServerError nise) {
+                logger.warn("NmsInternalServerError :::: [{}]", nise.getMessage());
                 errorDetails.setRecordDetails(childMctsCsv.toString());
-                errorDetails.setErrorCategory(ErrorCategoryConstants.INCONSISTENT_DATA);
-                errorDetails.setErrorDescription(dve.getMessage());
+                errorDetails.setErrorCategory(nise.getErrorCode());
+                errorDetails.setErrorDescription(nise.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
 
                 childCsvUploadStatus.incrementFailureCount();

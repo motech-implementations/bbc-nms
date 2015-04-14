@@ -404,6 +404,26 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         
     } 
     
+    @Test
+    public void testRecordRejectedIfStillBirthTrue() throws Exception {
+        logger.info("Inside testRecordRejectedIfAbortionTrue");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        ChildMctsCsv csv = new ChildMctsCsv();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("10000000049");
+        csv.setIdNo("49");
+        csv.setEntryType("9");
+        
+        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callChildMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
+        
+        Subscription dbSubscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        assertNull(dbSubscription);
+        
+    } 
+    
     
     @Test
     public void testUploadedIdNotInDatabase() throws Exception {

@@ -149,11 +149,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             
             logger.info("Not found active subscription from database for BeneficeryType[{}] based on msisdn[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), subscriber.getMsisdn(), pack.toString(), Status.ACTIVE);
             /* Find subscription from database based on mctsid, packName, status */
-            dbSubscription = getActiveSubscriptionByMctsIdPack(mctsId, pack, subscriber.getState().getStateCode());
+            dbSubscription = getActiveSubscriptionByMctsIdPack(mctsId, pack, subscriber.getStateCode());
             if (dbSubscription == null) {
                 logger.debug("Not found active subscription from database for BeneficeryType[{}] based on mctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), mctsId, pack.toString(), Status.ACTIVE);
                 /* Find subscription from database based on mctsid(MotherMcts), packName, status */
-                dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getState().getStateCode());
+                dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getStateCode());
                 if (dbSubscription == null) {
                     logger.debug("Not Found active subscription from database for BeneficeryType[{}] based on othermctsid[{}], packName[{}], status[{}]", subscriber.getBeneficiaryType(), otherMctsId, otherPack.toString(), Status.ACTIVE);
                     createNewSubscriberAndSubscription(subscriber, channel);
@@ -204,7 +204,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             SubscriptionPack otherPack, String otherMctsId,
             Subscriber dbSubscriber) {
         if(subscriber.getMotherMctsId() != null) {
-            Subscription dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getState().getStateCode());
+            Subscription dbSubscription = getActiveSubscriptionByMctsIdPack(otherMctsId, otherPack, subscriber.getStateCode());
             if(dbSubscription != null){
                 Subscriber dbMotherSubscriber = dbSubscription.getSubscriber();
                 if(dbMotherSubscriber!=null) {
@@ -257,7 +257,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (dbSubscription == null) {
             logger.debug("Not found active subscription from database based on msisdn[{}], packName[{}]", subscriber.getMsisdn(), SubscriptionPack.PACK_72_WEEKS);
             /* Find subscription from database based on mctsid, packName, status */
-            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), pack, subscriber.getState().getStateCode());
+            dbSubscription = getActiveSubscriptionByMctsIdPack(subscriber.getMotherMctsId(), pack, subscriber.getStateCode());
             if (dbSubscription == null) {
                 logger.debug("Not found active subscription from database based on Mothermctsid[{}], packName[{}]", subscriber.getMotherMctsId(), SubscriptionPack.PACK_72_WEEKS);
                 createNewSubscriberAndSubscription(subscriber, channel);
@@ -282,7 +282,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel)
-            throws NmsInternalServerError {
+            throws NmsInternalServerError, DataValidationException {
         createNewSubscriberAndSubscription(subscriber, channel, null);
     }
 
@@ -294,7 +294,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @throws DataValidationException
      */
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
-            throws NmsInternalServerError {
+            throws NmsInternalServerError, DataValidationException {
             Configuration configuration = configurationService.getConfiguration();
             long activeUserCount = activeSubscriptionCountService.getActiveSubscriptionCount();
         /*If DeactivationReason is NONE then create Subscriber and subscription*/
@@ -336,11 +336,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
         } else {
             logger.warn("Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription");
-            throw new NmsInternalServerError("Active Subscriptions Count Exceeded",
+            throw new DataValidationException("Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription",
                     ErrorCategoryConstants.INCONSISTENT_DATA,
-                    "Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription");
+                    "Inconsistent Data : Upload unsuccessfull as stillBorn/Abortion/Death reported got non existing subscription", null, null);
         }
-
     }
 
     /**
@@ -448,7 +447,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(DeactivationReason.PACK_CHANGED != deactivationReason) {
             dbSubscription.setMctsId(subscriber.getSuitableMctsId());
         }
-        dbSubscription.setStateCode(subscriber.getState().getStateCode());
+        dbSubscription.setStateCode(subscriber.getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
         
         if (statusFlag) {

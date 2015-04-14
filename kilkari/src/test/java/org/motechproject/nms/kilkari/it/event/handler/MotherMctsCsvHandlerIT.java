@@ -51,7 +51,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertNotNull(dbSubscriber);
         assertTrue(dbSubscription.getChannel().equals(Channel.MCTS));
         assertTrue(dbSubscriber.getName().equals(csv.getName()));
-        assertTrue(dbSubscriber.getState().getStateCode().toString().equals(csv.getStateCode()));
+        assertTrue(dbSubscriber.getStateCode().toString().equals(csv.getStateCode()));
     } 
     
     @Test
