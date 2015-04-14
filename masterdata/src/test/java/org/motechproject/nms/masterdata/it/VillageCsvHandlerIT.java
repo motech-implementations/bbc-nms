@@ -83,8 +83,8 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        VillageCsv csvData = TestHelper.getVillageCsvData();
-        VillageCsv invalidCsvData = TestHelper.getInvalidVillageCsvData();
+        CsvVillage csvData = TestHelper.getVillageCsvData();
+        CsvVillage invalidCsvData = TestHelper.getInvalidVillageCsvData();
 
         createVillageCsvData(csvData);
         createVillageCsvData(invalidCsvData);
@@ -129,7 +129,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createVillageCsvData(VillageCsv csvData) {
+    private void createVillageCsvData(CsvVillage csvData) {
 
         villageCsvService.create(csvData);
     }

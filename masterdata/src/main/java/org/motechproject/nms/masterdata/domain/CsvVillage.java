@@ -5,16 +5,16 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
- * This class Models data records provided in the HealthBlock Csv Upload
+ * This class Models data records provided in the Village Csv Upload
  */
 @Entity
-public class HealthBlockCsv extends MdsEntity {
+public class CsvVillage extends MdsEntity {
 
     @Field
     private String name;
 
     @Field
-    private String healthBlockCode;
+    private String villageCode;
 
     @Field
     private String stateCode;
@@ -25,9 +25,9 @@ public class HealthBlockCsv extends MdsEntity {
     @Field
     private String talukaCode;
 
-    public HealthBlockCsv(String name, String healthBlockCode, String stateCode, String districtCode, String talukaCode) {
+    public CsvVillage(String name, String villageCode, String stateCode, String districtCode, String talukaCode) {
         this.name = name;
-        this.healthBlockCode = healthBlockCode;
+        this.villageCode = villageCode;
         this.stateCode = stateCode;
         this.districtCode = districtCode;
         this.talukaCode = talukaCode;
@@ -41,12 +41,12 @@ public class HealthBlockCsv extends MdsEntity {
         this.name = name;
     }
 
-    public String getHealthBlockCode() {
-        return healthBlockCode;
+    public String getVillageCode() {
+        return villageCode;
     }
 
-    public void setHealthBlockCode(String healthBlockCode) {
-        this.healthBlockCode = healthBlockCode;
+    public void setVillageCode(String villageCode) {
+        this.villageCode = villageCode;
     }
 
     public String getStateCode() {
@@ -74,16 +74,17 @@ public class HealthBlockCsv extends MdsEntity {
     }
 
     /**
-     * This method override the toString method to create string for State Code
-     * District Code, Taluka Code and Health Block Code for the instance variables
+     * This method override the toString method to create string for state code
+     * District code, taluka code and village code for the instance variables
      *
-     * @return The string of the State Code District Code, Taluka Code and Health Block Code of the instance variables.
+     * @return The string of the name, state code
+     * District code, taluka code and village code for the instance variables
      */
     @Override
     public String toString() {
-        return "HealthBlockCsv{" +
+        return "VillageCsv{" +
                 "name='" + name + '\'' +
-                ", healthBlockCode='" + healthBlockCode + '\'' +
+                ", villageCode='" + villageCode + '\'' +
                 ", stateCode='" + stateCode + '\'' +
                 ", districtCode='" + districtCode + '\'' +
                 ", talukaCode='" + talukaCode + '\'' +

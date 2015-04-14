@@ -5,7 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.domain.CsvState;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -71,17 +71,17 @@ public class StateCsvUploadHandler {
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.STATE);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        StateCsv stateCsvRecord = null;
+        CsvState csvStateRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("STATE_CSV_SUCCESS event processing start for ID: {}", id);
-                stateCsvRecord = stateCsvService.findById(id);
+                csvStateRecord = stateCsvService.findById(id);
 
-                if (stateCsvRecord != null) {
-                    bulkUploadStatus.setUploadedBy(stateCsvRecord.getOwner());
+                if (csvStateRecord != null) {
+                    bulkUploadStatus.setUploadedBy(csvStateRecord.getOwner());
                     logger.info("Id exist in State Temporary Entity");
-                    State newRecord = mapStateCsv(stateCsvRecord);
+                    State newRecord = mapStateCsv(csvStateRecord);
                     processStateData(newRecord);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -93,7 +93,7 @@ public class StateCsvUploadHandler {
 
                 logger.error("STATE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), stateCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvStateRecord.toString());
 
             } catch (Exception e) {
 
@@ -101,8 +101,8 @@ public class StateCsvUploadHandler {
 
                 logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != stateCsvRecord) {
-                    stateCsvService.delete(stateCsvRecord);
+                if (null != csvStateRecord) {
+                    stateCsvService.delete(csvStateRecord);
                 }
             }
         }
@@ -110,7 +110,7 @@ public class StateCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private State mapStateCsv(StateCsv record) throws DataValidationException {
+    private State mapStateCsv(CsvState record) throws DataValidationException {
 
         State newRecord = new State();
 

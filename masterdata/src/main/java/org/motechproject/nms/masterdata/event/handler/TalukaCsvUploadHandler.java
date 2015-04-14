@@ -7,7 +7,7 @@ import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.TalukaCsv;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaCsvService;
@@ -81,17 +81,17 @@ public class TalukaCsvUploadHandler {
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.TALUKA);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        TalukaCsv talukaCsvRecord = null;
+        CsvTaluka csvTalukaRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("TALUKA_CSV_SUCCESS event processing start for ID: {}", id);
-                talukaCsvRecord = talukaCsvService.findById(id);
+                csvTalukaRecord = talukaCsvService.findById(id);
 
-                if (talukaCsvRecord != null) {
+                if (csvTalukaRecord != null) {
                     logger.info("Id exist in Taluka Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(talukaCsvRecord.getOwner());
-                    Taluka record = mapTalukaCsv(talukaCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvTalukaRecord.getOwner());
+                    Taluka record = mapTalukaCsv(csvTalukaRecord);
                     processTalukaData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -102,7 +102,7 @@ public class TalukaCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("TALUKA_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), talukaCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvTalukaRecord.toString());
 
             } catch (Exception e) {
 
@@ -110,15 +110,15 @@ public class TalukaCsvUploadHandler {
 
                 logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != talukaCsvRecord) {
-                    talukaCsvService.delete(talukaCsvRecord);
+                if (null != csvTalukaRecord) {
+                    talukaCsvService.delete(csvTalukaRecord);
                 }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private Taluka mapTalukaCsv(TalukaCsv record) throws DataValidationException {
+    private Taluka mapTalukaCsv(CsvTaluka record) throws DataValidationException {
         Taluka newRecord = new Taluka();
 
         String talukaName = ParseDataHelper.validateAndParseString("TalukaName", record.getName(), true);

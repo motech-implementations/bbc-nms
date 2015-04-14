@@ -5,7 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.OperatorCsv;
+import org.motechproject.nms.masterdata.domain.CsvOperator;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -58,7 +58,7 @@ public class OperatorCsvHandler {
         logger.info("OPERATOR_CSV_SUCCESS event received");
         Map<String, Object> params = motechEvent.getParameters();
 
-        OperatorCsv record = null;
+        CsvOperator record = null;
         Operator persistentRecord = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
@@ -123,7 +123,7 @@ public class OperatorCsvHandler {
      * @return Operator record after the mapping
      * @throws DataValidationException
      */
-    private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
+    private Operator mapOperatorFrom(CsvOperator record) throws DataValidationException {
         Operator newRecord = new Operator();
 
         newRecord.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));

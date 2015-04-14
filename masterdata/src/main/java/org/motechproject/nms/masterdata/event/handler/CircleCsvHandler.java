@@ -5,7 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -57,7 +57,7 @@ public class CircleCsvHandler {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
 
-        CircleCsv record = null;
+        CsvCircle record = null;
         Circle persistentRecord = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
@@ -124,7 +124,7 @@ public class CircleCsvHandler {
      * @return Circle record after the mapping
      * @throws DataValidationException
      */
-    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
+    private Circle mapCircleFrom(CsvCircle record) throws DataValidationException {
 
         Circle newRecord = new Circle();
 

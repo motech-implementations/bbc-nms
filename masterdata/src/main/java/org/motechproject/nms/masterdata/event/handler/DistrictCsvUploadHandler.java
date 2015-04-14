@@ -5,7 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
+import org.motechproject.nms.masterdata.domain.CsvDistrict;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
@@ -77,17 +77,17 @@ public class DistrictCsvUploadHandler {
 
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        DistrictCsv districtCsvRecord = null;
+        CsvDistrict csvDistrictRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("DISTRICT_CSV_SUCCESS event processing start for ID: {}", id);
-                districtCsvRecord = districtCsvService.findById(id);
+                csvDistrictRecord = districtCsvService.findById(id);
 
-                if (districtCsvRecord != null) {
+                if (csvDistrictRecord != null) {
                     logger.info("Id exist in District Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(districtCsvRecord.getOwner());
-                    District record = mapDistrictCsv(districtCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvDistrictRecord.getOwner());
+                    District record = mapDistrictCsv(csvDistrictRecord);
                     processDistrictData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -98,21 +98,21 @@ public class DistrictCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), districtCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvDistrictRecord.toString());
             } catch (Exception e) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
                 logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != districtCsvRecord) {
-                    districtCsvService.delete(districtCsvRecord);
+                if (null != csvDistrictRecord) {
+                    districtCsvService.delete(csvDistrictRecord);
                 }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private District mapDistrictCsv(DistrictCsv record) throws DataValidationException {
+    private District mapDistrictCsv(CsvDistrict record) throws DataValidationException {
 
         String districtName = ParseDataHelper.validateAndParseString("District Name", record.getName(), true);
         Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);

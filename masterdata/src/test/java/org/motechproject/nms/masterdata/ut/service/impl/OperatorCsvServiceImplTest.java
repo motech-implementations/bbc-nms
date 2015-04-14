@@ -3,7 +3,7 @@ package org.motechproject.nms.masterdata.ut.service.impl;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.mockito.Mock;
-import org.motechproject.nms.masterdata.domain.OperatorCsv;
+import org.motechproject.nms.masterdata.domain.CsvOperator;
 import org.motechproject.nms.masterdata.repository.OperatorCsvDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.impl.OperatorCsvServiceImpl;
@@ -29,12 +29,12 @@ public class OperatorCsvServiceImplTest extends TestCase {
 
     public void testGetRecord() throws Exception {
 
-        OperatorCsv operatorCsvData = new OperatorCsv();
-        operatorCsvData.setId(1L);
-        operatorCsvData.setName("Test");
-        operatorCsvData.setCode("123");
+        CsvOperator csvOperatorData = new CsvOperator();
+        csvOperatorData.setId(1L);
+        csvOperatorData.setName("Test");
+        csvOperatorData.setCode("123");
 
-        when(operatorCsvDataService.findById(1L)).thenReturn(operatorCsvData);
+        when(operatorCsvDataService.findById(1L)).thenReturn(csvOperatorData);
         assertNotNull(operatorCsvService.getRecord(1L));
         assertTrue("Test".equals(operatorCsvService.getRecord(1L).getName()));
         assertTrue("123".equals(operatorCsvService.getRecord(1L).getCode()));

@@ -78,17 +78,17 @@ public class VillageCsvUploadHandler {
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.VILLAGE);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        VillageCsv villageCsvRecord = null;
+        CsvVillage csvVillageRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("VILLAGE_CSV_SUCCESS event processing start for ID: {}", id);
-                villageCsvRecord = villageCsvService.findById(id);
+                csvVillageRecord = villageCsvService.findById(id);
 
-                if (villageCsvRecord != null) {
+                if (csvVillageRecord != null) {
                     logger.info("Id exist in Village Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(villageCsvRecord.getOwner());
-                    Village record = mapVillageCsv(villageCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvVillageRecord.getOwner());
+                    Village record = mapVillageCsv(csvVillageRecord);
                     processVillageData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -99,7 +99,7 @@ public class VillageCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), villageCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvVillageRecord.toString());
 
             } catch (Exception e) {
 
@@ -107,15 +107,15 @@ public class VillageCsvUploadHandler {
 
                 logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != villageCsvRecord) {
-                    villageCsvService.delete(villageCsvRecord);
+                if (null != csvVillageRecord) {
+                    villageCsvService.delete(csvVillageRecord);
                 }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private Village mapVillageCsv(VillageCsv record) throws DataValidationException {
+    private Village mapVillageCsv(CsvVillage record) throws DataValidationException {
         Village newRecord = new Village();
 
         String villageName = ParseDataHelper.validateAndParseString("VillageName", record.getName(), true);

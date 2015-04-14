@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
+import org.motechproject.nms.masterdata.domain.CsvLanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class LanguageLocationCodeCsvServiceImpl implements LanguageLocationCodeS
      * @return LanguageLocationCodeCsv type object
      */
     @Override
-    public LanguageLocationCodeCsv getRecord(Long id) {
+    public CsvLanguageLocationCode getRecord(Long id) {
         return languageLocationCodeCsvDataService.findById(id);
     }
 
@@ -37,7 +37,7 @@ public class LanguageLocationCodeCsvServiceImpl implements LanguageLocationCodeS
      * @param record LanguageLocationCodeCsv from database
      */
     @Override
-    public void delete(LanguageLocationCodeCsv record) {
+    public void delete(CsvLanguageLocationCode record) {
         languageLocationCodeCsvDataService.delete(record);
     }
 

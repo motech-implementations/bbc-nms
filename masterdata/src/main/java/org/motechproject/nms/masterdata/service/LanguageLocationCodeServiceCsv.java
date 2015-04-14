@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
+import org.motechproject.nms.masterdata.domain.CsvLanguageLocationCode;
 
 /**
  * This interface is used for crud operations on LanguageLocationCodeCsv
@@ -14,13 +14,13 @@ public interface LanguageLocationCodeServiceCsv {
      * @param id primary kry of the record
      * @return LanguageLocationCodeCsv type object
      */
-    LanguageLocationCodeCsv getRecord(Long id);
+    CsvLanguageLocationCode getRecord(Long id);
 
     /**
      * deletes LanguageLocationCodeCsv from database
      *
      * @param record LanguageLocationCodeCsv from database
      */
-    void delete(LanguageLocationCodeCsv record);
+    void delete(CsvLanguageLocationCode record);
 
 }

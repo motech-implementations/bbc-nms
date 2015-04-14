@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class StateCsv extends MdsEntity {
+public class CsvState extends MdsEntity {
 
     @Field
     private String name;
@@ -36,7 +36,7 @@ public class StateCsv extends MdsEntity {
     @Field(defaultValue = "true")
     private String isWhiteListEnable;
 
-    public StateCsv(String name, String stateCode, String maCapping, String mkCapping, String isMkDeployed, String isMaDeployed, String isKkDeployed, String isWhiteListEnable) {
+    public CsvState(String name, String stateCode, String maCapping, String mkCapping, String isMkDeployed, String isMaDeployed, String isKkDeployed, String isWhiteListEnable) {
         this.name = name;
         this.stateCode = stateCode;
         this.maCapping = maCapping;

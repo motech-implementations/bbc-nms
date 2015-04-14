@@ -81,17 +81,17 @@ public class HealthFacilityCsvUploadHandler {
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.HEALTH_FACILITY);
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        HealthFacilityCsv healthFacilityCsvRecord = null;
+        CsvHealthFacility csvHealthFacilityRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthFacilityCsvRecord = healthFacilityCsvService.findById(id);
+                csvHealthFacilityRecord = healthFacilityCsvService.findById(id);
 
-                if (null != healthFacilityCsvRecord) {
+                if (null != csvHealthFacilityRecord) {
                     logger.info("Id exist in HealthFacility Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(healthFacilityCsvRecord.getOwner());
-                    HealthFacility record = mapHealthFacilityCsv(healthFacilityCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvHealthFacilityRecord.getOwner());
+                    HealthFacility record = mapHealthFacilityCsv(csvHealthFacilityRecord);
                     processHealthFacilityData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
@@ -102,7 +102,7 @@ public class HealthFacilityCsvUploadHandler {
             } catch (DataValidationException dataValidationException) {
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), healthFacilityCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvHealthFacilityRecord.toString());
 
             } catch (Exception e) {
 
@@ -110,8 +110,8 @@ public class HealthFacilityCsvUploadHandler {
 
                 logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
             } finally {
-                if (null != healthFacilityCsvRecord) {
-                    healthFacilityCsvService.delete(healthFacilityCsvRecord);
+                if (null != csvHealthFacilityRecord) {
+                    healthFacilityCsvService.delete(csvHealthFacilityRecord);
                 }
             }
         }
@@ -119,7 +119,7 @@ public class HealthFacilityCsvUploadHandler {
     }
 
 
-    private HealthFacility mapHealthFacilityCsv(HealthFacilityCsv record) throws DataValidationException {
+    private HealthFacility mapHealthFacilityCsv(CsvHealthFacility record) throws DataValidationException {
         HealthFacility newRecord = new HealthFacility();
 
         String healthFacilityName = ParseDataHelper.validateAndParseString("HealthFacilityName", record.getName(), true);

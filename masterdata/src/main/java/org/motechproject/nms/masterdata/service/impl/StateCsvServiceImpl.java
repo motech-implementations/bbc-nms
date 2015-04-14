@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.domain.CsvState;
 import org.motechproject.nms.masterdata.repository.StateCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class StateCsvServiceImpl implements StateCsvService {
      * @param record of the State
      */
     @Override
-    public void delete(StateCsv record) {
+    public void delete(CsvState record) {
         stateCsvRecordsDataService.delete(record);
     }
 
@@ -35,7 +35,7 @@ public class StateCsvServiceImpl implements StateCsvService {
      * @param record of the StateCsv
      */
     @Override
-    public StateCsv create(StateCsv record) {
+    public CsvState create(CsvState record) {
         return stateCsvRecordsDataService.create(record);
     }
 
@@ -46,7 +46,7 @@ public class StateCsvServiceImpl implements StateCsvService {
      * @return StateCsv
      */
     @Override
-    public StateCsv findById(Long id) {
+    public CsvState findById(Long id) {
         return stateCsvRecordsDataService.findById(id);
     }
 }

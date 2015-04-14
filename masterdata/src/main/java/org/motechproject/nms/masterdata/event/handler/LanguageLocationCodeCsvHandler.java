@@ -67,7 +67,7 @@ public class LanguageLocationCodeCsvHandler {
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
-        LanguageLocationCodeCsv record = null;
+        CsvLanguageLocationCode record = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
@@ -133,7 +133,7 @@ public class LanguageLocationCodeCsvHandler {
      * @return Operator record after the mapping
      * @throws DataValidationException
      */
-    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record)
+    private LanguageLocationCode mapLanguageLocationCodeFrom(CsvLanguageLocationCode record)
             throws DataValidationException {
 
         LanguageLocationCode newRecord = null;
