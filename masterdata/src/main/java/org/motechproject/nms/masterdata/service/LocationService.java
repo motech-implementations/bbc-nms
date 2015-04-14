@@ -117,4 +117,11 @@ public interface LocationService {
      */
     boolean isKkDeployed(Long stateCode);
 
+    /**
+     * Check whether White List for msisdn is enabled on the the State or not by its State Code
+     * @param stateCode
+     * @return true/false
+     */
+    boolean isWhiteListEnabled(Long stateCode);
+
 }

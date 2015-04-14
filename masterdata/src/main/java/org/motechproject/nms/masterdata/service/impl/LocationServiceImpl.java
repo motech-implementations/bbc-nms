@@ -251,8 +251,8 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public boolean isMkDeployed(Long stateCode) {
 
-        State state=getStateByCode(stateCode);
-        if(state.getIsMkDeployed().equals("true"))
+        State state = getStateByCode(stateCode);
+        if (state.getIsMkDeployed().equals("true"))
             return true;
 
         return false;
@@ -266,8 +266,8 @@ public class LocationServiceImpl implements LocationService {
      */
     @Override
     public boolean isMadeployed(Long stateCode) {
-        State state=getStateByCode(stateCode);
-        if(state.getIsMaDeployed().equals("true"))
+        State state = getStateByCode(stateCode);
+        if (state.getIsMaDeployed().equals("true"))
             return true;
         return false;
     }
@@ -280,8 +280,22 @@ public class LocationServiceImpl implements LocationService {
      */
     @Override
     public boolean isKkDeployed(Long stateCode) {
-        State state=getStateByCode(stateCode);
-        if(state.getIsKkDeployed().equals("true"))
+        State state = getStateByCode(stateCode);
+        if (state.getIsKkDeployed().equals("true"))
+            return true;
+        return false;
+    }
+
+    /**
+     * Check whether White List for msisdn is enabled on the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/falsel
+     */
+    @Override
+    public boolean isWhiteListEnabled(Long stateCode) {
+        State state = getStateByCode(stateCode);
+        if (state.getIsWhiteListEnable().equals("true"))
             return true;
         return false;
     }
