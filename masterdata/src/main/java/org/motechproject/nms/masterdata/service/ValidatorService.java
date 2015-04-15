@@ -8,26 +8,26 @@ import org.motechproject.nms.util.helper.DataValidationException;
 public interface ValidatorService {
 
     /**
-     * update Validate Parent of HealthBlock
+     * Validate Parent of HealthBlock
      *
      * @param stateCode of the State
      * @param districtCode of the District
      * @param talukaCode of the Taluka
      */
-    public void validateHealthBlock(Long stateCode,Long districtCode,Long talukaCode)throws DataValidationException;
+    public void validateHealthBlockParent(Long stateCode,Long districtCode,Long talukaCode)throws DataValidationException;
 
     /**
-     * update Validate Parent of HealthFacility
+     * Validate Parent of HealthFacility
      *
      * @param stateCode of the State
      * @param districtCode of the District
      * @param talukaCode of the Taluka
      * @param healthBlockCode of the HealthBlock
      */
-    public void validateHealthFacility(Long stateCode,Long districtCode,Long talukaCode,Long healthBlockCode) throws DataValidationException;
+    public void validateHealthFacilityParent(Long stateCode,Long districtCode,Long talukaCode,Long healthBlockCode) throws DataValidationException;
 
     /**
-     * update Validate Parent of HealthSubFacility
+     * Validate Parent of HealthSubFacility
      *
      * @param stateCode of the State
      * @param districtCode of the District
@@ -35,6 +35,6 @@ public interface ValidatorService {
      * @param healthBlockCode of the HealthBlock
      * @param healthFacilityCode of the HealthFacility
      */
-    public void validateHealthSubFacility(Long stateCode,Long districtCode,Long talukaCode,Long healthBlockCode,Long healthFacilityCode) throws DataValidationException;
+    public void validateHealthSubFacilityParent(Long stateCode,Long districtCode,Long talukaCode,Long healthBlockCode,Long healthFacilityCode) throws DataValidationException;
 
 }

@@ -126,7 +126,7 @@ public class HealthSubFacilityCsvUploadHandler {
         Long healthfacilityCode = ParseDataHelper.validateAndParseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.validateAndParseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
-        validatorService.validateHealthSubFacility(stateCode,districtCode,talukaCode,healthBlockCode,healthfacilityCode);
+        validatorService.validateHealthSubFacilityParent(stateCode,districtCode,talukaCode,healthBlockCode,healthfacilityCode);
 
         newRecord.setName(healthSubFacilityName);
         newRecord.setStateCode(stateCode);

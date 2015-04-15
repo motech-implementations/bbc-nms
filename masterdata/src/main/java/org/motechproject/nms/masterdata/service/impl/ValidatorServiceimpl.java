@@ -34,14 +34,14 @@ public class ValidatorServiceimpl implements ValidatorService {
     }
 
     /**
-     * update Validate Parent of HealthBlock
+     * Validate Parent of HealthBlock
      *
      * @param stateCode    of the State
      * @param districtCode of the District
      * @param talukaCode   of the Taluka
      */
     @Override
-    public void validateHealthBlock(Long stateCode, Long districtCode, Long talukaCode) throws DataValidationException {
+    public void validateHealthBlockParent(Long stateCode, Long districtCode, Long talukaCode) throws DataValidationException {
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
@@ -61,7 +61,7 @@ public class ValidatorServiceimpl implements ValidatorService {
     }
 
     /**
-     * update Validate Parent of HealthFacility
+     * Validate Parent of HealthFacility
      *
      * @param stateCode       of the State
      * @param districtCode    of the District
@@ -69,9 +69,9 @@ public class ValidatorServiceimpl implements ValidatorService {
      * @param healthBlockCode of the HealthBlock
      */
     @Override
-    public void validateHealthFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) throws DataValidationException {
+    public void validateHealthFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) throws DataValidationException {
 
-        validateHealthBlock(stateCode, districtCode, talukaCode);
+        validateHealthBlockParent(stateCode, districtCode, talukaCode);
 
         HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
                 stateCode, districtCode, talukaCode, healthBlockCode);
@@ -81,7 +81,7 @@ public class ValidatorServiceimpl implements ValidatorService {
     }
 
     /**
-     * update Validate Parent of HealthSubFacility
+     * Validate Parent of HealthSubFacility
      *
      * @param stateCode          of the State
      * @param districtCode       of the District
@@ -90,9 +90,9 @@ public class ValidatorServiceimpl implements ValidatorService {
      * @param healthFacilityCode of the HealthFacility
      */
     @Override
-    public void validateHealthSubFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) throws DataValidationException {
+    public void validateHealthSubFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) throws DataValidationException {
 
-        validateHealthFacility(stateCode, districtCode, talukaCode, healthBlockCode);
+        validateHealthFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode);
 
         HealthFacility healthFacility = healthFacilityService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthFacilityCode);
         if (healthFacility == null) {
