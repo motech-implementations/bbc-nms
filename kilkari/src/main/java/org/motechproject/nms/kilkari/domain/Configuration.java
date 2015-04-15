@@ -32,30 +32,6 @@ public class Configuration {
     
     @Field(required = true)
     private Integer maxAllowedActiveBeneficiaryCount;
-    
-    @Field(required = true)
-    private String freshObdServiceId;
-    
-    @Field(required = true)
-    private String retryDay1ObdServiceId;
-    
-    @Field(required = true)
-    private String retryDay2ObdServiceId;
-    
-    @Field(required = true)
-    private String retryDay3ObdServiceId;
-    
-    @Field(required = true)
-    private String freshObdPriority;
-    
-    @Field(required = true)
-    private String retryDay1ObdPriority;
-    
-    @Field(required = true)
-    private String retryDay2ObdPriority;
-    
-    @Field(required = true)
-    private String retryDay3ObdPriority;
 
     public Long getIndex() {
         return index;
@@ -79,70 +55,6 @@ public class Configuration {
 
     public void setMaxAllowedActiveBeneficiaryCount(Integer maxAllowedActiveBeneficiaryCount) {
         this.maxAllowedActiveBeneficiaryCount = maxAllowedActiveBeneficiaryCount;
-    }
-
-    public String getFreshObdServiceId() {
-        return freshObdServiceId;
-    }
-
-    public void setFreshObdServiceId(String freshObdServiceId) {
-        this.freshObdServiceId = freshObdServiceId;
-    }
-    
-    public String getRetryDay1ObdServiceId() {
-        return retryDay1ObdServiceId;
-    }
-
-    public void setRetryDay1ObdServiceId(String retryDay1ObdServiceId) {
-        this.retryDay1ObdServiceId = retryDay1ObdServiceId;
-    }
-
-    public String getRetryDay2ObdServiceId() {
-        return retryDay2ObdServiceId;
-    }
-
-    public void setRetryDay2ObdServiceId(String retryDay2ObdServiceId) {
-        this.retryDay2ObdServiceId = retryDay2ObdServiceId;
-    }
-
-    public String getRetryDay3ObdServiceId() {
-        return retryDay3ObdServiceId;
-    }
-
-    public void setRetryDay3ObdServiceId(String retryDay3ObdServiceId) {
-        this.retryDay3ObdServiceId = retryDay3ObdServiceId;
-    }
-
-    public String getFreshObdPriority() {
-        return freshObdPriority;
-    }
-
-    public void setFreshObdPriority(String freshObdPriority) {
-        this.freshObdPriority = freshObdPriority;
-    }
-
-    public String getRetryDay1ObdPriority() {
-        return retryDay1ObdPriority;
-    }
-
-    public void setRetryDay1ObdPriority(String retryDay1ObdPriority) {
-        this.retryDay1ObdPriority = retryDay1ObdPriority;
-    }
-
-    public String getRetryDay2ObdPriority() {
-        return retryDay2ObdPriority;
-    }
-
-    public void setRetryDay2ObdPriority(String retryDay2ObdPriority) {
-        this.retryDay2ObdPriority = retryDay2ObdPriority;
-    }
-
-    public String getRetryDay3ObdPriority() {
-        return retryDay3ObdPriority;
-    }
-
-    public void setRetryDay3ObdPriority(String retryDay3ObdPriority) {
-        this.retryDay3ObdPriority = retryDay3ObdPriority;
     }
 
     public Integer getNationalDefaultLanguageLocationCode() {
