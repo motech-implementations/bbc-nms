@@ -58,16 +58,13 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private HealthSubFacilityService healthSubFacilityService;
 
     @Inject
-    private HealthBlockService healthBlockService;
-
-    @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Before
     public void setUp() {
         healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(validatorService,
                 healthFacilityService, healthSubFacilityCsvService,
-                healthSubFacilityService, healthBlockService, bulkUploadErrLogService);
+                healthSubFacilityService, bulkUploadErrLogService);
     }
 
     @Test

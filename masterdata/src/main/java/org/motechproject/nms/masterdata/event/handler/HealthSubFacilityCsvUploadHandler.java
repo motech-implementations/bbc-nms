@@ -45,7 +45,7 @@ public class HealthSubFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(ValidatorService validatorService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public HealthSubFacilityCsvUploadHandler(ValidatorService validatorService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, BulkUploadErrLogService bulkUploadErrLogService) {
         this.validatorService = validatorService;
         this.healthFacilityService = healthFacilityService;
         this.healthSubFacilityCsvService = healthSubFacilityCsvService;

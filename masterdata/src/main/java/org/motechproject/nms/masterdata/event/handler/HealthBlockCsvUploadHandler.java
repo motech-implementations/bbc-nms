@@ -125,7 +125,7 @@ public class HealthBlockCsvUploadHandler {
         Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
         Long healthBlockCode = ParseDataHelper.validateAndParseLong("HealthBlockCode", record.getHealthBlockCode(), true);
 
-        validatorService.validateHealthBlock(stateCode,districtCode,talukaCode);
+        validatorService.validateHealthBlockParent(stateCode,districtCode,talukaCode);
 
         newRecord.setName(healthBlockName);
         newRecord.setStateCode(stateCode);

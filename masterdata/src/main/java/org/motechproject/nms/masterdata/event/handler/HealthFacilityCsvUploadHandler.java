@@ -129,7 +129,7 @@ public class HealthFacilityCsvUploadHandler {
         Long facilityCode = ParseDataHelper.validateAndParseLong("FacilityCode", record.getHealthFacilityCode(), true);
         Integer facilityType = ParseDataHelper.validateAndParseInt("FacilityType", record.getHealthFacilityType(), true);
 
-        validatorService.validateHealthFacility(stateCode,districtCode,talukaCode,healthBlockCode);
+        validatorService.validateHealthFacilityParent(stateCode,districtCode,talukaCode,healthBlockCode);
 
         newRecord.setName(healthFacilityName);
         newRecord.setStateCode(stateCode);
