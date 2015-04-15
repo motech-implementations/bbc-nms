@@ -5,10 +5,12 @@ import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * This Class is used to validate Parent Object.
  */
+@Service("validatorService")
 public class ValidatorServiceimpl implements ValidatorService {
 
     private StateService stateService;
