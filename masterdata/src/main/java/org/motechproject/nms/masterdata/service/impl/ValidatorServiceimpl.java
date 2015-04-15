@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
+import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -32,60 +33,70 @@ public class ValidatorServiceimpl implements ValidatorService {
         this.healthFacilityService = healthFacilityService;
     }
 
+    /**
+     * update Validate Parent of HealthBlock
+     *
+     * @param stateCode    of the State
+     * @param districtCode of the District
+     * @param talukaCode   of the Taluka
+     */
     @Override
     public void validateHealthBlock(Long stateCode, Long districtCode, Long talukaCode) throws DataValidationException {
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.STATE, String.format(LocationConstants.DATA_VALID_REASON, "StateCode", stateCode));
         }
 
         District district = districtService.findDistrictByParentCode(districtCode, stateCode);
         if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.DISTRICT, String.format(LocationConstants.DATA_VALID_REASON, "DistrictCode", districtCode));
         }
 
         Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
 
         if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.TALUKA, String.format(LocationConstants.DATA_VALID_REASON, "TalukaCode", talukaCode));
         }
     }
 
+    /**
+     * update Validate Parent of HealthFacility
+     *
+     * @param stateCode       of the State
+     * @param districtCode    of the District
+     * @param talukaCode      of the Taluka
+     * @param healthBlockCode of the HealthBlock
+     */
     @Override
-    public void validateHealthFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) throws DataValidationException{
+    public void validateHealthFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) throws DataValidationException {
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
-
-        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
-        if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
-        }
-
-        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
-
-        if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
-        }
+        validateHealthBlock(stateCode, districtCode, talukaCode);
 
         HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
                 stateCode, districtCode, talukaCode, healthBlockCode);
         if (healthBlock == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.HEALTH_BLOCK, String.format(LocationConstants.DATA_VALID_REASON, "HealthBlockCode", healthBlockCode));
         }
     }
 
+    /**
+     * update Validate Parent of HealthSubFacility
+     *
+     * @param stateCode          of the State
+     * @param districtCode       of the District
+     * @param talukaCode         of the Taluka
+     * @param healthBlockCode    of the HealthBlock
+     * @param healthFacilityCode of the HealthFacility
+     */
     @Override
-    public void validateHealthSubFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) throws DataValidationException{
+    public void validateHealthSubFacility(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) throws DataValidationException {
 
-        validateHealthFacility(stateCode,districtCode,talukaCode,healthBlockCode);
+        validateHealthFacility(stateCode, districtCode, talukaCode, healthBlockCode);
 
         HealthFacility healthFacility = healthFacilityService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthFacilityCode);
         if (healthFacility == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthFacility", "HealthFacilityCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.HEALTH_FACILITY, String.format(LocationConstants.DATA_VALID_REASON, "HealthFacilityCode", healthFacilityCode));
         }
     }
 
