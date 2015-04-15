@@ -31,6 +31,9 @@
 
 	<osgi:service ref="FlwUsageDetailService"
 		interface="org.motechproject.nms.mobileacademy.service.FlwUsageDetailService" />
+		
+    <osgi:service ref="CallDetailService"
+        interface="org.motechproject.nms.mobileacademy.service.CallDetailService" />
 
 
 	<osgi:reference id="CourseProcessedContentDataService"
@@ -62,6 +65,12 @@
 
 	<osgi:reference id="FrontLineWorkerService"
 		interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService" />
+    
+    <osgi:reference id="CallDetailDataService"
+        interface="org.motechproject.nms.mobileacademy.repository.CallDetailDataService" />
+    
+    <osgi:reference id="ContentLogDataService"
+        interface="org.motechproject.nms.mobileacademy.repository.ContentLogDataService" />
 
 	<bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
 		<property name="defaultURL" value="/mobileacademy" />

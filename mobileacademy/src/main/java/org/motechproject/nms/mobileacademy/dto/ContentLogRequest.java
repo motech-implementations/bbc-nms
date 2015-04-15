@@ -2,9 +2,12 @@ package org.motechproject.nms.mobileacademy.dto;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-//This is just a placeholder for save call details API.
-//actual implementation would be done in sprint 1504
-public class ContentDetails {
+/**
+ * ContentLogRequest object contain detailed call information(i.e content name,
+ * type , contentFile) and mapped to callDetails API request content parameter.
+ *
+ */
+public class ContentLogRequest {
 
     @JsonProperty
     private String type;
@@ -22,13 +25,16 @@ public class ContentDetails {
     private String endTime;
 
     @JsonProperty
-    private boolean completionFlag;
+    private String completionFlag;
 
-    public String getContentType() {
+    @JsonProperty
+    private String correctAnswerReceived;
+
+    public String getType() {
         return type;
     }
 
-    public void setContentType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -64,19 +70,28 @@ public class ContentDetails {
         this.endTime = endTime;
     }
 
-    public boolean isCompletionFlag() {
+    public String getCompletionFlag() {
         return completionFlag;
     }
 
-    public void setCompletionFlag(boolean completionFlag) {
+    public void setCompletionFlag(String completionFlag) {
         this.completionFlag = completionFlag;
+    }
+
+    public String getCorrectAnswerReceived() {
+        return correctAnswerReceived;
+    }
+
+    public void setCorrectAnswerReceived(String correctAnswerReceived) {
+        this.correctAnswerReceived = correctAnswerReceived;
     }
 
     @Override
     public String toString() {
-        return "ContentDetails{" + "contentType=" + type + ", contentName='"
+        return "ContentLogRequest{" + "contentType=" + type + ", contentName='"
                 + contentName + '\'' + ", contentFilee='" + contentFile + '\''
                 + ", startTime=" + startTime + ", endTime=" + endTime
-                + ", completionFlag=" + completionFlag + '}';
+                + ", completionFlag=" + completionFlag
+                + ", correctAnswerReceived=" + correctAnswerReceived + '}';
     }
 }

@@ -156,6 +156,10 @@ public class MobileAcademyConstants {
 
     public static final String EMPTY_JSON = "{}";
 
+    public static final Integer DEFAULT_CURRENT_USAGE_IN_PULSES = 0;
+
+    public static final Integer DEFAULT_END_OF_USAGE_PROMPT_COUNTER = 0;
+
     /* Parameters for controllers */
 
     public static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
@@ -167,11 +171,11 @@ public class MobileAcademyConstants {
     public static final String REQUEST_PARAM_CALL_ID = "callId";
 
     public static final String REQUEST_PARAM_LLC = "languageLocationCode";
-    
-    public static final String BOOKMARK_ID ="bookmarkId";
-    
-    public static final String BOOKMARK ="bookmark";
-    
-    public static final String COURSE_COMPLETED ="COURSE_COMPLETED";
+
+    public static final String BOOKMARK_ID = "bookmarkId";
+
+    public static final String BOOKMARK = "bookmark";
+
+    public static final String COURSE_COMPLETED = "COURSE_COMPLETED";
 
 }

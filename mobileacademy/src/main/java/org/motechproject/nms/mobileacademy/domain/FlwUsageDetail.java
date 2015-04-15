@@ -1,7 +1,11 @@
 package org.motechproject.nms.mobileacademy.domain;
 
+import javax.jdo.annotations.Unique;
+
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -11,14 +15,35 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class FlwUsageDetail extends MdsEntity {
 
-    @Field
+    // mapped to PK of FrontLineWorker table
+    @Unique
+    @Field(required = true)
+    @UIDisplayable(position = 0)
     private Long flwId;
 
-    @Field
+    @Field(required = true)
+    @UIDisplayable(position = 1)
+    private Long msisdn;
+
+    @Field(required = true)
+    @UIDisplayable(position = 2)
+    private Integer currentUsageInPulses;
+
+    @Field(required = true)
+    @UIDisplayable(position = 3)
     private Integer endOfUsagePromptCounter;
 
     @Field
-    private Integer currentUsageInPulses;
+    @UIDisplayable(position = 4)
+    private DateTime courseStartDate;
+
+    @Field
+    @UIDisplayable(position = 5)
+    private DateTime courseEndDate;
+
+    @Field(required = true)
+    @UIDisplayable(position = 6)
+    private DateTime lastAccessTime;
 
     public Long getFlwId() {
         return flwId;
@@ -26,6 +51,22 @@ public class FlwUsageDetail extends MdsEntity {
 
     public void setFlwId(Long flwId) {
         this.flwId = flwId;
+    }
+
+    public Long getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(Long msisdn) {
+        this.msisdn = msisdn;
+    }
+
+    public Integer getCurrentUsageInPulses() {
+        return currentUsageInPulses;
+    }
+
+    public void setCurrentUsageInPulses(Integer currentUsageInPulses) {
+        this.currentUsageInPulses = currentUsageInPulses;
     }
 
     public Integer getEndOfUsagePromptCounter() {
@@ -36,12 +77,28 @@ public class FlwUsageDetail extends MdsEntity {
         this.endOfUsagePromptCounter = endOfUsagePromptCounter;
     }
 
-    public Integer getCurrentUsageInPulses() {
-        return currentUsageInPulses;
+    public DateTime getCourseStartDate() {
+        return courseStartDate;
     }
 
-    public void setCurrentUsageInPulses(Integer currentUsageInPulses) {
-        this.currentUsageInPulses = currentUsageInPulses;
+    public void setCourseStartDate(DateTime courseStartDate) {
+        this.courseStartDate = courseStartDate;
+    }
+
+    public DateTime getCourseEndDate() {
+        return courseEndDate;
+    }
+
+    public void setCourseEndDate(DateTime courseEndDate) {
+        this.courseEndDate = courseEndDate;
+    }
+
+    public DateTime getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public void setLastAccessTime(DateTime lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
     }
 
 }

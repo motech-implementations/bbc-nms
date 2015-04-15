@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.service.ut;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -90,6 +91,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
@@ -165,6 +168,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
@@ -240,6 +245,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
@@ -317,6 +324,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
@@ -392,6 +401,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
@@ -466,6 +477,8 @@ public class UserDetailsServiceImplTest {
         flwUsageDetail.setFlwId(userProfile.getNmsFlwId());
         flwUsageDetail.setCurrentUsageInPulses(0);
         flwUsageDetail.setEndOfUsagePromptCounter(0);
+        flwUsageDetail.setLastAccessTime(new DateTime(System
+                .currentTimeMillis()));
 
         when(
                 userProfileDetailsService.processUserDetails(callingNumber,
