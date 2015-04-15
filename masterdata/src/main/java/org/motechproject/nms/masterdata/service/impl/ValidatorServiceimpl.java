@@ -34,6 +34,26 @@ public class ValidatorServiceimpl implements ValidatorService {
     }
 
     /**
+     * Validate Parent of Taluka
+     *
+     * @param stateCode    of the State
+     * @param districtCode of the District
+     */
+    @Override
+    public void validateTalukaParent(Long stateCode, Long districtCode) throws DataValidationException {
+
+        State state = stateService.findRecordByStateCode(stateCode);
+        if (state == null) {
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.STATE, String.format(LocationConstants.DATA_VALID_REASON, "StateCode", stateCode));
+        }
+
+        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
+        if (district == null) {
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.DISTRICT, String.format(LocationConstants.DATA_VALID_REASON, "DistrictCode", districtCode));
+        }
+    }
+
+    /**
      * Validate Parent of HealthBlock
      *
      * @param stateCode    of the State

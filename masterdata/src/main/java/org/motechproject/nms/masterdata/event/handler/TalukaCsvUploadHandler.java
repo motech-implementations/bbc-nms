@@ -8,10 +8,7 @@ import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaCsvService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -35,7 +32,7 @@ import java.util.Map;
 @Component
 public class TalukaCsvUploadHandler {
 
-    private StateService stateService;
+    private ValidatorService validatorService;
 
     private DistrictService districtService;
 
@@ -48,8 +45,8 @@ public class TalukaCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
 
     @Autowired
-    public TalukaCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaCsvService talukaCsvService, TalukaService talukaService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateService = stateService;
+    public TalukaCsvUploadHandler(ValidatorService validatorService, DistrictService districtService, TalukaCsvService talukaCsvService, TalukaService talukaService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.validatorService = validatorService;
         this.districtService = districtService;
         this.talukaCsvService = talukaCsvService;
         this.talukaService = talukaService;
@@ -126,15 +123,9 @@ public class TalukaCsvUploadHandler {
         Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
         Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
 
-        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
-        if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "districtCode");
-        }
+
+        validatorService.validateTalukaParent(stateCode,districtCode);
 
         newRecord.setName(talukaName);
         newRecord.setStateCode(stateCode);
