@@ -334,8 +334,6 @@ public class RecordsProcessHelper {
 
         if (!verifyRange(record.getChapterId(), 1,
                 MobileAcademyConstants.NUM_OF_CHAPTERS)) {
-            LOGGER.warn("ChapterId out of range for contentID:{}",
-                    courseContentCsv.getContentId());
             recordDataValidation = false;
         }
 
