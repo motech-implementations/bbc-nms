@@ -80,7 +80,7 @@ public class BaseController {
 
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"" + exception.getMessage()
-                + "}";
+                + " \"}";
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
