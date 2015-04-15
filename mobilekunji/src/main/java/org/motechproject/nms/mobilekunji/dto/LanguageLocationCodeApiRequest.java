@@ -64,7 +64,7 @@ public class LanguageLocationCodeApiRequest {
 
         ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
                 ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
-        if(null == languageLocationCode) {
+        if (null == languageLocationCode) {
             ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.LANGUAGE_LOCATION_CODE, null);
         }
     }
