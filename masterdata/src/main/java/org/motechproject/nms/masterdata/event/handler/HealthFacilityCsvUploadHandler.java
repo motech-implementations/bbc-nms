@@ -30,11 +30,7 @@ import java.util.Map;
 @Component
 public class HealthFacilityCsvUploadHandler {
 
-    private StateService stateService;
-
-    private DistrictService districtService;
-
-    private TalukaService talukaService;
+    private ValidatorService validatorService;
 
     private HealthFacilityCsvService healthFacilityCsvService;
 
@@ -47,14 +43,12 @@ public class HealthFacilityCsvUploadHandler {
     private static Logger logger = LoggerFactory.getLogger(HealthFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityCsvService healthFacilityCsvService, HealthFacilityService healthFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateService = stateService;
-        this.districtService = districtService;
-        this.talukaService = talukaService;
+    public HealthFacilityCsvUploadHandler(HealthBlockService healthBlockService,HealthFacilityCsvService healthFacilityCsvService, HealthFacilityService healthFacilityService, BulkUploadErrLogService bulkUploadErrLogService,ValidatorService validatorService) {
+        this.healthBlockService = healthBlockService;
         this.healthFacilityCsvService = healthFacilityCsvService;
         this.healthFacilityService = healthFacilityService;
-        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
+        this.validatorService = validatorService;
     }
 
     /**
@@ -130,27 +124,8 @@ public class HealthFacilityCsvUploadHandler {
         Long facilityCode = ParseDataHelper.validateAndParseLong("FacilityCode", record.getHealthFacilityCode(), true);
         Integer facilityType = ParseDataHelper.validateAndParseInt("FacilityType", record.getHealthFacilityType(), true);
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
+        validatorService.validateHealthFacility(stateCode,districtCode,talukaCode,healthBlockCode);
 
-        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
-        if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
-        }
-
-        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
-
-        if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
-        }
-
-        HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
-                stateCode, districtCode, talukaCode, healthBlockCode);
-        if (healthBlock == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
-        }
         newRecord.setName(healthFacilityName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);

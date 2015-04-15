@@ -30,11 +30,7 @@ import java.util.Map;
 @Component
 public class HealthSubFacilityCsvUploadHandler {
 
-    private StateService stateService;
-
-    private DistrictService districtService;
-
-    private TalukaService talukaService;
+    private ValidatorService validatorService;
 
     private HealthFacilityService healthFacilityService;
 
@@ -42,21 +38,16 @@ public class HealthSubFacilityCsvUploadHandler {
 
     private HealthSubFacilityService healthSubFacilityService;
 
-    private HealthBlockService healthBlockService;
-
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
 
     @Autowired
-    public HealthSubFacilityCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateService = stateService;
-        this.districtService = districtService;
-        this.talukaService = talukaService;
+    public HealthSubFacilityCsvUploadHandler(ValidatorService validatorService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, HealthBlockService healthBlockService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.validatorService = validatorService;
         this.healthFacilityService = healthFacilityService;
         this.healthSubFacilityCsvService = healthSubFacilityCsvService;
         this.healthSubFacilityService = healthSubFacilityService;
-        this.healthBlockService = healthBlockService;
         this.bulkUploadErrLogService = bulkUploadErrLogService;
     }
 
@@ -102,7 +93,6 @@ public class HealthSubFacilityCsvUploadHandler {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
 
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
-
                 }
             } catch (DataValidationException healthSubFacilityDataException) {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", healthSubFacilityDataException.getErroneousField());
@@ -134,32 +124,8 @@ public class HealthSubFacilityCsvUploadHandler {
         Long healthfacilityCode = ParseDataHelper.validateAndParseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.validateAndParseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
+        validatorService.validateHealthSubFacility(stateCode,districtCode,talukaCode,healthBlockCode,healthfacilityCode);
 
-        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
-        if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
-        }
-
-        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
-
-        if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
-        }
-
-        HealthBlock healthBlock = healthBlockService.findHealthBlockByParentCode(
-                stateCode, districtCode, talukaCode, healthBlockCode);
-        if (healthBlock == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthBlock", "HealthBlockCode");
-        }
-
-        HealthFacility healthFacility = healthFacilityService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
-        if (healthFacility == null) {
-            ParseDataHelper.raiseInvalidDataException("HealthFacility", "HealthFacilityCode");
-        }
         newRecord.setName(healthSubFacilityName);
         newRecord.setStateCode(stateCode);
         newRecord.setDistrictCode(districtCode);
