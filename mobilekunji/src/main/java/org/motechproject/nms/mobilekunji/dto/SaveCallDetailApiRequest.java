@@ -1,7 +1,6 @@
 package org.motechproject.nms.mobilekunji.dto;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.motechproject.nms.mobilekunji.CommonValidator;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CardDetail;
 import org.motechproject.nms.util.helper.DataValidationException;

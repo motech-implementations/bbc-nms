@@ -1,4 +1,4 @@
-package org.motechproject.nms.mobilekunji;
+package org.motechproject.nms.mobilekunji.dto;
 
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
