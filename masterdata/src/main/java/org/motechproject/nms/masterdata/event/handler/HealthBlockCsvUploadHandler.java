@@ -95,15 +95,15 @@ public class HealthBlockCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
-                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+            } catch (DataValidationException healthBlockDataException) {
+                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", healthBlockDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), healthBlockCsvRecord.toString());
-            } catch (Exception e) {
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, healthBlockDataException.getErroneousField(), healthBlockDataException.getErrorCode(), healthBlockCsvRecord.toString());
+            } catch (Exception healthBlockException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("HEALTH_BLOCK_CSV_SUCCESS processing receive Exception exception, message: {}", healthBlockException);
             } finally {
                 if (null != healthBlockCsvRecord) {
                     healthBlockCsvService.delete(healthBlockCsvRecord);

@@ -99,16 +99,16 @@ public class TalukaCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
-                logger.error("TALUKA_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+            } catch (DataValidationException talukaDataException) {
+                logger.error("TALUKA_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", talukaDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), talukaCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, talukaDataException.getErroneousField(), talukaDataException.getErrorCode(), talukaCsvRecord.toString());
 
-            } catch (Exception e) {
+            } catch (Exception talukaException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("TALUKA_CSV_SUCCESS processing receive Exception exception, message: {}", talukaException);
             } finally {
                 if (null != talukaCsvRecord) {
                     talukaCsvService.delete(talukaCsvRecord);
