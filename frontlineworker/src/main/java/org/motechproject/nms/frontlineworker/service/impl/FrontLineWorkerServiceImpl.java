@@ -103,4 +103,12 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     public void deleteAll() {
         frontLineWorkerRecordDataService.deleteAll();
     }
+
+    @Override
+    public List<FrontLineWorker> retrieveAll() {
+
+        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.retrieveAll();
+
+        return frontLineWorkerList;
+    }
 }

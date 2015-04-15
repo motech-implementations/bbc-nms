@@ -22,4 +22,6 @@ public interface UserProfileDetailsService {
 
     public void validateOperator(String operatorCode) throws DataValidationException;
 
+    public void validateCircle(String circleCode) throws DataValidationException;
+
 }

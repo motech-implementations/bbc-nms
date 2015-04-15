@@ -30,22 +30,32 @@ import org.springframework.stereotype.Service;
 @Service("userProfileDetailsService")
 public class UserProfileDetailsServiceImpl implements UserProfileDetailsService {
 
-    @Autowired
+    //@Autowired
     FrontLineWorkerService frontLineWorkerService;
 
-    @Autowired
+    // @Autowired
     OperatorService operatorService;
 
-    @Autowired
+    //@Autowired
     CircleService circleService;
 
-    @Autowired
+    //@Autowired
     LanguageLocationCodeService languageLocationCodeService;
 
-    @Autowired
+    //@Autowired
     StateService stateService;
 
     private static Logger logger = LoggerFactory.getLogger(UserProfileDetailsServiceImpl.class);
+
+    @Autowired
+    public UserProfileDetailsServiceImpl(FrontLineWorkerService frontLineWorkerService, OperatorService operatorService, CircleService circleService, LanguageLocationCodeService languageLocationCodeService, StateService stateService) {
+        this.frontLineWorkerService = frontLineWorkerService;
+        this.operatorService = operatorService;
+        this.circleService = circleService;
+        this.languageLocationCodeService = languageLocationCodeService;
+        this.stateService = stateService;
+
+    }
 
     /**
      * This procedure implements the API processUserDetails which is used to get the User Details of FrontLine worker
@@ -57,6 +67,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param service      the module which is invoking the API
      * @throws DataValidationException , NmsInternalServerError
      */
+
+
     @Override
     public UserProfile processUserDetails(String msisdn, String circleCode, String operatorCode,
                                           ServicesUsingFrontLineWorker service)
@@ -152,7 +164,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         logger.debug("Operator validation start");
         Operator operator = operatorService.getRecordByCode(operatorCode);
         if (operator == null) {
-            ParseDataHelper.raiseInvalidDataException("operatorCode", operatorCode);
+            ParseDataHelper.raiseInvalidDataException("operator", operatorCode);
         }
         logger.debug("Operator validation ends");
     }
@@ -163,12 +175,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param circleCode the circle code deduced by the call
      * @throws DataValidationException
      */
-    private void validateCircle(String circleCode) throws DataValidationException {
+    @Override
+    public void validateCircle(String circleCode) throws DataValidationException {
 
         Circle circle = circleService.getRecordByCode(circleCode);
 
         if (circle == null) {
-            ParseDataHelper.raiseInvalidDataException("circleCode", circleCode);
+            ParseDataHelper.raiseInvalidDataException("circle", circleCode);
         }
 
     }
@@ -231,7 +244,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                   ServicesUsingFrontLineWorker service) throws DataValidationException {
         String validatedMsisdn = null;
 
-        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
+        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber", msisdn);
         validateOperator(operatorCode);
 
         validateCircle(circleCode);

@@ -13,6 +13,11 @@ public final class ConfigurationConstants {
 
     public static final String UNKNOWN_CIRCLE = "99";
 
+    public static final String BASE_SUBJECT = "org.motechproject.frontlineworker.";
+
+    public static final String DELETION_EVENT_SUBJECT_SCHEDULER = BASE_SUBJECT + "deletion";
+
+
     private ConfigurationConstants() {
     }
 }

@@ -2,6 +2,8 @@ package org.motechproject.nms.frontlineworker.service;
 
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 
+import java.util.List;
+
 /**
  * Interface for repository that persists simple records and allows CRUD.
  * Its implementation uses the repository interface FlwRecordsDataService whose base class
@@ -22,6 +24,8 @@ public interface FrontLineWorkerService {
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode);
 
     public FrontLineWorker findById(Long id);
+
+    public List<FrontLineWorker> retrieveAll();
     
     public void deleteAll();
 }

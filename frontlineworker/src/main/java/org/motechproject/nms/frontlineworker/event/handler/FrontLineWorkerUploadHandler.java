@@ -288,6 +288,7 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
         dbRecord.setOwner(frontLineWorker.getOwner());
         frontLineWorkerService.updateFrontLineWorker(dbRecord);
+
     }
 
 
@@ -581,6 +582,7 @@ public class FrontLineWorkerUploadHandler {
         String contactNo = frontLineWorker.getContactNo();
         logger.debug("FLW Contact Number : {}", contactNo);
         dbRecordByContactNo = frontLineWorkerService.getFlwBycontactNo(contactNo);
+
 
         //creation when record not found in database
         if (dbRecord == null && dbRecordByContactNo == null) {

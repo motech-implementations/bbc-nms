@@ -46,6 +46,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Scheduler -->
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+
         <!-- Repository -->
         <dependency>
             <groupId>org.motechproject</groupId>
