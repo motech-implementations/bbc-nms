@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-//This is just a placeholder for save bookmark with score API.
-//actual implementation would be done in sprint 1504
+
+/**
+ * This class is used for getting the input parameters from saveBookmarkWithScore API
+ *
+ */
 public class BookmarkWithScore implements Serializable {
 
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 1L;
 
     @JsonProperty
@@ -31,5 +31,37 @@ public class BookmarkWithScore implements Serializable {
         return "BookmarkWithScore{callingNumber=" + callingNumber + ", callId="
                 + callId + ", bookmark=" + bookmark + ", scoresByChapter="
                 + scoresByChapter + "}";
+    }
+
+    public String getCallingNumber() {
+        return callingNumber;
+    }
+
+    public void setCallingNumber(String callingNumber) {
+        this.callingNumber = callingNumber;
+    }
+
+    public String getCallId() {
+        return callId;
+    }
+
+    public void setCallId(String callId) {
+        this.callId = callId;
+    }
+
+    public String getBookmark() {
+        return bookmark;
+    }
+
+    public void setBookmark(String bookmark) {
+        this.bookmark = bookmark;
+    }
+
+    public Map<String, String> getScoresByChapter() {
+        return scoresByChapter;
+    }
+
+    public void setScoresByChapter(Map<String, String> scoresByChapter) {
+        this.scoresByChapter = scoresByChapter;
     }
 }

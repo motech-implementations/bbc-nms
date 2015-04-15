@@ -35,4 +35,12 @@ public interface UserDetailsService {
      */
     void setLanguageLocationCode(String languageLocationCode,
             String callingNumber, String callId) throws DataValidationException;
+    
+    /**
+     * Check whether a MSISDn exists with FLW for MA service or not
+     * 
+     * @param callingNo : 10 digit MSISDN
+     * @return true if MSISDN exists
+     */
+    boolean doesMsisdnExists(String callingNo);
 }

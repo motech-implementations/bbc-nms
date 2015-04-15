@@ -3,6 +3,7 @@ package org.motechproject.nms.mobileacademy.service.impl;
 import org.apache.log4j.Logger;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
@@ -33,6 +34,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private FlwUsageDetailService flwUsageDetailService;
+    
+    @Autowired
+    private FrontLineWorkerService frontLineWorkerService;
 
     private static final Logger LOGGER = Logger
             .getLogger(UserDetailsServiceImpl.class);
@@ -165,5 +169,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         LOGGER.debug("Llc updated  for callingNumber:" + callingNumber
                 + ", callId:" + callId + ", llc:" + languageLocationCode);
 
+    }
+    
+    @Override
+    public boolean doesMsisdnExists(String callingNo) {
+        return frontLineWorkerService.getFlwBycontactNo(callingNo) != null;
     }
 }

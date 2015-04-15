@@ -154,4 +154,24 @@ public class MobileAcademyConstants {
 
     public static final String UNKNOWN_CIRCLE_CODE = "99";
 
+    public static final String EMPTY_JSON = "{}";
+
+    /* Parameters for controllers */
+
+    public static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
+
+    public static final String REQUEST_PARAM_OPERATOR = "operator";
+
+    public static final String REQUEST_PARAM_CIRCLE = "circle";
+
+    public static final String REQUEST_PARAM_CALL_ID = "callId";
+
+    public static final String REQUEST_PARAM_LLC = "languageLocationCode";
+    
+    public static final String BOOKMARK_ID ="bookmarkId";
+    
+    public static final String BOOKMARK ="bookmark";
+    
+    public static final String COURSE_COMPLETED ="COURSE_COMPLETED";
+
 }
