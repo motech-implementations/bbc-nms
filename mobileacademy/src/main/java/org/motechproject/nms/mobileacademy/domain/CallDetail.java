@@ -6,6 +6,10 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * CallDetail object to refer call related data.
+ *
+ */
 @Entity
 public class CallDetail extends MdsEntity {
 

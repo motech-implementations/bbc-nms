@@ -6,6 +6,11 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
+/**
+ * ContentLog object to refer call content data (i.e content name, type ,
+ * contentFile)
+ *
+ */
 @Entity
 public class ContentLog extends MdsEntity {
 
