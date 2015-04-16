@@ -78,7 +78,7 @@ public class DistrictCsvUploadHandler {
     }
 
 
-    public void processRecords(List<Long> CreatedId,
+    private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 

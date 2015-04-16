@@ -99,7 +99,6 @@ public class OperatorCsvHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
     private void processOperatorRecords(String csvFileName, List<Long> createdIds) {
 
         CsvOperator record = null;

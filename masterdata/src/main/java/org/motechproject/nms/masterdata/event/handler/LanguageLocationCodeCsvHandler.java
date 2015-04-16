@@ -110,7 +110,6 @@ public class LanguageLocationCodeCsvHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
     private void processLanguageLocationRecords(String csvFileName, List<Long> createdIds) {
         CsvLanguageLocationCode record = null;
         DateTime timeStamp = new DateTime();

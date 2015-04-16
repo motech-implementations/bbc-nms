@@ -65,8 +65,7 @@ public class CircleCsvHandler {
 
     }
 
-
-    public void processRecords(List<Long> createdId,
+    private void processRecords(List<Long> createdId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 

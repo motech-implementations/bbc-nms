@@ -109,7 +109,6 @@ public class HealthFacilityCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
     private void processHealthFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
