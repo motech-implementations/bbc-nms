@@ -27,19 +27,28 @@ public class BookmarkHelper {
 				MobileAcademyConstants.BOOKMARK,
 				(String) bookmark.getProgress().get(
 						MobileAcademyConstants.BOOKMARK_ID));
-		bookmarkJson.add("scoresByChapter", getScoresJson(bookmark));
+		JsonElement scoresByChapter = getScoresJson(bookmark);
+		if(scoresByChapter != null) {
+			bookmarkJson.add("scoresByChapter", scoresByChapter);
+		}		
 		return bookmarkJson.toString();
 	}
 
 	private static JsonElement getScoresJson(Bookmark bookmark) {
+		
+		boolean doesAnyScoreExists = false;
 		JsonObject scoresJson = new JsonObject();
 		Map<String, Object> progressMap = bookmark.getProgress();
 
 		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
 			if (progressMap.containsKey(chapterNo.toString())) {
+				doesAnyScoreExists = true;
 				scoresJson.addProperty(chapterNo.toString(),
 						(Integer) progressMap.get(chapterNo));
 			}
+		}
+		if(!doesAnyScoreExists) {
+			return null;
 		}
 		return scoresJson;
 	}
@@ -68,6 +77,9 @@ public class BookmarkHelper {
 
 		Map<String, Object> progressMap = courseBookmark.getProgress();
 		List<String> keys = new ArrayList<String>(scoresByChapter.keySet());
+		if(CollectionUtils.isEmpty(keys)) {
+			return;
+		}
 
 		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
 			try {

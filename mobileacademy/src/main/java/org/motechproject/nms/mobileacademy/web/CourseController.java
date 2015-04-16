@@ -1,15 +1,11 @@
 package org.motechproject.nms.mobileacademy.web;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.dto.BookmarkWithScore;
-import org.motechproject.nms.mobileacademy.helper.BookmarkHelper;
 import org.motechproject.nms.mobileacademy.service.ConfigurationService;
 import org.motechproject.nms.mobileacademy.service.CourseBookmarkService;
 import org.motechproject.nms.mobileacademy.service.CourseService;
@@ -110,35 +106,19 @@ public class CourseController extends BaseController {
 			@RequestParam(value = CourseController.REQUEST_PARAM_CALLING_NUMBER) String callingNo,
 			@RequestParam(value = CourseController.REQUEST_PARAM_CALL_ID) String callId)
 			throws DataValidationException {
-		LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}",
-				callingNo);
+		LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}", callingNo);
 
 		callingNo = validateAndGetCallingNo(callingNo);
 
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
-				callingNo);
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service", callingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN", callingNo);
 		}
 
-		Bookmark bookmark = courseBookmarkService
-				.getBookmarkByMsisdn(callingNo);
-		String bookmarkToReturn = "";
-		if ((bookmark == null)
-				|| (StringUtils.isBlank((String) bookmark.getProgress().get(
-						MobileAcademyConstants.BOOKMARK_ID)))) {
-			LOGGER.debug("There is no bookmark in the system for MSISDN: {}",
-					callingNo);
-			bookmarkToReturn = MobileAcademyConstants.EMPTY_JSON;
-		} else {
-			bookmarkToReturn = BookmarkHelper.getBookmarkJson(bookmark);
-		}
-
-		LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}",
-				callingNo);
-		return bookmarkToReturn;
+		LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}", callingNo);
+		return courseBookmarkService.getBookmarkWithScore(callingNo);
 	}
 
 	/**
@@ -158,7 +138,6 @@ public class CourseController extends BaseController {
 		LOGGER.debug("saveBookmarkWithScore: Started");
 		LOGGER.debug("Input Request: " + bookmarkWithScore);
 
-		boolean firstBookmark = false;
 		String callingNo = validateAndGetCallingNo(bookmarkWithScore
 				.getCallingNumber());
 
@@ -166,8 +145,7 @@ public class CourseController extends BaseController {
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
-					callingNo);
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service", callingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN",
 					bookmarkWithScore.getCallingNumber());
 		}
@@ -176,46 +154,23 @@ public class CourseController extends BaseController {
 		Map<String, String> scoresByChapter = bookmarkWithScore
 				.getScoresByChapter();
 
-		Bookmark courseBookmark = courseBookmarkService
-				.getBookmarkByMsisdn(callingNo);
-		if (courseBookmark == null) {
-			firstBookmark = true;
-			courseBookmark = new Bookmark();
-			courseBookmark.setProgress(new HashMap<String, Object>());
-			courseBookmark.setExternalId(callingNo);
-		}
+		courseBookmarkService.saveBookmarkWithScore(bookmarkId,
+				scoresByChapter, callingNo);
 
-		BookmarkHelper.validateAndPopulateBookmark(courseBookmark, bookmarkId,
-				scoresByChapter);
-		if (firstBookmark) {
-			courseBookmarkService.createBookmark(courseBookmark);
-		} else {
-			courseBookmarkService.updateBookmark(courseBookmark);
-		}
-
-		if (bookmarkId.equals(MobileAcademyConstants.COURSE_COMPLETED)) {
-			LOGGER.info("MSISDN: {} has completed the course",
-					callingNo);
-			// SEND SMS: To be done in sprint 1505
-			resetTheBookmark(courseBookmark);
-		}
-
-		LOGGER.debug("saveBookmarkWithScore: Ended for MSISDN: {}",
-				callingNo);
+		LOGGER.debug("saveBookmarkWithScore: Ended for MSISDN: {}", callingNo);
 	}
 
-	private void resetTheBookmark(Bookmark courseBookmark) {
-		courseBookmark.setProgress(new HashMap<String, Object>());
-		courseBookmarkService.updateBookmark(courseBookmark);
-		LOGGER.debug("Bookmark has been reset for MSISDN: {}",
-				courseBookmark.getExternalId());
-	}
-
+	/*
+	 * Used for validating the callID as per Util module
+	 */
 	private void validateCallId(String callId) throws DataValidationException {
 		ParseDataHelper.validateAndParseLong(
 				MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId, true);
 	}
 
+	/*
+	 * Used for validating and getting the last 10 digits of MSISDN.
+	 */
 	private String validateAndGetCallingNo(String callingNumber)
 			throws DataValidationException {
 		ParseDataHelper.validateAndParseString(
