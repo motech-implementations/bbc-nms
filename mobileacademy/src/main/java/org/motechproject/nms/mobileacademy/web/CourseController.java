@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
@@ -18,6 +17,8 @@ import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class CourseController extends BaseController {
 
-	private static final Logger LOGGER = Logger
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(CourseController.class);
 
 	@Autowired
@@ -46,7 +47,7 @@ public class CourseController extends BaseController {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private ConfigurationService configurationService;
 
@@ -109,14 +110,16 @@ public class CourseController extends BaseController {
 			@RequestParam(value = CourseController.REQUEST_PARAM_CALLING_NUMBER) String callingNo,
 			@RequestParam(value = CourseController.REQUEST_PARAM_CALL_ID) String callId)
 			throws DataValidationException {
-		LOGGER.debug("getBookmarkWithScore: Started");
-		LOGGER.debug("Request Received");
+		LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}",
+				callingNo);
 
 		callingNo = validateAndGetCallingNo(callingNo);
 
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+				callingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN", callingNo);
 		}
 
@@ -126,12 +129,15 @@ public class CourseController extends BaseController {
 		if ((bookmark == null)
 				|| (StringUtils.isBlank((String) bookmark.getProgress().get(
 						MobileAcademyConstants.BOOKMARK_ID)))) {
+			LOGGER.debug("There is no bookmark in the system for MSISDN: {}",
+					callingNo);
 			bookmarkToReturn = MobileAcademyConstants.EMPTY_JSON;
 		} else {
 			bookmarkToReturn = BookmarkHelper.getBookmarkJson(bookmark);
 		}
 
-		LOGGER.debug("getBookmarkWithScore: Ended");
+		LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}",
+				callingNo);
 		return bookmarkToReturn;
 	}
 
@@ -160,6 +166,8 @@ public class CourseController extends BaseController {
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+					callingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN",
 					bookmarkWithScore.getCallingNumber());
 		}
@@ -177,24 +185,30 @@ public class CourseController extends BaseController {
 			courseBookmark.setExternalId(callingNo);
 		}
 
-		BookmarkHelper.validateAndPopulateBookmark(courseBookmark, bookmarkId, scoresByChapter);
+		BookmarkHelper.validateAndPopulateBookmark(courseBookmark, bookmarkId,
+				scoresByChapter);
 		if (firstBookmark) {
 			courseBookmarkService.createBookmark(courseBookmark);
 		} else {
 			courseBookmarkService.updateBookmark(courseBookmark);
 		}
-		
-		if(bookmarkId.equals(MobileAcademyConstants.COURSE_COMPLETED)) {
-			//SEND SMS: To be done in sprint 1505			
+
+		if (bookmarkId.equals(MobileAcademyConstants.COURSE_COMPLETED)) {
+			LOGGER.info("MSISDN: {} has completed the course",
+					callingNo);
+			// SEND SMS: To be done in sprint 1505
 			resetTheBookmark(courseBookmark);
 		}
 
-		LOGGER.debug("saveBookmarkWithScore: Ended");
+		LOGGER.debug("saveBookmarkWithScore: Ended for MSISDN: {}",
+				callingNo);
 	}
 
 	private void resetTheBookmark(Bookmark courseBookmark) {
 		courseBookmark.setProgress(new HashMap<String, Object>());
 		courseBookmarkService.updateBookmark(courseBookmark);
+		LOGGER.debug("Bookmark has been reset for MSISDN: {}",
+				courseBookmark.getExternalId());
 	}
 
 	private void validateCallId(String callId) throws DataValidationException {
