@@ -85,13 +85,13 @@ public class LanguageLocationCodeCsvHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         languageLocationCodeService.getLanguageLocationCodeDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<LanguageLocationCode>() {
 
                     List<Long> lLcCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<LanguageLocationCode> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.lLcCsvId = createdId;
@@ -100,9 +100,9 @@ public class LanguageLocationCodeCsvHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public LanguageLocationCode doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        LanguageLocationCode transactionObject = null;
                         processLanguageLocationRecords(csvFileName, lLcCsvId);
                         return transactionObject;
                     }

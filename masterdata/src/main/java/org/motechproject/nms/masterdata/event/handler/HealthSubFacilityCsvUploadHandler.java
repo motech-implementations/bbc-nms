@@ -11,7 +11,6 @@ import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvHealthSubFacility;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.service.HealthFacilityService;
 import org.motechproject.nms.masterdata.service.HealthSubFacilityCsvService;
 import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
@@ -86,13 +85,13 @@ public class HealthSubFacilityCsvUploadHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         healthSubFacilityService.getHealthSubFacilityRecordsDataService().doInTransaction(
-                new TransactionCallback<State>() {
+                new TransactionCallback<HealthSubFacility>() {
 
                     List<Long> healthSubFacilityCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<HealthSubFacility> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.healthSubFacilityCsvId = createdId;
@@ -101,9 +100,9 @@ public class HealthSubFacilityCsvUploadHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public HealthSubFacility doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        HealthSubFacility transactionObject = null;
                         processHealthSubFacilityRecords(csvFileName, healthSubFacilityCsvId);
                         return transactionObject;
                     }

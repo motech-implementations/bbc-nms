@@ -6,7 +6,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.TalukaCsvService;
@@ -85,13 +84,13 @@ public class TalukaCsvUploadHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         talukaService.getTalukaRecordsDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<Taluka>() {
 
                     List<Long> talukaCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<Taluka> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.talukaCsvId = createdId;
@@ -100,9 +99,9 @@ public class TalukaCsvUploadHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public Taluka doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        Taluka transactionObject = null;
                         processTalukaRecords(csvFileName, talukaCsvId);
                         return transactionObject;
                     }

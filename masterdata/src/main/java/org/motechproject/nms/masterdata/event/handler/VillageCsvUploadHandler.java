@@ -5,10 +5,12 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvVillage;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.ValidatorService;
+import org.motechproject.nms.masterdata.service.VillageCsvService;
+import org.motechproject.nms.masterdata.service.VillageService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -81,13 +83,13 @@ public class VillageCsvUploadHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         villageService.getVillageRecordsDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<Village>() {
 
                     List<Long> csvVillageId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<Village> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.csvVillageId = createdId;
@@ -96,9 +98,9 @@ public class VillageCsvUploadHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public Village doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        Village transactionObject = null;
                         processVillageRecords(csvFileName, csvVillageId);
                         return transactionObject;
                     }

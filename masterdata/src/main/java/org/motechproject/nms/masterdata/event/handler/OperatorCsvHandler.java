@@ -6,7 +6,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvOperator;
 import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -75,13 +74,13 @@ public class OperatorCsvHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         operatorService.getOperatorDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<Operator>() {
 
                     List<Long> operatorCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<Operator> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.operatorCsvId = createdId;
@@ -90,9 +89,9 @@ public class OperatorCsvHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public Operator doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        Operator transactionObject = null;
                         processOperatorRecords(csvFileName, operatorCsvId);
                         return transactionObject;
                     }

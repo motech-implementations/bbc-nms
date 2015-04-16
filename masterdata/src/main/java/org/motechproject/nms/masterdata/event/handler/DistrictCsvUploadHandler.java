@@ -83,13 +83,13 @@ public class DistrictCsvUploadHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         districtService.getDistrictRecordsDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<District>() {
 
                     List<Long> districtCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<District> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.districtCsvId = createdId;
@@ -98,9 +98,9 @@ public class DistrictCsvUploadHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public District doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        District transactionObject = null;
                         processDistrictCsvRecords(csvFileName, districtCsvId);
                         return transactionObject;
                     }

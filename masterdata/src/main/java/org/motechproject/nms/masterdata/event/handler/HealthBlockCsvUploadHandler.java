@@ -6,7 +6,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvHealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.service.HealthBlockCsvService;
 import org.motechproject.nms.masterdata.service.HealthBlockService;
@@ -87,13 +86,13 @@ public class HealthBlockCsvUploadHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         healthBlockService.getHealthBlockRecordsDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<HealthBlock>() {
 
                     List<Long> healthBlockCsvId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<HealthBlock> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.healthBlockCsvId = createdId;
@@ -102,9 +101,9 @@ public class HealthBlockCsvUploadHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public HealthBlock doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        HealthBlock transactionObject = null;
                         processHealthBlockRecords(csvFileName, healthBlockCsvId);
                         return transactionObject;
                     }

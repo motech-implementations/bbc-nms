@@ -6,7 +6,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.CsvCircle;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -72,13 +71,13 @@ public class CircleCsvHandler {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         circleService.getCircleDataService()
-                .doInTransaction(new TransactionCallback<State>() {
+                .doInTransaction(new TransactionCallback<Circle>() {
 
                     List<Long> csvCircleId;
 
                     String csvFileName;
 
-                    private TransactionCallback<State> init(
+                    private TransactionCallback<Circle> init(
                             List<Long> createdId,
                             String csvFileName) {
                         this.csvCircleId = createdId;
@@ -87,9 +86,9 @@ public class CircleCsvHandler {
                     }
 
                     @Override
-                    public State doInTransaction(
+                    public Circle doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
+                        Circle transactionObject = null;
                         processCircleRecords(csvFileName, csvCircleId);
                         return transactionObject;
                     }
