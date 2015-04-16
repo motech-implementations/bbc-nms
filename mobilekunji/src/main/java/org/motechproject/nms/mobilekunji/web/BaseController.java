@@ -37,8 +37,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage());
-        String responseJson = "{\"failureReason\":\""
-                + exception.getParameterName() + ":Not Present\"}";
+        String responseJson = getResponseJson()+ exception.getParameterName() + ":Not Present\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -58,7 +57,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + "Invalid JSON\"}";
+        String responseJson = getResponseJson() + "Invalid JSON\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -78,8 +77,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
-                + "Invalid Content Type\"}";
+        String responseJson = getResponseJson()+ "Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -100,7 +98,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = getResponseJson()
                 + exception.getErroneousField() + ":Invalid Value\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -122,7 +120,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
+        String responseJson = getResponseJson() + exception.getMessage()
                 + "\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -142,7 +140,7 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = getResponseJson()+"\"Internal Error\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -188,6 +186,10 @@ public class BaseController {
                     "Error occured while finding Input Request details for logging",
                     e);
         }
+    }
+
+    private String getResponseJson() {
+        return "{\"failureReason\":\"";
     }
 
 }
