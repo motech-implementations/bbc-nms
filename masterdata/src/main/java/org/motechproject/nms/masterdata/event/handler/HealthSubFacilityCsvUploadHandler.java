@@ -201,25 +201,28 @@ public class HealthSubFacilityCsvUploadHandler {
         );
 
         if (existHealthSubFacilityData != null) {
-            updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully updated.");
+            updateHealthSubFacilityData(existHealthSubFacilityData, healthSubFacilityData);
         } else {
-
-            HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
-                    healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
-                    healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
-                    healthSubFacilityData.getHealthFacilityCode());
-
-            healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
-            healthFacilityService.update(healthFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully inserted.");
+            insertHealthSubFacility(healthSubFacilityData);
         }
     }
 
-    private void updateHealthSubFacilityDAta(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
+    private void insertHealthSubFacility(HealthSubFacility healthSubFacilityData) {
+        HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
+                healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
+                healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
+                healthSubFacilityData.getHealthFacilityCode());
+
+        healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
+        healthFacilityService.update(healthFacilityData);
+        logger.info("HealthSubFacility Permanent data is successfully inserted.");
+    }
+
+    private void updateHealthSubFacilityData(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
         existHealthSubFacilityData.setName(healthSubFacilityData.getName());
         existHealthSubFacilityData.setModifiedBy(healthSubFacilityData.getModifiedBy());
         healthSubFacilityService.update(existHealthSubFacilityData);
+        logger.info("HealthSubFacility Permanent data is successfully updated.");
     }
 
     private void validateHealthSubFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthfacilityCode) throws DataValidationException {

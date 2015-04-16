@@ -43,7 +43,7 @@ public class ValidatorServiceimpl implements ValidatorService {
 
         State state = stateService.findRecordByStateCode(stateCode);
         if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
+            ParseDataHelper.raiseInvalidDataException(LocationConstants.STATE, "StateCode");
         }
     }
 

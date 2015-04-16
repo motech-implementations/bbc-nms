@@ -195,20 +195,22 @@ public class HealthBlockCsvUploadHandler {
 
         if (existHealthBlockData != null) {
             updateHealthBlock(existHealthBlockData, healthBlockData);
-            logger.info("HealthBlock data is successfully updated.");
-
         } else {
-
-            Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
-            talukaRecord.getHealthBlock().add(healthBlockData);
-            talukaService.update(talukaRecord);
-            logger.info("HealthBlock data is successfully inserted.");
+            insertHealthBlock(healthBlockData);
         }
+    }
+
+    private void insertHealthBlock(HealthBlock healthBlockData) {
+        Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
+        talukaRecord.getHealthBlock().add(healthBlockData);
+        talukaService.update(talukaRecord);
+        logger.info("HealthBlock data is successfully inserted.");
     }
 
     private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
         existHealthBlockData.setName(healthBlockData.getName());
         existHealthBlockData.setModifiedBy(healthBlockData.getModifiedBy());
         healthBlockService.update(existHealthBlockData);
+        logger.info("HealthBlock data is successfully updated.");
     }
 }
