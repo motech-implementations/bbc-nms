@@ -87,14 +87,14 @@ public class HealthFacilityCsvUploadHandler {
         healthFacilityService.getHealthFacilityRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> healthFacilityCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.healthFacilityCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -103,7 +103,7 @@ public class HealthFacilityCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processHealthFacilityRecords(csvFileName, healthFacilityCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -111,7 +111,7 @@ public class HealthFacilityCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processHealthFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -170,7 +170,7 @@ public class HealthFacilityCsvUploadHandler {
         Long facilityCode = ParseDataHelper.validateAndParseLong("FacilityCode", record.getHealthFacilityCode(), true);
         Integer facilityType = ParseDataHelper.validateAndParseInt("FacilityType", record.getHealthFacilityType(), true);
 
-        validateHealthFacilityParent(stateCode,districtCode,talukaCode,healthBlockCode);
+        validateHealthFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode);
 
         newRecord.setName(healthFacilityName);
         newRecord.setStateCode(stateCode);

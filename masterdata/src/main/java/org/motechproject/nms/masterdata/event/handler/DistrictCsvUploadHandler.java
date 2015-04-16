@@ -85,14 +85,14 @@ public class DistrictCsvUploadHandler {
         districtService.getDistrictRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> districtCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.districtCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -101,7 +101,7 @@ public class DistrictCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processDistrictCsvRecords(csvFileName, districtCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -109,7 +109,8 @@ public class DistrictCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processDistrictCsvRecords(String csvFileName, List<Long> createdIds) {
+
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -117,7 +118,6 @@ public class DistrictCsvUploadHandler {
         BulkUploadError errorDetails = new BulkUploadError();
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.DISTRICT);
-
 
         CsvDistrict csvDistrictRecord = null;
 

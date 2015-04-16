@@ -87,14 +87,14 @@ public class TalukaCsvUploadHandler {
         talukaService.getTalukaRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> talukaCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.talukaCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -103,7 +103,7 @@ public class TalukaCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processTalukaRecords(csvFileName, talukaCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -111,7 +111,7 @@ public class TalukaCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processTalukaRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
 

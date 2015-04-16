@@ -83,14 +83,14 @@ public class VillageCsvUploadHandler {
         villageService.getVillageRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> csvVillageId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.csvVillageId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -99,7 +99,7 @@ public class VillageCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processVillageRecords(csvFileName, csvVillageId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -107,7 +107,7 @@ public class VillageCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processVillageRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
 

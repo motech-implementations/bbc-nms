@@ -89,14 +89,14 @@ public class HealthBlockCsvUploadHandler {
         healthBlockService.getHealthBlockRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> healthBlockCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.healthBlockCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -105,7 +105,7 @@ public class HealthBlockCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processHealthBlockRecords(csvFileName, healthBlockCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -113,7 +113,7 @@ public class HealthBlockCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processHealthBlockRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();

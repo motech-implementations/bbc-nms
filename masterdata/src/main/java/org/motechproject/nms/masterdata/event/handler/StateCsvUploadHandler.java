@@ -75,14 +75,14 @@ public class StateCsvUploadHandler {
         stateService.getStateRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> stateCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.stateCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -90,16 +90,16 @@ public class StateCsvUploadHandler {
                     @Override
                     public State doInTransaction(
                             TransactionStatus status) {
-                        State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
-                        return transactionObject;
+                        State stateTransactionObject = null;
+                        processStateCsvRecords(csvFileName, stateCsvId);
+                        return stateTransactionObject;
                     }
                 }.init(CreatedId, csvFileName));
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processStateCsvRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
 

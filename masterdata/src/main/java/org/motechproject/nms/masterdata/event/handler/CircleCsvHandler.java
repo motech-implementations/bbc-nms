@@ -74,14 +74,14 @@ public class CircleCsvHandler {
         circleService.getCircleDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> csvCircleId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.csvCircleId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -90,7 +90,7 @@ public class CircleCsvHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processCircleRecords(csvFileName, csvCircleId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -98,7 +98,7 @@ public class CircleCsvHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processCircleRecords(String csvFileName, List<Long> createdIds) {
         CsvCircle record = null;
         Circle persistentRecord = null;
 

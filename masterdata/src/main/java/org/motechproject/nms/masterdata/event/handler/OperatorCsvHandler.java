@@ -77,14 +77,14 @@ public class OperatorCsvHandler {
         operatorService.getOperatorDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> operatorCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.operatorCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -93,7 +93,7 @@ public class OperatorCsvHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processOperatorRecords(csvFileName, operatorCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -101,7 +101,7 @@ public class OperatorCsvHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processOperatorRecords(String csvFileName, List<Long> createdIds) {
 
         CsvOperator record = null;
         Operator persistentRecord = null;

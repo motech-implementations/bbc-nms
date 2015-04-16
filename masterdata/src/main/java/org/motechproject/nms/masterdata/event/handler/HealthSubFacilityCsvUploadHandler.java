@@ -88,14 +88,14 @@ public class HealthSubFacilityCsvUploadHandler {
         healthSubFacilityService.getHealthSubFacilityRecordsDataService().doInTransaction(
                 new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> healthSubFacilityCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.healthSubFacilityCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -104,7 +104,7 @@ public class HealthSubFacilityCsvUploadHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processHealthSubFacilityRecords(csvFileName, healthSubFacilityCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -112,7 +112,7 @@ public class HealthSubFacilityCsvUploadHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processHealthSubFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();

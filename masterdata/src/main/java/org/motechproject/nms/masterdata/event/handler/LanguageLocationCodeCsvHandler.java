@@ -87,14 +87,14 @@ public class LanguageLocationCodeCsvHandler {
         languageLocationCodeService.getLanguageLocationCodeDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
-                    List<Long> CreatedId;
+                    List<Long> lLcCsvId;
 
                     String csvFileName;
 
                     private TransactionCallback<State> init(
-                            List<Long> CreatedId,
+                            List<Long> createdId,
                             String csvFileName) {
-                        this.CreatedId = CreatedId;
+                        this.lLcCsvId = createdId;
                         this.csvFileName = csvFileName;
                         return this;
                     }
@@ -103,7 +103,7 @@ public class LanguageLocationCodeCsvHandler {
                     public State doInTransaction(
                             TransactionStatus status) {
                         State transactionObject = null;
-                        processRecordsInTransaction(csvFileName, CreatedId);
+                        processLanguageLocationRecords(csvFileName, lLcCsvId);
                         return transactionObject;
                     }
                 }.init(CreatedId, csvFileName));
@@ -111,7 +111,7 @@ public class LanguageLocationCodeCsvHandler {
     }
 
 
-    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+    private void processLanguageLocationRecords(String csvFileName, List<Long> createdIds) {
         CsvLanguageLocationCode record = null;
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();

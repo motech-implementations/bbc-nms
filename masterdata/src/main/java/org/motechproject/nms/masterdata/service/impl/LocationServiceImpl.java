@@ -251,8 +251,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getMkServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if(null != state)
+        if(null != state) {
             return state.getIsMkDeployed();
+        }
        return null;
     }
 
@@ -265,8 +266,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getMaServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if(null != state)
+        if(null != state) {
             return state.getIsMaDeployed();
+        }
         return null;
     }
 
@@ -279,8 +281,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getKkServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if(null != state)
+        if(null != state) {
             return state.getIsKkDeployed();
+        }
         return null;
     }
 
@@ -293,8 +296,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getWhiteListingEnableStatusByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if(null != state)
+        if(null != state) {
             return state.getIsWhiteListEnable();
+        }
         return null;
     }
 
