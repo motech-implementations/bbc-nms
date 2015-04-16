@@ -45,7 +45,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     private StateCsvUploadHandler stateCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {

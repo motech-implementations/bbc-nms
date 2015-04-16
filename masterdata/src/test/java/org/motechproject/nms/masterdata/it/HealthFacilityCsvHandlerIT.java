@@ -45,6 +45,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     @Inject
     private HealthFacilityService healthFacilityService;
 
+    @Inject
     private HealthBlockService healthBlockService;
 
     @Inject
@@ -61,7 +62,6 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void testDataServiceInstance() throws Exception {
-        assertNotNull(healthBlockService);
         assertNotNull(healthFacilityCsvService);
         assertNotNull(healthFacilityService);
         assertNotNull(stateService);

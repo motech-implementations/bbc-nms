@@ -54,7 +54,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     @Inject
     private ValidatorService validatorService;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {

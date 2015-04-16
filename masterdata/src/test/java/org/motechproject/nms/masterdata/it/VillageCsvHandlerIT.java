@@ -33,7 +33,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
     private VillageCsvUploadHandler villageCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;

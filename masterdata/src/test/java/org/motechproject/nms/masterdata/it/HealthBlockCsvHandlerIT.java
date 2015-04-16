@@ -34,7 +34,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
     private HealthBlockCsvUploadHandler healthBlockCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;
