@@ -4,10 +4,9 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
-import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.CsvOperator;
+import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.repository.OperatorDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -41,7 +40,6 @@ public class OperatorCsvHandler {
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    private OperatorDataService operatorDataService;
 
     private static Logger logger = LoggerFactory.getLogger(OperatorCsvHandler.class);
 
@@ -76,7 +74,7 @@ public class OperatorCsvHandler {
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
-        operatorDataService
+        operatorService.getOperatorDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
                     List<Long> CreatedId;
@@ -137,12 +135,12 @@ public class OperatorCsvHandler {
                     ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException ex) {
+            } catch (DataValidationException operatorDataException) {
 
-                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, operatorDataException.getErrorDesc(), operatorDataException.getErrorCode(), record.toString());
 
-            } catch (Exception e) {
-                logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+            } catch (Exception operatorException) {
+                logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", operatorException);
 
                 ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Some Error Occurred");
 

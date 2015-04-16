@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 
 /**
  * This interface is used for crud operations on LanguageLocationCode
@@ -82,5 +83,16 @@ public interface LanguageLocationCodeService {
      */
     Integer getDefaultLanguageLocationCodeByCircleCode(String circleCode);
 
+    /**
+     * This method returns the language location code record for a code
+     *
+     * @param code is used to determined Language Location Code
+     */
     LanguageLocationCode findLLCByCode(Integer code);
+
+
+    /**
+     * Get LanguageLocationCodeDataService object
+     */
+    public LanguageLocationCodeDataService getLanguageLocationCodeDataService();
 }

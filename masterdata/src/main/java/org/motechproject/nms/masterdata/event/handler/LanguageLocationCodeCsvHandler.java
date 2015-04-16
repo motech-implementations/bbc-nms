@@ -5,7 +5,6 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
@@ -44,8 +43,6 @@ public class LanguageLocationCodeCsvHandler {
     private CircleService circleService;
 
     private LocationService locationService;
-
-    private LanguageLocationCodeDataService languageLocationCodeDataService;
 
     private static Logger logger = LoggerFactory.getLogger(LanguageLocationCodeCsvHandler.class);
 
@@ -87,7 +84,7 @@ public class LanguageLocationCodeCsvHandler {
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
-        languageLocationCodeDataService
+        languageLocationCodeService.getLanguageLocationCodeDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
                     List<Long> CreatedId;
@@ -148,12 +145,12 @@ public class LanguageLocationCodeCsvHandler {
                     ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException ex) {
+            } catch (DataValidationException languageLocationDataException) {
 
-                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, languageLocationDataException.getErrorDesc(), languageLocationDataException.getErrorCode(), record.toString());
 
-            } catch (Exception e) {
-                logger.error("LANGUAGE_LOCATION_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+            } catch (Exception languageLocationException) {
+                logger.error("LANGUAGE_LOCATION_CSV_SUCCESS processing receive Exception exception, message: {}", languageLocationException);
 
                 ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Some Error Occurred");
 

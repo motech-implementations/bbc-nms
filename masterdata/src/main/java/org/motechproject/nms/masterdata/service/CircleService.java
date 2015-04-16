@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
 
 /**
  * This interface is used for crud operations on Circle
@@ -41,4 +42,9 @@ public interface CircleService {
      * @return State object corresponding to the census code
      */
     Circle getRecordByCode(String circleCode);
+
+    /**
+     * Get CircleDataService object
+     */
+    public CircleDataService getCircleDataService();
 }

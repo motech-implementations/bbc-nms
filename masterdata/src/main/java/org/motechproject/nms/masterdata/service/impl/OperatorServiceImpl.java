@@ -69,4 +69,12 @@ public class OperatorServiceImpl implements OperatorService {
         return operatorDataService.findByCode(code);
 
     }
+
+    /**
+     * Get OperatorDataService object
+     */
+    @Override
+    public OperatorDataService getOperatorDataService() {
+        return operatorDataService;
+    }
 }
