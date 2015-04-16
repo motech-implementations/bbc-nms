@@ -5,6 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeServiceCsv;
@@ -21,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,8 @@ public class LanguageLocationCodeCsvHandler {
     private CircleService circleService;
 
     private LocationService locationService;
+
+    private LanguageLocationCodeDataService languageLocationCodeDataService;
 
     private static Logger logger = LoggerFactory.getLogger(LanguageLocationCodeCsvHandler.class);
 
@@ -65,14 +70,52 @@ public class LanguageLocationCodeCsvHandler {
      */
     @MotechListener(subjects = LocationConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
+
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
-        CsvLanguageLocationCode record = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        languageLocationCodeDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+        CsvLanguageLocationCode record = null;
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
 

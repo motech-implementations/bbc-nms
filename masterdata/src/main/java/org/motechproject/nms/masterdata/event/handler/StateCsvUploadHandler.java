@@ -4,8 +4,9 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
-import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.CsvState;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class StateCsvUploadHandler {
 
     private StateCsvService stateCsvService;
 
+    private StateRecordsDataService stateRecordsDataService;
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
@@ -61,6 +65,44 @@ public class StateCsvUploadHandler {
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        processRecords(createdIds, csvFileName);
+
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        stateRecordsDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
 
@@ -70,7 +112,6 @@ public class StateCsvUploadHandler {
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.STATE);
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         CsvState csvStateRecord = null;
 
         for (Long id : createdIds) {
@@ -109,6 +150,7 @@ public class StateCsvUploadHandler {
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
+
 
     private State mapStateCsv(CsvState record) throws DataValidationException {
 

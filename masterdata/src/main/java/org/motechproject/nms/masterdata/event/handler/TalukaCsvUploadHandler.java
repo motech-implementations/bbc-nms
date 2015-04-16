@@ -4,10 +4,11 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.CsvTaluka;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.masterdata.service.TalukaCsvService;
@@ -24,6 +25,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,7 @@ public class TalukaCsvUploadHandler {
 
     private TalukaService talukaService;
 
+    private TalukaRecordsDataService talukaRecordsDataService;
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(TalukaCsvUploadHandler.class);
@@ -72,6 +76,48 @@ public class TalukaCsvUploadHandler {
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+        processRecords(createdIds, csvFileName);
+
+    }
+
+
+    /**
+     * *****************************************************************
+     */
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        talukaRecordsDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -80,7 +126,7 @@ public class TalukaCsvUploadHandler {
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.TALUKA);
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
         CsvTaluka csvTalukaRecord = null;
 
         for (Long id : createdIds) {

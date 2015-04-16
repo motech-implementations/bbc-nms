@@ -6,6 +6,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.CsvOperator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.repository.OperatorDataService;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,8 @@ public class OperatorCsvHandler {
     private OperatorCsvService operatorCsvService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    private OperatorDataService operatorDataService;
 
     private static Logger logger = LoggerFactory.getLogger(OperatorCsvHandler.class);
 
@@ -58,13 +64,49 @@ public class OperatorCsvHandler {
         logger.info("OPERATOR_CSV_SUCCESS event received");
         Map<String, Object> params = motechEvent.getParameters();
 
-        CsvOperator record = null;
-        Operator persistentRecord = null;
-
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    public void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        operatorDataService
+                .doInTransaction(new TransactionCallback<State>() {
+
+                    List<Long> CreatedId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<State> init(
+                            List<Long> CreatedId,
+                            String csvFileName) {
+                        this.CreatedId = CreatedId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public State doInTransaction(
+                            TransactionStatus status) {
+                        State transactionObject = null;
+                        processRecordsInTransaction(csvFileName, CreatedId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+
+    private void processRecordsInTransaction(String csvFileName, List<Long> createdIds) {
+
+        CsvOperator record = null;
+        Operator persistentRecord = null;
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
 
