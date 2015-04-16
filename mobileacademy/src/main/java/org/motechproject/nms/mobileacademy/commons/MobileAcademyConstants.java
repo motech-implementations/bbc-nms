@@ -106,9 +106,9 @@ public class MobileAcademyConstants {
 
     public static final String INCONSISTENT_RECORDS_MESSAGE = "Inconsistent Records";
 
-    public static final String INSUFFICIENT_RECORDS_FOR_MODIFY = "Insufficient Records for modifying the file name for Content Name: [ %s ]. Hence Aborting the Modification process for this content file name.";
+    public static final String INSUFFICIENT_RECORDS_FOR_MODIFY = "Insufficient Records for modifying the file name/Metadata for Content Name: [ %s ]. Hence Aborting the Modification process for this content name.";
 
-    public static final String INCONSISTENT_RECORD_FOR_MODIFY = "Inconsistent Record for modifying the file name for Content Name: [ %s ]. Hence Aborting the Modification process for this content file name.";
+    public static final String INCONSISTENT_RECORD_FOR_MODIFY = "Inconsistent Record for modifying the file name/Metadata for Content Name: [ %s ]. Hence Aborting the Modification process for this content name.";
 
     public static final String INSUFFICIENT_RECORDS_FOR_ADD = "Insufficient Records for adding the course for Language Location Code: [ %d ]. Hence Aborting the Course Addition process for this Language location code.";
 

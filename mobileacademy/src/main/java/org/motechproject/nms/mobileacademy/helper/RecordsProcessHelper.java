@@ -232,11 +232,11 @@ public class RecordsProcessHelper {
 
         if (record.getType() == FileType.QUESTION_CONTENT) {
             String metaData = ParseDataHelper.validateAndParseString(
-                    "METADETA", courseContentCsv.getMetaData(), true);
+                    "METADATA", courseContentCsv.getMetaData(), true);
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
-                ParseDataHelper.raiseInvalidDataException("METADETA",
+                ParseDataHelper.raiseInvalidDataException("METADATA",
                         courseContentCsv.getMetaData());
             } else {
                 int answerNo = ParseDataHelper.validateAndParseInt("",
@@ -244,7 +244,7 @@ public class RecordsProcessHelper {
                 if (verifyRange(answerNo, 1, 2)) {
                     record.setAnswerId(answerNo);
                 } else {
-                    ParseDataHelper.raiseInvalidDataException("METADETA",
+                    ParseDataHelper.raiseInvalidDataException("METADATA",
                             courseContentCsv.getMetaData());
                 }
             }

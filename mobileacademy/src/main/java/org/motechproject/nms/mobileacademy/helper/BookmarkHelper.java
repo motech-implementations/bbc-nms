@@ -1,10 +1,10 @@
 package org.motechproject.nms.mobileacademy.helper;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.motechproject.mtraining.domain.Bookmark;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
@@ -35,15 +35,11 @@ public class BookmarkHelper {
 		JsonObject scoresJson = new JsonObject();
 		Map<String, Object> progressMap = bookmark.getProgress();
 
-		List<String> chapterKeys = new ArrayList<String>(progressMap.keySet());
-		Collections.sort(chapterKeys);
-
-		for (String chapterNo : chapterKeys) {
-			if (chapterNo.equals(MobileAcademyConstants.BOOKMARK_ID)) {
-				continue;
+		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
+			if (progressMap.containsKey(chapterNo.toString())) {
+				scoresJson.addProperty(chapterNo.toString(),
+						(Integer) progressMap.get(chapterNo));
 			}
-			scoresJson.addProperty(chapterNo,
-					(Integer) progressMap.get(chapterNo));
 		}
 		return scoresJson;
 	}
@@ -71,10 +67,12 @@ public class BookmarkHelper {
 			Map<String, String> scoresByChapter) throws DataValidationException {
 
 		Map<String, Object> progressMap = courseBookmark.getProgress();
+		List<String> keys = new ArrayList<String>(scoresByChapter.keySet());
 
 		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
 			try {
 				if (scoresByChapter.containsKey(chapterNo.toString())) {
+					keys.remove(chapterNo.toString());
 					Integer scoreInChapter = Integer.parseInt(scoresByChapter
 							.get(chapterNo.toString()));
 					if (!RecordsProcessHelper.verifyRange(scoreInChapter, 0,
@@ -94,6 +92,14 @@ public class BookmarkHelper {
 				ParseDataHelper.raiseInvalidDataException("ScoresByChapter",
 						scoresByChapter.toString());
 			}
+		}
+		
+		if(CollectionUtils.isNotEmpty(keys)) {
+			LOGGER.debug(
+					"Invalid Chapter Indices in ScoresByChapter field of Save bookmark request for MSISDN: {}",
+					courseBookmark.getExternalId());
+			ParseDataHelper.raiseInvalidDataException(
+					"ScoresByChapter", keys.get(0));
 		}
 	}
 }
