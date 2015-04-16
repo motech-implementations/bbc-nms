@@ -6,7 +6,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.CsvState;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -38,7 +37,6 @@ public class StateCsvUploadHandler {
 
     private StateCsvService stateCsvService;
 
-    private StateRecordsDataService stateRecordsDataService;
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(StateCsvUploadHandler.class);
@@ -74,7 +72,7 @@ public class StateCsvUploadHandler {
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
-        stateRecordsDataService
+        stateService.getStateRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
                     List<Long> CreatedId;
