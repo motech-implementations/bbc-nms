@@ -54,10 +54,12 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(stateService,
-                districtService, talukaService, healthBlockCsvService,
+        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(validatorService,talukaService, healthBlockCsvService,
                 healthBlockService, bulkUploadErrLogService);
     }
 

@@ -4,13 +4,13 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
-import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.CsvDistrict;
+import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.ValidatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -37,19 +37,21 @@ import java.util.Map;
 @Component
 public class DistrictCsvUploadHandler {
 
+    private ValidatorService validatorService;
+
     private DistrictCsvService districtCsvService;
 
     private DistrictService districtService;
 
     private StateService stateService;
-    private DistrictRecordsDataService districtRecordsDataService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(DistrictCsvUploadHandler.class);
 
     @Autowired
-    public DistrictCsvUploadHandler(DistrictCsvService districtCsvService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
+    public DistrictCsvUploadHandler(ValidatorService validatorService, DistrictCsvService districtCsvService, DistrictService districtService, StateService stateService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.validatorService = validatorService;
         this.districtCsvService = districtCsvService;
         this.districtService = districtService;
         this.stateService = stateService;
@@ -80,7 +82,7 @@ public class DistrictCsvUploadHandler {
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
-        districtRecordsDataService
+        districtService.getDistrictRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
                     List<Long> CreatedId;
@@ -135,14 +137,14 @@ public class DistrictCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
-                logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+            } catch (DataValidationException stateDataException) {
+                logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", stateDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvDistrictRecord.toString());
-            } catch (Exception e) {
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, stateDataException.getErroneousField(), stateDataException.getErrorCode(), csvDistrictRecord.toString());
+            } catch (Exception stateException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
-                logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", stateException);
             } finally {
                 if (null != csvDistrictRecord) {
                     districtCsvService.delete(csvDistrictRecord);
@@ -159,10 +161,7 @@ public class DistrictCsvUploadHandler {
         Long stateCode = ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true);
         Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
+        validateDistrictParent(stateCode);
 
         District newRecord = new District();
 
@@ -176,25 +175,32 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
+    private void validateDistrictParent(Long stateCode) throws DataValidationException {
+        validatorService.validateDistrictParent(stateCode);
+    }
+
     private void processDistrictData(District districtData) throws DataValidationException {
 
         logger.debug("District data contains district code : {}", districtData.getDistrictCode());
         District existDistrictData = districtService.findDistrictByParentCode(districtData.getDistrictCode(), districtData.getStateCode());
         if (null != existDistrictData) {
             updateDistrict(existDistrictData, districtData);
-            logger.info("District data is successfully updated.");
         } else {
-
-            State stateData = stateService.findRecordByStateCode(districtData.getStateCode());
-            stateData.getDistrict().add(districtData);
-            stateService.update(stateData);
-            logger.info("District data is successfully inserted.");
+            insertDistrict(districtData);
         }
+    }
+
+    private void insertDistrict(District districtData) {
+        State stateData = stateService.findRecordByStateCode(districtData.getStateCode());
+        stateData.getDistrict().add(districtData);
+        stateService.update(stateData);
+        logger.info("District data is successfully inserted.");
     }
 
     private void updateDistrict(District existDistrictData, District districtData) {
         existDistrictData.setName(districtData.getName());
         existDistrictData.setModifiedBy(districtData.getModifiedBy());
         districtService.update(existDistrictData);
+        logger.info("District data is successfully updated.");
     }
 }

@@ -12,6 +12,7 @@ import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.ValidatorService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -50,11 +51,14 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     @Inject
     private DistrictCsvService districtCsvService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {
-        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvService,
+        districtCsvUploadHandler = new DistrictCsvUploadHandler(validatorService,districtCsvService,
                 districtService, stateService, bulkUploadErrLogService);
     }
 
@@ -64,6 +68,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
     }
 
     @Test

@@ -4,8 +4,10 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
+import org.motechproject.nms.masterdata.domain.CsvVillage;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -32,9 +34,7 @@ import java.util.Map;
 @Component
 public class VillageCsvUploadHandler {
 
-    private StateService stateService;
-
-    private DistrictService districtService;
+    private ValidatorService validatorService;
 
     private TalukaService talukaService;
 
@@ -42,16 +42,13 @@ public class VillageCsvUploadHandler {
 
     private VillageService villageService;
 
-    private VillageRecordsDataService villageRecordsDataService;
-
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(VillageCsvUploadHandler.class);
 
     @Autowired
-    public VillageCsvUploadHandler(StateService stateService, DistrictService districtService, TalukaService talukaService, VillageCsvService villageCsvService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
-        this.stateService = stateService;
-        this.districtService = districtService;
+    public VillageCsvUploadHandler(ValidatorService validatorService, TalukaService talukaService, VillageCsvService villageCsvService, VillageService villageService, BulkUploadErrLogService bulkUploadErrLogService) {
+        this.validatorService = validatorService;
         this.talukaService = talukaService;
         this.villageCsvService = villageCsvService;
         this.villageService = villageService;
@@ -76,15 +73,14 @@ public class VillageCsvUploadHandler {
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
         processRecords(createdIds, csvFileName);
-
     }
 
 
-    public void processRecords(List<Long> CreatedId,
+    private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
-        villageRecordsDataService
+        villageService.getVillageRecordsDataService()
                 .doInTransaction(new TransactionCallback<State>() {
 
                     List<Long> CreatedId;
@@ -140,16 +136,16 @@ public class VillageCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
-                logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+            } catch (DataValidationException villageDataException) {
+                logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", villageDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), csvVillageRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, villageDataException.getErroneousField(), villageDataException.getErrorCode(), csvVillageRecord.toString());
 
-            } catch (Exception e) {
+            } catch (Exception villageException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", villageException);
             } finally {
                 if (null != csvVillageRecord) {
                     villageCsvService.delete(csvVillageRecord);
@@ -168,20 +164,7 @@ public class VillageCsvUploadHandler {
         Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
         Long villageCode = ParseDataHelper.validateAndParseLong("VillageCode", record.getVillageCode(), true);
 
-        State state = stateService.findRecordByStateCode(stateCode);
-        if (state == null) {
-            ParseDataHelper.raiseInvalidDataException("State", "StateCode");
-        }
-
-        District district = districtService.findDistrictByParentCode(districtCode, stateCode);
-        if (district == null) {
-            ParseDataHelper.raiseInvalidDataException("District", "DistrictCode");
-        }
-
-        Taluka taluka = talukaService.findTalukaByParentCode(stateCode, districtCode, talukaCode);
-        if (taluka == null) {
-            ParseDataHelper.raiseInvalidDataException("Taluka", "TalukaCode");
-        }
+        validateVillageParent(stateCode, districtCode, talukaCode);
 
         newRecord.setName(villageName);
         newRecord.setStateCode(stateCode);
@@ -195,6 +178,10 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
+    private void validateVillageParent(Long stateCode, Long districtCode, Long talukaCode) throws DataValidationException {
+        validatorService.validateVillageParent(stateCode, districtCode, talukaCode);
+    }
+
     private void processVillageData(Village villageData) throws DataValidationException {
 
         logger.debug("Village data contains village code : {}", villageData.getVillageCode());
@@ -206,20 +193,26 @@ public class VillageCsvUploadHandler {
 
         if (existVillageData != null) {
             updateVillage(existVillageData, villageData);
-            logger.info("Village data is successfully updated.");
         } else {
-
-            Taluka talukaRecord = talukaService.findTalukaByParentCode(villageData.getStateCode(),
-                    villageData.getDistrictCode(), villageData.getTalukaCode());
-            talukaRecord.getVillage().add(villageData);
-            talukaService.update(talukaRecord);
-            logger.info("Village data is successfully inserted.");
+            insertVillage(villageData);
         }
     }
 
+    private void insertVillage(Village villageData) {
+
+        Taluka talukaRecord = talukaService.findTalukaByParentCode(villageData.getStateCode(),
+                villageData.getDistrictCode(), villageData.getTalukaCode());
+        talukaRecord.getVillage().add(villageData);
+        talukaService.update(talukaRecord);
+        logger.info("Village data is successfully inserted.");
+    }
+
     private void updateVillage(Village existVillageData, Village villageData) {
+
         existVillageData.setName(villageData.getName());
         existVillageData.setModifiedBy(villageData.getModifiedBy());
         villageService.update(existVillageData);
+        logger.info("Village data is successfully updated.");
     }
+
 }

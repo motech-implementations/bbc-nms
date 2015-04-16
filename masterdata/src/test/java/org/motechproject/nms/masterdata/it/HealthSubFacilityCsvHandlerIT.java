@@ -60,11 +60,14 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateService,
-                districtService, talukaService, healthFacilityService, healthSubFacilityCsvService,
-                healthSubFacilityService, healthBlockService, bulkUploadErrLogService);
+        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(validatorService,
+                healthFacilityService, healthSubFacilityCsvService,
+                healthSubFacilityService, bulkUploadErrLogService);
     }
 
     @Test
@@ -76,6 +79,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
         assertNotNull(healthSubFacilityCsvHandler);
     }
 

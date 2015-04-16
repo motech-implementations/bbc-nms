@@ -53,10 +53,13 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtService, talukaService, villageCsvService,
+        villageCsvUploadHandler = new VillageCsvUploadHandler(validatorService,
+                 talukaService, villageCsvService,
                 villageService, bulkUploadErrLogService);
     }
 
@@ -68,6 +71,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
         assertNotNull(villageCsvUploadHandler);
     }
 

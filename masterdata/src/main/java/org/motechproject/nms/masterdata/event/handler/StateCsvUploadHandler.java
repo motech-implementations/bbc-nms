@@ -67,7 +67,6 @@ public class StateCsvUploadHandler {
         logger.debug("Csv file name received in event : {}", csvFileName);
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         processRecords(createdIds, csvFileName);
-
     }
 
 

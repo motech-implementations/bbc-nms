@@ -2,6 +2,7 @@ package org.motechproject.nms.masterdata.service;
 
 
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.repository.VillageRecordsDataService;
 
 /**
  * This interface is used for crud operations on Village
@@ -41,4 +42,10 @@ public interface VillageService {
                                     Long districtCode,
                                     Long talukaCode,
                                     Long villageCode);
+
+    /**
+     * Get VillageRecordsDataService object
+     */
+    public VillageRecordsDataService getVillageRecordsDataService();
+
 }

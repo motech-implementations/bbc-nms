@@ -75,5 +75,12 @@ public class HealthBlockServiceImpl implements HealthBlockService {
         return healthBlockRecordsDataService.findById(id);
     }
 
+    /**
+     * Get HealthBlockRecordsDataService object
+     */
+    @Override
+    public HealthBlockRecordsDataService getHealthBlockRecordsDataService() {
+        return healthBlockRecordsDataService;
+    }
 
 }

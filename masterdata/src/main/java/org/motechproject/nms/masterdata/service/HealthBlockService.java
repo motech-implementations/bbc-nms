@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 
 /**
  * This interface is used for crud operations on HealthBlock
@@ -47,5 +48,10 @@ public interface HealthBlockService {
      */
     HealthBlock findById(Long id);
 
+
+    /**
+     * Get HealthBlockRecordsDataService object
+     */
+    public HealthBlockRecordsDataService getHealthBlockRecordsDataService();
 
 }
