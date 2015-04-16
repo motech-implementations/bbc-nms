@@ -33,7 +33,7 @@ public class CsvState extends MdsEntity {
     @Field(defaultValue = "true")
     private String isKkDeployed;
 
-    @Field(defaultValue = "true")
+    @Field(defaultValue = "false")
     private String isWhiteListEnable;
 
     public CsvState(String name, String stateCode, String maCapping, String mkCapping, String isMkDeployed, String isMaDeployed, String isKkDeployed, String isWhiteListEnable) {

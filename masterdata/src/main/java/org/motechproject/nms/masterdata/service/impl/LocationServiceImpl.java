@@ -251,9 +251,9 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getMkServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if (state.getIsMkDeployed().equals("true"))
-            return true;
-        return null;
+        if(null != state)
+            return state.getIsMkDeployed();
+       return null;
     }
 
     /**
@@ -265,8 +265,8 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getMaServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if (state.getIsMaDeployed().equals("true"))
-            return true;
+        if(null != state)
+            return state.getIsMaDeployed();
         return null;
     }
 
@@ -279,8 +279,8 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getKkServiceDeployedByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if (state.getIsKkDeployed().equals("true"))
-            return true;
+        if(null != state)
+            return state.getIsKkDeployed();
         return null;
     }
 
@@ -293,66 +293,10 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Boolean getWhiteListingEnableStatusByCode(Long stateCode) {
         State state = getStateByCode(stateCode);
-        if (state.getIsWhiteListEnable().equals("true"))
-            return true;
+        if(null != state)
+            return state.getIsWhiteListEnable();
         return null;
     }
 
-  /*  *//**
-     * Check whether MK is deployed on the the State or not by its State Code
-     *
-     * @param stateCode
-     * @return true/false
-     *//*
-    @Override
-    public boolean isMkDeployed(Long stateCode) {
 
-        State state = getStateByCode(stateCode);
-        if (state.getIsMkDeployed().equals("true"))
-            return true;
-
-        return false;
-    }
-
-    *//**
-     * Check whether MA is deployed on the the State or not by its State Code
-     *
-     * @param stateCode
-     * @return true/false
-     *//*
-    @Override
-    public boolean isMadeployed(Long stateCode) {
-        State state = getStateByCode(stateCode);
-        if (state.getIsMaDeployed().equals("true"))
-            return true;
-        return false;
-    }
-
-    *//**
-     * Check whether KK is deployed on the the State or not by its State Code
-     *
-     * @param stateCode
-     * @return true/false
-     *//*
-    @Override
-    public boolean isKkDeployed(Long stateCode) {
-        State state = getStateByCode(stateCode);
-        if (state.getIsKkDeployed().equals("true"))
-            return true;
-        return false;
-    }
-
-    *//**
-     * Check whether White List for msisdn is enabled on the the State or not by its State Code
-     *
-     * @param stateCode
-     * @return true/false
-     *//*
-    @Override
-    public boolean isWhiteListEnabled(Long stateCode) {
-        State state = getStateByCode(stateCode);
-        if (state.getIsWhiteListEnable().equals("true"))
-            return true;
-        return false;
-    }*/
 }

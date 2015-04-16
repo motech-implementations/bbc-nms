@@ -39,19 +39,19 @@ public class State extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 4)
-    private String IsMkDeployed;
+    private Boolean isMkDeployed;
 
     @Field
     @UIDisplayable(position = 5)
-    private String IsMaDeployed;
+    private Boolean isMaDeployed;
 
     @Field
     @UIDisplayable(position = 6)
-    private String IsKkDeployed;
+    private Boolean isKkDeployed;
 
     @Field
     @UIDisplayable(position = 7)
-    private String IsWhiteListEnable;
+    private Boolean isWhiteListEnable;
 
 
     public State() {
@@ -97,38 +97,38 @@ public class State extends MdsEntity {
         this.maCapping = maCapping;
     }
 
-    public String getIsWhiteListEnable() {
-        return IsWhiteListEnable;
+
+    public Boolean getIsMkDeployed() {
+        return isMkDeployed;
     }
 
-    public void setIsWhiteListEnable(String isWhiteListEnable) {
-        IsWhiteListEnable = isWhiteListEnable;
+    public void setIsMkDeployed(Boolean isMkDeployed) {
+        this.isMkDeployed = isMkDeployed;
     }
 
-    public String getIsMaDeployed() {
-        return IsMaDeployed;
+    public Boolean getIsMaDeployed() {
+        return isMaDeployed;
     }
 
-    public void setIsMaDeployed(String isMaDeployed) {
-        IsMaDeployed = isMaDeployed;
+    public void setIsMaDeployed(Boolean isMaDeployed) {
+        this.isMaDeployed = isMaDeployed;
     }
 
-    public String getIsMkDeployed() {
-        return IsMkDeployed;
+    public Boolean getIsKkDeployed() {
+        return isKkDeployed;
     }
 
-    public void setIsMkDeployed(String isMkDeployed) {
-        IsMkDeployed = isMkDeployed;
+    public void setIsKkDeployed(Boolean isKkDeployed) {
+        this.isKkDeployed = isKkDeployed;
     }
 
-    public String getIsKkDeployed() {
-        return IsKkDeployed;
+    public Boolean getIsWhiteListEnable() {
+        return isWhiteListEnable;
     }
 
-    public void setIsKkDeployed(String isKkDeployed) {
-        IsKkDeployed = isKkDeployed;
+    public void setIsWhiteListEnable(Boolean isWhiteListEnable) {
+        this.isWhiteListEnable = isWhiteListEnable;
     }
-
 
     /**
      * This method override the toString method to create string for name, state code
@@ -145,10 +145,10 @@ public class State extends MdsEntity {
                 ", district=" + district +
                 ", maCapping=" + maCapping +
                 ", mkCapping=" + mkCapping +
-                ", IsMkDeployed='" + IsMkDeployed + '\'' +
-                ", IsMaDeployed='" + IsMaDeployed + '\'' +
-                ", IsKkDeployed='" + IsKkDeployed + '\'' +
-                ", IsWhiteListEnable='" + IsWhiteListEnable + '\'' +
+                ", IsMkDeployed='" + isMkDeployed + '\'' +
+                ", IsMaDeployed='" + isMaDeployed + '\'' +
+                ", IsKkDeployed='" + isKkDeployed + '\'' +
+                ", IsWhiteListEnable='" + isWhiteListEnable + '\'' +
                 '}';
     }
 }

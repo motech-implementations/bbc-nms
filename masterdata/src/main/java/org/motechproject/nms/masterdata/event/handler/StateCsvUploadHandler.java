@@ -127,10 +127,10 @@ public class StateCsvUploadHandler {
         newRecord.setStateCode(stateCode);
         newRecord.setMaCapping(maCapping);
         newRecord.setMkCapping(mkCapping);
-        newRecord.setIsMkDeployed(isMkdeployed.toString());
-        newRecord.setIsMaDeployed(isMadeployed.toString());
-        newRecord.setIsKkDeployed(isKkdeployed.toString());
-        newRecord.setIsWhiteListEnable(isWhiteListEnable.toString());
+        newRecord.setIsMkDeployed(isMkdeployed);
+        newRecord.setIsMaDeployed(isMadeployed);
+        newRecord.setIsKkDeployed(isKkdeployed);
+        newRecord.setIsWhiteListEnable(isWhiteListEnable);
         newRecord.setCreator(record.getCreator());
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
