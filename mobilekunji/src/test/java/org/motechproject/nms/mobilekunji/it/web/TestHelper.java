@@ -25,6 +25,10 @@ public class TestHelper {
         State stateData = new State();
         stateData.setName("UP");
         stateData.setStateCode(25L);
+        stateData.setIsKkDeployed(true);
+        stateData.setIsMaDeployed(true);
+        stateData.setIsMkDeployed(true);
+        stateData.setIsWhiteListEnable(true);
         stateData.setDistrict(districtSet);
         return stateData;
     }
