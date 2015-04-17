@@ -16,11 +16,22 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+/**
+ * This is a helper class for implementation of CourseBookmark Service
+ */
 public class BookmarkHelper {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(BookmarkHelper.class);
 
+	/**
+	 * This function returns bookmark JSON to be sent to IVR on getBookmark
+	 * request on the basis of MTraining bookmark
+	 * 
+	 * @param bookmark
+	 *            : mTraining bookmark
+	 * @return : JSON response to be returned to IVR
+	 */
 	public static String getBookmarkJson(Bookmark bookmark) {
 		JsonObject bookmarkJson = new JsonObject();
 		bookmarkJson.addProperty(
@@ -40,6 +51,14 @@ public class BookmarkHelper {
 		return bookmarkJson.toString();
 	}
 
+	/*
+	 * This function returns scoreByChapter node's JSON content to be put in
+	 * Bookmark JSON
+	 * 
+	 * @param bookmark : mTraining bookmark
+	 * 
+	 * @return scoreByChapter node's JSON content
+	 */
 	private static JsonElement getScoresJson(Bookmark bookmark) {
 
 		/* To keep track of empty progress map */
@@ -64,6 +83,19 @@ public class BookmarkHelper {
 		return scoresJson;
 	}
 
+	/**
+	 * This function validates the input request of IVR to save the bookmark in
+	 * the system using MTraining. In case of any errors, generates Data
+	 * validation exception.
+	 * 
+	 * @param courseBookmark
+	 *            : MTraining bookmark to be populated
+	 * @param bookmarkID
+	 *            : bookmark node id as mentioned in course structure
+	 * @param scoresByChapter
+	 *            : user's score in different chapters
+	 * @throws DataValidationException
+	 */
 	public static void validateAndPopulateBookmark(Bookmark courseBookmark,
 			String bookmarkID, Map<String, String> scoresByChapter)
 			throws DataValidationException {
@@ -72,7 +104,7 @@ public class BookmarkHelper {
 		if (bookmarkID != null) {
 			/* In case of no value in bookmark ID */
 			if (StringUtils.isBlank(bookmarkID)) {
-				LOGGER.debug(
+				LOGGER.warn(
 						"There is no bookmark ID in Save bookmark request for MSISDN: {}",
 						courseBookmark.getExternalId());
 				ParseDataHelper.raiseMissingDataException(
@@ -88,6 +120,10 @@ public class BookmarkHelper {
 		}
 	}
 
+	/*
+	 * This function validates the scores received in input request and in case
+	 * of any scores received, it saves them in progress map of MTraining bookmark
+	 */
 	private static void validateScoresPutInBookmark(Bookmark courseBookmark,
 			Map<String, String> scoresByChapter) throws DataValidationException {
 
@@ -101,6 +137,9 @@ public class BookmarkHelper {
 			return;
 		}
 
+		/*
+		 * Traverse to check if score for a particular chapter has been received
+		 */
 		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
 			try {
 				if (scoresByChapter.containsKey(chapterNo.toString())) {
