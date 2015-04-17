@@ -3,6 +3,10 @@ package org.motechproject.nms.kilkariobd.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
@@ -23,7 +27,7 @@ public class IvrHttpClient {
         RetryStrategy retryStrategy = new RetryStrategy();
         Integer retryNumber = 0;
         Long timeOutValue = retryStrategy.getTimeOutInterval(retryNumber, null);
-        while (RetryStrategy.shouldRetry(retryNumber++)) {
+        while (retryStrategy.shouldRetry(retryNumber++)) {
             try {
                 params.setConnectionManagerTimeout(timeOutValue);
                 params.setSoTimeout(timeOutValue.intValue());
@@ -54,7 +58,6 @@ public class IvrHttpClient {
         postMethod.setRequestEntity(stringEntity);
         return postMethod;
     }
-
 
     private String ivrUrl() {
         return String.format("http://%s/%s/obdmanager/notifytargetfile", "", "");

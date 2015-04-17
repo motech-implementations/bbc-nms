@@ -1,21 +1,25 @@
 package org.motechproject.nms.kilkariobd.client;
 
+import org.motechproject.nms.kilkariobd.settings.Settings;
+import org.motechproject.server.config.SettingsFacade;
+import org.springframework.beans.factory.annotation.Autowired;
+
 public class RetryStrategy {
-    static final int DEFAULT_RETRY = 3;
-    static final int RETRY_MULTIPLIER = 2;
-    static final Long INITIAL_INTERVAL = 5L;
+    @Autowired
+    SettingsFacade kilkariObdSettings;
 
+    Settings settings = new Settings(kilkariObdSettings);
 
-    public static boolean shouldRetry(Integer retryNumber) {
-        return retryNumber <= DEFAULT_RETRY;
+    public boolean shouldRetry(Integer retryNumber) {
+        return retryNumber <= Integer.parseInt(settings.getOfflineApiMaxRetries());
     }
 
-    public Long getTimeOutInterval(int retryNumber, Long previousInterval) {
+    public Long getTimeOutInterval(Integer retryNumber, Long previousInterval) {
         Long timeToWaitInMillis = 0L;
         if (retryNumber < 1) {
-            timeToWaitInMillis = INITIAL_INTERVAL;
-        } else if (retryNumber <= DEFAULT_RETRY) {
-            timeToWaitInMillis = previousInterval * RETRY_MULTIPLIER;
+            timeToWaitInMillis = Long.parseLong(settings.getOfflineApiInitalIntervalInMilliseconds());
+        } else if (retryNumber <= Integer.parseInt(settings.getOfflineApiMaxRetries())) {
+            timeToWaitInMillis = previousInterval * Integer.parseInt(settings.getOfflineApiRetryMultiplier());
         }
         return timeToWaitInMillis;
     }
