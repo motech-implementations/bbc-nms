@@ -89,8 +89,8 @@ public class LanguageLocationCodeServiceImplTest extends TestCase {
     @Test
     public void testGetLanguageLocationCodeByCircleCode() {
 
-        List<Integer> listData = new ArrayList<Integer>();
-        listData.add(100);
+        List<String> listData = new ArrayList<String>();
+        listData.add("100");
 
         when(languageLocationCodeDataService.executeQuery(any(QueryExecution.class))).thenReturn(listData);
 
