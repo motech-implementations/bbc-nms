@@ -1,11 +1,11 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
+
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-
-import org.motechproject.mds.annotations.Entity;
-import org.motechproject.mds.annotations.Field;
 
 @Entity
 public class OutboundCallRequest {

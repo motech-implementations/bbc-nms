@@ -14,4 +14,13 @@
         <property name="defaultURL" value="/kilkariobd"/>
         <property name="moduleName" value="kilkariobd"/>
     </bean>
+
+    <bean id="kilkariObdSettings" class="org.motechproject.server.config.SettingsFacade" autowire="byType">
+        <property name="configFiles">
+            <list>
+                <value>classpath:kilkariobd.properties</value>
+            </list>
+        </property>
+    </bean>
+
 </beans>
