@@ -2,6 +2,8 @@ package org.motechproject.nms.mobilekunji.web;
 
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
@@ -55,7 +57,7 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId, final HttpServletRequest request)
-            throws DataValidationException, NmsInternalServerError {
+            throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
 
         long startTime = System.currentTimeMillis();
 
@@ -113,7 +115,7 @@ public class CallerDataController extends BaseController {
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public
     @ResponseBody
-    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException {
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException,FlwNotInWhiteListException,ServiceNotDeployedException {
 
         logger.debug("SetLanguageLocationCode: started");
         logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());

@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
@@ -52,13 +54,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return User detail response object
      */
     @Override
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws DataValidationException, NmsInternalServerError {
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws
+            DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
 
         logger.info("Get UserDetails Entered successfully.");
 
         UserDetailApiResponse userDetailApiResponse = null;
 
-        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
+        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         populateFlwDetail(userProfileData);
 
@@ -73,13 +76,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
      */
     @Override
-    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException, ServiceNotDeployedException, FlwNotInWhiteListException {
 
         logger.info("Update LanguageLocationCode Entered successfully.");
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(),
                 ParseDataHelper.validateAndTrimMsisdn(
-                        "CallingNumber", request.getCallingNumber()));
+                        "CallingNumber", request.getCallingNumber()),ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         logger.info("LanguageLocationCode executed successfully.");
     }
