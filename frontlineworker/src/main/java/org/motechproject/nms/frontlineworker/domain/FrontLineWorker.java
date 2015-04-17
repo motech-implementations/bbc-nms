@@ -80,9 +80,6 @@ public class FrontLineWorker extends MdsEntity {
 
     private String circleCode = null;
 
-    private Boolean isInWhiteList;
-
-
     public FrontLineWorker() {
     }
 
@@ -255,11 +252,4 @@ public class FrontLineWorker extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public Boolean getIsInWhiteList() {
-        return isInWhiteList;
-    }
-
-    public void setIsInWhiteList(Boolean isInWhiteList) {
-        this.isInWhiteList = isInWhiteList;
-    }
 }

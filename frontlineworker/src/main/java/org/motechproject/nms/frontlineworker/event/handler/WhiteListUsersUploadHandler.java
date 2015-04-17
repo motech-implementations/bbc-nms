@@ -195,7 +195,7 @@ public class WhiteListUsersUploadHandler {
                 }
             }catch (Exception e) {
                 bulkUploadStatus.incrementFailureCount();
-                logger.error("Exception occur : {}", e.getStackTrace());
+                logger.error("exception occur : {}", e.getStackTrace());
                 errorDetails = populateErrorDetails(csvFileName, csvsWhiteListUsers.toString(),
                         ErrorCategoryConstants.GENERAL_EXCEPTION,
                         ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);

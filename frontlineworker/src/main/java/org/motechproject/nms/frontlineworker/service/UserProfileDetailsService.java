@@ -1,5 +1,7 @@
 package org.motechproject.nms.frontlineworker.service;
 
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -15,7 +17,8 @@ public interface UserProfileDetailsService {
 
     public UserProfile processUserDetails(String msisdn, String circle, String operatorCode,
                                           ServicesUsingFrontLineWorker service)
-            throws DataValidationException, NmsInternalServerError;
+            throws DataValidationException, NmsInternalServerError,
+            FlwNotInWhiteListException,ServiceNotDeployedException;
 
     public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
             throws DataValidationException;

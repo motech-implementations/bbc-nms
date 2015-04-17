@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.frontlineworker.Designation;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
@@ -14,16 +16,8 @@ import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.service.CircleService;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
-import org.motechproject.nms.masterdata.service.OperatorService;
-import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -276,7 +270,8 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
     
     @Test
-    public void testprocessUserDetails() throws DataValidationException, NmsInternalServerError {
+    public void testprocessUserDetails() throws DataValidationException, NmsInternalServerError,
+            FlwNotInWhiteListException, ServiceNotDeployedException {
         
         UserProfile userProfile;
         FrontLineWorker frontLineWorker;

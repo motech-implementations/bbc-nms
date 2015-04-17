@@ -256,7 +256,7 @@ public class FrontLineWorkerUploadHandler {
 
             } catch (Exception e) {
                 bulkUploadStatus.incrementFailureCount();
-                logger.error("Exception occur : {}", e.getStackTrace());
+                logger.error("exception occur : {}", e.getStackTrace());
                 errorDetails = populateErrorDetails(csvFileName, csvsFrontLineWorker.toString(),
                         ErrorCategoryConstants.GENERAL_EXCEPTION,
                         ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION);
