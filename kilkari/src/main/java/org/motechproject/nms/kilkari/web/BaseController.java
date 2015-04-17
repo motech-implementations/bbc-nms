@@ -57,7 +57,7 @@ public class BaseController {
         String responseJson = null;
         if (exception.getErrorCode().equals(ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
             responseJson = "{\"failureReason\":\""
-                    + exception.getErroneousField() + ":Mandatory Parameter Missing\"}";
+                    + exception.getErroneousField() + ":Not Present\"}";
         } else {
             responseJson = "{\"failureReason\":\""
                     + exception.getErroneousField() + ":Invalid Value\"}";

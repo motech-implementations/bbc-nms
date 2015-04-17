@@ -68,7 +68,7 @@ public class SubscriptionController extends BaseController {
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
-        logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId().toString() + "]");
+        logger.debug(String.format("subscriptionId : [%d]", apiRequest.getSubscriptionId()));
         apiRequest.validateMandatoryParameter();
         subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId(),
                 apiRequest.getOperator(), apiRequest.getCircle());

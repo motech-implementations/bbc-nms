@@ -33,7 +33,7 @@ public class SubscriptionDeactivateApiRequestTest {
             apiRequest.validateMandatoryParameter();
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
         }
     }
 
