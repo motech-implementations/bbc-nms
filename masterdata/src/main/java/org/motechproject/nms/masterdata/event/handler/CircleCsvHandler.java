@@ -67,7 +67,7 @@ public class CircleCsvHandler {
     }
 
 
-    public void processRecords(List<Long> CreatedId,
+    public void processRecords(List<Long> createdId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
@@ -93,7 +93,7 @@ public class CircleCsvHandler {
                         processCircleRecords(csvFileName, csvCircleId);
                         return transactionObject;
                     }
-                }.init(CreatedId, csvFileName));
+                }.init(createdId, csvFileName));
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
