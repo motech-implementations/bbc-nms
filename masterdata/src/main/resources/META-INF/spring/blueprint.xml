@@ -6,6 +6,9 @@
 
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
+    <osgi:service ref="validatorService"
+                  interface="org.motechproject.nms.masterdata.service.ValidatorService"/>
+
     <osgi:service ref="locationService"
                   interface="org.motechproject.nms.masterdata.service.LocationService"/>
 

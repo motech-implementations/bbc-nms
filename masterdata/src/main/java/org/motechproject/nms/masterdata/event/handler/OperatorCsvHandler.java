@@ -95,12 +95,12 @@ public class OperatorCsvHandler {
                     ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException ex) {
+            } catch (DataValidationException operatorDataException) {
 
-                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, operatorDataException.getErrorDesc(), operatorDataException.getErrorCode(), record.toString());
 
-            } catch (Exception e) {
-                logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+            } catch (Exception operatorException) {
+                logger.error("OPERATOR_CSV_SUCCESS processing receive Exception exception, message: {}", operatorException);
 
                 ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Some Error Occurred");
 
