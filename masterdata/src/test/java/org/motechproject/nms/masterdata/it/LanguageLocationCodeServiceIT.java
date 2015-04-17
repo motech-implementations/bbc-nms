@@ -120,14 +120,14 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("testCircle");
         circle.setCode("testCode");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("123");
         circle = circleService.create(circle);
 
         //create circle with code "validCode"
         Circle circle2 = new Circle();
         circle2.setName("testCircle");
         circle2.setCode("validCode");
-        circle2.setDefaultLanguageLocationCode(321);
+        circle2.setDefaultLanguageLocationCode("321");
         circle2 = circleService.create(circle2);
 
         //create State with statecode "1"
@@ -157,7 +157,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         record.setLanguageKK("LanguageKK");
         record.setLanguageMA("LanguageMA");
         record.setLanguageMK("LanguageMK");
-        record.setLanguageLocationCode(123);
+        record.setLanguageLocationCode("123");
         record.setCircle(circle);
         record.setDistrict(district);
         record.setState(state);
@@ -170,7 +170,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         record2.setLanguageKK("LanguageKK");
         record2.setLanguageMA("LanguageMA");
         record2.setLanguageMK("LanguageMK");
-        record2.setLanguageLocationCode(123);
+        record2.setLanguageLocationCode("123");
         record2.setCircle(circle);
         record2.setDistrict(district);
         record2.setState(state);
@@ -183,7 +183,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         record3.setLanguageKK("LanguageKK");
         record3.setLanguageMA("LanguageMA");
         record3.setLanguageMK("LanguageMK");
-        record3.setLanguageLocationCode(321);
+        record3.setLanguageLocationCode("321");
         record3.setCircle(circle2);
         record3.setDistrict(district);
         record3.setState(state);
@@ -196,7 +196,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         record4.setLanguageKK("LanguageKK");
         record4.setLanguageMA("LanguageMA");
         record4.setLanguageMK("LanguageMK");
-        record4.setLanguageLocationCode(12345);
+        record4.setLanguageLocationCode("12345");
         record4.setCircle(circle2);
         record4.setDistrict(district);
         record4.setState(state);

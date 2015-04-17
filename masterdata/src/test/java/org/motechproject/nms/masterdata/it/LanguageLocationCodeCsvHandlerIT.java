@@ -151,7 +151,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("name");
         circle.setCode("testCode");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("123");
         circle = circleService.create(circle);
 
         //create State with statecode "1"
@@ -201,7 +201,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("testCircle");
         circle.setCode("testCode");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("123");
         circle = circleService.create(circle);
 
         //create State with statecode "1"

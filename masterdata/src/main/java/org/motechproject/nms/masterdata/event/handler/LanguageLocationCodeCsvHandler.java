@@ -220,7 +220,7 @@ public class LanguageLocationCodeCsvHandler {
         newRecord.setOwner(record.getOwner());
         newRecord.setModifiedBy(record.getModifiedBy());
 
-        newRecord.setLanguageLocationCode(ParseDataHelper.validateAndParseInt("LanguageLocationCode",
+        newRecord.setLanguageLocationCode(ParseDataHelper.validateAndParseString("LanguageLocationCode",
                 record.getLanguageLocationCode(), true));
         newRecord.setLanguageKK(ParseDataHelper.validateAndParseString("LanguageKK", record.getLanguageKK(), true));
         newRecord.setLanguageMK(ParseDataHelper.validateAndParseString("LanguageMK", record.getLanguageMK(), true));
