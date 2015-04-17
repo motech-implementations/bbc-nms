@@ -213,4 +213,16 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
         return null;
     }
 
+
+    @Override
+    public List<LanguageLocationCode> findLLCListByCircleCode(String circleCode) {
+
+        List<LanguageLocationCode> languageLocationCodeList = languageLocationCodeDataService.findByCircleCode(circleCode);
+
+
+        return languageLocationCodeList;
+    }
 }
+
+
+
