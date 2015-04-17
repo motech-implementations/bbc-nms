@@ -77,7 +77,7 @@ public class TestHelper {
         languageLocationCode.setStateCode(25L);
         languageLocationCode.setDistrictCode(3L);
 
-        languageLocationCode.setLanguageLocationCode(29);
+        languageLocationCode.setLanguageLocationCode("29");
         languageLocationCode.setLanguageMK("Hindi");
         languageLocationCode.setLanguageKK("Hindi");
         languageLocationCode.setLanguageMA("Hindi");
@@ -102,7 +102,7 @@ public class TestHelper {
         LanguageLocationCodeApiRequest request = new LanguageLocationCodeApiRequest();
         request.setCallId("111111111111111");
         request.setCallingNumber("9810179788");
-        request.setLanguageLocationCode(29);
+        request.setLanguageLocationCode("29");
 
         return request;
     }
@@ -131,7 +131,7 @@ public class TestHelper {
         List<CardDetail> cardDetailList = new ArrayList<>();
 
         CardDetail cardDetail = new CardDetail();
-        cardDetail.setMkCardNumber(1);
+        cardDetail.setMkCardNumber("01");
         cardDetail.setAudioFileName("Yellowfever.wav");
         cardDetail.setContentName("YellowFever");
         cardDetail.setEndTime(1222222221);

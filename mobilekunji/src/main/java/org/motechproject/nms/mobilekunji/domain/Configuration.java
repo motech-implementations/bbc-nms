@@ -30,13 +30,13 @@ public class Configuration extends MdsEntity {
     private Integer maxEndofusageMessage;
 
     @Field(required = true)
-    private Integer nationalDefaultLanguageLocationCode;
+    private String nationalDefaultLanguageLocationCode;
 
-    public Integer getNationalDefaultLanguageLocationCode() {
+    public String getNationalDefaultLanguageLocationCode() {
         return nationalDefaultLanguageLocationCode;
     }
 
-    public void setNationalDefaultLanguageLocationCode(Integer nationalDefaultLanguageLocationCode) {
+    public void setNationalDefaultLanguageLocationCode(String nationalDefaultLanguageLocationCode) {
         this.nationalDefaultLanguageLocationCode = nationalDefaultLanguageLocationCode;
     }
 
