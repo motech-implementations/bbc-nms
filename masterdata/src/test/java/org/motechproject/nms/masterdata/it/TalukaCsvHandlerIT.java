@@ -8,12 +8,9 @@ import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.TalukaCsv;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaCsvService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -39,7 +36,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
 
     private TalukaCsvUploadHandler talukaCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;
@@ -56,9 +53,12 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
+        talukaCsvUploadHandler = new TalukaCsvUploadHandler(validatorService,
                 districtService, talukaCsvService, talukaService, bulkUploadErrLogService);
     }
 
@@ -70,6 +70,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(talukaCsvUploadHandler);
+        assertNotNull(validatorService);
     }
 
     @Test
@@ -80,8 +81,8 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         stateData.getDistrict().add(districtData);
         stateService.create(stateData);
 
-        TalukaCsv csvData = TestHelper.getTalukaCsvData();
-        TalukaCsv invalidCsvData = TestHelper.getInvalidTalukaCsvData();
+        CsvTaluka csvData = TestHelper.getTalukaCsvData();
+        CsvTaluka invalidCsvData = TestHelper.getInvalidTalukaCsvData();
 
         createTalukaCsvData(csvData);
         createTalukaCsvData(invalidCsvData);
@@ -123,7 +124,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createTalukaCsvData(TalukaCsv csvData) {
+    private void createTalukaCsvData(CsvTaluka csvData) {
 
         talukaCsvService.create(csvData);
     }

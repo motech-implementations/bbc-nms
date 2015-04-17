@@ -65,4 +65,13 @@ public class VillageServiceImpl implements VillageService {
     public Village findVillageByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long villageCode) {
         return villageRecordsDataService.findVillageByParentCode(stateCode, districtCode, talukaCode, villageCode);
     }
+
+    /**
+     * Get VillageRecordsDataService object
+     */
+    @Override
+    public VillageRecordsDataService getVillageRecordsDataService() {
+        return villageRecordsDataService;
+    }
+
 }

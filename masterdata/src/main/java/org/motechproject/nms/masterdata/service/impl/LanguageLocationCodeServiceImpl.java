@@ -213,4 +213,12 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
         return null;
     }
 
+    /**
+     * Get LanguageLocationCodeDataService object
+     */
+    @Override
+    public LanguageLocationCodeDataService getLanguageLocationCodeDataService() {
+        return languageLocationCodeDataService;
+    }
+
 }

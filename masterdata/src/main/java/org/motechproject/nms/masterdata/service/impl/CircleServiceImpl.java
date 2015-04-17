@@ -69,4 +69,12 @@ public class CircleServiceImpl implements CircleService {
         return circleDataService.findByCode(circleCode);
 
     }
+
+    /**
+     * Get CircleDataService object
+     */
+    @Override
+    public CircleDataService getCircleDataService() {
+        return circleDataService;
+    }
 }

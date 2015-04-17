@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class DistrictCsv extends MdsEntity {
+public class CsvDistrict extends MdsEntity {
 
     @Field
     private String name;
@@ -20,7 +20,7 @@ public class DistrictCsv extends MdsEntity {
     @Field
     private String stateCode;
 
-    public DistrictCsv(String name, String districtCode, String stateCode) {
+    public CsvDistrict(String name, String districtCode, String stateCode) {
         this.name = name;
         this.districtCode = districtCode;
         this.stateCode = stateCode;

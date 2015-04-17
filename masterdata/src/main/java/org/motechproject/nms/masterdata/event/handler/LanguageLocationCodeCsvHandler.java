@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,14 +67,60 @@ public class LanguageLocationCodeCsvHandler {
      */
     @MotechListener(subjects = LocationConstants.LANGUAGE_LOCATION_CODE_CSV_SUCCESS)
     public void languageLocationCodeCsvSuccess(MotechEvent motechEvent) {
+
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
-        LanguageLocationCodeCsv record = null;
 
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
+
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
+        processRecords(createdIds, csvFileName);
+    }
+
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        languageLocationCodeService.getLanguageLocationCodeDataService()
+                .doInTransaction(new TransactionCallback<LanguageLocationCode>() {
+
+                    List<Long> lLcCsvId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<LanguageLocationCode> init(
+                            List<Long> createdId,
+                            String csvFileName) {
+                        this.lLcCsvId = createdId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public LanguageLocationCode doInTransaction(
+                            TransactionStatus status) {
+                        LanguageLocationCode transactionObject = null;
+                        processLanguageLocationRecords(csvFileName, lLcCsvId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+    /**
+     * This method is used to process LanguageLocationCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
+    private void processLanguageLocationRecords(String csvFileName, List<Long> createdIds) {
+        CsvLanguageLocationCode record = null;
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
 
@@ -133,7 +181,7 @@ public class LanguageLocationCodeCsvHandler {
      * @return Operator record after the mapping
      * @throws DataValidationException
      */
-    private LanguageLocationCode mapLanguageLocationCodeFrom(LanguageLocationCodeCsv record)
+    private LanguageLocationCode mapLanguageLocationCodeFrom(CsvLanguageLocationCode record)
             throws DataValidationException {
 
         LanguageLocationCode newRecord = null;

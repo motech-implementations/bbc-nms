@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class LanguageLocationCodeCsv extends MdsEntity {
+public class CsvLanguageLocationCode extends MdsEntity {
 
     @Field
     private String stateCode;

@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This class Models data records provided in the Taluka Csv Upload
  */
 @Entity
-public class TalukaCsv extends MdsEntity {
+public class CsvTaluka extends MdsEntity {
 
     @Field
     private String name;
@@ -22,7 +22,7 @@ public class TalukaCsv extends MdsEntity {
     @Field
     private String talukaCode;
 
-    public TalukaCsv(String name, String districtCode, String stateCode, String talukaCode) {
+    public CsvTaluka(String name, String districtCode, String stateCode, String talukaCode) {
         this.name = name;
         this.districtCode = districtCode;
         this.stateCode = stateCode;

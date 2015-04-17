@@ -1,5 +1,6 @@
 package org.motechproject.nms.masterdata.ut.service.impl;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -314,6 +315,50 @@ public class LocationServiceUnitTest {
         assertTrue(200 == locationService.getMkCappingByCode(stateData.getStateCode()).intValue());
     }
 
+    @Test
+    public void testGetMkServiceDeployedByCode()
+    {
+        State stateData = getStateData();
+
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getMkServiceDeployedByCode(stateData.getStateCode()));
+        Assert.assertNull(locationService.getMkServiceDeployedByCode(3L));
+        assertTrue(Boolean.TRUE == locationService.getMkServiceDeployedByCode(stateData.getStateCode()));
+    }
+
+    @Test
+    public void testGetMaServiceDeployedByCode()
+    {
+        State stateData = getStateData();
+
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getMaServiceDeployedByCode(stateData.getStateCode()));
+        Assert.assertNull(locationService.getMaServiceDeployedByCode(3L));
+        assertTrue(Boolean.FALSE == locationService.getMaServiceDeployedByCode(stateData.getStateCode()));
+    }
+
+    @Test
+    public void testGetKkServiceDeployedByCode()
+    {
+        State stateData = getStateData();
+
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getKkServiceDeployedByCode(stateData.getStateCode()));
+        Assert.assertNull(locationService.getKkServiceDeployedByCode(3L));
+        assertTrue(Boolean.TRUE == locationService.getKkServiceDeployedByCode(stateData.getStateCode()));
+    }
+
+    @Test
+    public void testGetWhiteListingEnableStatusByCode()
+    {
+        State stateData = getStateData();
+
+        when(stateService.findRecordByStateCode(stateData.getStateCode())).thenReturn(stateData);
+        assertNotNull(locationService.getWhiteListingEnableStatusByCode(stateData.getStateCode()));
+        Assert.assertNull(locationService.getWhiteListingEnableStatusByCode(3L));
+        assertTrue(Boolean.FALSE == locationService.getWhiteListingEnableStatusByCode(stateData.getStateCode()));
+    }
+
     private State getStateData() {
 
         State stateData = new State();
@@ -321,6 +366,10 @@ public class LocationServiceUnitTest {
         stateData.setStateCode(123L);
         stateData.setMaCapping(100);
         stateData.setMkCapping(200);
+        stateData.setIsMaDeployed(Boolean.FALSE);
+        stateData.setIsMkDeployed(Boolean.TRUE);
+        stateData.setIsKkDeployed(Boolean.TRUE);
+        stateData.setIsWhiteListEnable(Boolean.FALSE);
         return stateData;
     }
 

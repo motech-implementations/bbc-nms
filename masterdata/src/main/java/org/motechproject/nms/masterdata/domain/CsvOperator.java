@@ -10,7 +10,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class OperatorCsv extends MdsEntity {
+public class CsvOperator extends MdsEntity {
 
     @Field
     private String name;

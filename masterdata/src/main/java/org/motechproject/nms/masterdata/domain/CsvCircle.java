@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  */
 
 @Entity
-public class CircleCsv extends MdsEntity {
+public class CsvCircle extends MdsEntity {
 
     @Field
     private String name;
