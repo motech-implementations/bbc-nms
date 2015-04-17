@@ -56,7 +56,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
          *
          * @param query
          * @param restriction
-         * @return List&lt;Integer&gt;
+         * @return List&lt;String&gt;
          */
         @Override
         public List<String> execute(Query query,
@@ -143,7 +143,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languageLocationCode object.
      */
-    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode) {
+    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, String langLocCode) {
         List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
         if (locationCodeList != null && !locationCodeList.isEmpty()) {
             return locationCodeList.get(0);
@@ -205,7 +205,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     @Override
-    public LanguageLocationCode findLLCByCode(Integer code) {
+    public LanguageLocationCode findLLCByCode(String code) {
         List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findLLCByCode(code);
         if (locationCodeList != null && !locationCodeList.isEmpty()) {
             return locationCodeList.get(0);

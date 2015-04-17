@@ -76,7 +76,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
         LanguageLocationCodeServiceImpl llcImpl = new LanguageLocationCodeServiceImpl(
                 languageLocationCodeDataService, circleService);
         preSetUp();
-        Assert.assertTrue(llcImpl.getDefaultLanguageLocationCodeByCircleCode("testCode") == 123);
+        Assert.assertTrue(llcImpl.getDefaultLanguageLocationCodeByCircleCode("testCode").equals("123"));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class LanguageLocationCodeServiceIT extends BasePaxIT {
                 languageLocationCodeDataService, circleService);
 
         preSetUp();
-        Assert.assertTrue(llcImpl.getLanguageLocationCodeByCircleCode("testCode") == 123);
+        Assert.assertTrue(llcImpl.getLanguageLocationCodeByCircleCode("testCode").equals("123"));
     }
 
     @Test

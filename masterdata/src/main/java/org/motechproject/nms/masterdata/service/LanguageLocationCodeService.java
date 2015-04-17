@@ -53,7 +53,7 @@ public interface LanguageLocationCodeService {
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languagelocationCode object.
      */
-    LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode);
+    LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, String langLocCode);
 
     /**
      * This method returns the value of  language location code for a location (state, district)
@@ -88,7 +88,7 @@ public interface LanguageLocationCodeService {
      *
      * @param code is used to determined Language Location Code
      */
-    LanguageLocationCode findLLCByCode(Integer code);
+    LanguageLocationCode findLLCByCode(String code);
 
 
     /**
