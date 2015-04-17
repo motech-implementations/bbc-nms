@@ -154,7 +154,7 @@ public class ContentUploadCsvHandler {
         ContentUpload newRecord = new ContentUpload();
         Integer contentId = null;
         String circleCode = null;
-        Integer languageLocationCode;
+        String languageLocationCode;
         String contentName = null;
         String content = null;
         String contentFile = null;
@@ -163,7 +163,7 @@ public class ContentUploadCsvHandler {
 
         contentId = ParseDataHelper.validateAndParseInt("Content Id", record.getContentId(), true);
         circleCode = ParseDataHelper.validateAndParseString("Circle Code", record.getCircleCode(), true);
-        languageLocationCode = ParseDataHelper.validateAndParseInt("Language Location Code", record.getLanguageLocationCode(), true);
+        languageLocationCode = ParseDataHelper.validateAndParseString("Language Location Code", record.getLanguageLocationCode(), true);
         contentName = ParseDataHelper.validateAndParseString("Content name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
 

@@ -12,7 +12,7 @@ import org.motechproject.mds.domain.MdsEntity;
 public class CardDetail extends MdsEntity {
 
     @Field
-    private Integer mkCardNumber;
+    private String mkCardNumber;
 
     @Field
     private String contentName;
@@ -26,11 +26,11 @@ public class CardDetail extends MdsEntity {
     @Field
     private Integer endTime;
 
-    public Integer getMkCardNumber() {
+    public String getMkCardNumber() {
         return mkCardNumber;
     }
 
-    public void setMkCardNumber(Integer mkCardNumber) {
+    public void setMkCardNumber(String mkCardNumber) {
         this.mkCardNumber = mkCardNumber;
     }
 

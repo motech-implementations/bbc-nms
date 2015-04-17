@@ -20,7 +20,7 @@ public class ContentUpload extends MdsEntity {
     private String circleCode;
 
     @Field(required = true)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     private String contentName;
@@ -41,7 +41,7 @@ public class ContentUpload extends MdsEntity {
 
     }
 
-    public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, String cardNumber, Integer contentDuration) {
+    public ContentUpload(Integer contentId, String circleCode, String languageLocationCode, String contentName, ContentType contentType, String contentFile, String cardNumber, Integer contentDuration) {
         this.contentId = contentId;
         this.circleCode = circleCode;
         this.languageLocationCode = languageLocationCode;
@@ -68,11 +68,11 @@ public class ContentUpload extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
