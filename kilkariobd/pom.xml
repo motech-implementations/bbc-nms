@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.51</version>
+        </dependency>
         <dependency>
             <groupId>org.motechproject</groupId>
             <artifactId>motech-platform-osgi-extender-fragment</artifactId>

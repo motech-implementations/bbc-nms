@@ -1,9 +1,9 @@
 package org.motechproject.nms.kilkariobd.domain;
 
 public enum CallStatus {
-    Success(1),
-    Failed(2),
-    Rejected(3);
+    SUCCESS(1),
+    FAILED(2),
+    REJECTED(3);
     
     private int callStatus;
     

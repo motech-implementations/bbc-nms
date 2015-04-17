@@ -2,7 +2,7 @@ package org.motechproject.nms.kilkariobd.domain;
 
 public enum Priority {
 
-    Default(0),
+    DEFAULT(0),
     MEDIUM_PRIORITY(1),
     HIGH_PRIORITY(2);
     
