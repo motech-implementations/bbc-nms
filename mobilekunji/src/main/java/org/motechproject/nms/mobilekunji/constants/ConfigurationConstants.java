@@ -31,8 +31,40 @@ public class ConfigurationConstants {
 
     public static final Integer MAX_CARD_DIGITS = 2;
 
-    public static final Boolean TRUE = true;
-
-    public static final Boolean FALSE = false;
     public static final String LOG_SEPERATOR = "|";
+
+    public static final String CALLING_NUMBER = "Calling Number";
+
+    public static final String CALL_ID = "Call Id";
+
+    public static final String OPERATOR_CODE = "Operator Code";
+
+    public static final String LANGUAGE_LOCATION_CODE = "LanguageLocation Code";
+
+    public static final String CIRCLE_CODE = "Circle Code";
+
+    public static final String CALL_START_TIME = "Call Start Time";
+
+    public static final String CALL_END_TIME = "Call End Time";
+
+    public static final String CALL_DURATION_PULSES = "Pulse Duration";
+
+    public static final String END_OF_USAGE_PROMPT = "Usage Prompt";
+
+    public static final String WELCOME_MESSAGE_FLAG = "Welcome Message";
+
+    public static final String CALL_STATUS = "Call Status";
+
+    public static final String CALL_DISCONNECTED_REASON = "Call Disconnected Reason";
+
+    public static final String CARD_NUMBER = "Card Number";
+
+    public static final String CONTENT_NAME = "Content Name";
+
+    public static final String AUDIO_FILE_NAME = "Audio File Name";
+
+    public static final String START_TIME = "Start Time";
+
+    public static final String END_TIME = "End Time";
+
 }

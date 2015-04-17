@@ -2,6 +2,7 @@ package org.motechproject.nms.mobilekunji.web;
 
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
@@ -32,8 +33,8 @@ public class CallerDataController extends BaseController {
 
     @Autowired
     public CallerDataController(UserDetailsService userDetailsService, SaveCallDetailsService saveCallDetailsService) {
-        this.saveCallDetailsService = saveCallDetailsService;
         this.userDetailsService = userDetailsService;
+        this.saveCallDetailsService = saveCallDetailsService;
     }
 
     /**
@@ -89,9 +90,11 @@ public class CallerDataController extends BaseController {
 
         logger.debug("SaveCallDetails: started");
         logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
-        long startTime = System.currentTimeMillis();
 
-        validateCallId(saveCallDetailApiRequest.getCallId());
+        saveCallDetailApiRequest.validateMandatoryParameters();
+        saveCallDetailApiRequest.validateCardDetailParameters();
+
+        long startTime = System.currentTimeMillis();
 
         saveCallDetailsService.saveCallDetails(saveCallDetailApiRequest);
 
@@ -115,9 +118,9 @@ public class CallerDataController extends BaseController {
         logger.debug("SetLanguageLocationCode: started");
         logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());
 
-        long startTime = System.currentTimeMillis();
+        languageLocationCodeApiRequest.validateMandatoryParameters();
 
-        validateCallId(languageLocationCodeApiRequest.getCallId());
+        long startTime = System.currentTimeMillis();
 
         userDetailsService.setLanguageLocationCode(languageLocationCodeApiRequest);
 
@@ -151,6 +154,6 @@ public class CallerDataController extends BaseController {
      */
     private void validateCallId(String callId) throws DataValidationException {
 
-        ParseDataHelper.validateLengthOfCallId("CallId", callId);
+        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID, callId);
     }
 }
