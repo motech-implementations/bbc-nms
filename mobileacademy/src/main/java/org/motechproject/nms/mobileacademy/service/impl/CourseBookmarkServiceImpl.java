@@ -98,7 +98,7 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 		 * If user has completed the course successfully, compute the score,
 		 * process for SMS and reset the user's bookmark for next call
 		 */
-		if (bookmarkId
+		if (bookmarkId!=null && bookmarkId
 				.equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
 			LOGGER.info("MSISDN: {} has completed the course", callingNo);
 			// SEND SMS: To be done in sprint 1505

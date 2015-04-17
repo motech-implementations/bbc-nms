@@ -70,7 +70,7 @@ public class BookmarkHelper {
 			if (progressMap.containsKey(chapterNo.toString())) {
 				doesAnyScoreExists = true;
 				scoresJson.addProperty(chapterNo.toString(),
-						(Integer) progressMap.get(chapterNo));
+						(Integer) progressMap.get(chapterNo.toString()));
 			}
 		}
 		/*
