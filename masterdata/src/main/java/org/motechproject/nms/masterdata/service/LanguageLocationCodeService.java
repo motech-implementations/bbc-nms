@@ -63,7 +63,7 @@ public interface LanguageLocationCodeService {
      * @return null if a  LanguageLocationCode is not determined for location or no entry for location,
      * else returns the determined languageLocationCode value
      */
-    Integer getLanguageLocationCodeByLocationCode(Long stateCode, Long districtCode);
+    String getLanguageLocationCodeByLocationCode(Long stateCode, Long districtCode);
 
     /**
      * This method returns the value of language location code for a circle
@@ -72,7 +72,7 @@ public interface LanguageLocationCodeService {
      * @return null if a unique LanguageLocationCode is not determined for Circle or no entry for circle,
      * else returns the determined languageLocationCode value
      */
-    Integer getLanguageLocationCodeByCircleCode(String circleCode);
+    String getLanguageLocationCodeByCircleCode(String circleCode);
 
     /**
      * This method returns the value of default language location code for a circle
@@ -81,7 +81,7 @@ public interface LanguageLocationCodeService {
      * @return null if unique Default LanguageLocationCode is not found or no entry found for circle,
      * else returns the determined value of default Language Location Code.
      */
-    Integer getDefaultLanguageLocationCodeByCircleCode(String circleCode);
+    String getDefaultLanguageLocationCodeByCircleCode(String circleCode);
 
     /**
      * This method returns the language location code record for a code
