@@ -93,7 +93,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageKK().equals("LanguageKK"));
         Assert.assertTrue(record.getLanguageMA().equals("LanguageMA"));
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMK"));
-        Assert.assertTrue(record.getLanguageLocationCode().equals(123));
+        Assert.assertTrue(record.getLanguageLocationCode().equals("123"));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageKK().equals("LanguageKKChanged"));
         Assert.assertTrue(record.getLanguageMA().equals("LanguageMAChanged"));
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMKChanged"));
-        Assert.assertTrue(record.getLanguageLocationCode().equals(321));
+        Assert.assertTrue(record.getLanguageLocationCode().equals("321"));
     }
 
     @Test
