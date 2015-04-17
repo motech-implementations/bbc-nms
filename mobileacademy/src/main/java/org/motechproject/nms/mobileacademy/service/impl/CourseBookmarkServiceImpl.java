@@ -54,6 +54,12 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 	public String getBookmarkWithScore(String callingNo) {
 		Bookmark bookmark = getMtrainingBookmarkByMsisdn(callingNo);
 		String bookmarkToReturn = "";
+
+		/*
+		 * If there is no bookmark for user or the bookmark for user has been
+		 * reset, in which case, the bookmarkId will be blank; then return empty
+		 * JSON.
+		 */
 		if ((bookmark == null)
 				|| (StringUtils.isBlank((String) bookmark.getProgress().get(
 						MobileAcademyConstants.BOOKMARK_ID)))) {
@@ -72,9 +78,12 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 			throws DataValidationException {
 
 		Bookmark courseBookmark = getMtrainingBookmarkByMsisdn(callingNo);
-		boolean firstBookmark = false;
+		
+		/*
+		 * In case of first time bookmark, initialize and put the calling no in
+		 * external ID field
+		 */
 		if (courseBookmark == null) {
-			firstBookmark = true;
 			courseBookmark = new Bookmark();
 			courseBookmark.setProgress(new HashMap<String, Object>());
 			courseBookmark.setExternalId(callingNo);
@@ -83,19 +92,24 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 		BookmarkHelper.validateAndPopulateBookmark(courseBookmark, bookmarkId,
 				scoresByChapter);
 
-		if (firstBookmark) {
-			createBookmark(courseBookmark);
-		} else {
-			updateBookmark(courseBookmark);
-		}
+		updateBookmark(courseBookmark);
 
-		if (bookmarkId.equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
+		/*
+		 * If user has completed the course successfully, compute the score,
+		 * process for SMS and reset the user's bookmark for next call
+		 */
+		if (bookmarkId
+				.equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
 			LOGGER.info("MSISDN: {} has completed the course", callingNo);
 			// SEND SMS: To be done in sprint 1505
 			resetTheBookmark(courseBookmark);
 		}
 	}
 
+	/*
+	 * This is used for resetting the bookmark of a MSISDN. It resets the
+	 * progress map
+	 */
 	private void resetTheBookmark(Bookmark courseBookmark) {
 		courseBookmark.setProgress(new HashMap<String, Object>());
 		updateBookmark(courseBookmark);
