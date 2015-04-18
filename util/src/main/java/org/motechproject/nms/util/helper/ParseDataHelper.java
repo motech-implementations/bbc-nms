@@ -260,6 +260,50 @@ public final class ParseDataHelper {
         return parsedValue;
     }
 
+    /**
+     * This method validates a field of Long type for null/empty values, and
+     * raises exception if a mandatory field is empty/null or is invalid Long
+     * format
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @return null if field is optional and its value is null/empty, else field
+     *         value is converted from string to Long and returned
+     * @throws DataValidationException
+     */
+    public static Long validateLong(String fieldName,
+                                    Long fieldValue)
+            throws DataValidationException {
+
+        if (fieldValue == null) {
+            raiseApiParameterMissingDataException(fieldName, null);
+        }
+        return fieldValue;
+    }
+
+    /**
+     * This method validates a field of Int type for null/empty values, and
+     * raises exception if a mandatory field is empty/null or is invalid Long
+     * format
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @return null if field is optional and its value is null/empty, else field
+     *         value is converted from string to Long and returned
+     * @throws DataValidationException
+     */
+    public static Integer validateInt(String fieldName,
+                                      Integer fieldValue)
+            throws DataValidationException {
+
+
+        if (fieldValue == null) {
+            raiseApiParameterMissingDataException(fieldName, null);
+        }
+
+        return fieldValue;
+    }
+
 
     /**
      * This method validates a field of Boolean type for null/empty values, and raises exception if a
