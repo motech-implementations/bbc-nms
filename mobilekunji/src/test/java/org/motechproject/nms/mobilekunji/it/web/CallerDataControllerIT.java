@@ -189,7 +189,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
 
-        
+
 
         /*------------------This case is used to Test SaveCallDetail------------------------- */
 
@@ -197,6 +197,11 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
+        saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
+        saveCallDetailApiRequest.setContent(null);
+
+        //This test case is used to Check Null Content in SaveCallDetail
+        controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByCallingNumber("9810179788");
