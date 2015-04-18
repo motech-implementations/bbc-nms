@@ -33,6 +33,7 @@ import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -137,7 +138,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         //This call is for State Capping Type
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
-        //For Null Cpping Value
+        //For Null Capping Value
         stateData.setMkCapping(null);
         stateService.update(stateData);
 
@@ -163,6 +164,14 @@ public class CallerDataControllerIT extends BasePaxIT {
         //This call is for Next Time Access Date
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
+        //For Null Access Date
+        flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getId());
+        flwDetail.setLastAccessDate(null);
+        flwDetailService.update(flwDetail);
+
+        //This call is for Null Access Date
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
         assertNotNull(frontLineWorker);
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
@@ -170,8 +179,17 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
+        //For LanguageLocationCode is Null
+        circleService.create(TestHelper.getInvalidCircleData());
+        userDetailApiResponse = controller.getUserDetails("9837241545", "AL", "99", "111111111111111", TestHelper.getHttpRequest());
 
+        assertNotNull(userDetailApiResponse.getCircle().equals("99"));
+        assertNull(userDetailApiResponse.getLanguageLocationCode());
+        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode().equals("1"));
+        assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
 
+        
 
         /*------------------This case is used to Test SaveCallDetail------------------------- */
 
