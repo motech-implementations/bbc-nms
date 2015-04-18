@@ -137,6 +137,14 @@ public class CallerDataControllerIT extends BasePaxIT {
         //This call is for State Capping Type
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
+        //For Null Cpping Value
+        stateData.setMkCapping(null);
+        stateService.update(stateData);
+
+        //This call is for State Capping Type with Null Capping Value
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
+
         //For Default National Cappings
         configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
