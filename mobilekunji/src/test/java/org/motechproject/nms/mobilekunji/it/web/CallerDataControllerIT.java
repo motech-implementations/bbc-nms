@@ -14,6 +14,7 @@ import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.*;
@@ -121,6 +122,10 @@ public class CallerDataControllerIT extends BasePaxIT {
         WhiteListUsers whilteListUserData = TestHelper.getWhiteListUserData();
         whiteListUsersService.createWhiteListUsers(whilteListUserData);
 
+
+         /*------------------This case is used to Test getUserDetails------------------------- */
+
+
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         //For Default National Cappings
@@ -136,7 +141,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
-        /*This case is used to Test SaveCallDetail */
+        /*------------------This case is used to Test SaveCallDetail------------------------- */
 
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
 
@@ -148,6 +153,21 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         assertNotNull(flwWorker);
         assertNotNull(callDetail);
+
+        /*------------------This case is used to Test UpdateLanguageLocationCode------------------------- */
+
+        //Update Language Location Code
+        flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        flwWorker.setLanguageLocationCodeId("33");
+        frontLineWorkerService.updateFrontLineWorker(flwWorker);
+
+        LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
+
+        controller.setLanguageLocationCode(languageLocationCodeApiRequest, TestHelper.getHttpRequest());
+
+        flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        assertNotNull(flwWorker);
+        assertTrue(flwWorker.getLanguageLocationCodeId().equals("29"));
 
 
       /*  flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
