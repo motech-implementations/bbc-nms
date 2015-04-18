@@ -30,6 +30,7 @@ public class TestHelper {
         stateData.setIsMaDeployed(true);
         stateData.setIsMkDeployed(true);
         stateData.setIsWhiteListEnable(true);
+        stateData.setMkCapping(10);
         stateData.setDistrict(districtSet);
         return stateData;
     }

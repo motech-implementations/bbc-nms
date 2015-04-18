@@ -14,6 +14,7 @@ import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
+import org.motechproject.nms.mobilekunji.domain.FlwDetail;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
@@ -147,16 +148,19 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
 
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getId());
+        flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
+        flwDetailService.update(flwDetail);
+
+        //This call is for Next Time Access Date
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
         assertNotNull(frontLineWorker);
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
        /* assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());*/
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
-
-
-
-
 
 
 
