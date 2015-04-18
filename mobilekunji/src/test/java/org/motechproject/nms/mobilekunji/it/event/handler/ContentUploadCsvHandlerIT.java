@@ -47,12 +47,11 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+
     private ContentUploadCsvHandler contentUploadCsvHandler;
 
     @Before
     public void setUp() {
-
-
         contentUploadCsvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService);
 

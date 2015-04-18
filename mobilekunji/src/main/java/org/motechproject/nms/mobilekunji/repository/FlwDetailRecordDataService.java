@@ -23,12 +23,4 @@ public interface FlwDetailRecordDataService extends MotechDataService<FlwDetail>
     @Lookup
     public FlwDetail findFlwDetailByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
 
-    /**
-     * Finds the FlwDetail record by its msisdn
-     *
-     * @param msisdn
-     * @return FlwDetail
-     */
-    @Lookup
-    public FlwDetail findFlwDetailByMsisdn(@LookupField(name = "msisdn") String msisdn);
 }
