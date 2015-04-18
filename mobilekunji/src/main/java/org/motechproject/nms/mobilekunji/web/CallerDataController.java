@@ -65,8 +65,6 @@ public class CallerDataController extends BaseController {
 
         logger.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
 
-        validateCallId(callId);
-
         validateInputDataForGetUserDetails(operator, circle, callId);
 
         UserDetailApiResponse userDetailApiResponse = userDetailsService.getUserDetails(
@@ -94,7 +92,7 @@ public class CallerDataController extends BaseController {
         logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
 
         saveCallDetailApiRequest.validateMandatoryParameters();
-        saveCallDetailApiRequest.validateCardDetailParameters();
+
 
         long startTime = System.currentTimeMillis();
 
@@ -143,9 +141,11 @@ public class CallerDataController extends BaseController {
      */
     private void validateInputDataForGetUserDetails(String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(operator, operator, true);
-        ParseDataHelper.validateAndParseString(circle, circle, true);
-        ParseDataHelper.validateAndParseLong(callId, callId, true);
+
+        validateCallId(callId);
+        ParseDataHelper.validateString(ConfigurationConstants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateString(ConfigurationConstants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateLong(ConfigurationConstants.CALL_ID, callId, true);
     }
 
     /**

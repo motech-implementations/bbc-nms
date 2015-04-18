@@ -59,16 +59,14 @@ public class LanguageLocationCodeApiRequest {
      */
     public void validateMandatoryParameters() throws DataValidationException {
 
-        ParseDataHelper.validateAndParseString(ConfigurationConstants.LANGUAGE_LOCATION_CODE,languageLocationCode, true);
+        ParseDataHelper.validateString(ConfigurationConstants.LANGUAGE_LOCATION_CODE, languageLocationCode, true);
 
         callingNumber = ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
+                ParseDataHelper.validateString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
 
         ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
+                ParseDataHelper.validateString(ConfigurationConstants.CALL_ID, callId, true));
 
-        if (null == languageLocationCode) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.LANGUAGE_LOCATION_CODE, null);
-        }
+
     }
 }
