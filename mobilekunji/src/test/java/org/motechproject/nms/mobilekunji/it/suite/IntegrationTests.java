@@ -10,7 +10,7 @@ import org.motechproject.nms.mobilekunji.it.web.CallerDataControllerIT;
  * Parent IT class to run all the individual IT cases.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ ContentUploadCsvHandlerIT.class,
-        ConfigurationServiceIT.class, CallerDataControllerIT.class })
+@Suite.SuiteClasses({ContentUploadCsvHandlerIT.class,
+        ConfigurationServiceIT.class, CallerDataControllerIT.class})
 public class IntegrationTests {
 }

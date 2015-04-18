@@ -32,9 +32,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * This Test class is used to test CallerDataController Functionality.
@@ -101,7 +99,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testController() throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+    public void testController() throws DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
