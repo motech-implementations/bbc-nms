@@ -94,7 +94,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void fillDefaultFlwWithUserProfile(FlwDetail flwDetail, UserProfile userProfileData) {
 
         flwDetail.setNmsFlwId(userProfileData.getNmsFlwId());
-        flwDetail.setMsisdn(userProfileData.getMsisdn());
         flwDetail.setLastAccessDate(DateTime.now());
         flwDetail.setWelcomePromptFlag(ConfigurationConstants.DEFAULT_WELCOME_PROMPT);
         flwDetail.setEndOfUsagePrompt(ConfigurationConstants.DEFAULT_END_OF_USAGE_PROMPT);
@@ -105,7 +104,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private FlwDetail checkAndUpdateFlwForInvalidUser(UserProfile userProfileData) {
 
 
-        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfileData.getNmsFlwId());
 
         if (null == flwDetail){
             flwDetail = new FlwDetail();
