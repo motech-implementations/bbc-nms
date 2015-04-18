@@ -125,12 +125,25 @@ public class CallerDataControllerIT extends BasePaxIT {
 
          /*------------------This case is used to Test getUserDetails------------------------- */
 
-
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
-        //For Default National Cappings
+
+        //For State Level Capping Type
         Configuration configurationData = configurationService.getConfiguration();
+        configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
+        //This call is for State Capping Type
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
+        //For Default National Cappings
+        configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
+        //This call is for Default National Capping Type
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
 
@@ -140,6 +153,13 @@ public class CallerDataControllerIT extends BasePaxIT {
        /* assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());*/
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+
+
+
+
+
+
+
 
         /*------------------This case is used to Test SaveCallDetail------------------------- */
 
