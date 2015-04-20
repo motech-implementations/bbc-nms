@@ -197,7 +197,7 @@ public final class ParseDataHelper {
 
         if (null != callId) {
 
-            if (StringUtils.isNumeric(callId.trim()) && callId.trim().length() == Constants.CALL_ID_LENGTH) {
+            if (StringUtils.isNumeric(callId.trim()) && callId.trim().length() <= Constants.CALL_ID_LENGTH) {
                 return true;
             } else {
                 ParseDataHelper.raiseInvalidDataException(fieldName,callId);
