@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service("whiteListUsersService")
-public class WhiteListUsersServiceImpl implements WhiteListUsersService{
+public class WhiteListUsersServiceImpl implements WhiteListUsersService {
 
     public WhiteListUsersRecordDataService whiteListUsersRecordDataService;
 
@@ -28,9 +28,10 @@ public class WhiteListUsersServiceImpl implements WhiteListUsersService{
     public WhiteListUsers findContactNo(String contactNo) {
 
         WhiteListUsers whiteListUsers = whiteListUsersRecordDataService.getContactNo(contactNo);
-        return  whiteListUsers;
+        return whiteListUsers;
 
     }
+
     @Override
     public void createWhiteListUsers(WhiteListUsers whiteListUsers) {
         whiteListUsersRecordDataService.create(whiteListUsers);

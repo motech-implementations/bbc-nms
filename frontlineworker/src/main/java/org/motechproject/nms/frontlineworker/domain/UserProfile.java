@@ -33,17 +33,17 @@ public class UserProfile {
         return nmsFlwId;
     }
 
+    public void setNmsFlwId(Long nmsFlwId) {
+
+        this.nmsFlwId = nmsFlwId;
+    }
+
     public boolean isDefaultLanguageLocationCode() {
         return isDefaultLanguageLocationCode;
     }
 
     public void setIsDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
-    }
-
-    public void setNmsFlwId(Long nmsFlwId) {
-
-        this.nmsFlwId = nmsFlwId;
     }
 
     public String getMsisdn() {

@@ -9,7 +9,7 @@ public class ServiceNotDeployedException extends Exception {
         super(message);
     }
 
-    public ServiceNotDeployedException(String message, String errorCode, String errorDesc ) {
+    public ServiceNotDeployedException(String message, String errorCode, String errorDesc) {
         super(message);
         this.errorCode = errorCode;
         this.errorDesc = errorDesc;

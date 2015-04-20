@@ -26,6 +26,6 @@ public interface FrontLineWorkerService {
     public FrontLineWorker findById(Long id);
 
     public List<FrontLineWorker> retrieveAll();
-    
+
     public void deleteAll();
 }

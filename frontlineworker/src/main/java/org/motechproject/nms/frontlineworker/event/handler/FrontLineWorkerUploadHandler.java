@@ -42,23 +42,15 @@ import java.util.Map;
 @Component
 public class FrontLineWorkerUploadHandler {
 
-    private BulkUploadErrLogService bulkUploadErrLogService;
-
-    private LocationService locationService;
-
-    private FrontLineWorkerService frontLineWorkerService;
-
-    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
-
-    private CsvFrontLineWorkerService csvFrontLineWorkerService;
-
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
-
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
-
     private static Logger logger = LoggerFactory.getLogger(FrontLineWorkerUploadHandler.class);
+    private BulkUploadErrLogService bulkUploadErrLogService;
+    private LocationService locationService;
+    private FrontLineWorkerService frontLineWorkerService;
+    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
+    private CsvFrontLineWorkerService csvFrontLineWorkerService;
 
 
     @Autowired
@@ -116,8 +108,16 @@ public class FrontLineWorkerUploadHandler {
         return listOfRecords;
     }
 
-    public void processRecords(List<CsvFrontLineWorker> record,
-                                  String csvFileName) {
+
+    /**
+     * This function processes all the CSV upload records. This function is
+     * called in a transaction call so in case of any error, the changes are
+     * reverted back.
+     * @param record list of csvFrontLineWorker objects
+     * @param csvFileName name of the upload file
+     */
+    private void processRecords(List<CsvFrontLineWorker> record,
+                               String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         frontLineWorkerRecordDataService
@@ -147,12 +147,12 @@ public class FrontLineWorkerUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-     /*
+    /**
      * This function processes all the CSV upload records. This function is
-     * called in a transaction call so in case of any error, the changes are
-     * reverted back.
+     * called from  processRecords procedure to perform transactional add/del/mod.
+     * @param record list of csvFrontLineWorker objects
+     * @param csvFileName name of the upload file
      */
-
     private void processRecordsInTransaction(
             List<CsvFrontLineWorker> record, String csvFileName) {
 
@@ -275,7 +275,6 @@ public class FrontLineWorkerUploadHandler {
     }
 
 
-
     /**
      * This method maps fields of generated front line worker object to front line worker object that
      * is to be saved in Database.
@@ -354,7 +353,6 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
 
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
-        dbRecord.setOwner(frontLineWorker.getOwner());
         frontLineWorkerService.updateFrontLineWorker(dbRecord);
     }
 

@@ -13,22 +13,8 @@ import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUpload
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.HealthBlockService;
-import org.motechproject.nms.masterdata.service.HealthFacilityService;
-import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
-import org.motechproject.nms.masterdata.service.LocationService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaService;
-import org.motechproject.nms.masterdata.service.VillageService;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -53,125 +39,93 @@ import static org.junit.Assert.*;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class FrontlineWorkerHandlerIT extends BasePaxIT {
-    
-    @Inject
-    private BulkUploadErrLogService bulkUploadErrLogService;
-    
-    @Inject
-    private LocationService locationService;
-    
-    @Inject
-    private FrontLineWorkerService frontLineWorkerService;
-    
-    @Inject
-    private CsvFrontLineWorkerService csvFrontLineWorkerService;
 
-    @Inject
-    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
-    
-    @Inject
-    private StateService stateService;
-    
-    @Inject
-    private DistrictService districtService;
-    
-    @Inject
-    private VillageService villageService;
-    
-    @Inject
-    private TalukaService talukaService;
-    
-    @Inject
-    private HealthBlockService healthBlockService;
-    
-    @Inject
-    private HealthFacilityService healthFacilityService;
-    
-    @Inject
-    private HealthSubFacilityService healthSubFacilityService;
-    
-    
-    private FrontLineWorkerUploadHandler frontLineWorkerUploadHandler;
-    
-    private State stateData;
-    
-    private District districtData;
-    
-    private Taluka talukaData;
-    
-    private Village villageData;
-    
-    private HealthBlock healthBlockData;
-    
-    private HealthFacility healthFacilityData;
-    
-    private HealthSubFacility healthSubFacilityData;
-    
     private static boolean setUpIsDone = false;
-    
-    private State state = null;
-    
-    private District district = null;
-    
-    private Circle circle = null;
-    
-    private Taluka taluka = null;
-    
-    private HealthBlock healthBlock = null;
-    
-    private HealthFacility healthFacility = null;
-    
-    private HealthSubFacility healthSubFacility = null;
-    
-    private Village village = null;
-    
-    
-    private TestHelper testHelper = new TestHelper();
-    
     Map<String, Object> parameters = new HashMap<>();
     List<Long> uploadedIds = new ArrayList<Long>();
-    
+    @Inject
+    private BulkUploadErrLogService bulkUploadErrLogService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private FrontLineWorkerService frontLineWorkerService;
+    @Inject
+    private CsvFrontLineWorkerService csvFrontLineWorkerService;
+    @Inject
+    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
+    @Inject
+    private StateService stateService;
+    @Inject
+    private DistrictService districtService;
+    @Inject
+    private VillageService villageService;
+    @Inject
+    private TalukaService talukaService;
+    @Inject
+    private HealthBlockService healthBlockService;
+    @Inject
+    private HealthFacilityService healthFacilityService;
+    @Inject
+    private HealthSubFacilityService healthSubFacilityService;
+    private FrontLineWorkerUploadHandler frontLineWorkerUploadHandler;
+    private State stateData;
+    private District districtData;
+    private Taluka talukaData;
+    private Village villageData;
+    private HealthBlock healthBlockData;
+    private HealthFacility healthFacilityData;
+    private HealthSubFacility healthSubFacilityData;
+    private State state = null;
+    private District district = null;
+    private Circle circle = null;
+    private Taluka taluka = null;
+    private HealthBlock healthBlock = null;
+    private HealthFacility healthFacility = null;
+    private HealthSubFacility healthSubFacility = null;
+    private Village village = null;
+    private TestHelper testHelper = new TestHelper();
+
     @Before
     public void setUp() {
-        
-        
+
+
         frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
-                frontLineWorkerService, csvFrontLineWorkerService,frontLineWorkerRecordDataService
+                frontLineWorkerService, csvFrontLineWorkerService, frontLineWorkerRecordDataService
         );
-        
+
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
         assertNotNull(frontLineWorkerService);
         assertNotNull(csvFrontLineWorkerService);
-        
-        
+
+
         if (!setUpIsDone) {
             state = testHelper.createState();
             stateService.create(state);
             assertNotNull(state);
-            
+
             district = testHelper.createDistrict();
             State stateData = stateService.findRecordByStateCode(district.getStateCode());
             stateData.getDistrict().add(district);
             stateService.update(stateData);
             assertNotNull(district);
-            
-            
+
+
             taluka = testHelper.createTaluka();
             District districtData = districtService.findDistrictByParentCode(taluka.getDistrictCode(), taluka.getStateCode());
             districtData.getTaluka().add(taluka);
             districtService.update(districtData);
             assertNotNull(taluka);
-            
-            
+
+
             healthBlock = testHelper.createHealthBlock();
             Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlock.getStateCode(),
                     healthBlock.getDistrictCode(), healthBlock.getTalukaCode());
             talukaRecord.getHealthBlock().add(healthBlock);
             talukaService.update(talukaRecord);
             assertNotNull(healthBlock);
-            
+
             healthFacility = testHelper.createHealthFacility();
             HealthBlock healthBlockData = healthBlockService.findHealthBlockByParentCode(
                     healthFacility.getStateCode(), healthFacility.getDistrictCode(), healthFacility.getTalukaCode(),
@@ -179,18 +133,18 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             healthBlockData.getHealthFacility().add(healthFacility);
             healthBlockService.update(healthBlockData);
             assertNotNull(healthFacility);
-            
-            
+
+
             healthSubFacility = testHelper.createHealthSubFacility();
             HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                     healthSubFacility.getStateCode(), healthSubFacility.getDistrictCode(),
                     healthSubFacility.getTalukaCode(), healthSubFacility.getHealthBlockCode(),
                     healthSubFacility.getHealthFacilityCode());
-            
+
             healthFacilityData.getHealthSubFacility().add(healthSubFacility);
             healthFacilityService.update(healthFacilityData);
             assertNotNull(healthSubFacility);
-            
+
             village = testHelper.createVillage();
             Taluka talukaRecordVillage = talukaService.findTalukaByParentCode(village.getStateCode(),
                     village.getDistrictCode(), village.getTalukaCode());
@@ -928,20 +882,20 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
     }
 
-    
+
     @Test
     public void testFrontLineWorkerAll() {
-        
+
         MotechEvent motechEvent = new MotechEvent("CsvFrontLineWorker.csv_success", parameters);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
-        
+
         FrontLineWorker flw;
         FrontLineWorker frontLineWorker;
-        
+
         // testFrontLineWorkerValidDataGetByPhnNo
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990545494");
-        
+
         assertNotNull(flw);
         assertTrue(1L == flw.getFlwId());
         assertEquals("9990545494", flw.getContactNo());
@@ -955,26 +909,26 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
-        
+
+
         // testFrontLineWorkerValidDataGetById
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(2L, 12L);
-        
+
         assertNotNull(flw);
-        
+
         assertTrue(2L == flw.getFlwId());
         assertEquals("9990545495", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
-        
+
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
         assertTrue(1L == flw.getTalukaId().getTalukaCode());
@@ -982,22 +936,22 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerValidDataLargerphnNo
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
-        
+
         assertNotNull(flw);
-        
+
         assertTrue(3L == flw.getFlwId());
         assertEquals("9905454950", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
-        
+
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
         assertTrue(1L == flw.getTalukaId().getTalukaCode());
@@ -1005,199 +959,199 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerValidDatasmallPhnNo
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
-        
+
         assertNull(flw);
-        
+
         // testFrontLineWorkerNoState
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
 
         // testFrontLineWorkerNoDistrict
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidTaluka
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidVillage
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthBlock
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthFacility
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthSubFacility
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidDesignation
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerContactNoAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerStateCodeAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerDistrictCodeAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerDesignationAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerTalukaAbsentVillagePresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerTalukaAbsentHealthBlockPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerHBAbsentPHCPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerPHCAbsentSSCPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerUpdationNoFlwId Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(flw);
-        
+
         // testFrontLineWorkerUpdationNoFlwId Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertTrue(10L == frontLineWorker.getFlwId());
-        
+
         // testFrontLineWorkerUpdation Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(flw);
-        
+
         // testFrontLineWorkerUpdation Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti2", frontLineWorker.getName());
-        
+
         // testFrontLineWorkerStatusInvalidToValid Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("5555555555");
         assertNotNull(flw);
         assertEquals(Status.INVALID, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusInvalidToValid Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("5555555555");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jaya", frontLineWorker.getName());
         assertEquals(Status.INVALID, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusValidToInvalid Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(flw);
         //assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusValidToInvalid Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INVALID, frontLineWorker.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithIsValidNull Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
-        
+
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithIsValidNull Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INACTIVE, frontLineWorker.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithNoFlwId Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234500000");
-        
+
         assertNotNull(flw);
         assertTrue(14L == flw.getFlwId());
-        
+
         // testFrontLineWorkerUpdationWithNoFlwId Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234500000");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti", frontLineWorker.getName());
         assertTrue(14L == frontLineWorker.getFlwId());
-        
+
         // testFrontLineWorkerVillageWithoutTaluka
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerHealthBlockWithoutTaluka
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerPhcWithoutHealthBlock
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerSubCentreWithoutPhc
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
-        
+
         assertNull(flw);
-        
+
         //nms generated id is null in update record
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("8888888888");
         assertNotNull(flw);
         assertTrue(null != flw.getId());
@@ -1209,7 +1163,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(25L != flw.getFlwId());
 
         // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive*/
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(flw);
         FrontLineWorker flw2 = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
@@ -1300,8 +1254,8 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         List<CsvFrontLineWorker> listFlwCsv = csvFrontLineWorkerService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
-        
-        
+
+
     }
 
 }

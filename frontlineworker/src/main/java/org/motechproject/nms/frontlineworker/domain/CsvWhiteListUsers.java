@@ -7,9 +7,12 @@ import org.motechproject.mds.domain.MdsEntity;
  * This class Models data records provided in the White List Users Csv Upload
  */
 @Entity
-public class CsvWhiteListUsers  extends MdsEntity {
+public class CsvWhiteListUsers extends MdsEntity {
 
     private String contactNo;
+
+    public CsvWhiteListUsers() {
+    }
 
     public CsvWhiteListUsers(String contactNo) {
         this.contactNo = contactNo;
@@ -25,7 +28,7 @@ public class CsvWhiteListUsers  extends MdsEntity {
 
     @Override
     public String toString() {
-        return contactNo;
+        return this.getContactNo();
 
     }
 }

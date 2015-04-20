@@ -6,13 +6,7 @@ import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 
 /**
  * This class Models data for Front Line Worker records
@@ -115,7 +109,7 @@ public class FrontLineWorker extends MdsEntity {
     public void setFlwId(Long flwId) {
         this.flwId = flwId;
     }
-    
+
     public String getContactNo() {
         return contactNo;
     }

@@ -28,7 +28,7 @@ public class CsvWhiteListUsersServiceImpl implements CsvWhiteListUsersService {
 
     @Override
     public void deleteFromCsv(CsvWhiteListUsers csvWhiteListUsers) {
-         csvWhiteListUsersRecordDataService.delete(csvWhiteListUsers);
+        csvWhiteListUsersRecordDataService.delete(csvWhiteListUsers);
     }
 
 }

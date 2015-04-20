@@ -37,27 +37,20 @@ import java.util.Map;
 @Component
 public class WhiteListUsersUploadHandler {
 
-    private BulkUploadErrLogService bulkUploadErrLogService;
-
-    private WhiteListUsersService whiteListUsersService;
-
-    private WhiteListUsersRecordDataService whiteListUsersRecordDataService;
-
-    private CsvWhiteListUsersService csvWhiteListUsersService;
-
     private static final String CSV_IMPORT_PREFIX = "csv-import.";
-
     public static final String CSV_IMPORT_CREATED_IDS = CSV_IMPORT_PREFIX + "created_ids";
-
     public static final String CSV_IMPORT_FILE_NAME = CSV_IMPORT_PREFIX + "filename";
-
     private static Logger logger = LoggerFactory.getLogger(WhiteListUsersUploadHandler.class);
+    private BulkUploadErrLogService bulkUploadErrLogService;
+    private WhiteListUsersService whiteListUsersService;
+    private WhiteListUsersRecordDataService whiteListUsersRecordDataService;
+    private CsvWhiteListUsersService csvWhiteListUsersService;
 
     @Autowired
     public WhiteListUsersUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
-                                        WhiteListUsersService whiteListUsersService,
-                                        CsvWhiteListUsersService csvWhiteListUsersService,
-                                        WhiteListUsersRecordDataService whiteListUsersRecordDataService
+                                       WhiteListUsersService whiteListUsersService,
+                                       CsvWhiteListUsersService csvWhiteListUsersService,
+                                       WhiteListUsersRecordDataService whiteListUsersRecordDataService
     ) {
 
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -105,8 +98,15 @@ public class WhiteListUsersUploadHandler {
         return listOfRecords;
     }
 
+    /**
+     * This function processes all the CsvWhiteListUsers upload records. This function is
+     * called in a transaction call so in case of any error, the changes are
+     * reverted back.
+     * @param record list of CsvWhiteListUsers objects
+     * @param csvFileName name of the upload file
+     */
 
-    public void processRecords(List<CsvWhiteListUsers> record,
+    private void processRecords(List<CsvWhiteListUsers> record,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
@@ -116,6 +116,7 @@ public class WhiteListUsersUploadHandler {
                     List<CsvWhiteListUsers> record;
 
                     String csvFileName;
+
                     private TransactionCallback<WhiteListUsers> init(
                             List<CsvWhiteListUsers> record,
                             String csvFileName) {
@@ -125,21 +126,22 @@ public class WhiteListUsersUploadHandler {
                     }
 
                     @Override
-                public WhiteListUsers doInTransaction(
+                    public WhiteListUsers doInTransaction(
                             TransactionStatus status) {
                         WhiteListUsers transactionObject = null;
                         processRecordsInTransaction(record,
                                 csvFileName);
                         return transactionObject;
                     }
-                }.init(record,csvFileName));
+                }.init(record, csvFileName));
     }
 
 
-     /*
-     * This function processes all the CSV upload records. This function is
-     * called in a transaction call so in case of any error, the changes are
-     * reverted back.
+    /**
+     * This function processes all the CsvWhiteListUsers upload records. This function is
+     * called from  processRecords procedure to perform transactional add/del/mod.
+     * @param record list of CsvWhiteListUsers objects
+     * @param csvFileName name of the upload file
      */
 
     private void processRecordsInTransaction(
@@ -177,8 +179,7 @@ public class WhiteListUsersUploadHandler {
                         //creation scenario
                         logger.debug("New White List User creation starts");
                         successfulCreate(whiteListUsers, bulkUploadStatus, "Successful creation of new White List User");
-                    }
-                    else {
+                    } else {
                         logger.debug("Record already exist for the given ContactNo");
                     }
                 }
@@ -193,7 +194,7 @@ public class WhiteListUsersUploadHandler {
                 } else {
                     logger.warn("Record not found for uploaded record(Contact No is not present");
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 bulkUploadStatus.incrementFailureCount();
                 logger.error("exception occur : {}", e.getStackTrace());
                 errorDetails = populateErrorDetails(csvFileName, csvsWhiteListUsers.toString(),
@@ -214,7 +215,7 @@ public class WhiteListUsersUploadHandler {
     /**
      * This method validates a field of whiteListUsers
      *
-     * @param record          the whiteListUsers record from Csv that is to be validated
+     * @param record         the whiteListUsers record from Csv that is to be validated
      * @param whiteListUsers the FwhiteListUsers record that is to be saved in database
      * @throws DataValidationException
      */
@@ -257,7 +258,7 @@ public class WhiteListUsersUploadHandler {
     /**
      * This method is used to check existence of WhiteListUsers
      *
-     * @param whiteListUsers  whiteListUsers whose details are to be fetched from database.
+     * @param whiteListUsers whiteListUsers whose details are to be fetched from database.
      * @return null if there is no dbrecord for that ContactNo.
      */
 
@@ -276,7 +277,7 @@ public class WhiteListUsersUploadHandler {
      * This method maps fields of generated white list users object to white list users  object that
      * is to be saved in Database.
      *
-     * @param whiteListUsers  the whiteListUsers object which is to be stored in database
+     * @param whiteListUsers   the whiteListUsers object which is to be stored in database
      * @param bulkUploadStatus object to provide the status of create scenario
      * @param log              log to be generated for create scenario
      */

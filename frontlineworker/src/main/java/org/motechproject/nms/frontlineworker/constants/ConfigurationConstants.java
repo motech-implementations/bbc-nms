@@ -6,7 +6,7 @@ package org.motechproject.nms.frontlineworker.constants;
 public final class ConfigurationConstants {
 
     public static final int FLW_CONTACT_NUMBER_LENGTH = 10;
-    
+
     public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.CsvFrontLineWorker.csv-import.success";
 
     public static final String WLU_UPLOAD_SUCCESS = "mds.crud.frontlineworker.CsvWhiteListUsers.csv-import.success";
