@@ -187,7 +187,6 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         if(isValidLmp(lmp)){
             motherSubscriber.setLmp(lmp);
         }
-        
 
         /* Check appropriate value of entryType and abortion*/
         Integer outcomeNos = ParseDataHelper.validateAndParseInt(Constants.OUTCOME_NOS, motherMctsCsv.getOutcomeNos(), false);
@@ -216,7 +215,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     }
 
     /**
-     * This method is used to check lmp. lmp should not be of future date and more than 72 week before
+     * This method is used to check lmp. lmp should not be of future date and more than 3 months + 72 week before
      * @param lmp
      * @return boolean 
      * @throws DataValidationException
