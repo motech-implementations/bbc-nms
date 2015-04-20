@@ -6,10 +6,10 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
- * CallDetailRequest object contain details mapped to callDetails API request.
+ * CallDetailsRequest object contain details mapped to callDetails API request.
  *
  */
-public class CallDetailRequest implements Serializable {
+public class CallDetailsRequest implements Serializable {
 
     /**
 	 * 
@@ -139,10 +139,10 @@ public class CallDetailRequest implements Serializable {
 
     @Override
     public String toString() {
-        return "CallDetailRequest{callingNumber=" + callingNumber + ", callId="
-                + callId + ", operator=" + operator + ", circle=" + circle
-                + ", callStartTime=" + callStartTime + ", callEndTime="
-                + callEndTime + ", callDurationInPulses="
+        return "CallDetailsRequest{callingNumber=" + callingNumber
+                + ", callId=" + callId + ", operator=" + operator + ", circle="
+                + circle + ", callStartTime=" + callStartTime
+                + ", callEndTime=" + callEndTime + ", callDurationInPulses="
                 + callDurationInPulses + ", endOfUsagePromptCounter="
                 + endOfUsagePromptCounter + ", callStatus=" + callStatus
                 + ", callDisconnectReason=" + callDisconnectReason

@@ -177,7 +177,11 @@ public class MobileAcademyConstants {
     public static final String BOOKMARK = "bookmark";
 
     public static final String COURSE_COMPLETED = "COURSE_COMPLETED";
-    
+
     public static final String SCORE_BY_CHAPTER_NODE = "scoresByChapter";
+
+    public static final String COURSE_START_CONTENT = "Chapter01_Lesson01";
+
+    public static final String COURSE_END_CONTENT = "Chapter11_Question04";
 
 }

@@ -31,166 +31,163 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class CourseController extends BaseController {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(CourseController.class);
+    private static final Logger LOGGER = LoggerFactory
+            .getLogger(CourseController.class);
 
-	@Autowired
-	private CourseService courseService;
+    @Autowired
+    private CourseService courseService;
 
-	@Autowired
-	private CourseBookmarkService courseBookmarkService;
+    @Autowired
+    private CourseBookmarkService courseBookmarkService;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
-	private static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
+    private static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
 
-	private static final String REQUEST_PARAM_CALL_ID = "callId";
+    private static final String REQUEST_PARAM_CALL_ID = "callId";
 
-	/**
-	 * Get Course API
-	 * 
-	 * @return the current course in system in JSON format
-	 */
-	@RequestMapping(value = "/course", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCourse() throws NmsInternalServerError {
-		LOGGER.debug("getCourse: Started");
-		Course course = courseService.getMtrainingCourse();
-		if (course == null || course.getState() == CourseUnitState.Inactive) {
-			LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-			throw new NmsInternalServerError(
-					MobileAcademyConstants.NO_COURSE_PRESENT);
-		} else {
-			LOGGER.debug("getCourse: Ended");
-			return courseService.getCourseJson();
-		}
-	}
+    /**
+     * Get Course API
+     * 
+     * @return the current course in system in JSON format
+     */
+    @RequestMapping(value = "/course", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCourse() throws NmsInternalServerError {
+        LOGGER.debug("getCourse: Started");
+        Course course = courseService.getMtrainingCourse();
+        if (course == null || course.getState() == CourseUnitState.Inactive) {
+            LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
+            throw new NmsInternalServerError(
+                    MobileAcademyConstants.NO_COURSE_PRESENT);
+        } else {
+            LOGGER.debug("getCourse: Ended");
+            return courseService.getCourseJson();
+        }
+    }
 
-	/**
-	 * Get Course Version API
-	 * 
-	 * @return the version of the current course in the system in Integer
-	 */
-	@RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCourseVersion() throws NmsInternalServerError {
-		LOGGER.debug("getCourseVersion: Started");
-		Integer courseVersion = courseService.getCurrentCourseVersion();
-		if (courseVersion == null) {
-			LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
-			throw new NmsInternalServerError(
-					MobileAcademyConstants.NO_COURSE_PRESENT);
-		} else {
-			LOGGER.debug("getCourseVersion: Ended");
-			return getJsonNode(MobileAcademyConstants.COURSE_KEY_VERSION,
-					courseVersion);
-		}
-	}
+    /**
+     * Get Course Version API
+     * 
+     * @return the version of the current course in the system in Integer
+     */
+    @RequestMapping(value = "/courseVersion", method = RequestMethod.GET)
+    @ResponseBody
+    public String getCourseVersion() throws NmsInternalServerError {
+        LOGGER.debug("getCourseVersion: Started");
+        Integer courseVersion = courseService.getCurrentCourseVersion();
+        if (courseVersion == null) {
+            LOGGER.error(MobileAcademyConstants.NO_COURSE_PRESENT);
+            throw new NmsInternalServerError(
+                    MobileAcademyConstants.NO_COURSE_PRESENT);
+        } else {
+            LOGGER.debug("getCourseVersion: Ended");
+            return getJsonNode(MobileAcademyConstants.COURSE_KEY_VERSION,
+                    courseVersion);
+        }
+    }
 
-	/**
-	 * Get Bookmark With Score API
-	 * 
-	 * @param callingNumber
-	 *            mobile number of the caller
-	 * @param callId
-	 *            unique call id assigned by IVR
-	 */
-	@RequestMapping(value = "/bookmarkWithScore", method = RequestMethod.GET)
-	@ResponseBody
-	public String getBookmarkWithScore(
-			@RequestParam(value = CourseController.REQUEST_PARAM_CALLING_NUMBER) String callingNo,
-			@RequestParam(value = CourseController.REQUEST_PARAM_CALL_ID) String callId)
-			throws DataValidationException {
-		LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}", callingNo);
-		String originalCallingNo = callingNo;
+    /**
+     * Get Bookmark With Score API
+     * 
+     * @param callingNumber mobile number of the caller
+     * @param callId unique call id assigned by IVR
+     */
+    @RequestMapping(value = "/bookmarkWithScore", method = RequestMethod.GET)
+    @ResponseBody
+    public String getBookmarkWithScore(
+            @RequestParam(value = CourseController.REQUEST_PARAM_CALLING_NUMBER) String callingNo,
+            @RequestParam(value = CourseController.REQUEST_PARAM_CALL_ID) String callId)
+            throws DataValidationException {
+        LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}", callingNo);
+        String originalCallingNo = callingNo;
 
-		callingNo = validateAndGetCallingNo(callingNo);
+        callingNo = validateAndGetCallingNo(callingNo);
 
-		validateCallId(callId);
+        validateCallId(callId);
 
-		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
-					originalCallingNo);
-			ParseDataHelper.raiseInvalidDataException("MSISDN", callingNo);
-		}
+        if (!userDetailsService.doesMsisdnExist(callingNo)) {
+            LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+                    originalCallingNo);
+            ParseDataHelper.raiseInvalidDataException("MSISDN", callingNo);
+        }
 
-		String bookmarkJson = courseBookmarkService
-				.getBookmarkWithScore(callingNo);
-		LOGGER.debug("Sending bookmark JSON as : {} for calling no.: {}",
-				bookmarkJson, callingNo);
-		LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}", callingNo);
-		return bookmarkJson;
-	}
+        String bookmarkJson = courseBookmarkService
+                .getBookmarkWithScore(callingNo);
+        LOGGER.debug("Sending bookmark JSON as : {} for calling no.: {}",
+                bookmarkJson, callingNo);
+        LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}", callingNo);
+        return bookmarkJson;
+    }
 
-	/**
-	 * Save Bookmark With Score API
-	 * 
-	 * @param bookmarkWithScore
-	 *            object contain input request
-	 * @throws MissingServletRequestParameterException
-	 * @throws DataValidationException
-	 */
-	@RequestMapping(value = "/bookmarkWithScore", method = RequestMethod.POST)
-	@ResponseBody
-	public void saveBookmarkWithScore(
-			@RequestBody BookmarkWithScore bookmarkWithScore)
-			throws MissingServletRequestParameterException,
-			DataValidationException {
-		LOGGER.debug("saveBookmarkWithScore: Started");
-		LOGGER.debug("Input Request: " + bookmarkWithScore);
+    /**
+     * Save Bookmark With Score API
+     * 
+     * @param bookmarkWithScore object contain input request
+     * @throws MissingServletRequestParameterException
+     * @throws DataValidationException
+     */
+    @RequestMapping(value = "/bookmarkWithScore", method = RequestMethod.POST)
+    @ResponseBody
+    public void saveBookmarkWithScore(
+            @RequestBody BookmarkWithScore bookmarkWithScore)
+            throws MissingServletRequestParameterException,
+            DataValidationException {
+        LOGGER.debug("saveBookmarkWithScore: Started");
+        LOGGER.debug("Input Request: " + bookmarkWithScore);
 
-		String originalCallingNo = bookmarkWithScore.getCallingNumber();
+        String originalCallingNo = bookmarkWithScore.getCallingNumber();
 
-		String callingNo = validateAndGetCallingNo(originalCallingNo);
+        String callingNo = validateAndGetCallingNo(originalCallingNo);
 
-		String callId = bookmarkWithScore.getCallId();
-		validateCallId(callId);
+        String callId = bookmarkWithScore.getCallId();
+        validateCallId(callId);
 
-		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
-					originalCallingNo);
-			ParseDataHelper.raiseInvalidDataException("MSISDN",
-					bookmarkWithScore.getCallingNumber());
-		}
+        if (!userDetailsService.doesMsisdnExist(callingNo)) {
+            LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+                    originalCallingNo);
+            ParseDataHelper.raiseInvalidDataException("MSISDN",
+                    bookmarkWithScore.getCallingNumber());
+        }
 
-		String bookmarkId = bookmarkWithScore.getBookmark();
-		Map<String, String> scoresByChapter = bookmarkWithScore
-				.getScoresByChapter();
+        String bookmarkId = bookmarkWithScore.getBookmark();
+        Map<String, String> scoresByChapter = bookmarkWithScore
+                .getScoresByChapter();
 
-		courseBookmarkService.saveBookmarkWithScore(bookmarkId,
-				scoresByChapter, callingNo);
+        courseBookmarkService.saveBookmarkWithScore(bookmarkId,
+                scoresByChapter, callingNo);
 
-		LOGGER.debug("saveBookmarkWithScore: Ended for MSISDN: {}", callingNo);
-	}
+        LOGGER.debug("saveBookmarkWithScore: Ended for MSISDN: {}", callingNo);
+    }
 
-	/*
-	 * Used for validating the callID as per Util module
-	 */
-	private void validateCallId(String callId) throws DataValidationException {
-		ParseDataHelper.validateLengthOfCallId(
-				MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId);
-	}
+    /*
+     * Used for validating the callID as per Util module
+     */
+    private void validateCallId(String callId) throws DataValidationException {
+        ParseDataHelper.validateLengthOfCallId(
+                MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId);
+    }
 
-	/*
-	 * Used for validating and getting the last 10 digits of MSISDN.
-	 */
-	private String validateAndGetCallingNo(String callingNumber)
-			throws DataValidationException {
-		ParseDataHelper.validateAndParseString(
-				MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
-				callingNumber, true);
-		return ParseDataHelper.validateAndTrimMsisdn(
-				MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
-				callingNumber);
-	}
+    /*
+     * Used for validating and getting the last 10 digits of MSISDN.
+     */
+    private String validateAndGetCallingNo(String callingNumber)
+            throws DataValidationException {
+        ParseDataHelper.validateAndParseString(
+                MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
+                callingNumber, true);
+        return ParseDataHelper.validateAndTrimMsisdn(
+                MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
+                callingNumber);
+    }
 
-	/*
-	 * This provides a JSON node in form of key-value node for integer value
-	 */
-	private String getJsonNode(String key, Integer value) {
-		String response;
-		response = "{\"" + key + "\":" + value + "}";
-		return response;
-	}
+    /*
+     * This provides a JSON node in form of key-value node for integer value
+     */
+    private String getJsonNode(String key, Integer value) {
+        String response;
+        response = "{\"" + key + "\":" + value + "}";
+        return response;
+    }
 }

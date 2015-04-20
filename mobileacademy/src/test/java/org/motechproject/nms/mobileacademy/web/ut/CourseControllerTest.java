@@ -36,205 +36,205 @@ import com.google.gson.Gson;
  */
 public class CourseControllerTest {
 
-	@InjectMocks
-	CourseController courseController = new CourseController();
+    @InjectMocks
+    CourseController courseController = new CourseController();
 
-	private MockMvc mockMvc;
+    private MockMvc mockMvc;
 
-	@Mock
-	private CourseService courseService;
+    @Mock
+    private CourseService courseService;
 
-	@Mock
-	private UserDetailsService userDetailsService;
+    @Mock
+    private UserDetailsService userDetailsService;
 
-	@Mock
-	private CourseBookmarkService courseBookmarkService;
+    @Mock
+    private CourseBookmarkService courseBookmarkService;
 
-	@Before
-	public void setup() {
-		initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(courseController).build();
-	}
+    @Before
+    public void setup() {
+        initMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(courseController).build();
+    }
 
-	@Test
-	public void testGetCourseSuccess() {
-		Course course = new Course("Course", CourseUnitState.Active, null);
-		String url = "/course";
-		try {
-			when(courseService.getMtrainingCourse()).thenReturn(course);
-			when(courseService.getCourseJson()).thenReturn(
-					"JSON will be returned");
-			mockMvc.perform(get(url))
-					.andExpect(status().is(HttpStatus.OK.value()))
-					.andExpect(content().string("JSON will be returned"));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+    @Test
+    public void testGetCourseSuccess() {
+        Course course = new Course("Course", CourseUnitState.Active, null);
+        String url = "/course";
+        try {
+            when(courseService.getMtrainingCourse()).thenReturn(course);
+            when(courseService.getCourseJson()).thenReturn(
+                    "JSON will be returned");
+            mockMvc.perform(get(url))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andExpect(content().string("JSON will be returned"));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testGetCourseFailure() {
-		String url = "/course";
-		String expectedJson = "{\"failureReason\":\""
-				+ MobileAcademyConstants.NO_COURSE_PRESENT + "\"}";
+    @Test
+    public void testGetCourseFailure() {
+        String url = "/course";
+        String expectedJson = "{\"failureReason\":\""
+                + MobileAcademyConstants.NO_COURSE_PRESENT + "\"}";
 
-		try {
-			when(courseService.getMtrainingCourse()).thenReturn(null);
-			mockMvc.perform(get(url))
-					.andExpect(
-							status().is(
-									HttpStatus.INTERNAL_SERVER_ERROR.value()))
-					.andExpect(content().string(expectedJson));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+        try {
+            when(courseService.getMtrainingCourse()).thenReturn(null);
+            mockMvc.perform(get(url))
+                    .andExpect(
+                            status().is(
+                                    HttpStatus.INTERNAL_SERVER_ERROR.value()))
+                    .andExpect(content().string(expectedJson));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testGetCourseVersionSuccess() {
-		String url = "/courseVersion";
-		DateTime currentTime = DateTime.now();
+    @Test
+    public void testGetCourseVersionSuccess() {
+        String url = "/courseVersion";
+        DateTime currentTime = DateTime.now();
 
-		String expectedJson = "{\"" + MobileAcademyConstants.COURSE_KEY_VERSION
-				+ "\":" + currentTime.getMillis() / 1000 + "}";
-		try {
-			when(courseService.getCurrentCourseVersion()).thenReturn(
-					(int) (currentTime.getMillis() / 1000));
+        String expectedJson = "{\"" + MobileAcademyConstants.COURSE_KEY_VERSION
+                + "\":" + currentTime.getMillis() / 1000 + "}";
+        try {
+            when(courseService.getCurrentCourseVersion()).thenReturn(
+                    (int) (currentTime.getMillis() / 1000));
 
-			mockMvc.perform(get(url))
-					.andExpect(status().is(HttpStatus.OK.value()))
-					.andExpect(content().string(expectedJson));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+            mockMvc.perform(get(url))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andExpect(content().string(expectedJson));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testGetCourseVersionFailure() {
-		String url = "/courseVersion";
-		String expectedJson = "{\"failureReason\":\""
-				+ MobileAcademyConstants.NO_COURSE_PRESENT + "\"}";
+    @Test
+    public void testGetCourseVersionFailure() {
+        String url = "/courseVersion";
+        String expectedJson = "{\"failureReason\":\""
+                + MobileAcademyConstants.NO_COURSE_PRESENT + "\"}";
 
-		try {
-			when(courseService.getCurrentCourseVersion()).thenReturn(null);
-			mockMvc.perform(get(url))
-					.andExpect(
-							status().is(
-									HttpStatus.INTERNAL_SERVER_ERROR.value()))
-					.andExpect(content().string(expectedJson));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+        try {
+            when(courseService.getCurrentCourseVersion()).thenReturn(null);
+            mockMvc.perform(get(url))
+                    .andExpect(
+                            status().is(
+                                    HttpStatus.INTERNAL_SERVER_ERROR.value()))
+                    .andExpect(content().string(expectedJson));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testGetBookmarkWithScore() {
-		String callingNumber = "9990632906";
-		String callId = "123456789123456";
+    @Test
+    public void testGetBookmarkWithScore() {
+        String callingNumber = "9990632906";
+        String callId = "123456789123456";
 
-		StringBuilder url = new StringBuilder("/bookmarkWithScore?");
-		url.append("callingNumber=" + callingNumber);
-		url.append("&callId=" + callId);
+        StringBuilder url = new StringBuilder("/bookmarkWithScore?");
+        url.append("callingNumber=" + callingNumber);
+        url.append("&callId=" + callId);
 
-		try {
-			when(userDetailsService.doesMsisdnExists(callingNumber))
-					.thenReturn(true);
+        try {
+            when(userDetailsService.doesMsisdnExist(callingNumber)).thenReturn(
+                    true);
 
-			when(courseBookmarkService.getBookmarkWithScore(callingNumber))
-					.thenReturn("Bookmark Json");
-			mockMvc.perform(get(url.toString()))
-					.andExpect(status().is(HttpStatus.OK.value()))
-					.andExpect(content().string("Bookmark Json"));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+            when(courseBookmarkService.getBookmarkWithScore(callingNumber))
+                    .thenReturn("Bookmark Json");
+            mockMvc.perform(get(url.toString()))
+                    .andExpect(status().is(HttpStatus.OK.value()))
+                    .andExpect(content().string("Bookmark Json"));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testGetBookmarkWithScoreFailure() {
-		String callingNumber = "9990632906";
-		String callId = "123456789123456";
+    @Test
+    public void testGetBookmarkWithScoreFailure() {
+        String callingNumber = "9990632906";
+        String callId = "123456789123456";
 
-		String expectedJson = "{\"failureReason\":\"" + "MSISDN"
-				+ ":Invalid Value\"}";
+        String expectedJson = "{\"failureReason\":\"" + "MSISDN"
+                + ":Invalid Value\"}";
 
-		StringBuilder url = new StringBuilder("/bookmarkWithScore?");
-		url.append("callingNumber=" + callingNumber);
-		url.append("&callId=" + callId);
+        StringBuilder url = new StringBuilder("/bookmarkWithScore?");
+        url.append("callingNumber=" + callingNumber);
+        url.append("&callId=" + callId);
 
-		try {
-			when(userDetailsService.doesMsisdnExists(callingNumber))
-					.thenReturn(false);
+        try {
+            when(userDetailsService.doesMsisdnExist(callingNumber)).thenReturn(
+                    false);
 
-			when(courseBookmarkService.getBookmarkWithScore(callingNumber))
-					.thenReturn("Bookmark Json");
-			mockMvc.perform(get(url.toString()))
-					.andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-					.andExpect(content().string(expectedJson));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+            when(courseBookmarkService.getBookmarkWithScore(callingNumber))
+                    .thenReturn("Bookmark Json");
+            mockMvc.perform(get(url.toString()))
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(content().string(expectedJson));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testSaveBookmarkWithScore() {
-		String callingNumber = "9990632906";
-		String callId = "123456789123456";
+    @Test
+    public void testSaveBookmarkWithScore() {
+        String callingNumber = "9990632906";
+        String callId = "123456789123456";
 
-		BookmarkWithScore bookmarkWithScore = new BookmarkWithScore();
-		bookmarkWithScore.setCallId(callId);
-		bookmarkWithScore.setCallingNumber(callingNumber);
-		bookmarkWithScore.setBookmark("Chapter01_Lesson01");
-		bookmarkWithScore.setScoresByChapter(new HashMap<String, String>());
+        BookmarkWithScore bookmarkWithScore = new BookmarkWithScore();
+        bookmarkWithScore.setCallId(callId);
+        bookmarkWithScore.setCallingNumber(callingNumber);
+        bookmarkWithScore.setBookmark("Chapter01_Lesson01");
+        bookmarkWithScore.setScoresByChapter(new HashMap<String, String>());
 
-		String url = "/bookmarkWithScore";
-		Gson gson = new Gson();
-		String bookmarkJSon = gson.toJson(bookmarkWithScore);
+        String url = "/bookmarkWithScore";
+        Gson gson = new Gson();
+        String bookmarkJSon = gson.toJson(bookmarkWithScore);
 
-		try {
-			when(userDetailsService.doesMsisdnExists(callingNumber))
-					.thenReturn(true);
+        try {
+            when(userDetailsService.doesMsisdnExist(callingNumber)).thenReturn(
+                    true);
 
-			when(courseBookmarkService.getBookmarkWithScore(callingNumber))
-					.thenReturn("Bookmark Json");
-			mockMvc.perform(
-					post(url).contentType(MediaType.APPLICATION_JSON).body(
-							bookmarkJSon.getBytes())).andExpect(
-					status().is(HttpStatus.OK.value()));
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+            when(courseBookmarkService.getBookmarkWithScore(callingNumber))
+                    .thenReturn("Bookmark Json");
+            mockMvc.perform(
+                    post(url).contentType(MediaType.APPLICATION_JSON).body(
+                            bookmarkJSon.getBytes())).andExpect(
+                    status().is(HttpStatus.OK.value()));
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 
-	@Test
-	public void testSaveBookmarkWithScoreFailure() {
-		String callingNumber = "9990632906";
-		String callId = "123456789123456";
-		String expectedJson = "{\"failureReason\":\"" + "MSISDN"
-				+ ":Invalid Value\"}";
+    @Test
+    public void testSaveBookmarkWithScoreFailure() {
+        String callingNumber = "9990632906";
+        String callId = "123456789123456";
+        String expectedJson = "{\"failureReason\":\"" + "MSISDN"
+                + ":Invalid Value\"}";
 
-		BookmarkWithScore bookmarkWithScore = new BookmarkWithScore();
-		bookmarkWithScore.setCallId(callId);
-		bookmarkWithScore.setCallingNumber(callingNumber);
-		bookmarkWithScore.setBookmark("Chapter01_Lesson01");
-		bookmarkWithScore.setScoresByChapter(new HashMap<String, String>());
+        BookmarkWithScore bookmarkWithScore = new BookmarkWithScore();
+        bookmarkWithScore.setCallId(callId);
+        bookmarkWithScore.setCallingNumber(callingNumber);
+        bookmarkWithScore.setBookmark("Chapter01_Lesson01");
+        bookmarkWithScore.setScoresByChapter(new HashMap<String, String>());
 
-		String url = "/bookmarkWithScore";
-		Gson gson = new Gson();
-		String bookmarkJSon = gson.toJson(bookmarkWithScore);
+        String url = "/bookmarkWithScore";
+        Gson gson = new Gson();
+        String bookmarkJSon = gson.toJson(bookmarkWithScore);
 
-		try {
-			when(userDetailsService.doesMsisdnExists(callingNumber))
-					.thenReturn(false);
+        try {
+            when(userDetailsService.doesMsisdnExist(callingNumber)).thenReturn(
+                    false);
 
-			mockMvc.perform(
-					post(url).contentType(MediaType.APPLICATION_JSON).body(
-							bookmarkJSon.getBytes()))
-					.andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
-					.andExpect(content().string(expectedJson));
-			
-		} catch (Exception e) {
-			assertFalse(true);
-		}
-	}
+            mockMvc.perform(
+                    post(url).contentType(MediaType.APPLICATION_JSON).body(
+                            bookmarkJSon.getBytes()))
+                    .andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+                    .andExpect(content().string(expectedJson));
+
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+    }
 }

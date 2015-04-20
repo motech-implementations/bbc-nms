@@ -6,7 +6,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.motechproject.nms.mobileacademy.commons.CallDisconnectReason;
 import org.motechproject.nms.mobileacademy.commons.CallStatus;
-import org.motechproject.nms.mobileacademy.dto.CallDetailRequest;
+import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
 import org.motechproject.nms.mobileacademy.dto.ContentLogRequest;
 import org.motechproject.nms.mobileacademy.dto.LlcRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
@@ -133,19 +133,20 @@ public class UserController extends BaseController {
     /**
      * Save Call Details API
      * 
-     * @param callDetails object contain input request
+     * @param callDetailsRequest object contain input request
      * @throws MissingServletRequestParameterException
      * @throws DataValidationException
      */
     @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody CallDetailRequest callDetailRequest)
+    public void saveCallDetails(
+            @RequestBody CallDetailsRequest callDetailsRequest)
             throws MissingServletRequestParameterException,
             DataValidationException {
         LOGGER.debug("saveCallDetails: Started");
-        LOGGER.debug("Input request: " + callDetailRequest);
-        validateInputDataForSaveCallDetails(callDetailRequest);
-        userDetailsService.saveCallDetails(callDetailRequest);
+        LOGGER.debug("Input request: " + callDetailsRequest);
+        validateInputDataForSaveCallDetails(callDetailsRequest);
+        userDetailsService.saveCallDetails(callDetailsRequest);
         LOGGER.debug("saveCallDetails: Ended");
     }
 
@@ -205,77 +206,77 @@ public class UserController extends BaseController {
     /**
      * validate Input Data For Save Call Details for missing and invalid values
      * 
-     * @param callDetailRequest
+     * @param callDetailsRequest
      * @throws MissingServletRequestParameterException
      * @throws DataValidationException
      */
     private void validateInputDataForSaveCallDetails(
-            CallDetailRequest callDetailRequest)
+            CallDetailsRequest callDetailsRequest)
             throws MissingServletRequestParameterException,
             DataValidationException {
         // check whether parameter is missing or not
         checkParameterMissing(REQUEST_PARAM_CALLING_NUMBER,
-                callDetailRequest.getCallingNumber());
+                callDetailsRequest.getCallingNumber());
         checkParameterMissing(REQUEST_PARAM_OPERATOR,
-                callDetailRequest.getOperator());
+                callDetailsRequest.getOperator());
         checkParameterMissing(REQUEST_PARAM_CIRCLE,
-                callDetailRequest.getCircle());
+                callDetailsRequest.getCircle());
         checkParameterMissing(REQUEST_PARAM_CALL_ID,
-                callDetailRequest.getCallId());
+                callDetailsRequest.getCallId());
         checkParameterMissing(REQUEST_PARAM_CALL_START_TIME,
-                callDetailRequest.getCallStartTime());
+                callDetailsRequest.getCallStartTime());
         checkParameterMissing(REQUEST_PARAM_CALL_END_TIME,
-                callDetailRequest.getCallEndTime());
+                callDetailsRequest.getCallEndTime());
         checkParameterMissing(REQUEST_PARAM_CALL_DURATION_IN_PULSES,
-                callDetailRequest.getCallDurationInPulses());
+                callDetailsRequest.getCallDurationInPulses());
         checkParameterMissing(REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
-                callDetailRequest.getEndOfUsagePromptCounter());
+                callDetailsRequest.getEndOfUsagePromptCounter());
         checkParameterMissing(REQUEST_PARAM_CALL_STATUS,
-                callDetailRequest.getCallStatus());
+                callDetailsRequest.getCallStatus());
         checkParameterMissing(REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                callDetailRequest.getCallDisconnectReason());
+                callDetailsRequest.getCallDisconnectReason());
 
-        // check whether parameter value is invalid or not
+        // check whether parameter value is valid or not
         ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
                 ParseDataHelper.validateAndParseString(
                         REQUEST_PARAM_CALLING_NUMBER,
-                        callDetailRequest.getCallingNumber(), true));
+                        callDetailsRequest.getCallingNumber(), true));
         ParseDataHelper.validateAndParseString(REQUEST_PARAM_OPERATOR,
-                callDetailRequest.getOperator(), true);
+                callDetailsRequest.getOperator(), true);
         ParseDataHelper.validateAndParseString(REQUEST_PARAM_CIRCLE,
-                callDetailRequest.getCircle(), true);
+                callDetailsRequest.getCircle(), true);
         ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
                 ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
-                        callDetailRequest.getCallId(), true));
+                        callDetailsRequest.getCallId(), true));
         ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_START_TIME,
-                callDetailRequest.getCallStartTime(), true);
+                callDetailsRequest.getCallStartTime(), true);
         ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_END_TIME,
-                callDetailRequest.getCallEndTime(), true);
+                callDetailsRequest.getCallEndTime(), true);
         ParseDataHelper.validateAndParseInt(
                 REQUEST_PARAM_CALL_DURATION_IN_PULSES,
-                callDetailRequest.getCallDurationInPulses(), true);
+                callDetailsRequest.getCallDurationInPulses(), true);
         ParseDataHelper.validateAndParseInt(
                 REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
-                callDetailRequest.getEndOfUsagePromptCounter(), true);
+                callDetailsRequest.getEndOfUsagePromptCounter(), true);
         ParseDataHelper.validateAndParseInt(REQUEST_PARAM_CALL_STATUS,
-                callDetailRequest.getCallStatus(), true);
-        if (CallStatus.findByValue(Integer.valueOf(callDetailRequest
+                callDetailsRequest.getCallStatus(), true);
+        if (CallStatus.findByValue(Integer.valueOf(callDetailsRequest
                 .getCallStatus())) == null) {
             ParseDataHelper.raiseInvalidDataException(
                     REQUEST_PARAM_CALL_STATUS,
-                    callDetailRequest.getCallStatus());
+                    callDetailsRequest.getCallStatus());
         }
         ParseDataHelper.validateAndParseInt(
                 REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                callDetailRequest.getCallDisconnectReason(), true);
-        if (CallDisconnectReason.findByValue(Integer.valueOf(callDetailRequest
+                callDetailsRequest.getCallDisconnectReason(), true);
+        if (CallDisconnectReason.findByValue(Integer.valueOf(callDetailsRequest
                 .getCallDisconnectReason())) == null) {
             ParseDataHelper.raiseInvalidDataException(
                     REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                    callDetailRequest.getCallDisconnectReason());
+                    callDetailsRequest.getCallDisconnectReason());
         }
-        if (CollectionUtils.isNotEmpty(callDetailRequest.getContent())) {
-            for (ContentLogRequest contentLogRequest : callDetailRequest
+        if (CollectionUtils.isNotEmpty(callDetailsRequest.getContent())) {
+            for (ContentLogRequest contentLogRequest : callDetailsRequest
                     .getContent()) {
                 validateCallContentLogData(contentLogRequest);
             }
@@ -305,7 +306,7 @@ public class UserController extends BaseController {
         checkParameterMissing(REQUEST_PARAM_COMPLETION_FLAG,
                 contentLogRequest.getCompletionFlag());
 
-        // check whether parameter value is invalid or not
+        // check whether parameter value is valid or not
         ParseDataHelper.validateAndParseString(REQUEST_PARAM_TYPE,
                 contentLogRequest.getType(), true);
         if (!Arrays.asList(CALL_DATA_TYPE).contains(

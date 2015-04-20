@@ -30,60 +30,60 @@ public class ContentLogRequest {
     @JsonProperty
     private String correctAnswerReceived;
 
-    public String getType() {
-        return type;
-    }
-
     public void setType(String type) {
         this.type = type;
-    }
-
-    public String getContentName() {
-        return contentName;
     }
 
     public void setContentName(String contentName) {
         this.contentName = contentName;
     }
 
-    public String getContentFile() {
-        return contentFile;
-    }
-
     public void setContentFile(String contentFile) {
         this.contentFile = contentFile;
-    }
-
-    public String getStartTime() {
-        return startTime;
     }
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
-        return endTime;
-    }
-
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-    }
-
-    public String getCompletionFlag() {
-        return completionFlag;
     }
 
     public void setCompletionFlag(String completionFlag) {
         this.completionFlag = completionFlag;
     }
 
-    public String getCorrectAnswerReceived() {
-        return correctAnswerReceived;
-    }
-
     public void setCorrectAnswerReceived(String correctAnswerReceived) {
         this.correctAnswerReceived = correctAnswerReceived;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public String getContentName() {
+        return contentName;
+    }
+
+    public String getContentFile() {
+        return contentFile;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getCompletionFlag() {
+        return completionFlag;
+    }
+
+    public String getCorrectAnswerReceived() {
+        return correctAnswerReceived;
     }
 
     @Override
