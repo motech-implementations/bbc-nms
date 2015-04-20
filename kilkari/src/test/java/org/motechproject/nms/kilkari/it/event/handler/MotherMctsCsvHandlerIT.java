@@ -395,9 +395,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertNotNull(subscription.getSubscriber());
         assertNotNull(subs2);
         assertFalse(subscription.getMsisdn()==subs2.getMsisdn());
-
+    
     }
-
-
 
 }

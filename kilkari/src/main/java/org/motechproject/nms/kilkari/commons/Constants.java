@@ -101,4 +101,7 @@ public final class Constants {
     public static final String CALLING_NUMBER = "Calling Number";
 
     public static final String DEFAULT_FETCH_GROUP = "true";
+    
+    public static final int DAYS_IN_WEEK = 7;
+    
 }
