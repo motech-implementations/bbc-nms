@@ -51,6 +51,7 @@ public class CustomQueries {
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
             date = date.minusDays(41);
+            query = query.getPersistenceManager().newQuery(Subscription.class);
             query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && modificationDate < date");
             query.declareParameters("java.util.Date date");
             query.deletePersistentAll(date.toDate());
@@ -62,6 +63,7 @@ public class CustomQueries {
 
         @Override
         public List<Subscriber> execute(Query query, InstanceSecurityRestriction restriction) {
+            query =  query.getPersistenceManager().newQuery(Subscriber.class);
             query.setFilter("subscriptionList.isEmpty()");
             query.deletePersistentAll();
             return null;

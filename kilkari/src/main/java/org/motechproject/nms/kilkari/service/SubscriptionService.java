@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
@@ -90,4 +91,6 @@ public interface SubscriptionService {
     void deleteSubscriberSubscriptionAfter6Weeks();
 
     List<Subscription> getScheduledSubscriptions();
+
+    void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
 }

@@ -433,26 +433,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setStateCode(subscriber.getStateCode());
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
-        
-        DateTime startDate = null;
-        DateTime packIntialStartDate = null;
-        DateTime currDate = new DateTime();
-        if(channel == Channel.IVR) {
-            newSubscription.setStartDate(currDate.plusDays(1).getMillis());
-        } else if(channel == Channel.MCTS) {
-            if (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) {
-                packIntialStartDate = subscriber.getLmp().plusMonths(3);
-            } else {
-                packIntialStartDate = subscriber.getDob();                
-            }
-            int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
-            if(noOfDays%7==0){
-                startDate = currDate;
-            } else {
-                startDate = currDate.plusDays(7 - (noOfDays % 7));
-            }
-            newSubscription.setStartDate(startDate.toDateMidnight().getMillis());
-        }
+        newSubscription.setStartDate(makeStartDate(subscriber, channel).toDateMidnight().getMillis());
         
         /* Initial state is always Pending Activation */
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
@@ -469,6 +450,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         activeSubscriptionCountService.incrementActiveSubscriptionCount();
         
         return newSubscription;
+    }
+
+    /**
+     * This method is used to make start date.
+     * @param subscriber
+     * @param channel
+     * @return
+     */
+    private DateTime makeStartDate(Subscriber subscriber, Channel channel) {
+
+        DateTime startDate = null;
+        DateTime packIntialStartDate = null;
+        DateTime currDate = new DateTime();
+        if(channel == Channel.IVR) {
+            startDate = currDate.plusDays(1);
+        } else if(channel == Channel.MCTS) {
+            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) 
+                    ? subscriber.getLmp().plusMonths(3) : subscriber.getDob() ;
+            int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
+            startDate = (noOfDays%7 == 0) ? currDate : currDate.plusDays(7 - (noOfDays % 7));
+        }
+        return startDate;
     }
     
     /**
@@ -554,6 +557,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
     
+    @Override
     public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null) {
