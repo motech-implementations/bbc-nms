@@ -383,7 +383,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(subscriptionFirst.getSubscriber());
         assertTrue(subscriptionFirst.getMctsId().equals(csv.getIdNo()));
         assertTrue(subscriptionFirst.getStatus() == Status.DEACTIVATED);
-        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_CHANGED);
+        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_SCHEDULE_CHANGED);
         assertTrue(subscriptionFirst.getSubscriber().getId() == updatedChildSubs.getSubscriber().getId());
         assertNotNull(updatedChildSubs);
     }

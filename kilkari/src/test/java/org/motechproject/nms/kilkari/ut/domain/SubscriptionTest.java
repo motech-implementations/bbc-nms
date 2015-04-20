@@ -43,8 +43,8 @@ public class SubscriptionTest {
         subscription.setOperatorCode("operatorCode");
         Assert.assertEquals("operatorCode", subscription.getOperatorCode());
 
-        subscription.setStartDate(dateTime);
-        Assert.assertEquals(dateTime, subscription.getStartDate());
+        subscription.setStartDate(dateTime.getMillis());
+        Assert.assertTrue(dateTime.getMillis() == subscription.getStartDate());
 
         subscription.setStateCode(1L);
         Assert.assertTrue(1L == subscription.getStateCode());

@@ -1,11 +1,30 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
-import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionMeasureService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -13,8 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  *This class is used to perform crud operations on Subscription object
@@ -27,6 +44,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     @Autowired
     private SubscriberService subscriberService;
+    
+    @Autowired
+    private SubscriptionMeasureService subscriptionMeasureService;
     
     @Autowired
     private ConfigurationService configurationService;
@@ -410,12 +430,30 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setMctsId(subscriber.getSuitableMctsId());
-        if (subscriber.getState() != null) {
-            newSubscription.setStateCode(subscriber.getStateCode());
-        }
+        newSubscription.setStateCode(subscriber.getStateCode());
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
-
+        
+        DateTime startDate = null;
+        DateTime packIntialStartDate = null;
+        DateTime currDate = new DateTime();
+        if(channel == Channel.IVR) {
+            newSubscription.setStartDate(currDate.plusDays(1).getMillis());
+        } else if(channel == Channel.MCTS) {
+            if (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) {
+                packIntialStartDate = subscriber.getLmp().plusMonths(3);
+            } else {
+                packIntialStartDate = subscriber.getDob();                
+            }
+            int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
+            if(noOfDays%7==0){
+                startDate = currDate;
+            } else {
+                startDate = currDate.plusDays(7 - (noOfDays % 7));
+            }
+            newSubscription.setStartDate(startDate.toDateMidnight().getMillis());
+        }
+        
         /* Initial state is always Pending Activation */
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
 
@@ -529,6 +567,73 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         } else {
             logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
         }
+    }
+    
+    @Override
+    public void deleteSubscriberSubscriptionAfter6Weeks(){
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery());
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
+    }
+    
+    @Override
+    public List<Subscription> getScheduledSubscriptions() {
+        List<Subscription> subscriptionList = subscriptionDataService.executeQuery(new CustomQueries.FindScheduledSubscription());
+        List<Subscription> scheduledSubscription = new ArrayList<Subscription>();
+        for(Subscription subscription : subscriptionList) {
+            SubscriptionMeasure measure = new SubscriptionMeasure();
+            Subscriber subscriber = subscription.getSubscriber();
+            
+            //handling which week msg we have to deliver.
+            DateTime dobOrLmp = subscriber.getDobLmp();
+            DateTime currDate = new DateTime();
+            int weekNum = 0;
+            if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
+                weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+            } else {
+                weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + (Days.daysBetween(dobOrLmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+            }
+            subscription.setWeekNumber(weekNum);
+            measure.setWeekNumber(weekNum);
+            
+            //handling which msg(first or second) we have to deliver.
+            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
+                subscription.setMessageNumber(1);
+                measure.setMessageNumber(1);
+            } else if(Days.daysBetween(new DateTime(subscription.getStartDate()), new DateTime(currDate.toDateMidnight().getMillis())).getDays()%7==0){
+                subscription.setMessageNumber(1);
+                measure.setMessageNumber(1);
+            } else {
+                subscription.setMessageNumber(2);
+                measure.setMessageNumber(2);
+            }
+            
+            if(subscription.getStatus()==Status.PENDING_ACTIVATION && weekNum < 72 && subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER) {
+                subscription.setStatus(Status.ACTIVE);
+            }
+            
+            if(subscription.getStatus()==Status.PENDING_ACTIVATION && weekNum < 48 && subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
+                subscription.setStatus(Status.ACTIVE);
+            }
+            
+            /* handling pack status*/
+            if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum >= Constants.DURATION_OF_48_WEEK_PACK) {
+                subscription.setStatus(Status.COMPLETED);
+            }
+            
+            if (subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum >= Constants.DURATION_OF_72_WEEK_PACK) {
+                subscription.setStatus(Status.COMPLETED);
+            }
+            
+            measure.setStatus(subscription.getStatus());
+            Subscription dbSubscription = subscriptionDataService.update(subscription);
+            
+            measure.setSubscription(dbSubscription);
+            subscriptionMeasureService.create(measure);
+            if(subscription.getStatus()!=Status.COMPLETED)
+                scheduledSubscription.add(subscription);
+
+        }
+        return scheduledSubscription;
     }
     
 }

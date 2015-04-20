@@ -47,7 +47,7 @@ public class Subscription extends MdsEntity {
     private Integer messageNumber;
 
     @Field
-    private DateTime startDate;
+    private Long startDate;
 
     @Field
     private DateTime nextObdDate;
@@ -140,11 +140,11 @@ public class Subscription extends MdsEntity {
         this.messageNumber = messageNumber;
     }
 
-    public DateTime getStartDate() {
+    public Long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(DateTime startDate) {
+    public void setStartDate(Long startDate) {
         this.startDate = startDate;
     }
 

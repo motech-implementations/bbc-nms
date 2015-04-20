@@ -179,18 +179,19 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, childMctsCsv.getMotherId(), false));
         childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, childMctsCsv.getMotherName(), false));
+        
+        /* handling of appropriate dob */
         DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true);
         DateTime currDate = DateTime.now();
-        int days = Days.daysBetween(currDate, dob).getDays();
-        if (days < 0 && (days/Constants.DAYS_IN_WEEK)>Constants.DURATION_OF_48_WEEK_PACK) {
-            ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, dob.toString());
-        } else {
-            childSubscriber.setLmp(dob);
-        }
         if (dob.isAfter(DateTime.now())) {
             ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
         } else {
-            childSubscriber.setDob(dob);
+            int days = Days.daysBetween(currDate, dob).getDays();
+            if ((days/Constants.DAYS_IN_WEEK) < Constants.DURATION_OF_48_WEEK_PACK) {
+                childSubscriber.setDob(dob);
+            } else {
+                ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
+            }
         }
         /* Set the appropriate Deactivation Reason */
         String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, childMctsCsv.getEntryType(), false);

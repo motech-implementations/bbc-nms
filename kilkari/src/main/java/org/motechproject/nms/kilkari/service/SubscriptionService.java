@@ -86,4 +86,8 @@ public interface SubscriptionService {
      */
     void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
         throws DataValidationException, NmsInternalServerError;
+
+    void deleteSubscriberSubscriptionAfter6Weeks();
+
+    List<Subscription> getScheduledSubscriptions();
 }

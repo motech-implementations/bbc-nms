@@ -5,11 +5,13 @@ import java.util.List;
 import javax.jdo.Query;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 
 public class CustomQueries {
 
@@ -42,4 +44,46 @@ public class CustomQueries {
             return (List<SubscriptionPack>) query.execute();
         }
     }
+
+    public static class DeleteSubscriptionQuery implements QueryExecution<List<Subscription>> {
+
+        @Override
+        public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
+            DateTime date = new DateTime();
+            date = date.minusDays(41);
+            query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && modificationDate < date");
+            query.declareParameters("java.util.Date date");
+            query.deletePersistentAll(date.toDate());
+            return null;
+        }
+    }
+
+    public static class DeleteSubscriberQuery implements QueryExecution<List<Subscriber>> {
+
+        @Override
+        public List<Subscriber> execute(Query query, InstanceSecurityRestriction restriction) {
+            query.setFilter("subscriptionList.isEmpty()");
+            query.deletePersistentAll();
+            return null;
+
+        }
+    }
+
+    public static class FindScheduledSubscription implements QueryExecution<List<Subscription>> {
+
+        @Override
+        public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
+            DateTime date = new DateTime();
+            long day = 1000*60*60*24; 
+            long currDateInMillis = date.toDateMidnight().getMillis();
+            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (((currDateInMillis-startDate)/day)%7 == 0)");
+            } else {
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && ((((currDateInMillis-startDate)/day)%7 == 0) || (((currDateInMillis-startDate)/day)%7 == 3))");
+            }
+            query.declareParameters("Long currDateInMillis, Integer day");
+            return (List<Subscription>) query.execute(currDateInMillis, day);
+        }
+    }
+
 }

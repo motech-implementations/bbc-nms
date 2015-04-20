@@ -1,10 +1,6 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
@@ -12,12 +8,12 @@ import javax.jdo.JDOObjectNotFoundException;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
@@ -95,6 +91,9 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected ActiveSubscriptionCountDataService activeSubscriptionCountDataService;
+    
+    @Inject
+    protected SubscriptionMeasureDataService subscriptionMeasureDataService;
 
     private static boolean setUpIsDone = false;
     
@@ -117,6 +116,9 @@ public class CommonStructure extends BasePaxIT {
     }
 
     private void deleteAll() {
+        try {
+            subscriptionMeasureDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             subscriptionService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
@@ -268,6 +270,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setAge("30");
         csv.setEntryType("1");
         csv.setAadharNo("123456789876");
+        csv.setCreator("Deepak");
+        csv.setOwner("Deepak");
+        csv.setModifiedBy("Deepak");
         return csv;
     }
     
