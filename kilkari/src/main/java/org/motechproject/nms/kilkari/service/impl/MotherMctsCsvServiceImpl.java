@@ -181,13 +181,19 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         motherSubscriber.setAge(ParseDataHelper.validateAndParseInt(Constants.AGE, motherMctsCsv.getAge(), false));
         motherSubscriber.setAadharNumber(ParseDataHelper.validateAndParseString(Constants.AADHAR_NUM, motherMctsCsv.getAadharNo(), false));
         motherSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.NAME, motherMctsCsv.getName(),false));
+        
+        /* handling of appropriate lmp */
         DateTime lmp = ParseDataHelper.validateAndParseDate(Constants.LMP_DATE, motherMctsCsv.getLmpDate(), true);
         DateTime currDate = DateTime.now();
-        int days = Days.daysBetween(currDate, lmp).getDays();
-        if (days < 0 && (days/Constants.DAYS_IN_WEEK) > Constants.DURATION_OF_72_WEEK_PACK) {
+        if (lmp.isAfter(DateTime.now())) {
             ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
         } else {
-            motherSubscriber.setLmp(lmp);
+            int days = Days.daysBetween(lmp.plusMonths(3), currDate).getDays();
+            if ((days/Constants.DAYS_IN_WEEK) < Constants.DURATION_OF_72_WEEK_PACK) {
+                motherSubscriber.setLmp(lmp);
+            } else {
+                ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
+            }
         }
 
         /* Check appropriate value of entryType and abortion*/

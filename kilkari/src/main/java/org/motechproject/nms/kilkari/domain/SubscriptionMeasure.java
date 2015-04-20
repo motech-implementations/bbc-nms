@@ -18,4 +18,36 @@ public class SubscriptionMeasure {
     @Field(required = true)
     private Status status;
 
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
+
+    public Integer getWeekNumber() {
+        return weekNumber;
+    }
+
+    public void setWeekNumber(Integer weekNumber) {
+        this.weekNumber = weekNumber;
+    }
+
+    public Integer getMessageNumber() {
+        return messageNumber;
+    }
+
+    public void setMessageNumber(Integer messageNumber) {
+        this.messageNumber = messageNumber;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+    
 }

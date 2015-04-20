@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final Integer DURATION_OF_48_WEEK_PACK = 48;
 
-    public static final Integer START_WEEK_OF_48_WEEK_PACK = 27;
+    public static final Integer START_WEEK_OF_48_WEEK_PACK = 25;
 
 
     /* Constants for Error Description */

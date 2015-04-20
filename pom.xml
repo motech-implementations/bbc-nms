@@ -699,7 +699,7 @@
         <module>mobilekunji</module>        
         <module>util</module>        
         <module>masterdata</module>
-        <module>kilkariobd</module>
+        <!-- <module>kilkariobd</module>  -->
     </modules>
 
     <build>

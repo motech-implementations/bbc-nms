@@ -20,6 +20,9 @@
     <osgi:service ref="subscriptionService"
                   interface="org.motechproject.nms.kilkari.service.SubscriptionService" />
                   
+	<osgi:service ref="subscriptionMeasureService"
+                  interface="org.motechproject.nms.kilkari.service.SubscriptionMeasureService" />                  
+                  
     <osgi:service ref="subscriberService"
                   interface="org.motechproject.nms.kilkari.service.SubscriberService" />
                   
@@ -44,6 +47,9 @@
     <osgi:reference id="subscriptionDataService"
                     interface="org.motechproject.nms.kilkari.repository.SubscriptionDataService" /> 
                     
+	<osgi:reference id="subscriptionMeasureDataService"
+                    interface="org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService" /> 
+                                        
     <osgi:reference id="subscriberDataService"
                     interface="org.motechproject.nms.kilkari.repository.SubscriberDataService" />   
                     
