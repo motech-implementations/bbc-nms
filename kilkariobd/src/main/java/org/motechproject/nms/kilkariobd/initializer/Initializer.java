@@ -31,13 +31,13 @@ public class Initializer {
 
     public static final String DEFAULT_RETRY_DAY3_OBD_SERVICE_ID = "1";
 
-    public static final String DEFAULT_FRESH_OBD_PRIORITY = "1";
+    public static final Integer DEFAULT_FRESH_OBD_PRIORITY = 1;
 
-    public static final String DEFAULT_RETRY_DAY1_OBD_PRIORITY = "1";
+    public static final Integer DEFAULT_RETRY_DAY1_OBD_PRIORITY = 1;
 
-    public static final String DEFAULT_RETRY_DAY2_OBD_PRIORITY = "1";
+    public static final Integer DEFAULT_RETRY_DAY2_OBD_PRIORITY = 1;
 
-    public static final String DEFAULT_RETRY_DAY3_OBD_PRIORITY = "1";
+    public static final Integer DEFAULT_RETRY_DAY3_OBD_PRIORITY = 1;
 
     public static final String  DEFAULT_OBD_FILE_SERVER_IP = "127.0.0.1";
 

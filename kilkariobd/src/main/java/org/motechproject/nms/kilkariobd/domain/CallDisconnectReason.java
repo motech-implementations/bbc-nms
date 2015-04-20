@@ -17,4 +17,13 @@ public enum CallDisconnectReason {
         this.value = value;
     }
 
+    public static CallDisconnectReason getByString(String reason) {
+        for (CallDisconnectReason disconnectReason : CallDisconnectReason.values()) {
+            if (reason.equals(disconnectReason.name())) {
+                return disconnectReason;
+            }
+        }
+        return null;
+    }
+
 }

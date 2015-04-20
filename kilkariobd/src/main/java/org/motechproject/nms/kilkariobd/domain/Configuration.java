@@ -39,16 +39,16 @@ public class Configuration {
     private String retryDay3ObdServiceId;
 
     @Field(required = true)
-    private String freshObdPriority;
+    private Integer freshObdPriority;
 
     @Field(required = true)
-    private String retryDay1ObdPriority;
+    private Integer retryDay1ObdPriority;
 
     @Field(required = true)
-    private String retryDay2ObdPriority;
+    private Integer retryDay2ObdPriority;
 
     @Field(required = true)
-    private String retryDay3ObdPriority;
+    private Integer retryDay3ObdPriority;
 
     @Field(required = true)
     private String obdFileServerIp;
@@ -109,35 +109,35 @@ public class Configuration {
         this.retryDay3ObdServiceId = retryDay3ObdServiceId;
     }
 
-    public String getFreshObdPriority() {
+    public Integer getFreshObdPriority() {
         return freshObdPriority;
     }
 
-    public void setFreshObdPriority(String freshObdPriority) {
+    public void setFreshObdPriority(Integer freshObdPriority) {
         this.freshObdPriority = freshObdPriority;
     }
 
-    public String getRetryDay1ObdPriority() {
+    public Integer getRetryDay1ObdPriority() {
         return retryDay1ObdPriority;
     }
 
-    public void setRetryDay1ObdPriority(String retryDay1ObdPriority) {
+    public void setRetryDay1ObdPriority(Integer retryDay1ObdPriority) {
         this.retryDay1ObdPriority = retryDay1ObdPriority;
     }
 
-    public String getRetryDay2ObdPriority() {
+    public Integer getRetryDay2ObdPriority() {
         return retryDay2ObdPriority;
     }
 
-    public void setRetryDay2ObdPriority(String retryDay2ObdPriority) {
+    public void setRetryDay2ObdPriority(Integer retryDay2ObdPriority) {
         this.retryDay2ObdPriority = retryDay2ObdPriority;
     }
 
-    public String getRetryDay3ObdPriority() {
+    public Integer getRetryDay3ObdPriority() {
         return retryDay3ObdPriority;
     }
 
-    public void setRetryDay3ObdPriority(String retryDay3ObdPriority) {
+    public void setRetryDay3ObdPriority(Integer retryDay3ObdPriority) {
         this.retryDay3ObdPriority = retryDay3ObdPriority;
     }
 

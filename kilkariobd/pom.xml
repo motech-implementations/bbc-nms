@@ -51,6 +51,13 @@
             <version>0.1-SNAPSHOT</version>
         </dependency>
 
+        <!-- kilkari dependency -->
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>kilkari</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
         <!-- OSGi IT -->
         <dependency>
             <groupId>org.motechproject</groupId>
