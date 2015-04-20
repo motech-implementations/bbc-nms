@@ -37,6 +37,10 @@ public class CustomQueries {
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
             query.setFilter("msisdn == '" + msisdn + "' && (status == '" + Status.ACTIVE + "' ||" + " status == '" + Status.PENDING_ACTIVATION + "')");
             query.setResult("DISTINCT " + resultParamName);
+            org.joda.time.DateTime date = new DateTime();
+            query.setFilter("Days.daysBetween(date, date)");
+            query.declareImports("org.joda.time.Days");
+            query.declareParameters("org.joda.time.DateTime date");
             return (List<SubscriptionPack>) query.execute();
         }
     }
