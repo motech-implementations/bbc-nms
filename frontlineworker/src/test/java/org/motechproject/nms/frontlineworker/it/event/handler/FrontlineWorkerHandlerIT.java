@@ -7,10 +7,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.domain.CsvFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
-import org.motechproject.nms.frontlineworker.domain.FrontLineWorkerCsv;
 import org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerUploadHandler;
-import org.motechproject.nms.frontlineworker.service.FrontLineWorkerCsvService;
+import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
+import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
@@ -52,122 +53,93 @@ import static org.junit.Assert.*;
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class FrontlineWorkerHandlerIT extends BasePaxIT {
-    
-    @Inject
-    private BulkUploadErrLogService bulkUploadErrLogService;
-    
-    @Inject
-    private LocationService locationService;
-    
-    @Inject
-    private FrontLineWorkerService frontLineWorkerService;
-    
-    @Inject
-    private FrontLineWorkerCsvService frontLineWorkerCsvService;
-    
-    @Inject
-    private StateService stateService;
-    
-    @Inject
-    private DistrictService districtService;
-    
-    @Inject
-    private VillageService villageService;
-    
-    @Inject
-    private TalukaService talukaService;
-    
-    @Inject
-    private HealthBlockService healthBlockService;
-    
-    @Inject
-    private HealthFacilityService healthFacilityService;
-    
-    @Inject
-    private HealthSubFacilityService healthSubFacilityService;
-    
-    
-    private FrontLineWorkerUploadHandler frontLineWorkerUploadHandler;
-    
-    private State stateData;
-    
-    private District districtData;
-    
-    private Taluka talukaData;
-    
-    private Village villageData;
-    
-    private HealthBlock healthBlockData;
-    
-    private HealthFacility healthFacilityData;
-    
-    private HealthSubFacility healthSubFacilityData;
-    
+
     private static boolean setUpIsDone = false;
-    
-    private State state = null;
-    
-    private District district = null;
-    
-    private Circle circle = null;
-    
-    private Taluka taluka = null;
-    
-    private HealthBlock healthBlock = null;
-    
-    private HealthFacility healthFacility = null;
-    
-    private HealthSubFacility healthSubFacility = null;
-    
-    private Village village = null;
-    
-    
-    private TestHelper testHelper = new TestHelper();
-    
     Map<String, Object> parameters = new HashMap<>();
     List<Long> uploadedIds = new ArrayList<Long>();
-    
+    @Inject
+    private BulkUploadErrLogService bulkUploadErrLogService;
+    @Inject
+    private LocationService locationService;
+    @Inject
+    private FrontLineWorkerService frontLineWorkerService;
+    @Inject
+    private CsvFrontLineWorkerService csvFrontLineWorkerService;
+    @Inject
+    private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
+    @Inject
+    private StateService stateService;
+    @Inject
+    private DistrictService districtService;
+    @Inject
+    private VillageService villageService;
+    @Inject
+    private TalukaService talukaService;
+    @Inject
+    private HealthBlockService healthBlockService;
+    @Inject
+    private HealthFacilityService healthFacilityService;
+    @Inject
+    private HealthSubFacilityService healthSubFacilityService;
+    private FrontLineWorkerUploadHandler frontLineWorkerUploadHandler;
+    private State stateData;
+    private District districtData;
+    private Taluka talukaData;
+    private Village villageData;
+    private HealthBlock healthBlockData;
+    private HealthFacility healthFacilityData;
+    private HealthSubFacility healthSubFacilityData;
+    private State state = null;
+    private District district = null;
+    private Circle circle = null;
+    private Taluka taluka = null;
+    private HealthBlock healthBlock = null;
+    private HealthFacility healthFacility = null;
+    private HealthSubFacility healthSubFacility = null;
+    private Village village = null;
+    private TestHelper testHelper = new TestHelper();
+
     @Before
     public void setUp() {
-        
-        
+
+
         frontLineWorkerUploadHandler = new FrontLineWorkerUploadHandler(bulkUploadErrLogService,
                 locationService,
-                frontLineWorkerService, frontLineWorkerCsvService
+                frontLineWorkerService, csvFrontLineWorkerService, frontLineWorkerRecordDataService
         );
-        
+
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(locationService);
         assertNotNull(frontLineWorkerService);
-        assertNotNull(frontLineWorkerCsvService);
-        
-        
+        assertNotNull(csvFrontLineWorkerService);
+
+
         if (!setUpIsDone) {
             state = testHelper.createState();
             stateService.create(state);
             assertNotNull(state);
-            
+
             district = testHelper.createDistrict();
             State stateData = stateService.findRecordByStateCode(district.getStateCode());
             stateData.getDistrict().add(district);
             stateService.update(stateData);
             assertNotNull(district);
-            
-            
+
+
             taluka = testHelper.createTaluka();
             District districtData = districtService.findDistrictByParentCode(taluka.getDistrictCode(), taluka.getStateCode());
             districtData.getTaluka().add(taluka);
             districtService.update(districtData);
             assertNotNull(taluka);
-            
-            
+
+
             healthBlock = testHelper.createHealthBlock();
             Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlock.getStateCode(),
                     healthBlock.getDistrictCode(), healthBlock.getTalukaCode());
             talukaRecord.getHealthBlock().add(healthBlock);
             talukaService.update(talukaRecord);
             assertNotNull(healthBlock);
-            
+
             healthFacility = testHelper.createHealthFacility();
             HealthBlock healthBlockData = healthBlockService.findHealthBlockByParentCode(
                     healthFacility.getStateCode(), healthFacility.getDistrictCode(), healthFacility.getTalukaCode(),
@@ -175,18 +147,18 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             healthBlockData.getHealthFacility().add(healthFacility);
             healthBlockService.update(healthBlockData);
             assertNotNull(healthFacility);
-            
-            
+
+
             healthSubFacility = testHelper.createHealthSubFacility();
             HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                     healthSubFacility.getStateCode(), healthSubFacility.getDistrictCode(),
                     healthSubFacility.getTalukaCode(), healthSubFacility.getHealthBlockCode(),
                     healthSubFacility.getHealthFacilityCode());
-            
+
             healthFacilityData.getHealthSubFacility().add(healthSubFacility);
             healthFacilityService.update(healthFacilityData);
             assertNotNull(healthSubFacility);
-            
+
             village = testHelper.createVillage();
             Taluka talukaRecordVillage = talukaService.findTalukaByParentCode(village.getStateCode(),
                     village.getDistrictCode(), village.getTalukaCode());
@@ -198,746 +170,746 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             setUpIsDone = true;
         }
 
-        FrontLineWorkerCsv frontLineWorkerCsv;
-        FrontLineWorkerCsv frontLineWorkerCsvdb;
+        CsvFrontLineWorker csvFrontLineWorker;
+        CsvFrontLineWorker csvdbFrontLineWorker;
 
         // testFrontLineWorkerValidDataGetByPhnNo
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545494", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsv.setCreator("Etasha");
-        frontLineWorkerCsv.setModifiedBy("Etasha");
-        frontLineWorkerCsv.setOwner("Etasha");
+        csvFrontLineWorker.setCreator("Etasha");
+        csvFrontLineWorker.setModifiedBy("Etasha");
+        csvFrontLineWorker.setOwner("Etasha");
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerValidDataGetById
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "9990545495", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("2", "12", "9990545495", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerValidDataLargerphnNo
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "99905454950", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("3", "12", "99905454950", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerValidDatasmallPhnNo
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("4", "12", "99905", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("4", "12", "99905", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
         // testFrontLineWorkerNoState
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "11", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "11", "9990545496", "etasha",
                 "USHA", "123", null, null, null, null, null,
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerNoDistrict
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "122", null, null, null, null, null,
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidTaluka
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "123", "1233", null, null, null, null,
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidVillage
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "123", "1", null, null, null, "1233",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidHealthBlock
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "123", "1", "1233", null, null, "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidHealthFacility
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "123", "1", "1234", "12344", null, "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidHealthSubFacility
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "USHA", "123", "1", "1234", "12345", "123455", "1234",
                 null, null, "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerInvalidDesignation
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ABC", "123", "1", "1234", "12345", "123456", "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerContactNoAbsent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", null, "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", null, "etasha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerStateCodeAbsent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", null, "9990545496", null,
+        csvFrontLineWorker = new CsvFrontLineWorker("1", null, "9990545496", null,
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerDistrictCodeAbsent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ASHA", null, "1", "1234", "12345", "123456", "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerDesignationAbsent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 null, "123", "1", "1234", "12345", "123456", "1234",
                 null, null, "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerTalukaAbsentVillagePresent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ASHA", "123", null, null, null, null, "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerTalukaAbsentHealthBlockPresent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ASHA", "123", null, "1234", null, null, null,
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerHBAbsentPHCPresent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ASHA", "123", "1", null, "12345", null, "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerPHCAbsentSSCPresent
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545496", "etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545496", "etasha",
                 "ASHA", "123", "1", "1234", null, "123456", "1234",
                 null, null, "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationNoFlwId Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti",
+        csvFrontLineWorker = new CsvFrontLineWorker("10", "12", "1234567890", "Jyoti",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationNoFlwId Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("", "12", "1234567890", "Jyoti",
+        csvFrontLineWorker = new CsvFrontLineWorker("", "12", "1234567890", "Jyoti",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdation Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti",
+        csvFrontLineWorker = new CsvFrontLineWorker("10", "12", "1234567890", "Jyoti",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdation Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("10", "12", "1234567890", "Jyoti2",
+        csvFrontLineWorker = new CsvFrontLineWorker("10", "12", "1234567890", "Jyoti2",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
                 "1234", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerStatusInvalidToValid Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "5555555555", "Jaya",
+        csvFrontLineWorker = new CsvFrontLineWorker("11", "12", "5555555555", "Jaya",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "False", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerStatusInvalidToValid Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("11", "12", "5555555555", "Jaya2",
+        csvFrontLineWorker = new CsvFrontLineWorker("11", "12", "5555555555", "Jaya2",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
                 "1234", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerStatusValidToInvalid Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "3333333333", "Sushma",
+        csvFrontLineWorker = new CsvFrontLineWorker("12", "12", "3333333333", "Sushma",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerStatusValidToInvalid Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("12", "12", "3333333333", "Sushma",
+        csvFrontLineWorker = new CsvFrontLineWorker("12", "12", "3333333333", "Sushma",
                 "AWW", "123", "1", "1234", "12345", "123456", "1234",
                 "1234", "1234", "False", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationWithIsValidNull Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
+        csvFrontLineWorker = new CsvFrontLineWorker("13", "12", "4444444444", "Rekha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationWithIsValidNull Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("13", "12", "4444444444", "Rekha",
+        csvFrontLineWorker = new CsvFrontLineWorker("13", "12", "4444444444", "Rekha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 "1234", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationWithNoFlwId Part 1
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("14", "12", "1234500000", "Jyoti",
+        csvFrontLineWorker = new CsvFrontLineWorker("14", "12", "1234500000", "Jyoti",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "True", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdationWithNoFlwId Part 2
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv(null, "12", "1234500000", "Jyoti2",
+        csvFrontLineWorker = new CsvFrontLineWorker(null, "12", "1234500000", "Jyoti2",
                 "ANM", "123", "1", "1234", "12345", "123456", "1234",
                 "1234", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerVillageWithoutTaluka
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Anjali",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Anjali",
                 "USHA", "123", null, "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerHealthBlockWithoutTaluka
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", null, "1234", "12345", "123456", null,
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerPhcWithoutHealthBlock
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", null, "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerSubCentreWithoutPhc
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
                 "9876", "1234", "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         //nms generated id is null in update record
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("100", "12", "8888888888", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("100", "12", "8888888888", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // test Front Line Worker flw id doesnt exist, Contact No already present. hence failure case
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("25", "12", "9990545494", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("25", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
                 "9876", "1234", "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive...diff records
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("3", "12", "4444444444", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("3", "12", "4444444444", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
                 "9876", "1234", "true", null);
 
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // test valid  is null contactNo  and FlwId exist
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("1", "12", "9990545494", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("1", "12", "9990545494", "Etasha",
                 "USHA", "123", "1", "1234", null, "123456", "1234",
                 "9876", "1234", null, null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerCreation flwId not present in CSV and new record insertion
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("", "12", "8484848484", "Rashi",
+        csvFrontLineWorker = new CsvFrontLineWorker("", "12", "8484848484", "Rashi",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
         // testFrontLineWorker Update Flw ID provided in record where fleID was originally null
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("103", "12", "8484848484", "Rashi",
+        csvFrontLineWorker = new CsvFrontLineWorker("103", "12", "8484848484", "Rashi",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker update FLW ID
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("104", "12", "8484848484", "Rashi",
+        csvFrontLineWorker = new CsvFrontLineWorker("104", "12", "8484848484", "Rashi",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerTaluka not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "2", "1234", "12345", "123456", null,
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerVillage not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "123456",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker Taluka-Village combination not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "2", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker Taluka is null, Village is non null.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
         // testFrontLineWorkerHealthBlock not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "123456", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker Taluka-HealthBlock combination not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "3", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker Taluka is null, HealthBlock is non null.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerHealthFacility not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", "123", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker HealthBlock-HealthFacility combination not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "123", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker HealthBlock is null, HealthFacility is non null.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerHealthSubFacility not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "1234", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker HealthFacility-HealthSubFacility combination not present in CSV.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", "123", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker HealthFacility is null, HealthSubFacility is non null.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("20", "12", "9990000000", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("20", "12", "9990000000", "Etasha",
                 "USHA", "123", "1", "1234", "", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("15", "12", "3737373737", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("15", "12", "3737373737", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "false", null);// status is invalid.
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("16", "12", "3737373737", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("16", "12", "3737373737", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
         // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null, present
         // in different records and record fetched by contact number is invalid
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("17", "12", "4747474747", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("17", "12", "4747474747", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("18", "12", "5757575757", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("18", "12", "5757575757", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "false", null);//status is invalid.
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("17", "12", "5757575757", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("17", "12", "5757575757", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo is null
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("19", "12", "6767676767", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("19", "12", "6767676767", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("19", "12", "7777777777", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("19", "12", "7777777777", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null,
         // present in different records.
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("21", "12", "9797979797", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("21", "12", "9797979797", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("22", "12", "8989898987", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("22", "12", "8989898987", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("22", "12", "9797979797", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("22", "12", "9797979797", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in same Record
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("6", "12", "1717171717", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("6", "12", "1717171717", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("6", "12", "1717171717", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("6", "12", "1717171717", "Etasha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         // testFrontLineWorker flwId and stateId combination non null, ContactNo non null, present in different Record
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("2", "12", "1717171717", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("2", "12", "1717171717", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
 
         // testFrontLineWorker flwId not present in both create and update
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("", "12", "1818181818", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("", "12", "1818181818", "Etasha",
                 "USHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
-        frontLineWorkerCsv = new FrontLineWorkerCsv("", "12", "1818181818", "Etasha",
+        csvFrontLineWorker = new CsvFrontLineWorker("", "12", "1818181818", "Etasha",
                 "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                 "9876", "1234", "true", null);
 
-        frontLineWorkerCsvdb = frontLineWorkerCsvService.createFrontLineWorkerCsv(frontLineWorkerCsv);
-        assertNotNull(frontLineWorkerCsvdb);
-        uploadedIds.add(frontLineWorkerCsvdb.getId());
+        csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+        assertNotNull(csvdbFrontLineWorker);
+        uploadedIds.add(csvdbFrontLineWorker.getId());
 
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
 
     }
 
-    
+
     @Test
     public void testFrontLineWorkerAll() {
-        
-        MotechEvent motechEvent = new MotechEvent("FrontLineWorkerCsv.csv_success", parameters);
+
+        MotechEvent motechEvent = new MotechEvent("CsvFrontLineWorker.csv_success", parameters);
         frontLineWorkerUploadHandler.flwDataHandlerSuccess(motechEvent);
-        
+
         FrontLineWorker flw;
         FrontLineWorker frontLineWorker;
-        
+
         // testFrontLineWorkerValidDataGetByPhnNo
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990545494");
-        
+
         assertNotNull(flw);
         assertTrue(1L == flw.getFlwId());
         assertEquals("9990545494", flw.getContactNo());
@@ -951,26 +923,26 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals("Etasha", flw.getCreator());
         assertEquals("Etasha", flw.getModifiedBy());
         assertEquals("Etasha", flw.getOwner());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
-        
+
+
         // testFrontLineWorkerValidDataGetById
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(2L, 12L);
-        
+
         assertNotNull(flw);
-        
+
         assertTrue(2L == flw.getFlwId());
         assertEquals("9990545495", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
-        
+
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
         assertTrue(1L == flw.getTalukaId().getTalukaCode());
@@ -978,22 +950,22 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerValidDataLargerphnNo
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
-        
+
         assertNotNull(flw);
-        
+
         assertTrue(3L == flw.getFlwId());
         assertEquals("9905454950", flw.getContactNo());
         assertEquals(Designation.USHA, flw.getDesignation());
         assertEquals("Etasha", flw.getName());
-        
+
         assertTrue(12L == flw.getStateCode());
         assertTrue(123L == flw.getDistrictId().getDistrictCode());
         assertTrue(1L == flw.getTalukaId().getTalukaCode());
@@ -1001,199 +973,199 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(1234L == flw.getHealthBlockId().getHealthBlockCode());
         assertTrue(12345L == flw.getHealthFacilityId().getHealthFacilityCode());
         assertTrue(123456L == flw.getHealthSubFacilityId().getHealthSubFacilityCode());
-        
+
         assertEquals("1234", flw.getAdhaarNumber());
         assertEquals("9876", flw.getAshaNumber());
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerValidDatasmallPhnNo
-        
+
         flw = frontLineWorkerService.getFlwByFlwIdAndStateId(4L, 12L);
-        
+
         assertNull(flw);
-        
+
         // testFrontLineWorkerNoState
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
 
         // testFrontLineWorkerNoDistrict
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidTaluka
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidVillage
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthBlock
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthFacility
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidHealthSubFacility
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerInvalidDesignation
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerContactNoAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerStateCodeAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerDistrictCodeAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerDesignationAbsent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerTalukaAbsentVillagePresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerTalukaAbsentHealthBlockPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerHBAbsentPHCPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerPHCAbsentSSCPresent
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9990545496");
         assertNull(frontLineWorker);
-        
+
         // testFrontLineWorkerUpdationNoFlwId Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(flw);
-        
+
         // testFrontLineWorkerUpdationNoFlwId Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertTrue(10L == frontLineWorker.getFlwId());
-        
+
         // testFrontLineWorkerUpdation Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(flw);
-        
+
         // testFrontLineWorkerUpdation Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567890");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti2", frontLineWorker.getName());
-        
+
         // testFrontLineWorkerStatusInvalidToValid Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("5555555555");
         assertNotNull(flw);
         assertEquals(Status.INVALID, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusInvalidToValid Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("5555555555");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jaya", frontLineWorker.getName());
         assertEquals(Status.INVALID, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusValidToInvalid Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(flw);
         //assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerStatusValidToInvalid Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("3333333333");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INVALID, frontLineWorker.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithIsValidNull Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
-        
+
         assertNotNull(flw);
         assertEquals(Status.INACTIVE, flw.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithIsValidNull Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(frontLineWorker);
         assertEquals("1234", frontLineWorker.getAshaNumber());
         assertEquals(Status.INACTIVE, frontLineWorker.getStatus());
-        
+
         // testFrontLineWorkerUpdationWithNoFlwId Part 1
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("1234500000");
-        
+
         assertNotNull(flw);
         assertTrue(14L == flw.getFlwId());
-        
+
         // testFrontLineWorkerUpdationWithNoFlwId Part 2
-        
+
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234500000");
         assertNotNull(frontLineWorker);
         assertEquals("9876", frontLineWorker.getAshaNumber());
         assertEquals("Jyoti", frontLineWorker.getName());
         assertTrue(14L == frontLineWorker.getFlwId());
-        
+
         // testFrontLineWorkerVillageWithoutTaluka
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerHealthBlockWithoutTaluka
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerPhcWithoutHealthBlock
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
-        
+
         // testFrontLineWorkerSubCentreWithoutPhc
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
-        
+
         assertNull(flw);
-        
+
         //nms generated id is null in update record
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("8888888888");
         assertNotNull(flw);
         assertTrue(null != flw.getId());
@@ -1205,7 +1177,7 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertTrue(25L != flw.getFlwId());
 
         // testFrontLineWorkerFlwIdAndContactNoIsDifferentAndStateIsInactive*/
-        
+
         flw = frontLineWorkerService.getFlwBycontactNo("4444444444");
         assertNotNull(flw);
         FrontLineWorker flw2 = frontLineWorkerService.getFlwByFlwIdAndStateId(3L, 12L);
@@ -1294,10 +1266,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertEquals(Designation.ASHA, flw.getDesignation());
         assertNull(flw.getFlwId());
 
-        List<FrontLineWorkerCsv> listFlwCsv = frontLineWorkerCsvService.retrieveAllFromCsv();
+        List<CsvFrontLineWorker> listFlwCsv = csvFrontLineWorkerService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);
-        
-        
+
+
     }
 
 }

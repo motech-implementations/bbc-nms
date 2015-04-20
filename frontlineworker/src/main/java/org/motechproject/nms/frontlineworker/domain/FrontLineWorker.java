@@ -80,7 +80,6 @@ public class FrontLineWorker extends MdsEntity {
 
     private String circleCode = null;
 
-
     public FrontLineWorker() {
     }
 
@@ -116,7 +115,7 @@ public class FrontLineWorker extends MdsEntity {
     public void setFlwId(Long flwId) {
         this.flwId = flwId;
     }
-    
+
     public String getContactNo() {
         return contactNo;
     }
@@ -252,4 +251,5 @@ public class FrontLineWorker extends MdsEntity {
     public void setCircleCode(String circleCode) {
         this.circleCode = circleCode;
     }
+
 }

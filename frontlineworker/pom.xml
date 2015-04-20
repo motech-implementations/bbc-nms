@@ -46,6 +46,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Scheduler -->
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+
         <!-- Repository -->
         <dependency>
             <groupId>org.motechproject</groupId>
@@ -91,6 +99,7 @@
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
                             org.motechproject.nms.frontlineworker.service;version=${project.version},
                             org.motechproject.nms.frontlineworker.service.impl;version=${project.version},
+                            org.motechproject.nms.frontlineworker.exception;version=${project.version},
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

@@ -8,7 +8,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * This class Models data records provided in the Front Line Worker Csv Upload
  */
 @Entity
-public class FrontLineWorkerCsv extends MdsEntity {
+public class CsvFrontLineWorker extends MdsEntity {
 
     @Field
     private String flwId;
@@ -55,11 +55,11 @@ public class FrontLineWorkerCsv extends MdsEntity {
     @Field
     private String nmsFlwId;
 
-    public FrontLineWorkerCsv() {
+    public CsvFrontLineWorker() {
     }
 
 
-    public FrontLineWorkerCsv(String flwId, String stateCode, String contactNo, String name, String type,
+    public CsvFrontLineWorker(String flwId, String stateCode, String contactNo, String name, String type,
                               String districtCode, String talukaCode, String healthBlockCode, String phcCode,
                               String subCentreCode, String villageCode, String ashaNumber, String adhaarNo,
                               String isValid, String nmsFlwId) {

@@ -1,6 +1,10 @@
 package org.motechproject.nms.frontlineworker.service;
 
+import org.joda.time.DateTime;
+import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+
+import java.util.List;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -22,6 +26,8 @@ public interface FrontLineWorkerService {
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode);
 
     public FrontLineWorker findById(Long id);
-    
+
+    public List<FrontLineWorker> findByStatus(Status status, DateTime modificationDate);
+
     public void deleteAll();
 }
