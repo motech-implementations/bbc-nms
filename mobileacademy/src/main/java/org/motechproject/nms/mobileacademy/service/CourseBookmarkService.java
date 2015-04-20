@@ -27,7 +27,7 @@ public interface CourseBookmarkService {
 	 *            to be updated
 	 * @return bookmark which is updated in system
 	 */
-	public Bookmark updateBookmark(Bookmark bookmark);
+	public Bookmark updateMtrainingBookmark(Bookmark bookmark);
 
 	/**
 	 * This is used to create the bookmark in mTraining tables
@@ -35,7 +35,7 @@ public interface CourseBookmarkService {
 	 * @param bookmark
 	 *            to be created
 	 */
-	public void createBookmark(Bookmark bookmark);
+	public void createMtrainingBookmark(Bookmark bookmark);
 
 	/**
 	 * To delete the bookmark of a user from MTraining tables
@@ -43,7 +43,7 @@ public interface CourseBookmarkService {
 	 * @param callingNo
 	 *            : for which bookmark need to be deleted
 	 */
-	public void deleteBookmark(String callingNo);
+	public void deleteMtrainingBookmark(String callingNo);
 
 	/**
 	 * @param callingNo

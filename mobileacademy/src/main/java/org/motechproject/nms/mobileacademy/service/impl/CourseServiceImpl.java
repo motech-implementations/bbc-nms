@@ -835,7 +835,7 @@ public class CourseServiceImpl implements CourseService {
     private List<String> getScoreFiles(int chapterNo,
             List<ChapterContent> chapterContents) {
         List<String> scoreFiles = new ArrayList<String>();
-        for (int scoreNo = 0; scoreNo <= MobileAcademyConstants.NUM_OF_SCORES; scoreNo++) {
+        for (int scoreNo = 0; scoreNo <= MobileAcademyConstants.MAX_SCORE; scoreNo++) {
             scoreFiles.add(getScore(chapterContents, chapterNo, scoreNo,
                     MobileAcademyConstants.SCORE).getAudioFile());
         }

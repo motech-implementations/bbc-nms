@@ -39,7 +39,7 @@ public class ChapterFlag {
         this.questionFlags = questionFlags;
 
         List<ScoreFlag> scoreFlags = new ArrayList<ScoreFlag>();
-        for (int i = 0; i <= MobileAcademyConstants.NUM_OF_SCORES; i++) {
+        for (int i = 0; i <= MobileAcademyConstants.MAX_SCORE; i++) {
             scoreFlags.add(new ScoreFlag(i));
         }
         this.scoreFlags = scoreFlags;

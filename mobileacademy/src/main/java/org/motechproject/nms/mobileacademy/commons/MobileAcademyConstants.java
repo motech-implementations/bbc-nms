@@ -14,7 +14,7 @@ public class MobileAcademyConstants {
 
     public static final int NUM_OF_QUESTIONS = 4;
 
-    public static final int NUM_OF_SCORES = 4;
+    public static final int MAX_SCORE = 4;
 
     public static final int NUM_OF_SCORE_FILES = 5;
 

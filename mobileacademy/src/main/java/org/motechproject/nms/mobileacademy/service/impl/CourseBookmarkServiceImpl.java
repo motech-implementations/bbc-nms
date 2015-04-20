@@ -31,28 +31,30 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 
 	@Override
 	public Bookmark getMtrainingBookmarkByMsisdn(String callingNo) {
+		Bookmark mtrainingBookmark = null;
 		List<Bookmark> bookmarks = bookmarkService
 				.getAllBookmarksForUser(callingNo);
-		if (CollectionUtils.isEmpty(bookmarks)) {
-			return null;
-		} else {
-			return bookmarks.get(0);
+		if (CollectionUtils.isNotEmpty(bookmarks)) {
+			mtrainingBookmark = bookmarks.get(0);
 		}
+		return mtrainingBookmark;
 	}
 
 	@Override
-	public Bookmark updateBookmark(Bookmark bookmark) {
+	public Bookmark updateMtrainingBookmark(Bookmark bookmark) {
 		return bookmarkService.updateBookmark(bookmark);
 	}
 
 	@Override
-	public void createBookmark(Bookmark bookmark) {
+	public void createMtrainingBookmark(Bookmark bookmark) {
 		bookmarkService.createBookmark(bookmark);
 	}
 
 	@Override
 	public String getBookmarkWithScore(String callingNo) {
-		Bookmark bookmark = getMtrainingBookmarkByMsisdn(callingNo);
+		Bookmark mtrainingBookmark = getMtrainingBookmarkByMsisdn(callingNo);
+		LOGGER.trace("Received bookmark from MTraining for calling No {} : {}",
+				callingNo, mtrainingBookmark);
 		String bookmarkToReturn = "";
 
 		/*
@@ -60,15 +62,18 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 		 * reset, in which case, the bookmarkId will be blank; then return empty
 		 * JSON.
 		 */
-		if ((bookmark == null)
-				|| (StringUtils.isBlank((String) bookmark.getProgress().get(
-						MobileAcademyConstants.BOOKMARK_ID)))) {
+		if ((mtrainingBookmark == null)
+				|| (StringUtils.isBlank((String) mtrainingBookmark
+						.getProgress().get(MobileAcademyConstants.BOOKMARK_ID)))) {
 			LOGGER.debug("There is no bookmark in the system for MSISDN: {}",
 					callingNo);
 			bookmarkToReturn = MobileAcademyConstants.EMPTY_JSON;
 		} else {
-			bookmarkToReturn = BookmarkHelper.getBookmarkJson(bookmark);
+			bookmarkToReturn = BookmarkHelper
+					.getBookmarkJson(mtrainingBookmark);
 		}
+		LOGGER.trace("Sending bookmark JSON for calling No {} : {}", callingNo,
+				bookmarkToReturn);
 		return bookmarkToReturn;
 	}
 
@@ -77,32 +82,33 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 			Map<String, String> scoresByChapter, String callingNo)
 			throws DataValidationException {
 
-		Bookmark courseBookmark = getMtrainingBookmarkByMsisdn(callingNo);
-		
+		Bookmark mtrainingBookmark = getMtrainingBookmarkByMsisdn(callingNo);
+
 		/*
 		 * In case of first time bookmark, initialize and put the calling no in
 		 * external ID field
 		 */
-		if (courseBookmark == null) {
-			courseBookmark = new Bookmark();
-			courseBookmark.setProgress(new HashMap<String, Object>());
-			courseBookmark.setExternalId(callingNo);
+		if (mtrainingBookmark == null) {
+			mtrainingBookmark = new Bookmark();
+			mtrainingBookmark.setProgress(new HashMap<String, Object>());
+			mtrainingBookmark.setExternalId(callingNo);
 		}
 
-		BookmarkHelper.validateAndPopulateBookmark(courseBookmark, bookmarkId,
-				scoresByChapter);
+		BookmarkHelper.validateAndPopulateBookmark(mtrainingBookmark,
+				bookmarkId, scoresByChapter);
 
-		updateBookmark(courseBookmark);
+		updateMtrainingBookmark(mtrainingBookmark);
 
 		/*
 		 * If user has completed the course successfully, compute the score,
 		 * process for SMS and reset the user's bookmark for next call
 		 */
-		if (bookmarkId!=null && bookmarkId
-				.equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
-			LOGGER.info("MSISDN: {} has completed the course", callingNo);
+		if (bookmarkId != null
+				&& bookmarkId
+						.equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
+			LOGGER.info("FLW with MSISDN: {} has completed the course", callingNo);
 			// SEND SMS: To be done in sprint 1505
-			resetTheBookmark(courseBookmark);
+			resetTheBookmark(mtrainingBookmark);
 		}
 	}
 
@@ -112,13 +118,13 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 	 */
 	private void resetTheBookmark(Bookmark courseBookmark) {
 		courseBookmark.setProgress(new HashMap<String, Object>());
-		updateBookmark(courseBookmark);
+		updateMtrainingBookmark(courseBookmark);
 		LOGGER.debug("Bookmark has been reset for MSISDN: {}",
 				courseBookmark.getExternalId());
 	}
 
 	@Override
-	public void deleteBookmark(String callingNo) {
+	public void deleteMtrainingBookmark(String callingNo) {
 		bookmarkService.deleteAllBookmarksForUser(callingNo);
 	}
 }

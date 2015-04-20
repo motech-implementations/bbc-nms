@@ -101,7 +101,7 @@ public class RecordsProcessHelper {
      */
     public static List<ScoreContent> createListOfScores() {
         List<ScoreContent> scoreList = new ArrayList<>();
-        for (int scoreCount = 0; scoreCount <= MobileAcademyConstants.NUM_OF_SCORES; scoreCount++) {
+        for (int scoreCount = 0; scoreCount <= MobileAcademyConstants.MAX_SCORE; scoreCount++) {
             ScoreContent scoreContent = new ScoreContent(
                     MobileAcademyConstants.SCORE
                             + String.format(
@@ -394,7 +394,7 @@ public class RecordsProcessHelper {
             record.setType(fileType);
             return true;
         } else if (fileType == FileType.SCORE) {
-            if (!verifyRange(index, 0, MobileAcademyConstants.NUM_OF_SCORES)) {
+            if (!verifyRange(index, 0, MobileAcademyConstants.MAX_SCORE)) {
                 return false;
             }
             record.setScoreID(index);

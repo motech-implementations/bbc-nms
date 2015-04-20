@@ -6,7 +6,6 @@ import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.dto.BookmarkWithScore;
-import org.motechproject.nms.mobileacademy.service.ConfigurationService;
 import org.motechproject.nms.mobileacademy.service.CourseBookmarkService;
 import org.motechproject.nms.mobileacademy.service.CourseService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
@@ -43,9 +42,6 @@ public class CourseController extends BaseController {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-
-	@Autowired
-	private ConfigurationService configurationService;
 
 	private static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
 
@@ -107,18 +103,24 @@ public class CourseController extends BaseController {
 			@RequestParam(value = CourseController.REQUEST_PARAM_CALL_ID) String callId)
 			throws DataValidationException {
 		LOGGER.debug("getBookmarkWithScore: Started for MSISDN: {}", callingNo);
+		String originalCallingNo = callingNo;
 
 		callingNo = validateAndGetCallingNo(callingNo);
 
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service", callingNo);
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+					originalCallingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN", callingNo);
 		}
 
+		String bookmarkJson = courseBookmarkService
+				.getBookmarkWithScore(callingNo);
+		LOGGER.debug("Sending bookmark JSON as : {} for calling no.: {}",
+				bookmarkJson, callingNo);
 		LOGGER.debug("getBookmarkWithScore: Ended for MSISDN: {}", callingNo);
-		return courseBookmarkService.getBookmarkWithScore(callingNo);
+		return bookmarkJson;
 	}
 
 	/**
@@ -138,14 +140,16 @@ public class CourseController extends BaseController {
 		LOGGER.debug("saveBookmarkWithScore: Started");
 		LOGGER.debug("Input Request: " + bookmarkWithScore);
 
-		String callingNo = validateAndGetCallingNo(bookmarkWithScore
-				.getCallingNumber());
+		String originalCallingNo = bookmarkWithScore.getCallingNumber();
+
+		String callingNo = validateAndGetCallingNo(originalCallingNo);
 
 		String callId = bookmarkWithScore.getCallId();
 		validateCallId(callId);
 
 		if (!userDetailsService.doesMsisdnExists(callingNo)) {
-			LOGGER.error("MSISDN: {} doesn't exist with FLW service", callingNo);
+			LOGGER.error("MSISDN: {} doesn't exist with FLW service",
+					originalCallingNo);
 			ParseDataHelper.raiseInvalidDataException("MSISDN",
 					bookmarkWithScore.getCallingNumber());
 		}
@@ -164,8 +168,8 @@ public class CourseController extends BaseController {
 	 * Used for validating the callID as per Util module
 	 */
 	private void validateCallId(String callId) throws DataValidationException {
-		ParseDataHelper.validateAndParseLong(
-				MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId, true);
+		ParseDataHelper.validateLengthOfCallId(
+				MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId);
 	}
 
 	/*

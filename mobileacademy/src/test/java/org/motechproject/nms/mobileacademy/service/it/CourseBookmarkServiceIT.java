@@ -31,7 +31,7 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
 	@Test
 	public void testNoBookmarkCase() {
 		String callingNo = "9718228124";
-		courseBookmarkService.deleteBookmark(callingNo);
+		courseBookmarkService.deleteMtrainingBookmark(callingNo);
 		/*
 		 * In case of no bookmark in the system for a particular mobile no.,
 		 * service should return blank JSON string
@@ -96,7 +96,7 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
 	@Test
 	public void testBookmarkServiceInvalidParams() {
 		String callingNo = "9718228124";
-		courseBookmarkService.deleteBookmark(callingNo);
+		courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
 		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
 				MobileAcademyConstants.EMPTY_JSON);
@@ -140,7 +140,7 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
 	@Test
 	public void testBookmarkSuccess() {
 		String callingNo = "9718228124";
-		courseBookmarkService.deleteBookmark(callingNo);
+		courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
 		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
 				MobileAcademyConstants.EMPTY_JSON);
@@ -182,7 +182,7 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
 	@Test
 	public void testCourseCompletionSuccess() {
 		String callingNo = "9718228124";
-		courseBookmarkService.deleteBookmark(callingNo);
+		courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
 		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
 				MobileAcademyConstants.EMPTY_JSON);
