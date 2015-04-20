@@ -7,6 +7,9 @@ public final class Constants {
 
     /* constants for Integer constants */
     public static final Long ACTIVE_SUBSCRIPTION_COUNT_ZERO = 0L;
+    public static final String CONFIGURATION_UPDATE_EVENT = "mds.crud.kilkariobd.Configuation.UPDATE";
+    public static final String CONFIGURATION_ID = "object_id";
+
 
     /* Constants for Kilkari-Obd system settings parameters */
     public static final String KILKARI_OBD_PROPERTY_FILE_NAME = "kilkariobd.properties";

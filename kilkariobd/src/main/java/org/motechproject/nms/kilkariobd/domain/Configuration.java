@@ -1,7 +1,9 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.event.CrudEventType;
 
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
@@ -12,6 +14,7 @@ import javax.validation.constraints.NotNull;
  * This entity represents the configuration parameters of Kilkariobd.
  */
 @Entity(recordHistory = true)
+@CrudEvents(CrudEventType.UPDATE)
 public class Configuration {
 
     public static final Long CONFIGURATION_INDEX = 1L;
@@ -48,7 +51,22 @@ public class Configuration {
     private String retryDay3ObdPriority;
 
     @Field(required = true)
-    private String obdFileLocalPath;
+    private String obdFileServerIp;
+
+    @Field(required = true)
+    private String obdFilePathOnServer;
+
+    @Field(required = true)
+    private String obdFileServerSshUsername;
+
+    @Field(required = true)
+    private String obdIvrUrl;
+
+    @Field(required = true)
+    private String obdCreationEventCronExpression;
+
+    @Field(required = true)
+    private String obdNotificationEventCronExpression;
 
 
     public Long getIndex() {
@@ -123,12 +141,54 @@ public class Configuration {
         this.retryDay3ObdPriority = retryDay3ObdPriority;
     }
 
-    public String getObdFileLocalPath() {
-        return obdFileLocalPath;
+    public String getObdFileServerIp() {
+        return obdFileServerIp;
     }
 
-    public void setObdFileLocalPath(String obdFileLocalPath) {
-        this.obdFileLocalPath = obdFileLocalPath;
+    public void setObdFileServerIp(String obdFileServerIp) {
+        this.obdFileServerIp = obdFileServerIp;
     }
+
+    public String getObdFilePathOnServer() {
+        return obdFilePathOnServer;
+    }
+
+    public void setObdFilePathOnServer(String obdFilePathOnServer) {
+        this.obdFilePathOnServer = obdFilePathOnServer;
+    }
+
+    public String getObdFileServerSshUsername() {
+        return obdFileServerSshUsername;
+    }
+
+    public void setObdFileServerSshUsername(String obdFileServerSshUsername) {
+        this.obdFileServerSshUsername = obdFileServerSshUsername;
+    }
+
+    public String getObdIvrUrl() {
+        return obdIvrUrl;
+    }
+
+    public void setObdIvrUrl(String obdIvrUrl) {
+        this.obdIvrUrl = obdIvrUrl;
+    }
+
+    public String getObdCreationEventCronExpression() {
+        return obdCreationEventCronExpression;
+    }
+
+    public void setObdCreationEventCronExpression(String obdCreationEventCronExpression) {
+        this.obdCreationEventCronExpression = obdCreationEventCronExpression;
+    }
+
+    public String getObdNotificationEventCronExpression() {
+        return obdCreationEventCronExpression;
+    }
+
+    public void setObdNotificationEventCronExpression(String obdNotificationEventCronExpression) {
+        this.obdNotificationEventCronExpression = obdNotificationEventCronExpression;
+    }
+
+
 }
 
