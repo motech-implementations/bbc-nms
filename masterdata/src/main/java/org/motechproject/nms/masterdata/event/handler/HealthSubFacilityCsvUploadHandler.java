@@ -80,6 +80,11 @@ public class HealthSubFacilityCsvUploadHandler {
     }
 
 
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -110,6 +115,11 @@ public class HealthSubFacilityCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
+    /**
+     * This method is used to process HealthSubFacility records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processHealthSubFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
@@ -158,6 +168,12 @@ public class HealthSubFacilityCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
+    /**
+     * This method maps CSV data to the the HealthSubFacility object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private HealthSubFacility mapHealthSubFacilityCsv(CsvHealthSubFacility record) throws DataValidationException {
         HealthSubFacility newRecord = new HealthSubFacility();
 
@@ -185,6 +201,11 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method is used to process the HealthSubFacility data according to the operation
+     * @param healthSubFacilityData
+     * @throws DataValidationException
+     */
     private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData) throws DataValidationException {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}", healthSubFacilityData.getHealthSubFacilityCode());
@@ -205,6 +226,10 @@ public class HealthSubFacilityCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new HealthSubFacility record to the database.
+     * @param healthSubFacilityData
+     */
     private void insertHealthSubFacility(HealthSubFacility healthSubFacilityData) {
         HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
                 healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
@@ -216,6 +241,11 @@ public class HealthSubFacilityCsvUploadHandler {
         logger.info("HealthSubFacility Permanent data is successfully inserted.");
     }
 
+    /**
+     * This method is used to update an existing HealthSubFacility record.
+     * @param existHealthSubFacilityData
+     * @param healthSubFacilityData
+     */
     private void updateHealthSubFacilityData(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
         existHealthSubFacilityData.setName(healthSubFacilityData.getName());
         existHealthSubFacilityData.setModifiedBy(healthSubFacilityData.getModifiedBy());
@@ -223,6 +253,15 @@ public class HealthSubFacilityCsvUploadHandler {
         logger.info("HealthSubFacility Permanent data is successfully updated.");
     }
 
+    /**
+     * This method validates whether the HealthSubFacility has its parent or not.
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @param healthBlockCode
+     * @param healthfacilityCode
+     * @throws DataValidationException
+     */
     private void validateHealthSubFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthfacilityCode) throws DataValidationException {
 
         validatorService.validateHealthSubFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);

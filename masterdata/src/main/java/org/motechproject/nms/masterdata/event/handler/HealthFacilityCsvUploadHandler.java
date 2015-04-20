@@ -78,7 +78,11 @@ public class HealthFacilityCsvUploadHandler {
         processRecords(createdIds, csvFileName);
     }
 
-
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -109,6 +113,11 @@ public class HealthFacilityCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
+    /**
+     * This method is used to process HealthFacilityCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processHealthFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
@@ -157,6 +166,12 @@ public class HealthFacilityCsvUploadHandler {
     }
 
 
+    /**
+     * This method maps CSV data to the the HealthFacility object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private HealthFacility mapHealthFacilityCsv(CsvHealthFacility record) throws DataValidationException {
         HealthFacility newRecord = new HealthFacility();
 
@@ -184,6 +199,11 @@ public class HealthFacilityCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method is used to process the HealthFacility data according to the operation
+     * @param healthFacilityData
+     * @throws DataValidationException
+     */
     private void processHealthFacilityData(HealthFacility healthFacilityData) throws DataValidationException {
 
         logger.debug("Health Facility data contains facility code : {}", healthFacilityData.getHealthFacilityCode());
@@ -201,6 +221,10 @@ public class HealthFacilityCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new HealthFacility record to the database.
+     * @param healthFacilityData
+     */
     private void insertHealthFacilityData(HealthFacility healthFacilityData) {
         HealthBlock healthBlockData = healthBlockService.findHealthBlockByParentCode(
                 healthFacilityData.getStateCode(), healthFacilityData.getDistrictCode(),
@@ -211,6 +235,12 @@ public class HealthFacilityCsvUploadHandler {
         logger.info("HealthFacility data is successfully inserted.");
 
     }
+
+    /**
+     * This method is used to update an existing HealthFacility record.
+     * @param existHealthFacilityData
+     * @param healthFacilityData
+     */
     private void updateHealthFacilityData(HealthFacility existHealthFacilityData, HealthFacility healthFacilityData) {
         existHealthFacilityData.setName(healthFacilityData.getName());
         existHealthFacilityData.setHealthFacilityType(healthFacilityData.getHealthFacilityType());
@@ -219,6 +249,14 @@ public class HealthFacilityCsvUploadHandler {
         logger.info("HealthFacility data is successfully updated.");
     }
 
+    /**
+     * This method validates whether the HealthFacility has its parent or not.
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @param healthBlockCode
+     * @throws DataValidationException
+     */
     private void validateHealthFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode) throws DataValidationException {
 
         validatorService.validateHealthFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode);

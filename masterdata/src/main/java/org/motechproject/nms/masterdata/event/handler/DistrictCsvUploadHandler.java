@@ -77,7 +77,11 @@ public class DistrictCsvUploadHandler {
         processRecords(createdIds, csvFileName);
     }
 
-
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -108,7 +112,11 @@ public class DistrictCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
+    /**
+     * This method is used to process DistrictCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processDistrictCsvRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
@@ -155,6 +163,12 @@ public class DistrictCsvUploadHandler {
 
     }
 
+    /**
+     * This method maps CSV data to the the District object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private District mapDistrictCsv(CsvDistrict record) throws DataValidationException {
 
         String districtName = ParseDataHelper.validateAndParseString("District Name", record.getName(), true);
@@ -175,10 +189,20 @@ public class DistrictCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method validates whether the District has its parent or not.
+     * @param stateCode
+     * @throws DataValidationException
+     */
     private void validateDistrictParent(Long stateCode) throws DataValidationException {
         validatorService.validateDistrictParent(stateCode);
     }
 
+    /**
+     * This method is used to process the District data according to the operation
+     * @param districtData
+     * @throws DataValidationException
+     */
     private void processDistrictData(District districtData) throws DataValidationException {
 
         logger.debug("District data contains district code : {}", districtData.getDistrictCode());
@@ -190,6 +214,10 @@ public class DistrictCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new District record to the database.
+     * @param districtData
+     */
     private void insertDistrict(District districtData) {
         State stateData = stateService.findRecordByStateCode(districtData.getStateCode());
         stateData.getDistrict().add(districtData);
@@ -197,6 +225,11 @@ public class DistrictCsvUploadHandler {
         logger.info("District data is successfully inserted.");
     }
 
+    /**
+     * This method is used to update an existing District record.
+     * @param existDistrictData
+     * @param districtData
+     */
     private void updateDistrict(District existDistrictData, District districtData) {
         existDistrictData.setName(districtData.getName());
         existDistrictData.setModifiedBy(districtData.getModifiedBy());

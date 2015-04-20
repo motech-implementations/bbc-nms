@@ -79,8 +79,12 @@ public class LanguageLocationCodeCsvHandler {
         processRecords(createdIds, csvFileName);
     }
 
-
-    public void processRecords(List<Long> CreatedId,
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
@@ -110,6 +114,11 @@ public class LanguageLocationCodeCsvHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
+    /**
+     * This method is used to process LanguageLocationCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processLanguageLocationRecords(String csvFileName, List<Long> createdIds) {
         CsvLanguageLocationCode record = null;
         DateTime timeStamp = new DateTime();

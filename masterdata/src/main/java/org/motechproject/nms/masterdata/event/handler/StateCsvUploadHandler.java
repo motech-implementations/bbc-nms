@@ -68,6 +68,11 @@ public class StateCsvUploadHandler {
     }
 
 
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -99,6 +104,11 @@ public class StateCsvUploadHandler {
     }
 
 
+    /**
+     * This method is used to process StateCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processStateCsvRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
@@ -149,6 +159,12 @@ public class StateCsvUploadHandler {
     }
 
 
+    /**
+     * This method maps CSV data to the the State object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private State mapStateCsv(CsvState record) throws DataValidationException {
 
         State newRecord = new State();
@@ -177,6 +193,11 @@ public class StateCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method is used to process the State data according to the operation
+     * @param stateData
+     * @throws DataValidationException
+     */
     private void processStateData(State stateData) throws DataValidationException {
 
         logger.debug("State data contains state code : {}", stateData.getStateCode());
@@ -191,6 +212,11 @@ public class StateCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to update an existing State record.
+     * @param stateExistData
+     * @param stateData
+     */
     private void updateState(State stateExistData, State stateData) {
 
         stateExistData.setName(stateData.getName());
@@ -201,8 +227,6 @@ public class StateCsvUploadHandler {
         stateExistData.setIsKkDeployed(stateData.getIsKkDeployed());
         stateExistData.setIsWhiteListEnable(stateData.getIsWhiteListEnable());
         stateExistData.setModifiedBy(stateData.getModifiedBy());
-
-
         stateService.update(stateExistData);
     }
 

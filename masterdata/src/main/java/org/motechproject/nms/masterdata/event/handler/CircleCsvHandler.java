@@ -65,6 +65,11 @@ public class CircleCsvHandler {
 
     }
 
+    /**
+     * This method processes the Csv data Records.
+     * @param createdId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> createdId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -95,7 +100,11 @@ public class CircleCsvHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
+    /**
+     * This method is used to process CircleCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processCircleRecords(String csvFileName, List<Long> createdIds) {
         CsvCircle record = null;
         Circle persistentRecord = null;

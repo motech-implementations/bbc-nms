@@ -78,6 +78,11 @@ public class TalukaCsvUploadHandler {
 
     }
 
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -109,6 +114,11 @@ public class TalukaCsvUploadHandler {
     }
 
 
+    /**
+     * This method is used to process TalukaCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processTalukaRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
@@ -156,6 +166,12 @@ public class TalukaCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
+    /**
+     * This method maps CSV data to the the Taluka object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private Taluka mapTalukaCsv(CsvTaluka record) throws DataValidationException {
         Taluka newRecord = new Taluka();
 
@@ -164,7 +180,7 @@ public class TalukaCsvUploadHandler {
         Long districtCode = ParseDataHelper.validateAndParseLong("DistrictCode", record.getDistrictCode(), true);
         Long talukaCode = ParseDataHelper.validateAndParseLong("TalukaCode", record.getTalukaCode(), true);
 
-        validateTalukaParent(stateCode,districtCode);
+        validateTalukaParent(stateCode, districtCode);
 
         newRecord.setName(talukaName);
         newRecord.setStateCode(stateCode);
@@ -177,10 +193,21 @@ public class TalukaCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method validates whether the Taluka has its parent or not.
+     * @param stateCode
+     * @param districtCode
+     * @throws DataValidationException
+     */
     private void validateTalukaParent(Long stateCode, Long districtCode) throws DataValidationException {
         validatorService.validateTalukaParent(stateCode, districtCode);
     }
 
+    /**
+     * This method is used to process the Taluka data according to the operation
+     * @param talukaData
+     * @throws DataValidationException
+     */
     private void processTalukaData(Taluka talukaData) throws DataValidationException {
 
         Taluka existTalukaData = talukaService.findTalukaByParentCode(
@@ -195,6 +222,10 @@ public class TalukaCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new Taluka record to the database.
+     * @param talukaData
+     */
     private void insertTaluka(Taluka talukaData) {
 
         District districtData = districtService.findDistrictByParentCode(talukaData.getDistrictCode(), talukaData.getStateCode());
@@ -203,6 +234,12 @@ public class TalukaCsvUploadHandler {
         logger.info("Taluka data is successfully inserted.");
     }
 
+
+    /**
+     * This method is used to update an existing Taluka record.
+     * @param existTalukaData
+     * @param talukaData
+     */
     private void updateTaluka(Taluka existTalukaData, Taluka talukaData) {
         existTalukaData.setName(talukaData.getName());
         existTalukaData.setModifiedBy(talukaData.getModifiedBy());

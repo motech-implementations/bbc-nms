@@ -80,6 +80,11 @@ public class HealthBlockCsvUploadHandler {
 
     }
 
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -110,7 +115,11 @@ public class HealthBlockCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
+    /**
+     * This method is used to process HealthBlockCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processHealthBlockRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
@@ -158,7 +167,12 @@ public class HealthBlockCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-
+    /**
+     * This method maps CSV data to the the HealthBlock object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
     private HealthBlock mapHealthBlockCsv(CsvHealthBlock record) throws DataValidationException {
         HealthBlock newRecord = new HealthBlock();
 
@@ -182,6 +196,11 @@ public class HealthBlockCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method is used to process the HealthBlock data according to the operation
+     * @param healthBlockData
+     * @throws DataValidationException
+     */
     private void processHealthBlockData(HealthBlock healthBlockData) throws DataValidationException {
 
         logger.debug("Health Block data contains Health Block code : {}", healthBlockData.getHealthBlockCode());
@@ -198,6 +217,10 @@ public class HealthBlockCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new HealthBlock record to the database.
+     * @param healthBlockData
+     */
     private void insertHealthBlock(HealthBlock healthBlockData) {
         Taluka talukaRecord = talukaService.findTalukaByParentCode(healthBlockData.getStateCode(), healthBlockData.getDistrictCode(), healthBlockData.getTalukaCode());
         talukaRecord.getHealthBlock().add(healthBlockData);
@@ -205,6 +228,11 @@ public class HealthBlockCsvUploadHandler {
         logger.info("HealthBlock data is successfully inserted.");
     }
 
+    /**
+     * This method is used to update an existing HealthBlock record.
+     * @param existHealthBlockData
+     * @param healthBlockData
+     */
     private void updateHealthBlock(HealthBlock existHealthBlockData, HealthBlock healthBlockData) {
         existHealthBlockData.setName(healthBlockData.getName());
         existHealthBlockData.setModifiedBy(healthBlockData.getModifiedBy());

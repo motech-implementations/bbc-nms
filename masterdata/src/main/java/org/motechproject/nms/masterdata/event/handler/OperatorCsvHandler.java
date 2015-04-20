@@ -69,7 +69,12 @@ public class OperatorCsvHandler {
     }
 
 
-    public void processRecords(List<Long> CreatedId,
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
@@ -99,6 +104,11 @@ public class OperatorCsvHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
+    /**
+     * This method is used to process OperatorCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processOperatorRecords(String csvFileName, List<Long> createdIds) {
 
         CsvOperator record = null;

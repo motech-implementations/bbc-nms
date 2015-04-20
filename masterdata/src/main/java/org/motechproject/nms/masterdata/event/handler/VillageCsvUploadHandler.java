@@ -77,6 +77,11 @@ public class VillageCsvUploadHandler {
         processRecords(createdIds, csvFileName);
     }
 
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
     private void processRecords(List<Long> CreatedId,
                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
@@ -107,7 +112,11 @@ public class VillageCsvUploadHandler {
         logger.info("Record Processing complete for csv file: {}", csvFileName);
     }
 
-
+    /**
+     *  This method is used to process villageCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
     private void processVillageRecords(String csvFileName, List<Long> createdIds) {
 
         DateTime timeStamp = new DateTime();
@@ -156,6 +165,12 @@ public class VillageCsvUploadHandler {
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
+    /**
+     * This method maps CSV data to the the Village object.
+     * @param record
+     * @return Village object
+     * @throws DataValidationException
+     */
     private Village mapVillageCsv(CsvVillage record) throws DataValidationException {
         Village newRecord = new Village();
 
@@ -179,10 +194,22 @@ public class VillageCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method validates whether the village has its parent or not.
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @throws DataValidationException
+     */
     private void validateVillageParent(Long stateCode, Long districtCode, Long talukaCode) throws DataValidationException {
         validatorService.validateVillageParent(stateCode, districtCode, talukaCode);
     }
 
+    /**
+     * This method is used to process the Village data according to the operation
+     * @param villageData
+     * @throws DataValidationException
+     */
     private void processVillageData(Village villageData) throws DataValidationException {
 
         logger.debug("Village data contains village code : {}", villageData.getVillageCode());
@@ -199,6 +226,10 @@ public class VillageCsvUploadHandler {
         }
     }
 
+    /**
+     * This method is used to insert a new Village record to the database.
+     * @param villageData
+     */
     private void insertVillage(Village villageData) {
 
         Taluka talukaRecord = talukaService.findTalukaByParentCode(villageData.getStateCode(),
@@ -208,6 +239,11 @@ public class VillageCsvUploadHandler {
         logger.info("Village data is successfully inserted.");
     }
 
+    /**
+     * This method is used to update an existing Village record.
+     * @param existVillageData
+     * @param villageData
+     */
     private void updateVillage(Village existVillageData, Village villageData) {
 
         existVillageData.setName(villageData.getName());
