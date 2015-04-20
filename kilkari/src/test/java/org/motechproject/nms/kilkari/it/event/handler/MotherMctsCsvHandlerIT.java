@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.AssertTrue;
+
 import static org.junit.Assert.*;
 /**
  * Verify that HelloWorldRecordService present, functional.
@@ -399,7 +402,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     }
     
     @Test
-    public void should(){
+    public void testDeleteSubscriberSubscriptionAfter6Weeks(){
         logger.info("Inside createSameMsisdnSameMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -467,7 +470,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     }
     
     @Test
-    public void test1(){
+    public void testScheduledSubscriptionApi(){
         
         logger.info("Inside createSameMsisdnSameMcts");
         
@@ -603,7 +606,9 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
-        subscriptionService.getScheduledSubscriptions();
+        List<Subscription> scheduledSubscriptions = subscriptionService.getScheduledSubscriptions();
+        
+        
     }
     
     
