@@ -88,9 +88,25 @@ public interface SubscriptionService {
     void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
         throws DataValidationException, NmsInternalServerError;
 
+    /**
+     * This method is used to delete subscriber and subscription 
+     * which are deactivated or completed six week before
+     */
     void deleteSubscriberSubscriptionAfter6Weeks();
 
+    /**
+     * This method is used to get those subscriber 
+     * whose OBD message is to send today.
+     */
     List<Subscription> getScheduledSubscriptions();
 
+    /**
+     * This method is used by kilkari-obd module for deactivating a subscription
+     * and we have not to deactivate those subscription who have subscribed through
+     * IVR and having deactivation reason 'MSISDN_IN_DND'.
+     * 
+     * @param subscriptionId Long type object
+     * @param reason DeactivateReason
+     */
     void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
 }

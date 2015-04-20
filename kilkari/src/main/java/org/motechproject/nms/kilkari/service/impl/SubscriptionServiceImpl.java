@@ -540,6 +540,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     /**
      * This method deactivates the subscription corresponding to subscriptionId
+     * 
      * @param subscriptionId Long type object
      */
     @Override
@@ -557,6 +558,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
     
+    /**
+     * This method is used by kilkari-obd module for deactivating a subscription
+     * and we have not to deactivate those subscription who have subscribed through
+     * IVR and having deactivation reason 'MSISDN_IN_DND'.
+     * 
+     * @param subscriptionId Long type object
+     * @param reason DeactivateReason
+     */
     @Override
     public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
@@ -573,12 +582,22 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
     
+    /**
+     * This method is used to delete subscriber and subscription 
+     * which are deactivated or completed six week before
+     * 
+     */
     @Override
     public void deleteSubscriberSubscriptionAfter6Weeks(){
         subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery());
         subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
     }
     
+    /**
+     * This method is used to get those subscriber 
+     * whose OBD message is to send today
+     * 
+     */
     @Override
     public List<Subscription> getScheduledSubscriptions() {
         List<Subscription> subscriptionList = subscriptionDataService.executeQuery(new CustomQueries.FindScheduledSubscription());
@@ -588,14 +607,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             Subscriber subscriber = subscription.getSubscriber();
             
             //handling which week msg we have to deliver.
-            DateTime dobOrLmp = subscriber.getDobLmp();
             DateTime currDate = new DateTime();
-            int weekNum = 0;
-            if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
-                weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
-            } else {
-                weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + (Days.daysBetween(dobOrLmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
-            }
+            int weekNum = calculateWeekNumber(subscriber, currDate);
             subscription.setWeekNumber(weekNum);
             measure.setWeekNumber(weekNum);
             
@@ -638,6 +651,25 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         }
         return scheduledSubscription;
+    }
+
+    /**
+     * This method is used to calculate which week message is to send.
+     * @param subscriber
+     * @param currDate
+     * @return
+     */
+    private int calculateWeekNumber(Subscriber subscriber, DateTime currDate) {
+        DateTime dobOrLmp = subscriber.getDobLmp();
+        int weekNum = 0;
+        if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
+            weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + 
+                    (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+        } else {
+            weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + 
+                    (Days.daysBetween(dobOrLmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+        }
+        return weekNum;
     }
     
 }
