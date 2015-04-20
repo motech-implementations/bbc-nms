@@ -466,10 +466,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(channel == Channel.IVR) {
             startDate = currDate.plusDays(1);
         } else if(channel == Channel.MCTS) {
-            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) 
-                    ? subscriber.getLmp().plusMonths(3) : subscriber.getDob() ;
-            int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
-            startDate = (noOfDays%7 == 0) ? currDate : currDate.plusDays(7 - (noOfDays % 7));
+            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(3) : subscriber.getDob() ;
+            if(packIntialStartDate.isAfter(currDate)) {
+                int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
+                startDate = (noOfDays%7 == 0) ? currDate : currDate.plusDays(7 - (noOfDays % 7));
+            } else {
+                startDate =  packIntialStartDate;
+            }
         }
         return startDate;
     }
@@ -606,46 +609,37 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             SubscriptionMeasure measure = new SubscriptionMeasure();
             Subscriber subscriber = subscription.getSubscriber();
             
-            //handling which week msg we have to deliver.
+            /* handling which week msg we have to deliver. */
             DateTime currDate = new DateTime();
             int weekNum = calculateWeekNumber(subscriber, currDate);
             subscription.setWeekNumber(weekNum);
             measure.setWeekNumber(weekNum);
             
-            //handling which msg(first or second) we have to deliver.
-            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
-                subscription.setMessageNumber(1);
-                measure.setMessageNumber(1);
-            } else if(Days.daysBetween(new DateTime(subscription.getStartDate()), new DateTime(currDate.toDateMidnight().getMillis())).getDays()%7==0){
-                subscription.setMessageNumber(1);
-                measure.setMessageNumber(1);
+            /* handling which msg(first or second) we have to deliver. */
+            subscription.setMessageNumber(1);
+            measure.setMessageNumber(1);
+            
+            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 2) {
+                int alignDiffofStartAndCurrent = Days.daysBetween(new DateTime(subscription.getStartDate()), new DateTime(currDate.toDateMidnight().getMillis())).getDays()%7;
+                if(alignDiffofStartAndCurrent == 3 ){
+                    subscription.setMessageNumber(2);
+                    measure.setMessageNumber(2);
+                }
+            }
+            
+            /* Set status of subscription */
+            if(subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER) {
+                subscription.setStatus(weekNum < Constants.DURATION_OF_72_WEEK_PACK ? Status.ACTIVE : Status.COMPLETED);
             } else {
-                subscription.setMessageNumber(2);
-                measure.setMessageNumber(2);
-            }
-            
-            if(subscription.getStatus()==Status.PENDING_ACTIVATION && weekNum < 72 && subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER) {
-                subscription.setStatus(Status.ACTIVE);
-            }
-            
-            if(subscription.getStatus()==Status.PENDING_ACTIVATION && weekNum < 48 && subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
-                subscription.setStatus(Status.ACTIVE);
-            }
-            
-            /* handling pack status*/
-            if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum >= Constants.DURATION_OF_48_WEEK_PACK) {
-                subscription.setStatus(Status.COMPLETED);
-            }
-            
-            if (subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum >= Constants.DURATION_OF_72_WEEK_PACK) {
-                subscription.setStatus(Status.COMPLETED);
+                subscription.setStatus(weekNum < Constants.DURATION_OF_48_WEEK_PACK ? Status.ACTIVE : Status.COMPLETED);
             }
             
             measure.setStatus(subscription.getStatus());
             Subscription dbSubscription = subscriptionDataService.update(subscription);
-            
+                
             measure.setSubscription(dbSubscription);
             subscriptionMeasureService.create(measure);
+            
             if(subscription.getStatus()!=Status.COMPLETED)
                 scheduledSubscription.add(subscription);
 
@@ -662,7 +656,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private int calculateWeekNumber(Subscriber subscriber, DateTime currDate) {
         DateTime dobOrLmp = subscriber.getDobLmp();
         int weekNum = 0;
-        if (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD) {
+        if (subscriber.getBeneficiaryType() == BeneficiaryType.CHILD) {
             weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + 
                     (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
         } else {

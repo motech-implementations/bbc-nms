@@ -479,7 +479,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000013");
         csv.setIdNo("13");
-        csv.setLmpDate("2014-01-01 08:08:08");
+        csv.setLmpDate("2015-04-20 08:08:08");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record

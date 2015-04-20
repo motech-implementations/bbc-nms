@@ -79,9 +79,9 @@ public class CustomQueries {
             long day = 1000*60*60*24; 
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (((currDateInMillis-startDate)/day)%7 == 0)");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && (((currDateInMillis-startDate)/day)%7 == 0)");
             } else {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && ((((currDateInMillis-startDate)/day)%7 == 0) || (((currDateInMillis-startDate)/day)%7 == 3))");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && ((((currDateInMillis-startDate)/day)%7 == 0) || (((currDateInMillis-startDate)/day)%7 == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
             return (List<Subscription>) query.execute(currDateInMillis, day);
