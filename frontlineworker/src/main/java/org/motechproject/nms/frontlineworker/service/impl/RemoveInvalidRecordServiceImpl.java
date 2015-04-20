@@ -13,11 +13,6 @@ public class RemoveInvalidRecordServiceImpl implements RemoveInvalidRecordServic
 
     @Autowired
     private JobScheduler jobScheduler;
-/*
-    @Autowired
-    public RemoveInvalidRecordServiceImpl(JobScheduler jobScheduler) {
-        this.jobScheduler = jobScheduler;
-    }*/
 
 
     @Override

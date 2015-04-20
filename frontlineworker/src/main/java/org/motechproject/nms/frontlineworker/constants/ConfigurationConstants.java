@@ -19,6 +19,8 @@ public final class ConfigurationConstants {
 
     public static final String DELETION_EVENT_SUBJECT_SCHEDULER = BASE_SUBJECT + "deletion";
 
+    public static final int DELETE_INVALID_RECORDS_AFTER_WEEKS = 6;
+
 
     private ConfigurationConstants() {
     }

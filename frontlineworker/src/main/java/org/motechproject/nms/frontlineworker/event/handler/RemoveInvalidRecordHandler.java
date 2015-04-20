@@ -1,5 +1,6 @@
 package org.motechproject.nms.frontlineworker.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.frontlineworker.Status;
@@ -27,21 +28,12 @@ public class RemoveInvalidRecordHandler {
     @MotechListener(subjects = {ConfigurationConstants.DELETION_EVENT_SUBJECT_SCHEDULER})
     public void handleDeleteInvalidFlw(MotechEvent motechEvent) {
 
+        DateTime lastModificationDate = new DateTime().minusWeeks(ConfigurationConstants.DELETE_INVALID_RECORDS_AFTER_WEEKS);
 
-        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerService.retrieveAll();
+        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerService.findByStatus(Status.INVALID, lastModificationDate);
 
         for (FrontLineWorker frontLineWorker : frontLineWorkerList) {
-            if (frontLineWorker.getStatus() == Status.INVALID) {
-                frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
-            }
+            frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
         }
-
-        // scheduleRepeatDeletion(motechEvent);
     }
-
-    private void scheduleRepeatDeletion(MotechEvent motechEvent) {
-
-    }
-
-
 }

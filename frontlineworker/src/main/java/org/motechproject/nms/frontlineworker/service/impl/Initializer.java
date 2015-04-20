@@ -18,20 +18,20 @@ public class Initializer {
 
     private static final Logger LOG = LoggerFactory.getLogger(Initializer.class);
 
-    private RemoveInvalidRecordService job;
+    private RemoveInvalidRecordService removeInvalidRecordService;
 
     public Initializer() {
     }
 
     @Autowired
-    public Initializer(RemoveInvalidRecordService job) {
-        this.job = job;
+    public Initializer(RemoveInvalidRecordService removeInvalidRecordService) {
+        this.removeInvalidRecordService = removeInvalidRecordService;
     }
 
     @PostConstruct
     public void initializeConfiguration() {
 
-        job.createNewDeletionJob();
+        removeInvalidRecordService.createNewDeletionJob();
     }
 
 }

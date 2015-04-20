@@ -30,14 +30,15 @@ public class JobScheduler {
     }
 
     public void scheduleDeletionJob() {
-        CronSchedulableJob schedulableJob = getSchedulableJob();
+
+        //loop here for calling job everyday
+        CronSchedulableJob schedulableJob = getSchedulableDailyJob();
         schedulerService.safeScheduleJob(schedulableJob);
     }
 
-    private CronSchedulableJob getSchedulableJob() {
+    private CronSchedulableJob getSchedulableDailyJob() {
         Map<String, Object> eventParams = null;
-        DateTime dateTime = DateTime.now();
-        dateTime = dateTime.plusMinutes(5);
+        DateTime dateTime = new DateTime().withTimeAtStartOfDay();
 
         MotechEvent motechEvent = new MotechEvent(ConfigurationConstants.DELETION_EVENT_SUBJECT_SCHEDULER, eventParams);
         String cronJobExpression = new CronJobSimpleExpressionBuilder(new Time(dateTime.toLocalTime())).build();

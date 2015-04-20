@@ -102,12 +102,13 @@ public class WhiteListUsersUploadHandler {
      * This function processes all the CsvWhiteListUsers upload records. This function is
      * called in a transaction call so in case of any error, the changes are
      * reverted back.
-     * @param record list of CsvWhiteListUsers objects
+     *
+     * @param record      list of CsvWhiteListUsers objects
      * @param csvFileName name of the upload file
      */
 
     private void processRecords(List<CsvWhiteListUsers> record,
-                               String csvFileName) {
+                                String csvFileName) {
         logger.info("Record Processing Started for csv file: {}", csvFileName);
 
         whiteListUsersRecordDataService
@@ -140,7 +141,8 @@ public class WhiteListUsersUploadHandler {
     /**
      * This function processes all the CsvWhiteListUsers upload records. This function is
      * called from  processRecords procedure to perform transactional add/del/mod.
-     * @param record list of CsvWhiteListUsers objects
+     *
+     * @param record      list of CsvWhiteListUsers objects
      * @param csvFileName name of the upload file
      */
 

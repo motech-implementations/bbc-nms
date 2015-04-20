@@ -16,8 +16,16 @@ import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -499,7 +507,8 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
     }
 
     @Test
-    public void testUpdateLanguageLocationCodeFromMsisdn() throws DataValidationException {
+    public void testUpdateLanguageLocationCodeFromMsisdn() throws DataValidationException, FlwNotInWhiteListException,
+    ServiceNotDeployedException{
 
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
@@ -509,7 +518,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         // Record 12 LanguageLocationCode not Exist in Database.
 
         try {
-            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(234, "1121121121");
+            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(234, "1121121121", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -521,7 +530,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         // Record 13 LanguageLocationCode and contactNO Exist in Database.
 
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1313131313");
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1313131313", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1313131313");
 
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
@@ -530,7 +539,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         // Record 14 LanguageLocationCode should Exist but FrontlineWorker not present.
 
         try {
-            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1414141414");
+            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1414141414",  ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);

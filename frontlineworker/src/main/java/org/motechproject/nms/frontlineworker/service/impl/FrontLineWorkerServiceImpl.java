@@ -1,5 +1,6 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
+import org.joda.time.DateTime;
 import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
@@ -105,9 +106,9 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     }
 
     @Override
-    public List<FrontLineWorker> retrieveAll() {
+    public List<FrontLineWorker> findByStatus(Status status, DateTime modificationDate) {
 
-        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.retrieveAll();
+        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.findByStatus(status, modificationDate);
 
         return frontLineWorkerList;
     }

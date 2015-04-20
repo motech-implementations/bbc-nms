@@ -15,7 +15,11 @@ import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.Operator;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -24,8 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * This class provides the implementation of User Profile Details interface.
@@ -120,12 +122,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @throws DataValidationException
      */
     @Override
-    public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn)
-            throws DataValidationException {
+    public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn,
+                                                     ServicesUsingFrontLineWorker service)
+            throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException {
 
-/*        boolean isDeployed = false;
+        boolean isDeployed = false;
         boolean isInWhiteList = false;
-        List<Long>stateCodeList = null;*/
+        Long stateCode = null;
 
         logger.debug("updateLanguageLocationCodeFromMsisdn API start");
         String validatedMsisdn = null;
@@ -146,6 +149,21 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 if (languageLocationCodeByParam == null) {
                     ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
                 } else {
+                    stateCode = languageLocationCodeByParam.getStateCode();
+
+                    isDeployed = checkIsDeployedInState(service, stateCode);
+                    if (!isDeployed) {
+                        String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                        throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+
+                    }
+                    isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
+                    if (!isInWhiteList) {
+
+                        String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+                        throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+                    }
+
                     frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
                     frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
                 }
@@ -204,6 +222,31 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
     }
 
+
+    /**
+     * This procedure validates the parameters that are sent in the ProcessUserDetails API
+     *
+     * @param msisdn       contact number of the front line worker whose details are to be fetched
+     * @param operatorCode the operator code deduced by the call
+     * @param circleCode   the circle code deduced by the call
+     * @param service      the module which is invoking the API
+     * @throws DataValidationException
+     */
+    private String validateParams(String msisdn, String operatorCode, String circleCode,
+                                  ServicesUsingFrontLineWorker service) throws DataValidationException {
+        String validatedMsisdn = null;
+
+        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber", msisdn);
+        validateOperator(operatorCode);
+
+        validateCircle(circleCode);
+
+        validateService(service);
+
+        return validatedMsisdn;
+
+    }
+
     /**
      * This procedure creates a new UserProfile when a call is made by a number which is not present in the Database
      *
@@ -237,38 +280,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
 
     /**
-     * This procedure validates the parameters that are sent in the ProcessUserDetails API
-     *
-     * @param msisdn       contact number of the front line worker whose details are to be fetched
-     * @param operatorCode the operator code deduced by the call
-     * @param circleCode   the circle code deduced by the call
-     * @param service      the module which is invoking the API
-     * @throws DataValidationException
-     */
-    private String validateParams(String msisdn, String operatorCode, String circleCode,
-                                  ServicesUsingFrontLineWorker service) throws DataValidationException {
-        String validatedMsisdn = null;
-
-        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("callingNumber", msisdn);
-        validateOperator(operatorCode);
-
-        validateCircle(circleCode);
-
-        validateService(service);
-
-        return validatedMsisdn;
-
-    }
-
-
-    /**
      * This procedure generates the UserDetails of a record with the circle code given in the API call
      *
      * @param msisdn     contact number of the front line worker whose details are to be fetched
      * @param circleCode the circle code deduced from the call
      * @param service    the module which is invoking the API
      * @param circleCode the circle code deduced from the call
-     * @throws DataValidationException,java.lang.Exception
+     * @throws FlwNotInWhiteListException,ServiceNotDeployedException
      */
     private UserProfile getUserDetailsByCircle(String msisdn, String circleCode, ServicesUsingFrontLineWorker service)
             throws FlwNotInWhiteListException, ServiceNotDeployedException {
@@ -280,62 +298,30 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         boolean isDeployed = false;
         boolean isInWhiteList = false;
 
-        List<LanguageLocationCode> languageLocationCodeList = null;
         Long stateCode = null;
-/*        boolean isDeployedInEveryState = false;
-        boolean isDeployed = false;*/
-        List<Long> stateCodeList = null;
 
+        locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
 
-        languageLocationCodeList = languageLocationCodeService.findLLCListByCircleCode(circleCode);
-        if (languageLocationCodeList != null) {
-            if (languageLocationCodeList.size() == 1) {
-                //unique language location code is found for the provided circle
-                languageLocationCode = languageLocationCodeList.get(0);
-                logger.debug("language location code found by circle = {}", languageLocationCode.getLanguageLocationCode());
-                stateCodeList.add(0, languageLocationCode.getStateCode());
-                //languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
-                isDeployed = checkIsDeployedInState(service, stateCodeList);
-                if (!isDeployed) {
-                    throw new ServiceNotDeployedException("Service is not Deployed for all states", ErrorCategoryConstants.INCONSISTENT_DATA,
-                            "Service is not Deployed for all states");
+        if (locationCode != null) {
+            languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
 
-                }
-                isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCodeList);
-                if (!isInWhiteList) {
-
-                    throw new FlwNotInWhiteListException("ContactNo not present in WhiteListUsers List",
-                            ErrorCategoryConstants.INCONSISTENT_DATA, "ContactNo not present in WhiteListUsers List");
-                }
-
-                userProfile = uniqueLLCForAnonymousUser(languageLocationCode, service);
-
-            } else {
-                logger.debug("multiple language location codes found by circle");
-                int i = 0;
-                for (LanguageLocationCode code : languageLocationCodeList) {
-                    stateCodeList.add(i, code.getStateCode());
-                    i++;
-                }
-                isDeployed = checkIsDeployedInState(service, stateCodeList);
-                if (!isDeployed) {
-                    throw new ServiceNotDeployedException("Service is not Deployed for all states", ErrorCategoryConstants.INCONSISTENT_DATA,
-                            "Service is not Deployed for all states");
-
-                }
-                isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCodeList);
-                if (!isInWhiteList) {
-
-                    throw new FlwNotInWhiteListException("ContactNo not present in WhiteListUsers List",
-                            ErrorCategoryConstants.INCONSISTENT_DATA, "ContactNo not present in WhiteListUsers List");
-                }
-
+            logger.debug("language location code found by circle = {}", locationCode);
+            stateCode = languageLocationCode.getStateCode();
+            isDeployed = checkIsDeployedInState(service, stateCode);
+            if (!isDeployed) {
+                String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA,
+                        errMessage);
             }
-            userProfile = multipleLLCForAnonymousUser(service, circleCode);
+            isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
+            if (!isInWhiteList) {
+                String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+                throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+            }
+
+            userProfile = uniqueLLCForAnonymousUser(languageLocationCode, service);
 
         } else {
-
-
             defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
             if (defaultLanguageLocationCode != null) {
                 //no or multiple language location codes is found for the provided circle. here default language location
@@ -363,43 +349,30 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         return userProfile;
     }
- /*       //locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
-        if (locationCode != null) {
-            //unique language location code is found for the provided circle
-            logger.debug("language location code found by circle = {}", locationCode);
-            languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, locationCode);
-            userProfile.setIsDefaultLanguageLocationCode(false);
-            userProfile.setLanguageLocationCode(locationCode);
-            stateCode = languageLocationCode.getStateCode();
-            userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-            userProfile.setCircle(languageLocationCode.getCircleCode());
 
 
-        } else {
-            defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
-            if (defaultLanguageLocationCode != null) {
-                //no or multiple language location codes is found for the provided circle. here default language location
-                // code is fetched from circle
-                logger.debug("default language location code found by circle = {}", defaultLanguageLocationCode);
-                languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
-                userProfile.setIsDefaultLanguageLocationCode(true);
-                userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
-                stateCode = languageLocationCode.getStateCode();
-                userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-                userProfile.setCircle(languageLocationCode.getCircleCode());
+    /**
+     * This procedure generates UserDetails for an Anonymous USer if unique language location code is found
+     * for the provided circle
+     *
+     * @param languageLocationCode LanguageLocationCode
+     * @param service              the module which is invoking the API
+     * @return userProfile Details
+     */
+    private UserProfile uniqueLLCForAnonymousUser(LanguageLocationCode languageLocationCode,
+                                                  ServicesUsingFrontLineWorker service) {
 
+        UserProfile userProfile = null;
+        Long stateCode = null;
+        userProfile.setIsDefaultLanguageLocationCode(false);
+        userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
+        stateCode = languageLocationCode.getStateCode();
+        userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
+        userProfile.setCircle(languageLocationCode.getCircleCode());
 
-            } else {
-                //here the default language location code for circle is also not found.
-                logger.debug("both language location code and default language location code not found");
-                userProfile.setIsDefaultLanguageLocationCode(true);
-                userProfile.setLanguageLocationCode(null);
-                userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
-                userProfile.setCircle(circleCode);
+        return userProfile;
 
-            }
-        }*/
-
+    }
 
     /**
      * This procedure generates UserDetails for an Anonymous USer if multiple language location code is found
@@ -442,29 +415,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     }
 
     /**
-     * This procedure generates UserDetails for an Anonymous USer if unique language location code is found
-     * for the provided circle
-     *
-     * @param languageLocationCode LanguageLocationCode
-     * @param service              the module which is invoking the API
-     * @return userProfile Details
-     */
-    private UserProfile uniqueLLCForAnonymousUser(LanguageLocationCode languageLocationCode,
-                                                  ServicesUsingFrontLineWorker service) {
-
-        UserProfile userProfile = null;
-        Long stateCode = null;
-        userProfile.setIsDefaultLanguageLocationCode(false);
-        userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
-        stateCode = languageLocationCode.getStateCode();
-        userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-        userProfile.setCircle(languageLocationCode.getCircleCode());
-
-        return userProfile;
-
-    }
-
-    /**
      * This procedure generates UserDetails for an InactiveUser using its state and district details
      *
      * @param msisdn          contact number of the front line worker whose details are to be fetched
@@ -479,17 +429,16 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         boolean isDeployed = false;
         boolean isInWhiteList = false;
-        List<Long> stateCodeList = null;
+
         Long stateCode = frontLineWorker.getStateCode();
-        stateCodeList.add(0, stateCode);
         UserProfile userProfile = null;
-        isDeployed = checkIsDeployedInState(service, stateCodeList);
+        isDeployed = checkIsDeployedInState(service, stateCode);
         if (!isDeployed) {
-            String errMessage = String.format("Service is not Deployed for state : %s :", stateCode);
+            String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
             throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
         }
-        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCodeList);
+        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
         if (!isInWhiteList) {
 
             String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
@@ -498,144 +447,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         userProfile = inactiveUserDetails(msisdn, operatorCode, frontLineWorker, service);
 
         return userProfile;
-    }
-
-
-    /**
-     * This procedure generated UserDetails for an ActiveUser using its state and district details
-     *
-     * @param msisdn          contact number of the front line worker whose details are to be fetched
-     * @param operatorCode    the operator by which the call is generated
-     * @param frontLineWorker the frontLineWorker found using the msisdn
-     * @param service         the module which is invoking the API
-     * @param circleCode      the circle code deduced from the call
-     * @throws NmsInternalServerError, ServiceNotDeployedException, FlwNotInWhiteListException
-     */
-    private UserProfile getUserDetailsForActiveUser(String msisdn, String operatorCode,
-                                                    FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service, String circleCode)
-            throws ServiceNotDeployedException, FlwNotInWhiteListException, NmsInternalServerError {
-
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
-        List<Long> stateCodeList = null;
-        Long stateCode = frontLineWorker.getStateCode();
-        stateCodeList.add(0, stateCode);
-        UserProfile userProfile = null;
-        isDeployed = checkIsDeployedInState(service, stateCodeList);
-        if (!isDeployed) {
-            String errMessage = String.format("Service is not Deployed for state : %s :", stateCode);
-            throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-
-        }
-        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCodeList);
-        if (!isInWhiteList) {
-
-            String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
-            throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-        }
-        userProfile = activeUserDetails(msisdn, operatorCode, frontLineWorker, service, circleCode);
-        return userProfile;
-    }
-
-
-    /**
-     * This procedure checks whether the calling service is deployed in the state or not.
-     *
-     * @param service       the module which is invoking the API
-     * @param stateCodeList stateCode fetched from frontLineWorker record
-     */
-    private boolean checkIsDeployedInState(ServicesUsingFrontLineWorker service, List<Long> stateCodeList) {
-
-        boolean isDeployed = false;
-        if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-            for (Long stateCode : stateCodeList) {
-
-                if (locationService.getMaServiceDeployedByCode(stateCode) == true) {
-                    logger.debug("Mobile Academy Service deployed in state : %s", stateCode);
-                    isDeployed = true;
-                    break;
-                } else {
-                    logger.debug("Service is not Deployed for state : %s :", stateCode);
-                }
-
-            }
-        } else {
-            for (Long stateCode : stateCodeList) {
-
-                if (locationService.getMkServiceDeployedByCode(stateCode) == true) {
-                    logger.debug("Mobile Kunji Service deployed in state : %s", stateCode);
-                    isDeployed = true;
-                    break;
-                } else {
-                    logger.debug("Service is not Deployed for state : %s :", stateCode);
-                }
-            }
-        }
-
-        return isDeployed;
-    }
-
-/*
-
-
-    */
-/**
- * This procedure checks whether the calling service is deployed in the state or not.
- * @param service the module which is invoking the API
- * @param stateCode stateCode fetched from frontLineWorker record
- * @return isDeplpoyed status
- *//*
-
-    private boolean checkIsDeployedInStateForAnonymous(ServicesUsingFrontLineWorker service, Long stateCode) {
-        boolean isDeployed = false;
-        if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-
-            if (locationService.getMaServiceDeployedByCode(stateCode) == true) {
-                logger.debug("Mobile Academy Service deployed in state : %s", stateCode);
-                isDeployed = true;
-            }
-        }
-        else {
-            if (locationService.getMkServiceDeployedByCode(stateCode) == true) {
-                logger.debug("Mobile Kunji Service deployed in state : %s", stateCode);
-                isDeployed = true;
-            } else {
-                isDeployed = false;
-            }
-        }
-        return isDeployed;
-    }
-*/
-
-
-    /**
-     * This procedure checks whether the calling msisdn is present in whiteList or not
-     *
-     * @param msisdn        contact number which is to be checked from whiteList
-     * @param stateCodeList state code fetched from front line worker record
-     * @return isInWhiteList status
-     */
-    private boolean checkIsInWhiteListStatus(String msisdn, List<Long> stateCodeList) {
-
-        boolean isInWhiteList = true;
-        boolean isWhiteListingEnabled = false;
-        WhiteListUsers whiteListUsers = null;
-        for (Long stateCode : stateCodeList) {
-            if (locationService.getWhiteListingEnableStatusByCode(stateCode)) {
-                isWhiteListingEnabled = true;
-            } else {
-                isWhiteListingEnabled = false;
-                break;
-            }
-        }
-        if (isWhiteListingEnabled) {
-            whiteListUsers = whiteListUsersService.findContactNo(msisdn);
-            if (whiteListUsers == null) {
-                isInWhiteList = false;
-            }
-
-        }
-        return isInWhiteList;
     }
 
 
@@ -680,6 +491,41 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         frontLineWorker.setOperatorCode(operatorCode);
         frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
 
+        return userProfile;
+    }
+
+
+    /**
+     * This procedure generated UserDetails for an ActiveUser using its state and district details
+     *
+     * @param msisdn          contact number of the front line worker whose details are to be fetched
+     * @param operatorCode    the operator by which the call is generated
+     * @param frontLineWorker the frontLineWorker found using the msisdn
+     * @param service         the module which is invoking the API
+     * @param circleCode      the circle code deduced from the call
+     * @throws NmsInternalServerError, ServiceNotDeployedException, FlwNotInWhiteListException
+     */
+    private UserProfile getUserDetailsForActiveUser(String msisdn, String operatorCode,
+                                                    FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service, String circleCode)
+            throws ServiceNotDeployedException, FlwNotInWhiteListException, NmsInternalServerError {
+
+        boolean isDeployed = false;
+        boolean isInWhiteList = false;
+        Long stateCode = frontLineWorker.getStateCode();
+        UserProfile userProfile = null;
+        isDeployed = checkIsDeployedInState(service, stateCode);
+        if (!isDeployed) {
+            String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+            throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+
+        }
+        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
+        if (!isInWhiteList) {
+
+            String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+            throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+        }
+        userProfile = activeUserDetails(msisdn, operatorCode, frontLineWorker, service, circleCode);
         return userProfile;
     }
 
@@ -782,7 +628,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         String circle = null;
         boolean isDeployed = false;
         boolean isInWhiteList = false;
-        List<Long> stateCodeList = null;
+        Long stateCode = null;
 
         circle = frontLineWorker.getCircleCode();
         languageLocationCode = frontLineWorker.getLanguageLocationCodeId();
@@ -790,20 +636,19 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             langLocCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circle, languageLocationCode);
             if (langLocCode != null) {
                 logger.debug(" Language Location code = {}, Circle Code = {}", languageLocationCode, circle);
-
-                stateCodeList.add(0, langLocCode.getStateCode());
-                isDeployed = checkIsDeployedInState(service, stateCodeList);
+                stateCode = langLocCode.getStateCode();
+                isDeployed = checkIsDeployedInState(service, stateCode);
                 if (!isDeployed) {
-                    throw new ServiceNotDeployedException("Service is not Deployed for state",
-                            ErrorCategoryConstants.INCONSISTENT_DATA, "Service is not Deployed for state");
+                    String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                    throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
                 }
-                isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCodeList);
+                isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
                 if (!isInWhiteList) {
                     throw new FlwNotInWhiteListException("ContactNo not present in WhiteListUsers",
                             ErrorCategoryConstants.INCONSISTENT_DATA, "ContactNo not present in WhiteListUsers");
                 }
-                userProfile = AnonymousUserDetails(msisdn, langLocCode.getStateCode(), frontLineWorker, service);
+                userProfile = anonymousUserDetails(msisdn, langLocCode.getStateCode(), frontLineWorker, service);
             } else {
                 String errMessage = String.format("Language Location code not found for circle : %s", circle);
                 throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
@@ -831,7 +676,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @param service         the module which is invoking the API
      * @return userProfile Details
      */
-    private UserProfile AnonymousUserDetails(String msisdn, Long stateCode, FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service) {
+    private UserProfile anonymousUserDetails(String msisdn, Long stateCode, FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service) {
 
         UserProfile userProfile = null;
         userProfile.setIsDefaultLanguageLocationCode(false);
@@ -861,6 +706,55 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             maxStateLevelCapping = state.getMkCapping();
         }
         return maxStateLevelCapping;
+    }
+
+
+    /**
+     * This procedure checks whether the calling service is deployed in the state or not.
+     *
+     * @param service   the module which is invoking the API
+     * @param stateCode stateCode fetched from frontLineWorker record
+     */
+    private boolean checkIsDeployedInState(ServicesUsingFrontLineWorker service, Long stateCode) {
+
+        boolean isDeployed = false;
+        if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
+            if (locationService.getMaServiceDeployedByCode(stateCode) == true) {
+                logger.debug("Mobile Academy Service deployed in state : %s", stateCode);
+                isDeployed = true;
+            }
+        } else {
+            if (locationService.getMkServiceDeployedByCode(stateCode) == true) {
+                logger.debug("Mobile Kunji Service deployed in state : %s", stateCode);
+                isDeployed = true;
+            }
+        }
+        return isDeployed;
+    }
+
+    /**
+     * This procedure checks whether the calling msisdn is present in whiteList or not
+     *
+     * @param msisdn    contact number which is to be checked from whiteList
+     * @param stateCode state code fetched from front line worker record
+     * @return isInWhiteList status
+     */
+    private boolean checkIsInWhiteListStatus(String msisdn, Long stateCode) {
+
+        boolean isInWhiteList = true;
+        boolean isWhiteListingEnabled = false;
+        WhiteListUsers whiteListUsers = null;
+        if (locationService.getWhiteListingEnableStatusByCode(stateCode)) {
+            logger.debug("White Listing enabled for State %s :", stateCode);
+            isWhiteListingEnabled = true;
+        }
+        if (isWhiteListingEnabled) {
+            whiteListUsers = whiteListUsersService.findContactNo(msisdn);
+            if (whiteListUsers == null) {
+                isInWhiteList = false;
+            }
+        }
+        return isInWhiteList;
     }
 
 }

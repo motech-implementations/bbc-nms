@@ -12,7 +12,13 @@ import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -88,7 +94,7 @@ public class FrontLineWorkerUploadHandler {
         logger.debug("Processing Csv file");
 
         processRecords(findListOfRecords(createdIds), csvFileName);
-        logger.info("Finished processing FrontLineWorker_CSV_UPLOAD_SUCCESS_EVENT Handler");
+        logger.info("Finished processing Success[flwDataHandlerSuccess] method for CsvFrontLineWorker");
     }
 
 
@@ -108,17 +114,18 @@ public class FrontLineWorkerUploadHandler {
         return listOfRecords;
     }
 
-
     /**
      * This function processes all the CSV upload records. This function is
      * called in a transaction call so in case of any error, the changes are
      * reverted back.
-     * @param record list of csvFrontLineWorker objects
+     *
+     * @param record      list of csvFrontLineWorker objects
      * @param csvFileName name of the upload file
      */
     private void processRecords(List<CsvFrontLineWorker> record,
-                               String csvFileName) {
-        logger.info("Record Processing Started for csv file: {}", csvFileName);
+                                String csvFileName) {
+
+        logger.debug("Record Processing Started for csv file: {}", csvFileName);
 
         frontLineWorkerRecordDataService
                 .doInTransaction(new TransactionCallback<FrontLineWorker>() {
@@ -144,19 +151,20 @@ public class FrontLineWorkerUploadHandler {
                         return transactionObject;
                     }
                 }.init(record, csvFileName));
-        logger.info("Record Processing complete for csv file: {}", csvFileName);
+        logger.debug("Record Processing complete for csv file: {}", csvFileName);
     }
 
     /**
      * This function processes all the CSV upload records. This function is
      * called from  processRecords procedure to perform transactional add/del/mod.
-     * @param record list of csvFrontLineWorker objects
+     *
+     * @param record      list of csvFrontLineWorker objects
      * @param csvFileName name of the upload file
      */
     private void processRecordsInTransaction(
             List<CsvFrontLineWorker> record, String csvFileName) {
 
-
+        logger.debug("processRecordsInTransaction method start for CsvFrontLineWorker");
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails;
 
@@ -199,8 +207,7 @@ public class FrontLineWorkerUploadHandler {
 
                     //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
                     // in database, then exception is to be thrown
-                    if (dbRecord != null && dbRecord.getId() != nmsFlwId && nmsFlwId != null) {
-
+                    if ((dbRecord != null) && (nmsFlwId != null) && (dbRecord.getId().longValue() != nmsFlwId.longValue())) {
                         ParseDataHelper.raiseInvalidDataException("NMS Flw Id", "Incorrect");
                     }
 
@@ -270,7 +277,7 @@ public class FrontLineWorkerUploadHandler {
 
             bulkUploadStatus.setUploadedBy(userName);
             bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
-            logger.debug("Success[flwDataHandlerSuccess] method finished for CsvFrontLineWorker");
+            logger.debug("processRecordsInTransaction method finished for CsvFrontLineWorker");
         }
     }
 
