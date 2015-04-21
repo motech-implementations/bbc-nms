@@ -53,6 +53,9 @@ public class UserDetailsServiceIT extends BasePaxIT {
     @Inject
     private ContentLogDataService contentLogDataService;
 
+    /**
+     * Initialize tables with data
+     */
     @Before
     public void setupData() {
         clearData();
@@ -69,21 +72,13 @@ public class UserDetailsServiceIT extends BasePaxIT {
     }
 
     /**
-     * test Save Call Details Success
+     * test Save Call Details Success when both course start and end content
+     * present in content log request
      */
     @Test
     public void testSaveCallDetailsSuccess() {
-        CallDetailsRequest callDetailRequest = new CallDetailsRequest();
-        callDetailRequest.setCallingNumber("9990632901");
-        callDetailRequest.setCallId("12345678");
-        callDetailRequest.setOperator("AL");
-        callDetailRequest.setCircle("DL");
-        callDetailRequest.setCallStartTime("1429166000");// start time
-        callDetailRequest.setCallEndTime("1429171000");
-        callDetailRequest.setCallDurationInPulses("20");
-        callDetailRequest.setEndOfUsagePromptCounter("3");
-        callDetailRequest.setCallStatus("1");
-        callDetailRequest.setCallDisconnectReason("6");
+
+        CallDetailsRequest callDetailRequest = createCallDetailsRequest();
         // content
         List<ContentLogRequest> contentList = new ArrayList<>();
         // course start record
@@ -189,6 +184,69 @@ public class UserDetailsServiceIT extends BasePaxIT {
         }
     }
 
+    /**
+     * test Save Call Details Success Scenario When only Call Detail Request
+     * received and the FLW usage information already exist
+     */
+    @Test
+    public void testSaveCallDetailsForUsageDetailUpdate() {
+
+        CallDetailsRequest callDetailRequest = createCallDetailsRequest();
+        try {
+            // Usage In pulse during first call is 20
+            userDetailsService.saveCallDetails(callDetailRequest);
+            // Usage In pulse during second call is 20
+            userDetailsService.saveCallDetails(callDetailRequest);
+
+            // FLW's usage should be added & currentUsageInPulses should be 40
+            FlwUsageDetail flwUsageDetail = flwUsageDetailDataService.retrieve(
+                    "msisdn", 9990632901l);
+
+            // assert usage table data
+            assertTrue(3 == flwUsageDetail.getEndOfUsagePromptCounter());
+            assertTrue(40 == flwUsageDetail.getCurrentUsageInPulses());
+            assertTrue(9990632901l == flwUsageDetail.getMsisdn());
+            assertTrue(1429166000l == (flwUsageDetail.getLastAccessTime()
+                    .getMillis() / 1000));
+
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+    }
+
+    /**
+     * create new Call Details Request object
+     * 
+     * @return CallDetailsRequest
+     */
+    private CallDetailsRequest createCallDetailsRequest() {
+        CallDetailsRequest callDetailRequest = new CallDetailsRequest();
+        callDetailRequest.setCallingNumber("9990632901");
+        callDetailRequest.setCallId("12345678");
+        callDetailRequest.setOperator("AL");
+        callDetailRequest.setCircle("DL");
+        callDetailRequest.setCallStartTime("1429166000");// start time
+        callDetailRequest.setCallEndTime("1429171000");
+        callDetailRequest.setCallDurationInPulses("20");
+        callDetailRequest.setEndOfUsagePromptCounter("3");
+        callDetailRequest.setCallStatus("1");
+        callDetailRequest.setCallDisconnectReason("6");
+
+        return callDetailRequest;
+    }
+
+    /**
+     * test Does Msisdn Exist Success
+     */
+    @Test
+    public void testDoesMsisdnExistSuccess() {
+
+        assertTrue(userDetailsService.doesMsisdnExist("9990632901"));
+    }
+
+    /**
+     * clear Data from tables
+     */
     @After
     public void clearData() {
         contentLogDataService.deleteAll();
