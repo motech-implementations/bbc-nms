@@ -162,6 +162,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param userDetailApiResponse
      */
     private void setLanguageLocationCode(Boolean defaultLlc, UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
+
         if (userProfile.getLanguageLocationCode() == null) {
             setNationalDefaultLlc(userDetailApiResponse);
         } else {
