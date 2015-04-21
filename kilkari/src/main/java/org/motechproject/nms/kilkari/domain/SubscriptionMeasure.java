@@ -9,10 +9,10 @@ public class SubscriptionMeasure {
     @Field(name = "subscriptionId", required=true)
     private Subscription subscription;
     
-    @Field(required=true)
+    @Field
     private Integer weekNumber;
     
-    @Field(required=true)
+    @Field
     private Integer messageNumber;
     
     @Field(required = true)

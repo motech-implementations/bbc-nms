@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
@@ -26,63 +27,81 @@ import org.motechproject.nms.masterdata.domain.Village;
 public class Subscriber extends MdsEntity {
     
     @Field(required = true)
+    @UIDisplayable(position = 0)
     private String msisdn;
     
-    @Field
-    private String childMctsId;
-    
-    @Field
-    private String motherMctsId;
-    
     @Field(required = true)
+    @UIDisplayable(position = 1)
     private BeneficiaryType beneficiaryType;
     
     @Field
+    @UIDisplayable(position = 2)
     private String name;
     
     @Field
+    @UIDisplayable(position = 3)
     private Integer age;
     
-    @Field(name = "stateId")
-    private State state;
+    @Field
+    @UIDisplayable(position = 4)
+    private Long stateCode;
     
-    @Field(name = "districtId")
-    private District district;
+    @Field
+    @UIDisplayable(position = 5)
+    private String motherMctsId;
     
-    @Field(name = "talukaId")
-    private Taluka taluka;
-    
-    @Field(name = "healthBlockId")
-    private HealthBlock healthBlock;
-    
-    @Field(name = "phcId")
-    private HealthFacility phc;
-    
-    @Field(name = "subCentreId")
-    private HealthSubFacility subCentre;
-    
-    @Field(name = "villageId")
-    private Village village;
+    @Field
+    @UIDisplayable(position = 6)
+    private String childMctsId;
     
     @Field
     @Min(value=1)
     @Max(value=99)
+    @UIDisplayable(position = 7)
     private Integer languageLocationCode;
     
     @Field
-    private String aadharNumber;
+    @UIDisplayable(position = 8)
+    private DateTime dob;
     
     @Field
+    @UIDisplayable(position = 9)
     private DateTime lmp;
     
     @Field
-    private DateTime dob;
+    @UIDisplayable(position = 10)
+    private String aadharNumber; 
+    
+    @Field(name = "stateId")
+    @UIDisplayable(position = 11)
+    private State state;
+    
+    @Field(name = "districtId")
+    @UIDisplayable(position = 12)
+    private District district;
+    
+    @Field(name = "talukaId")
+    @UIDisplayable(position = 13)
+    private Taluka taluka;
+    
+    @Field(name = "healthBlockId")
+    @UIDisplayable(position = 14)
+    private HealthBlock healthBlock;
+    
+    @Field(name = "phcId")
+    @UIDisplayable(position = 15)
+    private HealthFacility phc;
+    
+    @Field(name = "subCentreId")
+    @UIDisplayable(position = 16)
+    private HealthSubFacility subCentre;
+    
+    @Field(name = "villageId")
+    @UIDisplayable(position = 17)
+    private Village village;
     
     @Persistent(mappedBy = "subscriber")
     private Set<Subscription> subscriptionList;
-
-    @Field
-    private Long stateCode;
 
     /* Ignoring this field in entity, so that it is not created as a column,
     This field is used in mapping deactivation reason from Mother/Child Csv.
