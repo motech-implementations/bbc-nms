@@ -378,12 +378,15 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                     if (!metaData.equalsIgnoreCase(courseContentCsv
                             .getMetaData())) {
                         LOGGER.warn(
-                                "Correct Answer Option(MetaData) does not match for content name: {}, contentID: {}",
+                                "Correct Answer Option(Metadata) does not match for content name: {}, contentID: {}",
                                 contentName, courseContentCsv.getContentId());
                         flagForAbortingModification = true;
                     }
                 }
                 if (flagForAbortingModification) {
+                    LOGGER.warn(
+                            "Course modification aborted for content name: {}",
+                            contentName);
                     bulkUploadError.setRecordDetails(String.format(
                             "Content ID: %s", courseContentCsv.getContentId()));
                     bulkUploadError
@@ -518,6 +521,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     + Integer.toString(correctAnswerOption));
                 }
                 courseProcessedContentService.update(courseProcessedContent);
+                LOGGER.debug(
+                        "Record modified in ContentProcessedTable for LLC: {}, content Name: {}",
+                        languageLocCode, contentName);
             }
             bulkUploadStatus.incrementSuccessCount();
             fileModifyingRecordsIterator.remove();
@@ -835,7 +841,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         bulkUploadErrLogService
                                 .writeBulkUploadErrLog(bulkUploadError);
                         LOGGER.warn(
-                                "Record for complete course haven't arrived to add the course for LLC: {}",
+                                "Records for complete course haven't arrived to add the course for LLC: {}",
                                 languageLocCode);
 
                         deleteCourseRawContentsByList(courseContentCsvs, true,

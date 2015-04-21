@@ -25,186 +25,166 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 @ExamFactory(MotechNativeTestContainerFactory.class)
 public class CourseBookmarkServiceIT extends BasePaxIT {
 
-	@Inject
-	private CourseBookmarkService courseBookmarkService;
+    @Inject
+    private CourseBookmarkService courseBookmarkService;
 
-	@Test
-	public void testNoBookmarkCase() {
-		String callingNo = "9718228124";
-		courseBookmarkService.deleteMtrainingBookmark(callingNo);
-		/*
-		 * In case of no bookmark in the system for a particular mobile no.,
-		 * service should return blank JSON string
-		 */
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
-		System.out.println("test for no bookmark case passed");
+    @Test
+    public void testNoBookmarkCase() {
+        String callingNo = "9718228124";
+        courseBookmarkService.deleteMtrainingBookmark(callingNo);
+        /*
+         * In case of no bookmark in the system for a particular mobile no.,
+         * service should return blank JSON string
+         */
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
 
-		Map<String, String> scoresByChapter = new HashMap<String, String>();
+        Map<String, String> scoresByChapter = new HashMap<String, String>();
 
-		/*
-		 * Providing empty scoresByChapter node, Service should not insert it in
-		 * the bookmark
-		 */
-		try {
-			courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
-					scoresByChapter, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\"}");
-		System.out.println("test for empty scoresByChapter node passed");
+        /*
+         * Providing empty scoresByChapter node, Service should not insert it in
+         * the bookmark
+         */
+        try {
+            courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
+                    scoresByChapter, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\"}");
 
-		try {
-			courseBookmarkService.saveBookmarkWithScore(null, null, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\"}");
-		System.out
-				.println("test for No bookmarkID and no scoresByChapter node passed");
+        try {
+            courseBookmarkService.saveBookmarkWithScore(null, null, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\"}");
 
-		try {
-			courseBookmarkService.saveBookmarkWithScore(null, scoresByChapter,
-					callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\"}");
-		System.out
-				.println("test for No bookmarkID and empty scoresByChapter node passed");
+        try {
+            courseBookmarkService.saveBookmarkWithScore(null, scoresByChapter,
+                    callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\"}");
 
-		try {
-			courseBookmarkService.saveBookmarkWithScore("  ", scoresByChapter,
-					callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(true);
-			System.out
-					.println("expected data validation exception occured for blank bookmarkID");
-		}
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\"}");
+        try {
+            courseBookmarkService.saveBookmarkWithScore("  ", scoresByChapter,
+                    callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(true);
+        }
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\"}");
+    }
 
-		System.out
-				.println("test for blank bookmarkID and empty scoresByChapter node passed");
+    @Test
+    public void testBookmarkServiceInvalidParams() {
+        String callingNo = "9718228124";
+        courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
-	}
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
 
-	@Test
-	public void testBookmarkServiceInvalidParams() {
-		String callingNo = "9718228124";
-		courseBookmarkService.deleteMtrainingBookmark(callingNo);
+        Map<String, String> scoresByChapter = new HashMap<String, String>();
+        scoresByChapter.put("1", "5");
+        /*
+         * Providing scoresByChapter node with invalid value of Score (greater
+         * than 4). Data validation exception will occur
+         */
+        try {
+            courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
+                    scoresByChapter, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(true);
+        }
 
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
+        scoresByChapter.put("1", "3");
+        scoresByChapter.put("12", "2");
+        /*
+         * Providing scoresByChapter node with invalid value of Chapter No
+         * (greater than 11). Data validation exception will occur
+         */
+        try {
+            courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
+                    scoresByChapter, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(true);
+        }
 
-		Map<String, String> scoresByChapter = new HashMap<String, String>();
-		scoresByChapter.put("1", "5");
-		/*
-		 * Providing scoresByChapter node with invalid value of Score (greater
-		 * than 4). Data validation exception will occur
-		 */
-		try {
-			courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
-					scoresByChapter, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(true);
-			System.out
-					.println("expected data validation exception occured for invalid score no");
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
+    }
 
-		}
+    @Test
+    public void testBookmarkSuccess() {
+        String callingNo = "9718228124";
+        courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
-		scoresByChapter.put("1", "3");
-		scoresByChapter.put("12", "2");
-		/*
-		 * Providing scoresByChapter node with invalid value of Chapter No
-		 * (greater than 11). Data validation exception will occur
-		 */
-		try {
-			courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
-					scoresByChapter, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(true);
-			System.out
-					.println("expected data validation exception occured for invalid chapter no");
-		}
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
 
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
-		System.out.println("Bookmark remains unaffected for any exception");
-	}
+        Map<String, String> scoresByChapter = new HashMap<String, String>();
+        scoresByChapter.put("1", "3");
+        scoresByChapter.put("2", "0");
 
-	@Test
-	public void testBookmarkSuccess() {
-		String callingNo = "9718228124";
-		courseBookmarkService.deleteMtrainingBookmark(callingNo);
+        try {
+            courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
+                    scoresByChapter, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
 
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\",\"scoresByChapter\":{\"1\":3,\"2\":0}}");
 
-		Map<String, String> scoresByChapter = new HashMap<String, String>();
-		scoresByChapter.put("1", "3");
-		scoresByChapter.put("2", "0");
+        scoresByChapter.put("1", "4");
+        scoresByChapter.put("3", "3");
 
-		try {
-			courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
-					scoresByChapter, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
+        /*
+         * ScoresByChapter input request doesn't contain the data for chapter 2,
+         * hence the score for chapter 2 will remain unchanged while score for
+         * chapter 1 will be overwritten
+         */
+        try {
+            courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
+                    scoresByChapter, callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
 
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\",\"scoresByChapter\":{\"1\":3,\"2\":0}}");
+        assertEquals(
+                courseBookmarkService.getBookmarkWithScore(callingNo),
+                "{\"bookmark\":\"Chapter01_Lesson01\",\"scoresByChapter\":{\"1\":4,\"2\":0,\"3\":3}}");
+    }
 
-		scoresByChapter.put("1", "4");
-		scoresByChapter.put("3", "3");
+    @Test
+    public void testCourseCompletionSuccess() {
+        String callingNo = "9718228124";
+        courseBookmarkService.deleteMtrainingBookmark(callingNo);
 
-		/*
-		 * ScoresByChapter input request doesn't contain the data for chapter 2,
-		 * hence the score for chapter 2 will remain unchanged while score for
-		 * chapter 1 will be overwritten
-		 */
-		try {
-			courseBookmarkService.saveBookmarkWithScore("Chapter01_Lesson01",
-					scoresByChapter, callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
 
-		assertEquals(
-				courseBookmarkService.getBookmarkWithScore(callingNo),
-				"{\"bookmark\":\"Chapter01_Lesson01\",\"scoresByChapter\":{\"1\":4,\"2\":0,\"3\":3}}");
-	}
+        Map<String, String> scoresByChapter = new HashMap<String, String>();
+        scoresByChapter.put("1", "4");
 
-	@Test
-	public void testCourseCompletionSuccess() {
-		String callingNo = "9718228124";
-		courseBookmarkService.deleteMtrainingBookmark(callingNo);
-
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
-
-		Map<String, String> scoresByChapter = new HashMap<String, String>();
-		scoresByChapter.put("1", "4");
-
-		/*
-		 * Checking if after completing the course, service resets the bookmark
-		 * or not
-		 */
-		try {
-			courseBookmarkService.saveBookmarkWithScore(
-					MobileAcademyConstants.COURSE_COMPLETED, scoresByChapter,
-					callingNo);
-		} catch (DataValidationException e) {
-			assertTrue(false);
-		}
-		assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
-				MobileAcademyConstants.EMPTY_JSON);
-		System.out
-				.println("test for resetting the bookmark on course competion passed");
-	}
+        /*
+         * Checking if after completing the course, service resets the bookmark
+         * or not
+         */
+        try {
+            courseBookmarkService.saveBookmarkWithScore(
+                    MobileAcademyConstants.COURSE_COMPLETED, scoresByChapter,
+                    callingNo);
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+        assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
+                MobileAcademyConstants.EMPTY_JSON);
+    }
 
 }

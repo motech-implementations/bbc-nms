@@ -177,9 +177,9 @@ public class RecordsProcessHelper {
     }
 
     public static void processError(BulkUploadError errorDetail,
-            DataValidationException ex, String recordIdentifier) {
+            DataValidationException ex, String uniqueRecordIdentifier) {
         errorDetail.setErrorCategory(ex.getErrorCode());
-        errorDetail.setRecordDetails(recordIdentifier);
+        errorDetail.setRecordDetails(uniqueRecordIdentifier);
         errorDetail.setErrorDescription(ex.getErrorDesc());
     }
 
@@ -236,14 +236,19 @@ public class RecordsProcessHelper {
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
+                LOGGER.warn("Invalid format of METADATA for contentID:{}",
+                        courseContentCsv.getContentId());
                 ParseDataHelper.raiseInvalidDataException("METADATA",
                         courseContentCsv.getMetaData());
+
             } else {
                 int answerNo = ParseDataHelper.validateAndParseInt("",
                         metaData.substring(metaData.indexOf(':') + 1), true);
                 if (verifyRange(answerNo, 1, 2)) {
                     record.setAnswerId(answerNo);
                 } else {
+                    LOGGER.warn("Answer option out of range for contentID:{}",
+                            courseContentCsv.getContentId());
                     ParseDataHelper.raiseInvalidDataException("METADATA",
                             courseContentCsv.getMetaData());
                 }
@@ -277,6 +282,8 @@ public class RecordsProcessHelper {
     public static void validateContentType(CourseContentCsv courseContentCsv)
             throws DataValidationException {
         if (ContentType.findByName(courseContentCsv.getContentType()) == null) {
+            LOGGER.warn("Invalid content type for contentID: {}",
+                    courseContentCsv.getContentId());
             ParseDataHelper.raiseInvalidDataException("Content Type",
                     courseContentCsv.getContentType());
         }
@@ -293,6 +300,8 @@ public class RecordsProcessHelper {
         String contentName = courseContentCsv.getContentName().trim();
         boolean recordDataValidation = true;
         if (contentName.indexOf('_') == -1) {
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     ErrorCategoryConstants.INCONSISTENT_DATA);
         }
@@ -304,7 +313,8 @@ public class RecordsProcessHelper {
         if (StringUtils.isBlank(subString)
                 || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
                         chapterString.length() - 2))) {
-
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
@@ -315,7 +325,8 @@ public class RecordsProcessHelper {
             record.setChapterId(Integer.parseInt(chapterString
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
-            LOGGER.debug(exception.getMessage(), exception);
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,

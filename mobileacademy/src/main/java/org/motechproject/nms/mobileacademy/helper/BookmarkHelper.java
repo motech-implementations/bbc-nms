@@ -130,47 +130,48 @@ public class BookmarkHelper {
 		Map<String, Object> progressMap = courseBookmark.getProgress();
 
 		/* List to keep track if there are scores only for chapters 1-11 */
-		List<String> keys = new ArrayList<String>(scoresByChapter.keySet());
+		List<String> chapterKeys = new ArrayList<String>(scoresByChapter.keySet());
 
-		/* If the scoresByChapter field doesn't contain any score */
-		if (CollectionUtils.isEmpty(keys)) {
-			return;
-		}
+		/* If the scoresByChapter field contains some score */
+		    if (CollectionUtils.isNotEmpty(chapterKeys)) {
 
-		/*
-		 * Traverse to check if score for a particular chapter has been received
-		 */
-		for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
+                        /*
+			 * Traverse to check if score for a particular chapter has been
+			 * received
+			 */
+			for (Integer chapterNo = 1; chapterNo <= MobileAcademyConstants.NUM_OF_CHAPTERS; chapterNo++) {
 
-			if (scoresByChapter.containsKey(chapterNo.toString())) {
-				keys.remove(chapterNo.toString());
-				Integer scoreInChapter = Integer.parseInt(scoresByChapter
-						.get(chapterNo.toString()));
+				if (scoresByChapter.containsKey(chapterNo.toString())) {
+					chapterKeys.remove(chapterNo.toString());
+					Integer scoreInChapter = Integer.parseInt(scoresByChapter
+							.get(chapterNo.toString()));
 
-				/* If the score is not in range of 0-4, its a bad request */
-				if (!RecordsProcessHelper.verifyRange(scoreInChapter, 0,
-						MobileAcademyConstants.MAX_SCORE)) {
-					LOGGER.debug(
-							"scores out of range in Save bookmark request for MSISDN: {}",
-							courseBookmark.getExternalId());
-					ParseDataHelper.raiseInvalidDataException(
-							MobileAcademyConstants.SCORE_BY_CHAPTER_NODE,
-							scoreInChapter.toString());
+					/* If the score is not in range of 0-4, its a bad request */
+					if (!RecordsProcessHelper.verifyRange(scoreInChapter, 0,
+							MobileAcademyConstants.MAX_SCORE)) {
+						LOGGER.debug(
+								"scores out of range in Save bookmark request for MSISDN: {}",
+								courseBookmark.getExternalId());
+						ParseDataHelper.raiseInvalidDataException(
+								MobileAcademyConstants.SCORE_BY_CHAPTER_NODE,
+								scoreInChapter.toString());
+					}
+					progressMap.put(chapterNo.toString(), scoreInChapter);
 				}
-				progressMap.put(chapterNo.toString(), scoreInChapter);
 			}
-		}
 
-		/*
-		 * If scoresByChapter field contains score for other than chapter 1-11,
-		 * it's a bad request.
-		 */
-		if (CollectionUtils.isNotEmpty(keys)) {
-			LOGGER.debug(
-					"Invalid Chapter Indices in ScoresByChapter field of Save bookmark request for MSISDN: {}",
-					courseBookmark.getExternalId());
-			ParseDataHelper.raiseInvalidDataException(
-					MobileAcademyConstants.SCORE_BY_CHAPTER_NODE, keys.get(0));
+			/*
+			 * If scoresByChapter field contains score for other than chapter
+			 * 1-11, it's a bad request.
+			 */
+			if (CollectionUtils.isNotEmpty(chapterKeys)) {
+				LOGGER.debug(
+						"Invalid Chapter Indices in ScoresByChapter field of Save bookmark request for MSISDN: {}",
+						courseBookmark.getExternalId());
+				ParseDataHelper.raiseInvalidDataException(
+						MobileAcademyConstants.SCORE_BY_CHAPTER_NODE,
+						chapterKeys.get(0));
+			}
 		}
 	}
 }
