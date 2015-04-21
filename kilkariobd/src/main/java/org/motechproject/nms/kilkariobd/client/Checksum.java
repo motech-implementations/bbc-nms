@@ -25,7 +25,7 @@ public class Checksum {
     /*
     * Calculate checksum of a File using MD5 algorithm
     */
-    public static String checkSum(String path) throws IOException{
+    public static String checkSum(String path) {
 
         FileInputStream fis = null;
         String checksum = null;
@@ -47,7 +47,11 @@ public class Checksum {
             logger.log(Level.SEVERE, null, ex);
         } finally {
             if(fis!=null){
-                fis.close();
+                try {
+                    fis.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         return checksum;

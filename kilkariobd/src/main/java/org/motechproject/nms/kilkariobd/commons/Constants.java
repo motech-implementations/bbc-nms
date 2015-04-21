@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkariobd.commons;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
+
 /**
  * Defines constants for kilkariobd module
  */
@@ -32,6 +34,8 @@ public final class Constants {
     public static final String CDR_SUMMARY_CHECKSUM = "cdr Summary checksum";
 
     public static final String CDR_SUMMARY_RECORDS_COUNT = "cdr Summary records Count";
+
+    public static final String CONTENT_FILE_NAME = "Content file name";
 
 
 

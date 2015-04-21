@@ -28,4 +28,9 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
     public OutboundCallFlow update(OutboundCallFlow record) {
         return callFlowDataService.update(record);
     }
+
+    @Override
+    public OutboundCallFlow findRecordByFileName(String filename) {
+       return callFlowDataService.findRecordByFileName(filename);
+    }
 }

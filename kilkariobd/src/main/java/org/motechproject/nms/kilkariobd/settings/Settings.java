@@ -14,7 +14,7 @@ public class Settings {
 
     private Logger logger = LoggerFactory.getLogger(Settings.class);
 
-    private String offlineApiInitalIntervalInMilliseconds;
+    private String offlineApiInitialIntervalInMilliseconds;
 
     private String offlineApiMaxRetries;
 
@@ -41,7 +41,7 @@ public class Settings {
 
     public Settings(String offlineApiInitalIntervalInMilliseconds, String offlineApiMaxRetries, String offlineApiRetryMultiplier,
                     String obdFileLocalPath, String sshPrivateKeyFile) {
-        this.offlineApiInitalIntervalInMilliseconds = offlineApiInitalIntervalInMilliseconds;
+        this.offlineApiInitialIntervalInMilliseconds = offlineApiInitalIntervalInMilliseconds;
         this.offlineApiMaxRetries = offlineApiMaxRetries;
         this.offlineApiRetryMultiplier = offlineApiRetryMultiplier;
         this.obdFileLocalPath = obdFileLocalPath;
@@ -49,11 +49,11 @@ public class Settings {
     }
 
     public String getOfflineApiInitalIntervalInMilliseconds() {
-        return offlineApiInitalIntervalInMilliseconds;
+        return offlineApiInitialIntervalInMilliseconds;
     }
 
     public void setOfflineApiInitalIntervalInMilliseconds(String offlineApiInitalIntervalInMilliseconds) {
-        this.offlineApiInitalIntervalInMilliseconds = offlineApiInitalIntervalInMilliseconds;
+        this.offlineApiInitialIntervalInMilliseconds = offlineApiInitalIntervalInMilliseconds;
     }
 
     public String getOfflineApiMaxRetries() {

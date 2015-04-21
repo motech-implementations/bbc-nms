@@ -18,19 +18,19 @@ public class OutboundCallFlow extends MdsEntity {
     private String cdrSummaryChecksum;
 
     @Field
-    private Integer cdrSummaryRecordCount;
+    private Long cdrSummaryRecordCount;
 
     @Field
     private String cdrDetailChecksum;
 
     @Field
-    private Integer cdrDetailRecordCount;
+    private Long cdrDetailRecordCount;
 
     @Field
     private String obdChecksum;
 
     @Field
-    private Integer obdRecordCount;
+    private Long obdRecordCount;
 
     public String getObdFileName() {
         return obdFileName;
@@ -56,28 +56,12 @@ public class OutboundCallFlow extends MdsEntity {
         this.cdrSummaryChecksum = cdrSummaryChecksum;
     }
 
-    public Integer getCdrSummaryRecordCount() {
-        return cdrSummaryRecordCount;
-    }
-
-    public void setCdrSummaryRecordCount(Integer cdrSummaryRecordCount) {
-        this.cdrSummaryRecordCount = cdrSummaryRecordCount;
-    }
-
     public String getCdrDetailChecksum() {
         return cdrDetailChecksum;
     }
 
     public void setCdrDetailChecksum(String cdrDetailChecksum) {
         this.cdrDetailChecksum = cdrDetailChecksum;
-    }
-
-    public Integer getCdrDetailRecordCount() {
-        return cdrDetailRecordCount;
-    }
-
-    public void setCdrDetailRecordCount(Integer cdrDetailRecordCount) {
-        this.cdrDetailRecordCount = cdrDetailRecordCount;
     }
 
     public String getObdChecksum() {
@@ -88,11 +72,27 @@ public class OutboundCallFlow extends MdsEntity {
         this.obdChecksum = obdChecksum;
     }
 
-    public Integer getObdRecordCount() {
+    public Long getCdrSummaryRecordCount() {
+        return cdrSummaryRecordCount;
+    }
+
+    public void setCdrSummaryRecordCount(Long cdrSummaryRecordCount) {
+        this.cdrSummaryRecordCount = cdrSummaryRecordCount;
+    }
+
+    public Long getCdrDetailRecordCount() {
+        return cdrDetailRecordCount;
+    }
+
+    public void setCdrDetailRecordCount(Long cdrDetailRecordCount) {
+        this.cdrDetailRecordCount = cdrDetailRecordCount;
+    }
+
+    public Long getObdRecordCount() {
         return obdRecordCount;
     }
 
-    public void setObdRecordCount(Integer obdRecordCount) {
+    public void setObdRecordCount(Long obdRecordCount) {
         this.obdRecordCount = obdRecordCount;
     }
 }

@@ -10,7 +10,7 @@ public class CdrInfo {
     String cdrChecksum;
 
     @JsonProperty
-    Integer recordsCount;
+    Long recordsCount;
 
     public String getCdrFile() {
         return cdrFile;
@@ -28,11 +28,11 @@ public class CdrInfo {
         this.cdrChecksum = cdrChecksum;
     }
 
-    public Integer getRecordsCount() {
+    public Long getRecordsCount() {
         return recordsCount;
     }
 
-    public void setRecordsCount(Integer recordsCount) {
+    public void setRecordsCount(Long recordsCount) {
         this.recordsCount = recordsCount;
     }
 }

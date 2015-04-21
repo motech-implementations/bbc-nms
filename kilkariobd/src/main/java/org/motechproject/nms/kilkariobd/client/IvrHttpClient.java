@@ -10,21 +10,28 @@ import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
+import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
-import org.motechproject.nms.kilkariobd.dto.request.CdrFileProcessedStatusRequest;
+import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
+import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.dto.request.TargetNotificationRequest;
+import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
 
 public class IvrHttpClient {
     private Logger logger = LoggerFactory.getLogger(IvrHttpClient.class);
 
+    @Autowired
+    private OutboundCallFlowService callFlowService;
+
     private HttpClient commonHttpClient = new HttpClient();
 
-    public void notifyTargetFile() {
-        HttpMethod postMethod = buildTargetNotificationRequest(ivrUrl());
+    public void notifyTargetFile(String fileName, String checksum, Long recordsCount) {
+        HttpMethod postMethod = buildTargetNotificationRequest(ivrUrl(), fileName, checksum, recordsCount);
         HttpClientParams params =  commonHttpClient.getParams();
         RetryStrategy retryStrategy = new RetryStrategy();
         Integer retryNumber = 0;
@@ -43,6 +50,10 @@ public class IvrHttpClient {
                 postMethod.releaseConnection();
             }
         }
+
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
+        todayCallFlow.setStatus(CallFlowStatus.OBD_FILE_NOTIFICATION_SENT_TO_IVR);
+        callFlowService.update(todayCallFlow);
     }
 
     public void notifyCDRFileProcessedStatus(FileProcessingStatus status) {
@@ -79,16 +90,16 @@ public class IvrHttpClient {
         return postMethod;
     }
 
-    private HttpMethod buildTargetNotificationRequest(String url) {
+    private HttpMethod buildTargetNotificationRequest(String url, String fileName, String checksum, Long recordsCount) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        TargetNotificationRequest request = new TargetNotificationRequest("", "", 0);
+        TargetNotificationRequest request = new TargetNotificationRequest(fileName, checksum, recordsCount);
         String requestBody = gson.toJson(request);
         return buildRequest(url, requestBody);
     }
 
     private HttpMethod buildCdrFileProcessedStatusRequest(String url, FileProcessingStatus status) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        CdrFileProcessedStatusRequest request = new CdrFileProcessedStatusRequest(status.ordinal(), "");
+        FileProcessedStatusRequest request = new FileProcessedStatusRequest(status, "");
         String requestBody = gson.toJson(request);
         return buildRequest(url, requestBody);
     }

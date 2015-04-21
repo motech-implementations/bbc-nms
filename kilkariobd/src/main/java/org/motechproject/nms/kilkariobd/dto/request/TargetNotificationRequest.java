@@ -6,11 +6,11 @@ public class TargetNotificationRequest {
 
     private String checksum;
 
-    private Integer recordsCount;
+    private Long recordsCount;
 
     public TargetNotificationRequest() {}
 
-    public TargetNotificationRequest(String fileName, String checksum, Integer recordsCount) {
+    public TargetNotificationRequest(String fileName, String checksum, Long recordsCount) {
         this.fileName = fileName;
         this.checksum = checksum;
         this.recordsCount = recordsCount;
@@ -32,11 +32,11 @@ public class TargetNotificationRequest {
         this.checksum = checksum;
     }
 
-    public Integer getRecordsCount() {
+    public Long getRecordsCount() {
         return recordsCount;
     }
 
-    public void setRecordsCount(Integer recordsCount) {
+    public void setRecordsCount(Long recordsCount) {
         this.recordsCount = recordsCount;
     }
 }

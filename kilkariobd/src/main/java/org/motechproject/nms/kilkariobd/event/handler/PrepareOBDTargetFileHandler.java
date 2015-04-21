@@ -1,23 +1,31 @@
 package org.motechproject.nms.kilkariobd.event.handler;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.service.impl.csv.CsvImporterExporter;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkariobd.client.Checksum;
+import org.motechproject.nms.kilkariobd.client.CopyFile;
 import org.motechproject.nms.kilkariobd.client.IvrHttpClient;
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.*;
 import org.motechproject.nms.kilkariobd.mapper.ReadByCSVMapper;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallRequestService;
+import org.motechproject.nms.kilkariobd.settings.Settings;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.motechproject.server.config.SettingsFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +55,14 @@ public class PrepareOBDTargetFileHandler {
     @Autowired
     private ContentUploadService contentUploadService;
 
+    @Autowired
+    private SettingsFacade kilkariObdSettings;
+
+    private Settings settings = new Settings(kilkariObdSettings);
+
     Configuration configuration = configurationService.getConfiguration();
 
+    //Daily event to be raised by scheduler
     public void prepareOBDTargetFile() {
 
         IvrHttpClient client = new IvrHttpClient();
@@ -56,23 +70,43 @@ public class PrepareOBDTargetFileHandler {
         //delete all the records from outboundCallRequest before preparing fresh ObdTargetFile
         requestService.deleteAll();
         OutboundCallFlow callFlow = new OutboundCallFlow();
-        callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_NOTIFICATION_EVENT_RECEIVED);
+        callFlow.setStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED);
         callFlowService.create(callFlow);
-        OutboundCallFlow olCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
-        createFreshOBDRecords();
-        processCDRSummaryCSV(olCallFlow.getObdFileName());
-        exportOutBoundCallRequest();
-        processCDRDetail(olCallFlow.getObdFileName());
-        olCallFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSED);
-        callFlowService.update(olCallFlow);
+        OutboundCallFlow oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
+
+        try {
+            createFreshOBDRecords();
+            //Old call flow will be null is service is deployed first time.
+            if (oldCallFlow != null) {
+                String obdFileName = oldCallFlow.getObdFileName();
+                downloadCdrSummaryAndDetailFiles(obdFileName);
+                processCDRSummaryCSV(obdFileName);
+                processCDRDetail(obdFileName);
+                oldCallFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSED);
+                callFlowService.update(oldCallFlow);
+            }
+            exportOutBoundCallRequest();
+
+        } catch (DataValidationException ex) {
+            ex.printStackTrace();
+        }
 
         client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY);
         //todo : send error if cdrsummary and cdrdetail has errors while processing
 
     }
 
-    public void SubmitTargetFile() {
+    //Daily event to be raised by scheduler
+    public void CopyAndNotifyOBDTargetFile() {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(
+                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
+        String fileName = todayCallFlow.getObdFileName();
+        Long recordsCount = todayCallFlow.getObdRecordCount();
+        CopyFile.toRemote(fileName);
 
+        //notify IVR
+        IvrHttpClient client = new IvrHttpClient();
+        client.notifyTargetFile(fileName, todayCallFlow.getObdChecksum(), recordsCount);
     }
 
     private Boolean isValidForRetry(Integer retryDayNumber, CallStatus finalStatus, ObdStatusCode statusCode) {
@@ -83,6 +117,7 @@ public class PrepareOBDTargetFileHandler {
     }
 
     private boolean isValidRetryDayNumber(Integer retryDayNumber) {
+        //todo msg_per_week constant?
         final Integer MSG_PER_WEEK = 1;
         if (MSG_PER_WEEK == 1) {
             return retryDayNumber < 3;
@@ -94,19 +129,38 @@ public class PrepareOBDTargetFileHandler {
     }
 
     private void exportOutBoundCallRequest() {
-        String filename = "filePath";
-        File file = new File(filename);
+        updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
+                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
+
+        String fileName = settings.getObdFileLocalPath() + "/OBD_NMS_" + getCsvFileName();
+        Long recordsCount = 0l;
+        File file = new File(fileName);
         try {
             FileWriter fos = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bf = new BufferedWriter(fos);
 
-            csvImporterExporter.exportCsv("OUTBOUNDCALLREQUEST", bf);
+            recordsCount = csvImporterExporter.exportCsv("OUTBOUNDCALLREQUEST", bf);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        String obdChecksum = Checksum.checkSum(fileName);
+        updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
+                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED, obdChecksum, recordsCount);
+
     }
 
-    private void createFreshOBDRecords() {
+    private void copyFileToRemoteServer(String fileName, Long recordsCount) {
+        IvrHttpClient client = new IvrHttpClient();
+        CopyFile.toRemote(fileName);
+    }
+
+    private String getCsvFileName() {
+        DateTime date = new DateTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return sdf.format(date) + ".csv";
+    }
+
+    private void createFreshOBDRecords() throws DataValidationException{
         List<Subscription> scheduledActiveSubscription = subscriptionService.getScheduledSubscriptions();
         for (Subscription subscription : scheduledActiveSubscription) {
             OutboundCallRequest callRequest = new OutboundCallRequest();
@@ -124,7 +178,7 @@ public class PrepareOBDTargetFileHandler {
                 }
                 else {
                     //todo if this file name is returned null then create an error log for this record and don't add this record.
-                    //throw error
+                    ParseDataHelper.raiseMissingDataException(Constants.CONTENT_FILE_NAME, null);
                 }
                 callRequest.setLanguageLocationCode(subscription.getSubscriber().getLanguageLocationCode());
                 LanguageLocationCode record = llcService.findLLCByCode(llcCode);
@@ -141,14 +195,10 @@ public class PrepareOBDTargetFileHandler {
         }
     }
 
-
     private void processCDRSummaryCSV(String obdFileName) {
-
         List<Map<String, Object>> cdrSummaryRecords;
-
         try {
-            //todo cdrCallSummaryCSV file name?
-            cdrSummaryRecords = ReadByCSVMapper.readWithCsvMapReader("cdrSummary"  + obdFileName);
+            cdrSummaryRecords = ReadByCSVMapper.readWithCsvMapReader("Cdr_Summary_"  + obdFileName);
             for (Map<String, Object> map : cdrSummaryRecords) {
                 Integer retryDayNumber = (Integer) map.get("retryDayNumber");
                 CallStatus finalStatus = (CallStatus) map.get("finalStatus");
@@ -191,9 +241,8 @@ public class PrepareOBDTargetFileHandler {
     private void processCDRDetail(String obdFileName) {
         List<Map<String, Object>> cdrDetailRecords;
         //read and parse CDRDetail CSV and create entry in CdrCallDetail table for each record.
-        //todo cdrCallDetailCSV file name?
         try {
-            cdrDetailRecords = ReadByCSVMapper.readWithCsvMapReader("cdrDetail" + obdFileName);
+            cdrDetailRecords = ReadByCSVMapper.readWithCsvMapReader("CDR_detail_" + obdFileName);
             for (Map<String, Object> cdrDetailMap : cdrDetailRecords) {
                 OutboundCallDetail callDetail = new OutboundCallDetail();
                 callDetail.setRequestId(cdrDetailMap.get("requestId").toString());
@@ -216,11 +265,31 @@ public class PrepareOBDTargetFileHandler {
                         cdrDetailMap.get("callDisconnectReason").toString());
                 callDetail.setCallDisconnectReason(disconnectReason);
                 callDetail.setWeekId(cdrDetailMap.get("weekId").toString());
+                callDetailService.create(callDetail);
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
 
+    private void downloadCdrSummaryAndDetailFiles(String fileName) {
+        CopyFile.fromRemote("Cdr_Summary_" + fileName);
+        CopyFile.fromRemote("CDR_detail_" + fileName);
+    }
+
+    private void updateCallFlowStatus(CallFlowStatus fetchBy, CallFlowStatus updateTo) {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(fetchBy);
+        todayCallFlow.setStatus(updateTo);
+        callFlowService.update(todayCallFlow);
+    }
+
+    private void updateCallFlowStatus(
+            CallFlowStatus fetchBy, CallFlowStatus updateTo, String obdChecksum, Long obdRecordsCount) {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(fetchBy);
+        todayCallFlow.setStatus(updateTo);
+        todayCallFlow.setObdChecksum(obdChecksum);
+        todayCallFlow.setObdRecordCount(obdRecordsCount);
+        callFlowService.update(todayCallFlow);
     }
 }
 

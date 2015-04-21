@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class RetryStrategy {
     @Autowired
-    SettingsFacade kilkariObdSettings;
+    private SettingsFacade kilkariObdSettings;
 
     Settings settings = new Settings(kilkariObdSettings);
 

@@ -16,7 +16,7 @@ public enum CallFlowStatus {
     NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED,
     
     /* Target File Notification sent to IVR */
-    OBD_FILE_NOTIFICATION_SENT_TO_IVR;
+    OBD_FILE_NOTIFICATION_SENT_TO_IVR,
     
     /* Status for OBD file Processing at IVR */
     OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR,

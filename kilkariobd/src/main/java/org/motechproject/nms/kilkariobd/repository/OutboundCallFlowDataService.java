@@ -11,4 +11,7 @@ public interface OutboundCallFlowDataService extends MotechDataService<OutboundC
 
     @Lookup
     OutboundCallFlow findRecordByCallStatus(@LookupField(name = "status")CallFlowStatus status);
+
+    @Lookup
+    OutboundCallFlow findRecordByFileName(@LookupField(name = "obdFileName")String fileName);
 }

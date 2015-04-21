@@ -11,4 +11,6 @@ public interface OutboundCallFlowService {
     public OutboundCallFlow create(OutboundCallFlow record);
 
     public OutboundCallFlow update(OutboundCallFlow record);
+
+    public OutboundCallFlow findRecordByFileName(String filename);
 }
