@@ -15,7 +15,7 @@ public class UserProfile {
 
     private boolean isDefaultLanguageLocationCode;
 
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     private String circle;
 
@@ -55,11 +55,11 @@ public class UserProfile {
     }
 
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

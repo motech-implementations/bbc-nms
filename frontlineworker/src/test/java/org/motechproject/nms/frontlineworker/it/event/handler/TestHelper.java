@@ -123,7 +123,7 @@ public class TestHelper {
         circle.setCreator("Etasha");
         circle.setOwner("Etasha");
         circle.setModifiedBy("Etasha");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("LLC");
         return circle;
 
     }
@@ -133,7 +133,7 @@ public class TestHelper {
         languageLocationCode.setState(state);
         languageLocationCode.setDistrict(district);
         languageLocationCode.setCircle(circle);
-        languageLocationCode.setLanguageLocationCode(123);
+        languageLocationCode.setLanguageLocationCode("LLC");
         languageLocationCode.setLanguageMA("LanguageMA");
         languageLocationCode.setLanguageMK("LanguageMK");
         languageLocationCode.setLanguageKK("LanguageKK");

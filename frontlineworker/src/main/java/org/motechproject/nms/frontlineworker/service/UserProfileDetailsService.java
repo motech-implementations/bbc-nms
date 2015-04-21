@@ -20,7 +20,7 @@ public interface UserProfileDetailsService {
             throws DataValidationException, NmsInternalServerError,
             FlwNotInWhiteListException, ServiceNotDeployedException;
 
-    public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn,
+    public void updateLanguageLocationCodeFromMsisdn(String languageLocationCode, String msisdn,
                                                      ServicesUsingFrontLineWorker service)
             throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException;
 

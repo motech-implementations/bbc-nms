@@ -44,8 +44,8 @@ public class UserProfileTest {
     @Test
     public void testLanguageLocationCode() {
 
-        userProfile.setLanguageLocationCode(1234);
-        assertTrue(1234 == userProfile.getLanguageLocationCode());
+        userProfile.setLanguageLocationCode("LLC");
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class UserProfileTest {
         userProfile.setNmsFlwId(12L);
         userProfile.setMsisdn("1234567890");
         userProfile.setIsDefaultLanguageLocationCode(true);
-        userProfile.setLanguageLocationCode(1234);
+        userProfile.setLanguageLocationCode("LLC");
         userProfile.setCircle("12");
         userProfile.setMaxStateLevelCappingValue(10);
 

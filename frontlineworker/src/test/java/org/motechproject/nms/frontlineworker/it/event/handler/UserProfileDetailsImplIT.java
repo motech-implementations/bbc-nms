@@ -126,7 +126,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         frontLineWorker = new FrontLineWorker(1500L, "1234512345", "Rashi", Designation.USHA,
                 "123", 12L, stateData, district, null, null, null,
-                null, null, null, null, Status.ACTIVE, 123, ConfigurationConstants.UNKNOWN_CIRCLE);
+                null, null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE);
 
         frontLineWorker.setCreator("Etasha");
         frontLineWorker.setModifiedBy("Etasha");
@@ -140,7 +140,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         frontLineWorker = new FrontLineWorker(1501L, "1212121212", "Rashi", Designation.ASHA,
                 "123", 12L, stateData, district, null, null, null,
-                null, null, null, null, Status.ACTIVE, 123, "circleCode");
+                null, null, null, null, Status.ACTIVE, "LLC", "circleCode");
 
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
         frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1212121212");
@@ -181,7 +181,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         frontLineWorker = new FrontLineWorker(1507L, "1234567999", "Rashi", Designation.USHA,
                 null, null, null, null, null, null, null,
-                null, null, null, null, Status.ANONYMOUS, 123, "circleCode");
+                null, null, null, null, Status.ANONYMOUS, "LLC", "circleCode");
 
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
         frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234567999");
@@ -193,7 +193,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         frontLineWorker = new FrontLineWorker(1508L, "9876543210", "Rashi", Designation.USHA,
                 "123", 12L, stateData, district, null, null, null,
-                null, null, null, null, Status.INVALID, 123, "circleCode");
+                null, null, null, null, Status.INVALID, "LLC", "circleCode");
 
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
         frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9876543210");
@@ -203,7 +203,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         frontLineWorker = new FrontLineWorker(1509L, "2222222222", "Rashi", Designation.USHA,
                 "123", 12L, stateData, district, null, null, null,
-                null, null, null, null, Status.INVALID, 123, ConfigurationConstants.UNKNOWN_CIRCLE);
+                null, null, null, null, Status.INVALID, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE);
 
 
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -280,7 +280,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("1234512345", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -288,7 +288,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234512345");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertEquals(Designation.USHA, frontLineWorker.getDesignation());
@@ -300,7 +300,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("1212121212", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -308,7 +308,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1212121212");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertEquals(Designation.ASHA, frontLineWorker.getDesignation());
@@ -319,7 +319,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("9999999999", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -327,7 +327,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9999999999");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertEquals(Designation.ANM, frontLineWorker.getDesignation());
@@ -338,7 +338,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("2121212121", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -346,7 +346,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("2121212121");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ACTIVE, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertEquals(Designation.AWW, frontLineWorker.getDesignation());
@@ -358,7 +358,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("1111111111", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -366,7 +366,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1111111111");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
 
@@ -376,7 +376,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("1234567999", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -384,7 +384,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1234567999");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
 
@@ -394,7 +394,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("9879879879", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -402,7 +402,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9879879879");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
 
@@ -412,7 +412,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("9876543210", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -420,7 +420,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9876543210");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertTrue(null == frontLineWorker.getFlwId());
@@ -431,7 +431,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("2222222222", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(20 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(true, userProfile.isCreated());
         assertEquals(false, userProfile.isDefaultLanguageLocationCode());
@@ -439,7 +439,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("2222222222");
         assertNotNull(frontLineWorker);
         assertEquals("circleCode", frontLineWorker.getCircleCode());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
         assertEquals("123", frontLineWorker.getOperatorCode());
         assertTrue(null == frontLineWorker.getFlwId());
@@ -461,7 +461,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         languageLocationCodeTemp.setCircleCode(circle.getCode());
         languageLocationCodeTemp.setDistrictCode(district.getDistrictCode());
         languageLocationCodeTemp.setStateCode(stateData.getStateCode());
-        languageLocationCodeTemp.setLanguageLocationCode(1234);
+        languageLocationCodeTemp.setLanguageLocationCode("LLC2");
         languageLocationCodeTemp.setLanguageMA("LanguageMA");
         languageLocationCodeTemp.setLanguageMK("LanguageMK");
         languageLocationCodeTemp.setLanguageKK("LanguageKK");
@@ -481,7 +481,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         assertEquals("circleCode", userProfile.getCircle());
         assertEquals("8989898989", userProfile.getMsisdn());
-        assertTrue(123 == userProfile.getLanguageLocationCode());
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
         assertTrue(10 == userProfile.getMaxStateLevelCappingValue());
         assertEquals(false, userProfile.isCreated());
         assertEquals(true, userProfile.isDefaultLanguageLocationCode());
@@ -518,7 +518,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         // Record 12 LanguageLocationCode not Exist in Database.
 
         try {
-            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(234, "1121121121", ServicesUsingFrontLineWorker.MOBILEKUNJI);
+            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn("LLC2", "1121121121", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
@@ -530,16 +530,16 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
         // Record 13 LanguageLocationCode and contactNO Exist in Database.
 
-        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1313131313", ServicesUsingFrontLineWorker.MOBILEKUNJI);
+        userProfileDetailsService.updateLanguageLocationCodeFromMsisdn("LLC", "1313131313", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo("1313131313");
 
         assertEquals(Status.ANONYMOUS, frontLineWorker.getStatus());
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
 
         // Record 14 LanguageLocationCode should Exist but FrontlineWorker not present.
 
         try {
-            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(123, "1414141414",  ServicesUsingFrontLineWorker.MOBILEKUNJI);
+            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn("LLC", "1414141414",  ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);

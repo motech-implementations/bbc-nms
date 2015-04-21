@@ -71,8 +71,8 @@ public class FrontLineWorkerTest {
 
     @Test
     public void testLanguageLocationCodeId() {
-        frontLineWorker.setLanguageLocationCodeId(123);
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        frontLineWorker.setLanguageLocationCodeId("LLC");
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
     }
 
 }

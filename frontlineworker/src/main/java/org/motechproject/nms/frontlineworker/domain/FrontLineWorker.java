@@ -79,7 +79,7 @@ public class FrontLineWorker extends MdsEntity {
 
     @UIDisplayable(position = 6)
     @Field
-    private Integer languageLocationCodeId = null;
+    private String languageLocationCodeId = null;
 
     @UIDisplayable(position = 7)
     @Field
@@ -92,7 +92,7 @@ public class FrontLineWorker extends MdsEntity {
                            Long stateCode, State stateId, District districtId, Taluka talukaId,
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
             healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
-                           Status status, Integer languageLocationCodeId, String circleCode) {
+                           Status status, String languageLocationCodeId, String circleCode) {
         this.flwId = flwId;
         this.contactNo = contactNo;
         this.name = name;
@@ -241,11 +241,11 @@ public class FrontLineWorker extends MdsEntity {
         this.status = status;
     }
 
-    public Integer getLanguageLocationCodeId() {
+    public String getLanguageLocationCodeId() {
         return languageLocationCodeId;
     }
 
-    public void setLanguageLocationCodeId(Integer languageLocationCodeId) {
+    public void setLanguageLocationCodeId(String languageLocationCodeId) {
         this.languageLocationCodeId = languageLocationCodeId;
     }
 

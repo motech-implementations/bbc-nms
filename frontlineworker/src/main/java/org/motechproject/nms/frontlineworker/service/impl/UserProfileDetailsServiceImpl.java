@@ -122,7 +122,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      * @throws DataValidationException
      */
     @Override
-    public void updateLanguageLocationCodeFromMsisdn(Integer languageLocationCode, String msisdn,
+    public void updateLanguageLocationCodeFromMsisdn(String languageLocationCode, String msisdn,
                                                      ServicesUsingFrontLineWorker service)
             throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException {
 
@@ -147,7 +147,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             } else {
                 languageLocationCodeByParam = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
                 if (languageLocationCodeByParam == null) {
-                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode);
                 } else {
                     stateCode = languageLocationCodeByParam.getStateCode();
 
@@ -292,8 +292,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             throws FlwNotInWhiteListException, ServiceNotDeployedException {
 
         UserProfile userProfile = new UserProfile();
-        Integer locationCode = null;
-        Integer defaultLanguageLocationCode = null;
+        String locationCode = null;
+        String defaultLanguageLocationCode = null;
         LanguageLocationCode languageLocationCode = null;
         boolean isDeployed = false;
         boolean isInWhiteList = false;
@@ -384,7 +384,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
     private UserProfile multipleLLCForAnonymousUser(ServicesUsingFrontLineWorker service, String circleCode) {
         UserProfile userProfile = null;
-        Integer defaultLanguageLocationCode = null;
+        String defaultLanguageLocationCode = null;
         Long stateCode = null;
         LanguageLocationCode languageLocationCode = null;
 
@@ -545,7 +545,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                           ServicesUsingFrontLineWorker service, String circleCode)
             throws NmsInternalServerError {
         logger.debug("User details to be found for active user");
-        Integer locationCode = null;
+        String locationCode = null;
         UserProfile userProfile = new UserProfile();
         String circle = null;
         LanguageLocationCode languageLocationCode = null;
@@ -622,7 +622,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                                        ServicesUsingFrontLineWorker service, String circleCode)
             throws NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
         logger.debug("User details to be found for anonymous user");
-        Integer languageLocationCode = null;
+        String languageLocationCode = null;
         LanguageLocationCode langLocCode = null;
         UserProfile userProfile = null;
         String circle = null;
