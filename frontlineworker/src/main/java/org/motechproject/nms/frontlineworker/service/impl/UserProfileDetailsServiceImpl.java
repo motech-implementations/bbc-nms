@@ -322,28 +322,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile = uniqueLLCForAnonymousUser(languageLocationCode, service);
 
         } else {
-            defaultLanguageLocationCode = languageLocationCodeService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
-            if (defaultLanguageLocationCode != null) {
-                //no or multiple language location codes is found for the provided circle. here default language location
-                // code is fetched from circle
-                logger.debug("default language location code found by circle = {}", defaultLanguageLocationCode);
-                languageLocationCode = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, defaultLanguageLocationCode);
-                userProfile.setIsDefaultLanguageLocationCode(true);
-                userProfile.setLanguageLocationCode(defaultLanguageLocationCode);
-                stateCode = languageLocationCode.getStateCode();
-                userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
-                userProfile.setCircle(languageLocationCode.getCircleCode());
-
-
-            } else {
-                //here the default language location code for circle is also not found.
-                logger.debug("both language location code and default language location code not found");
-                userProfile.setIsDefaultLanguageLocationCode(true);
-                userProfile.setLanguageLocationCode(null);
-                userProfile.setMaxStateLevelCappingValue(ConfigurationConstants.CAPPING_NOT_FOUND_BY_STATE);
-                userProfile.setCircle(circleCode);
-
-            }
+            userProfile = multipleLLCForAnonymousUser(service, circleCode);
         }
         userProfile.setMsisdn(msisdn);
 
@@ -362,7 +341,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     private UserProfile uniqueLLCForAnonymousUser(LanguageLocationCode languageLocationCode,
                                                   ServicesUsingFrontLineWorker service) {
 
-        UserProfile userProfile = null;
+        UserProfile userProfile = new UserProfile();
         Long stateCode = null;
         userProfile.setIsDefaultLanguageLocationCode(false);
         userProfile.setLanguageLocationCode(languageLocationCode.getLanguageLocationCode());
@@ -383,7 +362,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      */
 
     private UserProfile multipleLLCForAnonymousUser(ServicesUsingFrontLineWorker service, String circleCode) {
-        UserProfile userProfile = null;
+        UserProfile userProfile = new UserProfile();
         String defaultLanguageLocationCode = null;
         Long stateCode = null;
         LanguageLocationCode languageLocationCode = null;
