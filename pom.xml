@@ -693,9 +693,9 @@
     </dependencyManagement>
     
     <modules>
-        <module>mobileacademy</module>
+        <!--<module>mobileacademy</module>-->
         <module>frontlineworker</module>
-        <module>kilkari</module>
+        <!--<module>kilkari</module>-->
         <module>mobilekunji</module>        
         <module>util</module>        
         <module>masterdata</module>        
