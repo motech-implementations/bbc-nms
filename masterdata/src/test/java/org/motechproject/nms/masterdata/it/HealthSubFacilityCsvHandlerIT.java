@@ -40,6 +40,9 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
+    private ValidatorService validatorService;
+
+    @Inject
     private DistrictService districtService;
 
     @Inject
@@ -55,16 +58,13 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private HealthSubFacilityService healthSubFacilityService;
 
     @Inject
-    private HealthBlockService healthBlockService;
-
-    @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     @Before
     public void setUp() {
-        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(stateService,
-                districtService, talukaService, healthFacilityService, healthSubFacilityCsvService,
-                healthSubFacilityService, healthBlockService, bulkUploadErrLogService);
+        healthSubFacilityCsvHandler = new HealthSubFacilityCsvUploadHandler(validatorService,
+                healthFacilityService, healthSubFacilityCsvService,
+                healthSubFacilityService, bulkUploadErrLogService);
     }
 
     @Test

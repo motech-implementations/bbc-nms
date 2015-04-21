@@ -79,9 +79,9 @@ public class HttpRequest implements HttpServletRequest {
      * or -1 if the named header
      * was not included with the
      * request
-     * @exception IllegalArgumentException    If the header value
-     * can't be converted
-     * to a date
+     * @throws IllegalArgumentException If the header value
+     *                                  can't be converted
+     *                                  to a date
      */
     @Override
     public long getDateHeader(String name) {
@@ -176,9 +176,9 @@ public class HttpRequest implements HttpServletRequest {
      * of the request header or -1
      * if the request doesn't have a
      * header of this name
-     * @exception NumberFormatException        If the header value
-     * can't be converted
-     * to an <code>int</code>
+     * @throws NumberFormatException If the header value
+     *                               can't be converted
+     *                               to an <code>int</code>
      */
     @Override
     public int getIntHeader(String name) {
@@ -339,7 +339,7 @@ public class HttpRequest implements HttpServletRequest {
      * @return a <code>String</code> specifying the session
      * ID, or <code>null</code> if the request did
      * not specify a session ID
-     * @see        #isRequestedSessionIdValid
+     * @see #isRequestedSessionIdValid
      */
     @Override
     public String getRequestedSessionId() {
@@ -443,7 +443,7 @@ public class HttpRequest implements HttpServletRequest {
      * with this request or <code>null</code> if
      * <code>create</code> is <code>false</code>
      * and the request has no valid session
-     * @see    #getSession()
+     * @see #getSession()
      */
     @Override
     public HttpSession getSession(boolean create) {
@@ -456,7 +456,7 @@ public class HttpRequest implements HttpServletRequest {
      *
      * @return the <code>HttpSession</code> associated
      * with this request
-     * @see    #getSession(boolean)
+     * @see #getSession(boolean)
      */
     @Override
     public HttpSession getSession() {
@@ -466,12 +466,12 @@ public class HttpRequest implements HttpServletRequest {
     /**
      * Checks whether the requested session ID is still valid.
      *
-     * @return            <code>true</code> if this
+     * @return <code>true</code> if this
      * request has an id for a valid session
      * in the current session context;
      * <code>false</code> otherwise
-     * @see            #getRequestedSessionId
-     * @see            #getSession
+     * @see #getRequestedSessionId
+     * @see #getSession
      */
     @Override
     public boolean isRequestedSessionIdValid() {
@@ -481,10 +481,10 @@ public class HttpRequest implements HttpServletRequest {
     /**
      * Checks whether the requested session ID came in as a cookie.
      *
-     * @return            <code>true</code> if the session ID
+     * @return <code>true</code> if the session ID
      * came in as a
      * cookie; otherwise, <code>false</code>
-     * @see            #getSession
+     * @see #getSession
      */
     @Override
     public boolean isRequestedSessionIdFromCookie() {
@@ -495,10 +495,10 @@ public class HttpRequest implements HttpServletRequest {
      * Checks whether the requested session ID came in as part of the
      * request URL.
      *
-     * @return            <code>true</code> if the session ID
+     * @return <code>true</code> if the session ID
      * came in as part of a URL; otherwise,
      * <code>false</code>
-     * @see            #getSession
+     * @see #getSession
      */
     @Override
     public boolean isRequestedSessionIdFromURL() {
@@ -618,11 +618,11 @@ public class HttpRequest implements HttpServletRequest {
      * a {@link javax.servlet.ServletInputStream}.  Either this method or
      * {@link #getReader} may be called to read the body, not both.
      *
+     * @return a {@link javax.servlet.ServletInputStream} object containing
+     * the body of the request
      * @throws IllegalStateException if the {@link #getReader} method
      *                               has already been called for this request
      * @throws java.io.IOException   if an input or output exception occurred
-     * @return a {@link javax.servlet.ServletInputStream} object containing
-     * the body of the request
      */
     @Override
     public ServletInputStream getInputStream() throws IOException {
@@ -689,7 +689,7 @@ public class HttpRequest implements HttpServletRequest {
      *             the parameter whose value is requested
      * @return an array of <code>String</code> objects
      * containing the parameter's values
-     * @see        #getParameter
+     * @see #getParameter
      */
     @Override
     public String[] getParameterValues(String name) {
@@ -775,14 +775,14 @@ public class HttpRequest implements HttpServletRequest {
      * Either this method or {@link #getInputStream} may be called to read the
      * body, not both.
      *
+     * @return a <code>BufferedReader</code>
+     * containing the body of the request
      * @throws java.io.UnsupportedEncodingException if the character set encoding
      *                                              used is not supported and the
      *                                              text cannot be decoded
      * @throws IllegalStateException                if {@link #getInputStream} method
      *                                              has been called on this request
      * @throws java.io.IOException                  if an input or output exception occurred
-     * @return a <code>BufferedReader</code>
-     * containing the body of the request
      * @see #getInputStream
      */
     @Override

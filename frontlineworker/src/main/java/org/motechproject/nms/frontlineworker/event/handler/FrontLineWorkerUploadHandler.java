@@ -135,7 +135,7 @@ public class FrontLineWorkerUploadHandler {
 
                     //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
                     // in database, then exception is to be thrown
-                    if (dbRecord != null && dbRecord.getId() != nmsFlwId && nmsFlwId != null) {
+                    if ((dbRecord != null) && (nmsFlwId != null) && (dbRecord.getId().longValue() != nmsFlwId.longValue()) ) {
 
                         ParseDataHelper.raiseInvalidDataException("NMS Flw Id", "Incorrect");
                     }

@@ -114,10 +114,10 @@ public class SubscriptionCreateApiRequest {
                 ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
 
         if(SubscriptionPack.findByName(subscriptionPack) == null) {
-            ParseDataHelper.raiseInvalidDataException(Constants.SUBSCRIPTION_PACK, subscriptionPack);
+            ParseDataHelper.raiseMissingDataException(Constants.SUBSCRIPTION_PACK, subscriptionPack);
         }
         if (languageLocationCode == null) {
-            ParseDataHelper.raiseInvalidDataException(Constants.LANGUAGE_LOCATION_CODE, null);
+            ParseDataHelper.raiseMissingDataException(Constants.LANGUAGE_LOCATION_CODE, null);
         }
     }
 }

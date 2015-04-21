@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import org.motechproject.nms.util.constants.Constants;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +20,11 @@ import java.util.Date;
  * Helper methods also raises exception if parameters is invalid or empty/null (if mandatory).
  */
 public final class ParseDataHelper {
+
+
+
+
+    private static Logger logger = LoggerFactory.getLogger(ParseDataHelper.class);
 
     private ParseDataHelper() {
 
@@ -197,7 +204,7 @@ public final class ParseDataHelper {
 
         if (null != callId) {
 
-            if (StringUtils.isNumeric(callId.trim()) && callId.trim().length() == Constants.CALL_ID_LENGTH) {
+            if (StringUtils.isNumeric(callId.trim()) && callId.trim().length() <= Constants.CALL_ID_LENGTH) {
                 return true;
             } else {
                 ParseDataHelper.raiseInvalidDataException(fieldName,callId);
@@ -217,6 +224,7 @@ public final class ParseDataHelper {
             throws DataValidationException {
         String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, fieldName);
+        logger.error(errDesc);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName, e);
     }
 
@@ -230,6 +238,7 @@ public final class ParseDataHelper {
             throws DataValidationException {
         String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.INVALID_DATA_DESCRIPTION, fieldName);
+        logger.error(errDesc);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName);
     }
 
@@ -243,6 +252,7 @@ public final class ParseDataHelper {
             throws DataValidationException {
         String errMessage = String.format(DataValidationException.MANDATORY_MISSING_MESSAGE, fieldName, fieldValue);
         String errDesc = String.format(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING_DESCRIPTION, fieldName);
+        logger.error(errDesc);
         throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING,
                 errDesc, fieldName);
     }

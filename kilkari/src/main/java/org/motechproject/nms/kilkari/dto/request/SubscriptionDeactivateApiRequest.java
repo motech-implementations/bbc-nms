@@ -78,9 +78,9 @@ public class SubscriptionDeactivateApiRequest {
         ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
         if (subscriptionId == null) {
-            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.SUBSCRIPTION_ID, subscriptionId);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.SUBSCRIPTION_ID);
-            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.SUBSCRIPTION_ID);
+            String errMessage = String.format(DataValidationException.MANDATORY_MISSING_MESSAGE, Constants.SUBSCRIPTION_ID, subscriptionId);
+            String errDesc = String.format(ErrorDescriptionConstants.MISSING_API_PARAMETER_DESCRIPTION, Constants.SUBSCRIPTION_ID);
+            throw new DataValidationException(errMessage, ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING, errDesc, Constants.SUBSCRIPTION_ID);
         }
     }
 }

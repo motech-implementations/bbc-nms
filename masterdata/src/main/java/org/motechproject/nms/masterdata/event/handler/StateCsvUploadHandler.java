@@ -89,17 +89,17 @@ public class StateCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
+            } catch (DataValidationException dataException) {
 
-                logger.error("STATE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+                logger.error("STATE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), stateCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataException.getErroneousField(), dataException.getErrorCode(), stateCsvRecord.toString());
 
-            } catch (Exception e) {
+            } catch (Exception stateException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("STATE_CSV_SUCCESS processing receive Exception exception, message: {}", stateException);
             } finally {
                 if (null != stateCsvRecord) {
                     stateCsvService.delete(stateCsvRecord);
@@ -109,6 +109,7 @@ public class StateCsvUploadHandler {
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
+
 
     private State mapStateCsv(StateCsv record) throws DataValidationException {
 

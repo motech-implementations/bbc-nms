@@ -95,12 +95,12 @@ public class CircleCsvHandler {
                     ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException ex) {
+            } catch (DataValidationException circleDataException) {
 
-                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, circleDataException.getErrorDesc(), circleDataException.getErrorCode(), record.toString());
 
-            } catch (Exception e) {
-                logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+            } catch (Exception circleException) {
+                logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", circleException);
 
                 ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
