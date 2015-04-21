@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class FileNotificationController {
+public class FileNotificationController extends BaseController{
     Logger logger = LoggerFactory.getLogger(FileNotificationController.class);
 
     @Autowired

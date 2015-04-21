@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class CopyFile {
+public class SecureCopy {
 
     @Autowired
     @Qualifier("copyFilesSettings")
@@ -43,7 +43,7 @@ public class CopyFile {
         try {
             // exec 'scp -t rFile' remotely
             String command = "scp -p -t " + rFile;
-            Session session = getSession();
+            Session session = getSession(configuration.getObdFileServerSshUsername(), configuration.getObdFileServerIp());
             Channel channel = getChannel(session, command);
 
             OutputStream out = channel.getOutputStream();
@@ -103,14 +103,13 @@ public class CopyFile {
             System.exit(0);
     }
 
-    public static void fromRemote(String fileName) {
+    public static void fromRemote(String fileName) throws IOException{
         Configuration configuration = configurationService.getConfiguration();
 
-        Channel channel = null;
         FileOutputStream fos = null;
 
         String lFile = settings.getObdFileLocalPath();
-        String rFile = configuration.getObdFilePathOnServer();
+        String rFile = configuration.getObdFilePathOnServer() + "/" + fileName;
 
         try {
             String prefix=null;
@@ -120,8 +119,8 @@ public class CopyFile {
 
             // exec 'scp -f rFile' remotely
             String command = "scp -f " + rFile;
-            Session session = getSession();
-            channel = getChannel(session, command);
+            Session session = getSession(configuration.getObdFileServerSshUsername(), configuration.getObdFileServerIp());
+            Channel channel = getChannel(session, command);
 
             // get I/O streams for remote scp
             OutputStream out = channel.getOutputStream();
@@ -199,14 +198,9 @@ public class CopyFile {
             session.disconnect();
 
             System.exit(0);
-        } catch (Exception ex) {
+        } catch (JSchException ex) {
             ex.printStackTrace();
-            try {
-                if (fos != null)
-                    fos.close();
-            } catch (IOException ee) {
-                ee.printStackTrace();
-            }
+            fos.close();
         }
     }
 
@@ -247,13 +241,14 @@ public class CopyFile {
         return b;
     }
 
-    private static Session getSession() {
+    private static Session getSession(String remoteUser, String remoteIp) {
         byte[] privateKey = readMyPrivateKeyFromFile(settings.getSshPrivateKeyFile());
         JSch jsch = new JSch();
         Session session = null;
         try {
+            //todo : constant for username.
             jsch.addIdentity("ashish", privateKey, null, null);
-            session = jsch.getSession("ashish", "10.204.23.160", 22);
+            session = jsch.getSession(remoteUser, remoteIp, 22);
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);

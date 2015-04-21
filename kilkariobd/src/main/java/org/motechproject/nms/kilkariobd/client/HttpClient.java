@@ -4,17 +4,18 @@ package org.motechproject.nms.kilkariobd.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.ConnectTimeoutException;
-import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
+import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.dto.request.TargetNotificationRequest;
+import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +23,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
 
-public class IvrHttpClient {
-    private Logger logger = LoggerFactory.getLogger(IvrHttpClient.class);
+public class HttpClient {
+    private Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
     @Autowired
     private OutboundCallFlowService callFlowService;
 
-    private HttpClient commonHttpClient = new HttpClient();
+    @Autowired
+    private ConfigurationService configurationService;
+
+    private org.apache.commons.httpclient.HttpClient commonHttpClient = new org.apache.commons.httpclient.HttpClient();
 
     public void notifyTargetFile(String fileName, String checksum, Long recordsCount) {
-        HttpMethod postMethod = buildTargetNotificationRequest(ivrUrl(), fileName, checksum, recordsCount);
+        HttpMethod postMethod = buildTargetNotificationRequest(ivrUrl() + "/notifytargetfile", fileName, checksum, recordsCount);
         HttpClientParams params =  commonHttpClient.getParams();
         RetryStrategy retryStrategy = new RetryStrategy();
         Integer retryNumber = 0;
@@ -57,7 +61,7 @@ public class IvrHttpClient {
     }
 
     public void notifyCDRFileProcessedStatus(FileProcessingStatus status) {
-        HttpMethod postMethod = buildCdrFileProcessedStatusRequest(ivrUrl(), status);
+        HttpMethod postMethod = buildCdrFileProcessedStatusRequest(ivrUrl() + "/NotifyCDRFileProcessedStatus", status);
         HttpClientParams params =  commonHttpClient.getParams();
         RetryStrategy retryStrategy = new RetryStrategy();
         Integer retryNumber = 0;
@@ -105,7 +109,8 @@ public class IvrHttpClient {
     }
 
     private String ivrUrl() {
-        return String.format("http://%s/%s/obdmanager/notifytargetfile", "", "");
+        Configuration configuration = configurationService.getConfiguration();
+        return String.format(configuration.getObdIvrUrl());
     }
 
 

@@ -23,5 +23,4 @@ public class RetryStrategy {
         }
         return timeToWaitInMillis;
     }
-
 }
