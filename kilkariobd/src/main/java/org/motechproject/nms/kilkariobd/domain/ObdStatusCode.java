@@ -13,7 +13,7 @@ public enum ObdStatusCode {
     
     private int statusCode;
     
-    private ObdStatusCode(int statusCode){
+    private ObdStatusCode(int statusCode) {
         this.statusCode = statusCode;
     }
 

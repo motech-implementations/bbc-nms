@@ -1,10 +1,10 @@
 package org.motechproject.nms.kilkariobd.settings;
 
 
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.motechproject.nms.kilkariobd.commons.Constants;
 
 /**
  * The purpose of this class is to read kilkari obd properties from the kilkariobd.properties file and make
@@ -31,11 +31,11 @@ public class Settings {
 
     public Settings(SettingsFacade settingsFacade) {
         this(
-                settingsFacade.getProperty(OFFLINE_API_INIT_INTERVAL, KILKARI_OBD_PROPERTY_FILE_NAME),
-                settingsFacade.getProperty(OFFLINE_API_MAX_RETRIES, KILKARI_OBD_PROPERTY_FILE_NAME),
-                settingsFacade.getProperty(OFFLINE_API_RETRY_MULTIPLIER, KILKARI_OBD_PROPERTY_FILE_NAME),
-                settingsFacade.getProperty(OBD_FILE_LOCAL_PATH, KILKARI_OBD_PROPERTY_FILE_NAME),
-                settingsFacade.getProperty(SSH_PRIVATE_KEY_FILE, KILKARI_OBD_PROPERTY_FILE_NAME)
+                settingsFacade.getProperty(Constants.OFFLINE_API_INIT_INTERVAL, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
+                settingsFacade.getProperty(Constants.OFFLINE_API_MAX_RETRIES, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
+                settingsFacade.getProperty(Constants.OFFLINE_API_RETRY_MULTIPLIER, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
+                settingsFacade.getProperty(Constants.OBD_FILE_LOCAL_PATH, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
+                settingsFacade.getProperty(Constants.SSH_PRIVATE_KEY_FILE, Constants.KILKARI_OBD_PROPERTY_FILE_NAME)
         );
     }
 
