@@ -20,6 +20,7 @@ public final class Constants {
     public static final String OFFLINE_API_RETRY_MULTIPLIER = "offlineApiRetryMultiplier";
     public static final String OBD_FILE_LOCAL_PATH = "obdFileLocalPath";
     public static final String SSH_PRIVATE_KEY_FILE = "sshPrivateKeyFile";
+    public static final String SSH_LOCAL_USERNAME = "sshLocalUsername";
 
     public static final String FILE_NAME = "File name";
 

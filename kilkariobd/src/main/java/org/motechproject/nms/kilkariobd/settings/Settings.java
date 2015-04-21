@@ -24,9 +24,11 @@ public class Settings {
 
     private String sshPrivateKeyFile;
 
+    private String sshLocalUsername;
+
 
     public Settings() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, null, null);
     }
 
     public Settings(SettingsFacade settingsFacade) {
@@ -35,17 +37,20 @@ public class Settings {
                 settingsFacade.getProperty(Constants.OFFLINE_API_MAX_RETRIES, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
                 settingsFacade.getProperty(Constants.OFFLINE_API_RETRY_MULTIPLIER, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
                 settingsFacade.getProperty(Constants.OBD_FILE_LOCAL_PATH, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
-                settingsFacade.getProperty(Constants.SSH_PRIVATE_KEY_FILE, Constants.KILKARI_OBD_PROPERTY_FILE_NAME)
+                settingsFacade.getProperty(Constants.SSH_PRIVATE_KEY_FILE, Constants.KILKARI_OBD_PROPERTY_FILE_NAME),
+                settingsFacade.getProperty(Constants.SSH_LOCAL_USERNAME, Constants.KILKARI_OBD_PROPERTY_FILE_NAME)
         );
     }
 
     public Settings(String offlineApiInitalIntervalInMilliseconds, String offlineApiMaxRetries, String offlineApiRetryMultiplier,
-                    String obdFileLocalPath, String sshPrivateKeyFile) {
+                    String obdFileLocalPath, String sshPrivateKeyFile, String sshLocalUsername ) {
         this.offlineApiInitialIntervalInMilliseconds = offlineApiInitalIntervalInMilliseconds;
         this.offlineApiMaxRetries = offlineApiMaxRetries;
         this.offlineApiRetryMultiplier = offlineApiRetryMultiplier;
         this.obdFileLocalPath = obdFileLocalPath;
         this.sshPrivateKeyFile = sshPrivateKeyFile;
+        this.sshLocalUsername = sshLocalUsername;
+
     }
 
     public String getOfflineApiInitalIntervalInMilliseconds() {
@@ -86,5 +91,13 @@ public class Settings {
 
     public void setSshPrivateKeyFile(String sshPrivateKeyFile) {
         this.sshPrivateKeyFile = sshPrivateKeyFile;
+    }
+
+    public String getSshLocalUsername() {
+        return sshLocalUsername;
+    }
+
+    public void setSshLocalUsername(String sshLocalUsername) {
+        this.sshLocalUsername = sshLocalUsername;
     }
 }
