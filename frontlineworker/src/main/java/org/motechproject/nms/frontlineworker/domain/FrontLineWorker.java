@@ -3,7 +3,6 @@ package org.motechproject.nms.frontlineworker.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
-import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.frontlineworker.Designation;
 import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.masterdata.domain.District;
@@ -13,6 +12,7 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This class Models data for Front Line Worker records
@@ -30,15 +30,18 @@ public class FrontLineWorker extends MdsEntity {
     private String contactNo;
 
     @UIDisplayable(position = 1)
+    @Field
     private String name;
 
     @UIDisplayable(position = 3)
+    @Field
     private Designation designation;
 
     @Field
     private String operatorCode;
 
     @UIDisplayable(position = 4)
+    @Field
     private Long stateCode;
 
     @Field(name = "state_id")
@@ -78,6 +81,8 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private Integer languageLocationCodeId = null;
 
+    @UIDisplayable(position = 7)
+    @Field
     private String circleCode = null;
 
     public FrontLineWorker() {

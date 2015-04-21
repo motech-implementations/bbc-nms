@@ -47,11 +47,11 @@
         </dependency>
 
         <!-- Scheduler -->
-        <dependency>
+        <!--dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
-        </dependency>
+        </dependency-->
 
 
         <!-- Repository -->
@@ -99,7 +99,8 @@
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
                             org.motechproject.nms.frontlineworker.service;version=${project.version},
                             org.motechproject.nms.frontlineworker.service.impl;version=${project.version},
-                            org.motechproject.nms.frontlineworker.exception;version=${project.version},
+                            org.motechproject.nms.frontlineworker.constants;version=${project.version},
+                            org.motechproject.nms.frontlineworker.exception;version=${project.version}
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

@@ -15,8 +15,8 @@
     <osgi:service ref="userProfileDetailsService"
                   interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
 
-    <osgi:service ref="removeInvalidRecordService"
-                  interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecordService"/>
+    <!--osgi:service ref="removeInvalidRecordService"
+                  interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecordService"/-->
 
     <osgi:service ref="csvWhiteListUsersService"
                   interface="org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService"/>
@@ -72,8 +72,8 @@
     <osgi:reference id="healthSubFacilityService"
                     interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
 
-    <osgi:reference id="schedulerServiceOsgi"
-                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
+    <!--osgi:reference id="schedulerServiceOsgi"
+                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/-->
 
 
 </beans>

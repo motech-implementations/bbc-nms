@@ -1,10 +1,8 @@
 package org.motechproject.nms.frontlineworker.repository;
 
-import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 
 import java.util.List;
@@ -28,7 +26,7 @@ public interface FrontLineWorkerRecordDataService extends MotechDataService<Fron
     @Lookup
     FrontLineWorker findById(@LookupField(name = "id") Long id);
 
-    @Lookup
+    /*@Lookup
     List<FrontLineWorker> findByStatus(@LookupField(name = "status") Status status, @LookupField(name = "modificationDate") DateTime modificationDate);
-
+*/
 }

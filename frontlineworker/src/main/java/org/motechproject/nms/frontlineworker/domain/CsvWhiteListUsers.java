@@ -1,6 +1,7 @@
 package org.motechproject.nms.frontlineworker.domain;
 
 import org.motechproject.mds.annotations.Entity;
+import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -9,6 +10,7 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class CsvWhiteListUsers extends MdsEntity {
 
+    @Field
     private String contactNo;
 
     public CsvWhiteListUsers() {
