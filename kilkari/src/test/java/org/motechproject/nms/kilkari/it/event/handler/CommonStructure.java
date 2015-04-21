@@ -21,16 +21,20 @@ import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -55,6 +59,12 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    
+    @Inject
+    private CircleDataService circleDataService;
+    
+    @Inject
+    private LanguageLocationCodeDataService llcDataService;
     
     @Inject
     protected SubscriberService subscriberService;
@@ -110,6 +120,8 @@ public class CommonStructure extends BasePaxIT {
             createHealthFacility();
             createHealthSubFacility();
             createVillage();
+            createCircle();
+            createLLC();
         }
         // do the setup
         setUpIsDone = true;
@@ -126,6 +138,14 @@ public class CommonStructure extends BasePaxIT {
             subscriberService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
 
+        try {
+            circleDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
+        try {
+            llcDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
         try {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
@@ -254,6 +274,37 @@ public class CommonStructure extends BasePaxIT {
         talukaRecordsDataService.update(talukaRecord);
         logger.info("Village data is successfully inserted.");
     }
+    
+    private void createCircle(){
+        Circle newRecord = new Circle();
+        newRecord.setName("circleName");
+        newRecord.setCode("1");
+        newRecord.setDefaultLanguageLocationCode(1);
+        newRecord.setCreator("Deepak");
+        newRecord.setOwner("Deepak");
+        newRecord.setModifiedBy("Deepak");
+        circleDataService.create(newRecord);
+        
+        logger.info("Circle data is successfully inserted.");
+    }
+    
+    private void createLLC(){
+        LanguageLocationCode newRecord = new LanguageLocationCode();
+        newRecord.setStateCode(1L);
+        newRecord.setDistrictCode(1L);
+        newRecord.setCircleCode("1");
+        newRecord.setLanguageKK("LanguageKK");
+        newRecord.setLanguageMA("LanguageMA");
+        newRecord.setLanguageMK("LanguageMK");
+        newRecord.setLanguageLocationCode(1);
+        newRecord.setState(stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode()));
+        newRecord.setDistrict(districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode()));
+        newRecord.setCircle(circleDataService.findByCode(newRecord.getCircleCode()));
+        llcDataService.create(newRecord);
+
+        logger.info("LLC data is successfully inserted.");
+    }
+    
     
     protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
         csv.setStateCode("1");

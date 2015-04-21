@@ -166,8 +166,9 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
      *  and map Mother mcts to subscriber
      * 
      *  @param motherMctsCsv csv uploaded subscriber
+     * @throws NmsInternalServerError 
      */
-    private Subscriber mapMotherMctsToSubscriber(MotherMctsCsv motherMctsCsv) throws DataValidationException {
+    private Subscriber mapMotherMctsToSubscriber(MotherMctsCsv motherMctsCsv) throws DataValidationException, NmsInternalServerError {
 
         Subscriber motherSubscriber = new Subscriber();
 

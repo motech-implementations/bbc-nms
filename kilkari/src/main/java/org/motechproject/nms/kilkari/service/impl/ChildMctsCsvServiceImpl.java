@@ -166,12 +166,12 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
      * 
      *  @param childMctsCsv csv uploaded record
      */
-    private Subscriber mapChildMctsToSubscriber(ChildMctsCsv childMctsCsv) throws DataValidationException {
+    private Subscriber mapChildMctsToSubscriber(ChildMctsCsv childMctsCsv) throws DataValidationException, NmsInternalServerError {
 
         Subscriber childSubscriber = new Subscriber();
         
         logger.trace("mapChildMctsToSubscriber method start");
-        childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
+        childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber) ;
 
         String msisdn = ParseDataHelper.validateAndParseString(Constants.WHOM_PHONE_NUM, childMctsCsv.getWhomPhoneNo(), true);
         childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn(Constants.WHOM_PHONE_NUM, msisdn));
