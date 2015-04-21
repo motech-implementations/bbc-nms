@@ -144,11 +144,11 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = "{\"failureReason\":\"Service Not Deployed\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
-                HttpStatus.INTERNAL_SERVER_ERROR);
+                HttpStatus.NOT_IMPLEMENTED);
     }
 
     /**
@@ -163,11 +163,11 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = "{\"failureReason\":\"User is not Present in WhiteList\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
-                HttpStatus.INTERNAL_SERVER_ERROR);
+                HttpStatus.FORBIDDEN);
     }
 
     /**
