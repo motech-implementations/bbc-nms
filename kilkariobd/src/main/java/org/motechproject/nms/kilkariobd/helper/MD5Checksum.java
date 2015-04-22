@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkariobd.client;
+package org.motechproject.nms.kilkariobd.helper;
 
 import java.io.FileInputStream;
 import java.io.IOException;

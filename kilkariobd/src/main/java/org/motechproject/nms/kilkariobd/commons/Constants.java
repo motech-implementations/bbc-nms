@@ -63,4 +63,7 @@ public final class Constants {
     public static final String OPERATOR_ID = "operatorId";
     public static final String CALL_DISCONNECT_REASON = "callDisconnectReason";
 
+    //constant for httpRetryStrategy
+    public static final Integer FIRST_ATTEMPT = 0;
+
 }

@@ -1,4 +1,4 @@
-package org.motechproject.nms.kilkariobd.client;
+package org.motechproject.nms.kilkariobd.helper;
 
 import com.jcraft.jsch.*;
 import com.jcraft.jsch.JSch;
@@ -26,13 +26,12 @@ public class SecureCopy {
     @Autowired
     private static ConfigurationService configurationService;
 
-    private static Settings settings = new Settings(settingsFacade);
-
     /**
      * This method copies a file from local machine to remote machine using SCP
      * @param fileName name of the file to be copied.
      */
     public static void toRemote(String fileName) {
+        Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
         String rFile = configuration.getObdFilePathOnServer();
@@ -108,6 +107,7 @@ public class SecureCopy {
      * @param fileName name of the file to be copied.
      */
     public static void fromRemote(String fileName) throws IOException{
+        Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
         FileOutputStream fos = null;
@@ -247,6 +247,7 @@ public class SecureCopy {
     }
 
     private static Session getSession(String remoteUser, String remoteIp, String localUser) {
+        Settings settings = new Settings(settingsFacade);
         byte[] privateKey = readMyPrivateKeyFromFile(settings.getSshPrivateKeyFile());
         JSch jsch = new JSch();
         Session session = null;
