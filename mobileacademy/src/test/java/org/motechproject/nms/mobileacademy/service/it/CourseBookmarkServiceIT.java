@@ -171,10 +171,17 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
 
         Map<String, String> scoresByChapter = new HashMap<String, String>();
         scoresByChapter.put("1", "4");
-
+        scoresByChapter.put("2", "1");
+        scoresByChapter.put("3", "4");
+        scoresByChapter.put("5", "3");
+        scoresByChapter.put("6", "4");
+        scoresByChapter.put("7", "0");
+        scoresByChapter.put("8", "2");
+        scoresByChapter.put("9", "2");
+        scoresByChapter.put("11", "4");
         /*
          * Checking if after completing the course, service resets the bookmark
-         * or not
+         * or not, it must not send the SMS
          */
         try {
             courseBookmarkService.saveBookmarkWithScore(
@@ -185,6 +192,7 @@ public class CourseBookmarkServiceIT extends BasePaxIT {
         }
         assertEquals(courseBookmarkService.getBookmarkWithScore(callingNo),
                 MobileAcademyConstants.EMPTY_JSON);
+
     }
 
 }
