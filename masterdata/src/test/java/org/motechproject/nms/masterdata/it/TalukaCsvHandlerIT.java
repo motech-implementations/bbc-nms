@@ -10,10 +10,7 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.TalukaCsv;
 import org.motechproject.nms.masterdata.event.handler.TalukaCsvUploadHandler;
-import org.motechproject.nms.masterdata.service.DistrictService;
-import org.motechproject.nms.masterdata.service.StateService;
-import org.motechproject.nms.masterdata.service.TalukaCsvService;
-import org.motechproject.nms.masterdata.service.TalukaService;
+import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -56,9 +53,12 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        talukaCsvUploadHandler = new TalukaCsvUploadHandler(stateService,
+        talukaCsvUploadHandler = new TalukaCsvUploadHandler(validatorService,
                 districtService, talukaCsvService, talukaService, bulkUploadErrLogService);
     }
 
@@ -68,6 +68,7 @@ public class TalukaCsvHandlerIT extends BasePaxIT {
         assertNotNull(talukaService);
         assertNotNull(districtService);
         assertNotNull(stateService);
+        assertNotNull(validatorService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(talukaCsvUploadHandler);
     }
