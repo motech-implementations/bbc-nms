@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * This class register the controller methods for CDRFileNotification, and FileProcessedStatusNotification
+ */
 @Controller
 public class FileNotificationController extends BaseController{
     Logger logger = LoggerFactory.getLogger(FileNotificationController.class);
@@ -24,6 +27,11 @@ public class FileNotificationController extends BaseController{
     @Autowired
     private OutboundCallFlowService callFlowService;
 
+    /**
+     * Maps CDRFileNotification request to the controller
+     * @param apiRequest CdrNotificationRequest
+     * @throws DataValidationException
+     */
     @RequestMapping(value = "/cdrFileNotification", method = RequestMethod.POST)
     @ResponseBody
     public void CDRFileNotification(@RequestBody CdrNotificationRequest apiRequest) throws DataValidationException{
@@ -51,6 +59,10 @@ public class FileNotificationController extends BaseController{
 
     }
 
+    /**
+     * Maps FileProcessedStatusNotification request to the controller
+     * @param request FileProcessedStatusRequest
+     */
     @RequestMapping(value = "/obdFileProcessedNotification", method = RequestMethod.POST)
     public void FileProcessedStatusNotification(@RequestBody FileProcessedStatusRequest request) {
         logger.debug("FileProcessedStatusNotification: started");

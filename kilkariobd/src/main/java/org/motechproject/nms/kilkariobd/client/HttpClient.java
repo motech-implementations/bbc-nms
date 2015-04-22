@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.UnsupportedEncodingException;
 
+/**
+ * This class provides method to make http request to a server
+ */
 public class HttpClient {
     private Logger logger = LoggerFactory.getLogger(HttpClient.class);
 
@@ -34,6 +37,12 @@ public class HttpClient {
 
     private org.apache.commons.httpclient.HttpClient commonHttpClient = new org.apache.commons.httpclient.HttpClient();
 
+    /**
+     * This method makes an http request to notify the server of the target file has been copied.
+     * @param fileName name of the file that has been copied
+     * @param checksum MD5checksum of the copied file
+     * @param recordsCount records count of the copied file
+     */
     public void notifyTargetFile(String fileName, String checksum, Long recordsCount) {
         HttpMethod postMethod = buildTargetNotificationRequest(ivrUrl() + "/notifytargetfile", fileName, checksum, recordsCount);
         HttpClientParams params =  commonHttpClient.getParams();
@@ -60,6 +69,10 @@ public class HttpClient {
         callFlowService.update(todayCallFlow);
     }
 
+    /**
+     * This method makes an http request to a server to notify the CDR file processed status.
+     * @param status status of the processed files.
+     */
     public void notifyCDRFileProcessedStatus(FileProcessingStatus status) {
         HttpMethod postMethod = buildCdrFileProcessedStatusRequest(ivrUrl() + "/NotifyCDRFileProcessedStatus", status);
         HttpClientParams params =  commonHttpClient.getParams();
