@@ -29,7 +29,7 @@ public class SecureCopy {
     private static Settings settings = new Settings(settingsFacade);
 
     /**
-     * This method copies a file from local machine to remote machine
+     * This method copies a file from local machine to remote machine using SCP
      * @param fileName name of the file to be copied.
      */
     public static void toRemote(String fileName) {
