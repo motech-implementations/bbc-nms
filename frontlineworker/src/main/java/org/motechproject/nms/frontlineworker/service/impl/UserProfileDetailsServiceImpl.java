@@ -113,7 +113,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         logger.debug("updateLanguageLocationCodeFromMsisdn API start");
         String validatedMsisdn = null;
-        LanguageLocationCode languageLocationCodeByParam = null;
+        LanguageLocationCode languageLocationCodeByParam = new LanguageLocationCode();
         FrontLineWorker frontLineWorker = null;
         validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
         String circleCode = null;
@@ -123,7 +123,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
         } else {
             circleCode = frontLineWorker.getCircleCode();
-            if (circleCode == ConfigurationConstants.UNKNOWN_CIRCLE) {
+            if (circleCode.equals(ConfigurationConstants.UNKNOWN_CIRCLE)) {
                 languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
                 if (languageLocationCodeByParam != null) {
                     frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
@@ -131,7 +131,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
                 }
                 else {
-                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+                    ParseDataHelper.raiseInvalidDataException("LanguageLocationCode ", languageLocationCode.toString());
                 }
             } else {
                 languageLocationCodeByParam = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
