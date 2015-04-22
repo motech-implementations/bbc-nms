@@ -155,7 +155,8 @@ public class CourseControllerTest {
         String callingNumber = "9990632906";
         String callId = "123456789123456";
 
-        String expectedJson = "{\"failureReason\":\"" + "MSISDN"
+        String expectedJson = "{\"failureReason\":\""
+                + MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER
                 + ":Invalid Value\"}";
 
         StringBuilder url = new StringBuilder("/bookmarkWithScore?");
@@ -210,7 +211,8 @@ public class CourseControllerTest {
     public void testSaveBookmarkWithScoreFailure() {
         String callingNumber = "9990632906";
         String callId = "123456789123456";
-        String expectedJson = "{\"failureReason\":\"" + "MSISDN"
+        String expectedJson = "{\"failureReason\":\""
+                + MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER
                 + ":Invalid Value\"}";
 
         BookmarkWithScore bookmarkWithScore = new BookmarkWithScore();
