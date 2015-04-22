@@ -2,7 +2,14 @@ package org.motechproject.nms.kilkari.service;
 
 import org.motechproject.nms.kilkari.domain.MctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 

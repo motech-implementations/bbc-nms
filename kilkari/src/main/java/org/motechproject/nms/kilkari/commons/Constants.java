@@ -104,4 +104,8 @@ public final class Constants {
     
     public static final int DAYS_IN_WEEK = 7;
     
+    public static final long MILLIS_IN_DAY = 1000*60*60*24;
+    
+    public static final int EXPIRED_SUBSCRIPTION_AGE_DAYS = 41;
+    
 }

@@ -9,7 +9,7 @@ import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
 public interface SubscriptionMeasureService {
 
     /**
-     * This method creates SubscriptionMeasure
+     * This method creates SubscriptionMeasure entry
      * @param subscriptionMeasure SubscriptionMeasure type object
      * @return SubscriptionMeasure type object
      */

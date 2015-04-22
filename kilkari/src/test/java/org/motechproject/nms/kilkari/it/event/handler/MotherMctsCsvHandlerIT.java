@@ -1,5 +1,17 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
@@ -14,15 +26,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import javax.validation.constraints.AssertFalse;
-import javax.validation.constraints.AssertTrue;
-
-import static org.junit.Assert.*;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -408,6 +411,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
+        csv.setLmpDate("2014-12-01 08:08:08");
         csv.setWhomPhoneNo("1000000012");
         csv.setIdNo("12");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
@@ -428,9 +432,11 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
-        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
         
         subscriptionService.deleteSubscriberSubscriptionAfter6Weeks();
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        
+        assertNotNull(updateSubs);
     }
     
     @Test
@@ -443,7 +449,9 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000013");
         csv.setIdNo("13");
-        csv.setLmpDate("2015-04-20 08:08:08");
+        DateTime date = new DateTime().minusMonths(6);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setLmpDate(dtf.print(date));
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -453,7 +461,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000014");
         csv.setIdNo("14");
-        csv.setLmpDate("2014-01-02 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(1)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -463,7 +471,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000015");
         csv.setIdNo("15");
-        csv.setLmpDate("2014-01-03 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(2)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -473,7 +481,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000016");
         csv.setIdNo("16");
-        csv.setLmpDate("2014-01-04 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(3)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -483,7 +491,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000017");
         csv.setIdNo("17");
-        csv.setLmpDate("2014-01-05 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(4)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -493,7 +501,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000018");
         csv.setIdNo("18");
-        csv.setLmpDate("2014-01-06 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(5)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -503,7 +511,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000019");
         csv.setIdNo("19");
-        csv.setLmpDate("2014-01-07 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(6)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -513,7 +521,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000020");
         csv.setIdNo("20");
-        csv.setLmpDate("2014-01-08 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(7)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -523,7 +531,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000021");
         csv.setIdNo("21");
-        csv.setLmpDate("2014-01-09 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(8)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -533,7 +541,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000022");
         csv.setIdNo("22");
-        csv.setLmpDate("2014-01-10 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(9)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -544,27 +552,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000023");
         csv.setIdNo("23");
-        csv.setLmpDate("2014-01-11 08:08:08");
-        dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
-        uploadedIds.clear();
-        
-        csv = new MotherMctsCsv();
-        csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("1000000024");
-        csv.setIdNo("24");
-        csv.setLmpDate("2014-01-12 08:08:08");
-        dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
-        uploadedIds.clear();
-        
-        csv = new MotherMctsCsv();
-        csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("1000000025");
-        csv.setIdNo("25");
-        csv.setLmpDate("2014-01-13 08:08:08");
+        csv.setLmpDate(dtf.print(date.plusDays(10)));
         dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
@@ -572,11 +560,9 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         
         List<Subscription> scheduledSubscriptions = subscriptionService.getScheduledSubscriptions();
         
+        assertNotNull(scheduledSubscriptions);
+        assertFalse(scheduledSubscriptions.isEmpty());
         
     }
     
-    
-    
-    
-
 }

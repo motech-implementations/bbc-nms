@@ -7,6 +7,7 @@ import javax.jdo.Query;
 import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
@@ -37,20 +38,26 @@ public class CustomQueries {
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
             query.setFilter("msisdn == '" + msisdn + "' && (status == '" + Status.ACTIVE + "' ||" + " status == '" + Status.PENDING_ACTIVATION + "')");
             query.setResult("DISTINCT " + resultParamName);
-            org.joda.time.DateTime date = new DateTime();
-            query.setFilter("Days.daysBetween(date, date)");
-            query.declareImports("org.joda.time.Days");
-            query.declareParameters("org.joda.time.DateTime date");
             return (List<SubscriptionPack>) query.execute();
         }
     }
 
+    /**
+     * This class is used to delete subscription 
+     * whose status is completed or deactivated six week before.
+     */
     public static class DeleteSubscriptionQuery implements QueryExecution<List<Subscription>> {
 
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            date = date.minusDays(41);
+            date = date.minusDays(Constants.EXPIRED_SUBSCRIPTION_AGE_DAYS);
             query = query.getPersistenceManager().newQuery(Subscription.class);
             query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && modificationDate < date");
             query.declareParameters("java.util.Date date");
@@ -59,8 +66,18 @@ public class CustomQueries {
         }
     }
 
+    /**
+     * This class is used to delete subscriber 
+     * who doen't have any subscription 
+     */
     public static class DeleteSubscriberQuery implements QueryExecution<List<Subscriber>> {
 
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
         public List<Subscriber> execute(Query query, InstanceSecurityRestriction restriction) {
             query =  query.getPersistenceManager().newQuery(Subscriber.class);
@@ -71,12 +88,20 @@ public class CustomQueries {
         }
     }
 
+    /**
+     * This class is used to find scheduled subscription 
+     */
     public static class FindScheduledSubscription implements QueryExecution<List<Subscription>> {
 
+        /**
+         * This method executes the query passed.
+         * @param query to be executed
+         * @param restriction
+         * @return List of distinct subscription packs
+         */
         @Override
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            long day = 1000*60*60*24; 
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
                 query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && (((currDateInMillis-startDate)/day)%7 == 0)");
@@ -84,7 +109,7 @@ public class CustomQueries {
                 query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && ((((currDateInMillis-startDate)/day)%7 == 0) || (((currDateInMillis-startDate)/day)%7 == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
-            return (List<Subscription>) query.execute(currDateInMillis, day);
+            return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);
         }
     }
 
