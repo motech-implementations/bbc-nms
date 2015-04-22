@@ -28,6 +28,18 @@ public class FrontLineWorkerTest {
     }
 
     @Test
+    public void testAlternateContactNo() {
+        frontLineWorker.setAlternateContactNo("9999099956");
+        assertEquals("9999099956", frontLineWorker.getAlternateContactNo());
+    }
+
+    @Test
+    public void testOldContactNo() {
+        frontLineWorker.setOldMobileNo("9999099957");
+        assertEquals("9999099957", frontLineWorker.getOldMobileNo());
+    }
+
+    @Test
     public void testName() {
         frontLineWorker.setName("Etasha");
         assertEquals("Etasha", frontLineWorker.getName());
@@ -49,12 +61,6 @@ public class FrontLineWorkerTest {
     public void testStateCode() {
         frontLineWorker.setStateCode(12L);
         assertTrue(12L == frontLineWorker.getStateCode());
-    }
-
-    @Test
-    public void AshaNumber() {
-        frontLineWorker.setAshaNumber("9876");
-        assertEquals("9876", frontLineWorker.getAshaNumber());
     }
 
     @Test

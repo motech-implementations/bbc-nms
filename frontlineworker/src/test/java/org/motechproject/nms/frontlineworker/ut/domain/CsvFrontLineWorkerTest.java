@@ -27,6 +27,18 @@ public class CsvFrontLineWorkerTest {
     }
 
     @Test
+    public void testShouldSetWithAlternateContactNumber() {
+        csvFrontLineWorker.setAlternateContactNo("12345");
+        assertEquals("12345", csvFrontLineWorker.getAlternateContactNo());
+    }
+
+    @Test
+    public void testShouldSetWithOldContactNumber() {
+        csvFrontLineWorker.setOldMobileNo("123456");
+        assertEquals("123456", csvFrontLineWorker.getOldMobileNo());
+    }
+
+    @Test
     public void testShouldSetWithFlwIdNull() {
         csvFrontLineWorker.setContactNo("1234");
         assertEquals("Contact No[1234]", csvFrontLineWorker.toString());
@@ -66,12 +78,6 @@ public class CsvFrontLineWorkerTest {
     public void testShouldSetWithVillageCode() {
         csvFrontLineWorker.setVillageCode("1234");
         assertEquals("1234", csvFrontLineWorker.getVillageCode());
-    }
-
-    @Test
-    public void testShouldSetWithAshaNumber() {
-        csvFrontLineWorker.setAshaNumber("9876");
-        assertEquals("9876", csvFrontLineWorker.getAshaNumber());
     }
 
     @Test

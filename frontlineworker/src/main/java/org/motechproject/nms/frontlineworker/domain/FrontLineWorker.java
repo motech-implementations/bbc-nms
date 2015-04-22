@@ -65,10 +65,6 @@ public class FrontLineWorker extends MdsEntity {
     @Field(name = "village_id")
     private Village villageId;
 
-    @UIDisplayable(position = 8)
-    @Field
-    private String ashaNumber;
-
     @UIDisplayable(position = 9)
     @Field
     private String adhaarNumber;
@@ -85,14 +81,21 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private String circleCode = null;
 
+    @Field
+    private String alternateContactNo;
+
+    @Field
+    private String oldMobileNo;
+
     public FrontLineWorker() {
     }
 
     public FrontLineWorker(Long flwId, String contactNo, String name, Designation designation, String operatorCode,
                            Long stateCode, State stateId, District districtId, Taluka talukaId,
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
-            healthSubFacilityId, Village villageId, String ashaNumber, String adhaarNumber,
-                           Status status, String languageLocationCodeId, String circleCode) {
+            healthSubFacilityId, Village villageId, String adhaarNumber,
+                           Status status, String languageLocationCodeId, String circleCode, String alternateContactNo,
+                           String oldMobileNo) {
         this.flwId = flwId;
         this.contactNo = contactNo;
         this.name = name;
@@ -106,11 +109,12 @@ public class FrontLineWorker extends MdsEntity {
         this.healthFacilityId = healthFacilityId;
         this.healthSubFacilityId = healthSubFacilityId;
         this.villageId = villageId;
-        this.ashaNumber = ashaNumber;
         this.adhaarNumber = adhaarNumber;
         this.status = status;
         this.languageLocationCodeId = languageLocationCodeId;
         this.circleCode = circleCode;
+        this.alternateContactNo = alternateContactNo;
+        this.oldMobileNo = oldMobileNo;
     }
 
     public Long getFlwId() {
@@ -217,14 +221,6 @@ public class FrontLineWorker extends MdsEntity {
         this.villageId = villageId;
     }
 
-    public String getAshaNumber() {
-        return ashaNumber;
-    }
-
-    public void setAshaNumber(String ashaNumber) {
-        this.ashaNumber = ashaNumber;
-    }
-
     public String getAdhaarNumber() {
         return adhaarNumber;
     }
@@ -255,6 +251,22 @@ public class FrontLineWorker extends MdsEntity {
 
     public void setCircleCode(String circleCode) {
         this.circleCode = circleCode;
+    }
+
+    public String getAlternateContactNo() {
+        return alternateContactNo;
+    }
+
+    public void setAlternateContactNo(String alternateContactNo) {
+        this.alternateContactNo = alternateContactNo;
+    }
+
+    public String getOldMobileNo() {
+        return oldMobileNo;
+    }
+
+    public void setOldMobileNo(String oldMobileNo) {
+        this.oldMobileNo = oldMobileNo;
     }
 
 }

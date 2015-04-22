@@ -44,9 +44,6 @@ public class CsvFrontLineWorker extends MdsEntity {
     private String villageCode;
 
     @Field
-    private String ashaNumber;
-
-    @Field
     private String adhaarNo;
 
     @Field
@@ -55,14 +52,20 @@ public class CsvFrontLineWorker extends MdsEntity {
     @Field
     private String nmsFlwId;
 
+    @Field
+    private String alternateContactNo;
+
+    @Field
+    private String oldMobileNo;
+
     public CsvFrontLineWorker() {
     }
 
 
     public CsvFrontLineWorker(String flwId, String stateCode, String contactNo, String name, String type,
                               String districtCode, String talukaCode, String healthBlockCode, String phcCode,
-                              String subCentreCode, String villageCode, String ashaNumber, String adhaarNo,
-                              String isValid, String nmsFlwId) {
+                              String subCentreCode, String villageCode, String adhaarNo,
+                              String isValid, String nmsFlwId, String alternateContactNo, String oldMobileNo) {
         this.flwId = flwId;
         this.stateCode = stateCode;
         this.contactNo = contactNo;
@@ -74,10 +77,11 @@ public class CsvFrontLineWorker extends MdsEntity {
         this.phcCode = phcCode;
         this.subCentreCode = subCentreCode;
         this.villageCode = villageCode;
-        this.ashaNumber = ashaNumber;
         this.adhaarNo = adhaarNo;
         this.isValid = isValid;
         this.nmsFlwId = nmsFlwId;
+        this.alternateContactNo = alternateContactNo;
+        this.oldMobileNo = oldMobileNo;
     }
 
     public String getFlwId() {
@@ -168,14 +172,6 @@ public class CsvFrontLineWorker extends MdsEntity {
         this.villageCode = villageCode;
     }
 
-    public String getAshaNumber() {
-        return ashaNumber;
-    }
-
-    public void setAshaNumber(String ashaNumber) {
-        this.ashaNumber = ashaNumber;
-    }
-
     public String getAdhaarNo() {
         return adhaarNo;
     }
@@ -200,7 +196,21 @@ public class CsvFrontLineWorker extends MdsEntity {
         this.nmsFlwId = nmsFlwId;
     }
 
+    public String getAlternateContactNo() {
+        return alternateContactNo;
+    }
 
+    public void setAlternateContactNo(String alternateContactNo) {
+        this.alternateContactNo = alternateContactNo;
+    }
+
+    public String getOldMobileNo() {
+        return oldMobileNo;
+    }
+
+    public void setOldMobileNo(String oldMobileNo) {
+        this.oldMobileNo = oldMobileNo;
+    }
     @Override
     public String toString() {
 

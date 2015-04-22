@@ -344,8 +344,6 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setStatus(frontLineWorker.getStatus());
         dbRecord.setContactNo(frontLineWorker.getContactNo());
         dbRecord.setDesignation(frontLineWorker.getDesignation());
-
-
         dbRecord.setStateCode(frontLineWorker.getStateCode());
         dbRecord.setStateId(frontLineWorker.getStateId());
         dbRecord.setDistrictId(frontLineWorker.getDistrictId());
@@ -357,7 +355,14 @@ public class FrontLineWorkerUploadHandler {
 
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
-        dbRecord.setAshaNumber(frontLineWorker.getAshaNumber());
+
+        if(frontLineWorker.getOldMobileNo() != null) {
+            dbRecord.setOldMobileNo(frontLineWorker.getOldMobileNo());
+        }
+
+        if(frontLineWorker.getAlternateContactNo() != null) {
+            dbRecord.setAlternateContactNo(frontLineWorker.getAlternateContactNo());
+        }
 
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
         frontLineWorkerService.updateFrontLineWorker(dbRecord);
@@ -379,6 +384,8 @@ public class FrontLineWorkerUploadHandler {
         State state = null;
         District district = null;
         Long districtCode = null;
+        String alternateContactNo;
+        String oldMobileNo;
 
         logger.debug("validateFrontLineWorker process start");
         frontLineWorker.setStateCode(ParseDataHelper.validateAndParseLong("StateCode", record.getStateCode(), true));
@@ -404,6 +411,16 @@ public class FrontLineWorkerUploadHandler {
 
         contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", record.getContactNo());
         frontLineWorker.setContactNo(contactNo);
+
+        if(record.getAlternateContactNo() != null) {
+            alternateContactNo = ParseDataHelper.validateAndTrimMsisdn("Alternate Number", record.getAlternateContactNo());
+            frontLineWorker.setAlternateContactNo(alternateContactNo);
+        }
+
+        if(record.getOldMobileNo() != null) {
+            oldMobileNo = ParseDataHelper.validateAndTrimMsisdn("Old Mobile Number", record.getOldMobileNo());
+            frontLineWorker.setOldMobileNo(oldMobileNo);
+        }
 
         //Bug 28
         designation = ParseDataHelper.validateAndParseString("Flw Type", record.getType(), true);
@@ -437,7 +454,6 @@ public class FrontLineWorkerUploadHandler {
 
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
         frontLineWorker.setId(ParseDataHelper.validateAndParseLong("NMS Flw Id", record.getNmsFlwId(), false));
-        frontLineWorker.setAshaNumber(ParseDataHelper.validateAndParseString("Asha Number", record.getAshaNumber(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
 
         if (record.getIsValid().equalsIgnoreCase("false")) {
