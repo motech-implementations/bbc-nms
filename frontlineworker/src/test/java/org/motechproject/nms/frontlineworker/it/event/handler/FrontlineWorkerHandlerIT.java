@@ -166,10 +166,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             talukaService.update(talukaRecordVillage);
             assertNotNull(village);
 
-            // do the setup
-            setUpIsDone = true;
-        }
-
         CsvFrontLineWorker csvFrontLineWorker;
         CsvFrontLineWorker csvdbFrontLineWorker;
 
@@ -893,6 +889,10 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
 
         parameters.put("csv-import.created_ids", uploadedIds);
         parameters.put("csv-import.filename", "FrontLineWorker.csv");
+
+            // do the setup
+            setUpIsDone = true;
+        }
 
     }
 

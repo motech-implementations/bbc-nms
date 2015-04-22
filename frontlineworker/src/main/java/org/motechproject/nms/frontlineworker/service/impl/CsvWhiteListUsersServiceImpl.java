@@ -6,6 +6,8 @@ import org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * This class acts as implementation class for the interface CsvWhiteListUsersService.
  * It uses CsvFrontLineWorkerRecordsDataService which further takes MotechDataService as
@@ -22,6 +24,11 @@ public class CsvWhiteListUsersServiceImpl implements CsvWhiteListUsersService {
     }
 
     @Override
+    public CsvWhiteListUsers createWhiteListUsersCsv(CsvWhiteListUsers csvWhiteListUsers) {
+        return csvWhiteListUsersRecordDataService.create(csvWhiteListUsers);
+    }
+
+    @Override
     public CsvWhiteListUsers findByIdInCsv(Long id) {
         return csvWhiteListUsersRecordDataService.findById(id);
     }
@@ -30,5 +37,11 @@ public class CsvWhiteListUsersServiceImpl implements CsvWhiteListUsersService {
     public void deleteFromCsv(CsvWhiteListUsers csvWhiteListUsers) {
         csvWhiteListUsersRecordDataService.delete(csvWhiteListUsers);
     }
+
+    @Override
+    public List<CsvWhiteListUsers> retrieveAllFromCsv() {
+        return csvWhiteListUsersRecordDataService.retrieveAll();
+    }
+
 
 }

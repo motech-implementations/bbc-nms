@@ -390,7 +390,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         }
 
 
-        return null;
+        return userProfile;
     }
 
     /**
@@ -603,7 +603,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         logger.debug("User details to be found for anonymous user");
         String languageLocationCode = null;
         LanguageLocationCode langLocCode = null;
-        UserProfile userProfile = null;
+        UserProfile userProfile = new UserProfile();
         String circle = null;
         boolean isDeployed = false;
         boolean isInWhiteList = false;
@@ -628,6 +628,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                             ErrorCategoryConstants.INCONSISTENT_DATA, "ContactNo not present in WhiteListUsers");
                 }
                 userProfile = anonymousUserDetails(msisdn, langLocCode.getStateCode(), frontLineWorker, service);
+
             } else {
                 String errMessage = String.format("Language Location code not found for circle : %s", circle);
                 throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
@@ -639,9 +640,10 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setCreated(false);
             frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
             frontLineWorker.setCircleCode(userProfile.getCircle());
-            frontLineWorker.setOperatorCode(operatorCode);
-            frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
         }
+        frontLineWorker.setOperatorCode(operatorCode);
+        frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
+
         return userProfile;
 
     }
@@ -657,7 +659,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
      */
     private UserProfile anonymousUserDetails(String msisdn, Long stateCode, FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service) {
 
-        UserProfile userProfile = null;
+        UserProfile userProfile = new UserProfile();
         userProfile.setIsDefaultLanguageLocationCode(false);
         userProfile.setLanguageLocationCode(frontLineWorker.getLanguageLocationCodeId());
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));

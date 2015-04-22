@@ -2,6 +2,8 @@ package org.motechproject.nms.frontlineworker.service;
 
 import org.motechproject.nms.frontlineworker.domain.CsvWhiteListUsers;
 
+import java.util.List;
+
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -14,5 +16,9 @@ public interface CsvWhiteListUsersService {
     public CsvWhiteListUsers findByIdInCsv(Long id);
 
     public void deleteFromCsv(CsvWhiteListUsers csvWhiteListUsers);
+
+    public CsvWhiteListUsers createWhiteListUsersCsv(CsvWhiteListUsers csvWhiteListUsers);
+
+    public List<CsvWhiteListUsers> retrieveAllFromCsv();
 
 }

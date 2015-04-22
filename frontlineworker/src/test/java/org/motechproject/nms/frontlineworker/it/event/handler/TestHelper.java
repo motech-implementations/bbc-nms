@@ -27,6 +27,9 @@ public class TestHelper {
         state.setCreator("Etasha");
         state.setMaCapping(10);
         state.setMkCapping(20);
+        state.setIsMaDeployed(true);
+        state.setIsMkDeployed(true);
+        state.setIsWhiteListEnable(true);
         state.setOwner("Etasha");
         state.setModifiedBy("Etasha");
         return state;
