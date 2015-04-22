@@ -56,7 +56,7 @@ public class PrepareOBDTargetFileHandler {
         //delete all the records from outboundCallRequest before preparing fresh ObdTargetFile
         requestService.deleteAll();
         OutboundCallFlow callFlow = new OutboundCallFlow();
-        callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_NOTIFICATION_EVENT_RECEIVED);
+        callFlow.setStatus(CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
         callFlowService.create(callFlow);
         OutboundCallFlow olCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
         createFreshOBDRecords();
