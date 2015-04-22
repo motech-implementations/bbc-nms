@@ -17,51 +17,40 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class to read and map csv files.
+ */
 public class ReadByCSVMapper {
-
-    private static final String CSV_FILENAME = "/home/ashish/priya/Demo1503/circle.csv";
-
-              	private static final String VARIABLE_CSV_FILENAME = "src/test/resources/customerswithvariablecolumns.csv";
-
-              	public static void main(String[] args) throws Exception {
-         		readWithCsvMapReader("");
-         	}
-
 
     public static List<Map<String, Object>> readWithCsvMapReader(String fileName) throws Exception {
 
         ICsvMapReader mapReader = null;
         List<Map<String, Object>> listOfCdrSummaryRecords = new ArrayList<>();
         try {
-            mapReader = new CsvMapReader(new FileReader(CSV_FILENAME), CsvPreference.STANDARD_PREFERENCE);
+            mapReader = new CsvMapReader(new FileReader(fileName), CsvPreference.STANDARD_PREFERENCE);
 
             // the header columns are used as the keys to the Map
             final String[] header = mapReader.getHeader(true);
-            final CellProcessor[] processors = getProcessors();
+            //final CellProcessor[] processors = getProcessors();
 
             Map<String, Object> cdrSummary;
-
-            while ((cdrSummary = mapReader.read(header, processors)) != null) {
+            while ((cdrSummary = mapReader.read(header, null)) != null) {
                 listOfCdrSummaryRecords.add(cdrSummary);
             }
-
         } finally {
             if (mapReader != null) {
                 mapReader.close();
             }
         }
-
         return listOfCdrSummaryRecords;
     }
 
     private static CellProcessor[] getProcessors() {
-
         final CellProcessor[] processors = new CellProcessor[] {
                 new UniqueHashCode(), // customerNo (must be unique)
                 new NotNull(), // firstName
                 new NotNull(), // lastName
         };
-
         return processors;
     }
 }

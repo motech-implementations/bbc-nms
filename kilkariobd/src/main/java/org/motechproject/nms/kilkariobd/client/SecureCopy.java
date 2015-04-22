@@ -14,6 +14,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * This class defines method to copy a file from remote location to local path and vice-versa
+ */
 public class SecureCopy {
 
     @Autowired
@@ -25,6 +28,10 @@ public class SecureCopy {
 
     private static Settings settings = new Settings(settingsFacade);
 
+    /**
+     * This method copies a file from local machine to remote machine
+     * @param fileName name of the file to be copied.
+     */
     public static void toRemote(String fileName) {
         Configuration configuration = configurationService.getConfiguration();
 
@@ -96,6 +103,10 @@ public class SecureCopy {
             System.exit(0);
     }
 
+    /**
+     * This method copies a file remote machine to local machine
+     * @param fileName name of the file to be copied.
+     */
     public static void fromRemote(String fileName) throws IOException{
         Configuration configuration = configurationService.getConfiguration();
 
