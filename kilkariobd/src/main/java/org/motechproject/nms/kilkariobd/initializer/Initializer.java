@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkariobd.initializer;
 
+import org.motechproject.event.MotechEvent;
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.scheduler.contract.CronSchedulableJob;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The purpose of this class is to perform initialization for Kilkariobd Service.
@@ -51,7 +55,27 @@ public class Initializer {
 
     public static final String DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION = "*****";
 
-    public CronSchedulableJob cronSchedulableJob;
+    Map<String,Object> parametersObdPreparation = new HashMap<String,Object>() {{
+
+        put(MotechSchedulerService.JOB_ID_KEY, Constants.PREPARE_OBD_TARGET_EVENT_Job);
+
+        }
+    };
+
+    Map<String,Object> parametersNotifyObdTarget = new HashMap<String, Object>() {{
+
+        put(MotechSchedulerService.JOB_ID_KEY, Constants.NOTIFY_OBD_TARGET_EVENT_Job);
+
+        }
+    };
+
+    public MotechEvent motechEventForObdPreparation = new MotechEvent(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT, parametersObdPreparation);
+
+    public MotechEvent motechEventToNotifyObdTarget = new MotechEvent(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, parametersNotifyObdTarget);
+
+    public CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION, null, null, true);
+
+    public CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION, null, null, true);
 
     private ConfigurationService configurationService;
 
@@ -97,7 +121,8 @@ public class Initializer {
 
         }
 
-        motechSchedulerService.scheduleJob(cronSchedulableJob);
+        motechSchedulerService.scheduleJob(cronJobForObdPreparation);
+        motechSchedulerService.scheduleJob(cronJobToNotifyObdTarget);
 
     }
 

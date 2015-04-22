@@ -37,6 +37,15 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         return configurationDataService.findConfigurationByIndex(Initializer.CONFIGURATION_INDEX);
     }
 
+    /**
+     * get service configuration object by id
+     * @param id
+     * @return object corresponding to service configuration
+     */
+    public Configuration getConfiguration(Long id) {
+        return configurationDataService.findById(id);
+    }
+
 
     /**
      * Checks if the configuration is already present

@@ -19,6 +19,14 @@ public interface ConfigurationService {
      */
     Configuration getConfiguration();
 
+
+    /**
+     * get service configuration object
+     * @param id
+     * @return object corresponding to service configuration
+     */
+    Configuration getConfiguration(Long id);
+
     /**
      * Checks if the configuration is already present
      * @return true if present, else false
