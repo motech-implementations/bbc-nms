@@ -120,6 +120,7 @@ public class TestHelper {
         request.setEndOfUsagePromptCounter(0);
         request.setWelcomeMessagePromptFlag(false);
         request.setCallDisconnectReason("1");
+        request.setCallStatus(1);
         request.setCallStartTime(1427372125L);
         request.setCallEndTime(1427372128L);
 
