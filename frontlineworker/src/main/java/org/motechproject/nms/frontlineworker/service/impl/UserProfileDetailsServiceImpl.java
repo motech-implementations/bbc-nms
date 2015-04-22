@@ -124,7 +124,15 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         } else {
             circleCode = frontLineWorker.getCircleCode();
             if (circleCode == ConfigurationConstants.UNKNOWN_CIRCLE) {
-                ParseDataHelper.raiseInvalidDataException("circle Code of Front line worker", circleCode);
+                languageLocationCodeByParam = languageLocationCodeService.findLLCByCode(languageLocationCode);
+                if (languageLocationCodeByParam != null) {
+                    frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
+                    frontLineWorker.setCircleCode(languageLocationCodeByParam.getCircleCode());
+                    frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
+                }
+                else {
+                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode.toString());
+                }
             } else {
                 languageLocationCodeByParam = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
                 if (languageLocationCodeByParam == null) {
