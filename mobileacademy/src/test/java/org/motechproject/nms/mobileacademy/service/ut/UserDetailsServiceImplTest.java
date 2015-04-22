@@ -601,7 +601,6 @@ public class UserDetailsServiceImplTest {
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
             assertTrue(2 == userResponse.getLanguageLocationCode());
-            System.out.println(userResponse.getCurrentUsageInPulses());
             assertTrue(0 == userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
                     userResponse.getEndOfUsagePromptCounter());
