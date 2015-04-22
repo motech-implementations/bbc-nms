@@ -206,7 +206,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(msisdn);
         frontLineWorker.setOperatorCode(operatorCode);
-        frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+        if(!userProfile.isDefaultLanguageLocationCode()) {
+            frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+        }
         frontLineWorker.setCircleCode(userProfile.getCircle());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -467,7 +469,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setNmsFlwId(frontLineWorker.getId());
             userProfile.setCreated(false);
 
-            frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+            if(!userProfile.isDefaultLanguageLocationCode()) {
+                frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
+            }
             frontLineWorker.setCircleCode(userProfile.getCircle());
             frontLineWorker.setOperatorCode(operatorCode);
             frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
