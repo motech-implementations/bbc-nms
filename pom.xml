@@ -97,6 +97,12 @@
             <artifactId>motech-platform-server-config</artifactId>
             <version>${motech.version}</version>
         </dependency>
+        <!--Motech Scheduler Service -->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
         <!--HTTP-->
         <dependency>
             <groupId>org.motechproject</groupId>
