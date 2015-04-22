@@ -72,8 +72,8 @@
     <osgi:reference id="healthSubFacilityService"
                     interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
 
-    <!--osgi:reference id="schedulerServiceOsgi"
-                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/-->
+    <osgi:reference id="schedulerServiceOsgi"
+                    interface="org.motechproject.scheduler.service.MotechSchedulerService">
 
 
 </beans>

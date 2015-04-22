@@ -56,6 +56,12 @@
                 <batch: processor="itemProcessor" commit-interval="10">
                 </batch:>
             </batch:tasklet>
+
+            <batch:tasklet>
+            <batch:>
+            </batch:>
+        </batch:tasklet>
+
         </batch:step>
     </batch:job>
 
