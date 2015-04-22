@@ -193,10 +193,11 @@ public class UserDetailsServiceImplTest {
 
         //invoke the userDetailService.
         try {
+            when(commonValidatorService.getLLCCodeByStateDistrict(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, 1, "circleCode"));
             response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
 
             //Do Assertions.
-            Assert.assertTrue(response.getLanguageLocationCode() == 789);
+            Assert.assertTrue(response.getLanguageLocationCode() == 1);
             Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
             Assert.assertEquals(response.getCircle(), "circleCode");
             Assert.assertNull(response.getDefaultLanguageLocationCode());
@@ -559,48 +560,6 @@ public class UserDetailsServiceImplTest {
             Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         } catch (Exception err) {
             Assert.assertNull(response);
-        }
-    }
-
-    @Test
-    public void shouldThrowErrorWhenLlcCodeIsDeterminedByStateAndDistrictIsNull() {
-        initMocks(this);
-        SubscriberDetailApiResponse response = new SubscriberDetailApiResponse();
-
-        //set the subscriber details
-        activePackList.add(SubscriptionPack.PACK_48_WEEKS);
-        activePackList.add(SubscriptionPack.PACK_72_WEEKS);
-        activePackNameList.add(SubscriptionPack.PACK_48_WEEKS.getValue());
-        activePackNameList.add(SubscriptionPack.PACK_72_WEEKS.getValue());
-        District district = locationBuilder.buildDistrict(1L, 1L);
-        Set<District> districts = new LinkedHashSet<>();
-        districts.add(district);
-
-        //create a subscriber with languageLocationCode, state and district.
-        subscriber = builder.buildSubscriber(msisdn, null, locationBuilder.buildState(1L), district ,BeneficiaryType.CHILD);
-
-        //Stub the service methods
-        when(subscriberService.getSubscriberByMsisdn(msisdn)).thenReturn(subscriber);
-        when(subscriptionService.getActiveSubscriptionPacksByMsisdn(msisdn)).thenReturn(activePackList);
-        when(llcService.getRecordByLocationCode(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, null, "circleCode"));
-        when(circleService.getRecordByCode("AP")).thenReturn(llcBuilder.buildCircle(123, "AP", "test"));
-
-        //invoke the userDetailService.
-        try {
-            response = userDetailsService.getSubscriberDetails(msisdn, "AP", null);
-
-            //Do Assertions.
-            Assert.assertNull(response.getLanguageLocationCode());
-            Assert.assertEquals(response.getSubscriptionPackList(), activePackNameList);
-            Assert.assertEquals(response.getCircle(), "circleCode");
-            Assert.assertNull(response.getDefaultLanguageLocationCode());
-        } catch (DataValidationException ex) {
-            Assert.assertNull(response);
-        } catch (Exception err) {
-            Assert.assertTrue(err instanceof NmsInternalServerError);
-            Assert.assertEquals(((NmsInternalServerError) err).getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
-            Assert.assertEquals(((NmsInternalServerError)err).getMessage() , "languageLocationCode could not be determined for stateCode : "
-                    + 1L +" and districtCode " + 1l);
         }
     }
 

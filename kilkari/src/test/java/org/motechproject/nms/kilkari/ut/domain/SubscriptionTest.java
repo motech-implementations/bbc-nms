@@ -37,14 +37,14 @@ public class SubscriptionTest {
         subscription.setMessageNumber(6);
         Assert.assertTrue(6 == subscription.getMessageNumber());
 
-        subscription.setNextObdDate(dateTime);
-        Assert.assertEquals(dateTime, subscription.getNextObdDate());
+        subscription.setLastObdDate(dateTime);
+        Assert.assertEquals(dateTime, subscription.getLastObdDate());
 
         subscription.setOperatorCode("operatorCode");
         Assert.assertEquals("operatorCode", subscription.getOperatorCode());
 
-        subscription.setStartDate(dateTime);
-        Assert.assertEquals(dateTime, subscription.getStartDate());
+        subscription.setStartDate(dateTime.getMillis());
+        Assert.assertTrue(dateTime.getMillis() == subscription.getStartDate());
 
         subscription.setStateCode(1L);
         Assert.assertTrue(1L == subscription.getStateCode());

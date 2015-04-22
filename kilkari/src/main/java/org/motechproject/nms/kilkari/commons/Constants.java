@@ -12,7 +12,7 @@ public final class Constants {
 
     public static final Integer DURATION_OF_48_WEEK_PACK = 48;
 
-    public static final Integer START_WEEK_OF_48_WEEK_PACK = 27;
+    public static final Integer START_WEEK_OF_48_WEEK_PACK = 25;
 
 
     /* Constants for Error Description */
@@ -101,4 +101,7 @@ public final class Constants {
     public static final String CALLING_NUMBER = "Calling Number";
 
     public static final String DEFAULT_FETCH_GROUP = "true";
+    
+    public static final int DAYS_IN_WEEK = 7;
+    
 }

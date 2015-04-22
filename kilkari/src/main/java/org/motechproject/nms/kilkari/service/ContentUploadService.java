@@ -36,4 +36,13 @@ public interface ContentUploadService {
      */
     ContentUpload getRecordByContentId(Long contentId);
 
+    /**
+     * This method get ContentUpload type record based on content name and language location code
+     *
+     * @param contentName String type object
+     * @param languageLocationCode Integer type object
+     * @return ContentUpload ContentUpload type object
+     */
+    String getContentFileName(String contentName, Integer languageLocationCode);
+
 }

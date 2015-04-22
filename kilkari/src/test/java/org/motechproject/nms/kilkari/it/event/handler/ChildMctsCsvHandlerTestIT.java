@@ -337,23 +337,34 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         List<Long> uploadedIds = new ArrayList<Long>();
         MotherMctsCsv csv = new MotherMctsCsv();
         csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("1000000045");
+        csv.setWhomPhoneNo("5111111111111");
         csv.setIdNo("45");
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("1000000045");
+        csv1.setIdNo("45");
+        csv1.setName("testDifferentName");
+        csv1.setLmpDate("2015-01-22 08:08:08");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));       
         
         ChildMctsCsv childCsv = new ChildMctsCsv();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000046");
         childCsv.setIdNo("46");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
-        uploadedIds.add(dbCsv1.getId());
+        ChildMctsCsv dbChildCsv = childMctsCsvDataService.create(childCsv);
+        uploadedIds.add(dbChildCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
-        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
+        Subscription updatedChildSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
         
         
         ChildMctsCsv childCsv2 = new ChildMctsCsv();
@@ -372,9 +383,9 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNotNull(subscriptionFirst.getSubscriber());
         assertTrue(subscriptionFirst.getMctsId().equals(csv.getIdNo()));
         assertTrue(subscriptionFirst.getStatus() == Status.DEACTIVATED);
-        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_CHANGED);
-        assertTrue(subscriptionFirst.getSubscriber().getId() == updateSubs.getSubscriber().getId());
-        assertNotNull(updateSubs);
+        assertTrue(subscriptionFirst.getDeactivationReason() == DeactivationReason.PACK_SCHEDULE_CHANGED);
+        assertTrue(subscriptionFirst.getSubscriber().getId() == updatedChildSubs.getSubscriber().getId());
+        assertNotNull(updatedChildSubs);
     }
     
     
@@ -436,6 +447,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         assertNull(motherMctsCsvDataService.findById(uploadedId));
         
     }
+    
     
    
 }

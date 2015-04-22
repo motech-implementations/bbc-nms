@@ -15,4 +15,8 @@ public interface ContentUploadDataService extends MotechDataService<ContentUploa
 
     @Lookup
     ContentUpload findByContentId(@LookupField(name = "contentId") Long id);
+
+    @Lookup
+    ContentUpload findContentFileName(@LookupField(name = "contentName") String contentName, 
+            @LookupField(name = "languageLocationCode") Integer languageLocationCode);
 }

@@ -19,7 +19,7 @@ public class SubscriptionPackTest {
     public void shouldGetStartWeekNumberOf48WeekPack() {
 
         SubscriptionPack subscriptionPack = SubscriptionPack.PACK_48_WEEKS;
-        Assert.assertTrue(27 == subscriptionPack.getStartWeekNumber());
+        Assert.assertTrue(25 == subscriptionPack.getStartWeekNumber());
     }
 
     @Test

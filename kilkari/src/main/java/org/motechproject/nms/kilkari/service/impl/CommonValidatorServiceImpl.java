@@ -6,7 +6,16 @@ import org.motechproject.nms.kilkari.domain.EntryType;
 import org.motechproject.nms.kilkari.domain.MctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
-import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
@@ -14,6 +23,7 @@ import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +43,9 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
 
     @Autowired
     private CircleService circleService;
+    
+    @Autowired
+    private LanguageLocationCodeService llcService;
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
@@ -185,10 +198,11 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
      * @param subscriber Subscriber type object
      * @return Subscriber type object
      * @throws DataValidationException
+     * @throws NmsInternalServerError 
      */
     @Override
     public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
-                                                             Subscriber subscriber) throws DataValidationException {
+                                                             Subscriber subscriber) throws DataValidationException, NmsInternalServerError {
         
         Long stateCode = ParseDataHelper.validateAndParseLong(Constants.STATE_CODE, mctsCsv.getStateCode(),  true);
         State state = checkAndGetState(stateCode);
@@ -213,6 +227,8 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
 
         subscriber.setState(state);
         subscriber.setStateCode(stateCode);
+        subscriber.setLanguageLocationCode(getLLCCodeByStateDistrict(stateCode, districtCode).
+                getLanguageLocationCode());
         subscriber.setDistrict(district);
         subscriber.setTaluka(taluka);
         subscriber.setHealthBlock(healthBlock);
@@ -220,6 +236,27 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         subscriber.setSubCentre(healthSubFacility);
         subscriber.setVillage(village);
         return subscriber;
+    }
+    
+    /**
+     * This method is used to LanguageLocationCode based on State and District
+     * @param stateCode
+     * @param districtCode
+     * @return
+     * @throws NmsInternalServerError
+     */
+    @Override
+    public LanguageLocationCode getLLCCodeByStateDistrict(
+            Long stateCode, Long districtCode) throws NmsInternalServerError {
+        LanguageLocationCode llcCodeRecord = llcService.getRecordByLocationCode(stateCode, districtCode);
+        if (llcCodeRecord != null) {
+            return llcCodeRecord;
+        } else {
+            String errMessage = "languageLocationCode could not be determined for stateCode : "
+                    + stateCode +" and districtCode " + districtCode;
+            throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+
+        }
     }
 
     /**
