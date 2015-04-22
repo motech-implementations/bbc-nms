@@ -42,7 +42,7 @@ public class SubscriptionBuilder {
     }
 
     public SubscriptionDeactivateApiRequest buildSubscriptionDeactivateApiRequest(String msisdn, String operator,
-                                                                                  String circle, Long subscriptionId, String callId) {
+                                                                                  String circle, String subscriptionId, String callId) {
         SubscriptionDeactivateApiRequest request = new SubscriptionDeactivateApiRequest();
         request.setCalledNumber(msisdn);
         request.setCircle(circle);
