@@ -160,7 +160,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
         Subscription subscription = subscriptionDataService.create(subscriptionBuilder.buildSubscription("1234567890", Channel.IVR, Status.PENDING_ACTIVATION));
         try {
             subscriptionController.deactivateSubscription(
-                    subscriptionBuilder.buildSubscriptionDeactivateApiRequest("1234567890", "operatorCode", "circleCode", subscription.getId(), "45564654668"));
+                    subscriptionBuilder.buildSubscriptionDeactivateApiRequest("1234567890", "operatorCode", "circleCode", subscription.getId().toString(), "45564654668"));
 
         } catch (DataValidationException e) {
             e.printStackTrace();

@@ -25,7 +25,9 @@ public class SubscriptionDeactivateApiRequest {
     private String callId;
 
     @JsonProperty
-    private Long subscriptionId;
+    private String subscriptionId;
+
+    private Long subscriptionIdLongValue;
 
     public String getCalledNumber() {
         return calledNumber;
@@ -59,12 +61,20 @@ public class SubscriptionDeactivateApiRequest {
         this.callId = callId;
     }
 
-    public Long getSubscriptionId() {
+    public String getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(Long subscriptionId) {
+    public void setSubscriptionId(String subscriptionId) {
         this.subscriptionId = subscriptionId;
+    }
+
+    public Long getSubscriptionIdLongValue() {
+        return subscriptionIdLongValue;
+    }
+
+    public void setSubscriptionIdLongValue(Long subscriptionIdLongValue) {
+        this.subscriptionIdLongValue = subscriptionIdLongValue;
     }
 
     /**
@@ -77,10 +87,6 @@ public class SubscriptionDeactivateApiRequest {
         ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
         ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
-        if (subscriptionId == null) {
-            String errMessage = String.format(DataValidationException.INVALID_FORMAT_MESSAGE, Constants.SUBSCRIPTION_ID, subscriptionId);
-            String errDesc = String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.SUBSCRIPTION_ID);
-            throw new DataValidationException(errMessage, ErrorCategoryConstants.INVALID_DATA, errDesc, Constants.SUBSCRIPTION_ID);
-        }
+        subscriptionIdLongValue = ParseDataHelper.validateAndParseLong(Constants.SUBSCRIPTION_ID, subscriptionId, true);
     }
 }

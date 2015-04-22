@@ -1,7 +1,10 @@
 package org.motechproject.nms.mobilekunji.dto;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CardDetail;
+import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
 
 import java.util.List;
 
@@ -159,6 +162,80 @@ public class SaveCallDetailApiRequest {
                 ", content=" + content +
                 '}';
     }
+
+    /**
+     * Validates mandatory value parameter and non null values
+     *
+     * @throws org.motechproject.nms.util.helper.DataValidationException if parameter value is blank or null
+     */
+    public void validateMandatoryParameters() throws DataValidationException {
+
+        callingNumber = ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
+
+        ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
+
+        ParseDataHelper.validateAndParseString(ConfigurationConstants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateAndParseString(ConfigurationConstants.CIRCLE_CODE, operator, true);
+        ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_DISCONNECTED_REASON, callDisconnectReason, true);
+
+        if (null == callStartTime) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_START_TIME, null);
+        }
+
+        if (null == callEndTime) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_END_TIME, null);
+        }
+
+        if (null == callDurationInPulses) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_DURATION_PULSES, null);
+        }
+
+        if (null == endOfUsagePromptCounter) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.END_OF_USAGE_PROMPT, null);
+        }
+
+        if (null == welcomeMessagePromptFlag) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.WELCOME_MESSAGE_FLAG, null);
+        }
+
+        if (null == callStatus) {
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_STATUS, null);
+        }
+    }
+
+    /**
+     * Validates mandatory value parameter and non null values
+     *
+     * @throws org.motechproject.nms.util.helper.DataValidationException if parameter value is blank or null
+     */
+    public void validateCardDetailParameters() throws DataValidationException {
+
+        if (null != content && !content.isEmpty()) {
+
+            for (CardDetail carDetail : content) {
+
+                if (null == carDetail.getMkCardNumber()) {
+                    ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CARD_NUMBER, null);
+                }
+                CommonValidator.validateCardNumber(carDetail.getMkCardNumber().toString());
+
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CONTENT_NAME, carDetail.getContentName(), true);
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.AUDIO_FILE_NAME, carDetail.getAudioFileName(), true);
+
+                if (null == carDetail.getStartTime()) {
+                    ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.START_TIME, null);
+                }
+
+                if (null == carDetail.getEndTime()) {
+                    ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.END_TIME, null);
+                }
+
+            }
+        }
+    }
+
 }
 
 
