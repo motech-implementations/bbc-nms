@@ -119,13 +119,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             flwUsageDetailReturn
                     .setEndOfUsagePromptCounter(MobileAcademyConstants.DEFAULT_END_OF_USAGE_PROMPT_COUNTER);
         } else {
-            // Compare FLW last access month with current month. If both not
+            // Compare FLW last access month with current month (year
+            // also considered). If both not
             // equals then reset current usage and end of usage prompt count to
             // default value.
             DateTime lastAccessTime = flwUsageDetail.getLastAccessTime();
-            String lastAccessMonth = new java.text.SimpleDateFormat("MMM")
+            String lastAccessMonth = new java.text.SimpleDateFormat("MMMYYYY")
                     .format(new Date(lastAccessTime.getMillis()));
-            String currentMonth = new java.text.SimpleDateFormat("MMM")
+            String currentMonth = new java.text.SimpleDateFormat("MMMYYYY")
                     .format(new Date(System.currentTimeMillis()));
             if (!lastAccessMonth.equals(currentMonth)) {
                 flwUsageDetail
@@ -213,6 +214,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public void setLanguageLocationCode(String languageLocationCode,
             String callingNumber, String callId) throws DataValidationException {
+        // TODO service deployed and white list validation
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(
