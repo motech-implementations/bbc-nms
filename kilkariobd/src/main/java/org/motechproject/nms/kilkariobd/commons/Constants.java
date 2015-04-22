@@ -27,10 +27,12 @@ public final class Constants {
     public static final String CDR_SUMMARY_FILE = "cdr Summary File";
     public static final String CDR_SUMMARY_CHECKSUM = "cdr Summary checksum";
     public static final String CDR_SUMMARY_RECORDS_COUNT = "cdr Summary records Count";
+
+    /*Constants for cron jobs*/
     public static final String PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.prepare.obdtarget";
     public static final String NOTIFY_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.notify.obdtarget";
-    public static final String PREPARE_OBD_TARGET_EVENT_Job = "OBDPreparationEvent";
-    public static final String NOTIFY_OBD_TARGET_EVENT_Job = "NotifyOBDEvent";
+    public static final String PREPARE_OBD_TARGET_EVENT_JOB = "OBDPreparationJob";
+    public static final String NOTIFY_OBD_TARGET_EVENT_JOB = "ODBNotifyJob";
 
     //constants for cdrSummary
     public static final String RETRY_DAY_NUMBER = "retryDayNumber";

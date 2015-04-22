@@ -11,10 +11,10 @@ public enum CallDisconnectReason {
     USAGE_CAP_EXCEEDED("Usage Cap exceeded", 4),
     ERROR_IN_API("Error in the API", 5),
     SYSTEM_ERROR("System Error", 6);
-    
+
     private String reason;
     private int value;
-    
+
     private CallDisconnectReason(String reason, int value){
         this.reason = reason;
         this.value = value;
@@ -27,7 +27,7 @@ public enum CallDisconnectReason {
      */
     public static CallDisconnectReason getByString(String reason) {
         for (CallDisconnectReason disconnectReason : CallDisconnectReason.values()) {
-            if (reason.equals(disconnectReason.name())) {
+            if (reason.equals(disconnectReason.reason)) {
                 return disconnectReason;
             }
         }

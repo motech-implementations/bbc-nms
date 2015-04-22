@@ -51,31 +51,13 @@ public class Initializer {
 
     public static final String DEFAULT_OBD_IVR_URL = "http://10.10.10.10:8080/obdmanager";
 
-    public static final String DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION = "*****";
+    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEK = 1;
 
-    public static final String DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION = "*****";
+    /*Triggers at 00:01am everyday */
+    public static final String DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION = "0 1 0 * * ?";
 
-    Map<String,Object> parametersObdPreparation = new HashMap<String,Object>() {{
-
-        put(MotechSchedulerService.JOB_ID_KEY, Constants.PREPARE_OBD_TARGET_EVENT_Job);
-
-        }
-    };
-
-    Map<String,Object> parametersNotifyObdTarget = new HashMap<String, Object>() {{
-
-        put(MotechSchedulerService.JOB_ID_KEY, Constants.NOTIFY_OBD_TARGET_EVENT_Job);
-
-        }
-    };
-
-    public MotechEvent motechEventForObdPreparation = new MotechEvent(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT, parametersObdPreparation);
-
-    public MotechEvent motechEventToNotifyObdTarget = new MotechEvent(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, parametersNotifyObdTarget);
-
-    public CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION, null, null, true);
-
-    public CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION, null, null, true);
+    /*Triggers at 8:00am everyday */
+    public static final String DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION = "0 0 8 * * ?";
 
     private ConfigurationService configurationService;
 
@@ -88,7 +70,7 @@ public class Initializer {
     }
 
     /**
-     * This Method is called post construction of Initalizer component and
+     * This Method is called post construction of Initializer component and
      * it creates the configuration entity in DB with default values,
      * if not created already
      */
@@ -98,9 +80,10 @@ public class Initializer {
         /*
          * Check if configuration is not present then create with default values
          */
+        Configuration configuration = new Configuration();
+
         if (!configurationService.isConfigurationPresent()) {
 
-            Configuration configuration = new Configuration();
             logger.info("Creating Configuration with default values");
             configuration.setIndex(CONFIGURATION_INDEX);
             configuration.setFreshObdServiceId(DEFAULT_FRESH_OBD_SERVICE_ID);
@@ -114,6 +97,7 @@ public class Initializer {
             configuration.setObdFileServerIp(DEFAULT_OBD_FILE_SERVER_IP);
             configuration.setObdFilePathOnServer(DEFAULT_OBD_FILE_PATH_ON_SERVER);
             configuration.setObdFileServerSshUsername(DEFAULT_OBD_FILE_SERVER_SSH_USERNAME);
+            configuration.setNumMsgPerWeek(DEFAULT_NUMBER_OF_MSG_PER_WEEK);
             configuration.setObdIvrUrl(DEFAULT_OBD_IVR_URL);
             configuration.setObdCreationEventCronExpression(DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION);
             configuration.setObdNotificationEventCronExpression(DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);
@@ -121,8 +105,30 @@ public class Initializer {
 
         }
 
-        motechSchedulerService.scheduleJob(cronJobForObdPreparation);
-        motechSchedulerService.scheduleJob(cronJobToNotifyObdTarget);
+        Map<String,Object> parametersObdPreparation = new HashMap<String,Object>() {{
+
+            put(MotechSchedulerService.JOB_ID_KEY, Constants.PREPARE_OBD_TARGET_EVENT_JOB);
+
+        }
+        };
+
+        Map<String,Object> parametersNotifyObdTarget = new HashMap<String, Object>() {{
+
+            put(MotechSchedulerService.JOB_ID_KEY, Constants.NOTIFY_OBD_TARGET_EVENT_JOB);
+
+        }
+        };
+
+        MotechEvent motechEventForObdPreparation = new MotechEvent(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT, parametersObdPreparation);
+
+        MotechEvent motechEventToNotifyObdTarget = new MotechEvent(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, parametersNotifyObdTarget);
+
+        CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, configuration.getObdCreationEventCronExpression() , null, null, true);
+
+        CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, configuration.getObdNotificationEventCronExpression(), null, null, true);
+
+        motechSchedulerService.safeScheduleJob(cronJobForObdPreparation);
+        motechSchedulerService.safeScheduleJob(cronJobToNotifyObdTarget);
 
     }
 

@@ -27,6 +27,9 @@ public class Configuration {
     private Long index;
 
     @Field(required = true)
+    private Integer numMsgPerWeek;
+
+    @Field(required = true)
     private String freshObdServiceId;
 
     @Field(required = true)
@@ -68,6 +71,14 @@ public class Configuration {
     @Field(required = true)
     private String obdNotificationEventCronExpression;
 
+
+    public Integer getNumMsgPerWeek() {
+        return numMsgPerWeek;
+    }
+
+    public void setNumMsgPerWeek(Integer numMsgPerWeek) {
+        this.numMsgPerWeek = numMsgPerWeek;
+    }
 
     public Long getIndex() {
         return index;

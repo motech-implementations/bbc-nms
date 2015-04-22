@@ -44,7 +44,7 @@ public class ConfigurationHandler {
         cronExpression1 = configuration.getObdCreationEventCronExpression();
         cronExpression2 = configuration.getObdNotificationEventCronExpression();
 
-        motechSchedulerService.rescheduleJob(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT,Constants.PREPARE_OBD_TARGET_EVENT_Job, cronExpression1);
-        motechSchedulerService.rescheduleJob(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, Constants.NOTIFY_OBD_TARGET_EVENT_Job, cronExpression2);
+        motechSchedulerService.rescheduleJob(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT,Constants.PREPARE_OBD_TARGET_EVENT_JOB, cronExpression1);
+        motechSchedulerService.rescheduleJob(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, Constants.NOTIFY_OBD_TARGET_EVENT_JOB, cronExpression2);
     }
 }
