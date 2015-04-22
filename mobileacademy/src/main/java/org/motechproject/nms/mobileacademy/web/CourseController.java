@@ -161,17 +161,13 @@ public class CourseController extends BaseController {
                 callingNumber);
     }
 
-    /*
-     * Used for validating the callID as per Util module
-     */
+    // Used for validating the callID as per Util module
     private void validateCallId(String callId) throws DataValidationException {
         ParseDataHelper.validateLengthOfCallId(
                 MobileAcademyConstants.REQUEST_PARAM_CALL_ID, callId);
     }
 
-    /*
-     * Used for validating and getting the last 10 digits of MSISDN.
-     */
+    // Used for validating and getting the last 10 digits of MSISDN.
     private String validateAndGetCallingNumber(String callingNumber)
             throws DataValidationException {
         ParseDataHelper.validateAndParseString(
@@ -182,9 +178,7 @@ public class CourseController extends BaseController {
                 callingNumber);
     }
 
-    /*
-     * This provides a JSON node in form of key-value node for integer value
-     */
+    // This provides a JSON node in form of key-value node for integer value
     private String getJsonNode(String key, Integer value) {
         String response;
         response = "{\"" + key + "\":" + value + "}";

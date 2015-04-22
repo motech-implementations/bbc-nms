@@ -66,11 +66,9 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
                 callingNo, mtrainingBookmark);
         String bookmarkToReturn = "";
 
-        /*
-         * If there is no bookmark for user or the bookmark for user has been
-         * reset, in which case, the bookmarkId will be blank; then return empty
-         * JSON.
-         */
+        // If there is no bookmark for user or the bookmark for user has been
+        // reset, in which case, the bookmarkId will be blank; then return empty
+        // JSON.
         if ((mtrainingBookmark == null)
                 || (StringUtils.isBlank((String) mtrainingBookmark
                         .getProgress().get(MobileAcademyConstants.BOOKMARK_ID)))) {
@@ -93,10 +91,8 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 
         Bookmark mtrainingBookmark = getMtrainingBookmarkByMsisdn(callingNo);
 
-        /*
-         * In case of first time bookmark, initialize and put the calling no in
-         * external ID field
-         */
+        // In case of first time bookmark, initialize and put the calling no in
+        // external ID field
         if (mtrainingBookmark == null) {
             mtrainingBookmark = new Bookmark();
             mtrainingBookmark.setProgress(new HashMap<String, Object>());
@@ -108,10 +104,8 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
 
         updateMtrainingBookmark(mtrainingBookmark);
 
-        /*
-         * If user has completed the course successfully, compute the score,
-         * process for SMS and reset the user's bookmark for next call
-         */
+        // If user has completed the course successfully, compute the score,
+        // process for SMS and reset the user's bookmark for next call
         if (bookmarkId != null
                 && bookmarkId
                         .equalsIgnoreCase(MobileAcademyConstants.COURSE_COMPLETED)) {
@@ -124,11 +118,10 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
         }
     }
 
-    /*
-     * This method calculates the score on the basis of mTraining bookmark and
-     * based on the minimum qualifying score configured in the system, it
-     * processes for SMS.
-     */
+    // This method calculates the score on the basis of mTraining bookmark and
+    // based on the minimum qualifying score configured in the system, it
+    // processes for SMS.
+
     private void calculateScoreAndProcessForSms(Bookmark mtrainingBookmark) {
         String callingNo = mtrainingBookmark.getExternalId();
         int totalScore = getTotalScoreByMtrainingBookmark(mtrainingBookmark);
@@ -151,21 +144,18 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
         }
     }
 
-    /*
-     * This is a dummy method for sending the SMS. the actual implementation
-     * will be done in sprint 1505
-     */
+    // This is a dummy method for sending the SMS. the actual implementation
+    // will be done in sprint 1505
     private void sendSms(String callingNo, int totalScore) {
         LOGGER.info(
                 "SMS sent for successful course completion of FLW with MSISDN: {}",
                 callingNo);
+        LOGGER.trace("Total score of FLW is : {}", totalScore);
     }
 
-    /*
-     * This method calculates a FLW's score in the complete course through the
-     * mTraining bookmark. MTraining bookmark of particular FLW must be passed
-     * as a input parameter to this function.
-     */
+    // This method calculates a FLW's score in the complete course through the
+    // mTraining bookmark. MTraining bookmark of particular FLW must be passed
+    // as a input parameter to this function.
     private int getTotalScoreByMtrainingBookmark(Bookmark mtrainingBookmark) {
         int totalScore = 0;
         if (mtrainingBookmark != null) {
@@ -182,10 +172,8 @@ public class CourseBookmarkServiceImpl implements CourseBookmarkService {
         return totalScore;
     }
 
-    /*
-     * This is used for resetting the bookmark of a MSISDN. It resets the
-     * progress map
-     */
+    // This is used for resetting the bookmark of a MSISDN. It resets the
+    // progress map
     private void resetTheBookmark(Bookmark courseBookmark) {
         courseBookmark.setProgress(new HashMap<String, Object>());
         updateMtrainingBookmark(courseBookmark);

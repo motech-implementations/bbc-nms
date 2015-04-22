@@ -52,7 +52,7 @@ public class MobileAcademyConstants {
 
     public static final String END_MENU = "EndMenu";
 
-    /* Constants used in making the course JSON file */
+    // Constants used in making the course JSON file
 
     public static final String COURSE_KEY_VERSION = "courseVersion";
 
@@ -132,7 +132,7 @@ public class MobileAcademyConstants {
 
     public final static int MILLIS_TO_SEC_CONVERTER = 1000;
 
-    /* Mobile academy service configuration parameters -Start */
+    // Mobile academy service configuration parameters -Start
 
     public static final Long CONFIG_DEFAULT_RECORD_INDEX = 1l;
 
@@ -148,7 +148,7 @@ public class MobileAcademyConstants {
 
     public static final String CONFIG_DEFAULT_SMS_SENDER_ADDRESS = "DEFAULT_SMS_SENDER_ADDRESS";
 
-    /* Mobile academy service configuration parameters -End */
+    // Mobile academy service configuration parameters -End
 
     public static final Integer MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED = -1;
 
@@ -160,7 +160,7 @@ public class MobileAcademyConstants {
 
     public static final Integer DEFAULT_END_OF_USAGE_PROMPT_COUNTER = 0;
 
-    /* Parameters for controllers */
+    // Parameters for controllers
 
     public static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
 
