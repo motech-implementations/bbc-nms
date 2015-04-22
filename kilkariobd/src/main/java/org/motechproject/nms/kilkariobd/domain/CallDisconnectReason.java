@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+/**
+ * Enum to define different reason for which call may disconnect
+ */
 public enum CallDisconnectReason {
 
     NORMAL_DROP("Normal Drop", 1),
@@ -17,6 +20,11 @@ public enum CallDisconnectReason {
         this.value = value;
     }
 
+    /**
+     * method to return enum for given string value otherwise null
+     * @param reason String for disconnect reason
+     * @return CallDisconnectReason enum
+     */
     public static CallDisconnectReason getByString(String reason) {
         for (CallDisconnectReason disconnectReason : CallDisconnectReason.values()) {
             if (reason.equals(disconnectReason.name())) {

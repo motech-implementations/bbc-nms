@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+/**
+ * Enum to define different outbound call statuses.
+ */
 public enum ObdStatusCode {
 
     OBD_SUCCESS_CALL_CONNECTED(1001),

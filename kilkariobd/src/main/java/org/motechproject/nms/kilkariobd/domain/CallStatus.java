@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+/**
+ * Enum to define different states of a call
+ */
 public enum CallStatus {
     SUCCESS(1),
     FAILED(2),

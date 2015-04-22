@@ -5,6 +5,9 @@ import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 
+/**
+ * Entity to represent the CdrNotification request object.
+ */
 public class CdrNotificationRequest {
     @JsonProperty
     String fileName;
@@ -39,6 +42,10 @@ public class CdrNotificationRequest {
         this.cdrDetail = cdrDetail;
     }
 
+    /**
+     * Method to validate the mandatory parameters of this class.
+     * @throws DataValidationException is to be thrown if one of the mandatory parameter is missing
+     */
     public void validateMandatoryParameters() throws DataValidationException{
         ParseDataHelper.validateAndParseString(Constants.FILE_NAME, fileName, true);
         ParseDataHelper.validateAndParseString(Constants.CDR_DETAIL_CHECKSUM, cdrDetail.getCdrChecksum(), true);

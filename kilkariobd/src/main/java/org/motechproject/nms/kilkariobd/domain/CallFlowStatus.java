@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+/**
+ * Enum to define different callFlowStatus
+ */
 public enum CallFlowStatus {
     /* Event Received to start preparing OBD Target File */
     OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,

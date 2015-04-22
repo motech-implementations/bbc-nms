@@ -2,6 +2,9 @@ package org.motechproject.nms.kilkariobd.dto.request;
 
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 
+/**
+ * Entity represents the file processed status.
+ */
 public class FileProcessedStatusRequest {
 
     FileProcessingStatus fileProcessingStatus;

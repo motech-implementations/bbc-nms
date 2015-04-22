@@ -7,6 +7,9 @@ import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+/**
+ * This entity shall contains the call details of the OBD messages delivery calls requested in obd target file
+ */
 @Entity
 public class OutboundCallDetail {
 

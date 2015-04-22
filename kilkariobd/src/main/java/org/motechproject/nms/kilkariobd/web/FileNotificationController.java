@@ -5,7 +5,7 @@ import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
-import org.motechproject.nms.kilkariobd.event.handler.PrepareOBDTargetFileHandler;
+import org.motechproject.nms.kilkariobd.event.handler.OBDTargetFileHandler;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public class FileNotificationController extends BaseController{
         OutboundCallFlow callFlow = callFlowService.findRecordByFileName(request.getFileName());
         if (!request.getCdrFileProcessingStatus().equals(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY)) {
             callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
-            PrepareOBDTargetFileHandler handler = new PrepareOBDTargetFileHandler();
+            OBDTargetFileHandler handler = new OBDTargetFileHandler();
             handler.prepareOBDTargetFile();
         } else {
             callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);

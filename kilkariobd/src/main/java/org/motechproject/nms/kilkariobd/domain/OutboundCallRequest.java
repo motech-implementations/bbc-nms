@@ -7,6 +7,10 @@ import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+/**
+ * This entity shall contains the OBD Call definition records, where each record shall have
+ * parameters required by IVR to make call for OBD message delivery.
+ */
 @Entity
 public class OutboundCallRequest {
 

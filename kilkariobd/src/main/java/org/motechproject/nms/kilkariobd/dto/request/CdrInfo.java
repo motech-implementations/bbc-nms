@@ -2,6 +2,9 @@ package org.motechproject.nms.kilkariobd.dto.request;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * Entity to represent the information of a cdr file.
+ */
 public class CdrInfo {
     @JsonProperty
     String cdrFile;

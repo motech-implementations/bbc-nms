@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.dto.request;
 
+/**
+ * Entity represents the TargetNotificationRequest.
+ */
 public class TargetNotificationRequest {
 
     private String fileName;

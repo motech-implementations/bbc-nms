@@ -18,6 +18,7 @@ public final class Constants {
     public static final String OFFLINE_API_RETRY_MULTIPLIER = "offlineApiRetryMultiplier";
     public static final String OBD_FILE_LOCAL_PATH = "obdFileLocalPath";
     public static final String SSH_PRIVATE_KEY_FILE = "sshPrivateKeyFile";
+    public static final String SSH_LOCAL_USERNAME = "sshLocalUsername";
 
     public static final String FILE_NAME = "File name";
 
@@ -32,6 +33,8 @@ public final class Constants {
     public static final String CDR_SUMMARY_CHECKSUM = "cdr Summary checksum";
 
     public static final String CDR_SUMMARY_RECORDS_COUNT = "cdr Summary records Count";
+
+    public static final String CONTENT_FILE_NAME = "Content file name";
 
     public static final String PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.prepare.obdtarget";
 

@@ -1,5 +1,8 @@
 package org.motechproject.nms.kilkariobd.domain;
 
+/**
+ * Enum to define different file processing statuses.
+ */
 public enum FileProcessingStatus {
     FILE_PROCESSED_SUCCESSFULLY(8000),
     FILE_NOT_ACCESSIBLE(8001),

@@ -31,7 +31,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-public class PrepareOBDTargetFileHandler {
+/**
+ * This class handle the events for prepare the target file and notify the target file to the IVR.
+ */
+public class OBDTargetFileHandler {
 
     @Autowired
     private OutboundCallRequestService requestService;
@@ -62,9 +65,11 @@ public class PrepareOBDTargetFileHandler {
 
     private Settings settings = new Settings(kilkariObdSettings);
 
-    Configuration configuration = configurationService.getConfiguration();
+    private Configuration configuration = configurationService.getConfiguration();
 
-    //Daily event to be raised by scheduler to prepare target file.
+    /**
+     * This method defines a daily event to be raised by scheduler to prepare target file.
+     */
     public void prepareOBDTargetFile() {
         HttpClient client = new HttpClient();
 
@@ -81,7 +86,7 @@ public class PrepareOBDTargetFileHandler {
 
         try {
             createFreshOBDRecords();
-            //Old call flow will be null is service is deployed first time.
+            //Old call flow will be null if service is deployed first time.
             if (oldCallFlow != null) {
                 String obdFileName = oldCallFlow.getObdFileName();
                 downloadAndProcessCdrSummaryFile(obdFileName);
@@ -89,10 +94,11 @@ public class PrepareOBDTargetFileHandler {
                 oldCallFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSED);
                 callFlowService.update(oldCallFlow);
             }
-            //todo : what if exception is raise then export will not occur.
+            //todo : what if exception is raise? In that case export will not occur.
             exportOutBoundCallRequest();
 
         } catch (DataValidationException ex) {
+            //todo what to do with the exception.
             ex.printStackTrace();
         } catch (CDRFileException cdrEx) {
             callFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSING_FAILED);
@@ -107,10 +113,12 @@ public class PrepareOBDTargetFileHandler {
         //todo : fetch callflow based on which status?
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(
                 CallFlowStatus.CDR_FILES_PROCESSED);
+        //update the callFlow status with notify outbound file event received.
         updateCallFlowStatus(CallFlowStatus.CDR_FILES_PROCESSED,
                 CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
         String fileName = todayCallFlow.getObdFileName();
         Long recordsCount = todayCallFlow.getObdRecordCount();
+        //copy this target file to remote location.
         SecureCopy.toRemote(fileName);
 
         //notify IVR
@@ -118,6 +126,7 @@ public class PrepareOBDTargetFileHandler {
         client.notifyTargetFile(fileName, todayCallFlow.getObdChecksum(), recordsCount);
     }
 
+    //This method checks if a particular call valid for retry based on callStatus and final status.
     private Boolean isValidForRetry(Integer retryDayNumber, CallStatus finalStatus, ObdStatusCode statusCode) {
         return (finalStatus.equals(CallStatus.REJECTED) ||
                 (finalStatus.equals(CallStatus.FAILED) &&
@@ -125,6 +134,7 @@ public class PrepareOBDTargetFileHandler {
                 isValidRetryDayNumber(retryDayNumber);
     }
 
+    //This method checks if retryDayNumber valid for retry.
     private boolean isValidRetryDayNumber(Integer retryDayNumber) {
         //todo msg_per_week constant?
         final Integer MSG_PER_WEEK = 1;
@@ -137,6 +147,7 @@ public class PrepareOBDTargetFileHandler {
         return false;
     }
 
+    //This method exports the records from OutboundCallRequest
     private void exportOutBoundCallRequest() {
         updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
                 CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
@@ -156,7 +167,6 @@ public class PrepareOBDTargetFileHandler {
         String obdChecksum = MD5Checksum.findChecksum(absoluteFileName);
         updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
                 CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED, obdChecksum, recordsCount, fileName);
-
     }
 
     private String getCsvFileName() {

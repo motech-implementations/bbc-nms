@@ -17,21 +17,13 @@ import java.nio.file.Paths;
 public class SecureCopy {
 
     @Autowired
-    @Qualifier("copyFilesSettings")
+    @Qualifier("kilkariObdSettings")
     private static SettingsFacade settingsFacade;
-
-    private static Settings settings = new Settings(settingsFacade);
 
     @Autowired
     private static ConfigurationService configurationService;
 
-//    public static void main(String[] args) {
-//        try {
-//            fromRemote();
-//        } catch (JSchException ex) {
-//            ex.printStackTrace();
-//        }
-//    }
+    private static Settings settings = new Settings(settingsFacade);
 
     public static void toRemote(String fileName) {
         Configuration configuration = configurationService.getConfiguration();
@@ -43,7 +35,8 @@ public class SecureCopy {
         try {
             // exec 'scp -t rFile' remotely
             String command = "scp -p -t " + rFile;
-            Session session = getSession(configuration.getObdFileServerSshUsername(), configuration.getObdFileServerIp());
+            Session session = getSession(configuration.getObdFileServerSshUsername(),
+                    configuration.getObdFileServerIp(), settings.getSshLocalUsername());
             Channel channel = getChannel(session, command);
 
             OutputStream out = channel.getOutputStream();
@@ -119,7 +112,8 @@ public class SecureCopy {
 
             // exec 'scp -f rFile' remotely
             String command = "scp -f " + rFile;
-            Session session = getSession(configuration.getObdFileServerSshUsername(), configuration.getObdFileServerIp());
+            Session session = getSession(configuration.getObdFileServerSshUsername(),
+                    configuration.getObdFileServerIp(), settings.getSshLocalUsername());
             Channel channel = getChannel(session, command);
 
             // get I/O streams for remote scp
@@ -241,13 +235,13 @@ public class SecureCopy {
         return b;
     }
 
-    private static Session getSession(String remoteUser, String remoteIp) {
+    private static Session getSession(String remoteUser, String remoteIp, String localUser) {
         byte[] privateKey = readMyPrivateKeyFromFile(settings.getSshPrivateKeyFile());
         JSch jsch = new JSch();
         Session session = null;
         try {
             //todo : constant for username.
-            jsch.addIdentity("ashish", privateKey, null, null);
+            jsch.addIdentity(localUser, privateKey, null, null);
             session = jsch.getSession(remoteUser, remoteIp, 22);
             java.util.Properties config = new java.util.Properties();
             config.put("StrictHostKeyChecking", "no");
