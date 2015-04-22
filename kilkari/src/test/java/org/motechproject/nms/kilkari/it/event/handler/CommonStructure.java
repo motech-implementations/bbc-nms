@@ -139,11 +139,11 @@ public class CommonStructure extends BasePaxIT {
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
 
         try {
-            circleDataService.deleteAll();
+            llcDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         
         try {
-            llcDataService.deleteAll();
+            circleDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         
         try {

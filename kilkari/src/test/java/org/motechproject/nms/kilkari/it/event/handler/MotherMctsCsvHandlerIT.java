@@ -430,43 +430,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
         
-        
         subscriptionService.deleteSubscriberSubscriptionAfter6Weeks();
-    }
-    
-    
-    @Test
-    public void test(){
-        
-        logger.info("Inside createSameMsisdnSameMcts");
-        
-        List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = new MotherMctsCsv();
-        csv = createMotherMcts(csv);
-        csv.setWhomPhoneNo("1000000012");
-        csv.setIdNo("12");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
-        uploadedIds.add(dbCsv.getId());
-        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
-        uploadedIds.clear();
-        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
-        
-        MotherMctsCsv csv1 = new MotherMctsCsv();
-        csv1 = createMotherMcts(csv1);
-        csv1.setWhomPhoneNo("1000000012");
-        csv1.setIdNo("12");
-        csv.setAbortion("null");
-        csv1.setOutcomeNos("0");
-        csv1.setEntryType("1");
-        csv1.setName("testing");
-        csv1.setLmpDate("2015-01-20 08:08:08");
-        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
-        uploadedIds.add(dbCsv1.getId());
-        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
-        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
-        
-        
-        subscriptionService.getScheduledSubscriptions();
     }
     
     @Test
