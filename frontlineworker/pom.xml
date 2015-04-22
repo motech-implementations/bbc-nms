@@ -47,11 +47,11 @@
         </dependency>
 
         <!-- Scheduler -->
-        <!--dependency>
+        <dependency>
             <groupId>${motech.groupId}</groupId>
             <artifactId>motech-scheduler</artifactId>
             <version>${motech.version}</version>
-        </dependency-->
+        </dependency>
 
 
         <!-- Repository -->
@@ -60,49 +60,101 @@
             <artifactId>motech-platform-dataservices</artifactId>
             <version>${motech.version}</version>
         </dependency>
-    </dependencies>
 
-    <repositories>
-        <repository>
-            <id>motech-repo</id>
-            <name>MOTECH Maven Repository</name>
-            <url>http://nexus.motechproject.org/content/repositories/public</url>
-        </repository>
-    </repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
+                <dependency>
+                    <groupId>javax.batch</groupId>
+                    <artifactId>javax.batch-api</artifactId>
+                    <version>1.0</version>
+                </dependency>
 
-            <plugin>
-                <groupId>org.apache.felix</groupId>
-                <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.5</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <instructions>
-                        <Blueprint-Enabled>true</Blueprint-Enabled>
-                        <Resource-Path>frontlineworker/resources</Resource-Path>
-                        <Context-Path>frontlineworker</Context-Path>
-                        <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
-                            org.motechproject.nms.frontlineworker.repository;version=${project.version},
-                            <!-- Bug 17 -->
+        <!--
+
+
+                       <dependency>
+                           <groupId>org.springframework</groupId>
+                           <artifactId>spring-core</artifactId>
+                           <version>${spring.version}</version>
+                       </dependency>
+
+
+                       <dependency>
+                           <groupId>org.springframework.batch</groupId>
+                           <artifactId>spring-batch-core</artifactId>
+                           <version>${spring.batch.version}</version>
+                       </dependency>
+                       <dependency>
+                           <groupId>org.springframework.batch</groupId>
+                           <artifactId>spring-batch-infrastructure</artifactId>
+                           <version>${spring.batch.version}</version>
+                       </dependency>
+       -->
+
+            </dependencies>
+
+            <repositories>
+                <repository>
+                    <id>motech-repo</id>
+                    <name>MOTECH Maven Repository</name>
+                    <url>http://nexus.motechproject.org/content/repositories/public</url>
+                </repository>
+            </repositories>
+
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.1</version>
+                        <configuration>
+                            <source>1.7</source>
+                            <target>1.7</target>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.apache.felix</groupId>
+                        <artifactId>maven-bundle-plugin</artifactId>
+                        <version>2.3.5</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <instructions>
+                                <Blueprint-Enabled>true</Blueprint-Enabled>
+                                <Resource-Path>frontlineworker/resources</Resource-Path>
+                                <Context-Path>frontlineworker</Context-Path>
+                                <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
+                                    org.motechproject.nms.frontlineworker.repository;version=${project.version},
+                                    <!-- Bug 17 -->
                             org.motechproject.nms.frontlineworker.event.handler;version=${project.version},
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
                             org.motechproject.nms.frontlineworker.service;version=${project.version},
                             org.motechproject.nms.frontlineworker.service.impl;version=${project.version},
                             org.motechproject.nms.frontlineworker.constants;version=${project.version},
-                            org.motechproject.nms.frontlineworker.exception;version=${project.version}
+                            org.motechproject.nms.frontlineworker.exception;version=${project.version},
+                            org.motechproject.nms.frontlineworker.scheduler;version=${project.version}
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
+                            org.springframework.batch.core.jsr.configuration.xml,
+                            org.springframework.batch.item.file.transform,
+                            org.springframework.batch.core.configuration.xml,
+                            org.springframework.batch.core.scope,
+                            org.springframework.batch.core.job.flow.support,
+                            org.springframework.batch.core.job.flow.support.state,
+                            org.springframework.batch.core.jsr,
+                            org.springframework.batch.core.jsr.launch,
+                            org.springframework.batch.core.resource,
+                            org.springframework.batch.core.launch.support,
+                            org.springframework.batch.core.explore.support,
+                            org.springframework.batch.core.configuration.support,
+                            org.springframework.batch.core.jsr.configuration.support,
+                            org.springframework.batch.item.database,
+                            org.springframework.batch.item.database.support,
+                            org.springframework.batch.core.repository.support,
+                            org.springframework.batch.support.transaction,
+                            org.motechproject.batch.service;version=${motech.version},
+                            org.motechproject.batch.exception;version=${motech.version},
+                            org.motechproject.batch.model;version=${motech.version},
+                            javax.batch.operations,
                             *
                         </Import-Package>
                     </instructions>

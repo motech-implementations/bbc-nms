@@ -21,6 +21,8 @@ public final class ConfigurationConstants {
 
     public static final int DELETE_INVALID_RECORDS_AFTER_WEEKS = 6;*/
 
+    public static final String DELETION_EVENT = "deleteInvalidFlw";
+
 
     private ConfigurationConstants() {
     }

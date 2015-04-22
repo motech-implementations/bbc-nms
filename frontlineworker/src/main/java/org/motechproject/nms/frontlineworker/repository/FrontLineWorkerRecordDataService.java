@@ -29,4 +29,5 @@ public interface FrontLineWorkerRecordDataService extends MotechDataService<Fron
     /*@Lookup
     List<FrontLineWorker> findByStatus(@LookupField(name = "status") Status status, @LookupField(name = "modificationDate") DateTime modificationDate);
 */
+
 }
