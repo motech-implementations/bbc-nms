@@ -155,11 +155,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         SubscriptionPack otherPack = null;
         String otherMctsId = null;
         
-        if(BeneficiaryType.CHILD == subscriber.getBeneficiaryType()) {
+        if (BeneficiaryType.CHILD == subscriber.getBeneficiaryType()) {
             mctsId = subscriber.getChildMctsId();
             otherMctsId = subscriber.getMotherMctsId();
             otherPack = SubscriptionPack.PACK_72_WEEKS;
-        }else {
+        } else {
             mctsId = subscriber.getMotherMctsId();
             otherMctsId = subscriber.getChildMctsId();
             otherPack = SubscriptionPack.PACK_48_WEEKS;
@@ -469,10 +469,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if(channel == Channel.IVR) {
             startDate = currDate.plusDays(1);
         } else if(channel == Channel.MCTS) {
-            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(3) : subscriber.getDob() ;
+            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(Constants.LMP_MSG_DELIVERY_START_MONTH) : subscriber.getDob() ;
             if(packIntialStartDate.isAfter(currDate)) {
                 int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
-                startDate = (noOfDays%7 == 0) ? currDate : currDate.plusDays(7 - (noOfDays % 7));
+                int offset = noOfDays % Constants.DAYS_IN_WEEK;
+                startDate = (offset == 0) ? currDate : currDate.plusDays(Constants.DAYS_IN_WEEK - offset);
             } else {
                 startDate =  packIntialStartDate;
             }
@@ -499,6 +500,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
+            dbSubscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
         }
 
         Subscription updatedDbSubscription = subscriptionDataService.update(dbSubscription);
@@ -555,20 +557,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         commonValidatorService.validateCircle(circleCode);
         commonValidatorService.validateOperator(operatorCode);
 
-        Subscription subscription = subscriptionDataService.findById(subscriptionId);
-        if (subscription != null) {
-            subscription.setStatus(Status.DEACTIVATED);
-            subscription.setDeactivationReason(DeactivationReason.USER_DEACTIVATED);
-            subscriptionDataService.update(subscription);
-            activeSubscriptionCountService.decrementActiveSubscriptionCount();
-            createSubscriptionMeasure(subscription);
-        } else {
-            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
-        }
+        deactivateSubscription(subscriptionId, DeactivationReason.USER_DEACTIVATED);
     }
 
     /**
-     * This method is used by kilkari-obd module for deactivating a subscription
+     * This method is used by kilkari and kilkari-obd module for deactivating a subscription
      * and we have not to deactivate those subscription who have subscribed through
      * IVR and having deactivation reason 'MSISDN_IN_DND'.
      * 
@@ -578,12 +571,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
-        if (subscription != null) {
+        if (subscription != null && subscription.getStatus() == Status.COMPLETED) {
             if(subscription.getChannel()==Channel.IVR && reason == DeactivationReason.MSISDN_IN_DND){
+                logger.warn("IVR Subscription[{}] is not eligible for DNS deactivation", subscriptionId);
                 return;
             }
             subscription.setStatus(Status.DEACTIVATED);
             subscription.setDeactivationReason(reason);
+            subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
             subscriptionDataService.update(subscription);
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(subscription);
@@ -597,11 +592,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  which are deactivated or completed n days earlier. Where n is configurable.
      */
     @Override
-    public void purgeOldSubscriptionSubscriberRecords(){
-        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery());
-        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
+    public void purgeOldSubscriptionSubscriberRecords() {
+        Configuration configuration = configurationService.getConfiguration();
+        if(configuration != null) {
+            int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
+            subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery(expiredSubscriptionAgeDays));
+            subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
+        }
     }
-
+    
     /**
      * This method is used to get those subscriber 
      * whose OBD message is to send today
@@ -625,11 +624,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription.setWeekNumber(weekNum);
 
             /* handling which msg(first or second) to deliver. */
-            subscription.setMessageNumber(1);
-            if(configurationService.getConfiguration().getNumMsgPerWeek() == 2) {
+            subscription.setMessageNumber(Constants.FIRST_MSG_OF_WEEK);
+            if(configurationService.getConfiguration().getNumMsgPerWeek() == Constants.SECOND_MSG_OF_WEEK) {
                 int diffStartAndCurrent = Days.daysBetween(new DateTime(subscription.getStartDate()), currDate.toDateMidnight()).getDays();
-                if(diffStartAndCurrent  % Constants.DAYS_IN_WEEK == 3 ){
-                    subscription.setMessageNumber(2);
+                if(diffStartAndCurrent  % Constants.DAYS_IN_WEEK == Constants.WEEK_DAY_OF_SECOND_MSG ){
+                    subscription.setMessageNumber(Constants.SECOND_MSG_OF_WEEK);
                 }
             }
 
@@ -641,6 +640,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 subscription.setLastObdDate(currDate.toDateMidnight().toDateTime());
             } else {
                 subscription.setStatus(Status.COMPLETED);
+                subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
             }
 
             Subscription dbSubscription = subscriptionDataService.update(subscription);
@@ -653,7 +653,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         return scheduledSubscription;
     }
-
+    
     /**
      * This method is used to calculate which week message is to send.
      * @param subscriber
@@ -690,6 +690,51 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         measure.setSubscription(subscription);
         subscriptionMeasureService.create(measure);
 
+    }
+    
+    /**
+     * This method is used by kilkari-obd. When they found last obd call 
+     * of subscription or its any retryAttempt is successfull and also call it 
+     * when last retry of last obd call is failed.   
+     * 
+     * @param subscriptionId
+     */
+    @Override
+    public void completeSubscription(Long subscriptionId) {
+        Subscription subscription = subscriptionDataService.findById(subscriptionId);
+        if (subscription != null && subscription.getStatus() != Status.DEACTIVATED) {
+            subscription.setStatus(Status.COMPLETED);
+            subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
+            subscriptionDataService.update(subscription);
+            createSubscriptionMeasure(subscription);
+        } else {
+            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
+        }
+    }
+    
+    /**
+     * This method is used by kilkari-obd for retry attempt
+     * 
+     * @param subscriptionId
+     * @return retryDay Its value is valid retryNumber or -1 if retryNumber is not valid
+     */
+    @Override
+    public Integer retryAttempt(Long subscriptionId) {
+        Subscription subscription = subscriptionDataService.findById(subscriptionId);
+        int retryDay = -1;
+        if (subscription != null && subscription.getStatus() != Status.DEACTIVATED) {
+            retryDay = Days.daysBetween(subscription.getLastObdDate(), DateTime.now().toDateMidnight()).getDays();
+            if(configurationService.getConfiguration().getNumMsgPerWeek() == Constants.FIRST_MSG_OF_WEEK && retryDay<=Constants.RETRY_DAY_NUMBER_THREE) {
+                return retryDay;
+            } else if (configurationService.getConfiguration().getNumMsgPerWeek() == Constants.SECOND_MSG_OF_WEEK && retryDay==Constants.RETRY_DAY_NUMBER_ONE){
+                return retryDay;
+            } else {
+                retryDay = -1;
+            }
+        } else {
+            logger.warn(String.format("Subscription not found or deactivated for the given subscriptionId{[%d]}", subscriptionId));
+        }
+        return retryDay;
     }
 
 }

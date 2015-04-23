@@ -18,6 +18,19 @@ public final class Constants {
 
     public static final Integer END_WEEK_OF_48_WEEK_PACK = START_WEEK_OF_48_WEEK_PACK + DURATION_OF_48_WEEK_PACK - 1;
 
+    public static final Integer FIRST_MSG_OF_WEEK = 1; 
+            
+    public static final Integer SECOND_MSG_OF_WEEK = 2;
+    
+    public static final Integer RETRY_DAY_NUMBER_ONE = 1;
+    
+    public static final Integer RETRY_DAY_NUMBER_TWO = 2;
+    
+    public static final Integer RETRY_DAY_NUMBER_THREE = 3;
+    
+    public static final Integer WEEK_DAY_OF_SECOND_MSG = 3;
+    
+    public static final Integer LMP_MSG_DELIVERY_START_MONTH = 3;
 
     /* Constants for Error Description */
     public static final String SUBSCRIPTION_EXIST_ERR_DESC =

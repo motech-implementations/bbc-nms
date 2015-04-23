@@ -44,25 +44,31 @@ public class CustomQueries {
 
     /**
      * This class is used to delete subscriptions
-     * whose status is completed or deactivated n days before.
+     * whose status is completed or deactivated n days earlier.
      */
-    public static class DeleteSubscriptionQuery implements QueryExecution<List<Subscription>> {
+    public static class DeleteSubscriptionQuery implements QueryExecution<Long> {
 
+        private Integer expiredSubscriptionAgeDays = 0;
+        
+        public DeleteSubscriptionQuery(Integer expiredSubscriptionAgeDays) {
+            this.expiredSubscriptionAgeDays = expiredSubscriptionAgeDays;
+        }
+        
         /**
-         * This method executes the query passed.
+         * This method executes the query passed and delete filtered subscription.
+         * 
          * @param query to be executed
          * @param restriction
          * @return count of Subscription records deleted
          */
         @Override
-        public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
+        public Long execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            date = date.minusDays(Constants.EXPIRED_SUBSCRIPTION_AGE_DAYS);
+            date = date.minusDays(expiredSubscriptionAgeDays-1);
             query = query.getPersistenceManager().newQuery(Subscription.class);
-            query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && modificationDate < date");
+            query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && completionOrDeactivationDate < date");
             query.declareParameters("java.util.Date date");
-            query.deletePersistentAll(date.toDate());
-            return null;
+            return query.deletePersistentAll(date.toDate());
         }
     }
 
@@ -70,21 +76,20 @@ public class CustomQueries {
      * This class is used to delete subscriber 
      * who doesn't have any subscription
      */
-    public static class DeleteSubscriberQuery implements QueryExecution<List<Subscriber>> {
+    public static class DeleteSubscriberQuery implements QueryExecution<Long> {
 
         /**
-         * This method executes the query passed.
+         * This method executes the query passed and delete filtered subscriber.
+         * 
          * @param query to be executed
          * @param restriction
          * @return Count of Subscriber records deleted.
          */
         @Override
-        public List<Subscriber> execute(Query query, InstanceSecurityRestriction restriction) {
+        public Long execute(Query query, InstanceSecurityRestriction restriction) {
             query =  query.getPersistenceManager().newQuery(Subscriber.class);
             query.setFilter("subscriptionList.isEmpty()");
-            query.deletePersistentAll();
-            return null;
-
+            return query.deletePersistentAll();
         }
     }
 
@@ -94,19 +99,21 @@ public class CustomQueries {
     public static class FindScheduledSubscription implements QueryExecution<List<Subscription>> {
 
         /**
-         * This method executes the query passed.
+         * This method executes the query passed and return 
+         * list of subscription whom message is to send today
+         * 
          * @param query to be executed
          * @param restriction
-         * @return List of distinct subscription packs
+         * @return List of scheduled subscription
          */
         @Override
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && (((currDateInMillis-startDate)/day) % 7 == 0)");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
             } else {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % 7 == 0) || (((currDateInMillis-startDate)/day) % 7 == 3))");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0) || (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
             return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);

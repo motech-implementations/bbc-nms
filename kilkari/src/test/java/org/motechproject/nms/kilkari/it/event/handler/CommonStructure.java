@@ -13,6 +13,7 @@ import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
@@ -104,6 +105,9 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected SubscriptionMeasureDataService subscriptionMeasureDataService;
+    
+    @Inject
+    protected SubscriptionDataService subscriptionDataService;
 
     private static boolean setUpIsDone = false;
     

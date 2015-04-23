@@ -65,6 +65,9 @@ public class Subscription extends MdsEntity {
     @Persistent
     @UIDisplayable(position = 12)
     private Subscriber subscriber;
+    
+    @Field
+    private DateTime completionOrDeactivationDate;
 
     public Subscriber getSubscriber() {
         return subscriber;
@@ -170,5 +173,13 @@ public class Subscription extends MdsEntity {
         this.lastObdDate = lastObdDate;
     }
 
+    public DateTime getCompletionOrDeactivationDate() {
+        return completionOrDeactivationDate;
+    }
+
+    public void setCompletionOrDeactivationDate(
+            DateTime completionOrDeactivationDate) {
+        this.completionOrDeactivationDate = completionOrDeactivationDate;
+    }
 }
 

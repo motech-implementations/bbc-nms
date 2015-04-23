@@ -109,4 +109,21 @@ public interface SubscriptionService {
      * @param reason DeactivateReason
      */
     void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
+
+    /**
+     * This method is used by kilkari-obd for retry attempt
+     * 
+     * @param subscriptionId
+     * @return retryDay Its value is valid retryNumber or -1 if retryNumber is not valid
+     */
+    Integer retryAttempt(Long subscriptionId);
+    
+    /**
+     * This method is used by kilkari-obd When they found last obd call 
+     * of subscription or its any retryAttempt is successfull and also call it 
+     * when last retry of last obd call is failed.   
+     * 
+     * @param subscriptionId
+     */
+    void completeSubscription(Long subscriptionId);
 }
