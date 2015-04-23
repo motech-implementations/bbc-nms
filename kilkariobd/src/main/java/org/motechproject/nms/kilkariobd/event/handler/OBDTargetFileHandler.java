@@ -23,6 +23,8 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.server.config.SettingsFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +69,8 @@ public class OBDTargetFileHandler {
 
     private Configuration configuration = configurationService.getConfiguration();
 
+    Logger logger = LoggerFactory.getLogger(OBDTargetFileHandler.class);
+
     /**
      * This method defines a daily event to be raised by scheduler to prepare target file.
      */
@@ -108,7 +112,7 @@ public class OBDTargetFileHandler {
 
         } catch (DataValidationException ex) {
             //todo what to do with the exception.
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         } catch (CDRFileException cdrEx) {
             callFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSING_FAILED);
             callFlowService.update(callFlow);
@@ -122,7 +126,7 @@ public class OBDTargetFileHandler {
     /*
     Daily event to be raised by scheduler to notify IVr of target file has been copied.
      */
-    public void CopyAndNotifyOBDTargetFile() {
+    public void copyAndNotifyOBDTargetFile() {
         //todo : fetch callflow based on which status?
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(
                 CallFlowStatus.CDR_FILES_PROCESSED);
@@ -162,12 +166,10 @@ public class OBDTargetFileHandler {
     This method checks if retryDayNumber valid for retry.
      */
     private boolean isValidRetryDayNumber(Integer retryDayNumber) {
-        //todo msg_per_week constant?
-        final Integer MSG_PER_WEEK = 1;
-        if (MSG_PER_WEEK == 1) {
+        if (configuration.getNumMsgPerWeek().equals(1)) {
             return retryDayNumber < 3;
         } else
-            if (MSG_PER_WEEK == 2) {
+            if (configuration.getNumMsgPerWeek().equals(2)) {
                 return retryDayNumber < 1;
             }
         return false;
@@ -190,7 +192,7 @@ public class OBDTargetFileHandler {
 
             recordsCount = csvImporterExporter.exportCsv("OUTBOUNDCALLREQUEST", bf);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         }
         String obdChecksum = MD5Checksum.findChecksum(absoluteFileName);
         updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
@@ -291,6 +293,10 @@ public class OBDTargetFileHandler {
                     requestService.create(callRequestRetry);
                 }
 
+                /*
+                If for any cdrSummary record callStatus is FAILED and status code is either OBD_FAILED_INVALIDNUMBER
+                or OBD_DNIS_IN_DND then deactivate the subscription for that record.
+                 */
                 if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER)) {
                     subscriptionService.deactivateSubscription(
                             (Long) map.get(Constants.REQUEST_ID), DeactivationReason.INVALID_MSISDN);
@@ -299,10 +305,20 @@ public class OBDTargetFileHandler {
                             (Long) map.get(Constants.REQUEST_ID), DeactivationReason.MSISDN_IN_DND);
                 }
                 /*
-                todo :
+                if for any cdrSummary record final status is Failed and statusCode is OBD_FAILED_NOATTEMPT then
+                create a record in OutboundCallDetail table.
                  */
                 if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_NOATTEMPT)) {
                     OutboundCallDetail record = new OutboundCallDetail();
+                    record.setWeekId(map.get(Constants.WEEK_ID).toString());
+                    record.setPriority((Integer) map.get(Constants.PRIORITY));
+                    record.setContentFile(map.get(Constants.CONTENT_FILE_NAME).toString());
+                    record.setCircleCode(map.get(Constants.CIRCLE).toString());
+                    record.setCallStatus(((CallStatus) map.get(Constants.FINAL_STATUS)).ordinal());
+                    record.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
+                    record.setMsisdn(map.get(Constants.MSISDN).toString());
+                    record.setRequestId(map.get(Constants.REQUEST_ID).toString());
+                    record.setRetryDayNumber((Integer)map.get(Constants.RETRY_DAY_NUMBER));
                     record.setCallStartTime(null);
                     record.setCallAnswerTime(null);
                     record.setCallEndTime(null);
@@ -310,7 +326,7 @@ public class OBDTargetFileHandler {
                 }
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         }
 
     }
@@ -371,7 +387,7 @@ public class OBDTargetFileHandler {
                 callDetailService.create(callDetail);
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         }
     }
 
@@ -388,7 +404,7 @@ public class OBDTargetFileHandler {
             client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrSummaryFileName);
             throw new CDRFileException(FileProcessingStatus.FILE_NOT_ACCESSIBLE);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         }
     }
 
@@ -405,7 +421,7 @@ public class OBDTargetFileHandler {
             client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrDetailFileName);
             throw new CDRFileException(FileProcessingStatus.FILE_NOT_ACCESSIBLE);
         } catch (IOException ex) {
-            ex.printStackTrace();
+            logger.error((ex.getMessage()));
         }
     }
 

@@ -1,11 +1,13 @@
 package org.motechproject.nms.kilkariobd.helper;
 
 import com.jcraft.jsch.*;
-import com.jcraft.jsch.JSch;
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.settings.Settings;
 import org.motechproject.server.config.SettingsFacade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -19,12 +21,28 @@ import java.nio.file.Paths;
  */
 public class SecureCopy {
 
+    static Logger logger = LoggerFactory.getLogger(SecureCopy.class);
+
     @Autowired
     @Qualifier("kilkariObdSettings")
     private static SettingsFacade settingsFacade;
 
     @Autowired
     private static ConfigurationService configurationService;
+
+    /*
+    Define Exception to be raised when error occurred while SCP.
+    */
+    private static class SecureCopyException extends Exception{
+        private String errorMessage;
+        SecureCopyException() {
+            super();
+        }
+
+        SecureCopyException(String errorMessage) {
+            this.errorMessage = errorMessage;
+        }
+    }
 
     /**
      * This method copies a file from local machine to remote machine using SCP
@@ -34,72 +52,80 @@ public class SecureCopy {
         Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
-        String rFile = configuration.getObdFilePathOnServer();
-        String lFile = settings.getObdFileLocalPath() + "/" + fileName;
+        String rFile = configuration.getObdFilePathOnServer(); //remoteFile
+        String lFile = settings.getObdFileLocalPath() + "/" + fileName; //localFile
+        int retry = Constants.FIRST_ATTEMPT;
 
-        FileInputStream fis = null;
-        try {
-            // exec 'scp -t rFile' remotely
-            String command = "scp -p -t " + rFile;
-            Session session = getSession(configuration.getObdFileServerSshUsername(),
-                    configuration.getObdFileServerIp(), settings.getSshLocalUsername());
-            Channel channel = getChannel(session, command);
-
-            OutputStream out = channel.getOutputStream();
-            InputStream in = channel.getInputStream();
-            channel.connect();
-
-            if (checkAck(in) != 0) {
-                System.exit(0);
-            }
-            // send "C0644 filesize filename", where filename should not include
-            // '/'
-            long fileSize = (new File(lFile)).length();
-            command = "C0644 " + fileSize + " ";
-
-            if (lFile.lastIndexOf('/') > 0) {
-                command += lFile.substring(lFile.lastIndexOf('/') + 1);
-            } else {
-                command += lFile;
-            }
-            command += "\n";
-            out.write(command.getBytes());
-            out.flush();
-
-            if (checkAck(in) != 0) {
-                System.exit(0);
-            }
-
-            // send a content of lfile
-            fis = new FileInputStream(lFile);
-            byte[] buf = new byte[1024];
-            while (true) {
-                int contentLength = fis.read(buf, 0, buf.length);
-                if (contentLength <= 0)
-                    break;
-                out.write(buf, 0, contentLength); // out.flush();
-            }
-            fis.close();
-            fis = null;
-            // send '\0'
-            buf[0] = 0;
-            out.write(buf, 0, 1);
-            out.flush();
-            if (checkAck(in) != 0) {
-                System.exit(0);
-            }
-            out.close();
-            channel.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
+        FileInputStream fileInputStream = null;
+        while (retry++ <= 2) {
             try {
-                if (fis != null)
-                    fis.close();
-            } catch (IOException ee) {
-                ee.printStackTrace();
+                /*
+                 exec 'scp -t rFile' remotely
+                  */
+                String command = "scp -p -t " + rFile;
+                Session session = getSession(configuration.getObdFileServerSshUsername(),
+                        configuration.getObdFileServerIp(), settings.getSshLocalUsername());
+                Channel channel = getChannel(session, command);
+
+                OutputStream out = channel.getOutputStream();
+                InputStream in = channel.getInputStream();
+                channel.connect();
+
+                checkAck(in);
+
+                /*
+                 send "C0644 fileSize filename", where filename should not include '/'
+                  */
+                long fileSize = (new File(lFile)).length();
+                command = "C0644 " + fileSize + " ";
+
+                if (lFile.lastIndexOf('/') > 0) {
+                    command += lFile.substring(lFile.lastIndexOf('/') + 1);
+                } else {
+                    command += lFile;
+                }
+                command += "\n";
+                out.write(command.getBytes());
+                out.flush();
+
+                checkAck(in);
+
+                /*
+                 send a content of lfile
+                  */
+                fileInputStream = new FileInputStream(lFile);
+                byte[] buf = new byte[1024];
+                while (true) {
+                    int contentLength = fileInputStream.read(buf, 0, buf.length);
+                    if (contentLength <= 0) {
+                        break;
+                    }
+                    out.write(buf, 0, contentLength);
+                }
+                fileInputStream.close();
+                fileInputStream = null;
+                /*
+                 send '\0'
+                  */
+                buf[0] = 0;
+                out.write(buf, 0, 1);
+                out.flush();
+                checkAck(in);
+                out.close();
+                channel.disconnect();
+            } catch (IOException | JSchException ex) {
+                logger.error(ex.getMessage());
+                try {
+                    if (fileInputStream != null) {
+                        fileInputStream.close();
+                    }
+                } catch (IOException ee) {
+                    ee.printStackTrace();
+                }
+            } catch (SecureCopyException scpEx) {
+                logger.error(scpEx.getMessage());
             }
         }
-            System.exit(0);
     }
 
     /**
@@ -110,149 +136,168 @@ public class SecureCopy {
         Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
-        FileOutputStream fos = null;
+        FileOutputStream fileOutputStream = null;
 
-        String lFile = settings.getObdFileLocalPath();
-        String rFile = configuration.getObdFilePathOnServer() + "/" + fileName;
+        String lFile = settings.getObdFileLocalPath(); //localFile
+        String rFile = configuration.getObdFilePathOnServer() + "/" + fileName; //remoteFile
 
-        try {
-            String prefix=null;
-            if(new File(lFile).isDirectory()){
-                prefix=lFile+File.separator;
-            }
+        int retry = 1;
 
-            // exec 'scp -f rFile' remotely
-            String command = "scp -f " + rFile;
-            Session session = getSession(configuration.getObdFileServerSshUsername(),
-                    configuration.getObdFileServerIp(), settings.getSshLocalUsername());
-            Channel channel = getChannel(session, command);
-
-            // get I/O streams for remote scp
-            OutputStream out = channel.getOutputStream();
-            InputStream in = channel.getInputStream();
-            channel.connect();
-
-            byte[] buf = new byte[1024];
-
-            // send '\0'
-            buf[0] = 0;
-            out.write(buf, 0, 1);
-            out.flush();
-
-            while (true) {
-                int c = checkAck(in);
-                if (c != 'C') {
-                    break;
-                }
-                // read '0644 '
-                in.read(buf, 0, 5);
-
-                long fileSize = 0L;
-                while (true) {
-                    if (in.read(buf, 0, 1) < 0)  { // error
-                        break;
-                    }
-                    if (buf[0] == ' ') break;
-                    fileSize = fileSize * 10L + (long) (buf[0] - '0');
+        while(retry++ <= 3) {
+            try {
+                String prefix = null;
+                if (new File(lFile).isDirectory()) {
+                    prefix = lFile + File.separator;
                 }
 
-                String file = null;
-                for (int i = 0; ; i++) {
-                    in.read(buf, i, 1);
-                    if (buf[i] == (byte) 0x0a) {
-                        file = new String(buf, 0, i);
-                        break;
-                    }
-                }
+                /*
+                 exec 'scp -f rFile' remotely
+                  */
+                String command = "scp -f " + rFile;
+                Session session = getSession(configuration.getObdFileServerSshUsername(),
+                        configuration.getObdFileServerIp(), settings.getSshLocalUsername());
+                Channel channel = getChannel(session, command);
 
-                // send '\0'
+                /*
+                 get I/O streams for remote scp
+                  */
+                OutputStream outputStream = channel.getOutputStream();
+                InputStream inputStream = channel.getInputStream();
+                channel.connect();
+
+                byte[] buf = new byte[1024];
+
+                /*
+                 send '\0'
+                  */
                 buf[0] = 0;
-                out.write(buf, 0, 1);
-                out.flush();
+                outputStream.write(buf, 0, 1);
+                outputStream.flush();
 
-                // read a content of lFile
-                fos = new FileOutputStream(prefix == null ? lFile : prefix + file);
-                int bufferLength;
                 while (true) {
-                    if (buf.length < fileSize) {
-                        bufferLength = buf.length;
-                    } else {
-                        bufferLength = (int)fileSize;
-                    }
-                    bufferLength = in.read(buf, 0, bufferLength);
-                    if (bufferLength < 0) { // error
+                    int charByte = checkAck(inputStream);
+                    if (charByte != 'C') {
                         break;
                     }
-                    fos.write(buf, 0, bufferLength);
-                    fileSize -= bufferLength;
-                    if (fileSize == 0L) break;
-                }
-                fos.close();
-                fos = null;
+                    /*
+                     read '0644 '
+                      */
+                    inputStream.read(buf, 0, 5);
 
-                if (checkAck(in) != 0) {
-                    System.exit(0);
+                    long fileSize = 0L;
+                    while (true) {
+                        if (inputStream.read(buf, 0, 1) < 0) { // error
+                            break;
+                        }
+                        if (buf[0] == ' ') {
+                            break;
+                        }
+                        fileSize = fileSize * 10L + (long) (buf[0] - '0');
+                    }
+
+                    String file = null;
+                    for (int i = 0; ; i++) {
+                        inputStream.read(buf, i, 1);
+                        if (buf[i] == (byte) 0x0a) {
+                            file = new String(buf, 0, i);
+                            break;
+                        }
+                    }
+
+                    /*
+                     send '\0'
+                      */
+                    buf[0] = 0;
+                    outputStream.write(buf, 0, 1);
+                    outputStream.flush();
+
+                    /*
+                     read a content of lFile
+                      */
+                    fileOutputStream = new FileOutputStream(prefix == null ? lFile : prefix + file);
+                    int bufferLength;
+                    while (true) {
+                        if (buf.length < fileSize) {
+                            bufferLength = buf.length;
+                        } else {
+                            bufferLength = (int) fileSize;
+                        }
+                        bufferLength = inputStream.read(buf, 0, bufferLength);
+                        if (bufferLength < 0) { // error
+                            break;
+                        }
+                        fileOutputStream.write(buf, 0, bufferLength);
+                        fileSize -= bufferLength;
+                        if (fileSize == 0L) break;
+                    }
+                    fileOutputStream.close();
+                    fileOutputStream = null;
+
+                    checkAck(inputStream);
+
+                    /*
+                     send '\0'
+                      */
+                    buf[0] = 0;
+                    outputStream.write(buf, 0, 1);
+                    outputStream.flush();
                 }
 
-                // send '\0'
-                buf[0] = 0;
-                out.write(buf, 0, 1);
-                out.flush();
+                session.disconnect();
+            } catch (JSchException ex) {
+                logger.error(ex.getMessage());
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (SecureCopyException scpEx) {
+                logger.error(scpEx.getMessage());
             }
-
-            session.disconnect();
-
-            System.exit(0);
-        } catch (JSchException ex) {
-            ex.printStackTrace();
-            fos.close();
         }
     }
 
-    private static byte[] readMyPrivateKeyFromFile(String aFileName) {
+    private static byte[] readMyPrivateKeyFromFile(String fileName) throws SecureCopyException{
         try {
-            Path path = Paths.get(aFileName);
+            Path path = Paths.get(fileName);
             return Files.readAllBytes(path);
         } catch (IOException ex) {
-            System.out.print(ex.toString());
+            logger.error(ex.getMessage());
+            throw new SecureCopyException(String.format(
+                    "Exception occurred while reading the private key from file %s", fileName));
         }
-        return null;
     }
 
-    static int checkAck(InputStream in) throws IOException{
-        int b=in.read();
-        // b may be 0 for success,
-        // 1 for error,
-        // 2 for fatal error,
-        // -1
-        if(b==0) return b;
-        if(b==-1) return b;
+    static int checkAck(InputStream inputStream) throws IOException, SecureCopyException{
+        int nextByte = inputStream.read();
+        /*
+         nextByte may be 0 for success,1 for error,2 for fatal error,-1
+        */
 
-        if(b==1 || b==2){
-            StringBuffer sb=new StringBuffer();
-            int c;
+        /*
+        If error is occurred while reading the byte
+         */
+        if(nextByte == 1 || nextByte == 2){
+            StringBuffer stringBuffer = new StringBuffer();
+            int charByte;
             do {
-                c=in.read();
-                sb.append((char)c);
+                charByte = inputStream.read();
+                stringBuffer.append((char) charByte);
             }
-            while(c!='\n');
-            if(b==1){ // error
-                System.out.print(sb.toString());
-            }
-            if(b==2){ // fatal error
-                System.out.print(sb.toString());
-            }
+            while(charByte!='\n');
+            logger.error(stringBuffer.toString());
         }
-        return b;
+        if(nextByte == 0) {
+            return nextByte;
+        } else {
+            throw new SecureCopyException();
+        }
     }
 
-    private static Session getSession(String remoteUser, String remoteIp, String localUser) {
+    private static Session getSession(String remoteUser, String remoteIp, String localUser) throws SecureCopyException{
         Settings settings = new Settings(settingsFacade);
         byte[] privateKey = readMyPrivateKeyFromFile(settings.getSshPrivateKeyFile());
         JSch jsch = new JSch();
         Session session = null;
         try {
-            //todo : constant for username.
             jsch.addIdentity(localUser, privateKey, null, null);
             session = jsch.getSession(remoteUser, remoteIp, 22);
             java.util.Properties config = new java.util.Properties();
@@ -260,18 +305,24 @@ public class SecureCopy {
             session.setConfig(config);
             session.connect();
         } catch (JSchException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
+            throw new SecureCopyException(ex.getMessage());
         }
         return session;
     }
 
-    private static Channel getChannel(Session session, String command) {
+    private static Channel getChannel(Session session, String command) throws SecureCopyException{
         Channel channel = null;
         try {
             channel = session.openChannel("exec");
-            ((ChannelExec) channel).setCommand(command);
+            if (channel != null) {
+                ((ChannelExec) channel).setCommand(command);
+            } else {
+                throw new SecureCopyException("channel is null");
+            }
         } catch (JSchException ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
+            throw new SecureCopyException(ex.getMessage());
         }
         return channel;
     }

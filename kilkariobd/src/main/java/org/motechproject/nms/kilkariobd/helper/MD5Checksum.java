@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class MD5Checksum {
     private static final Logger logger = Logger.getLogger(MD5Checksum.class.getName());
 
-    /*
+    /**
     * Calculate checksum of a File using MD5 algorithm
     */
     public static String findChecksum(String filePath) {

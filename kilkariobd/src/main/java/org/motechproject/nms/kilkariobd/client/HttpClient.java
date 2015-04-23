@@ -10,10 +10,8 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpClientParams;
 import org.motechproject.nms.kilkariobd.commons.Constants;
-import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
-import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.dto.request.TargetNotificationRequest;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
@@ -30,9 +28,6 @@ import java.io.UnsupportedEncodingException;
  */
 public class HttpClient {
     private Logger logger = LoggerFactory.getLogger(HttpClient.class);
-
-    @Autowired
-    private OutboundCallFlowService callFlowService;
 
     @Autowired
     private ConfigurationService configurationService;

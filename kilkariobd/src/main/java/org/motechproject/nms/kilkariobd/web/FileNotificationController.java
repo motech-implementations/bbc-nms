@@ -34,7 +34,7 @@ public class FileNotificationController extends BaseController{
      */
     @RequestMapping(value = "/cdrFileNotification", method = RequestMethod.POST)
     @ResponseBody
-    public void CDRFileNotification(@RequestBody CdrNotificationRequest apiRequest) throws DataValidationException{
+    public void cdrFileNotification(@RequestBody CdrNotificationRequest apiRequest) throws DataValidationException{
         logger.debug("CDRFileNotification: started");
         logger.debug("CDRFileNotification Request Parameters");
         logger.debug("fileName : [" + apiRequest.getFileName() + "]");
@@ -64,7 +64,7 @@ public class FileNotificationController extends BaseController{
      * @param request FileProcessedStatusRequest
      */
     @RequestMapping(value = "/obdFileProcessedNotification", method = RequestMethod.POST)
-    public void FileProcessedStatusNotification(@RequestBody FileProcessedStatusRequest request) {
+    public void fileProcessedStatusNotification(@RequestBody FileProcessedStatusRequest request) {
         logger.debug("FileProcessedStatusNotification: started");
         logger.debug("FileProcessedStatusNotification Request Parameters");
         logger.debug("fileName" + request.getFileName());

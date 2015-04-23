@@ -1,10 +1,6 @@
 package org.motechproject.nms.kilkariobd.mapper;
 
 
-import org.supercsv.cellprocessor.Optional;
-import org.supercsv.cellprocessor.ParseBool;
-import org.supercsv.cellprocessor.ParseDate;
-import org.supercsv.cellprocessor.ParseInt;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.constraint.UniqueHashCode;
 import org.supercsv.cellprocessor.ift.CellProcessor;
@@ -29,7 +25,9 @@ public class ReadByCSVMapper {
         try {
             mapReader = new CsvMapReader(new FileReader(fileName), CsvPreference.STANDARD_PREFERENCE);
 
-            // the header columns are used as the keys to the Map
+            /*
+             the header columns are used as the keys to the Map
+              */
             final String[] header = mapReader.getHeader(true);
             //final CellProcessor[] processors = getProcessors();
 
