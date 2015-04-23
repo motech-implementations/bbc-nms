@@ -571,7 +571,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
-        if (subscription != null && subscription.getStatus() == Status.COMPLETED) {
+        if (subscription != null && subscription.getStatus() != Status.COMPLETED) {
             if(subscription.getChannel()==Channel.IVR && reason == DeactivationReason.MSISDN_IN_DND){
                 logger.warn("IVR Subscription[{}] is not eligible for DNS deactivation", subscriptionId);
                 return;
@@ -583,7 +583,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(subscription);
         } else {
-            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
+            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]} or is Completed", subscriptionId));
         }
     }
 

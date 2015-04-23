@@ -351,7 +351,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
     public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek) throws DataValidationException {
         DateTime currDate = DateTime.now();
         int days = Days.daysBetween(currDate, lmpOrDob).getDays();
-        if ((days / Constants.DAYS_IN_WEEK) > durationInWeek) {
+        if ((days / Constants.DAYS_IN_WEEK) >= durationInWeek) {
             ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, lmpOrDob.toString());
         }
     }
