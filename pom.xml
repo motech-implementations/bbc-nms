@@ -698,7 +698,8 @@
         <!--<module>kilkari</module>-->
         <module>mobilekunji</module>        
         <module>util</module>        
-        <module>masterdata</module>        
+        <module>masterdata</module>
+        <module>batchscheduler</module>
     </modules>
 
     <build>
