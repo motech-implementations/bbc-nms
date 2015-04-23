@@ -1,16 +1,13 @@
-package org.motechproject.nms.frontlineworker.event.handler;
+package org.motechproject.nms.batchscheduler.event.handler;
 
+import org.motechproject.batch.exception.BatchException;
+import org.motechproject.batch.service.JobTriggerService;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
-import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
-import org.motechproject.nms.frontlineworker.service.RemoveInvalidRecords;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Created by abhishek on 21/4/15.
@@ -22,23 +19,24 @@ public class RemoveInvalidFrontLineWorkerHandler {
     //private static final String DATE_TIME_FORMAT = "dd-MM-yyyy";
 
 
-    @Autowired
-    RemoveInvalidRecords removeInvalidRecords;
 
     @Autowired
-    FrontLineWorkerService frontLineWorkerService;
-
-/*    @Autowired
-    private JobTriggerService jobTriggerService;*/
+    private JobTriggerService jobTriggerService;
 
     @MotechListener(subjects = "BATCH_JOB_TRIGGERED")
     public void handleEvent(MotechEvent motechEvent) {
-
-        List<FrontLineWorker> frontLineWorkerListToBeDeleted = removeInvalidRecords.invalidFrontLineWorkerList();
-
-        for(FrontLineWorker frontLineWorker: frontLineWorkerListToBeDeleted) {
-            frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
+        logger.debug("Handling batch_Start event in batch module");
+        String jobName = motechEvent.getParameters().get("Job_Name").toString();
+        logger.debug("The job name is: " + jobName);
+        try {
+            jobTriggerService.triggerJob(jobName);
+        } catch (BatchException e) {
+            logger.error(e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
         }
+
+
 
 
     }

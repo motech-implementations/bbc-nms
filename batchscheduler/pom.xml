@@ -26,23 +26,7 @@
             <version>${motech.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>util</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
 
-        <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>masterdata</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.motechproject.nms</groupId>
-            <artifactId>frontlineworker</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
 
         <!-- OSGi IT -->
         <dependency>
@@ -132,15 +116,8 @@
                                         <Resource-Path>batchscheduler/resources</Resource-Path>
                                         <Context-Path>batchscheduler</Context-Path>
                                         <Export-Package>org.motechproject.nms.batchscheduler;version=${project.version},
-                                            org.motechproject.nms.batchscheduler.repository;version=${project.version},
-                                            <!-- Bug 17 -->
-                            org.motechproject.nms.batchscheduler.event.handler;version=${project.version},
-                            org.motechproject.nms.batchscheduler.domain;version=${project.version},
-                            org.motechproject.nms.batchscheduler.service;version=${project.version},
-                            org.motechproject.nms.batchscheduler.service.impl;version=${project.version},
-                            org.motechproject.nms.batchscheduler.constants;version=${project.version},
-                            org.motechproject.nms.batchscheduler.exception;version=${project.version},
-                            org.motechproject.nms.batchscheduler.scheduler;version=${project.version}
+                                                        org.motechproject.nms.batchscheduler.event.handler;version=${project.version},
+                                                        org.motechproject.nms.batchscheduler.scheduler;version=${project.version}
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             org.springframework.batch.core.jsr.configuration.xml,

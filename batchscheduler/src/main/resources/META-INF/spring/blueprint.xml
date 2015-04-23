@@ -7,76 +7,8 @@
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
 
-
-    <!--
-    <osgi:service ref="csvFrontLineWorkerService"
-                  interface="org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService"/>
-
-    <osgi:service ref="frontLineWorkerService"
-                  interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService"/>
-
-    <osgi:service ref="userProfileDetailsService"
-                  interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/-->
-
-    <!--osgi:service ref="removeInvalidRecordService"
-                  interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecordService"/-->
-
-    <!--osgi:service ref="csvWhiteListUsersService"
-                  interface="org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService"/>
-
-    <osgi:service ref="whiteListUsersService"
-                  interface="org.motechproject.nms.frontlineworker.service.WhiteListUsersService"/>
-
-    <osgi:reference id="csvFlwRecordsDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.CsvFrontLineWorkerRecordsDataService"/>
-
-    <osgi:reference id="flwRecordDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService"/>
-
-    <osgi:reference id="csvWhiteListUsersDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.CsvWhiteListUsersRecordDataService"/>
-
-    <osgi:reference id="whiteListUsersDataService"
-                    interface="org.motechproject.nms.frontlineworker.repository.WhiteListUsersRecordDataService"/>
-
-    <osgi:reference id="locationService"
-                    interface="org.motechproject.nms.masterdata.service.LocationService"/>
-
-    <osgi:reference id="bulkUploadErrLogService"
-                    interface="org.motechproject.nms.util.service.BulkUploadErrLogService"/>
-
-    <osgi:reference id="operatorService"
-                    interface="org.motechproject.nms.masterdata.service.OperatorService"/>
-
-    <osgi:reference id="circleService"
-                    interface="org.motechproject.nms.masterdata.service.CircleService"/>
-
-    <osgi:reference id="languageLocationCodeService"
-                    interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService"/>
-
-    <osgi:reference id="stateService"
-                    interface="org.motechproject.nms.masterdata.service.StateService"/>
-
-    <osgi:reference id="districtService"
-                    interface="org.motechproject.nms.masterdata.service.DistrictService"/>
-
-    <osgi:reference id="talukaService"
-                    interface="org.motechproject.nms.masterdata.service.TalukaService"/>
-
-    <osgi:reference id="villageService"
-                    interface="org.motechproject.nms.masterdata.service.VillageService"/>
-
-    <osgi:reference id="healthBlockService"
-                    interface="org.motechproject.nms.masterdata.service.HealthBlockService"/>
-
-    <osgi:reference id="healthFacilityService"
-                    interface="org.motechproject.nms.masterdata.service.HealthFacilityService"/>
-
-    <osgi:reference id="healthSubFacilityService"
-                    interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
-
-    <osgi:reference id="schedulerServiceOsgi"
-                    interface="org.motechproject.scheduler.service.MotechSchedulerService"-->
+    <osgi:reference id="jobTriggerService"
+                    interface="org.motechproject.batch.service.JobTriggerService" />
 
 
 </beans>

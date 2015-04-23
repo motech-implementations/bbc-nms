@@ -14,7 +14,7 @@
 
     <properties>
         <motech.groupId>org.motechproject</motech.groupId>
-        <motech.version>0.25-SNAPSHOT</motech.version>
+        <motech.version>0.25</motech.version>
 
         <jasmine.server.port>8234</jasmine.server.port>
 
@@ -699,7 +699,7 @@
         <module>mobilekunji</module>        
         <module>util</module>        
         <module>masterdata</module>
-        <module>batchscheduler</module>
+        <!--<module>batchscheduler</module>-->
     </modules>
 
     <build>

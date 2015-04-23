@@ -5,7 +5,7 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:batch="http://www.springframework.org/schema/batch"
+       xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                               http://www.springframework.org/schema/beans/spring-beans.xsd
                               http://xmlns.jcp.org/xml/ns/javaee
@@ -18,7 +18,11 @@
                               http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
                               http://www.eclipse.org/gemini/blueprint/schema/blueprint http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
 
-    <context:component-scan base-package="org.motechproject.nms.frontlineworker" />
+
+
+    <import resource="classpath*:META-INF/motech/*.xml"/>
+
+
 
     <!-- job context -->
     <bean id="jobRepository"
@@ -37,7 +41,7 @@
     <!-- job context -->
 
     <bean id="syncFromBatchlet"
-          class="org.motechproject.nms.frontlineworker.event.handler.FrontLineWorkerSyncBatchlet">
+          class="org.motechproject.nms.batchscheduler.event.handler.FrontLineWorkerSyncBatchlet">
     </bean>
 
     <batch:job id="syncTo" job-repository="jobRepository">
@@ -48,7 +52,7 @@
     </batch:job>
 
 
-    <bean id="itemProcessor" class="org.motechproject.nms.frontlineworker.event.handler.RemoveInvalidFrontLineWorkerHandler" />
+    <bean id="itemProcessor" class="org.motechproject.nms.batchscheduler.event.handler.RemoveInvalidFrontLineWorkerHandler" />
 
     <batch:job id="deletionJob">
         <batch:step id="step1">
@@ -65,12 +69,12 @@
         </batch:step>
     </batch:job>
 
-    <bean id="runScheduler" class="org.motechproject.nms.frontlineworker.scheduler.RunScheduler" />
+    <bean id="runScheduler" class="org.motechproject.nms.batchscheduler.scheduler.RunScheduler" />
 
     <!-- Run every midnight -->
-    <!--task:scheduled-tasks>
+    <task:scheduled-tasks>
 
-        <task:scheduled ref="runScheduler" method="run" cron="*/* * 0 * * *" />
-    </task:scheduled-tasks-->
+        <task:scheduled ref="runScheduler" method="run" cron="*/5 * * * * *" />
+    </task:scheduled-tasks>
 
 </beans>

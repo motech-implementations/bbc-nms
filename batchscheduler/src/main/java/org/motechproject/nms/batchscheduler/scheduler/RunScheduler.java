@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker.scheduler;
+package org.motechproject.nms.batchscheduler.scheduler;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
