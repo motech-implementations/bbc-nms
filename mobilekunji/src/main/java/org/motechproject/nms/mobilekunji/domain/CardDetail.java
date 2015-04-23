@@ -21,10 +21,10 @@ public class CardDetail extends MdsEntity {
     private String audioFileName;
 
     @Field
-    private Integer startTime;
+    private Long startTime;
 
     @Field
-    private Integer endTime;
+    private Long endTime;
 
     public String getMkCardNumber() {
         return mkCardNumber;
@@ -50,19 +50,19 @@ public class CardDetail extends MdsEntity {
         this.audioFileName = audioFileName;
     }
 
-    public Integer getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 

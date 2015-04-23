@@ -63,8 +63,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
-        populateFlwDetail(userProfileData);
-
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
 
         logger.info("Get UserDetails executed successfully.");
@@ -103,29 +101,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
     }
 
-    /**
-     * Populate FlwDetail
-     *
-     * @param userProfileData
-     */
-    private void populateFlwDetail(UserProfile userProfileData) {
 
-        if (userProfileData.isCreated()) {
-            FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
-            if (null == flwDetail) {
+    private FlwDetail checkAndUpdateFlwForInvalidUser(UserProfile userProfileData) {
 
-                flwDetail = new FlwDetail();
-                fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
-                flwDetailService.create(flwDetail);
-                logger.info("FlwDetail created successfully.");
-            } else {
 
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
+
+        if (null == flwDetail){
+            flwDetail = new FlwDetail();
+            fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
+            flwDetailService.create(flwDetail);
+            logger.info("FlwDetail created successfully.");
+        } else {
+            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()){
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
                 flwDetailService.update(flwDetail);
                 logger.info("FlwDetail updated successfully.");
-
             }
         }
+
+       return flwDetail;
     }
 
     /**
@@ -136,20 +131,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
+        FlwDetail flwDetail = checkAndUpdateFlwForInvalidUser(userProfile);
+        userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
+        userDetailApiResponse.setCircle(userProfile.getCircle());
+        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
+        userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+        setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
+        setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
+        fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
 
-        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfile.getNmsFlwId());
-
-        if (null != flwDetail) {
-            userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
-            userDetailApiResponse.setCircle(userProfile.getCircle());
-            userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
-            userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
-            setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
-            setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
-            fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
-        } else {
-            ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
-        }
         return userDetailApiResponse;
     }
 

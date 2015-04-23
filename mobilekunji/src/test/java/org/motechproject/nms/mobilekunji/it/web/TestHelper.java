@@ -138,8 +138,8 @@ public class TestHelper {
         cardDetail.setMkCardNumber("01");
         cardDetail.setAudioFileName("Yellowfever.wav");
         cardDetail.setContentName("YellowFever");
-        cardDetail.setEndTime(1222222221);
-        cardDetail.setStartTime(1200000000);
+        cardDetail.setEndTime(1222222221L);
+        cardDetail.setStartTime(1200000000L);
 
         cardDetailList.add(cardDetail);
 
