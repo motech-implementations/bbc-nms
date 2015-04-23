@@ -28,7 +28,7 @@ public class SubscriptionDeactivateApiRequestTest {
         Assert.assertEquals("operator", apiRequest.getOperator());
         Assert.assertEquals("circle", apiRequest.getCircle());
         Assert.assertEquals("1234567890", apiRequest.getCalledNumber());
-        Assert.assertEquals("callId", apiRequest.getCallId());
+        Assert.assertEquals("123456", apiRequest.getCallId());
         Assert.assertTrue("1" == apiRequest.getSubscriptionId());
         Assert.assertTrue(1L == apiRequest.getSubscriptionIdLongValue());
     }
@@ -55,7 +55,7 @@ public class SubscriptionDeactivateApiRequestTest {
         deactivateApiRequest.setOperator("operator");
         deactivateApiRequest.setCircle("circle");
         deactivateApiRequest.setCalledNumber("1234567890");
-        deactivateApiRequest.setCallId("callId");
+        deactivateApiRequest.setCallId("123456");
         deactivateApiRequest.setSubscriptionId("1");
 
         return deactivateApiRequest;

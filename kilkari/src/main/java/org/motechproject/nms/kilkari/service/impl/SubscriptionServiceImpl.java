@@ -564,7 +564,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(subscription);
         } else {
-            logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
+            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
         }
     }
 
@@ -589,7 +589,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(subscription);
         } else {
-            logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
+            logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
         }
     }
 
