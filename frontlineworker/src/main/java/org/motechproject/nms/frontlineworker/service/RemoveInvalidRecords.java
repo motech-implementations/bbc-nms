@@ -11,5 +11,7 @@ import java.util.List;
 @Service
 public interface RemoveInvalidRecords {
 
-    List<FrontLineWorker> invalidFrontLineWorkerList();
+    public void deleteInvalidFrontLineWorkerRecords();
+
+    public List<FrontLineWorker> invalidFrontLineWorkerList();
 }

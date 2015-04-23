@@ -23,8 +23,6 @@ public final class ConfigurationConstants {
 
     public static final String DELETION_EVENT = "deleteInvalidFlw";
 
-    public static final Integer NUMBER_OF_DAYS_FOR_DELETION = 41;
-
 
     private ConfigurationConstants() {
     }

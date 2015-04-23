@@ -6,6 +6,9 @@
 
     <import resource="classpath*:META-INF/motech/*.xml"/>
 
+
+
+    <!--
     <osgi:service ref="csvFrontLineWorkerService"
                   interface="org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService"/>
 
@@ -13,12 +16,12 @@
                   interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService"/>
 
     <osgi:service ref="userProfileDetailsService"
-                  interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/>
+                  interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService"/-->
 
     <!--osgi:service ref="removeInvalidRecordService"
                   interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecordService"/-->
 
-    <osgi:service ref="csvWhiteListUsersService"
+    <!--osgi:service ref="csvWhiteListUsersService"
                   interface="org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService"/>
 
     <osgi:service ref="whiteListUsersService"
@@ -73,7 +76,7 @@
                     interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
 
     <osgi:reference id="schedulerServiceOsgi"
-                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
+                    interface="org.motechproject.scheduler.service.MotechSchedulerService"-->
 
 
 </beans>

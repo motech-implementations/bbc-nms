@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ public class CustomQueries {
         @Override
         public List<FrontLineWorker> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            date = date.minusDays(41);
+            date = date.minusDays(ConfigurationConstants.NUMBER_OF_DAYS_FOR_DELETION);
             query = query.getPersistenceManager().newQuery(FrontLineWorker.class);
             query.setFilter("(status == '"+ Status.INVALID+"') && modificationDate < date");
             query.declareParameters("java.util.Date date");

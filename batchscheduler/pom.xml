@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>nms</artifactId>
+        <groupId>org.motechproject.nms</groupId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <artifactId>batchscheduler</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+    <name>batchscheduler</name>
+
+    <properties>
+        <modules.root.dir>${basedir}/..</modules.root.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-osgi-extender-fragment</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>util</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>masterdata</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.motechproject.nms</groupId>
+            <artifactId>frontlineworker</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- OSGi IT -->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-pax-it</artifactId>
+            <version>${motech.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Scheduler -->
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+
+        <!-- Repository -->
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>motech-platform-dataservices</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+
+
+                <dependency>
+                    <groupId>javax.batch</groupId>
+                    <artifactId>javax.batch-api</artifactId>
+                    <version>1.0</version>
+                </dependency>
+
+        <dependency>
+            <groupId>org.motechproject</groupId>
+            <artifactId>batch</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
+        <!--
+
+                               <dependency>
+                                   <groupId>org.springframework</groupId>
+                                   <artifactId>spring-core</artifactId>
+                                   <version>${spring.version}</version>
+                               </dependency>
+
+                               <dependency>
+                                   <groupId>org.springframework.batch</groupId>
+                                   <artifactId>spring-batch-core</artifactId>
+                                   <version>${spring.batch.version}</version>
+                               </dependency>
+                               <dependency>
+                                   <groupId>org.springframework.batch</groupId>
+                                   <artifactId>spring-batch-infrastructure</artifactId>
+                                   <version>${spring.batch.version}</version>
+                               </dependency>
+-->
+
+                    </dependencies>
+
+                    <repositories>
+                        <repository>
+                            <id>motech-repo</id>
+                            <name>MOTECH Maven Repository</name>
+                            <url>http://nexus.motechproject.org/content/repositories/public</url>
+                        </repository>
+                    </repositories>
+
+                    <build>
+                        <plugins>
+                            <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                                <version>3.1</version>
+                                <configuration>
+                                    <source>1.7</source>
+                                    <target>1.7</target>
+                                </configuration>
+                            </plugin>
+
+                            <plugin>
+                                <groupId>org.apache.felix</groupId>
+                                <artifactId>maven-bundle-plugin</artifactId>
+                                <version>2.3.5</version>
+                                <extensions>true</extensions>
+                                <configuration>
+                                    <instructions>
+                                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                                        <Resource-Path>batchscheduler/resources</Resource-Path>
+                                        <Context-Path>batchscheduler</Context-Path>
+                                        <Export-Package>org.motechproject.nms.batchscheduler;version=${project.version},
+                                            org.motechproject.nms.batchscheduler.repository;version=${project.version},
+                                            <!-- Bug 17 -->
+                            org.motechproject.nms.batchscheduler.event.handler;version=${project.version},
+                            org.motechproject.nms.batchscheduler.domain;version=${project.version},
+                            org.motechproject.nms.batchscheduler.service;version=${project.version},
+                            org.motechproject.nms.batchscheduler.service.impl;version=${project.version},
+                            org.motechproject.nms.batchscheduler.constants;version=${project.version},
+                            org.motechproject.nms.batchscheduler.exception;version=${project.version},
+                            org.motechproject.nms.batchscheduler.scheduler;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>org.motechproject.osgi.web,
+                            org.springframework.batch.core.jsr.configuration.xml,
+                            org.springframework.batch.item.file.transform,
+                            org.springframework.batch.core.configuration.xml,
+                            org.springframework.batch.core.scope,
+                            org.springframework.batch.core.job.flow.support,
+                            org.springframework.batch.core.job.flow.support.state,
+                            org.springframework.batch.core.jsr,
+                            org.springframework.batch.core.jsr.launch,
+                            org.springframework.batch.core.resource,
+                            org.springframework.batch.core.launch.support,
+                            org.springframework.batch.core.explore.support,
+                            org.springframework.batch.core.configuration.support,
+                            org.springframework.batch.core.jsr.configuration.support,
+                            org.springframework.batch.item.database,
+                            org.springframework.batch.item.database.support,
+                            org.springframework.batch.core.repository.support,
+                            org.springframework.batch.support.transaction,
+                            org.motechproject.batch.service;version=${motech.version},
+                            org.motechproject.batch.exception;version=${motech.version},
+                            org.motechproject.batch.model;version=${motech.version},
+                            javax.batch.operations,
+                            *
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-bundles</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${user.home}/.motech/bundles</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>target</directory>
+                                    <includes>
+                                        <include>*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
