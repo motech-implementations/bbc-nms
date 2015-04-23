@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.mobileacademy.commons.CallDisconnectReason;
 import org.motechproject.nms.mobileacademy.commons.CallStatus;
 import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
@@ -83,7 +85,10 @@ public class UserController extends BaseController {
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
      * @return User response object containing user details
-     * @throws DataValidationException , NmsInternalServerError
+     * @throws DataValidationException
+     * @throws NmsInternalServerError
+     * @throws FlwNotInWhiteListException
+     * @throws ServiceNotDeployedException
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
@@ -92,7 +97,8 @@ public class UserController extends BaseController {
             @RequestParam(value = REQUEST_PARAM_OPERATOR) String operator,
             @RequestParam(value = REQUEST_PARAM_CIRCLE) String circle,
             @RequestParam(value = REQUEST_PARAM_CALL_ID) String callId)
-            throws DataValidationException, NmsInternalServerError {
+            throws DataValidationException, NmsInternalServerError,
+            ServiceNotDeployedException, FlwNotInWhiteListException {
         LOGGER.debug("getUserDetails: Started");
         LOGGER.debug("Input request-" + REQUEST_PARAM_CALLING_NUMBER + ":"
                 + callingNumber + ", " + REQUEST_PARAM_OPERATOR + ":"
@@ -114,12 +120,15 @@ public class UserController extends BaseController {
      * @param llcRequest object contain input request
      * @throws DataValidationException
      * @throws MissingServletRequestParameterException
+     * @throws FlwNotInWhiteListException
+     * @throws ServiceNotDeployedException
      */
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     @ResponseBody
     public void setLanguageLocationCode(@RequestBody LlcRequest llcRequest)
             throws DataValidationException,
-            MissingServletRequestParameterException {
+            MissingServletRequestParameterException,
+            ServiceNotDeployedException, FlwNotInWhiteListException {
         LOGGER.debug("setLanguageLocationCode: Started");
         LOGGER.debug("Input request: " + llcRequest);
         validateInputDataForSetLlc(llcRequest);

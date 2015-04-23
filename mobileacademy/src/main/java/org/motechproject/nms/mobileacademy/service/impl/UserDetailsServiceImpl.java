@@ -14,6 +14,8 @@ import org.joda.time.DateTime;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
@@ -75,7 +77,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public User findUserDetails(String callingNumber, String operator,
             String circle, String callId) throws DataValidationException,
-            NmsInternalServerError {
+            NmsInternalServerError, ServiceNotDeployedException,
+            FlwNotInWhiteListException {
         // TODO service deployed and white list validation
         User user = new User();// user detail response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
@@ -213,7 +216,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public void setLanguageLocationCode(String languageLocationCode,
-            String callingNumber, String callId) throws DataValidationException {
+            String callingNumber, String callId)
+            throws DataValidationException, ServiceNotDeployedException,
+            FlwNotInWhiteListException {
         // TODO service deployed and white list validation
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
