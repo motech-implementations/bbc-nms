@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.domain.MctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.masterdata.domain.District;
@@ -145,4 +146,11 @@ public interface CommonValidatorService {
      */
     LanguageLocationCode getLLCCodeByStateDistrict(Long stateCode,
             Long districtCode) throws NmsInternalServerError;
+
+    /**
+     * This method is used to check if the weeks passed from given date are less than given duration (weeks)
+     * @param lmpOrDob
+     * @throws DataValidationException if more
+     */
+    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek) throws DataValidationException;
 }

@@ -182,9 +182,9 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         
         /* handling of appropriate dob */
         DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true);
-        if(isValidDob(dob)){
-            childSubscriber.setDob(dob);
-        }
+        validateDob(dob);
+        childSubscriber.setDob(dob);
+
         /* Set the appropriate Deactivation Reason */
         String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, childMctsCsv.getEntryType(), false);
         commonValidatorService.checkValidEntryType(entryType);
@@ -205,29 +205,21 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     }
 
 
-
     /**
-     * This methos is used to check dob. Dob should not be of future date and more than 48 week before
+     * This method is used to check dob. Dob should not be of future date and more than 48 week before
      * @param dob
-     * @return boolean 
      * @throws DataValidationException
      */
-    private boolean isValidDob(DateTime dob) throws DataValidationException {
+    private void validateDob(DateTime dob) throws DataValidationException {
         
         boolean isValid = false;
         DateTime currDate = DateTime.now();
 
-        if (dob.isAfter(DateTime.now())) {
+        if (dob.isAfter(currDate)) {
             ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
-        } else {
-            int days = Days.daysBetween(currDate, dob).getDays();
-            if ((days/Constants.DAYS_IN_WEEK) < Constants.DURATION_OF_48_WEEK_PACK) {
-                isValid = true;
-            } else {
-                ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
-            }
         }
-        return isValid;
+
+        commonValidatorService.validateWeeksFromDate(dob, Constants.DURATION_OF_48_WEEK_PACK);
     }
 
 }

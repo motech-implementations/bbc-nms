@@ -1,5 +1,7 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.EntryType;
@@ -339,4 +341,20 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             }
         }
     }
+
+    /**
+     * This method is used to check if the weeks passed from given date are less than given duration (weeks)
+     * @param lmpOrDob
+     * @return boolean if less
+     * @throws DataValidationException if more
+     */
+    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek) throws DataValidationException {
+        DateTime currDate = DateTime.now();
+        int days = Days.daysBetween(currDate, lmpOrDob).getDays();
+        if ((days / Constants.DAYS_IN_WEEK) > durationInWeek) {
+            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, lmpOrDob.toString());
+        }
+    }
+
+
 }

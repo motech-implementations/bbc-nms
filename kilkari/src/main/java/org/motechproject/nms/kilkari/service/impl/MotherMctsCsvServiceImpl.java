@@ -185,9 +185,8 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         
         /* handling of appropriate lmp */
         DateTime lmp = ParseDataHelper.validateAndParseDate(Constants.LMP_DATE, motherMctsCsv.getLmpDate(), true);
-        if(isValidLmp(lmp)){
-            motherSubscriber.setLmp(lmp);
-        }
+        validateLmp(lmp);
+        motherSubscriber.setLmp(lmp);
 
         /* Check appropriate value of entryType and abortion*/
         Integer outcomeNos = ParseDataHelper.validateAndParseInt(Constants.OUTCOME_NOS, motherMctsCsv.getOutcomeNos(), false);
@@ -218,25 +217,18 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     /**
      * This method is used to check lmp. lmp should not be of future date and more than 3 months + 72 week before
      * @param lmp
-     * @return boolean 
      * @throws DataValidationException
      */
-    private boolean isValidLmp(DateTime lmp) throws DataValidationException {
+    private void validateLmp(DateTime lmp) throws DataValidationException {
         
         boolean isValid = false;
         DateTime currDate = DateTime.now();
         
         if (lmp.isAfter(DateTime.now())) {
             ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
-        } else {
-            int days = Days.daysBetween(lmp.plusMonths(3), currDate).getDays();
-            if ((days/Constants.DAYS_IN_WEEK) < Constants.DURATION_OF_72_WEEK_PACK) {
-                isValid = true;
-            } else {
-                ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
-            }
         }
-        return isValid;
+
+        commonValidatorService.validateWeeksFromDate(lmp.plusMonths(3), Constants.DURATION_OF_72_WEEK_PACK);
     }
 
 }

@@ -5,6 +5,8 @@ import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
 
+import java.util.List;
+
 /**
  * Interface for repository that persists simple records and allows CRUD.
  * MotechDataService base class will provide the implementation of this class as well
@@ -17,6 +19,6 @@ public interface ContentUploadDataService extends MotechDataService<ContentUploa
     ContentUpload findByContentId(@LookupField(name = "contentId") Long id);
 
     @Lookup
-    ContentUpload findContentFileName(@LookupField(name = "contentName") String contentName, 
+    List<ContentUpload> findContentFileName(@LookupField(name = "contentName") String contentName,
             @LookupField(name = "languageLocationCode") Integer languageLocationCode);
 }
