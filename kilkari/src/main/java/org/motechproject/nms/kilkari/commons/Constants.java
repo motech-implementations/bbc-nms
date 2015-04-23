@@ -104,8 +104,6 @@ public final class Constants {
 
     public static final String CALLING_NUMBER = "Calling Number";
 
-    public static final String DEFAULT_FETCH_GROUP = "true";
-    
     public static final int DAYS_IN_WEEK = 7;
     
     public static final long MILLIS_IN_DAY = 1000*60*60*24;
