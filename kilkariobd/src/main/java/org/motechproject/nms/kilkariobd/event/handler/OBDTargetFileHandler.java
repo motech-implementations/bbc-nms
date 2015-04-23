@@ -154,13 +154,24 @@ public class OBDTargetFileHandler {
     /*
     This method checks if a particular call valid for retry based on callStatus and final status.
      */
-    private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId) {
-        return (finalStatus.equals(CallStatus.REJECTED) ||
+    private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId, Integer weekNumber) {
+        Integer retryDayNumber = getRetryDayNumber(subscriptionId);
+        if (retryDayNumber.equals(-1) && weekNumber.equals(Constants.MAX_WEEK_NUMBER)) {
+            //todo :call subscription api to mark complete.
+            return false;
+        } else if(finalStatus.equals(CallStatus.REJECTED) ||
                 (finalStatus.equals(CallStatus.FAILED) &&
-                        !(statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER) || statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)))) &&
-                (getRetryDayNumber(subscriptionId) != -1);
+                        !(statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER) || statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)))){
+            return true;
+        }
+        return false;
     }
 
+    private void markCompleteForSuccessRecords(CallStatus finalStatus, Integer weekNumber, Long subscriptionId) {
+        if(finalStatus.equals(CallStatus.SUCCESS) && weekNumber.equals(Constants.MAX_WEEK_NUMBER)) {
+            //todo :call subscription api to mark complete.
+        }
+    }
     /*
     Method to get retryDayNumber.
      */
@@ -274,10 +285,9 @@ public class OBDTargetFileHandler {
                 String weekId = map.get(Constants.WEEK_ID).toString();
                 String[] weekNoMsgNo = weekId.split("_");
                 retryDayNumber = getRetryDayNumber(subscriptionId);
+                Integer weekNumber = Integer.parseInt(weekNoMsgNo[0]);
 
-                if (Integer.parseInt(weekNoMsgNo[0]) > Constants.MAX_WEEK_NUMBER && retryDayNumber.equals(Constants.RETRY_DAY_THREE)) {
-                    //todo: call subscription complete api of kilkari
-                } else if (isValidForRetry(finalStatus, statusCode, subscriptionId)) {
+                if (isValidForRetry(finalStatus, statusCode, subscriptionId, weekNumber)) {
 
                     OutboundCallRequest callRequestRetry = new OutboundCallRequest();
                     callRequestRetry.setRequestId(map.get(Constants.REQUEST_ID).toString());
@@ -303,6 +313,8 @@ public class OBDTargetFileHandler {
 
                     callRequestRetry.setWeekId(map.get(Constants.WEEK_ID).toString());
                     requestService.create(callRequestRetry);
+                } else {
+                    markCompleteForSuccessRecords(finalStatus, weekNumber, subscriptionId);
                 }
 
                 /*
