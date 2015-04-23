@@ -15,7 +15,6 @@ import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.dto.request.TargetNotificationRequest;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
-import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

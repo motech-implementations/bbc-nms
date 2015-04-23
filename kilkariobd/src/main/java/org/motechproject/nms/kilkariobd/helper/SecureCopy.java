@@ -120,7 +120,7 @@ public class SecureCopy {
                         fileInputStream.close();
                     }
                 } catch (IOException ee) {
-                    ee.printStackTrace();
+                    logger.error(ee.getMessage());
                 }
             } catch (SecureCopyException scpEx) {
                 logger.error(scpEx.getMessage());
@@ -228,7 +228,9 @@ public class SecureCopy {
                         }
                         fileOutputStream.write(buf, 0, bufferLength);
                         fileSize -= bufferLength;
-                        if (fileSize == 0L) break;
+                        if (fileSize == 0L) {
+                            break;
+                        }
                     }
                     fileOutputStream.close();
                     fileOutputStream = null;
