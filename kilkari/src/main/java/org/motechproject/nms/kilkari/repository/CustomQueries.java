@@ -43,8 +43,8 @@ public class CustomQueries {
     }
 
     /**
-     * This class is used to delete subscription 
-     * whose status is completed or deactivated six week before.
+     * This class is used to delete subscriptions
+     * whose status is completed or deactivated n days before.
      */
     public static class DeleteSubscriptionQuery implements QueryExecution<List<Subscription>> {
 
@@ -52,7 +52,7 @@ public class CustomQueries {
          * This method executes the query passed.
          * @param query to be executed
          * @param restriction
-         * @return List of distinct subscription packs
+         * @return count of Subscription records deleted
          */
         @Override
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
@@ -68,7 +68,7 @@ public class CustomQueries {
 
     /**
      * This class is used to delete subscriber 
-     * who doen't have any subscription 
+     * who doesn't have any subscription
      */
     public static class DeleteSubscriberQuery implements QueryExecution<List<Subscriber>> {
 
@@ -76,7 +76,7 @@ public class CustomQueries {
          * This method executes the query passed.
          * @param query to be executed
          * @param restriction
-         * @return List of distinct subscription packs
+         * @return Count of Subscriber records deleted.
          */
         @Override
         public List<Subscriber> execute(Query query, InstanceSecurityRestriction restriction) {
@@ -104,9 +104,9 @@ public class CustomQueries {
             DateTime date = new DateTime();
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && (((currDateInMillis-startDate)/day)%7 == 0)");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && (((currDateInMillis-startDate)/day) % 7 == 0)");
             } else {
-                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate)>=0 && ((((currDateInMillis-startDate)/day)%7 == 0) || (((currDateInMillis-startDate)/day)%7 == 3))");
+                query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % 7 == 0) || (((currDateInMillis-startDate)/day) % 7 == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
             return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);

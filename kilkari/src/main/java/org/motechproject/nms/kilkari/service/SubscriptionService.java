@@ -89,10 +89,10 @@ public interface SubscriptionService {
         throws DataValidationException, NmsInternalServerError;
 
     /**
-     * This method is used to delete subscriber and subscription 
-     * which are deactivated or completed six week before
+     *  This method is used to delete subscriber and subscription
+     * which are deactivated or completed n days earlier. Where n is configurable.
      */
-    void deleteSubscriberSubscriptionAfter6Weeks();
+    void purgeOldSubscriptionSubscriberRecords();
 
     /**
      * This method is used to get those subscriber 

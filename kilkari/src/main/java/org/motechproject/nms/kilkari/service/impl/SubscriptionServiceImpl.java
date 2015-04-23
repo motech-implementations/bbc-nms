@@ -18,7 +18,6 @@ import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
-import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
@@ -594,12 +593,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     /**
-     * This method is used to delete subscriber and subscription 
-     * which are deactivated or completed six week before.
-     * 
+     *  This method is used to delete subscriber and subscription
+     *  which are deactivated or completed n days earlier. Where n is configurable.
      */
     @Override
-    public void deleteSubscriberSubscriptionAfter6Weeks(){
+    public void purgeOldSubscriptionSubscriberRecords(){
         subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery());
         subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
     }
@@ -611,31 +609,36 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     @Override
     public List<Subscription> getScheduledSubscriptions() {
+
+        /* Get the list of subscriptions for which message is to be sent today */
         List<Subscription> subscriptionList = subscriptionDataService.executeQuery(new CustomQueries.FindScheduledSubscription());
+
         List<Subscription> scheduledSubscription = new ArrayList<Subscription>();
+
+
         for(Subscription subscription : subscriptionList) {
             Subscriber subscriber = subscription.getSubscriber();
 
-            /* handling which week msg we have to deliver. */
+            /* set which weekNumber's msg to deliver. */
             DateTime currDate = new DateTime();
             int weekNum = calculateWeekNumber(subscriber, currDate);
             subscription.setWeekNumber(weekNum);
 
-            /* handling which msg(first or second) we have to deliver. */
+            /* handling which msg(first or second) to deliver. */
             subscription.setMessageNumber(1);
-            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 2) {
-                int alignDiffofStartAndCurrent = Days.daysBetween(new DateTime(subscription.getStartDate()), new DateTime(currDate.toDateMidnight().getMillis())).getDays()%7;
-                if(alignDiffofStartAndCurrent == 3 ){
+            if(configurationService.getConfiguration().getNumMsgPerWeek() == 2) {
+                int diffStartAndCurrent = Days.daysBetween(new DateTime(subscription.getStartDate()), currDate.toDateMidnight()).getDays();
+                if(diffStartAndCurrent  % Constants.DAYS_IN_WEEK == 3 ){
                     subscription.setMessageNumber(2);
                 }
             }
 
-            /* Set status of subscription */
-            if((subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum < Constants.DURATION_OF_72_WEEK_PACK)
-                    || (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum < Constants.DURATION_OF_48_WEEK_PACK)) {
+            /* Set status of subscription to completed if Last week message has been delivered in previous week */
+            if((subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum <= Constants.END_WEEK_OF_72_WEEK_PACK)
+                    || (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum <= Constants.END_WEEK_OF_48_WEEK_PACK)) {
                 
                 subscription.setStatus(Status.ACTIVE);
-                subscription.setLastObdDate(currDate);
+                subscription.setLastObdDate(currDate.toDateMidnight().toDateTime());
             } else {
                 subscription.setStatus(Status.COMPLETED);
             }
@@ -643,7 +646,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             Subscription dbSubscription = subscriptionDataService.update(subscription);
             createSubscriptionMeasure(dbSubscription);
 
-            if(subscription.getStatus()!=Status.COMPLETED) {
+            if(subscription.getStatus() != Status.COMPLETED) {
                 scheduledSubscription.add(subscription);
             }
 
@@ -655,17 +658,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * This method is used to calculate which week message is to send.
      * @param subscriber
      * @param currDate
-     * @return
+     * @return the computed week number
      */
     private int calculateWeekNumber(Subscriber subscriber, DateTime currDate) {
-        DateTime dobOrLmp = subscriber.getDobLmp();
+
         int weekNum = 0;
+
         if (subscriber.getBeneficiaryType() == BeneficiaryType.CHILD) {
+            DateTime dob = subscriber.getDob();
             weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + 
-                    (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+                    (Days.daysBetween(dob.toDateMidnight(), currDate.toDateMidnight()).getDays() / Constants.DAYS_IN_WEEK);
         } else {
+            DateTime lmp = subscriber.getLmp();
             weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + 
-                    (Days.daysBetween(dobOrLmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+                    (Days.daysBetween(lmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / Constants.DAYS_IN_WEEK);
         }
         return weekNum;
     }

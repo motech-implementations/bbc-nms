@@ -10,9 +10,13 @@ public final class Constants {
 
     public static final Integer START_WEEK_OF_72_WEEK_PACK = 1;
 
+    public static final Integer END_WEEK_OF_72_WEEK_PACK = START_WEEK_OF_72_WEEK_PACK + DURATION_OF_72_WEEK_PACK - 1;
+
     public static final Integer DURATION_OF_48_WEEK_PACK = 48;
 
     public static final Integer START_WEEK_OF_48_WEEK_PACK = 25;
+
+    public static final Integer END_WEEK_OF_48_WEEK_PACK = START_WEEK_OF_48_WEEK_PACK + DURATION_OF_48_WEEK_PACK - 1;
 
 
     /* Constants for Error Description */

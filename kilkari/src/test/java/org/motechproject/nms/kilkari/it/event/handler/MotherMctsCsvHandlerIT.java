@@ -433,7 +433,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
         
-        subscriptionService.deleteSubscriberSubscriptionAfter6Weeks();
+        subscriptionService.purgeOldSubscriptionSubscriberRecords();
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
         
         assertNotNull(updateSubs);
