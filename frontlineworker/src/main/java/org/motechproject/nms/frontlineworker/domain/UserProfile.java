@@ -7,8 +7,6 @@ package org.motechproject.nms.frontlineworker.domain;
 
 public class UserProfile {
 
-    private boolean isCreated;
-
     private Long nmsFlwId;
 
     private String msisdn;
@@ -20,14 +18,6 @@ public class UserProfile {
     private String circle;
 
     private Integer maxStateLevelCappingValue;
-
-    public boolean isCreated() {
-        return isCreated;
-    }
-
-    public void setCreated(boolean isCreated) {
-        this.isCreated = isCreated;
-    }
 
     public Long getNmsFlwId() {
         return nmsFlwId;
@@ -83,7 +73,6 @@ public class UserProfile {
     @Override
     public String toString() {
         return "UserProfile{" +
-                "isCreated=" + isCreated +
                 ", nmsFlwId=" + nmsFlwId +
                 ", msisdn='" + msisdn + '\'' +
                 ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +

@@ -281,8 +281,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         frontLineWorker.setCircleCode(userProfile.getCircle());
         frontLineWorker.setStatus(Status.ANONYMOUS);
         frontLineWorkerService.createFrontLineWorker(frontLineWorker);
-        userProfile.setCreated(true);
-
         userProfile.setNmsFlwId(frontLineWorker.getId());
         logger.debug("New user profile created");
         return userProfile;
@@ -466,7 +464,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             userProfile.setIsDefaultLanguageLocationCode(false);
             userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
             userProfile.setNmsFlwId(frontLineWorker.getId());
-            userProfile.setCreated(true);
             userProfile.setMsisdn(msisdn);
             userProfile.setCircle(languageLocationCode.getCircleCode());
         } else {
@@ -584,7 +581,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         }
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setNmsFlwId(frontLineWorker.getId());
-        userProfile.setCreated(false);
         userProfile.setMsisdn(msisdn);
         userProfile.setIsDefaultLanguageLocationCode(false);
 
@@ -647,7 +643,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         } else {
             userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
             userProfile.setNmsFlwId(frontLineWorker.getId());
-            userProfile.setCreated(false);
             if(!userProfile.isDefaultLanguageLocationCode()) {
                 frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
             }
@@ -677,7 +672,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         userProfile.setMaxStateLevelCappingValue(findMaxCapping(stateCode, service));
         userProfile.setCircle(frontLineWorker.getCircleCode());
         userProfile.setNmsFlwId(frontLineWorker.getId());
-        userProfile.setCreated(false);
         userProfile.setMsisdn(msisdn);
         return userProfile;
     }
