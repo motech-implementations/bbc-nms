@@ -67,14 +67,13 @@ public class OBDTargetFileHandler {
 
     private Settings settings = new Settings(kilkariObdSettings);
 
-    private Configuration configuration = configurationService.getConfiguration();
-
     Logger logger = LoggerFactory.getLogger(OBDTargetFileHandler.class);
 
     /**
      * This method defines a daily event to be raised by scheduler to prepare target file.
      */
     public void prepareOBDTargetFile() {
+        Configuration configuration  = configurationService.getConfiguration();
         HttpClient client = new HttpClient();
 
         /*
@@ -96,13 +95,13 @@ public class OBDTargetFileHandler {
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
 
         try {
-            createFreshOBDRecords();
+            createFreshOBDRecords(configuration);
             /*
             Old call flow will be null if service is deployed first time.
              */
             if (oldCallFlow != null) {
                 String obdFileName = oldCallFlow.getObdFileName();
-                downloadAndProcessCdrSummaryFile(obdFileName);
+                downloadAndProcessCdrSummaryFile(obdFileName, configuration);
                 downloadAndProcessCdrDetailFile(obdFileName);
                 oldCallFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSED);
                 callFlowService.update(oldCallFlow);
@@ -155,24 +154,19 @@ public class OBDTargetFileHandler {
     /*
     This method checks if a particular call valid for retry based on callStatus and final status.
      */
-    private Boolean isValidForRetry(Integer retryDayNumber, CallStatus finalStatus, ObdStatusCode statusCode) {
+    private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId) {
         return (finalStatus.equals(CallStatus.REJECTED) ||
                 (finalStatus.equals(CallStatus.FAILED) &&
                         !(statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER) || statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)))) &&
-                isValidRetryDayNumber(retryDayNumber);
+                (getRetryDayNumber(subscriptionId) != -1);
     }
 
     /*
-    This method checks if retryDayNumber valid for retry.
+    Method to get retryDayNumber.
      */
-    private boolean isValidRetryDayNumber(Integer retryDayNumber) {
-        if (configuration.getNumMsgPerWeek().equals(1)) {
-            return retryDayNumber < 3;
-        } else
-            if (configuration.getNumMsgPerWeek().equals(2)) {
-                return retryDayNumber < 1;
-            }
-        return false;
+    private int getRetryDayNumber(Long subscriptionId) {
+        //todo : invoke subscription api to get retryDayNumber
+        return 0;
     }
 
     /*
@@ -206,7 +200,7 @@ public class OBDTargetFileHandler {
         return sdf.format(date) + ".csv";
     }
 
-    private void createFreshOBDRecords() throws DataValidationException{
+    private void createFreshOBDRecords(Configuration configuration) throws DataValidationException{
         List<Subscription> scheduledActiveSubscription = subscriptionService.getScheduledSubscriptions();
         for (Subscription subscription : scheduledActiveSubscription) {
             OutboundCallRequest callRequest = new OutboundCallRequest();
@@ -236,7 +230,6 @@ public class OBDTargetFileHandler {
             }
             callRequest.setWeekId(
                     subscription.getWeekNumber().toString() + "_" + subscription.getMessageNumber().toString());
-            callRequest.setRetryDayNumber(0);
             callRequest.setCli(null);
             callRequest.setCallFlowURL(null);
             requestService.create(callRequest);
@@ -244,9 +237,10 @@ public class OBDTargetFileHandler {
     }
 
     @Transactional
-    private void processCDRSummaryCSV(String cdrFileName) throws CDRFileException{
+    private void processCDRSummaryCSV(String cdrFileName, Configuration configuration) throws CDRFileException{
         HttpClient client = new HttpClient();
         List<Map<String, Object>> cdrSummaryRecords;
+        Integer retryDayNumber;
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByFileName(cdrFileName);
         try {
             cdrSummaryRecords = ReadByCSVMapper.readWithCsvMapReader("Cdr_Summary" + cdrFileName);
@@ -274,22 +268,40 @@ public class OBDTargetFileHandler {
             read and parse CDRSummary CSV and create entry in OutboundCallRequest table for each record.
              */
             for (Map<String, Object> map : cdrSummaryRecords) {
-                Integer retryDayNumber = (Integer) map.get(Constants.RETRY_DAY_NUMBER);
                 CallStatus finalStatus = (CallStatus) map.get(Constants.FINAL_STATUS);
                 ObdStatusCode statusCode = (ObdStatusCode) map.get(Constants.STATUS_CODE);
-                if (isValidForRetry(retryDayNumber, finalStatus, statusCode)) {
+                Long subscriptionId = ParseDataHelper.validateAndParseLong(Constants.REQUEST_ID, map.get(Constants.REQUEST_ID).toString(), true);
+                String weekId = map.get(Constants.WEEK_ID).toString();
+                String[] weekNoMsgNo = weekId.split("_");
+                retryDayNumber = getRetryDayNumber(subscriptionId);
+
+                if (Integer.parseInt(weekNoMsgNo[0]) > Constants.MAX_WEEK_NUMBER && retryDayNumber.equals(Constants.RETRY_DAY_THREE)) {
+                    //todo: call subscription complete api of kilkari
+                } else if (isValidForRetry(finalStatus, statusCode, subscriptionId)) {
+
                     OutboundCallRequest callRequestRetry = new OutboundCallRequest();
                     callRequestRetry.setRequestId(map.get(Constants.REQUEST_ID).toString());
-                    callRequestRetry.setServiceId(map.get(Constants.SERVICE_ID).toString());
+
                     callRequestRetry.setMsisdn(map.get(Constants.MSISDN).toString());
-                    callRequestRetry.setPriority((Integer) map.get(Constants.PRIORITY));
+
                     callRequestRetry.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
                     callRequestRetry.setCircleCode(map.get(Constants.CIRCLE).toString());
-                    callRequestRetry.setWeekId(map.get(Constants.WEEK_ID).toString());
+
                     callRequestRetry.setContentFileName(map.get(Constants.CONTENT_FILE_NAME).toString());
                     callRequestRetry.setCli(map.get(Constants.CLI).toString());
                     callRequestRetry.setCallFlowURL(map.get(Constants.CALL_FLOW_URL).toString());
-                    callRequestRetry.setRetryDayNumber(retryDayNumber + 1);
+                    if (retryDayNumber.equals(Constants.RETRY_DAY_ONE)) {
+                        callRequestRetry.setPriority(configuration.getRetryDay1ObdPriority());
+                        callRequestRetry.setServiceId(configuration.getRetryDay1ObdServiceId());
+                    } else if(retryDayNumber.equals(Constants.RETRY_DAY_TWO)) {
+                        callRequestRetry.setPriority(configuration.getRetryDay2ObdPriority());
+                        callRequestRetry.setServiceId(configuration.getRetryDay2ObdServiceId());
+                    } else {
+                        callRequestRetry.setPriority(configuration.getRetryDay3ObdPriority());
+                        callRequestRetry.setServiceId(configuration.getRetryDay3ObdServiceId());
+                    }
+
+                    callRequestRetry.setWeekId(map.get(Constants.WEEK_ID).toString());
                     requestService.create(callRequestRetry);
                 }
 
@@ -318,7 +330,6 @@ public class OBDTargetFileHandler {
                     record.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
                     record.setMsisdn(map.get(Constants.MSISDN).toString());
                     record.setRequestId(map.get(Constants.REQUEST_ID).toString());
-                    record.setRetryDayNumber((Integer)map.get(Constants.RETRY_DAY_NUMBER));
                     record.setCallStartTime(null);
                     record.setCallAnswerTime(null);
                     record.setCallEndTime(null);
@@ -391,7 +402,7 @@ public class OBDTargetFileHandler {
         }
     }
 
-    private void downloadAndProcessCdrSummaryFile(String obdFileName) throws CDRFileException{
+    private void downloadAndProcessCdrSummaryFile(String obdFileName, Configuration configuration) throws CDRFileException{
         HttpClient client = new HttpClient();
         String cdrSummaryFileName = settings.getObdFileLocalPath() + "/Cdr_Summary_" + obdFileName;
         try {
@@ -399,7 +410,7 @@ public class OBDTargetFileHandler {
             Copy cdrSummaryFile from remote location to local
              */
             SecureCopy.fromRemote(cdrSummaryFileName);
-            processCDRSummaryCSV(obdFileName);
+            processCDRSummaryCSV(obdFileName, configuration);
         } catch (FileNotFoundException fex) {
             client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrSummaryFileName);
             throw new CDRFileException(FileProcessingStatus.FILE_NOT_ACCESSIBLE);

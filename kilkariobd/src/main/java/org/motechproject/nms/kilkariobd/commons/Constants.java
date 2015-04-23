@@ -35,7 +35,6 @@ public final class Constants {
     public static final String NOTIFY_OBD_TARGET_EVENT_JOB = "ODBNotifyJob";
 
     //constants for cdrSummary
-    public static final String RETRY_DAY_NUMBER = "retryDayNumber";
     public static final String FINAL_STATUS = "finalStatus";
     public static final String STATUS_CODE = "statusCode";
     public static final String REQUEST_ID = "requestId";
@@ -48,6 +47,11 @@ public final class Constants {
     public static final String CONTENT_FILE_NAME = "contentFileName";
     public static final String CLI = "cli";
     public static final String CALL_FLOW_URL = "callFlowUrl";
+    public static final Integer RETRY_DAY_ONE = 1;
+    public static final Integer RETRY_DAY_TWO = 2;
+    public static final Integer RETRY_DAY_THREE = 3;
+    public static final Integer MAX_WEEK_NUMBER = 72;
+
 
     //constants for cdrDetail
     public static final String CALL_ID = "callId";

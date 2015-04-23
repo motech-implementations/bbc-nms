@@ -70,9 +70,6 @@ public class OutboundCallDetail {
     @Field(required=true)
     private String weekId;
     
-    @Field(required = true)
-    private Integer retryDayNumber;
-
     public String getRequestId() {
         return requestId;
     }
@@ -216,13 +213,4 @@ public class OutboundCallDetail {
     public void setWeekId(String weekId) {
         this.weekId = weekId;
     }
-
-    public Integer getRetryDayNumber() {
-        return retryDayNumber;
-    }
-
-    public void setRetryDayNumber(Integer retryDayNumber) {
-        this.retryDayNumber = retryDayNumber;
-    }
-    
 }

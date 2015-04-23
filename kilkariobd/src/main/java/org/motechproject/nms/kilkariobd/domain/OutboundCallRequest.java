@@ -47,9 +47,6 @@ public class OutboundCallRequest {
     
     @Field(required = true)
     private String circleCode;
-    
-    @Field(required = true)
-    private Integer retryDayNumber;
 
     public String getRequestId() {
         return requestId;
@@ -89,14 +86,6 @@ public class OutboundCallRequest {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
-    }
-
-    public Integer getRetryDayNumber() {
-        return retryDayNumber;
-    }
-
-    public void setRetryDayNumber(Integer retryDayNumber) {
-        this.retryDayNumber = retryDayNumber;
     }
 
     public String getCallFlowURL() {

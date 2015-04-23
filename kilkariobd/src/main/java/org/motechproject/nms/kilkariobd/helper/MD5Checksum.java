@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
 
 /**
  * This class is use to generate MD5 checksum for files.
