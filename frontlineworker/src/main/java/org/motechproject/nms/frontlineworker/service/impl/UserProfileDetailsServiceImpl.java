@@ -706,12 +706,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         boolean isDeployed = false;
         if (service == ServicesUsingFrontLineWorker.MOBILEACADEMY) {
-            if (locationService.getMaServiceDeployedByCode(stateCode) == true) {
+            if (locationService.getMaServiceDeployedByCode(stateCode)) {
                 logger.debug("Mobile Academy Service deployed in state : %s", stateCode);
                 isDeployed = true;
             }
         } else {
-            if (locationService.getMkServiceDeployedByCode(stateCode) == true) {
+            if (locationService.getMkServiceDeployedByCode(stateCode)) {
                 logger.debug("Mobile Kunji Service deployed in state : %s", stateCode);
                 isDeployed = true;
             }

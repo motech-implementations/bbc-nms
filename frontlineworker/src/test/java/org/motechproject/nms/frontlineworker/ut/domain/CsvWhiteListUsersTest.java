@@ -17,6 +17,6 @@ public class CsvWhiteListUsersTest {
     public void testShouldSetWithContactNumber() {
 
         csvWhiteListUsers.setContactNo("1234567890");
-        assertEquals("1234567890", csvWhiteListUsers.toString());
+        assertEquals("Contact No[1234567890]", csvWhiteListUsers.toString());
     }
 }

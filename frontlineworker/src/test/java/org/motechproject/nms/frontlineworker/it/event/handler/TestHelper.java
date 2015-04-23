@@ -1,15 +1,6 @@
 package org.motechproject.nms.frontlineworker.it.event.handler;
 
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 
 /**
  *
@@ -19,6 +10,8 @@ public class TestHelper {
     private State state = new State();
     private District district = new District();
     private Circle circle = new Circle();
+    private State stateTemp = new State();
+    private District districtTemp = new District();
 
     public State createState() {
 
@@ -35,6 +28,21 @@ public class TestHelper {
         return state;
     }
 
+    public State createStateTemp() {
+
+        stateTemp.setName("Rajasthan");
+        stateTemp.setStateCode(13L);
+        stateTemp.setCreator("Etasha");
+        stateTemp.setMaCapping(10);
+        stateTemp.setMkCapping(20);
+        stateTemp.setIsMaDeployed(true);
+        stateTemp.setIsMkDeployed(true);
+        stateTemp.setIsWhiteListEnable(false);
+        stateTemp.setOwner("Etasha");
+        stateTemp.setModifiedBy("Etasha");
+        return  stateTemp;
+    }
+
     public District createDistrict() {
 
         district.setName("East Delhi");
@@ -44,6 +52,17 @@ public class TestHelper {
         district.setOwner("Etasha");
         district.setModifiedBy("Etasha");
         return district;
+    }
+
+    public District createDistrictTemp() {
+
+        districtTemp.setName("Jaipur");
+        districtTemp.setStateCode(13L);
+        districtTemp.setDistrictCode(133L);
+        districtTemp.setCreator("Etasha");
+        districtTemp.setOwner("Etasha");
+        districtTemp.setModifiedBy("Etasha");
+        return districtTemp;
     }
 
     public Taluka createTaluka() {
