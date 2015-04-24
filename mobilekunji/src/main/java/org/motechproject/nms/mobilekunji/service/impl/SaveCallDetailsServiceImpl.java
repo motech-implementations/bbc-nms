@@ -52,7 +52,6 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
         logger.info("Save CallDetail Entered successfully.");
 
-        userProfileDetailsService.validateOperator(saveCallDetailApiRequest.getOperator());
 
         Long nmsId = updateFlwDetail(saveCallDetailApiRequest);
 
