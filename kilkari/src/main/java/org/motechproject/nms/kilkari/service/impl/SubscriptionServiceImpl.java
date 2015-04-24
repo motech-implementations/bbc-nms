@@ -123,10 +123,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
              active subscribers is not exceeding the value of Max Allowed Active Kilkari Subscribers.
 
         Update the subscriber record if there is an existing record
-            - Having MCTS Id same as the one in childMctsCsv Record.
-            - Having null or empty MCTS Id and MSISDN matching the one in childMctsCsv Record.
+            - Having MCTS Id same as the one in CsvMctsChild Record.
+            - Having null or empty MCTS Id and MSISDN matching the one in CsvMctsChild Record.
 
-        Update an existing subscription’s status as Deactivated, if in  childMctsCsv Record
+        Update an existing subscription’s status as Deactivated, if in  CsvMctsChild Record
             - EntryType is Death i.e. child death is reported.
             - DOB is modified (also create a new subscription in this case)
             - motherMCTSid matches to the existing Subscription (having status as Active/PendingActivation),
@@ -242,15 +242,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         /*
         Create a new Subscriber and Subscription record in NMS database, if
            - there is no existing subscription record with MSISDN and MCTSId (having status as
-             Active/PendingActivation) matching the ones in motherMctsCsv Record. Also check that number of existing
+             Active/PendingActivation) matching the ones in csvMctsMother Record. Also check that number of existing
              active subscribers is not exceeding the value of Max Allowed Active Kilkari Subscribers.
 
         Update the existing subscriber record (with MSISDN, motherMCTSId, Location, name , age and LMP), if a
            subscription record ((having status as Active/PendingActivation ) exists in NMS database
-            - Having MCTS Id same as the one in motherMctsCsv Record.
-            - Having null or empty MCTS Id and MSISDN matching the one in motherMctsCsv Record.
+            - Having MCTS Id same as the one in csvMctsMother Record.
+            - Having null or empty MCTS Id and MSISDN matching the one in csvMctsMother Record.
 
-        Update an existing subscription’s status as Deactivated if in  motherMctsCsv Record
+        Update an existing subscription’s status as Deactivated if in  csvMctsMother Record
             - Number of outcome is 0 i.e. stillbirth is reported
             - EntryType is Death i.e. mother death is reported.
             - Abortion is not “none” i.e. abortion is reported.

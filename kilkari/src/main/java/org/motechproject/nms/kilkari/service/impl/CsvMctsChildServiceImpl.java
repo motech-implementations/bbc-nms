@@ -26,7 +26,7 @@ import org.springframework.transaction.support.TransactionCallback;
 import java.util.List;
 
 /**
- * This class implements the logic in ChildMctsCsvService.
+ * This class implements the logic in CsvMctsChildService.
  */
 @Service("csvMctsChildService")
 public class CsvMctsChildServiceImpl implements CsvMctsChildService {
@@ -54,7 +54,7 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
      * @param uploadedIDs List type object
      */
     @Override
-    public void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs){
+    public void processCsvMctsChild(String csvFileName, List<Long> uploadedIDs){
 
         csvMctsChildDataService.doInTransaction(new TransactionCallback<CsvMctsChild>() {
 
@@ -69,7 +69,7 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
 
             @Override
             public CsvMctsChild doInTransaction(TransactionStatus arg0) {
-                processChildMctsCsvInTransaction(csvFileName, uploadedIDs);
+                processCsvMctsChildInTransaction(csvFileName, uploadedIDs);
                 return null;
             }
         }.init(csvFileName, uploadedIDs));
@@ -79,11 +79,11 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
     
     
     /**
-     * This method process ChildMctsCsv
+     * This method process CsvMctsChild
      * @param csvFileName String type object
      * @param uploadedIDs List type object
      */
-    public void processChildMctsCsvInTransaction(String csvFileName, List<Long> uploadedIDs){
+    public void processCsvMctsChildInTransaction(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);
         BulkUploadStatus childCsvUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -92,18 +92,18 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
         errorDetails.setTimeOfUpload(timeOfUpload);
         errorDetails.setRecordType(RecordType.CHILD_MCTS);
         
-        CsvMctsChild childMctsCsv = null;
+        CsvMctsChild csvMctsChild = null;
         String userName = null;
         
         for (Long id : uploadedIDs) {
             try {
                 logger.debug("Processing record id[{}]", id);
-                childMctsCsv = csvMctsChildDataService.findById(id);
+                csvMctsChild = csvMctsChildDataService.findById(id);
                 
-                if (childMctsCsv != null) {
+                if (csvMctsChild != null) {
                     logger.debug("Record found in database for record id[{}]", id);
-                    userName = childMctsCsv.getOwner();
-                    Subscriber subscriber = mapChildMctsToSubscriber(childMctsCsv);
+                    userName = csvMctsChild.getOwner();
+                    Subscriber subscriber = mapChildMctsToSubscriber(csvMctsChild);
                     subscriptionService.handleMctsSubscriptionRequestForChild(subscriber, Channel.MCTS);
                     childCsvUploadStatus.incrementSuccessCount();
                 } else {
@@ -117,7 +117,7 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
                 logger.info("Processed record id[{}]", id);
             } catch (NmsInternalServerError nise) {
                 logger.warn("NmsInternalServerError :::: [{}]", nise.getMessage());
-                errorDetails.setRecordDetails(childMctsCsv.toString());
+                errorDetails.setRecordDetails(csvMctsChild.toString());
                 errorDetails.setErrorCategory(nise.getErrorCode());
                 errorDetails.setErrorDescription(nise.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
@@ -126,7 +126,7 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
 
             } catch (DataValidationException dve) {
                 logger.warn("DataValidationException :::: [{}]", dve.getMessage());
-                        errorDetails.setRecordDetails(childMctsCsv.toString());
+                        errorDetails.setRecordDetails(csvMctsChild.toString());
                 errorDetails.setErrorCategory(dve.getErrorCode());
                 errorDetails.setErrorDescription(dve.getErrorDesc());
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
@@ -142,8 +142,8 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
                 throw e;
                 
             } finally {
-                if (childMctsCsv != null) {
-                    csvMctsChildDataService.delete(childMctsCsv);
+                if (csvMctsChild != null) {
+                    csvMctsChildDataService.delete(csvMctsChild);
                 }
             }
         }
@@ -159,29 +159,29 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
      *  This method is used to validate csv uploaded record 
      *  and map Child mcts to subscriber
      * 
-     *  @param childMctsCsv csv uploaded record
+     *  @param csvMctsChild csv uploaded record
      */
-    private Subscriber mapChildMctsToSubscriber(CsvMctsChild childMctsCsv) throws DataValidationException, NmsInternalServerError {
+    private Subscriber mapChildMctsToSubscriber(CsvMctsChild csvMctsChild) throws DataValidationException, NmsInternalServerError {
 
         Subscriber childSubscriber = new Subscriber();
         
         logger.trace("mapChildMctsToSubscriber method start");
-        childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(childMctsCsv, childSubscriber);
+        childSubscriber = commonValidatorService.validateAndMapMctsLocationToSubscriber(csvMctsChild, childSubscriber);
 
-        String msisdn = ParseDataHelper.validateAndParseString(Constants.WHOM_PHONE_NUM, childMctsCsv.getWhomPhoneNo(), true);
+        String msisdn = ParseDataHelper.validateAndParseString(Constants.WHOM_PHONE_NUM, csvMctsChild.getWhomPhoneNo(), true);
         childSubscriber.setMsisdn(ParseDataHelper.validateAndTrimMsisdn(Constants.WHOM_PHONE_NUM, msisdn));
         
-        childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, childMctsCsv.getIdNo(), true));
-        childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, childMctsCsv.getMotherId(), false));
-        childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, childMctsCsv.getMotherName(), false));
+        childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, csvMctsChild.getIdNo(), true));
+        childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, csvMctsChild.getMotherId(), false));
+        childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, csvMctsChild.getMotherName(), false));
         
         /* handling of appropriate dob */
-        DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true);
+        DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, csvMctsChild.getBirthdate(), true);
         validateDob(dob);
         childSubscriber.setDob(dob);
 
         /* Set the appropriate Deactivation Reason */
-        String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, childMctsCsv.getEntryType(), false);
+        String entryType = ParseDataHelper.validateAndParseString(Constants.ENTRY_TYPE, csvMctsChild.getEntryType(), false);
         commonValidatorService.checkValidEntryType(entryType);
 
         if(EntryType.DEATH.toString().equalsIgnoreCase(entryType)) {
@@ -191,9 +191,9 @@ public class CsvMctsChildServiceImpl implements CsvMctsChildService {
         }
         
         childSubscriber.setBeneficiaryType(BeneficiaryType.CHILD);
-        childSubscriber.setModifiedBy(childMctsCsv.getModifiedBy());
-        childSubscriber.setCreator(childMctsCsv.getCreator());
-        childSubscriber.setOwner(childMctsCsv.getOwner());
+        childSubscriber.setModifiedBy(csvMctsChild.getModifiedBy());
+        childSubscriber.setCreator(csvMctsChild.getCreator());
+        childSubscriber.setOwner(csvMctsChild.getOwner());
 
         logger.trace("mapChildMctsToSubscriber method finished");
         return childSubscriber;

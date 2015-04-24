@@ -7,28 +7,28 @@ import org.motechproject.nms.kilkari.domain.CsvMctsMother;
 
 public class CsvMctsMotherTest {
 
-    CsvMctsMother motherMctsCsv = new CsvMctsMother();
+    CsvMctsMother csvMctsMother = new CsvMctsMother();
 
     @Test
-    public void shouldSetValuesInMotherMctsCsv() {
+    public void shouldSetValuesInCsvMctsMother() {
 
-        motherMctsCsv.setName("name");
-        Assert.assertEquals("name",motherMctsCsv.getName());
+        csvMctsMother.setName("name");
+        Assert.assertEquals("name",csvMctsMother.getName());
 
-        motherMctsCsv.setAadharNo("aadharNo");
-        Assert.assertEquals("aadharNo",motherMctsCsv.getAadharNo());
+        csvMctsMother.setAadharNo("aadharNo");
+        Assert.assertEquals("aadharNo",csvMctsMother.getAadharNo());
 
-        motherMctsCsv.setAbortion("abortion");
-        Assert.assertEquals("abortion",motherMctsCsv.getAbortion());
+        csvMctsMother.setAbortion("abortion");
+        Assert.assertEquals("abortion",csvMctsMother.getAbortion());
 
-        motherMctsCsv.setAge("age");
-        Assert.assertEquals("age",motherMctsCsv.getAge());
+        csvMctsMother.setAge("age");
+        Assert.assertEquals("age",csvMctsMother.getAge());
 
-        motherMctsCsv.setLmpDate("lmpDate");
-        Assert.assertEquals("lmpDate",motherMctsCsv.getLmpDate());
+        csvMctsMother.setLmpDate("lmpDate");
+        Assert.assertEquals("lmpDate",csvMctsMother.getLmpDate());
 
-        motherMctsCsv.setOutcomeNos("outcomeNos");
-        Assert.assertEquals("outcomeNos",motherMctsCsv.getOutcomeNos());
+        csvMctsMother.setOutcomeNos("outcomeNos");
+        Assert.assertEquals("outcomeNos",csvMctsMother.getOutcomeNos());
 
     }
 
@@ -36,6 +36,6 @@ public class CsvMctsMotherTest {
     public void shouldReturnStringOfMctsIdAndStateCode() {
 
         String string = "Mcts Id[null] stateCode[null]";
-        Assert.assertEquals(string, motherMctsCsv.toString());
+        Assert.assertEquals(string, csvMctsMother.toString());
     }
 }

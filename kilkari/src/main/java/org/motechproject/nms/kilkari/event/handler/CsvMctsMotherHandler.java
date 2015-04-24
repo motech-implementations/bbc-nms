@@ -22,13 +22,13 @@ import static org.motechproject.nms.kilkari.commons.Constants.MOTHER_MCTS_CSV_UP
 public class CsvMctsMotherHandler {
 
     private static Logger logger = LoggerFactory.getLogger(CsvMctsMotherHandler.class);
-    private CsvMctsMotherService motherMctsCsvService;
+    private CsvMctsMotherService csvMctsMotherService;
     
     
     @Autowired
-    public CsvMctsMotherHandler(CsvMctsMotherService motherMctsCsvService){
+    public CsvMctsMotherHandler(CsvMctsMotherService csvMctsMotherService){
         
-        this.motherMctsCsvService = motherMctsCsvService;
+        this.csvMctsMotherService = csvMctsMotherService;
     }
 
     /**
@@ -37,16 +37,16 @@ public class CsvMctsMotherHandler {
      * @param motechEvent This is motechEvent having uploaded record details 
      */
     @MotechListener(subjects = MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT)
-    public void motherMctsCsvSuccess(MotechEvent motechEvent) {
-        logger.trace("Success[motherMctsCsvSuccess] method start for MotherMctsCsv");
+    public void csvMctsMotherSuccess(MotechEvent motechEvent) {
+        logger.trace("Success[csvMctsMotherSuccess] method start for CsvMctsMother");
         logger.info("Event invoked [{}]" + MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT);
         
         Map<String, Object> parameters = motechEvent.getParameters();
         List<Long> uploadedIDs = (List<Long>) parameters.get(Constants.CSV_IMPORT_CREATED_IDS);
         String csvFileName = (String) parameters.get(Constants.CSV_IMPORT_FILE_NAME);
 
-        motherMctsCsvService.processMotherMctsCsv(csvFileName, uploadedIDs);
-        logger.trace("Success[motherMctsCsvSuccess] method finished for MotherMctsCsv");
+        csvMctsMotherService.processCsvMctsMother(csvFileName, uploadedIDs);
+        logger.trace("Success[CsvMctsMotherSuccess] method finished for CsvMctsMother");
     }
     
 

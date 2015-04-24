@@ -15,6 +15,6 @@ public interface CsvMctsChildService {
      * @param csvFileName String type object
      * @param uploadedIDs List type object
      */
-    void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs);
+    void processCsvMctsChild(String csvFileName, List<Long> uploadedIDs);
     
 }

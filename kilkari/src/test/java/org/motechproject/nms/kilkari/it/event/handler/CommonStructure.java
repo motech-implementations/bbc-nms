@@ -52,13 +52,13 @@ public class CommonStructure extends BasePaxIT {
     protected CsvMctsMotherDataService csvMctsMotherDataService;
     
     @Inject
-    protected CsvMctsMotherService motherMctsCsvService;
+    protected CsvMctsMotherService csvMctsMotherService;
     
     @Inject
     protected CsvMctsChildDataService csvMctsChildDataService;
     
     @Inject
-    protected CsvMctsChildService childMctsCsvService;
+    protected CsvMctsChildService csvMctsChildService;
 
     @Inject
     protected SubscriptionService subscriptionService;
@@ -311,14 +311,14 @@ public class CommonStructure extends BasePaxIT {
         return csv;
     }
     
-    protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        logger.info("Inside  callMotherMctsCsvHandlerSuccessEvent");
-        motherMctsCsvService.processMotherMctsCsv("MotherMctsCsv.csv", uploadedIds);
+    protected void callCsvMctsMotherHandlerSuccessEvent(List<Long> uploadedIds){
+        logger.info("Inside  callCsvMctsMotherHandlerSuccessEvent");
+        csvMctsMotherService.processCsvMctsMother("CsvMctsMother.csv", uploadedIds);
     }
     
-    protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        logger.info("Inside  callChildMctsCsvHandlerSuccessEvent");
-        childMctsCsvService.processChildMctsCsv("ChildMctsCsv.csv", uploadedIds);
+    protected void callCsvMctsChildHandlerSuccessEvent(List<Long> uploadedIds){
+        logger.info("Inside  callCsvMctsChildHandlerSuccessEvent");
+        csvMctsChildService.processCsvMctsChild("CsvMctsChild.csv", uploadedIds);
     }
     
     protected CsvMctsChild createChildMcts(CsvMctsChild csv) {

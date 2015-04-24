@@ -7,26 +7,26 @@ import org.motechproject.nms.kilkari.domain.CsvMctsChild;
 
 public class CsvMctsChildTest {
 
-    CsvMctsChild childMctsCsv = new CsvMctsChild();
+    CsvMctsChild csvMctsChild = new CsvMctsChild();
 
     @Test
-    public void shouldSetValuesInChildMctsCsv() {
+    public void shouldSetValuesInCsvMctsChild() {
 
-        childMctsCsv.setMotherName("motherName");
-        Assert.assertEquals("motherName",childMctsCsv.getMotherName());
+        csvMctsChild.setMotherName("motherName");
+        Assert.assertEquals("motherName",csvMctsChild.getMotherName());
 
-        childMctsCsv.setMotherId("motherId");
-        Assert.assertEquals("motherId",childMctsCsv.getMotherId());
+        csvMctsChild.setMotherId("motherId");
+        Assert.assertEquals("motherId",csvMctsChild.getMotherId());
 
-        childMctsCsv.setBirthdate("birthDate");
-        Assert.assertEquals("birthDate",childMctsCsv.getBirthdate());
+        csvMctsChild.setBirthdate("birthDate");
+        Assert.assertEquals("birthDate",csvMctsChild.getBirthdate());
 
     }
 
     @Test
     public void shouldReturnStringOfMctsIdAndStateCode() {
 
-        String actualString = childMctsCsv.toString();
+        String actualString = csvMctsChild.toString();
         Assert.assertEquals("Mcts Id[null] stateCode[null]",actualString);
     }
 

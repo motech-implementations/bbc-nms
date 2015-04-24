@@ -18,11 +18,10 @@ import java.util.Map;
 public class MctsMotherMctsChildSuccessTest {
 
     @Mock
-    protected CsvMctsMotherService motherMctsCsvService;
+    protected CsvMctsMotherService csvMctsMotherService;
 
     @Mock
-    protected CsvMctsChildService childMctsCsvService;
-    
+    protected CsvMctsChildService csvMctsChildService;
     
     @Before
     public void init() {
@@ -37,12 +36,12 @@ public class MctsMotherMctsChildSuccessTest {
 
         uploadedIds.add(50l);
         parameters.put("csv-import.created_ids", uploadedIds);
-        parameters.put("csv-import.filename", "ChildMctsCsvUT.csv");
+        parameters.put("csv-import.filename", "CsvMctsChildUT.csv");
 
-        CsvMctsChildHandler childMctsCsvHandler = new CsvMctsChildHandler(childMctsCsvService);
+        CsvMctsChildHandler csvMctsChildHandler = new CsvMctsChildHandler(csvMctsChildService);
 
-        MotechEvent motechEvent = new MotechEvent("ChildMctsCsv.csv_success", parameters);
-        childMctsCsvHandler.childMctsCsvSuccess(motechEvent);
+        MotechEvent motechEvent = new MotechEvent("CsvMctsChild.csv_success", parameters);
+        csvMctsChildHandler.csvMctsChildSuccess(motechEvent);
 
 
     }
@@ -55,12 +54,12 @@ public class MctsMotherMctsChildSuccessTest {
 
         uploadedIds.add(50l);
         parameters.put("csv-import.created_ids", uploadedIds);
-        parameters.put("csv-import.filename", "ChildMctsCsvUT.csv");
+        parameters.put("csv-import.filename", "CsvMctsChildUT.csv");
 
-        CsvMctsMotherHandler childMctsCsvHandler = new CsvMctsMotherHandler(motherMctsCsvService);
+        CsvMctsMotherHandler csvMctsChildHandler = new CsvMctsMotherHandler(csvMctsMotherService);
 
-        MotechEvent motechEvent = new MotechEvent("ChildMctsCsv.csv_success", parameters);
-        childMctsCsvHandler.motherMctsCsvSuccess(motechEvent);
+        MotechEvent motechEvent = new MotechEvent("CsvMctsChild.csv_success", parameters);
+        csvMctsChildHandler.csvMctsMotherSuccess(motechEvent);
 
 
     }

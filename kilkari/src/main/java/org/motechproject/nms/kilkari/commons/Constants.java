@@ -47,9 +47,9 @@ public final class Constants {
 
 
     /* Constants for MDS Bulk Upload Events */
-    public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
+    public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.CsvMctsMother.csv-import.success";
 
-    public static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.ChildMctsCsv.csv-import.success";
+    public static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.CsvMctsChild.csv-import.success";
     
     /* Constants for Csv fields */
     public static final String WHOM_PHONE_NUM = "Whom Phone Num";
