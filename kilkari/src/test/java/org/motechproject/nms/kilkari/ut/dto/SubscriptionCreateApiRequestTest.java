@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.ut.dto;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;

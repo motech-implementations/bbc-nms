@@ -1,7 +1,5 @@
 package org.motechproject.nms.kilkari.it.web;
 
-import javax.inject.Inject;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,12 +8,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
 import org.motechproject.nms.kilkari.builder.LocationBuilder;
 import org.motechproject.nms.kilkari.builder.SubscriptionBuilder;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
@@ -24,11 +17,7 @@ import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
 import org.motechproject.nms.kilkari.web.SubscriptionController;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.repository.OperatorDataService;
@@ -45,6 +34,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+
+import javax.inject.Inject;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)

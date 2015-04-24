@@ -1,25 +1,12 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -27,6 +14,12 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static org.junit.Assert.*;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -465,6 +458,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
     
     @Test
     public void shouldFailedBecauseOfVeryOldLMP() {
+
         logger.info("Inside shouldFailedBecauseOfVeryOldLMP");
         
         List<Long> uploadedIds = new ArrayList<Long>();
@@ -472,7 +466,7 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000013");
         csv.setIdNo("13");
-        DateTime date = new DateTime().minusWeeks(72).minusMonths(3);
+        DateTime date = DateTime.now().minusWeeks(72).minusMonths(3).minusDays(1);
         DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
         csv.setLmpDate(dtf.print(date));
         MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);

@@ -1,17 +1,8 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.AbortionType;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
@@ -31,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
+
+import java.util.List;
 
 /**
  * This class implements the logic in MotherMctsCsvService.
@@ -145,6 +138,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 logger.error("**** Generic Exception Raised *****:", e);
                 motherCsvUploadStatus.incrementFailureCount();
+                throw e;
             }finally {
                 logger.debug("Inside finally");
                 if (motherMctsCsv != null) {
@@ -220,15 +214,14 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
      * @throws DataValidationException
      */
     private void validateLmp(DateTime lmp) throws DataValidationException {
-        
-        boolean isValid = false;
-        DateTime currDate = DateTime.now();
-        
-        if (lmp.isAfter(DateTime.now())) {
-            ParseDataHelper.raiseInvalidDataException(Constants.LMP_DATE, lmp.toString());
-        }
 
-        commonValidatorService.validateWeeksFromDate(lmp.plusMonths(3), Constants.DURATION_OF_72_WEEK_PACK);
+        logger.debug(String.format("checking the date %s", lmp.toString()));
+        if (lmp.isAfter(DateTime.now())) {
+            throw new DataValidationException("Date in Future", ErrorCategoryConstants.INCONSISTENT_DATA,
+                    "LMP Date in Future", Constants.LMP_DATE);
+        }
+        commonValidatorService.validateWeeksFromDate(lmp.plusMonths(3), Constants.DURATION_OF_72_WEEK_PACK, Constants.LMP_DATE);
+        logger.debug(String.format("After Invoking the validateWeeksFromDate with lmp : %s", lmp.toString()));
     }
 
 }

@@ -2,8 +2,6 @@ package org.motechproject.nms.kilkari.dto.request;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.util.constants.ErrorCategoryConstants;
-import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 

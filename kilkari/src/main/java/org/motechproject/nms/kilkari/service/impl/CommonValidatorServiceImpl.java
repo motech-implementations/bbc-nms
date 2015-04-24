@@ -1,23 +1,14 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
+import org.joda.time.Weeks;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.EntryType;
 import org.motechproject.nms.kilkari.domain.MctsCsv;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
-import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
-import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
@@ -27,6 +18,8 @@ import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +44,9 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
-    
+
+    private static Logger logger = LoggerFactory.getLogger(CommonValidatorService.class);
+
     /**
      *  This method is used to fetch state from DB based stateCode
      * 
@@ -348,11 +343,16 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
      * @return boolean if less
      * @throws DataValidationException if more
      */
-    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek) throws DataValidationException {
+    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek, String fieldName) throws DataValidationException {
         DateTime currDate = DateTime.now();
-        int days = Days.daysBetween(currDate, lmpOrDob).getDays();
-        if ((days / Constants.DAYS_IN_WEEK) >= durationInWeek) {
-            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, lmpOrDob.toString());
+
+        int weeks = Weeks.weeksBetween(lmpOrDob, currDate).getWeeks();
+
+        logger.debug(String.format("Weeks from date : %s with current date %s : %d", currDate.toString(), lmpOrDob.toString(), weeks));
+
+        if ( weeks >= durationInWeek) {
+            throw new DataValidationException("Date too Old for subscription", ErrorCategoryConstants.INCONSISTENT_DATA,
+                    "Date too old for Subscription", fieldName);
         }
     }
 

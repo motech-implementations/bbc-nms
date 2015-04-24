@@ -1,24 +1,17 @@
 package org.motechproject.nms.kilkari.domain;
 
-import java.util.Set;
-
-import javax.jdo.annotations.Persistent;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.domain.*;
+
+import javax.jdo.annotations.Persistent;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import java.util.Set;
 
 /**
  * This entity represents the subscriber record.

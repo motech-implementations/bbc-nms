@@ -1,16 +1,8 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.BeneficiaryType;
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
@@ -30,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
+
+import java.util.List;
 
 /**
  * This class implements the logic in ChildMctsCsvService.
@@ -145,6 +139,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 bulkUploadErrLogService.writeBulkUploadErrLog(errorDetails);
                 logger.error("**** Generic Exception Raised *****:", e);
                 childCsvUploadStatus.incrementFailureCount();
+                throw e;
                 
             } finally {
                 if (childMctsCsv != null) {
@@ -212,14 +207,12 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
      */
     private void validateDob(DateTime dob) throws DataValidationException {
         
-        boolean isValid = false;
-        DateTime currDate = DateTime.now();
-
-        if (dob.isAfter(currDate)) {
-            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
+        if (dob.isAfter(DateTime.now())) {
+            throw new DataValidationException("Date in Future", ErrorCategoryConstants.INCONSISTENT_DATA,
+                    "DOB Date in Future", Constants.BIRTH_DATE);
         }
 
-        commonValidatorService.validateWeeksFromDate(dob, Constants.DURATION_OF_48_WEEK_PACK);
+        commonValidatorService.validateWeeksFromDate(dob, Constants.DURATION_OF_48_WEEK_PACK, Constants.BIRTH_DATE);
     }
 
 }
