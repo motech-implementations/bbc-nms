@@ -68,9 +68,9 @@ public class SubscriptionController extends BaseController {
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
-        logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId().toString() + "]");
+        logger.debug("subscriptionId : [" + apiRequest.getSubscriptionId() + "]");
         apiRequest.validateMandatoryParameter();
-        subscriptionService.deactivateSubscription(apiRequest.getSubscriptionId(),
+        subscriptionService.deactivateSubscription(apiRequest.getSubscriptionIdLongValue(),
                 apiRequest.getOperator(), apiRequest.getCircle());
         logger.trace("deactivateSubscription: End");
     }
@@ -91,8 +91,8 @@ public class SubscriptionController extends BaseController {
         logger.debug("circle : [" + circle + "]");
         logger.debug("callId : [" + callId + "]");
         SubscriberDetailApiResponse response;
-            validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
-            response = userDetailsService.getSubscriberDetails(ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,callingNumber), circle, operator);
+        validateSubscriberDetailsRequestParams(callingNumber, operator, circle, callId);
+        response = userDetailsService.getSubscriberDetails(ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,callingNumber), circle, operator);
         logger.trace("getUserDetails: End");
         return response;
     }
@@ -105,12 +105,11 @@ public class SubscriptionController extends BaseController {
      * @param callId String type object
      * @throws DataValidationException
      */
-    public void validateSubscriberDetailsRequestParams(
-            String msisdn, String operator, String circle, String callId) throws DataValidationException {
+    public void validateSubscriberDetailsRequestParams(String msisdn, String operator, String circle,
+                                                       String callId) throws DataValidationException {
         ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, msisdn, true);
         ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
         ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
-        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,
-                ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
+        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID, ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
     }
 }

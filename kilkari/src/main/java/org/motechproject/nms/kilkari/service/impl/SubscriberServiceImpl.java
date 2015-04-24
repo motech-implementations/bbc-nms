@@ -60,7 +60,7 @@ public class SubscriberServiceImpl implements SubscriberService {
      * @param msisdn String type object
      * @param motherMctsId String type object
      * @param childMctsId String type object
-     * @param stateCode String type object
+     * @param stateCode Long type object
      * @param beneficiaryType BeneficiaryType type object
      * @return Subscriber type object
      */
@@ -82,7 +82,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     /**
      * This method gets subscriber by childMctsId and stateCode
      * @param childMctsId String type object
-     * @param stateCode String type object
+     * @param stateCode Long type object
      * @return Subscriber type object
      */
     @Override
@@ -93,7 +93,7 @@ public class SubscriberServiceImpl implements SubscriberService {
     /**
      * This method gets subscriber by motherMctsId
      * @param motherMctsId String type object
-     * @param stateCode String type object
+     * @param stateCode Long type object
      * @return Subscriber type object
      */
     @Override

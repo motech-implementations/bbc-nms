@@ -1,26 +1,44 @@
 
 package org.motechproject.nms.kilkari.ut;
 
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.impl.CommonValidatorServiceImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.HealthBlock;
+import org.motechproject.nms.masterdata.domain.HealthFacility;
+import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
+import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Verify that HelloWorldRecordService present, functional.
@@ -78,6 +96,9 @@ public class CommonValidatorServiceTest {
 
     @InjectMocks
     CommonValidatorServiceImpl commonValidatorService1;
+    
+    @Mock
+    private LanguageLocationCodeService llcService;
 
     @Before
     public void init() {
@@ -104,6 +125,23 @@ public class CommonValidatorServiceTest {
         }
 
         Assert.assertEquals(state,returnedState);
+    }
+    
+    @Test
+    public void shouldThrowErrorWhenLlcCodeIsDeterminedByStateAndDistrictIsNull() {
+        initMocks(this);
+        LanguageLocationCodeBuilder llcBuilder = new LanguageLocationCodeBuilder();
+        //Stub the service methods
+        when(llcService.getRecordByLocationCode(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, null, "circleCode"));
+
+        try {
+            commonValidatorService.getLLCCodeByStateDistrict(1L, 1L);
+        } catch (Exception err) {
+            Assert.assertTrue(err instanceof NmsInternalServerError);
+            Assert.assertEquals(((NmsInternalServerError) err).getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(((NmsInternalServerError)err).getMessage() , "languageLocationCode could not be determined for stateCode : "
+                    + 1L +" and districtCode " + 1l);
+        }
     }
 
     @Test

@@ -1,13 +1,10 @@
 package org.motechproject.nms.kilkari.it.initializer;
 
-import javax.inject.Inject;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.kilkari.domain.ActiveSubscriptionCount;
 import org.motechproject.nms.kilkari.domain.Configuration;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
@@ -20,6 +17,8 @@ import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
+
+import javax.inject.Inject;
 
 /**
  * This class contains test case to test Initializer
@@ -50,11 +49,6 @@ public class InitializerIT extends BasePaxIT {
         initializer = new Initializer(configurationService, activeSubscriptionCountService);
     }
 
-    @After
-    public void tearDown() {
-        configurationDataService.deleteAll();
-    }
-
     /**
      * This test case tests that Initializer is correctly
      * initializing the kilkari configurations with default values.
@@ -66,15 +60,7 @@ public class InitializerIT extends BasePaxIT {
 
         Assert.assertEquals(configuration.getIndex(), Initializer.CONFIGURATION_INDEX);
         Assert.assertEquals(configuration.getNumMsgPerWeek(), Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK);
-        Assert.assertEquals(configuration.getFreshObdPriority(), Initializer.DEFAULT_FRESH_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getFreshObdServiceId(), Initializer.DEFAULT_FRESH_OBD_SERVICE_ID);
         Assert.assertEquals(configuration.getMaxAllowedActiveBeneficiaryCount(), Initializer.DEFAULT_ALLOWED_BENEFICIARY_COUNT);
-        Assert.assertEquals(configuration.getRetryDay1ObdPriority(), Initializer.DEFAULT_RETRY_DAY1_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getRetryDay1ObdServiceId(), Initializer.DEFAULT_RETRY_DAY1_OBD_SERVICE_ID);
-        Assert.assertEquals(configuration.getRetryDay2ObdPriority(), Initializer.DEFAULT_RETRY_DAY2_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getRetryDay2ObdServiceId(), Initializer.DEFAULT_RETRY_DAY2_OBD_SERVICE_ID);
-        Assert.assertEquals(configuration.getRetryDay3ObdPriority(), Initializer.DEFAULT_RETRY_DAY3_OBD_PRIORITY);
-        Assert.assertEquals(configuration.getRetryDay3ObdServiceId(), Initializer.DEFAULT_RETRY_DAY3_OBD_SERVICE_ID);
 
         Long expectedActiveSubscriptionCount = Initializer.DEFAULT_ACTIVEUSER_COUNT;
         Long actualActiveSubscriptionCount = activeSubscriptionCountService.getActiveSubscriptionCount();

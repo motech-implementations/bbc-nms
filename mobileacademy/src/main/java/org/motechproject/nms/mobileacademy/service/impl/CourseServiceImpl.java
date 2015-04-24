@@ -32,8 +32,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
- * CoursePopulateServiceImpl class implements CoursePopulateService interface to
- * perform course populate related operations in mtraining and content tables.
+ * //CoursePopulateServiceImpl class implements CoursePopulateService interface
+ * to //perform course populate related operations in mtraining and content
+ * tables.
  *
  */
 @Service("CourseService")
@@ -483,11 +484,10 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public String getCourseJson() {
-        /*
-         * It is assumed that controller will check for condition in which no
-         * course is present in the system, so this method is called only if
-         * there is a course in system
-         */
+
+        // It is assumed that controller will check for condition in which no
+        // course is present in the system, so this method is called only if
+        // there is a course in system
         LOGGER.trace("getCourseJSON: started");
         List<ChapterContent> chapterContents = getAllChapterContents();
         JsonObject courseJsonObject = new JsonObject();
@@ -504,13 +504,9 @@ public class CourseServiceImpl implements CourseService {
         return courseJsonObject.toString();
     }
 
-    /*
-     * This function generates JSONArray for chapters
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonArray for chapters
-     */
+    // This function generates JSONArray for chapters
+    // @param chapterContents
+    // @return JsonArray for chapters
     private JsonArray generateChapterListJson(
             List<ChapterContent> chapterContents) {
         JsonArray chapterListJson = new JsonArray();
@@ -522,13 +518,9 @@ public class CourseServiceImpl implements CourseService {
         return chapterListJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the chapterNo
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the chapterNo
     private JsonObject generateChapterJson(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonObject courseJson = new JsonObject();
@@ -550,13 +542,9 @@ public class CourseServiceImpl implements CourseService {
         return courseJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the quiz of chapter as per chapterNo
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the quiz of chapter as per chapterNo
     private JsonObject generateQuizForChapter(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonObject quizJson = new JsonObject();
@@ -569,12 +557,9 @@ public class CourseServiceImpl implements CourseService {
         return quizJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @return JsonArray corresponding to the questions of chapter as per
-     * chapterNo
-     */
+    // @param chapterNo
+    // @return JsonArray corresponding to the questions of chapter as per
+    // chapterNo
     private JsonArray generateQuestionListForQuiz(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonArray questionsJsonArray = new JsonArray();
@@ -585,16 +570,11 @@ public class CourseServiceImpl implements CourseService {
         return questionsJsonArray;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param questionNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the question of chapter as per
-     * chapterNo & questionNo
-     */
+    // @param chapterNo
+    // @param questionNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the question of chapter as per
+    // chapterNo & questionNo
     private JsonObject generateQuestionJson(int chapterNo, int questionNo,
             List<ChapterContent> chapterContents) {
         JsonObject questionJson = new JsonObject();
@@ -617,16 +597,11 @@ public class CourseServiceImpl implements CourseService {
         return questionJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param questionNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the content for question of chapter
-     * as per chapterNo & questionNo
-     */
+    // @param chapterNo
+    // @param questionNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the content for question of chapter
+    // as per chapterNo & questionNo
     private JsonObject generateContentForQuestion(int chapterNo,
             int questionNo, List<ChapterContent> chapterContents) {
         JsonObject contentJson = new JsonObject();
@@ -663,14 +638,10 @@ public class CourseServiceImpl implements CourseService {
         return contentJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the content for quiz of chapter as
-     * per chapterNo
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the content for quiz of chapter as
+    // per chapterNo
     private JsonObject generateContentForQuiz(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonObject contentJson = new JsonObject();
@@ -692,14 +663,10 @@ public class CourseServiceImpl implements CourseService {
         return contentJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonArray corresponding to the lessons of chapter as per
-     * chapterNo
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return JsonArray corresponding to the lessons of chapter as per
+    // chapterNo
     private JsonArray generateLessonListForChapter(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonArray lessonJsonArray = new JsonArray();
@@ -710,16 +677,11 @@ public class CourseServiceImpl implements CourseService {
         return lessonJsonArray;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param lessonNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the lesson of chapter as per
-     * chapterNo and lessonNo
-     */
+    // @param chapterNo
+    // @param lessonNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the lesson of chapter as per
+    // chapterNo and lessonNo
     private JsonObject generateLessonJson(int chapterNo, int lessonNo,
             List<ChapterContent> chapterContents) {
         JsonObject lessonJson = new JsonObject();
@@ -737,16 +699,11 @@ public class CourseServiceImpl implements CourseService {
         return lessonJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param lessonNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the content of lesson of chapter as
-     * per chapterNo and lessonNo
-     */
+    // @param chapterNo
+    // @param lessonNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the content of lesson of chapter as
+    // per chapterNo and lessonNo
     private JsonObject generateContentForLesson(int chapterNo, int lessonNo,
             List<ChapterContent> chapterContents) {
         JsonObject contentJson = new JsonObject();
@@ -785,14 +742,10 @@ public class CourseServiceImpl implements CourseService {
         return contentJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return JsonObject corresponding to the content of chapter as per
-     * chapterNo
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return JsonObject corresponding to the content of chapter as per
+    // chapterNo
     private JsonObject generateContentForChapter(int chapterNo,
             List<ChapterContent> chapterContents) {
         JsonObject contentJson = new JsonObject();
@@ -824,33 +777,25 @@ public class CourseServiceImpl implements CourseService {
         return contentJson;
     }
 
-    /*
-     * @param chapterNo
-     * 
-     * @param chapterContents
-     * 
-     * @return This returns all the score files in sequence for a particular
-     * chapter
-     */
+    // @param chapterNo
+    // @param chapterContents
+    // @return This returns all the score files in sequence for a particular
+    // chapter
     private List<String> getScoreFiles(int chapterNo,
             List<ChapterContent> chapterContents) {
         List<String> scoreFiles = new ArrayList<String>();
-        for (int scoreNo = 0; scoreNo <= MobileAcademyConstants.NUM_OF_SCORES; scoreNo++) {
+        for (int scoreNo = 0; scoreNo <= MobileAcademyConstants.MAX_SCORE; scoreNo++) {
             scoreFiles.add(getScore(chapterContents, chapterNo, scoreNo,
                     MobileAcademyConstants.SCORE).getAudioFile());
         }
         return scoreFiles;
     }
 
-    /*
-     * @param idString
-     * 
-     * @param files
-     * 
-     * @return This function returns a JSON node with "id" and "file" key in
-     * that. If the list of files contain more than one file, key will be
-     * "files" instead of "file"
-     */
+    // @param idString
+    // @param files
+    // @return This function returns a JSON node with "id" and "file" key in
+    // that. If the list of files contain more than one file, key will be
+    // "files" instead of "file"
     private JsonObject generateIdFileNode(String idString, List<String> files) {
         JsonObject node = new JsonObject();
         if (CollectionUtils.isNotEmpty(files)) {

@@ -57,7 +57,7 @@ public class BaseController {
         String responseJson = null;
         if (exception.getErrorCode().equals(ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
             responseJson = "{\"failureReason\":\""
-                    + exception.getErroneousField() + ":Mandatory Parameter Missing\"}";
+                    + exception.getErroneousField() + ":Not Present\"}";
         } else {
             responseJson = "{\"failureReason\":\""
                     + exception.getErroneousField() + ":Invalid Value\"}";
@@ -80,7 +80,7 @@ public class BaseController {
 
         LOGGER.error(exception.getMessage(), exception);
         String responseJson = "{\"failureReason\":\"" + exception.getMessage()
-                + "}";
+                + " \"}";
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }

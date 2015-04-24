@@ -53,8 +53,8 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     public void setUp() {
 
 
-        contentUploadCsvHandler = new ContentUploadCsvHandler(contentUploadCsvService, bulkUploadErrLogService,
-                contentUploadService);
+        contentUploadCsvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+                contentUploadCsvService);
 
         assertNotNull(contentUploadCsvService);
         assertNotNull(contentUploadService);

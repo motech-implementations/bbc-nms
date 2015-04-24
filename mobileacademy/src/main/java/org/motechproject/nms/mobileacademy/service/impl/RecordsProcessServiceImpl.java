@@ -44,10 +44,9 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 
 /**
- * This class contains the implementation for RecordsProcessService to process
- * CSV records
+ * //This class contains the implementation for RecordsProcessService to process
+ * //CSV records
  *
- * @author Yogesh
  *
  */
 @Service("RecordsProcessService")
@@ -103,11 +102,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         return "Records Processed Successfully";
     }
 
-    /*
-     * This function processes all the CSV upload records. This function is
-     * called in a transaction call so in case of any error, the changes are
-     * reverted back.
-     */
+    // This function processes all the CSV upload records. This function is
+    // called in a transaction call so in case of any error, the changes are
+    // reverted back.
     private void processRawRecordsInTransaction(
             List<CourseContentCsv> courseContentCsvs, String csvFileName) {
         DateTime timeOfUpload = new DateTime();
@@ -155,10 +152,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 }
                 int languageLocCode = Integer.parseInt(courseContentCsv
                         .getLanguageLocationCode());
-                /*
-                 * If LLC corresponding to record exists, consider the record
-                 * for modification of course
-                 */
+
+                // If LLC corresponding to record exists, consider the record
+                // for modification of course
                 if (listOfExistingLlc.contains(languageLocCode)) {
                     RecordsProcessHelper.putRecordInModifyMap(
                             mapForModifyRecords, courseContentCsv);
@@ -166,10 +162,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             "Record moved to Modify Map for Content ID: {}",
                             courseContentCsv.getContentId());
                 }
-                /*
-                 * If LLC corresponding to record doesn'tt exist, consider the
-                 * record for addition of course
-                 */
+                // If LLC corresponding to record doesn'tt exist, consider the
+                // record for addition of course
                 else {
                     RecordsProcessHelper.putRecordInAddMap(mapForAddRecords,
                             courseContentCsv);
@@ -190,16 +184,14 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    /*
-     * This function takes The Map having CourserawContent Records for the
-     * modification and processes them
-     */
+    // This function takes The Map having CourserawContent Records for the
+    // modification and processes them
     private void processModificationRecords(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
             OperatorDetails operatorDetails) {
         if (!mapForModifyRecords.isEmpty()) {
-            /* Iterator for different content names */
+            // /Iterator for different content names */
             Iterator<String> contentNamesIterator = mapForModifyRecords
                     .keySet().iterator();
             while (contentNamesIterator.hasNext()) {
@@ -207,10 +199,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 List<CourseContentCsv> csvRecordList = mapForModifyRecords
                         .get(contentName);
                 if (CollectionUtils.isNotEmpty(csvRecordList)) {
-                    /*
-                     * Iterator for records of different LLCs for a specific
-                     * content name
-                     */
+                    // Iterator for records of different LLCs for a specific
+                    // content name
                     Iterator<CourseContentCsv> csvRecordIterator = csvRecordList
                             .iterator();
 
@@ -237,19 +227,15 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             continue;
                         }
 
-                        /*
-                         * If Record is changing the Audio File name or correct
-                         * answer option for a question, process it at last. Let
-                         * them remain on map
-                         */
+                        // If Record is changing the Audio File name or correct
+                        // answer option for a question, process it at last. Let
+                        // them remain on map
                         if (isRecordChangingTheFileName(record)
                                 || isRecordChangingTheAnswerOption(record)) {
                             continue;
                         }
-                        /*
-                         * Records corresponding to ContentID and Duration
-                         * change will be processed here.
-                         */
+                        // Records corresponding to ContentID and Duration
+                        // change will be processed here.
                         else {
                             int languageLocCode = Integer.parseInt(csvRecord
                                     .getLanguageLocationCode());
@@ -301,10 +287,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * This function process the modification records for which there is change
-     * in Audio File name or correct answer option
-     */
+    // This function process the modification records for which there is change
+    // in Audio File name or correct answer option
     private void processModificationRecordForAnswerOrFileChange(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
@@ -340,11 +324,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             String fileName = mapForModifyRecords.get(contentName).get(0)
                     .getContentFile();
             String metaData = "";
-            /*
-             * This block of code is just being written for the purpose to know
-             * whether this bunch of record refers to questionContent type or
-             * not
-             */
+            // This block of code is just being written for the purpose to know
+            // whether this bunch of record refers to questionContent type or
+            // not
             Record record = new Record();
             try {
                 RecordsProcessHelper.validateRawContent(mapForModifyRecords
@@ -371,20 +353,21 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                             contentName, courseContentCsv.getContentId());
                     flagForAbortingModification = true;
                 }
-                /*
-                 * Check for consistency of metaData only if record corresponds
-                 * to question content type
-                 */
+                // Check for consistency of metaData only if record corresponds
+                // to question content type
                 if (flagForUpdatingMetaData) {
                     if (!metaData.equalsIgnoreCase(courseContentCsv
                             .getMetaData())) {
                         LOGGER.warn(
-                                "Correct Answer Option(MetaData) does not match for content name: {}, contentID: {}",
+                                "Correct Answer Option(Metadata) does not match for content name: {}, contentID: {}",
                                 contentName, courseContentCsv.getContentId());
                         flagForAbortingModification = true;
                     }
                 }
                 if (flagForAbortingModification) {
+                    LOGGER.warn(
+                            "Course modification aborted for content name: {}",
+                            contentName);
                     bulkUploadError.setRecordDetails(String.format(
                             "Content ID: %s", courseContentCsv.getContentId()));
                     bulkUploadError
@@ -433,31 +416,22 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * This function is used for updating the modification record in the system
-     * with given details
-     * 
-     * @param mapForModifyRecords: Map having the modification raw records
-     * 
-     * @param bulkUploadStatus: status for bulk upload
-     * 
-     * @param operatorDetails: details of operator performing the modification
-     * 
-     * @param contentName: content Name for which modification need to be done
-     * 
-     * @param fileName: content audio file name
-     * 
-     * @param flagForUpdatingMetaData: flag if metadata need to be updated or
-     * not
-     */
+    // This function is used for updating the modification record in the system
+    // with given details
+    // @param mapForModifyRecords: Map having the modification raw records
+    // @param bulkUploadStatus: status for bulk upload
+    // @param operatorDetails: details of operator performing the modification
+    // @param contentName: content Name for which modification need to be done
+    // @param fileName: content audio file name
+    // @param flagForUpdatingMetaData: flag if metadata need to be updated or
+    // not
     private void updateModificationRecordsInSystem(
             Map<String, List<CourseContentCsv>> mapForModifyRecords,
             BulkUploadStatus bulkUploadStatus, OperatorDetails operatorDetails,
             String contentName, String fileName, boolean flagForUpdatingMetaData) {
-        /*
-         * This is done just to know the type of file to which this bunch of
-         * modification record refers to.
-         */
+
+        // This is done just to know the type of file to which this bunch of
+        // modification record refers to.
         Record record = new Record();
         Integer correctAnswerOption = null;
         try {
@@ -519,6 +493,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                                     + Integer.toString(correctAnswerOption));
                 }
                 courseProcessedContentService.update(courseProcessedContent);
+                LOGGER.debug(
+                        "Record modified in ContentProcessedTable for LLC: {}, content Name: {}",
+                        languageLocCode, contentName);
             }
             bulkUploadStatus.incrementSuccessCount();
             fileModifyingRecordsIterator.remove();
@@ -527,10 +504,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         LOGGER.warn("Course modified for content name: {}", contentName);
     }
 
-    /*
-     * This is used for deleting the records from internal list and updating the
-     * bulkUploadStatus for error and success scenarios
-     */
+    // This is used for deleting the records from internal list and updating the
+    // bulkUploadStatus for error and success scenarios
     private void deleteCourseRawContentsByList(
             List<CourseContentCsv> courseContentCsvs, Boolean hasErrorOccured,
             BulkUploadStatus bulkUploadStatus) {
@@ -546,10 +521,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * This function is used to update the filename on the basis of File-type in
-     * record object, into courseContent tables
-     */
+    // This function is used to update the filename on the basis of File-type in
+    // record object, into courseContent tables
     private void determineTypeAndUpdateChapterContent(Record record,
             OperatorDetails operatorDetails) {
         if (record.getType() == FileType.LESSON_CONTENT) {
@@ -591,10 +564,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * This checks if a modify record is also changing the name of the file
-     * currently existing the system. If yes, it returns true.
-     */
+    // This checks if a modify record is also changing the name of the file
+    // currently existing the system. If yes, it returns true.
     private boolean isRecordChangingTheFileName(Record record) {
         boolean status = false;
         List<ChapterContent> chapterContents = courseService
@@ -663,10 +634,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         return status;
     }
 
-    /*
-     * This function takes the list of CourseContentCsv records against which
-     * the file need to be added into the course
-     */
+    // This function takes the list of CourseContentCsv records against which
+    // the file need to be added into the course
     private void processAddRecords(
             Map<Integer, List<CourseContentCsv>> mapForAddRecords,
             BulkUploadError bulkUploadError, BulkUploadStatus bulkUploadStatus,
@@ -836,7 +805,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                         bulkUploadErrLogService
                                 .writeBulkUploadErrLog(bulkUploadError);
                         LOGGER.warn(
-                                "Record for complete course haven't arrived to add the course for LLC: {}",
+                                "Records for complete course haven't arrived to add the course for LLC: {}",
                                 languageLocCode);
 
                         deleteCourseRawContentsByList(courseContentCsvs, true,
@@ -847,10 +816,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * this function updates the correct option for different questions in the
-     * mTraining module.
-     */
+    // this function updates the correct option for different questions in the
+    // mTraining module.
     private void processListOfAnswerOptionRecords(
             List<Record> answerOptionRecordList, OperatorDetails operatorDetails) {
         for (Record answerRecord : answerOptionRecordList) {
@@ -869,12 +836,10 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         }
     }
 
-    /*
-     * This function checks whether a ADD record is having the same file Name
-     * for a file which is currently existing in the system. In positive
-     * scenarios, it also marks for successful arrival of the file in the course
-     * flags
-     */
+    // This function checks whether a ADD record is having the same file Name
+    // for a file which is currently existing in the system. In positive
+    // scenarios, it also marks for successful arrival of the file in the course
+    // flags
     private boolean checkRecordConsistencyAndMarkFlag(Record record,
             List<ChapterContent> chapterContents, CourseFlag courseFlag) {
         boolean status = true;
@@ -1090,11 +1055,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 questionNo));
     }
 
-    /*
-     * This function takes the CourserRawContent record as input and based on
-     * that It creates a CourseProcessedContent Record in CourseProcessedContent
-     * table chapter
-     */
+    // This function takes the CourserRawContent record as input and based on
+    // that It creates a CourseProcessedContent Record in CourseProcessedContent
+    // table chapter
     private void updateRecordInContentProcessedTable(
             CourseContentCsv courseContentCsv, OperatorDetails operatorDetails) {
         String metaData = "";

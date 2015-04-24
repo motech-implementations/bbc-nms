@@ -1,11 +1,32 @@
 package org.motechproject.nms.kilkari.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.jdo.annotations.Transactional;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Configuration;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.nms.kilkari.repository.CustomQueries;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
-import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
+import org.motechproject.nms.kilkari.service.CommonValidatorService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
+import org.motechproject.nms.kilkari.service.SubscriberService;
+import org.motechproject.nms.kilkari.service.SubscriptionMeasureService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -13,8 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  *This class is used to perform crud operations on Subscription object
@@ -27,7 +46,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     
     @Autowired
     private SubscriberService subscriberService;
-    
+
+    @Autowired
+    private SubscriptionMeasureService subscriptionMeasureService;
+
     @Autowired
     private ConfigurationService configurationService;
     
@@ -295,8 +317,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      */
     private void createNewSubscriberAndSubscription(Subscriber subscriber, Channel channel, String operatorCode)
             throws NmsInternalServerError, DataValidationException {
-            Configuration configuration = configurationService.getConfiguration();
-            long activeUserCount = activeSubscriptionCountService.getActiveSubscriptionCount();
+        Configuration configuration = configurationService.getConfiguration();
+        long activeUserCount = activeSubscriptionCountService.getActiveSubscriptionCount();
         /*If DeactivationReason is NONE then create Subscriber and subscription*/
         if (subscriber.getDeactivationReason() == DeactivationReason.NONE) {
             /* check for maximum allowed beneficiary */
@@ -318,7 +340,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 /* Check if there is any subscriber with same MSISDN who has subscribed through IVR */
                 if (dbSubscriber == null) {
                     dbSubscriber = subscriberService.getSubscriberByMsisdnMotherMctsIdChildMctsIdStateCodeAndBeneficiaryType(
-                    		subscriber.getMsisdn(), null, null, null, subscriber.getBeneficiaryType());
+                            subscriber.getMsisdn(), null, null, null, subscriber.getBeneficiaryType());
                 }
 
                 if (dbSubscriber != null) {
@@ -350,12 +372,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param llcCode Integer type
      * @throws DataValidationException
      */
+    @Transactional
     @Override
     public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode,
-                                             Integer llcCode) throws DataValidationException, NmsInternalServerError {
+            Integer llcCode) throws DataValidationException, NmsInternalServerError {
         SubscriptionPack pack = null;
         if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
-           pack = SubscriptionPack.PACK_48_WEEKS;
+            pack = SubscriptionPack.PACK_48_WEEKS;
         } else {
             pack = SubscriptionPack.PACK_72_WEEKS;
         }
@@ -370,7 +393,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         createNewSubscriberAndSubscription(subscriber, Channel.IVR, operatorCode);
     }
-    
+
     /**
      *  This method is used to update subscriber and subscription
      *   @param subscriber csv uploaded subscriber
@@ -378,11 +401,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param dbSubscriber database subscriber
      */
     private void updateDbSubscriberAndSubscription(Subscriber subscriber, Subscription dbSubscription,
-                                                   Subscriber dbSubscriber) {
-        
+            Subscriber dbSubscriber) {
+
         if (subscriber.getDeactivationReason() != DeactivationReason.NONE) {
             updateDbSubscription(subscriber, dbSubscription, true, subscriber.getDeactivationReason());
-            
+
         } else {
             if (!dbSubscriber.getDobLmp().toDateMidnight().equals(subscriber.getDobLmp().toDateMidnight())) {
                 updateDbSubscription(subscriber, dbSubscription, true, DeactivationReason.PACK_SCHEDULE_CHANGED);
@@ -392,10 +415,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 updateDbSubscription(subscriber, dbSubscription, false, subscriber.getDeactivationReason());
             }
         }
-        
+
         updateDbSubscriber(subscriber, dbSubscriber);
     }
-    
+
     /**
      *  This method is used to create subscription
      *
@@ -404,17 +427,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param dbSubscriber database subscriber
      */
     private Subscription createNewSubscription(Subscriber subscriber, Subscriber dbSubscriber, Channel channel,
-                                               String operatorCode) {
+            String operatorCode) {
 
         Subscription newSubscription = new Subscription();
 
         newSubscription.setMsisdn(subscriber.getMsisdn());
         newSubscription.setMctsId(subscriber.getSuitableMctsId());
-        if (subscriber.getState() != null) {
-            newSubscription.setStateCode(subscriber.getStateCode());
-        }
+        newSubscription.setStateCode(subscriber.getStateCode());
         newSubscription.setPackName(subscriber.getSuitablePackName());
         newSubscription.setChannel(channel);
+        newSubscription.setStartDate(genrateStartDate(subscriber, channel).toDateMidnight().getMillis());
 
         /* Initial state is always Pending Activation */
         newSubscription.setStatus(Status.PENDING_ACTIVATION);
@@ -427,12 +449,38 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         newSubscription.setOwner(subscriber.getOwner());
         newSubscription.setSubscriber(dbSubscriber);
 
-        newSubscription =  subscriptionDataService.create(newSubscription);
+        Subscription dbSubscription =  subscriptionDataService.create(newSubscription);
+        createSubscriptionMeasure(dbSubscription);
         activeSubscriptionCountService.incrementActiveSubscriptionCount();
-        
-        return newSubscription;
+
+        return dbSubscription;
     }
-    
+
+    /**
+     * This method is used to genrate start date of subscription.
+     * @param subscriber
+     * @param channel
+     * @return
+     */
+    private DateTime genrateStartDate(Subscriber subscriber, Channel channel) {
+
+        DateTime startDate = null;
+        DateTime packIntialStartDate = null;
+        DateTime currDate = new DateTime();
+        if(channel == Channel.IVR) {
+            startDate = currDate.plusDays(1);
+        } else if(channel == Channel.MCTS) {
+            packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(3) : subscriber.getDob() ;
+            if(packIntialStartDate.isAfter(currDate)) {
+                int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
+                startDate = (noOfDays%7 == 0) ? currDate : currDate.plusDays(7 - (noOfDays % 7));
+            } else {
+                startDate =  packIntialStartDate;
+            }
+        }
+        return startDate;
+    }
+
     /**
      *  This method is used to update Subscription info in database
      * 
@@ -440,8 +488,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      *  @param dbSubscription database Subscription
      */
     private void updateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag,
-                                      DeactivationReason deactivationReason) {
-        
+            DeactivationReason deactivationReason) {
+
         dbSubscription.setDeactivationReason(deactivationReason);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
         if(DeactivationReason.PACK_CHANGED != deactivationReason) {
@@ -449,20 +497,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
         dbSubscription.setStateCode(subscriber.getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
-        
+
         if (statusFlag) {
             dbSubscription.setStatus(Status.DEACTIVATED);
         }
 
-        subscriptionDataService.update(dbSubscription);
+        Subscription updatedDbSubscription = subscriptionDataService.update(dbSubscription);
 
         if (statusFlag) {
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
-        } else {
-            activeSubscriptionCountService.incrementActiveSubscriptionCount();
-        }
+            createSubscriptionMeasure(updatedDbSubscription);
+        } 
+
+
     }
-    
+
     /**
      *  This method is used to update Subscriber info in database
      * 
@@ -513,7 +562,128 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription.setDeactivationReason(DeactivationReason.USER_DEACTIVATED);
             subscriptionDataService.update(subscription);
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
+            createSubscriptionMeasure(subscription);
+        } else {
+            logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
         }
+    }
+
+    /**
+     * This method is used by kilkari-obd module for deactivating a subscription
+     * and we have not to deactivate those subscription who have subscribed through
+     * IVR and having deactivation reason 'MSISDN_IN_DND'.
+     * 
+     * @param subscriptionId Long type object
+     * @param reason DeactivateReason
+     */
+    @Override
+    public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
+        Subscription subscription = subscriptionDataService.findById(subscriptionId);
+        if (subscription != null) {
+            if(subscription.getChannel()==Channel.IVR && reason == DeactivationReason.MSISDN_IN_DND){
+                return;
+            }
+            subscription.setStatus(Status.DEACTIVATED);
+            subscription.setDeactivationReason(reason);
+            subscriptionDataService.update(subscription);
+            activeSubscriptionCountService.decrementActiveSubscriptionCount();
+            createSubscriptionMeasure(subscription);
+        } else {
+            logger.warn("Subscription not found for given subscriptionId{[]}", subscriptionId);
+        }
+    }
+
+    /**
+     * This method is used to delete subscriber and subscription 
+     * which are deactivated or completed six week before.
+     * 
+     */
+    @Override
+    public void deleteSubscriberSubscriptionAfter6Weeks(){
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery());
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
+    }
+
+    /**
+     * This method is used to get those subscriber 
+     * whose OBD message is to send today
+     * 
+     */
+    @Override
+    public List<Subscription> getScheduledSubscriptions() {
+        List<Subscription> subscriptionList = subscriptionDataService.executeQuery(new CustomQueries.FindScheduledSubscription());
+        List<Subscription> scheduledSubscription = new ArrayList<Subscription>();
+        for(Subscription subscription : subscriptionList) {
+            Subscriber subscriber = subscription.getSubscriber();
+
+            /* handling which week msg we have to deliver. */
+            DateTime currDate = new DateTime();
+            int weekNum = calculateWeekNumber(subscriber, currDate);
+            subscription.setWeekNumber(weekNum);
+
+            /* handling which msg(first or second) we have to deliver. */
+            subscription.setMessageNumber(1);
+            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 2) {
+                int alignDiffofStartAndCurrent = Days.daysBetween(new DateTime(subscription.getStartDate()), new DateTime(currDate.toDateMidnight().getMillis())).getDays()%7;
+                if(alignDiffofStartAndCurrent == 3 ){
+                    subscription.setMessageNumber(2);
+                }
+            }
+
+            /* Set status of subscription */
+            if((subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum < Constants.DURATION_OF_72_WEEK_PACK)
+                    || (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum < Constants.DURATION_OF_48_WEEK_PACK)) {
+                
+                subscription.setStatus(Status.ACTIVE);
+                subscription.setLastObdDate(currDate);
+            } else {
+                subscription.setStatus(Status.COMPLETED);
+            }
+
+            Subscription dbSubscription = subscriptionDataService.update(subscription);
+            createSubscriptionMeasure(dbSubscription);
+
+            if(subscription.getStatus()!=Status.COMPLETED) {
+                scheduledSubscription.add(subscription);
+            }
+
+        }
+        return scheduledSubscription;
+    }
+
+    /**
+     * This method is used to calculate which week message is to send.
+     * @param subscriber
+     * @param currDate
+     * @return
+     */
+    private int calculateWeekNumber(Subscriber subscriber, DateTime currDate) {
+        DateTime dobOrLmp = subscriber.getDobLmp();
+        int weekNum = 0;
+        if (subscriber.getBeneficiaryType() == BeneficiaryType.CHILD) {
+            weekNum = Constants.START_WEEK_OF_48_WEEK_PACK + 
+                    (Days.daysBetween(dobOrLmp.toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+        } else {
+            weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + 
+                    (Days.daysBetween(dobOrLmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / 7);
+        }
+        return weekNum;
+    }
+
+    /**
+     * This method is used to create SubscriptionMeasure each time when subscription registered, 
+     * obd message sent and subscription deactivated or completion   
+     * 
+     * @param subscription
+     */
+    private void createSubscriptionMeasure(Subscription subscription) {
+        SubscriptionMeasure measure = new SubscriptionMeasure();
+        measure.setMessageNumber(subscription.getMessageNumber());
+        measure.setStatus(subscription.getStatus());
+        measure.setWeekNumber(subscription.getWeekNumber());
+        measure.setSubscription(subscription);
+        subscriptionMeasureService.create(measure);
+
     }
 
 }

@@ -8,7 +8,10 @@ import java.util.List;
 public interface ChildMctsCsvService {
 
     /**
-     * This method process ChildMctsCsv
+     * This method process the child csv records under transaction means
+     * if single records fails whole transaction is rolled back 
+     * if all records process successfully data is committed
+     * 
      * @param csvFileName String type object
      * @param uploadedIDs List type object
      */

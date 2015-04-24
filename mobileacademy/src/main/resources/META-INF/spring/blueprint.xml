@@ -1,62 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:osgi="http://www.eclipse.org/gemini/blueprint/schema/blueprint"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
     http://www.eclipse.org/gemini/blueprint/schema/blueprint
     http://www.eclipse.org/gemini/blueprint/schema/blueprint/gemini-blueprint.xsd">
 
-    <import resource="classpath*:META-INF/motech/*.xml" />
+	<import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="RecordsProcessService"
-        interface="org.motechproject.nms.mobileacademy.service.RecordsProcessService" />
+	<osgi:service ref="RecordsProcessService"
+		interface="org.motechproject.nms.mobileacademy.service.RecordsProcessService" />
 
-    <osgi:service ref="CourseProcessedContentService"
-        interface="org.motechproject.nms.mobileacademy.service.CourseProcessedContentService" />
+	<osgi:service ref="CourseProcessedContentService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseProcessedContentService" />
 
-    <osgi:service ref="CourseContentCsvService"
-        interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
+	<osgi:service ref="CourseContentCsvService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseContentCsvService" />
 
-    <osgi:service ref="CourseService"
-        interface="org.motechproject.nms.mobileacademy.service.CourseService" />
+	<osgi:service ref="CourseService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseService" />
 
-    <osgi:service ref="UserDetailsServiceMa"
-        interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
-        
-     <osgi:service ref="ConfigurationServiceMa"
-        interface="org.motechproject.nms.mobileacademy.service.ConfigurationService" />
-        
-      <osgi:service ref="FlwUsageDetailService"
-        interface="org.motechproject.nms.mobileacademy.service.FlwUsageDetailService" />
+	<osgi:service ref="CourseBookmarkService"
+		interface="org.motechproject.nms.mobileacademy.service.CourseBookmarkService" />
+
+	<osgi:service ref="UserDetailsServiceMa"
+		interface="org.motechproject.nms.mobileacademy.service.UserDetailsService" />
+
+	<osgi:service ref="ConfigurationServiceMa"
+		interface="org.motechproject.nms.mobileacademy.service.ConfigurationService" />
+
+	<osgi:service ref="FlwUsageDetailService"
+		interface="org.motechproject.nms.mobileacademy.service.FlwUsageDetailService" />
+		
+    <osgi:service ref="CallDetailService"
+        interface="org.motechproject.nms.mobileacademy.service.CallDetailService" />
 
 
-    <osgi:reference id="CourseProcessedContentDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
+	<osgi:reference id="CourseProcessedContentDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService" />
 
-    <osgi:reference id="CourseContentCsvDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService" />
+	<osgi:reference id="CourseContentCsvDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService" />
 
-    <osgi:reference id="ChapterContentDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />
+	<osgi:reference id="ChapterContentDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.ChapterContentDataService" />
 
-    <osgi:reference id="ConfigurationDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.ConfigurationDataService" />
+	<osgi:reference id="ConfigurationDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.ConfigurationDataService" />
 
-    <osgi:reference id="MTrainingService"
-        interface="org.motechproject.mtraining.service.MTrainingService" />
+	<osgi:reference id="MTrainingService"
+		interface="org.motechproject.mtraining.service.MTrainingService" />
 
-    <osgi:reference id="bulkUploadErrLogService"
-        interface="org.motechproject.nms.util.service.BulkUploadErrLogService" />
+	<osgi:reference id="BookmarkService"
+		interface="org.motechproject.mtraining.service.BookmarkService" />
 
-    <osgi:reference id="UserProfileDetailsService"
-        interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService" />
+	<osgi:reference id="bulkUploadErrLogService"
+		interface="org.motechproject.nms.util.service.BulkUploadErrLogService" />
 
-    <osgi:reference id="FlwUsageDetailDataService"
-        interface="org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService" />
-        
-    <bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
-        <property name="defaultURL" value="/mobileacademy"/>
-        <property name="moduleName" value="mobileacademy"/>
-    </bean>
+	<osgi:reference id="UserProfileDetailsService"
+		interface="org.motechproject.nms.frontlineworker.service.UserProfileDetailsService" />
+
+	<osgi:reference id="FlwUsageDetailDataService"
+		interface="org.motechproject.nms.mobileacademy.repository.FlwUsageDetailDataService" />
+
+	<osgi:reference id="FrontLineWorkerService"
+		interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService" />
+    
+    <osgi:reference id="CallDetailDataService"
+        interface="org.motechproject.nms.mobileacademy.repository.CallDetailDataService" />
+    
+    <osgi:reference id="ContentLogDataService"
+        interface="org.motechproject.nms.mobileacademy.repository.ContentLogDataService" />
+
+	<bean id="moduleRegistrationData" class="org.motechproject.osgi.web.ModuleRegistrationData">
+		<property name="defaultURL" value="/mobileacademy" />
+		<property name="moduleName" value="mobileacademy" />
+	</bean>
 
 </beans>

@@ -1,5 +1,17 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
@@ -14,12 +26,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static org.junit.Assert.*;
 /**
  * Verify that HelloWorldRecordService present, functional.
  */
@@ -395,9 +401,168 @@ public class MotherMctsCsvHandlerIT extends CommonStructure {
         assertNotNull(subscription.getSubscriber());
         assertNotNull(subs2);
         assertFalse(subscription.getMsisdn()==subs2.getMsisdn());
-
+    
     }
-
-
-
+    
+    @Test
+    public void testDeleteSubscriberSubscriptionAfter6Weeks(){
+        logger.info("Inside createSameMsisdnSameMcts");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setLmpDate("2014-12-01 08:08:08");
+        csv.setWhomPhoneNo("1000000012");
+        csv.setIdNo("12");
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        MotherMctsCsv csv1 = new MotherMctsCsv();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("1000000012");
+        csv1.setIdNo("12");
+        csv.setAbortion("null");
+        csv1.setOutcomeNos("0");
+        csv1.setEntryType("1");
+        csv1.setName("testing");
+        csv1.setLmpDate("2015-01-20 08:08:08");
+        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        
+        subscriptionService.deleteSubscriberSubscriptionAfter6Weeks();
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        
+        assertNotNull(updateSubs);
+    }
+    
+    @Test
+    public void testScheduledSubscriptionApi(){
+        
+        logger.info("Inside createSameMsisdnSameMcts");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        MotherMctsCsv csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000013");
+        csv.setIdNo("13");
+        DateTime date = new DateTime().minusMonths(6);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setLmpDate(dtf.print(date));
+        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000014");
+        csv.setIdNo("14");
+        csv.setLmpDate(dtf.print(date.plusDays(1)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000015");
+        csv.setIdNo("15");
+        csv.setLmpDate(dtf.print(date.plusDays(2)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000016");
+        csv.setIdNo("16");
+        csv.setLmpDate(dtf.print(date.plusDays(3)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000017");
+        csv.setIdNo("17");
+        csv.setLmpDate(dtf.print(date.plusDays(4)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000018");
+        csv.setIdNo("18");
+        csv.setLmpDate(dtf.print(date.plusDays(5)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000019");
+        csv.setIdNo("19");
+        csv.setLmpDate(dtf.print(date.plusDays(6)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000020");
+        csv.setIdNo("20");
+        csv.setLmpDate(dtf.print(date.plusDays(7)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000021");
+        csv.setIdNo("21");
+        csv.setLmpDate(dtf.print(date.plusDays(8)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000022");
+        csv.setIdNo("22");
+        csv.setLmpDate(dtf.print(date.plusDays(9)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new MotherMctsCsv();
+        csv = createMotherMcts(csv);
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000023");
+        csv.setIdNo("23");
+        csv.setLmpDate(dtf.print(date.plusDays(10)));
+        dbCsv = motherMctsCsvDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        List<Subscription> scheduledSubscriptions = subscriptionService.getScheduledSubscriptions();
+        
+        assertNotNull(scheduledSubscriptions);
+        assertFalse(scheduledSubscriptions.isEmpty());
+        
+    }
+    
 }

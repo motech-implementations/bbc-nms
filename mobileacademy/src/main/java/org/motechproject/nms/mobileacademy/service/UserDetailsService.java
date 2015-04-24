@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobileacademy.service;
 
+import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -35,4 +36,21 @@ public interface UserDetailsService {
      */
     void setLanguageLocationCode(String languageLocationCode,
             String callingNumber, String callId) throws DataValidationException;
+
+    /**
+     * Check whether a MSISDN exists with FLW for MA service or not
+     * 
+     * @param callingNo : 10 digit MSISDN
+     * @return true if MSISDN exists
+     */
+    boolean doesMsisdnExist(String callingNo);
+
+    /**
+     * save Call Details when callDetails API is invoked.
+     * 
+     * @param callDetailsRequest
+     * @throws DataValidationException
+     */
+    void saveCallDetails(CallDetailsRequest callDetailsRequest)
+            throws DataValidationException;
 }

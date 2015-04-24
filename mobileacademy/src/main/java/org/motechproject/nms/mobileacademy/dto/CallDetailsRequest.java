@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-//This is just a placeholder for save call details API.
-//actual implementation would be done in sprint 1504
-public class CallDetails implements Serializable {
+/**
+ * CallDetailsRequest object contain details mapped to callDetails API request.
+ *
+ */
+public class CallDetailsRequest implements Serializable {
 
     /**
 	 * 
@@ -45,7 +47,7 @@ public class CallDetails implements Serializable {
     private String callDisconnectReason;
 
     @JsonProperty
-    private List<ContentDetails> content;
+    private List<ContentLogRequest> content;
 
     public String getCallingNumber() {
         return callingNumber;
@@ -127,20 +129,20 @@ public class CallDetails implements Serializable {
         this.callDisconnectReason = callDisconnectReason;
     }
 
-    public List<ContentDetails> getCourseContentList() {
+    public List<ContentLogRequest> getContent() {
         return content;
     }
 
-    public void setCourseContentList(List<ContentDetails> contentDetails) {
-        this.content = contentDetails;
+    public void setContent(List<ContentLogRequest> content) {
+        this.content = content;
     }
 
     @Override
     public String toString() {
-        return "CallDetails{callingNumber=" + callingNumber + ", callId="
-                + callId + ", operator=" + operator + ", circle=" + circle
-                + ", callStartTime=" + callStartTime + ", callEndTime="
-                + callEndTime + ", callDurationInPulses="
+        return "CallDetailsRequest{callingNumber=" + callingNumber
+                + ", callId=" + callId + ", operator=" + operator + ", circle="
+                + circle + ", callStartTime=" + callStartTime
+                + ", callEndTime=" + callEndTime + ", callDurationInPulses="
                 + callDurationInPulses + ", endOfUsagePromptCounter="
                 + endOfUsagePromptCounter + ", callStatus=" + callStatus
                 + ", callDisconnectReason=" + callDisconnectReason

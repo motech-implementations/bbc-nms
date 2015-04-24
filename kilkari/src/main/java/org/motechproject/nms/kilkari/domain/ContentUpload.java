@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -12,24 +13,31 @@ import org.motechproject.mds.domain.MdsEntity;
 public class ContentUpload extends MdsEntity {
 
     @Field(required = true)
+    @UIDisplayable(position = 0)
     private Long contentId;
 
     @Field(required = true)
+    @UIDisplayable(position = 1)
     private String circleCode;
 
     @Field(required = true)
+    @UIDisplayable(position = 2)
     private Integer languageLocationCode;
 
     @Field(required = true)
+    @UIDisplayable(position = 3)
     private String contentName;
 
     @Field(required = true)
+    @UIDisplayable(position = 4)
     private ContentType contentType;
 
     @Field(required = true)
+    @UIDisplayable(position = 5)
     private String contentFile;
 
     @Field(required = true)
+    @UIDisplayable(position = 6)
     private Integer contentDuration;
 
     public Long getContentId() {

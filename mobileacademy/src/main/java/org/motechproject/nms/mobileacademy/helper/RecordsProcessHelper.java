@@ -34,7 +34,7 @@ public class RecordsProcessHelper {
     private static final Logger LOGGER = LoggerFactory
             .getLogger(RecordsProcessHelper.class);
 
-    /*
+    /**
      * This function adds the records into a Map having LLC of record as key
      * 
      * The map will be process afterwards for processing ADD Records
@@ -53,7 +53,7 @@ public class RecordsProcessHelper {
         }
     }
 
-    /*
+    /**
      * This function adds the records into a Map having contentName of record as
      * key
      * 
@@ -72,7 +72,7 @@ public class RecordsProcessHelper {
         }
     }
 
-    /*
+    /**
      * This function is used to create the static course data in the content
      * tables.
      */
@@ -95,13 +95,13 @@ public class RecordsProcessHelper {
         return listOfChapters;
     }
 
-    /*
+    /**
      * This function creates theList of Score content files to be included in a
      * chapter
      */
     public static List<ScoreContent> createListOfScores() {
         List<ScoreContent> scoreList = new ArrayList<>();
-        for (int scoreCount = 0; scoreCount <= MobileAcademyConstants.NUM_OF_SCORES; scoreCount++) {
+        for (int scoreCount = 0; scoreCount <= MobileAcademyConstants.MAX_SCORE; scoreCount++) {
             ScoreContent scoreContent = new ScoreContent(
                     MobileAcademyConstants.SCORE
                             + String.format(
@@ -112,7 +112,7 @@ public class RecordsProcessHelper {
         return scoreList;
     }
 
-    /*
+    /**
      * This function creates the List of QuestionContent files to be included in
      * a quiz of chapter
      */
@@ -133,7 +133,7 @@ public class RecordsProcessHelper {
         return questionList;
     }
 
-    /*
+    /**
      * This function creates the List of LessonContent files to be included in a
      * chapter
      */
@@ -150,7 +150,7 @@ public class RecordsProcessHelper {
         return lessonList;
     }
 
-    /*
+    /**
      * This function does the schema level validation on a CourseContentCsv
      * Record. In case a erroneous field, throws DataValidationException
      */
@@ -176,10 +176,14 @@ public class RecordsProcessHelper {
                 courseContentCsv.getContentFile(), true);
     }
 
+    /**
+     * This mehtod populates the bulkUploadError's object with the help of
+     * content of DataValidationException
+     */
     public static void processError(BulkUploadError errorDetail,
-            DataValidationException ex, String recordIdentifier) {
+            DataValidationException ex, String uniqueRecordIdentifier) {
         errorDetail.setErrorCategory(ex.getErrorCode());
-        errorDetail.setRecordDetails(recordIdentifier);
+        errorDetail.setRecordDetails(uniqueRecordIdentifier);
         errorDetail.setErrorDescription(ex.getErrorDesc());
     }
 
@@ -218,7 +222,7 @@ public class RecordsProcessHelper {
 
     }
 
-    /*
+    /**
      * This function validates the CourseContentCsv record and returns the
      * record object, populated on the basis of contentName in the raw record.
      * In case of error in the record, it returns null.
@@ -232,19 +236,24 @@ public class RecordsProcessHelper {
 
         if (record.getType() == FileType.QUESTION_CONTENT) {
             String metaData = ParseDataHelper.validateAndParseString(
-                    "METADETA", courseContentCsv.getMetaData(), true);
+                    "METADATA", courseContentCsv.getMetaData(), true);
 
             if (!("CorrectAnswer").equalsIgnoreCase(metaData.substring(0,
                     metaData.indexOf(':')))) {
-                ParseDataHelper.raiseInvalidDataException("METADETA",
+                LOGGER.warn("Invalid format of METADATA for contentID:{}",
+                        courseContentCsv.getContentId());
+                ParseDataHelper.raiseInvalidDataException("METADATA",
                         courseContentCsv.getMetaData());
+
             } else {
                 int answerNo = ParseDataHelper.validateAndParseInt("",
                         metaData.substring(metaData.indexOf(':') + 1), true);
                 if (verifyRange(answerNo, 1, 2)) {
                     record.setAnswerId(answerNo);
                 } else {
-                    ParseDataHelper.raiseInvalidDataException("METADETA",
+                    LOGGER.warn("Answer option out of range for contentID:{}",
+                            courseContentCsv.getContentId());
+                    ParseDataHelper.raiseInvalidDataException("METADATA",
                             courseContentCsv.getMetaData());
                 }
             }
@@ -253,11 +262,11 @@ public class RecordsProcessHelper {
         record.setFileName(courseContentCsv.getContentFile());
     }
 
-    /*
+    /**
      * @param fieldName Name of the field in which data is inconsistent
      * 
      * @param message To be displayed. after the message it will show "in
-     * field<fieldName>"
+     *            field<fieldName>"
      * 
      * @throws DataValidationException
      */
@@ -269,7 +278,7 @@ public class RecordsProcessHelper {
                 ErrorCategoryConstants.INCONSISTENT_DATA, errDesc, "");
     }
 
-    /*
+    /**
      * This function validates the content Type in a CourseContentCsv Record. If
      * the content Type is anything other than CONTENT or PROMPT, it throws an
      * error.
@@ -277,12 +286,14 @@ public class RecordsProcessHelper {
     public static void validateContentType(CourseContentCsv courseContentCsv)
             throws DataValidationException {
         if (ContentType.findByName(courseContentCsv.getContentType()) == null) {
+            LOGGER.warn("Invalid content type for contentID: {}",
+                    courseContentCsv.getContentId());
             ParseDataHelper.raiseInvalidDataException("Content Type",
                     courseContentCsv.getContentType());
         }
     }
 
-    /*
+    /**
      * This function validates the content Name in a CourseContentCsv Record. In
      * case of Sunny Scenario, it sets the indices in the record object and
      * return true. while in case of any error in the content name field, it
@@ -293,6 +304,8 @@ public class RecordsProcessHelper {
         String contentName = courseContentCsv.getContentName().trim();
         boolean recordDataValidation = true;
         if (contentName.indexOf('_') == -1) {
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     ErrorCategoryConstants.INCONSISTENT_DATA);
         }
@@ -304,7 +317,8 @@ public class RecordsProcessHelper {
         if (StringUtils.isBlank(subString)
                 || !("Chapter").equalsIgnoreCase(chapterString.substring(0,
                         chapterString.length() - 2))) {
-
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
@@ -315,7 +329,8 @@ public class RecordsProcessHelper {
             record.setChapterId(Integer.parseInt(chapterString
                     .substring(chapterString.length() - 2)));
         } catch (NumberFormatException exception) {
-            LOGGER.debug(exception.getMessage(), exception);
+            LOGGER.warn("Invalid content name for contentID:{}",
+                    courseContentCsv.getContentId());
             raiseInconsistentDataException(MobileAcademyConstants.CONTENT_NAME,
                     String.format(
                             MobileAcademyConstants.INCONSISTENT_DATA_MESSAGE,
@@ -336,7 +351,7 @@ public class RecordsProcessHelper {
 
     }
 
-    /*
+    /**
      * This function checks if the type of the file to which the records points
      * to is determinable from the substring in content Name. in case of sunny
      * Scenario, it sets the file-type in record object and returns true, while
@@ -394,7 +409,7 @@ public class RecordsProcessHelper {
             record.setType(fileType);
             return true;
         } else if (fileType == FileType.SCORE) {
-            if (!verifyRange(index, 0, MobileAcademyConstants.NUM_OF_SCORES)) {
+            if (!verifyRange(index, 0, MobileAcademyConstants.MAX_SCORE)) {
                 return false;
             }
             record.setScoreID(index);
@@ -418,7 +433,7 @@ public class RecordsProcessHelper {
         return true;
     }
 
-    /*
+    /**
      * This function checks the file-type to which the record refers and on the
      * basis of that, it populates the chapterContent Prototype Object and marks
      * the flag in courseFlags for successful arrival of the file.

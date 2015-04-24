@@ -1,10 +1,6 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.inject.Inject;
 import javax.jdo.JDOObjectNotFoundException;
@@ -12,12 +8,12 @@ import javax.jdo.JDOObjectNotFoundException;
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
 import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
 import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
@@ -25,16 +21,20 @@ import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
+import org.motechproject.nms.masterdata.repository.CircleDataService;
 import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
 import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
+import org.motechproject.nms.masterdata.repository.LanguageLocationCodeDataService;
 import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
 import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -59,6 +59,12 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
+    
+    @Inject
+    private CircleDataService circleDataService;
+    
+    @Inject
+    private LanguageLocationCodeDataService llcDataService;
     
     @Inject
     protected SubscriberService subscriberService;
@@ -95,6 +101,9 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected ActiveSubscriptionCountDataService activeSubscriptionCountDataService;
+    
+    @Inject
+    protected SubscriptionMeasureDataService subscriptionMeasureDataService;
 
     private static boolean setUpIsDone = false;
     
@@ -111,6 +120,8 @@ public class CommonStructure extends BasePaxIT {
             createHealthFacility();
             createHealthSubFacility();
             createVillage();
+            createCircle();
+            createLLC();
         }
         // do the setup
         setUpIsDone = true;
@@ -118,12 +129,23 @@ public class CommonStructure extends BasePaxIT {
 
     private void deleteAll() {
         try {
+            subscriptionMeasureDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        try {
             subscriptionService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
         try {
             subscriberService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
 
+        try {
+            llcDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
+        try {
+            circleDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
         try {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
@@ -253,6 +275,37 @@ public class CommonStructure extends BasePaxIT {
         logger.info("Village data is successfully inserted.");
     }
     
+    private void createCircle(){
+        Circle newRecord = new Circle();
+        newRecord.setName("circleName");
+        newRecord.setCode("1");
+        newRecord.setDefaultLanguageLocationCode(1);
+        newRecord.setCreator("Deepak");
+        newRecord.setOwner("Deepak");
+        newRecord.setModifiedBy("Deepak");
+        circleDataService.create(newRecord);
+        
+        logger.info("Circle data is successfully inserted.");
+    }
+    
+    private void createLLC(){
+        LanguageLocationCode newRecord = new LanguageLocationCode();
+        newRecord.setStateCode(1L);
+        newRecord.setDistrictCode(1L);
+        newRecord.setCircleCode("1");
+        newRecord.setLanguageKK("LanguageKK");
+        newRecord.setLanguageMA("LanguageMA");
+        newRecord.setLanguageMK("LanguageMK");
+        newRecord.setLanguageLocationCode(1);
+        newRecord.setState(stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode()));
+        newRecord.setDistrict(districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode()));
+        newRecord.setCircle(circleDataService.findByCode(newRecord.getCircleCode()));
+        llcDataService.create(newRecord);
+
+        logger.info("LLC data is successfully inserted.");
+    }
+    
+    
     protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
@@ -268,6 +321,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setAge("30");
         csv.setEntryType("1");
         csv.setAadharNo("123456789876");
+        csv.setCreator("Deepak");
+        csv.setOwner("Deepak");
+        csv.setModifiedBy("Deepak");
         return csv;
     }
     

@@ -1,9 +1,16 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import org.apache.velocity.runtime.parser.node.GetExecutor;
+import java.util.List;
+
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.domain.EntryType;
+import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
 import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
@@ -21,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 /**
  * This class implements the logic in ChildMctsCsvService.
@@ -45,12 +52,44 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
     
     /**
-     * This method process ChildMctsCsv
+     * This method process the child csv records under transaction means
+     * if single records fails whole transaction is rolled back 
+     * if all records process successfully data is committed
+     * 
      * @param csvFileName String type object
      * @param uploadedIDs List type object
      */
     @Override
     public void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs){
+
+        childMctsCsvDataService.doInTransaction(new TransactionCallback<ChildMctsCsv>() {
+
+            private String csvFileName;
+            private List<Long> uploadedIDs;
+
+            private TransactionCallback<ChildMctsCsv> init(String csvFileName, List<Long> uploadedIDs) {
+                this.csvFileName = csvFileName;
+                this.uploadedIDs = uploadedIDs;
+                return this;
+            }
+
+            @Override
+            public ChildMctsCsv doInTransaction(TransactionStatus arg0) {
+                processChildMctsCsvInTransaction(csvFileName, uploadedIDs);
+                return null;
+            }
+        }.init(csvFileName, uploadedIDs));
+
+    }
+    
+    
+    
+    /**
+     * This method process ChildMctsCsv
+     * @param csvFileName String type object
+     * @param uploadedIDs List type object
+     */
+    public void processChildMctsCsvInTransaction(String csvFileName, List<Long> uploadedIDs){
         logger.info("Processing Csv file[{}]", csvFileName);
         BulkUploadStatus childCsvUploadStatus = new BulkUploadStatus();
         BulkUploadError errorDetails = new BulkUploadError();
@@ -127,7 +166,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
      * 
      *  @param childMctsCsv csv uploaded record
      */
-    private Subscriber mapChildMctsToSubscriber(ChildMctsCsv childMctsCsv) throws DataValidationException {
+    private Subscriber mapChildMctsToSubscriber(ChildMctsCsv childMctsCsv) throws DataValidationException, NmsInternalServerError {
 
         Subscriber childSubscriber = new Subscriber();
         
@@ -140,10 +179,10 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         childSubscriber.setChildMctsId(ParseDataHelper.validateAndParseString(Constants.ID_NO, childMctsCsv.getIdNo(), true));
         childSubscriber.setMotherMctsId(ParseDataHelper.validateAndParseString(Constants.MOTHER_ID, childMctsCsv.getMotherId(), false));
         childSubscriber.setName(ParseDataHelper.validateAndParseString(Constants.MOTHER_NAME, childMctsCsv.getMotherName(), false));
+        
+        /* handling of appropriate dob */
         DateTime dob = ParseDataHelper.validateAndParseDate(Constants.BIRTH_DATE, childMctsCsv.getBirthdate(), true);
-        if (dob.isAfter(DateTime.now())) {
-            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
-        } else {
+        if(isValidDob(dob)){
             childSubscriber.setDob(dob);
         }
         /* Set the appropriate Deactivation Reason */
@@ -167,5 +206,28 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
 
 
 
+    /**
+     * This methos is used to check dob. Dob should not be of future date and more than 48 week before
+     * @param dob
+     * @return boolean 
+     * @throws DataValidationException
+     */
+    private boolean isValidDob(DateTime dob) throws DataValidationException {
+        
+        boolean isValid = false;
+        DateTime currDate = DateTime.now();
+
+        if (dob.isAfter(DateTime.now())) {
+            ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
+        } else {
+            int days = Days.daysBetween(currDate, dob).getDays();
+            if ((days/Constants.DAYS_IN_WEEK) < Constants.DURATION_OF_48_WEEK_PACK) {
+                isValid = true;
+            } else {
+                ParseDataHelper.raiseInvalidDataException(Constants.BIRTH_DATE, dob.toString());
+            }
+        }
+        return isValid;
+    }
 
 }

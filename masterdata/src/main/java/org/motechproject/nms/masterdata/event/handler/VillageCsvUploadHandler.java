@@ -96,16 +96,16 @@ public class VillageCsvUploadHandler {
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException dataValidationException) {
-                logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
+            } catch (DataValidationException villageDataException) {
+                logger.error("VILLAGE_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", villageDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), villageCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, villageDataException.getErroneousField(), villageDataException.getErrorCode(), villageCsvRecord.toString());
 
-            } catch (Exception e) {
+            } catch (Exception villageException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("VILLAGE_CSV_SUCCESS processing receive Exception exception, message: {}", villageException);
             } finally {
                 if (null != villageCsvRecord) {
                     villageCsvService.delete(villageCsvRecord);

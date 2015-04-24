@@ -1,13 +1,14 @@
 package org.motechproject.nms.kilkari.service;
 
+import java.util.List;
+
 import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
-
-import java.util.List;
 
 /**
  *This interface provides methods to perform crud operations on Subscription object
@@ -86,4 +87,26 @@ public interface SubscriptionService {
      */
     void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
         throws DataValidationException, NmsInternalServerError;
+
+    /**
+     * This method is used to delete subscriber and subscription 
+     * which are deactivated or completed six week before
+     */
+    void deleteSubscriberSubscriptionAfter6Weeks();
+
+    /**
+     * This method is used to get those subscriber 
+     * whose OBD message is to send today.
+     */
+    List<Subscription> getScheduledSubscriptions();
+
+    /**
+     * This method is used by kilkari-obd module for deactivating a subscription,
+     * also have handling not to deactivate those subscription who have subscribed through
+     * IVR and having deactivation reason 'MSISDN_IN_DND'.
+     * 
+     * @param subscriptionId Long type object
+     * @param reason DeactivateReason
+     */
+    void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
 }

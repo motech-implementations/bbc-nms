@@ -23,4 +23,12 @@ public interface FlwUsageDetailService {
      * @return FlwUsageDetail
      */
     FlwUsageDetail findByFlwId(Long flwId);
+
+    /**
+     * update existing Flw Usage Record
+     * 
+     * @param flwUsageDetail
+     * @return FlwUsageDetail
+     */
+    FlwUsageDetail updateFlwUsageRecord(FlwUsageDetail flwUsageDetail);
 }

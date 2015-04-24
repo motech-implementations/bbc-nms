@@ -55,4 +55,21 @@ public class ContentUploadServiceImpl implements ContentUploadService {
     public ContentUpload getRecordByContentId(Long contentId) {
         return contentUploadKKCsvDataService.findByContentId(contentId);
     }
+    
+    /**
+     * This method get ContentUpload type record based on content name and language location code
+     *
+     * @param contentName String type object
+     * @param languageLocationCode Integer type object
+     * @return ContentUpload ContentUpload type object
+     */
+    @Override
+    public String getContentFileName(String contentName, Integer languageLocationCode) {
+        String contentFile = null;
+        ContentUpload contentUpload = contentUploadKKCsvDataService.findContentFileName(contentName, languageLocationCode);
+        if(contentUpload != null){
+            contentFile  = contentUpload.getContentFile();
+        }
+        return contentFile; 
+    }
 }

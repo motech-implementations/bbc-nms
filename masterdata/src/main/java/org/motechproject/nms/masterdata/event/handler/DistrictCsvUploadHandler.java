@@ -99,10 +99,10 @@ public class DistrictCsvUploadHandler {
                 logger.error("DISTRICT_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", dataValidationException.getErroneousField());
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, dataValidationException.getErroneousField(), dataValidationException.getErrorCode(), districtCsvRecord.toString());
-            } catch (Exception e) {
+            } catch (Exception districtException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
-                logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", e);
+                logger.error("DISTRICT_CSV_SUCCESS processing receive Exception exception, message: {}", districtException);
             } finally {
                 if (null != districtCsvRecord) {
                     districtCsvService.delete(districtCsvRecord);

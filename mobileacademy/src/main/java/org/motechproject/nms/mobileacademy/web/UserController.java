@@ -1,7 +1,13 @@
 package org.motechproject.nms.mobileacademy.web;
 
+import java.util.Arrays;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.motechproject.nms.mobileacademy.dto.CallDetails;
+import org.motechproject.nms.mobileacademy.commons.CallDisconnectReason;
+import org.motechproject.nms.mobileacademy.commons.CallStatus;
+import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
+import org.motechproject.nms.mobileacademy.dto.ContentLogRequest;
 import org.motechproject.nms.mobileacademy.dto.LlcRequest;
 import org.motechproject.nms.mobileacademy.dto.User;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
@@ -36,6 +42,35 @@ public class UserController extends BaseController {
     private static final String REQUEST_PARAM_CALL_ID = "callId";
 
     private static final String REQUEST_PARAM_LLC = "languageLocationCode";
+
+    private static final String REQUEST_PARAM_CALL_START_TIME = "callStartTime";
+
+    private static final String REQUEST_PARAM_CALL_END_TIME = "callEndTime";
+
+    private static final String REQUEST_PARAM_CALL_DURATION_IN_PULSES = "callDurationInPulses";
+
+    private static final String REQUEST_PARAM_END_USAGE_PROMPT_COUNTER = "endOfUsagePromptCounter";
+
+    private static final String REQUEST_PARAM_CALL_STATUS = "callStatus";
+
+    private static final String REQUEST_PARAM_CALL_DISCONNECT_REASON = "callDisconnectReason";
+
+    private static final String REQUEST_PARAM_TYPE = "type";
+
+    private static final String REQUEST_PARAM_CONTENT_NAME = "contentName";
+
+    private static final String REQUEST_PARAM_CONTENT_FILE = "contentFile";
+
+    private static final String REQUEST_PARAM_START_TIME = "startTime";
+
+    private static final String REQUEST_PARAM_END_TIME = "endTime";
+
+    private static final String REQUEST_PARAM_COMPLETION_FLAG = "completionFlag";
+
+    private static final String REQUEST_PARAM_CORRECT_ANSWER_RECEIVED = "correctAnswerReceived";
+
+    private static final String[] CALL_DATA_TYPE = { "lesson", "chapter",
+            "question" };
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -98,17 +133,20 @@ public class UserController extends BaseController {
     /**
      * Save Call Details API
      * 
-     * @param callDetails object contain input request
+     * @param callDetailsRequest object contain input request
      * @throws MissingServletRequestParameterException
+     * @throws DataValidationException
      */
-    // This is just a placeholder for save call details API.
-    // actual implementation would be done in sprint 1504
     @RequestMapping(value = "/callDetails", method = RequestMethod.POST)
     @ResponseBody
-    public void saveCallDetails(@RequestBody CallDetails callDetails)
-            throws MissingServletRequestParameterException {
+    public void saveCallDetails(
+            @RequestBody CallDetailsRequest callDetailsRequest)
+            throws MissingServletRequestParameterException,
+            DataValidationException {
         LOGGER.debug("saveCallDetails: Started");
-        LOGGER.debug("Input request: " + callDetails);
+        LOGGER.debug("Input request: " + callDetailsRequest);
+        validateInputDataForSaveCallDetails(callDetailsRequest);
+        userDetailsService.saveCallDetails(callDetailsRequest);
         LOGGER.debug("saveCallDetails: Ended");
     }
 
@@ -163,5 +201,132 @@ public class UserController extends BaseController {
                         llcRequest.getCallId(), true));
         ParseDataHelper.validateAndParseInt(REQUEST_PARAM_LLC,
                 llcRequest.getLanguageLocationCode(), true);
+    }
+
+    /**
+     * validate Input Data For Save Call Details for missing and invalid values
+     * 
+     * @param callDetailsRequest
+     * @throws MissingServletRequestParameterException
+     * @throws DataValidationException
+     */
+    private void validateInputDataForSaveCallDetails(
+            CallDetailsRequest callDetailsRequest)
+            throws MissingServletRequestParameterException,
+            DataValidationException {
+        // check whether parameter is missing or not
+        checkParameterMissing(REQUEST_PARAM_CALLING_NUMBER,
+                callDetailsRequest.getCallingNumber());
+        checkParameterMissing(REQUEST_PARAM_OPERATOR,
+                callDetailsRequest.getOperator());
+        checkParameterMissing(REQUEST_PARAM_CIRCLE,
+                callDetailsRequest.getCircle());
+        checkParameterMissing(REQUEST_PARAM_CALL_ID,
+                callDetailsRequest.getCallId());
+        checkParameterMissing(REQUEST_PARAM_CALL_START_TIME,
+                callDetailsRequest.getCallStartTime());
+        checkParameterMissing(REQUEST_PARAM_CALL_END_TIME,
+                callDetailsRequest.getCallEndTime());
+        checkParameterMissing(REQUEST_PARAM_CALL_DURATION_IN_PULSES,
+                callDetailsRequest.getCallDurationInPulses());
+        checkParameterMissing(REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
+                callDetailsRequest.getEndOfUsagePromptCounter());
+        checkParameterMissing(REQUEST_PARAM_CALL_STATUS,
+                callDetailsRequest.getCallStatus());
+        checkParameterMissing(REQUEST_PARAM_CALL_DISCONNECT_REASON,
+                callDetailsRequest.getCallDisconnectReason());
+
+        // check whether parameter value is valid or not
+        ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
+                ParseDataHelper.validateAndParseString(
+                        REQUEST_PARAM_CALLING_NUMBER,
+                        callDetailsRequest.getCallingNumber(), true));
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_OPERATOR,
+                callDetailsRequest.getOperator(), true);
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CIRCLE,
+                callDetailsRequest.getCircle(), true);
+        ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
+                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
+                        callDetailsRequest.getCallId(), true));
+        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_START_TIME,
+                callDetailsRequest.getCallStartTime(), true);
+        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_END_TIME,
+                callDetailsRequest.getCallEndTime(), true);
+        ParseDataHelper.validateAndParseInt(
+                REQUEST_PARAM_CALL_DURATION_IN_PULSES,
+                callDetailsRequest.getCallDurationInPulses(), true);
+        ParseDataHelper.validateAndParseInt(
+                REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
+                callDetailsRequest.getEndOfUsagePromptCounter(), true);
+        ParseDataHelper.validateAndParseInt(REQUEST_PARAM_CALL_STATUS,
+                callDetailsRequest.getCallStatus(), true);
+        if (CallStatus.findByValue(Integer.valueOf(callDetailsRequest
+                .getCallStatus())) == null) {
+            ParseDataHelper.raiseInvalidDataException(
+                    REQUEST_PARAM_CALL_STATUS,
+                    callDetailsRequest.getCallStatus());
+        }
+        ParseDataHelper.validateAndParseInt(
+                REQUEST_PARAM_CALL_DISCONNECT_REASON,
+                callDetailsRequest.getCallDisconnectReason(), true);
+        if (CallDisconnectReason.findByValue(Integer.valueOf(callDetailsRequest
+                .getCallDisconnectReason())) == null) {
+            ParseDataHelper.raiseInvalidDataException(
+                    REQUEST_PARAM_CALL_DISCONNECT_REASON,
+                    callDetailsRequest.getCallDisconnectReason());
+        }
+        if (CollectionUtils.isNotEmpty(callDetailsRequest.getContent())) {
+            for (ContentLogRequest contentLogRequest : callDetailsRequest
+                    .getContent()) {
+                validateCallContentLogData(contentLogRequest);
+            }
+        }
+    }
+
+    /**
+     * validate Call Content Log Data for missing and invalid values
+     * 
+     * @param contentLogRequest
+     * @throws MissingServletRequestParameterException
+     * @throws DataValidationException
+     */
+    private void validateCallContentLogData(ContentLogRequest contentLogRequest)
+            throws MissingServletRequestParameterException,
+            DataValidationException {
+        // check whether parameter is missing or not
+        checkParameterMissing(REQUEST_PARAM_TYPE, contentLogRequest.getType());
+        checkParameterMissing(REQUEST_PARAM_CONTENT_NAME,
+                contentLogRequest.getContentName());
+        checkParameterMissing(REQUEST_PARAM_CONTENT_FILE,
+                contentLogRequest.getContentFile());
+        checkParameterMissing(REQUEST_PARAM_START_TIME,
+                contentLogRequest.getStartTime());
+        checkParameterMissing(REQUEST_PARAM_END_TIME,
+                contentLogRequest.getEndTime());
+        checkParameterMissing(REQUEST_PARAM_COMPLETION_FLAG,
+                contentLogRequest.getCompletionFlag());
+
+        // check whether parameter value is valid or not
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_TYPE,
+                contentLogRequest.getType(), true);
+        if (!Arrays.asList(CALL_DATA_TYPE).contains(
+                contentLogRequest.getType().toLowerCase())) {
+            ParseDataHelper.raiseInvalidDataException(REQUEST_PARAM_TYPE,
+                    contentLogRequest.getType());
+        }
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CONTENT_NAME,
+                contentLogRequest.getContentName(), true);
+        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CONTENT_FILE,
+                contentLogRequest.getContentFile(), true);
+        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_START_TIME,
+                contentLogRequest.getStartTime(), true);
+        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_END_TIME,
+                contentLogRequest.getEndTime(), true);
+        ParseDataHelper.validateAndParseBoolean(REQUEST_PARAM_COMPLETION_FLAG,
+                contentLogRequest.getCompletionFlag(), true);
+        ParseDataHelper.validateAndParseBoolean(
+                REQUEST_PARAM_CORRECT_ANSWER_RECEIVED,
+                contentLogRequest.getCorrectAnswerReceived(), false);
+
     }
 }

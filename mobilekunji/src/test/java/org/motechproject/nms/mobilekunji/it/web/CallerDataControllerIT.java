@@ -115,7 +115,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         languageLocationCodeData.setCircle(circleData);
         languageLocationCodeService.create(languageLocationCodeData);
 
-        UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
+        UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         //For Default National Capping
         Configuration configurationData = configurationService.getConfiguration();
@@ -125,7 +125,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         flwDetailService.update(flwDetail);
         configurationService.updateConfiguration(configurationData);
 
-        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         //For State Level Capping Type and Next Date Condition
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
@@ -134,14 +134,14 @@ public class CallerDataControllerIT extends BasePaxIT {
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusMonths(2));
         flwDetailService.update(flwDetail);
 
-        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         //For Null Access Date
         flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(null);
         flwDetailService.update(flwDetail);
 
-        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         assertNotNull(userDetailApiResponse);
         assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
@@ -151,7 +151,7 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         //For LanguageLocationCode is Null
         circleService.create(TestHelper.getInvalidCircleData());
-        userDetailApiResponse = controller.getUserDetails("9837241545","AL","99", "111111111111111",TestHelper.getHttpRequest());
+        userDetailApiResponse = controller.getUserDetails("9837241545", "AL", "99", "111111111111111", TestHelper.getHttpRequest());
 
         assertNotNull(userDetailApiResponse.getCircle().equals("99"));
         assertNull(userDetailApiResponse.getLanguageLocationCode());
@@ -166,7 +166,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         frontLineWorkerService.updateFrontLineWorker(flwWorker);
         LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
 
-        controller.setLanguageLocationCode(languageLocationCodeApiRequest,TestHelper.getHttpRequest());
+        controller.setLanguageLocationCode(languageLocationCodeApiRequest, TestHelper.getHttpRequest());
         flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
@@ -176,7 +176,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         */
         frontLineWorkerService.deleteFrontLineWorker(flwWorker);
 
-        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111",TestHelper.getHttpRequest());
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
         assertNotNull(userDetailApiResponse);
 
         /*
@@ -184,7 +184,7 @@ public class CallerDataControllerIT extends BasePaxIT {
          */
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
 
-        controller.saveCallDetails(saveCallDetailApiRequest,TestHelper.getHttpRequest());
+        controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
         flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByNmsId(flwDetail.getNmsFlwId());
@@ -197,7 +197,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         */
         try {
             saveCallDetailApiRequest.setCallingNumber("8888888888");
-            controller.saveCallDetails(saveCallDetailApiRequest,TestHelper.getHttpRequest());
+            controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
         } catch (DataValidationException e) {
             assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         }
