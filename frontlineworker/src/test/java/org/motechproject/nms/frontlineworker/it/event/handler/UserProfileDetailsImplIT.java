@@ -1,12 +1,13 @@
 package org.motechproject.nms.frontlineworker.it.event.handler;
 
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.frontlineworker.Designation;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
-import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
@@ -137,7 +138,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1500L, "1234512345", "Rashi", Designation.USHA,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, "1781781781", "1231231212");
+                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, "1781781781", "1231231212", null);
 
             frontLineWorker.setCreator("Etasha");
             frontLineWorker.setModifiedBy("Etasha");
@@ -157,7 +158,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1501L, "1212121212", "Rashi", Designation.ASHA,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.ACTIVE, "LLC", "circleCode", "1010910109", "1010191010");
+                    null, null, null, Status.ACTIVE, "LLC", "circleCode", "1010910109", "1010191010", null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1212121212");
@@ -173,7 +174,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1502L, "9999999999", "Rashi", Designation.ANM,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.ACTIVE, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ACTIVE, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9999999999");
@@ -189,7 +190,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1503L, "2121212121", "Etasha", Designation.AWW,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.INACTIVE, null, null, null, null);
+                    null, null, null, Status.INACTIVE, null, null, null, null, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("2121212121");
@@ -205,7 +206,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1505L, "1111111111", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1111111111");
@@ -221,7 +222,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1507L, "1234567999", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
-                    null, null, null, Status.ANONYMOUS, "LLC", "circleCode", "2132132134", "22222234567");
+                    null, null, null, Status.ANONYMOUS, "LLC", "circleCode", "2132132134", "22222234567", null);
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1234567999");
@@ -245,7 +246,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1508L, "9876543210", "Rashi", Designation.USHA,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null);
+                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null, DateTime.now());
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9876543210");
@@ -261,7 +262,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1509L, "2222222222", "Rashi", Designation.USHA,
                     "123", 12L, stateData, district, null, null, null,
-                    null, null, null, Status.INVALID, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.INVALID, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null, DateTime.now());
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -278,7 +279,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1510L, "1234123412", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, null, "2345234567", null);
+                    null, null, null, Status.ANONYMOUS, null, null, "2345234567", null, null);
 
             whiteListUsers = new WhiteListUsers("1234123412");
 
@@ -291,7 +292,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1520L, "9876549876", "Rashi", Designation.USHA,
                     "123", 13L, stateTemp1, districtTemp, null, null, null,
-                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -303,7 +304,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1521L, "9809809800", "Rashi", Designation.USHA,
                     "123", 13L, stateTemp1, districtTemp, null, null, null,
-                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -315,7 +316,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1522L, "1233211234", "Rashi", Designation.USHA,
                     "123", 13L, stateTemp1, districtTemp, null, null, null,
-                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -327,7 +328,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1550L, "8978978970", "Rashi", Designation.USHA,
                     "123", 13L, stateTemp1, districtTemp, null, null, null,
-                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null);
+                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null, DateTime.now());
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("8978978970");
@@ -338,7 +339,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1551L, "3234325678", "Rashi", Designation.USHA,
                     "123", 13L, stateTemp1, districtTemp, null, null, null,
-                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null);
+                    null, null, null, Status.INVALID, "LLC", "circleCode", null, null, DateTime.now());
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("3234325678");
@@ -348,7 +349,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1511L, "8989898989", "Rashi", Designation.USHA,
                     null, null, null, null, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, "1111222233");
+                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, "1111222233", null);
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("8989898989");
             assertNotNull(frontLineWorkerdb);
@@ -363,7 +364,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1517L, "5050505050", "Rashi", Designation.USHA,
                     null, null, stateData, district, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, null, "6543265432", "7877111111");
+                    null, null, null, Status.ANONYMOUS, null, null, "6543265432", "7877111111", null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -380,7 +381,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1512L, "1121121121", "Rashi", Designation.USHA,
                     null, null, stateData, district, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null);
+                    null, null, null, Status.ANONYMOUS, null, ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);
@@ -397,7 +398,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
             frontLineWorker = new FrontLineWorker(1513L, "1313131313", "Rashi", Designation.USHA,
                     null, null, stateData, district, null, null, null,
-                    null, null, null, Status.ANONYMOUS, null, "circleCode", "8111111888", null);
+                    null, null, null, Status.ANONYMOUS, null, "circleCode", "8111111888", null, null);
 
 
             frontLineWorkerService.createFrontLineWorker(frontLineWorker);

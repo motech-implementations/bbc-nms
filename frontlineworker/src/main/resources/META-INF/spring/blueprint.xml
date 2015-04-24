@@ -24,6 +24,9 @@
     <osgi:service ref="whiteListUsersService"
                   interface="org.motechproject.nms.frontlineworker.service.WhiteListUsersService"/>
 
+    <osgi:service ref="configurationService"
+                  interface="org.motechproject.nms.frontlineworker.service.ConfigurationService"/>
+
     <osgi:reference id="csvFlwRecordsDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.CsvFrontLineWorkerRecordsDataService"/>
 
@@ -35,6 +38,9 @@
 
     <osgi:reference id="whiteListUsersDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.WhiteListUsersRecordDataService"/>
+
+    <osgi:reference id="configurationDataService"
+                    interface="org.motechproject.nms.frontlineworker.repository.ConfigurationDataService"/>
 
     <osgi:reference id="locationService"
                     interface="org.motechproject.nms.masterdata.service.LocationService"/>

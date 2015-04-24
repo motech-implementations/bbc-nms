@@ -4,8 +4,8 @@ package org.motechproject.nms.frontlineworker.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.frontlineworker.Designation;
-import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.CsvFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
@@ -311,6 +311,7 @@ public class FrontLineWorkerUploadHandler {
                 //mark record is invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
                 dbRecordByContactNo.setStatus(Status.INVALID);
+                dbRecordByContactNo.setInvalidDate(DateTime.now());
                 frontLineWorkerService.updateFrontLineWorker(dbRecordByContactNo);
             }
 
@@ -326,6 +327,7 @@ public class FrontLineWorkerUploadHandler {
                 //update the record as invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
                 dbRecord.setStatus(Status.INVALID);
+                dbRecord.setInvalidDate(DateTime.now());
                 frontLineWorkerService.updateFrontLineWorker(dbRecord);
             }
         }

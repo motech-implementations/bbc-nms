@@ -3,8 +3,8 @@ package org.motechproject.nms.frontlineworker.domain;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
-import org.motechproject.nms.frontlineworker.Designation;
-import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.HealthBlock;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
@@ -13,6 +13,7 @@ import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
 import org.motechproject.mds.domain.MdsEntity;
+import org.joda.time.DateTime;
 
 /**
  * This class Models data for Front Line Worker records
@@ -87,6 +88,9 @@ public class FrontLineWorker extends MdsEntity {
     @Field
     private String oldMobileNo;
 
+    @Field
+    private DateTime invalidDate;
+
     public FrontLineWorker() {
     }
 
@@ -95,7 +99,7 @@ public class FrontLineWorker extends MdsEntity {
                            HealthBlock healthBlockId, HealthFacility healthFacilityId, HealthSubFacility
             healthSubFacilityId, Village villageId, String adhaarNumber,
                            Status status, String languageLocationCodeId, String circleCode, String alternateContactNo,
-                           String oldMobileNo) {
+                           String oldMobileNo, DateTime invalidDate) {
         this.flwId = flwId;
         this.contactNo = contactNo;
         this.name = name;
@@ -115,6 +119,7 @@ public class FrontLineWorker extends MdsEntity {
         this.circleCode = circleCode;
         this.alternateContactNo = alternateContactNo;
         this.oldMobileNo = oldMobileNo;
+        this.invalidDate = invalidDate;
     }
 
     public Long getFlwId() {
@@ -269,4 +274,11 @@ public class FrontLineWorker extends MdsEntity {
         this.oldMobileNo = oldMobileNo;
     }
 
+    public DateTime getInvalidDate() {
+        return invalidDate;
+    }
+
+    public void setInvalidDate(DateTime invalidDate) {
+        this.invalidDate = invalidDate;
+    }
 }

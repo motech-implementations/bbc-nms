@@ -1,7 +1,7 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
-import org.motechproject.nms.frontlineworker.Status;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
