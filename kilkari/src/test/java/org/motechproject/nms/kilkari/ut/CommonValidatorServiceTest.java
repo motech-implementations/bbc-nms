@@ -59,7 +59,7 @@ public class CommonValidatorServiceTest {
     protected CsvMctsChildDataService csvMctsChildDataService;
 
     @Mock
-    protected CsvMctsChildService csvMctsChildService;
+    protected CsvMctsChildService childMctsCsvService;
 
     @Mock
     protected SubscriptionService subscriptionService;

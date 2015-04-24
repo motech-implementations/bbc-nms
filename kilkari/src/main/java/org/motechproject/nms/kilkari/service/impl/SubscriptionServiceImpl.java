@@ -457,7 +457,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         DateTime currDate = new DateTime();
         if(channel == Channel.IVR) {
             startDate = currDate.plusDays(1);
-        } else if(channel == Channel.MCTS) {
+        } else {
             packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(Constants.LMP_MSG_DELIVERY_START_MONTH) : subscriber.getDob() ;
             if(packIntialStartDate.isAfter(currDate)) {
                 int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
@@ -580,15 +580,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public void purgeOldSubscriptionSubscriberRecords() {
         Configuration configuration = configurationService.getConfiguration();
-        if(configuration != null) {
-            int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
-            List<Long> subscriptionIds = getSubscriptionIdOfNDaysEarlierSubscription();
-            if (!subscriptionIds.isEmpty()) {
-                subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionMeasureQuery(subscriptionIds));
-            }
-            subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery(expiredSubscriptionAgeDays));
-            subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
+        int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
+        List<Long> subscriptionIds = getSubscriptionIdOfNDaysEarlierSubscription();
+        if (!subscriptionIds.isEmpty()) {
+            subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionMeasureQuery(subscriptionIds));
         }
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery(expiredSubscriptionAgeDays));
+        subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
     }
     
     /**
@@ -599,10 +597,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public List<Long> getSubscriptionIdOfNDaysEarlierSubscription() {
         Configuration configuration = configurationService.getConfiguration();
         List<Long> subscriptionIds = new ArrayList<Long>();
-        if(configuration != null) {
-            int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
-            subscriptionIds.addAll(subscriptionDataService.executeQuery(new CustomQueries.SubscriptionIdOfNDaysEarlierSubscription(expiredSubscriptionAgeDays)));
-        }
+        int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
+        subscriptionIds.addAll(subscriptionDataService.executeQuery(new CustomQueries.SubscriptionIdOfNDaysEarlierSubscription(expiredSubscriptionAgeDays)));
         return subscriptionIds;
     }
     
@@ -638,17 +634,20 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             }
 
             /* Set status of subscription to completed if Last week message has been delivered in previous week */
+            Subscription dbSubscription = null;
             if((subscriber.getBeneficiaryType()==BeneficiaryType.MOTHER && weekNum <= Constants.END_WEEK_OF_72_WEEK_PACK)
                     || (subscriber.getBeneficiaryType()==BeneficiaryType.CHILD && weekNum <= Constants.END_WEEK_OF_48_WEEK_PACK)) {
                 
                 subscription.setStatus(Status.ACTIVE);
                 subscription.setLastObdDate(currDate.toDateMidnight().toDateTime());
                 scheduledSubscription.add(subscription);
+                dbSubscription = subscriptionDataService.update(subscription);
             } else {
                 subscription.setStatus(Status.COMPLETED);
                 subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
+                dbSubscription = subscriptionDataService.update(subscription);
+                activeSubscriptionCountService.decrementActiveSubscriptionCount();
             }
-            Subscription dbSubscription = subscriptionDataService.update(subscription);
             createSubscriptionMeasure(dbSubscription);
 
         }
