@@ -381,7 +381,7 @@ public class UserControllerTest {
                 + "\"callStartTime\": 1422879903,"
                 + "\"callEndTime\": 1422879923,"
                 + "\"callDurationInPulses\": 20,"
-                + "\"endOfUsagePromptCounter\": 0," + "\"callStatus\":4,"
+                + "\"endOfUsagePromptCounter\": 0," + "\"callStatus\":\"dd\","
                 + "\"callDisconnectReason\": 1," + "\"content\": ["
                 + "{\"type\": \"lesson\","
                 + "\"contentName\": \"Chapter-01lesson-04\","
@@ -410,7 +410,7 @@ public class UserControllerTest {
                 + "\"callEndTime\": 1422879923,"
                 + "\"callDurationInPulses\": 20,"
                 + "\"endOfUsagePromptCounter\": 0," + "\"callStatus\":1,"
-                + "\"callDisconnectReason\": 7," + "\"content\": ["
+                + "\"callDisconnectReason\": \"ss\"," + "\"content\": ["
                 + "{\"type\": \"lesson\","
                 + "\"contentName\": \"Chapter-01lesson-04\","
                 + "\"contentFile\": \"ch1_l4.wav\","
@@ -875,7 +875,7 @@ public class UserControllerTest {
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"endTime\": \"1222222221\","
                 + "\"completionFlag\": \"yes\","
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"completionFlag:Invalid Value\"}";
         try {
             mockMvc.perform(
@@ -904,8 +904,8 @@ public class UserControllerTest {
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"endTime\": \"1222222221\","
                 + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": \"yes\"" + "}" + "]}";
-        String expectedJson = "{\"failureReason\":\"correctAnswerReceived:Invalid Value\"}";
+                + "\"correctAnswerEntered\": \"yes\"" + "}" + "]}";
+        String expectedJson = "{\"failureReason\":\"correctAnswerEntered:Invalid Value\"}";
         try {
             mockMvc.perform(
                     post("/callDetails")
@@ -932,7 +932,7 @@ public class UserControllerTest {
                 + "\"contentName\": \"Chapter-01lesson-04\","
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"endTime\": \"1222222221\","
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"completionFlag:Not Present\"}";
         try {
             mockMvc.perform(
@@ -960,7 +960,7 @@ public class UserControllerTest {
                 + "\"contentName\": \"Chapter-01lesson-04\","
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"endTime:Not Present\"}";
         try {
             mockMvc.perform(
@@ -988,7 +988,7 @@ public class UserControllerTest {
                 + "\"contentName\": \"Chapter-01lesson-04\","
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"endTime\": 1222222221," + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"startTime:Not Present\"}";
         try {
             mockMvc.perform(
@@ -1016,7 +1016,7 @@ public class UserControllerTest {
                 + "\"contentName\": \"Chapter-01lesson-04\","
                 + "\"startTime\": 1200000000," + "\"endTime\": 1222222221,"
                 + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"contentFile:Not Present\"}";
         try {
             mockMvc.perform(
@@ -1043,7 +1043,7 @@ public class UserControllerTest {
                 + "{\"type\": \"lesson\"," + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"endTime\": 1222222221,"
                 + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"contentName:Not Present\"}";
         try {
             mockMvc.perform(
@@ -1071,7 +1071,7 @@ public class UserControllerTest {
                 + "\"contentFile\": \"ch1_l4.wav\","
                 + "\"startTime\": 1200000000," + "\"endTime\": 1222222221,"
                 + "\"completionFlag\": true,"
-                + "\"correctAnswerReceived\": true" + "}" + "]}";
+                + "\"correctAnswerEntered\": true" + "}" + "]}";
         String expectedJson = "{\"failureReason\":\"type:Not Present\"}";
         try {
             mockMvc.perform(

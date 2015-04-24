@@ -6,8 +6,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
-import org.motechproject.nms.mobileacademy.commons.CallDisconnectReason;
-import org.motechproject.nms.mobileacademy.commons.CallStatus;
 import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
 import org.motechproject.nms.mobileacademy.dto.ContentLogRequest;
 import org.motechproject.nms.mobileacademy.dto.LlcRequest;
@@ -69,7 +67,7 @@ public class UserController extends BaseController {
 
     private static final String REQUEST_PARAM_COMPLETION_FLAG = "completionFlag";
 
-    private static final String REQUEST_PARAM_CORRECT_ANSWER_RECEIVED = "correctAnswerReceived";
+    private static final String REQUEST_PARAM_CORRECT_ANSWER_ENTERED = "correctAnswerEntered";
 
     private static final String[] CALL_DATA_TYPE = { "lesson", "chapter",
             "question" };
@@ -269,21 +267,9 @@ public class UserController extends BaseController {
                 callDetailsRequest.getEndOfUsagePromptCounter(), true);
         ParseDataHelper.validateAndParseInt(REQUEST_PARAM_CALL_STATUS,
                 callDetailsRequest.getCallStatus(), true);
-        if (CallStatus.findByValue(Integer.valueOf(callDetailsRequest
-                .getCallStatus())) == null) {
-            ParseDataHelper.raiseInvalidDataException(
-                    REQUEST_PARAM_CALL_STATUS,
-                    callDetailsRequest.getCallStatus());
-        }
         ParseDataHelper.validateAndParseInt(
                 REQUEST_PARAM_CALL_DISCONNECT_REASON,
                 callDetailsRequest.getCallDisconnectReason(), true);
-        if (CallDisconnectReason.findByValue(Integer.valueOf(callDetailsRequest
-                .getCallDisconnectReason())) == null) {
-            ParseDataHelper.raiseInvalidDataException(
-                    REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                    callDetailsRequest.getCallDisconnectReason());
-        }
         if (CollectionUtils.isNotEmpty(callDetailsRequest.getContent())) {
             for (ContentLogRequest contentLogRequest : callDetailsRequest
                     .getContent()) {
@@ -334,8 +320,8 @@ public class UserController extends BaseController {
         ParseDataHelper.validateAndParseBoolean(REQUEST_PARAM_COMPLETION_FLAG,
                 contentLogRequest.getCompletionFlag(), true);
         ParseDataHelper.validateAndParseBoolean(
-                REQUEST_PARAM_CORRECT_ANSWER_RECEIVED,
-                contentLogRequest.getCorrectAnswerReceived(), false);
+                REQUEST_PARAM_CORRECT_ANSWER_ENTERED,
+                contentLogRequest.getCorrectAnswerEntered(), false);
 
     }
 }

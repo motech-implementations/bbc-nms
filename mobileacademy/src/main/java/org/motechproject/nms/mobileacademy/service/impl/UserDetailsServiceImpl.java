@@ -9,7 +9,8 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
@@ -65,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private CallDetailDataService callDetailDataService;
 
-    private static final Logger LOGGER = Logger
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(UserDetailsServiceImpl.class);
 
     private static final String COURSE_START_TIME_KEY = "courseStartTime";
@@ -306,9 +307,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     private Map<String, DateTime> findCourseStartAndEndTime(
             List<ContentLogRequest> contentLogRequests) {
-        Map<String, DateTime> courseStartEndTime = new HashMap<String, DateTime>();
-        courseStartEndTime.put(COURSE_START_TIME_KEY, null);
-        courseStartEndTime.put(COURSE_END_TIME_KEY, null);
+        Map<String, DateTime> courseStartAndEndTimeMap = new HashMap<String, DateTime>();
+        courseStartAndEndTimeMap.put(COURSE_START_TIME_KEY, null);
+        courseStartAndEndTimeMap.put(COURSE_END_TIME_KEY, null);
         List<Long> courseStartTimeValues = new ArrayList<Long>();
         List<Long> courseEndTimeValues = new ArrayList<Long>();
         if (CollectionUtils.isNotEmpty(contentLogRequests)) {
@@ -338,7 +339,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             DateTime startTime = new DateTime(
                     Long.valueOf(courseStartTimeValues.get(0))
                             * MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
-            courseStartEndTime.put(COURSE_START_TIME_KEY, startTime);
+            courseStartAndEndTimeMap.put(COURSE_START_TIME_KEY, startTime);
         }
         // if more than one record present select last for end date
         if (!courseEndTimeValues.isEmpty()) {
@@ -346,21 +347,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             DateTime endTime = new DateTime(Long.valueOf(courseEndTimeValues
                     .get(courseEndTimeValues.size() - 1))
                     * MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
-            courseStartEndTime.put(COURSE_END_TIME_KEY, endTime);
+            courseStartAndEndTimeMap.put(COURSE_END_TIME_KEY, endTime);
         }
-        return courseStartEndTime;
+        return courseStartAndEndTimeMap;
     }
 
     /**
      * add FLW Usage Record
      * 
-     * @param courseStartEndTime
+     * @param courseStartAndEndTimeMap
      * @param callDetailRequest
      * @param frontLineWorker
      * @return FlwUsageDetail
      */
     private FlwUsageDetail addFlwUsageRecord(
-            Map<String, DateTime> courseStartEndTime,
+            Map<String, DateTime> courseStartAndEndTimeMap,
             CallDetailsRequest callDetailsRequest,
             FrontLineWorker frontLineWorker) {
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
@@ -370,9 +371,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .valueOf(callDetailsRequest.getCallDurationInPulses()));
         flwUsageDetail.setEndOfUsagePromptCounter(Integer
                 .valueOf(callDetailsRequest.getEndOfUsagePromptCounter()));
-        flwUsageDetail.setCourseStartDate(courseStartEndTime
+        flwUsageDetail.setCourseStartDate(courseStartAndEndTimeMap
                 .get(COURSE_START_TIME_KEY));
-        flwUsageDetail.setCourseEndDate(courseStartEndTime
+        flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                 .get(COURSE_END_TIME_KEY));
         flwUsageDetail.setLastAccessTime(new DateTime(Long
                 .valueOf(callDetailsRequest.getCallStartTime())
@@ -389,7 +390,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return FlwUsageDetail
      */
     private FlwUsageDetail updateFlwUsageRecord(FlwUsageDetail flwUsageDetail,
-            Map<String, DateTime> courseStartEndTime,
+            Map<String, DateTime> courseStartAndEndTimeMap,
             CallDetailsRequest callDetailsRequest) {
         Integer currentUsageInPulses = Integer.valueOf(callDetailsRequest
                 .getCallDurationInPulses())
@@ -399,12 +400,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .valueOf(callDetailsRequest.getEndOfUsagePromptCounter()));
         if (flwUsageDetail.getCourseStartDate() != null
                 && flwUsageDetail.getCourseEndDate() == null) {
-            flwUsageDetail.setCourseEndDate(courseStartEndTime
+            flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                     .get(COURSE_END_TIME_KEY));
         } else {
-            flwUsageDetail.setCourseStartDate(courseStartEndTime
+            flwUsageDetail.setCourseStartDate(courseStartAndEndTimeMap
                     .get(COURSE_START_TIME_KEY));
-            flwUsageDetail.setCourseEndDate(courseStartEndTime
+            flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                     .get(COURSE_END_TIME_KEY));
         }
         flwUsageDetail.setLastAccessTime(new DateTime(Long
@@ -461,10 +462,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 contentLog.setCompletionFlag(Boolean
                         .parseBoolean(contentLogRequest.getCompletionFlag()));
                 if (StringUtils.isNotBlank(contentLogRequest
-                        .getCorrectAnswerReceived())) {
-                    contentLog.setCorrectAnswerReceived(Boolean
+                        .getCorrectAnswerEntered())) {
+                    contentLog.setCorrectAnswerEntered(Boolean
                             .parseBoolean(contentLogRequest
-                                    .getCorrectAnswerReceived()));
+                                    .getCorrectAnswerEntered()));
                 }
                 contentLog.setCourseStartDate(flwUsageDetail
                         .getCourseStartDate());
@@ -477,6 +478,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                                 .getCompletionFlag()))) {
                     contentLog.setCourseEndDate(flwUsageDetail
                             .getCourseEndDate());
+                    LOGGER.trace(
+                            "Course start and end  dates for FLW: {} , MSISDN: {} , Start Date: {} ,End Date: {}",
+                            frontLineWorker.getId(), callDetail.getMsisdn(),
+                            flwUsageDetail.getCourseStartDate(),
+                            flwUsageDetail.getCourseEndDate());
                 }
                 callDetailService.saveContentLogRecord(contentLog);
             }

@@ -56,7 +56,7 @@ public class ContentLog extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 10)
-    private Boolean correctAnswerReceived;
+    private Boolean correctAnswerEntered;
 
     public Long getCallId() {
         return callId;
@@ -138,12 +138,12 @@ public class ContentLog extends MdsEntity {
         this.courseEndDate = courseEndDate;
     }
 
-    public Boolean getCorrectAnswerReceived() {
-        return correctAnswerReceived;
+    public Boolean getCorrectAnswerEntered() {
+        return correctAnswerEntered;
     }
 
-    public void setCorrectAnswerReceived(Boolean correctAnswerReceived) {
-        this.correctAnswerReceived = correctAnswerReceived;
+    public void setCorrectAnswerEntered(Boolean correctAnswerEntered) {
+        this.correctAnswerEntered = correctAnswerEntered;
     }
 
 }

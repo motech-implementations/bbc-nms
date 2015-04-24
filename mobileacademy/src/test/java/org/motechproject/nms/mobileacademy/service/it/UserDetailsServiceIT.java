@@ -88,7 +88,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
         contentLogRequestFirst.setContentFile("ch1.wav");
         contentLogRequestFirst
                 .setContentName(MobileAcademyConstants.COURSE_START_CONTENT);
-        contentLogRequestFirst.setCorrectAnswerReceived("true");
+        contentLogRequestFirst.setCorrectAnswerEntered("true");
         contentLogRequestFirst.setStartTime("1429167000");
         contentLogRequestFirst.setEndTime("1429169000");
         // course end record
@@ -98,7 +98,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
         contentLogRequestLast.setContentFile("ch2.wav");
         contentLogRequestLast
                 .setContentName(MobileAcademyConstants.COURSE_END_CONTENT);
-        contentLogRequestLast.setCorrectAnswerReceived("true");
+        contentLogRequestLast.setCorrectAnswerEntered("true");
         contentLogRequestLast.setStartTime("1429168000");
         contentLogRequestLast.setEndTime("1429170000");
 
@@ -151,7 +151,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
                     contentLogFirstRecord.getContentName());
             assertEquals("lesson".toUpperCase(),
                     contentLogFirstRecord.getType());
-            assertTrue(contentLogFirstRecord.getCorrectAnswerReceived());
+            assertTrue(contentLogFirstRecord.getCorrectAnswerEntered());
             assertTrue(1429167000l == (contentLogFirstRecord
                     .getCourseStartDate().getMillis() / 1000));
             assertTrue(null == contentLogFirstRecord.getCourseEndDate());
@@ -169,7 +169,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
                     contentLogLastRecord.getContentName());
             assertEquals("question".toUpperCase(),
                     contentLogLastRecord.getType());
-            assertTrue(contentLogLastRecord.getCorrectAnswerReceived());
+            assertTrue(contentLogLastRecord.getCorrectAnswerEntered());
             assertTrue(1429167000l == (contentLogLastRecord
                     .getCourseStartDate().getMillis() / 1000));
             assertTrue(1429170000l == (contentLogLastRecord.getCourseEndDate()
