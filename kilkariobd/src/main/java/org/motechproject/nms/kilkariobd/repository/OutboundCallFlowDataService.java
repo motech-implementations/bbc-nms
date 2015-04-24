@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkariobd.repository;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Lookup;
 import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
@@ -19,4 +20,7 @@ public interface OutboundCallFlowDataService extends MotechDataService<OutboundC
 
     @Lookup
     OutboundCallFlow findRecordByFileName(@LookupField(name = "obdFileName")String fileName);
+
+    @Lookup
+    OutboundCallFlow findRecordByCreationDate(@LookupField(name = "creationDate")DateTime date);
 }

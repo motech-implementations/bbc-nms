@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkariobd.dto.request;
 
+import com.google.gson.annotations.Expose;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 
 /**
@@ -7,8 +8,11 @@ import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
  */
 public class FileProcessedStatusRequest {
 
-    FileProcessingStatus fileProcessingStatus;
-    String fileName;
+    @Expose
+    private FileProcessingStatus fileProcessingStatus;
+
+    @Expose
+    private String fileName;
 
     public FileProcessedStatusRequest(FileProcessingStatus status, String fileName) {
         this.fileProcessingStatus = status;

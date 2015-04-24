@@ -33,6 +33,12 @@ public final class Constants {
     public static final String NOTIFY_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.notify.obdtarget";
     public static final String PREPARE_OBD_TARGET_EVENT_JOB = "OBDPreparationJob";
     public static final String NOTIFY_OBD_TARGET_EVENT_JOB = "ODBNotifyJob";
+    public static final String RETRY_PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.retry.prepare.obdtarget";
+    public static final String OBD_PREPARATION_RETRY_JOB = "obdPreparationRetryJob";
+    public static final String CURRENT_OBD_FILE = "currentObdFile";
+    public static final String CURRENT_CDR_OBD_FILE = "currentCdrObdFile";
+    public static final String OBD_PREPARATION_RETRY_NUMBER = "retryNumber";
+
 
     //constants for cdrSummary
     public static final String FINAL_STATUS = "finalStatus";

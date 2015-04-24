@@ -71,6 +71,14 @@ public class Configuration {
     @Field(required = true)
     private String obdNotificationEventCronExpression;
 
+    @Field(required = true)
+    private Integer retryIntervalForObdPreparationInMins;
+
+
+    @Field(required = true)
+    private Integer maxObdPreparationRetryCount;
+
+
 
     public Integer getNumMsgPerWeek() {
         return numMsgPerWeek;
@@ -200,6 +208,21 @@ public class Configuration {
         this.obdNotificationEventCronExpression = obdNotificationEventCronExpression;
     }
 
+    public Integer getRetryIntervalForObdPreparationInMins() {
+        return retryIntervalForObdPreparationInMins;
+    }
+
+    public void setRetryIntervalForObdPreparationInMins(Integer retryIntervalForObdPreparationInMins) {
+        this.retryIntervalForObdPreparationInMins = retryIntervalForObdPreparationInMins;
+    }
+
+    public Integer getMaxObdPreparationRetryCount() {
+        return maxObdPreparationRetryCount;
+    }
+
+    public void setMaxObdPreparationRetryCount(Integer maxObdPreparationRetryCount) {
+        this.maxObdPreparationRetryCount = maxObdPreparationRetryCount;
+    }
 
 }
 

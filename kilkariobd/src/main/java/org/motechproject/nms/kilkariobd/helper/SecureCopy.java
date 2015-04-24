@@ -46,14 +46,12 @@ public class SecureCopy {
 
     /**
      * This method copies a file from local machine to remote machine using SCP
-     * @param fileName name of the file to be copied.
+     * @param lFile name of the file to be copied.
      */
-    public static void toRemote(String fileName) {
+    public static void toRemote(String lFile, String rFile) {
         Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
-        String rFile = configuration.getObdFilePathOnServer(); //remoteFile
-        String lFile = settings.getObdFileLocalPath() + "/" + fileName; //localFile
         int retry = Constants.FIRST_ATTEMPT;
 
         FileInputStream fileInputStream = null;
@@ -130,16 +128,13 @@ public class SecureCopy {
 
     /**
      * This method copies a file remote machine to local machine
-     * @param fileName name of the file to be copied.
+     * @param lFile name of the file to be copied.
      */
-    public static void fromRemote(String fileName) throws IOException{
+    public static void fromRemote(String lFile, String rFile) throws IOException{
         Settings settings = new Settings(settingsFacade);
         Configuration configuration = configurationService.getConfiguration();
 
         FileOutputStream fileOutputStream = null;
-
-        String lFile = settings.getObdFileLocalPath(); //localFile
-        String rFile = configuration.getObdFilePathOnServer() + "/" + fileName; //remoteFile
 
         int retry = 1;
 

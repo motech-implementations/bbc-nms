@@ -59,6 +59,8 @@ public class Initializer {
     /*Triggers at 8:00am everyday */
     public static final String DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION = "0 0 8 * * ?";
 
+    public static final Integer DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS = 60;
+
     private ConfigurationService configurationService;
 
     private MotechSchedulerService motechSchedulerService;
@@ -101,6 +103,7 @@ public class Initializer {
             configuration.setObdIvrUrl(DEFAULT_OBD_IVR_URL);
             configuration.setObdCreationEventCronExpression(DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION);
             configuration.setObdNotificationEventCronExpression(DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);
+            configuration.setRetryIntervalForObdPreparationInMins(DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS);
             configurationService.createConfiguration(configuration);
 
         }

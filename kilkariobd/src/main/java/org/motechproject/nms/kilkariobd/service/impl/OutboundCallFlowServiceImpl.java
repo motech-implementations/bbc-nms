@@ -1,5 +1,9 @@
 package org.motechproject.nms.kilkariobd.service.impl;
 
+import org.joda.time.DateTime;
+import org.motechproject.mds.filter.Filter;
+import org.motechproject.mds.query.QueryParams;
+import org.motechproject.mds.util.Order;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
@@ -54,5 +58,10 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
     @Override
     public OutboundCallFlow findRecordByFileName(String filename) {
        return callFlowDataService.findRecordByFileName(filename);
+    }
+
+    @Override
+    public OutboundCallFlow findRecordByCreationDate(DateTime date) {
+        return callFlowDataService.findRecordByCreationDate(date);
     }
 }
