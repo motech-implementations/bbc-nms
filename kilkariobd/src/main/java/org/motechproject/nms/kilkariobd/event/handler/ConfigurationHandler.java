@@ -36,6 +36,8 @@ public class ConfigurationHandler {
     @MotechListener(subjects = CONFIGURATION_UPDATE_EVENT)
     public void configurationUpdate(MotechEvent motechEvent) {
 
+        logger.info("Event invoked [{}]" + CONFIGURATION_UPDATE_EVENT);
+
         Map<String, Object> parameters = motechEvent.getParameters();
         Long object_id = (Long)parameters.get(CONFIGURATION_ID);
 
@@ -46,5 +48,7 @@ public class ConfigurationHandler {
 
         motechSchedulerService.rescheduleJob(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT,Constants.PREPARE_OBD_TARGET_EVENT_JOB, cronExpression1);
         motechSchedulerService.rescheduleJob(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, Constants.NOTIFY_OBD_TARGET_EVENT_JOB, cronExpression2);
+
+        logger.info("Update event handling completed");
     }
 }

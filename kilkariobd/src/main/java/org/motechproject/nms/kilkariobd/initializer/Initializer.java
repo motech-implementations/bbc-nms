@@ -51,7 +51,6 @@ public class Initializer {
 
     public static final String DEFAULT_OBD_IVR_URL = "http://10.10.10.10:8080/obdmanager";
 
-    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEK = 1;
 
     /*Triggers at 00:01am everyday */
     public static final String DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION = "0 1 0 * * ?";
@@ -97,7 +96,6 @@ public class Initializer {
             configuration.setObdFileServerIp(DEFAULT_OBD_FILE_SERVER_IP);
             configuration.setObdFilePathOnServer(DEFAULT_OBD_FILE_PATH_ON_SERVER);
             configuration.setObdFileServerSshUsername(DEFAULT_OBD_FILE_SERVER_SSH_USERNAME);
-            configuration.setNumMsgPerWeek(DEFAULT_NUMBER_OF_MSG_PER_WEEK);
             configuration.setObdIvrUrl(DEFAULT_OBD_IVR_URL);
             configuration.setObdCreationEventCronExpression(DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION);
             configuration.setObdNotificationEventCronExpression(DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);

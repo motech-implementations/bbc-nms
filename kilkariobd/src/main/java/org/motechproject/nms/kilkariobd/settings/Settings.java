@@ -3,16 +3,12 @@ package org.motechproject.nms.kilkariobd.settings;
 
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.server.config.SettingsFacade;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The purpose of this class is to read kilkari obd properties from the kilkariobd.properties file and make
  * the setting parameters available for the application to use *
  */
 public class Settings {
-
-    private Logger logger = LoggerFactory.getLogger(Settings.class);
 
     private String offlineApiInitialIntervalInMilliseconds;
 

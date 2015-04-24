@@ -53,6 +53,19 @@ public class OutboundCallDetailTest {
         Assert.assertTrue(1 == outboundCallDetail.getLanguageLocationCode());
 
         outboundCallDetail.setMsgPlayEndTime(6);
+        Assert.assertTrue(6 == outboundCallDetail.getMsgPlayEndTime());
+
+        outboundCallDetail.setWeekId("weekId");
+        Assert.assertEquals("weekId", outboundCallDetail.getWeekId());
+
+        outboundCallDetail.setOperatorCode("OC");
+        Assert.assertEquals("OC", outboundCallDetail.getOperatorCode());
+
+        outboundCallDetail.setPriority(6);
+        Assert.assertTrue(6 == outboundCallDetail.getPriority());
+
+        outboundCallDetail.setMsgPlayStartTime(1);
+        Assert.assertTrue(1 == outboundCallDetail.getMsgPlayStartTime());
 
     }
 }
