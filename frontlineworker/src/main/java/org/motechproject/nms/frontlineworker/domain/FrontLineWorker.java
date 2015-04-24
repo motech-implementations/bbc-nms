@@ -1,8 +1,10 @@
 package org.motechproject.nms.frontlineworker.domain;
 
+import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
+import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.nms.frontlineworker.enums.Designation;
 import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.masterdata.domain.District;
@@ -12,8 +14,6 @@ import org.motechproject.nms.masterdata.domain.HealthSubFacility;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.domain.Taluka;
 import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.mds.domain.MdsEntity;
-import org.joda.time.DateTime;
 
 /**
  * This class Models data for Front Line Worker records

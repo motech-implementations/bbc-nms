@@ -5,19 +5,31 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.frontlineworker.enums.Designation;
-import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
-import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.domain.WhiteListUsers;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
-import org.motechproject.nms.frontlineworker.service.*;
+import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
+import org.motechproject.nms.frontlineworker.service.CsvWhiteListUsersService;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
+import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.frontlineworker.service.WhiteListUsersService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
-import org.motechproject.nms.masterdata.domain.*;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.DistrictService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.OperatorService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -630,9 +642,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         try {
             userProfile = userProfileDetailsService.processUserDetails("9809809800", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
         } catch (FlwNotInWhiteListException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         } catch (ServiceNotDeployedException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
         // Record 13 LanguageLocationCodeId is not null, circleCode is Unknown, Status is ACTIVE and IsWhiteListEnable
@@ -648,9 +660,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         try {
             userProfile = userProfileDetailsService.processUserDetails("1233211234", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (FlwNotInWhiteListException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         } catch (ServiceNotDeployedException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
         // Record 14 status is INVALID and LanguageLocationCode, circleCode is not Null, IsWhiteListEnable
@@ -664,11 +676,11 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         assertNotNull(stateTemp1);
 
         try {
-        userProfile = userProfileDetailsService.processUserDetails("8978978970", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+            userProfile = userProfileDetailsService.processUserDetails("8978978970", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
         } catch (FlwNotInWhiteListException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         } catch (ServiceNotDeployedException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
 
@@ -685,9 +697,9 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         try {
             userProfile = userProfileDetailsService.processUserDetails("3234325678", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
         } catch (FlwNotInWhiteListException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         } catch (ServiceNotDeployedException e) {
-            Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
 
@@ -742,7 +754,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
 
     @Test
     public void testUpdateLanguageLocationCodeFromMsisdn() throws DataValidationException, FlwNotInWhiteListException,
-            ServiceNotDeployedException{
+            ServiceNotDeployedException {
 
 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
@@ -774,7 +786,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         // Record 20 LanguageLocationCode should Exist but FrontlineWorker not present.
 
         try {
-            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn("LLC", "1414141414",  ServicesUsingFrontLineWorker.MOBILEKUNJI);
+            userProfileDetailsService.updateLanguageLocationCodeFromMsisdn("LLC", "1414141414", ServicesUsingFrontLineWorker.MOBILEKUNJI);
         } catch (Exception e) {
             Assert.assertTrue(e instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) e).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);

@@ -4,11 +4,11 @@ package org.motechproject.nms.frontlineworker.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.frontlineworker.enums.Designation;
-import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.CsvFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.CsvFrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
@@ -188,54 +188,53 @@ public class FrontLineWorkerUploadHandler {
 
                     FrontLineWorker frontLineWorker = new FrontLineWorker();
 
-                    if (csvsFrontLineWorker.getIsValid().equalsIgnoreCase("false")) {
+                    if ((null != csvsFrontLineWorker.getIsValid()) && (csvsFrontLineWorker.getIsValid().equalsIgnoreCase("false"))) {
                         checkForInvalidFrontLineWorker(csvsFrontLineWorker);
-                    }
-                    else {
-
-                    //Apply validations on the values entered in the CSV
-                    validateFrontLineWorker(csvsFrontLineWorker, frontLineWorker);
-
-                    //Map values entered for the record in CSV to FrontLineWorker
-                    mapFrontLineWorkerFrom(csvsFrontLineWorker, frontLineWorker);
-
-                    nmsFlwId = frontLineWorker.getId();
-
-                    //to verify whether it is a creation case, update case of invalid case
-                    FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker);
-                    Long flw = ParseDataHelper.validateAndParseLong("flwId", csvsFrontLineWorker.getFlwId(), false);
-
-                    //in case of update, if flwId was present earlier and absent in latest record, exception is
-                    // to be thrown
-                    if (flw == null && dbRecord != null && dbRecord.getFlwId() != null) {
-                        ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
-                    }
-
-                    //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
-                    // in database, then exception is to be thrown
-                    if ((dbRecord != null) && (nmsFlwId != null) && (dbRecord.getId().longValue() != nmsFlwId.longValue())) {
-                        ParseDataHelper.raiseInvalidDataException("NMS Flw Id", "Incorrect");
-                    }
-
-                    if (dbRecord == null) {
-
-                        //creation scenario
-                        logger.debug("New front line worker creation starts");
-                        successfulCreate(frontLineWorker, bulkUploadStatus, "Successful creation of new front line worker");
-
-
                     } else {
-                        //updation scenario
-                        if (dbRecord.getStatus() == Status.INVALID) {
-                            //Invalid record is tried to be updated
-                            ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
-                        } else {
-                            Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", csvsFrontLineWorker.getIsValid(), false);
-                            if (valid == null) {
-                                frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
-                                successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = null ");
 
+                        //Apply validations on the values entered in the CSV
+                        validateFrontLineWorker(csvsFrontLineWorker, frontLineWorker);
+
+                        //Map values entered for the record in CSV to FrontLineWorker
+                        mapFrontLineWorkerFrom(csvsFrontLineWorker, frontLineWorker);
+
+                        nmsFlwId = frontLineWorker.getId();
+
+                        //to verify whether it is a creation case, update case of invalid case
+                        FrontLineWorker dbRecord = checkExistenceOfFlw(frontLineWorker);
+                        Long flw = ParseDataHelper.validateAndParseLong("flwId", csvsFrontLineWorker.getFlwId(), false);
+
+                        //in case of update, if flwId was present earlier and absent in latest record, exception is
+                        // to be thrown
+                        if (flw == null && dbRecord != null && dbRecord.getFlwId() != null) {
+                            ParseDataHelper.raiseInvalidDataException("FlwId for existing frontlineworker", null);
+                        }
+
+                        //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
+                        // in database, then exception is to be thrown
+                        if ((dbRecord != null) && (nmsFlwId != null) && (dbRecord.getId().longValue() != nmsFlwId.longValue())) {
+                            ParseDataHelper.raiseInvalidDataException("NMS Flw Id", "Incorrect");
+                        }
+
+                        if (dbRecord == null) {
+
+                            //creation scenario
+                            logger.debug("New front line worker creation starts");
+                            successfulCreate(frontLineWorker, bulkUploadStatus, "Successful creation of new front line worker");
+
+
+                        } else {
+                            //updation scenario
+                            if (dbRecord.getStatus() == Status.INVALID) {
+                                //Invalid record is tried to be updated
+                                ParseDataHelper.raiseInvalidDataException("Status for existing frontlineworker", "Invalid");
                             } else {
+                                Boolean valid = ParseDataHelper.validateAndParseBoolean("isValid", csvsFrontLineWorker.getIsValid(), false);
+                                if (valid == null) {
+                                    frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
+                                    successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = null ");
+
+                                } else {
                                 /*if (valid == true) {*/
                                     frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
                                     successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = true ");
@@ -245,9 +244,9 @@ public class FrontLineWorkerUploadHandler {
                                     successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = false");
 
                                 }*/
+                                }
                             }
                         }
-                    }
                     }
                 }
             } catch (DataValidationException dve) {
@@ -288,10 +287,11 @@ public class FrontLineWorkerUploadHandler {
     /**
      * This procedure is used to mark he frontLineWorker as invalid if the isValid field is set as false in Csv record
      * and the record is present in database.
+     *
      * @param csvFrontLineWorker the csvFrontLineWorker record which is to be marked invalid
      * @throws DataValidationException
      */
-    private void checkForInvalidFrontLineWorker(CsvFrontLineWorker csvFrontLineWorker) throws DataValidationException{
+    private void checkForInvalidFrontLineWorker(CsvFrontLineWorker csvFrontLineWorker) throws DataValidationException {
 
         logger.debug(" checking for existence of record that is to be marked invalid");
         FrontLineWorker dbRecord = null;
@@ -299,15 +299,14 @@ public class FrontLineWorkerUploadHandler {
         Long nmsFlwId = ParseDataHelper.validateAndParseLong("NMS Flw Id", csvFrontLineWorker.getNmsFlwId(), false);
 
 
-        if(nmsFlwId == null)
-        {
+        if (nmsFlwId == null) {
             logger.debug(" nms Flw Id is null. searching by Contact Number");
-            String contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", csvFrontLineWorker.getContactNo());
+
+            String contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", ParseDataHelper.validateAndParseString("Contact Number", csvFrontLineWorker.getContactNo(), true));
             dbRecordByContactNo = frontLineWorkerService.getFlwBycontactNo(contactNo);
-            if(dbRecordByContactNo == null) {
+            if (dbRecordByContactNo == null) {
                 ParseDataHelper.raiseInvalidDataException("Contact number", csvFrontLineWorker.getContactNo());
-            }
-            else {
+            } else {
                 //mark record is invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
                 dbRecordByContactNo.setStatus(Status.INVALID);
@@ -316,14 +315,12 @@ public class FrontLineWorkerUploadHandler {
             }
 
 
-        }
-        else {
+        } else {
             logger.debug(" nms Flw Id is not null. searching record in database by nmsFlwID");
             dbRecord = frontLineWorkerService.findById(nmsFlwId);
             if (dbRecord == null) {
                 ParseDataHelper.raiseInvalidDataException("NMS Flw Id", nmsFlwId.toString());
-            }
-            else {
+            } else {
                 //update the record as invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
                 dbRecord.setStatus(Status.INVALID);
@@ -407,11 +404,11 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
 
-        if(frontLineWorker.getOldMobileNo() != null) {
+        if (frontLineWorker.getOldMobileNo() != null) {
             dbRecord.setOldMobileNo(frontLineWorker.getOldMobileNo());
         }
 
-        if(frontLineWorker.getAlternateContactNo() != null) {
+        if (frontLineWorker.getAlternateContactNo() != null) {
             dbRecord.setAlternateContactNo(frontLineWorker.getAlternateContactNo());
         }
 
@@ -460,15 +457,15 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setHealthFacilityId(healthFacilityConsistencyCheck(frontLineWorker.getHealthBlockId(), record.getPhcCode()));
         frontLineWorker.setHealthSubFacilityId(healthSubFacilityConsistencyCheck(frontLineWorker.getHealthFacilityId(), record.getSubCentreCode()));
 
-        contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", record.getContactNo());
+        contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", ParseDataHelper.validateAndParseString("Contact Number", record.getContactNo(), true));
         frontLineWorker.setContactNo(contactNo);
 
-        if(record.getAlternateContactNo() != null) {
+        if (record.getAlternateContactNo() != null) {
             alternateContactNo = ParseDataHelper.validateAndTrimMsisdn("Alternate Number", record.getAlternateContactNo());
             frontLineWorker.setAlternateContactNo(alternateContactNo);
         }
 
-        if(record.getOldMobileNo() != null) {
+        if (record.getOldMobileNo() != null) {
             oldMobileNo = ParseDataHelper.validateAndTrimMsisdn("Old Mobile Number", record.getOldMobileNo());
             frontLineWorker.setOldMobileNo(oldMobileNo);
         }

@@ -25,10 +25,6 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         this.configurationDataService = configurationDataService;
     }
 
-    public ConfigurationServiceImpl() {
-    }
-
-
     /**
      * Create FrontLineWorker Service configuration
      *

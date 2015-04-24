@@ -24,6 +24,10 @@
     <osgi:service ref="configurationService"
                   interface="org.motechproject.nms.frontlineworker.service.ConfigurationService"/>
 
+    <osgi:service ref="removeInvalidRecordsService"
+                  interface="org.motechproject.nms.frontlineworker.service.RemoveInvalidRecords"/>
+
+
     <osgi:reference id="csvFlwRecordsDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.CsvFrontLineWorkerRecordsDataService"/>
 
@@ -38,6 +42,7 @@
 
     <osgi:reference id="configurationDataService"
                     interface="org.motechproject.nms.frontlineworker.repository.ConfigurationDataService"/>
+
 
     <osgi:reference id="locationService"
                     interface="org.motechproject.nms.masterdata.service.LocationService"/>
@@ -74,6 +79,10 @@
 
     <osgi:reference id="healthSubFacilityService"
                     interface="org.motechproject.nms.masterdata.service.HealthSubFacilityService"/>
+
+
+    <osgi:reference id="schedulerServiceOsgi"
+                    interface="org.motechproject.scheduler.service.MotechSchedulerService"/>
 
 </beans>
 

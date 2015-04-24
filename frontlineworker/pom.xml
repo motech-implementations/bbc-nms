@@ -53,42 +53,48 @@
             <version>${motech.version}</version>
         </dependency>
 
+        <!-- Scheduler -->
+        <dependency>
+            <groupId>${motech.groupId}</groupId>
+            <artifactId>motech-scheduler</artifactId>
+            <version>${motech.version}</version>
+        </dependency>
 
-                    </dependencies>
+    </dependencies>
 
-                    <repositories>
-                        <repository>
-                            <id>motech-repo</id>
-                            <name>MOTECH Maven Repository</name>
-                            <url>http://nexus.motechproject.org/content/repositories/public</url>
-                        </repository>
-                    </repositories>
+    <repositories>
+        <repository>
+            <id>motech-repo</id>
+            <name>MOTECH Maven Repository</name>
+            <url>http://nexus.motechproject.org/content/repositories/public</url>
+        </repository>
+    </repositories>
 
-                    <build>
-                        <plugins>
-                            <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-compiler-plugin</artifactId>
-                                <version>3.1</version>
-                                <configuration>
-                                    <source>1.7</source>
-                                    <target>1.7</target>
-                                </configuration>
-                            </plugin>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
 
-                            <plugin>
-                                <groupId>org.apache.felix</groupId>
-                                <artifactId>maven-bundle-plugin</artifactId>
-                                <version>2.3.5</version>
-                                <extensions>true</extensions>
-                                <configuration>
-                                    <instructions>
-                                        <Blueprint-Enabled>true</Blueprint-Enabled>
-                                        <Resource-Path>frontlineworker/resources</Resource-Path>
-                                        <Context-Path>frontlineworker</Context-Path>
-                                        <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
-                                            org.motechproject.nms.frontlineworker.repository;version=${project.version},
-                                            <!-- Bug 17 -->
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.5</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Blueprint-Enabled>true</Blueprint-Enabled>
+                        <Resource-Path>frontlineworker/resources</Resource-Path>
+                        <Context-Path>frontlineworker</Context-Path>
+                        <Export-Package>org.motechproject.nms.frontlineworker;version=${project.version},
+                            org.motechproject.nms.frontlineworker.repository;version=${project.version},
+                            <!-- Bug 17 -->
                             org.motechproject.nms.frontlineworker.event.handler;version=${project.version},
                             org.motechproject.nms.frontlineworker.domain;version=${project.version},
                             org.motechproject.nms.frontlineworker.service;version=${project.version},
@@ -96,6 +102,7 @@
                             org.motechproject.nms.frontlineworker.constants;version=${project.version},
                             org.motechproject.nms.frontlineworker.exception;version=${project.version},
                             org.motechproject.nms.frontlineworker.enums;version=${project.version}
+
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

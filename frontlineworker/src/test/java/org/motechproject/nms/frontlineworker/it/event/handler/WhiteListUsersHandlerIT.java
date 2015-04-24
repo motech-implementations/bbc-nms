@@ -28,7 +28,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 /**
- *  This Class models the integration testing of WhiteListUsersUploadHandler.
+ * This Class models the integration testing of WhiteListUsersUploadHandler.
  */
 
 

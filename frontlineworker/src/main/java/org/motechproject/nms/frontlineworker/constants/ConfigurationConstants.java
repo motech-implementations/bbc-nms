@@ -17,6 +17,13 @@ public final class ConfigurationConstants {
 
     public static final Long CONFIGURATION_INDEX = 1L;
 
+    /*Triggers at 00:01am everyday */
+    public static final String DELETION_EVENT_CRON_EXPRESSION = "0 1 0 * * ?";
+
+    public static final String FLW_DELETE_JOB = "FLWDeleteJob";
+
+    public static final String FLW_DELETE_EVENT_SUBJECT = "mds.crud.frontlineworker.delete";
+
     private ConfigurationConstants() {
     }
 }

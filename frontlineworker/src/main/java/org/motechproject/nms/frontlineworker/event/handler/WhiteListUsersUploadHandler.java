@@ -227,7 +227,7 @@ public class WhiteListUsersUploadHandler {
         String contactNo;
         logger.debug("validateAndMapWhiteListUsers process start");
 
-        contactNo = ParseDataHelper.validateAndTrimMsisdn(" White List User Contact Number", record.getContactNo());
+        contactNo = ParseDataHelper.validateAndTrimMsisdn(" White List User Contact Number", ParseDataHelper.validateAndParseString("White List User Contact Number", record.getContactNo(), true));
         whiteListUsers.setContactNo(contactNo);
 
         whiteListUsers.setCreator(record.getCreator());

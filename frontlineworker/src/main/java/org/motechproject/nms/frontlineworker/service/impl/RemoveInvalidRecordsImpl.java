@@ -17,11 +17,15 @@ import java.util.List;
 @Service("removeInvalidRecordsService")
 public class RemoveInvalidRecordsImpl implements RemoveInvalidRecords {
 
-    @Autowired
     FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
 
-    @Autowired
     FrontLineWorkerService frontLineWorkerService;
+
+    @Autowired
+    public RemoveInvalidRecordsImpl(FrontLineWorkerRecordDataService frontLineWorkerRecordDataService, FrontLineWorkerService frontLineWorkerService) {
+        this.frontLineWorkerRecordDataService = frontLineWorkerRecordDataService;
+        this.frontLineWorkerService = frontLineWorkerService;
+    }
 
     @Override
     public List<FrontLineWorker> invalidFrontLineWorkerList() {
@@ -33,10 +37,9 @@ public class RemoveInvalidRecordsImpl implements RemoveInvalidRecords {
     public void deleteInvalidFrontLineWorkerRecords() {
         List<FrontLineWorker> frontLineWorkerListToBeDeleted = invalidFrontLineWorkerList();
 
-        for(FrontLineWorker frontLineWorker: frontLineWorkerListToBeDeleted) {
+        for (FrontLineWorker frontLineWorker : frontLineWorkerListToBeDeleted) {
             frontLineWorkerService.deleteFrontLineWorker(frontLineWorker);
         }
-
 
 
     }
