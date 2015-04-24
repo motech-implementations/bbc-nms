@@ -5,7 +5,7 @@ import org.joda.time.Weeks;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMcts;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.masterdata.domain.*;
@@ -198,7 +198,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
      * @throws NmsInternalServerError 
      */
     @Override
-    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
+    public Subscriber validateAndMapMctsLocationToSubscriber(CsvMcts mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException, NmsInternalServerError {
         
         Long stateCode = ParseDataHelper.validateAndParseLong(Constants.STATE_CODE, mctsCsv.getStateCode(),  true);

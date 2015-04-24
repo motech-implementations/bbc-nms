@@ -3,14 +3,14 @@ package org.motechproject.nms.kilkari.ut.domain;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMcts;
 
 public class MctsCsvTest {
 
     @Test
     public void shouldSetValuesInMctsCsv() {
 
-        MctsCsv mctsCsv = new MctsCsv();
+        CsvMcts mctsCsv = new CsvMcts();
 
         mctsCsv.setDistrictCode("districtCode");
         Assert.assertEquals("districtCode",mctsCsv.getDistrictCode());

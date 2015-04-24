@@ -7,7 +7,7 @@ import org.motechproject.mds.annotations.Field;
  * This entity represents the child mcts record.
  */
 @Entity
-public class CsvMctsChild extends MctsCsv {
+public class CsvMctsChild extends CsvMcts {
     
     @Field
     private String motherName;

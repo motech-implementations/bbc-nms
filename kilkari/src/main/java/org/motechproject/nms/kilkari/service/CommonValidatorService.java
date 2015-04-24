@@ -1,7 +1,7 @@
 package org.motechproject.nms.kilkari.service;
 
 import org.joda.time.DateTime;
-import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMcts;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -91,7 +91,7 @@ public interface CommonValidatorService {
      * @throws DataValidationException
      * @throws NmsInternalServerError 
      */
-    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
+    public Subscriber validateAndMapMctsLocationToSubscriber(CsvMcts mctsCsv,
                                                              Subscriber subscriber) throws DataValidationException, NmsInternalServerError;
 
     /**

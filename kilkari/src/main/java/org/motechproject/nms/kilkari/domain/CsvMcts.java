@@ -9,7 +9,7 @@ import org.motechproject.mds.domain.MdsEntity;
  * Mother and Child data.
  */
 @Entity
-public class MctsCsv extends MdsEntity {
+public class CsvMcts extends MdsEntity {
     
     @Field
     private String stateCode;
