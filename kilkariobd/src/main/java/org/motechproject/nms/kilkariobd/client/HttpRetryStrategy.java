@@ -9,19 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  * This class retry logic for a Http request
  */
 public class HttpRetryStrategy {
-    @Autowired
-    private static SettingsFacade kilkariObdSettings;
-
-
 
     /**
      * checks if retryNumber is small enough to retry the request
+     * @param  settings is the object of system properties
      * @param retryNumber Integer
      * @return Boolean value
      */
-    public static boolean shouldRetry(Integer retryNumber) {
-        Settings settings = new Settings(kilkariObdSettings);
-        return retryNumber <= Integer.parseInt(settings.getOfflineApiMaxRetries());
+    public static boolean shouldRetry(Settings settings, Integer retryNumber) {
+
+        return retryNumber < Integer.parseInt(settings.getOfflineApiMaxRetries());
     }
 
     /**
@@ -30,8 +27,7 @@ public class HttpRetryStrategy {
      * @param previousInterval Long
      * @return timeout interval in milliseconds
      */
-    public static Long getTimeOutInterval(Integer retryNumber, Long previousInterval) {
-        Settings settings = new Settings(kilkariObdSettings);
+    public static Long getTimeOutInterval(Settings settings, Integer retryNumber, Long previousInterval) {
         Long timeToWaitInMillis = 0L;
         if (retryNumber.equals(Constants.FIRST_ATTEMPT)) {
             timeToWaitInMillis = Long.parseLong(settings.getOfflineApiInitalIntervalInMilliseconds());

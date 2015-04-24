@@ -1,7 +1,11 @@
 package org.motechproject.nms.kilkariobd.repository;
 
+import org.motechproject.mds.annotations.Lookup;
+import org.motechproject.mds.annotations.LookupField;
 import org.motechproject.mds.service.MotechDataService;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallDetail;
+
+import java.util.List;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -10,4 +14,7 @@ import org.motechproject.nms.kilkariobd.domain.OutboundCallDetail;
  * define and custom lookups we may need.
  */
 public interface OutboundCallDetailDataService extends MotechDataService<OutboundCallDetail>{
+
+    @Lookup
+    List<OutboundCallDetail> findRecordsByRequestId(@LookupField(name = "requestId") Long requestId);
 }

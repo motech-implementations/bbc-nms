@@ -4,6 +4,7 @@ package org.motechproject.nms.kilkariobd.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.httpclient.ConnectTimeoutException;
+import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.NoHttpResponseException;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -15,11 +16,14 @@ import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.dto.request.TargetNotificationRequest;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
+import org.motechproject.nms.kilkariobd.settings.Settings;
+import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
@@ -31,7 +35,8 @@ public class HttpClient {
     @Autowired
     private ConfigurationService configurationService;
 
-    private org.apache.commons.httpclient.HttpClient commonHttpClient = new org.apache.commons.httpclient.HttpClient();
+    @Autowired
+    private static SettingsFacade kilkariObdSettings;
 
     /**
      * This method makes an http request to notify the server of the target file has been copied.
@@ -49,6 +54,7 @@ public class HttpClient {
     /**
      * This method makes an http request to a server to notify the CDR file processed status.
      * @param status status of the processed files.
+     * @param fileName name of the OBDFile for which CDR Files are processed
      */
     public void notifyCDRFileProcessedStatus(FileProcessingStatus status, String fileName) {
         logger.debug("notifyCDRFileProcessedStatus Notification : started");
@@ -61,22 +67,31 @@ public class HttpClient {
     This method make post request to the http server and retry if failed.
      */
     private void postHttpRequestAndRetry(HttpMethod postMethod) {
+        Settings settings = new Settings(kilkariObdSettings);
+        org.apache.commons.httpclient.HttpClient httpClient = new org.apache.commons.httpclient.HttpClient();
+
         Integer retryNumber = Constants.FIRST_ATTEMPT;
-        Long timeOutValue = HttpRetryStrategy.getTimeOutInterval(retryNumber, null);
-        HttpClientParams params =  commonHttpClient.getParams();
-        while (HttpRetryStrategy.shouldRetry(retryNumber++)) {
+        Long timeOutValue = HttpRetryStrategy.getTimeOutInterval(settings, retryNumber, null);
+
+        HttpClientParams params =  httpClient.getParams();
+
+        /* Loop to attempt HTTP Connect and HTTP Method, and retry if failed to connect or get response */
+        while (HttpRetryStrategy.shouldRetry(settings, retryNumber++)) {
             try {
                 params.setConnectionManagerTimeout(timeOutValue);
                 params.setSoTimeout(timeOutValue.intValue());
-                int returnCode = commonHttpClient.executeMethod(postMethod);
+                int returnCode = httpClient.executeMethod(postMethod);
                 String responseBody = postMethod.getResponseBodyAsString();
                 if (returnCode == HttpStatus.BAD_REQUEST.value()) {
                     logger.error("Http post failed. Response returned : " + responseBody);
                 }
             } catch (NoHttpResponseException | ConnectTimeoutException exception) {
-                timeOutValue = HttpRetryStrategy.getTimeOutInterval(retryNumber, timeOutValue);
-            } catch (Exception ex) {
-                logger.error("Exception occurred while connecting to the server", ex);
+                logger.error("Http Post Timeout : " + postMethod.getPath());
+                timeOutValue = HttpRetryStrategy.getTimeOutInterval(settings, retryNumber, timeOutValue);
+            } catch (HttpException e) {
+                logger.error("Http Exception : ", e);
+            } catch (IOException e) {
+                logger.error("IO Exception : ", e);
             } finally {
                 postMethod.releaseConnection();
             }
@@ -92,7 +107,7 @@ public class HttpClient {
         try {
             stringEntity = new StringRequestEntity(requestBody, "application/json", null);
         } catch (UnsupportedEncodingException e) {
-            logger.warn("UnsupportedEncodingException, this should not occur: " + e.getMessage()); //This exception cannot happen here
+            logger.error("UnsupportedEncodingException, this should not occur. ", e);
         }
         postMethod.setRequestEntity(stringEntity);
         return postMethod;
@@ -118,9 +133,10 @@ public class HttpClient {
         return buildRequest(url, requestBody);
     }
 
+
     private String ivrUrl() {
         Configuration configuration = configurationService.getConfiguration();
-        return String.format(configuration.getObdIvrUrl());
+        return configuration.getObdIvrUrl();
     }
 
 
