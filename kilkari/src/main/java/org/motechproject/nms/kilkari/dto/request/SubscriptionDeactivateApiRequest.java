@@ -82,11 +82,17 @@ public class SubscriptionDeactivateApiRequest {
      * @throws DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameter() throws DataValidationException{
-        calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER,
-                ParseDataHelper.validateAndParseString(Constants.CALLED_NUMBER, calledNumber, true));
+
+        calledNumber = ParseDataHelper.validateAndParseString(Constants.CALLED_NUMBER, calledNumber, true);
+        calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER, calledNumber);                ;
+
         ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
+
         ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
-        ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
+
+        callId = ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
+        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,callId);
+
         subscriptionIdLongValue = ParseDataHelper.validateAndParseLong(Constants.SUBSCRIPTION_ID, subscriptionId, true);
     }
 }
