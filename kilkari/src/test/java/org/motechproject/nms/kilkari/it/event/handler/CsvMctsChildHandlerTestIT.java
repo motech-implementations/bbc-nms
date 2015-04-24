@@ -23,20 +23,20 @@ import static org.junit.Assert.*;
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
-public class ChildMctsCsvHandlerTestIT extends CommonStructure {
+public class CsvMctsChildHandlerTestIT extends CommonStructure {
     
-    private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvHandlerTestIT.class);
+    private static Logger logger = LoggerFactory.getLogger(CsvMctsChildHandlerTestIT.class);
     @Test
     public void shouldCreateSubscriptionSubscriberTest() throws Exception {
         logger.info("Inside shouldCreateSubscriptionSubscriberTest");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("10000000031");
         csv.setIdNo("31");
         
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
         
@@ -53,20 +53,20 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside shouldUpdateBasedSameMsisdnDifferentMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("1000000032");
         csv.setIdNo("32");
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
-        ChildMctsCsv csv1 = new ChildMctsCsv();
+        CsvMctsChild csv1 = new CsvMctsChild();
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("1000000032");
         csv1.setIdNo("33");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record_Already Exist
         
@@ -81,22 +81,22 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside shouldUpdateBasedSameMsisdnSameMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("1000000034");
         csv.setIdNo("34");
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        ChildMctsCsv csv1 = new ChildMctsCsv();
+        CsvMctsChild csv1 = new CsvMctsChild();
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("1000000034");
         csv1.setIdNo("34");
         csv1.setMotherName("testing");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
@@ -112,23 +112,23 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     public void shouldUpdateBasedDifferentMsisdnSameMcts() throws Exception {
         logger.info("Inside shouldUpdateBasedDifferentMsisdnSameMcts");
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("544444444444444444");
         csv.setIdNo("35");
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        ChildMctsCsv csv1 = new ChildMctsCsv();
+        CsvMctsChild csv1 = new CsvMctsChild();
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("1000000036");
         csv1.setIdNo("35");
         csv1.setMotherName("testDifferentName");
         csv1.setBirthdate("2015-01-22 08:08:08");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
@@ -146,23 +146,23 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
     public void shouldUpdateBasedChildDeath() throws Exception {
         logger.info("Inside shouldUpdateBasedChildDeath");
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("1000000051");
         csv.setIdNo("51");
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        ChildMctsCsv csv1 = new ChildMctsCsv();
+        CsvMctsChild csv1 = new CsvMctsChild();
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("1000000052");
         csv1.setIdNo("51");
         csv1.setMotherName("testDifferentName");
         csv1.setEntryType("9");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
@@ -182,21 +182,21 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside  shouldUpdateBasedDeleteOperation");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("41");
         csv.setIdNo("42");
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        ChildMctsCsv csv1 = new ChildMctsCsv();
+        CsvMctsChild csv1 = new CsvMctsChild();
         csv1 = createChildMcts(csv1);
         csv1.setWhomPhoneNo("43");
         csv1.setIdNo("42");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(csv1);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode())); //Operation Delete, Deactivate Subscription
@@ -210,21 +210,21 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside  shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = new MotherMctsCsv();
+        CsvMctsMother csv = new CsvMctsMother();
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000037");
         csv.setIdNo("37");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
-        ChildMctsCsv childCsv = new ChildMctsCsv();
+        CsvMctsChild childCsv = new CsvMctsChild();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000038");
         childCsv.setIdNo("38");
         childCsv.setMotherId("37");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(childCsv);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
@@ -244,23 +244,23 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside  shouldUpdateBasedDiffMsisdnDiffChildMctsSameMotherMctsTrueChildDeath");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = new MotherMctsCsv();
+        CsvMctsMother csv = new CsvMctsMother();
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000039");
         csv.setIdNo("39");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        ChildMctsCsv childCsv = new ChildMctsCsv();
+        CsvMctsChild childCsv = new CsvMctsChild();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000040");
         childCsv.setIdNo("40");
         childCsv.setMotherId("39");
         childCsv.setEntryType("9");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(childCsv);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
@@ -277,34 +277,34 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside  shouldDecactivateMotherAndDeleteSubscriberBasedDiffMsisdnSameChildMcts");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = new MotherMctsCsv();
+        CsvMctsMother csv = new CsvMctsMother();
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("1000000042");
         csv.setIdNo("42");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         
-        ChildMctsCsv childCsv = new ChildMctsCsv();
+        CsvMctsChild childCsv = new CsvMctsChild();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000043");
         childCsv.setIdNo("43");
         childCsv.setEntryType("1");
-        ChildMctsCsv dbCsv1 = childMctsCsvDataService.create(childCsv);
+        CsvMctsChild dbCsv1 = csvMctsChildDataService.create(childCsv);
         uploadedIds.add(dbCsv1.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
         
         
-        ChildMctsCsv childCsv2 = new ChildMctsCsv();
+        CsvMctsChild childCsv2 = new CsvMctsChild();
         childCsv2 = createChildMcts(childCsv2);
         childCsv2.setWhomPhoneNo("10000000401");
         childCsv2.setIdNo("43");
         childCsv2.setMotherId("42");
         childCsv2.setEntryType("1");
-        ChildMctsCsv dbCsv2 = childMctsCsvDataService.create(childCsv2);
+        CsvMctsChild dbCsv2 = csvMctsChildDataService.create(childCsv2);
         uploadedIds.add(dbCsv2.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
@@ -325,45 +325,45 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside  shouldDecactivateMotherAndDeleteSubscriberBasedSameMsisdn");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        MotherMctsCsv csv = new MotherMctsCsv();
+        CsvMctsMother csv = new CsvMctsMother();
         csv = createMotherMcts(csv);
         csv.setWhomPhoneNo("5111111111111");
         csv.setIdNo("45");
-        MotherMctsCsv dbCsv = motherMctsCsvDataService.create(csv);
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Created New Record
         uploadedIds.clear();
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         
-        MotherMctsCsv csv1 = new MotherMctsCsv();
+        CsvMctsMother csv1 = new CsvMctsMother();
         csv1 = createMotherMcts(csv1);
         csv1.setWhomPhoneNo("1000000045");
         csv1.setIdNo("45");
         csv1.setName("testDifferentName");
         csv1.setLmpDate("2015-01-22 08:08:08");
-        MotherMctsCsv dbCsv1 = motherMctsCsvDataService.create(csv1);
+        CsvMctsMother dbCsv1 = csvMctsMotherDataService.create(csv1);
         uploadedIds.add(dbCsv1.getId());
         callMotherMctsCsvHandlerSuccessEvent(uploadedIds); // Record update when different Msisdn and matching Mctsid
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));       
         
-        ChildMctsCsv childCsv = new ChildMctsCsv();
+        CsvMctsChild childCsv = new CsvMctsChild();
         childCsv = createChildMcts(childCsv);
         childCsv.setWhomPhoneNo("1000000046");
         childCsv.setIdNo("46");
-        ChildMctsCsv dbChildCsv = childMctsCsvDataService.create(childCsv);
+        CsvMctsChild dbChildCsv = csvMctsChildDataService.create(childCsv);
         uploadedIds.add(dbChildCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
         Subscription updatedChildSubs = subscriptionService.getSubscriptionByMctsIdState(childCsv.getIdNo(), Long.parseLong(childCsv.getStateCode()));
         
         
-        ChildMctsCsv childCsv2 = new ChildMctsCsv();
+        CsvMctsChild childCsv2 = new CsvMctsChild();
         childCsv2 = createChildMcts(childCsv2);
         childCsv2.setWhomPhoneNo("1000000046");
         childCsv2.setIdNo("46");
         childCsv2.setMotherId("45");
         childCsv2.setEntryType("1");
-        ChildMctsCsv dbCsv2 = childMctsCsvDataService.create(childCsv2);
+        CsvMctsChild dbCsv2 = csvMctsChildDataService.create(childCsv2);
         uploadedIds.add(dbCsv2.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
         uploadedIds.clear();
@@ -388,12 +388,12 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         activeUser = activeSubscriptionCountDataService.update(activeUser);
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("10000000048");
         csv.setIdNo("48");
         
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
         
@@ -410,13 +410,13 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         logger.info("Inside testRecordRejectedIfAbortionTrue");
         
         List<Long> uploadedIds = new ArrayList<Long>();
-        ChildMctsCsv csv = new ChildMctsCsv();
+        CsvMctsChild csv = new CsvMctsChild();
         csv = createChildMcts(csv);
         csv.setWhomPhoneNo("10000000049");
         csv.setIdNo("49");
         csv.setEntryType("9");
         
-        ChildMctsCsv dbCsv = childMctsCsvDataService.create(csv);
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
         uploadedIds.add(dbCsv.getId());
         callChildMctsCsvHandlerSuccessEvent(uploadedIds); //create new record
         
@@ -434,7 +434,7 @@ public class ChildMctsCsvHandlerTestIT extends CommonStructure {
         Long uploadedId = new Random().nextLong();
         uploadedIds.add(uploadedId);
         callChildMctsCsvHandlerSuccessEvent(uploadedIds);
-        assertNull(motherMctsCsvDataService.findById(uploadedId));
+        assertNull(csvMctsMotherDataService.findById(uploadedId));
         
     }
     

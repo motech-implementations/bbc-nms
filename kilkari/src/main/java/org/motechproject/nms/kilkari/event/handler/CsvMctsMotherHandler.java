@@ -2,7 +2,7 @@ package org.motechproject.nms.kilkari.event.handler;
 
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.CsvMctsMotherService;
 import org.motechproject.nms.util.constants.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +19,14 @@ import static org.motechproject.nms.kilkari.commons.Constants.MOTHER_MCTS_CSV_UP
  * event of csv upload of MotherMcts
  */
 @Component
-public class MotherMctsCsvHandler {
+public class CsvMctsMotherHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvHandler.class);
-    private MotherMctsCsvService motherMctsCsvService;
+    private static Logger logger = LoggerFactory.getLogger(CsvMctsMotherHandler.class);
+    private CsvMctsMotherService motherMctsCsvService;
     
     
     @Autowired
-    public MotherMctsCsvHandler(MotherMctsCsvService motherMctsCsvService){
+    public CsvMctsMotherHandler(CsvMctsMotherService motherMctsCsvService){
         
         this.motherMctsCsvService = motherMctsCsvService;
     }

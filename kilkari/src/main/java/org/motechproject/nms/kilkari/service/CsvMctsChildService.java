@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Expose method to implement the logic to insert child record
  */
-public interface ChildMctsCsvService {
+public interface CsvMctsChildService {
 
     /**
      * This method process the child csv records under transaction means

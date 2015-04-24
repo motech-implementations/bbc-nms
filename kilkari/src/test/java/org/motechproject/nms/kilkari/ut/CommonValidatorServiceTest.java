@@ -8,9 +8,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
-import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
+import org.motechproject.nms.kilkari.repository.CsvMctsChildDataService;
+import org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.kilkari.service.impl.CommonValidatorServiceImpl;
 import org.motechproject.nms.masterdata.domain.*;
@@ -50,16 +50,16 @@ public class CommonValidatorServiceTest {
     protected SubscriberService subscriberService;
 
     @Mock
-    protected MotherMctsCsvDataService motherMctsCsvDataService;
+    protected CsvMctsMotherDataService csvMctsMotherDataService;
 
     @Mock
-    protected MotherMctsCsvService motherMctsCsvService;
+    protected CsvMctsMotherService motherMctsCsvService;
 
     @Mock
-    protected ChildMctsCsvDataService childMctsCsvDataService;
+    protected CsvMctsChildDataService csvMctsChildDataService;
 
     @Mock
-    protected ChildMctsCsvService childMctsCsvService;
+    protected CsvMctsChildService childMctsCsvService;
 
     @Mock
     protected SubscriptionService subscriptionService;
@@ -360,7 +360,7 @@ public class CommonValidatorServiceTest {
 
 
 
-    protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {
+    protected CsvMctsChild createChildMcts(CsvMctsChild csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");

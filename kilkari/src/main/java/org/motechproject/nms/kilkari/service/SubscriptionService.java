@@ -122,4 +122,10 @@ public interface SubscriptionService {
      * @param subscriptionId
      */
     void completeSubscription(Long subscriptionId);
+
+    /**
+     *  This method is used to get subscription id of subscription which 
+     *  are deactivated or completed n days earlier. Where n is configurable.
+     */
+    List<Long> getSubscriptionIdOfNDaysEarlierSubscription();
 }

@@ -6,8 +6,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
+import org.motechproject.nms.kilkari.domain.CsvMctsMother;
 import org.motechproject.nms.kilkari.repository.*;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.masterdata.domain.*;
@@ -49,16 +49,16 @@ public class CommonStructure extends BasePaxIT {
     protected SubscriberService subscriberService;
     
     @Inject
-    protected MotherMctsCsvDataService motherMctsCsvDataService;
+    protected CsvMctsMotherDataService csvMctsMotherDataService;
     
     @Inject
-    protected MotherMctsCsvService motherMctsCsvService;
+    protected CsvMctsMotherService motherMctsCsvService;
     
     @Inject
-    protected ChildMctsCsvDataService childMctsCsvDataService;
+    protected CsvMctsChildDataService csvMctsChildDataService;
     
     @Inject
-    protected ChildMctsCsvService childMctsCsvService;
+    protected CsvMctsChildService childMctsCsvService;
 
     @Inject
     protected SubscriptionService subscriptionService;
@@ -288,7 +288,7 @@ public class CommonStructure extends BasePaxIT {
     }
     
     
-    protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
+    protected CsvMctsMother createMotherMcts(CsvMctsMother csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
@@ -321,7 +321,7 @@ public class CommonStructure extends BasePaxIT {
         childMctsCsvService.processChildMctsCsv("ChildMctsCsv.csv", uploadedIds);
     }
     
-    protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {
+    protected CsvMctsChild createChildMcts(CsvMctsChild csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");

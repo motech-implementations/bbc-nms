@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Expose method to implement the logic to insert mother record
  */
-public interface MotherMctsCsvService {
+public interface CsvMctsMotherService {
 
 
     /**

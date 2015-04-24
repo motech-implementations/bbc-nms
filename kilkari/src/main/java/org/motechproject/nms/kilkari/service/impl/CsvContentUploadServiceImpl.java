@@ -1,19 +1,19 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
-import org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService;
-import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
+import org.motechproject.nms.kilkari.domain.CsvContentUpload;
+import org.motechproject.nms.kilkari.repository.CsvContentUploadDataService;
+import org.motechproject.nms.kilkari.service.CsvContentUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
  * This class is used to get and delete the ContentUploadCsv record
  */
-@Service("contentUploadCsvService")
-public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
+@Service("csvContentUploadService")
+public class CsvContentUploadServiceImpl implements CsvContentUploadService {
 
     @Autowired
-    private ContentUploadCsvDataService contentUploadCsvDataService;
+    private CsvContentUploadDataService csvContentUploadDataService;
 
     /**
      * This method gets ContentUploadKKCsv type object by id from the database
@@ -21,8 +21,8 @@ public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
      * @param id primary key of the record
      */
     @Override
-    public ContentUploadCsv getRecord(Long id) {
-        return contentUploadCsvDataService.findById(id);
+    public CsvContentUpload getRecord(Long id) {
+        return csvContentUploadDataService.findById(id);
     }
 
     /**
@@ -31,8 +31,8 @@ public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
      * @param record object of type ContentUploadKKCsv
      */
     @Override
-    public void delete(ContentUploadCsv record) {
-        contentUploadCsvDataService.delete(record);
+    public void delete(CsvContentUpload record) {
+        csvContentUploadDataService.delete(record);
     }
 
 }

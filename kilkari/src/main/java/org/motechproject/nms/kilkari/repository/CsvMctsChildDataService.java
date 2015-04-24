@@ -1,7 +1,7 @@
 package org.motechproject.nms.kilkari.repository;
 
 import org.motechproject.mds.service.MotechDataService;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
 
 /**
  * Interface for repository that persists simple records and allows CRUD.
@@ -9,7 +9,8 @@ import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
  * as methods for adding, deleting, saving and finding all instances.  In this class we
  * define and custom lookups we may need.
  */
-public interface MotherMctsCsvDataService extends
-        MotechDataService<MotherMctsCsv> {
+public interface CsvMctsChildDataService extends MotechDataService<CsvMctsChild> {
     
+    
+
 }

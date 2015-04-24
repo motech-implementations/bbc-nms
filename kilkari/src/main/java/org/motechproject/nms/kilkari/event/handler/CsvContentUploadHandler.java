@@ -6,8 +6,8 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
-import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
-import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
+import org.motechproject.nms.kilkari.domain.CsvContentUpload;
+import org.motechproject.nms.kilkari.service.CsvContentUploadService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
@@ -32,7 +32,7 @@ import java.util.Map;
  * This class handles the csv upload for success and failure events for ContentUploadKKCsv.
  */
 @Component
-public class ContentUploadCsvHandler {
+public class CsvContentUploadHandler {
 
     private CircleService circleService;
 
@@ -42,14 +42,14 @@ public class ContentUploadCsvHandler {
 
     private ContentUploadService contentUploadService;
 
-    private ContentUploadCsvService contentUploadCsvService;
+    private CsvContentUploadService contentUploadCsvService;
 
-    private static Logger logger = LoggerFactory.getLogger(ContentUploadCsvHandler.class);
+    private static Logger logger = LoggerFactory.getLogger(CsvContentUploadHandler.class);
 
     @Autowired
-    public ContentUploadCsvHandler(BulkUploadErrLogService bulkUploadErrLogService,
+    public CsvContentUploadHandler(BulkUploadErrLogService bulkUploadErrLogService,
                                    ContentUploadService contentUploadService,
-                                   ContentUploadCsvService contentUploadCsvService, CircleService circleService,
+                                   CsvContentUploadService contentUploadCsvService, CircleService circleService,
                                    LanguageLocationCodeService languageLocationCodeService) {
 
         this.bulkUploadErrLogService = bulkUploadErrLogService;
@@ -71,7 +71,7 @@ public class ContentUploadCsvHandler {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("Start processing ContentUploadCsv-import success for upload {}", params.toString());
 
-        ContentUploadCsv record = null;
+        CsvContentUpload record = null;
         ContentUpload persistentRecord = null;
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
@@ -146,7 +146,7 @@ public class ContentUploadCsvHandler {
      * @return ContentUpload record after the mapping
      * @throws DataValidationException
      */
-    private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
+    private ContentUpload mapContentUploadFrom(CsvContentUpload record) throws DataValidationException {
         ContentUpload newRecord = new ContentUpload();
 
         String circleCode = ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, record.getCircleCode(), true);

@@ -3,11 +3,11 @@ package org.motechproject.nms.kilkari.ut.domain;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
 
-public class ChildMctsCsvTest {
+public class CsvMctsChildTest {
 
-    ChildMctsCsv childMctsCsv = new ChildMctsCsv();
+    CsvMctsChild childMctsCsv = new CsvMctsChild();
 
     @Test
     public void shouldSetValuesInChildMctsCsv() {

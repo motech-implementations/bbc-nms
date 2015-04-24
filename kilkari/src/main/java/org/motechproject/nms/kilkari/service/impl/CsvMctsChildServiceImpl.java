@@ -3,8 +3,8 @@ package org.motechproject.nms.kilkari.service.impl;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
-import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
+import org.motechproject.nms.kilkari.repository.CsvMctsChildDataService;
+import org.motechproject.nms.kilkari.service.CsvMctsChildService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * This class implements the logic in ChildMctsCsvService.
  */
-@Service("childMctsCsvService")
-public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
+@Service("csvMctsChildService")
+public class CsvMctsChildServiceImpl implements CsvMctsChildService {
 
     @Autowired
-    private ChildMctsCsvDataService childMctsCsvDataService;
+    private CsvMctsChildDataService csvMctsChildDataService;
     
     @Autowired
     private SubscriptionService subscriptionService;
@@ -43,7 +43,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
 
-    private static Logger logger = LoggerFactory.getLogger(ChildMctsCsvServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(CsvMctsChildServiceImpl.class);
     
     /**
      * This method process the child csv records under transaction means
@@ -56,19 +56,19 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
     @Override
     public void processChildMctsCsv(String csvFileName, List<Long> uploadedIDs){
 
-        childMctsCsvDataService.doInTransaction(new TransactionCallback<ChildMctsCsv>() {
+        csvMctsChildDataService.doInTransaction(new TransactionCallback<CsvMctsChild>() {
 
             private String csvFileName;
             private List<Long> uploadedIDs;
 
-            private TransactionCallback<ChildMctsCsv> init(String csvFileName, List<Long> uploadedIDs) {
+            private TransactionCallback<CsvMctsChild> init(String csvFileName, List<Long> uploadedIDs) {
                 this.csvFileName = csvFileName;
                 this.uploadedIDs = uploadedIDs;
                 return this;
             }
 
             @Override
-            public ChildMctsCsv doInTransaction(TransactionStatus arg0) {
+            public CsvMctsChild doInTransaction(TransactionStatus arg0) {
                 processChildMctsCsvInTransaction(csvFileName, uploadedIDs);
                 return null;
             }
@@ -92,13 +92,13 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
         errorDetails.setTimeOfUpload(timeOfUpload);
         errorDetails.setRecordType(RecordType.CHILD_MCTS);
         
-        ChildMctsCsv childMctsCsv = null;
+        CsvMctsChild childMctsCsv = null;
         String userName = null;
         
         for (Long id : uploadedIDs) {
             try {
                 logger.debug("Processing record id[{}]", id);
-                childMctsCsv = childMctsCsvDataService.findById(id);
+                childMctsCsv = csvMctsChildDataService.findById(id);
                 
                 if (childMctsCsv != null) {
                     logger.debug("Record found in database for record id[{}]", id);
@@ -143,7 +143,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
                 
             } finally {
                 if (childMctsCsv != null) {
-                    childMctsCsvDataService.delete(childMctsCsv);
+                    csvMctsChildDataService.delete(childMctsCsv);
                 }
             }
         }
@@ -161,7 +161,7 @@ public class ChildMctsCsvServiceImpl implements ChildMctsCsvService {
      * 
      *  @param childMctsCsv csv uploaded record
      */
-    private Subscriber mapChildMctsToSubscriber(ChildMctsCsv childMctsCsv) throws DataValidationException, NmsInternalServerError {
+    private Subscriber mapChildMctsToSubscriber(CsvMctsChild childMctsCsv) throws DataValidationException, NmsInternalServerError {
 
         Subscriber childSubscriber = new Subscriber();
         

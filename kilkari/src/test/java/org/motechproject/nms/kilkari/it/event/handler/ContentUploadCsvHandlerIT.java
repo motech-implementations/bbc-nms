@@ -8,11 +8,11 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.kilkari.domain.ContentType;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
-import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
-import org.motechproject.nms.kilkari.event.handler.ContentUploadCsvHandler;
-import org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService;
+import org.motechproject.nms.kilkari.domain.CsvContentUpload;
+import org.motechproject.nms.kilkari.event.handler.CsvContentUploadHandler;
+import org.motechproject.nms.kilkari.repository.CsvContentUploadDataService;
 import org.motechproject.nms.kilkari.repository.ContentUploadDataService;
-import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
+import org.motechproject.nms.kilkari.service.CsvContentUploadService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
@@ -57,10 +57,10 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
     private ContentUploadService contentUploadService;
 
     @Inject
-    private ContentUploadCsvService contentUploadCsvService;
+    private CsvContentUploadService contentUploadCsvService;
 
     @Inject
-    private ContentUploadCsvDataService contentUploadCsvDataService;
+    private CsvContentUploadDataService csvContentUploadDataService;
 
     @Inject
     private ContentUploadDataService contentUploadDataService;
@@ -86,7 +86,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldCreateContentUploadRecordsAfterCsvUpload() throws Exception {
-        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+        CsvContentUploadHandler csvHandler = new CsvContentUploadHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
 
         List<Long> createdIds = new ArrayList<Long>();
@@ -109,7 +109,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldUpdateContentUploadRecordsAfterCsvUpload() throws Exception {
-        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+        CsvContentUploadHandler csvHandler = new CsvContentUploadHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
 
         List<Long> createdIds = new ArrayList<Long>();
@@ -120,7 +120,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         createdIds.remove(0);
 
 
-        ContentUploadCsv csv = new ContentUploadCsv();
+        CsvContentUpload csv = new CsvContentUpload();
         csv.setLanguageLocationCode("123");
         csv.setContentType("CONTENT");
         csv.setContentFile("contentFileChanged");
@@ -128,7 +128,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         csv.setContentName("contentNameChanged");
         csv.setContentDuration("100");
         csv.setContentId("1");
-        ContentUploadCsv dbCsv = contentUploadCsvDataService.create(csv);
+        CsvContentUpload dbCsv = csvContentUploadDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
         csvHandler.contentUploadCsvSuccess(createMotechEvent(createdIds));
@@ -145,7 +145,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldWriteErrorLogIfCsvRecordIsNotFound() throws Exception {
-        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+        CsvContentUploadHandler csvHandler = new CsvContentUploadHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
 
         List<Long> createdIds = new ArrayList<Long>();
@@ -155,7 +155,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldRaiseDataValidationException() throws Exception {
-        ContentUploadCsvHandler csvHandler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+        CsvContentUploadHandler csvHandler = new CsvContentUploadHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
         Circle circle = new Circle();
         circle.setName("MotechEventCreateTest");
@@ -191,7 +191,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setState(dbState);
         languageLocationCodeService.create(llc);
 
-        ContentUploadCsv contentCsv = new ContentUploadCsv();
+        CsvContentUpload contentCsv = new CsvContentUpload();
         contentCsv.setLanguageLocationCode("123@@@@");
         contentCsv.setContentType("Prompt");
         contentCsv.setContentFile("contentFile");
@@ -199,7 +199,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentCsv.setContentName("contentName");
         contentCsv.setContentDuration("10");
         contentCsv.setContentId("1");
-        ContentUploadCsv dbCsv = contentUploadCsvDataService.create(contentCsv);
+        CsvContentUpload dbCsv = csvContentUploadDataService.create(contentCsv);
 
         List<Long> createdIds = new ArrayList<Long>();
         createdIds.add(dbCsv.getId());
@@ -253,7 +253,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setState(dbState);
         languageLocationCodeService.create(llc);
 
-        ContentUploadCsv contentCsv = new ContentUploadCsv();
+        CsvContentUpload contentCsv = new CsvContentUpload();
         contentCsv.setLanguageLocationCode("123");
         contentCsv.setContentType("Prompt");
         contentCsv.setContentFile("contentFile");
@@ -261,7 +261,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentCsv.setContentName("contentName");
         contentCsv.setContentDuration("10");
         contentCsv.setContentId("1");
-        ContentUploadCsv dbCsv = contentUploadCsvDataService.create(contentCsv);
+        CsvContentUpload dbCsv = csvContentUploadDataService.create(contentCsv);
         return dbCsv.getId();
     }
 

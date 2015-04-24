@@ -1,5 +1,10 @@
 package org.motechproject.nms.kilkari.repository;
 
+import java.util.List;
+
+import javax.jdo.Query;
+
+import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
@@ -7,11 +12,9 @@ import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.Status;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
 import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.initializer.Initializer;
-
-import javax.jdo.Query;
-import java.util.List;
 
 public class CustomQueries {
 
@@ -38,6 +41,32 @@ public class CustomQueries {
             query.setFilter("msisdn == '" + msisdn + "' && (status == '" + Status.ACTIVE + "' ||" + " status == '" + Status.PENDING_ACTIVATION + "')");
             query.setResult("DISTINCT " + resultParamName);
             return (List<SubscriptionPack>) query.execute();
+        }
+    }
+    
+    /**
+     * This class is used to delete SubscriptionMeasure having passed subscriptionIds
+     */
+    public static class DeleteSubscriptionMeasureQuery implements QueryExecution<Long> {
+
+        private List<Long> subscriptionIds = null;
+        
+        public DeleteSubscriptionMeasureQuery(List<Long> subscriptionIds) {
+            this.subscriptionIds = subscriptionIds;
+        }
+        
+        /**
+         * This method executes the query passed and delete filtered SubscriptionMeasure.
+         * 
+         * @param query to be executed
+         * @param restriction
+         * @return count of SubscriptionMeasure records deleted
+         */
+        @Override
+        public Long execute(Query query, InstanceSecurityRestriction restriction) {
+            query = query.getPersistenceManager().newQuery(SubscriptionMeasure.class);
+            query.setFilter(":p1.contains(subscriptionId)");
+            return query.deletePersistentAll(subscriptionIds);
         }
     }
 
@@ -109,13 +138,44 @@ public class CustomQueries {
         public List<Subscription> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
             long currDateInMillis = date.toDateMidnight().getMillis();
-            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == 1) {
+            if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == Constants.FIRST_MSG_OF_WEEK) {
                 query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
             } else {
                 query.setFilter("(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"') && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0) || (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
             return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);
+        }
+    }
+    
+    /**
+     * This class is used to delete subscriptions
+     * whose status is completed or deactivated n days earlier.
+     */
+    public static class SubscriptionIdOfNDaysEarlierSubscription implements QueryExecution<List<Long>> {
+
+        private Integer expiredSubscriptionAgeDays = 0;
+        
+        public SubscriptionIdOfNDaysEarlierSubscription(Integer expiredSubscriptionAgeDays) {
+            this.expiredSubscriptionAgeDays = expiredSubscriptionAgeDays;
+        }
+        
+        /**
+         * This method executes the query passed and delete filtered subscription.
+         * 
+         * @param query to be executed
+         * @param restriction
+         * @return count of Subscription records deleted
+         */
+        @Override
+        public List<Long> execute(Query query, InstanceSecurityRestriction restriction) {
+            DateTime date = new DateTime();
+            date = date.minusDays(expiredSubscriptionAgeDays-1);
+            query = query.getPersistenceManager().newQuery(Subscription.class);
+            query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && completionOrDeactivationDate < date");
+            query.declareParameters("java.util.Date date");
+            query.setResult("DISTINCT id");
+            return (List<Long>) query.execute(date.toDate());
         }
     }
 

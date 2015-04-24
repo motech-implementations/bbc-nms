@@ -3,9 +3,9 @@ package org.motechproject.nms.kilkari.service.impl;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
-import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
+import org.motechproject.nms.kilkari.service.CsvMctsMotherService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
@@ -28,11 +28,11 @@ import java.util.List;
 /**
  * This class implements the logic in MotherMctsCsvService.
  */
-@Service("motherMctsCsvService")
-public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
+@Service("csvMctsMotherService")
+public class CsvMctsMotherServiceImpl implements CsvMctsMotherService {
 
     @Autowired
-    private MotherMctsCsvDataService motherMctsCsvDataService;
+    private CsvMctsMotherDataService csvMctsMotherDataService;
     
     @Autowired
     private SubscriptionService subscriptionService;
@@ -43,7 +43,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
     
-    private static Logger logger = LoggerFactory.getLogger(MotherMctsCsvServiceImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(CsvMctsMotherServiceImpl.class);
     
     /**
      * This method process the mother csv records under transaction means
@@ -56,19 +56,19 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
     @Override
     public void processMotherMctsCsv(String csvFileName, List<Long> uploadedIDs){
         
-        motherMctsCsvDataService.doInTransaction(new TransactionCallback<MotherMctsCsv>() {
+        csvMctsMotherDataService.doInTransaction(new TransactionCallback<CsvMctsMother>() {
             
             private String csvFileName;
             private List<Long> uploadedIDs;
             
-            private TransactionCallback<MotherMctsCsv> init(String csvFileName, List<Long> uploadedIDs) {
+            private TransactionCallback<CsvMctsMother> init(String csvFileName, List<Long> uploadedIDs) {
                 this.csvFileName = csvFileName;
                 this.uploadedIDs = uploadedIDs;
                 return this;
             }
             
             @Override
-            public MotherMctsCsv doInTransaction(TransactionStatus arg0) {
+            public CsvMctsMother doInTransaction(TransactionStatus arg0) {
                 processMotherMctsCsvInTransaction(csvFileName, uploadedIDs);
                 return null;
             }
@@ -91,13 +91,13 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
         errorDetails.setTimeOfUpload(timeOfUpload);
         errorDetails.setRecordType(RecordType.MOTHER_MCTS);
 
-        MotherMctsCsv motherMctsCsv = null;
+        CsvMctsMother motherMctsCsv = null;
         String userName = null;
 
         for (Long id : uploadedIDs) {
             try {
                 logger.debug("Processing record id[{}]", id);
-                motherMctsCsv = motherMctsCsvDataService.findById(id);
+                motherMctsCsv = csvMctsMotherDataService.findById(id);
                 if (motherMctsCsv != null) {
                     logger.debug("Record found in database for uploaded id[{}]", id);
                     userName = motherMctsCsv.getOwner();
@@ -143,7 +143,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
                 logger.debug("Inside finally");
                 if (motherMctsCsv != null) {
                     logger.info("Deleting motherMctsCsv record id[{}]", motherMctsCsv.getId());
-                    motherMctsCsvDataService.delete(motherMctsCsv);
+                    csvMctsMotherDataService.delete(motherMctsCsv);
                 }
             }
         }
@@ -162,7 +162,7 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
      *  @param motherMctsCsv csv uploaded subscriber
      * @throws NmsInternalServerError 
      */
-    private Subscriber mapMotherMctsToSubscriber(MotherMctsCsv motherMctsCsv) throws DataValidationException, NmsInternalServerError {
+    private Subscriber mapMotherMctsToSubscriber(CsvMctsMother motherMctsCsv) throws DataValidationException, NmsInternalServerError {
 
         Subscriber motherSubscriber = new Subscriber();
 
@@ -220,7 +220,8 @@ public class MotherMctsCsvServiceImpl implements MotherMctsCsvService {
             throw new DataValidationException("Date in Future", ErrorCategoryConstants.INCONSISTENT_DATA,
                     "LMP Date in Future", Constants.LMP_DATE);
         }
-        commonValidatorService.validateWeeksFromDate(lmp.plusMonths(3), Constants.DURATION_OF_72_WEEK_PACK, Constants.LMP_DATE);
+        commonValidatorService.validateWeeksFromDate(lmp.plusMonths(Constants.LMP_MSG_DELIVERY_START_MONTH), 
+                Constants.DURATION_OF_72_WEEK_PACK, Constants.LMP_DATE);
         logger.debug(String.format("After Invoking the validateWeeksFromDate with lmp : %s", lmp.toString()));
     }
 

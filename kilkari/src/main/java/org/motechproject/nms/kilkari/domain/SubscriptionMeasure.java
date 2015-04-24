@@ -12,7 +12,7 @@ public class SubscriptionMeasure {
 
     @Field(name = "subscriptionId", required=true)
     @UIDisplayable(position = 0)
-    private Subscription subscription;
+    private Long subscriptionId;
     
     @Field
     @UIDisplayable(position = 2)
@@ -26,12 +26,12 @@ public class SubscriptionMeasure {
     @UIDisplayable(position = 1)
     private Status status;
 
-    public Subscription getSubscription() {
-        return subscription;
+    public Long getSubscriptionId() {
+        return subscriptionId;
     }
 
-    public void setSubscription(Subscription subscription) {
-        this.subscription = subscription;
+    public void setSubscriptionId(Long subscriptionId) {
+        this.subscriptionId = subscriptionId;
     }
 
     public Integer getWeekNumber() {

@@ -215,11 +215,14 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             if(dbSubscription != null){
                 Subscriber dbMotherSubscriber = dbSubscription.getSubscriber();
                 if(dbMotherSubscriber!=null) {
+                    dbSubscriber.getSubscriptionList().addAll(dbMotherSubscriber.getSubscriptionList());
                     dbSubscription.setStatus(Status.DEACTIVATED);
                     dbSubscription.setDeactivationReason(DeactivationReason.PACK_CHANGED);
-                    dbSubscriber.getSubscriptionList().addAll(dbMotherSubscriber.getSubscriptionList());
+                    dbSubscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
                     dbMotherSubscriber.getSubscriptionList().clear();
                     subscriberService.delete(dbMotherSubscriber);
+                    createSubscriptionMeasure(dbSubscription);
+                    activeSubscriptionCountService.decrementActiveSubscriptionCount();
                 }
             }
         }
@@ -476,26 +479,23 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private void updateDbSubscription(Subscriber subscriber, Subscription dbSubscription, boolean statusFlag,
             DeactivationReason deactivationReason) {
 
-        dbSubscription.setDeactivationReason(deactivationReason);
         dbSubscription.setMsisdn(subscriber.getMsisdn());
-        if(DeactivationReason.PACK_CHANGED != deactivationReason) {
-            dbSubscription.setMctsId(subscriber.getSuitableMctsId());
-        }
         dbSubscription.setStateCode(subscriber.getStateCode());
         dbSubscription.setModifiedBy(subscriber.getModifiedBy());
 
         if (statusFlag) {
+            if(DeactivationReason.PACK_CHANGED != deactivationReason) {
+                dbSubscription.setMctsId(subscriber.getSuitableMctsId());
+            }
+            dbSubscription.setDeactivationReason(deactivationReason);
             dbSubscription.setStatus(Status.DEACTIVATED);
             dbSubscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
-        }
-
-        Subscription updatedDbSubscription = subscriptionDataService.update(dbSubscription);
-
-        if (statusFlag) {
+            Subscription updatedDbSubscription = subscriptionDataService.update(dbSubscription);
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(updatedDbSubscription);
-        } 
-
+        } else {
+            subscriptionDataService.update(dbSubscription);
+        }
 
     }
 
@@ -582,9 +582,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         Configuration configuration = configurationService.getConfiguration();
         if(configuration != null) {
             int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
+            List<Long> subscriptionIds = getSubscriptionIdOfNDaysEarlierSubscription();
+            if (!subscriptionIds.isEmpty()) {
+                subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionMeasureQuery(subscriptionIds));
+            }
             subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriptionQuery(expiredSubscriptionAgeDays));
             subscriptionDataService.executeQuery(new CustomQueries.DeleteSubscriberQuery());
         }
+    }
+    
+    /**
+     *  This method is used to get subscription id of subscription which 
+     *  are deactivated or completed n days earlier. Where n is configurable.
+     */
+    @Override
+    public List<Long> getSubscriptionIdOfNDaysEarlierSubscription() {
+        Configuration configuration = configurationService.getConfiguration();
+        List<Long> subscriptionIds = new ArrayList<Long>();
+        if(configuration != null) {
+            int expiredSubscriptionAgeDays = configuration.getExpiredSubscriptionAgeDays();
+            subscriptionIds.addAll(subscriptionDataService.executeQuery(new CustomQueries.SubscriptionIdOfNDaysEarlierSubscription(expiredSubscriptionAgeDays)));
+        }
+        return subscriptionIds;
     }
     
     /**
@@ -624,17 +643,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 
                 subscription.setStatus(Status.ACTIVE);
                 subscription.setLastObdDate(currDate.toDateMidnight().toDateTime());
+                scheduledSubscription.add(subscription);
             } else {
                 subscription.setStatus(Status.COMPLETED);
                 subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
             }
-
             Subscription dbSubscription = subscriptionDataService.update(subscription);
             createSubscriptionMeasure(dbSubscription);
-
-            if(subscription.getStatus() != Status.COMPLETED) {
-                scheduledSubscription.add(subscription);
-            }
 
         }
         return scheduledSubscription;
@@ -657,7 +672,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         } else {
             DateTime lmp = subscriber.getLmp();
             weekNum = Constants.START_WEEK_OF_72_WEEK_PACK + 
-                    (Days.daysBetween(lmp.plusMonths(3).toDateMidnight(), currDate.toDateMidnight()).getDays() / Constants.DAYS_IN_WEEK);
+                    (Days.daysBetween(lmp.plusMonths(Constants.LMP_MSG_DELIVERY_START_MONTH).toDateMidnight(), currDate.toDateMidnight()).getDays() / Constants.DAYS_IN_WEEK);
         }
         return weekNum;
     }
@@ -673,7 +688,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         measure.setMessageNumber(subscription.getMessageNumber());
         measure.setStatus(subscription.getStatus());
         measure.setWeekNumber(subscription.getWeekNumber());
-        measure.setSubscription(subscription);
+        measure.setSubscriptionId(subscription.getId());
         subscriptionMeasureService.create(measure);
 
     }
@@ -693,6 +708,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscription.setCompletionOrDeactivationDate(DateTime.now().toDateMidnight().toDateTime());
             subscriptionDataService.update(subscription);
             createSubscriptionMeasure(subscription);
+            activeSubscriptionCountService.decrementActiveSubscriptionCount();
         } else {
             logger.warn(String.format("Subscription not found for given subscriptionId{[%d]}", subscriptionId));
         }
