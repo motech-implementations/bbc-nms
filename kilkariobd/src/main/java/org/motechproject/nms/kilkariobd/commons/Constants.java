@@ -20,13 +20,16 @@ public final class Constants {
     public static final String SSH_PRIVATE_KEY_FILE = "sshPrivateKeyFile";
     public static final String SSH_LOCAL_USERNAME = "sshLocalUsername";
 
+    /* Strings for request parameters to report validation error */
     public static final String FILE_NAME = "File name";
-    public static final String CDR_DETAIL_FILE = "cdr Detail File";
-    public static final String CDR_DETAIL_CHECKSUM = "cdr Detail checksum";
-    public static final String CDR_DETAIL_RECORDS_COUNT = "cdr Detail records Count";
-    public static final String CDR_SUMMARY_FILE = "cdr Summary File";
-    public static final String CDR_SUMMARY_CHECKSUM = "cdr Summary checksum";
-    public static final String CDR_SUMMARY_RECORDS_COUNT = "cdr Summary records Count";
+    public static final String CDR_DETAIL_INFO = "CDR Detail Info";
+    public static final String CDR_DETAIL_FILE = "CDR Detail File";
+    public static final String CDR_DETAIL_CHECKSUM = "CDR Detail checksum";
+    public static final String CDR_DETAIL_RECORDS_COUNT = "CDR Detail records Count";
+    public static final String CDR_SUMMARY_INFO = "CDR Summary Info";
+    public static final String CDR_SUMMARY_FILE = "CDR Summary File";
+    public static final String CDR_SUMMARY_CHECKSUM = "CDR Summary checksum";
+    public static final String CDR_SUMMARY_RECORDS_COUNT = "CDR Summary records Count";
 
     /*Constants for cron jobs*/
     public static final String PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.prepare.obdtarget";

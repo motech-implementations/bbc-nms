@@ -3,6 +3,8 @@ package org.motechproject.nms.kilkariobd.service;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
+import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
+import org.motechproject.nms.util.helper.DataValidationException;
 
 /**
  * Interface to expose the CRUD operations for OutboundCallFlow Entity
@@ -43,4 +45,11 @@ public interface OutboundCallFlowService {
      * @return
      */
     public OutboundCallFlow findRecordByCreationDate(DateTime date);
+
+     /**
+     * Method to update OutboundCallFlow status based on CDR notification
+     * @param cdrNotificationRequest Cdr notification object
+     */
+    public void handleCdrNotification(CdrNotificationRequest cdrNotificationRequest)
+            throws DataValidationException;
 }

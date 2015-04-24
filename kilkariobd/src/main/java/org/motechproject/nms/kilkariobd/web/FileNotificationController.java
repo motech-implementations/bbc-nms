@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkariobd.web;
 
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
@@ -38,22 +39,26 @@ public class FileNotificationController extends BaseController{
         logger.debug("CDRFileNotification: started");
         logger.debug("CDRFileNotification Request Parameters");
         logger.debug("fileName : [" + apiRequest.getFileName() + "]");
-        logger.debug("cdrSummary parameters");
-        logger.debug("cdrFile : [" + apiRequest.getCdrSummary().getCdrFile() + "]");
-        logger.debug("cdrChecksum : [" + apiRequest.getCdrSummary().getCdrChecksum() + "]");
-        logger.debug("recordsCount : [%d]", apiRequest.getCdrSummary().getRecordsCount());
-        logger.debug("cdrDetail parameters");
-        logger.debug("cdrFile : [" + apiRequest.getCdrDetail().getCdrFile() + "]");
-        logger.debug("cdrChecksum : [" + apiRequest.getCdrDetail().getCdrChecksum() + "]");
-        logger.debug("recordsCount : [%d]", apiRequest.getCdrDetail().getRecordsCount());
+
+        if (apiRequest.getCdrSummary() != null) {
+            logger.debug("cdrSummary parameters");
+            logger.debug("cdrFile : [" + apiRequest.getCdrSummary().getCdrFile() + "]");
+            logger.debug("cdrChecksum : [" + apiRequest.getCdrSummary().getCdrChecksum() + "]");
+            logger.debug("recordsCount : [%d]", apiRequest.getCdrSummary().getRecordsCount());
+        }
+
+        if (apiRequest.getCdrDetail() != null) {
+            logger.debug("cdrDetail parameters");
+            logger.debug("cdrFile : [" + apiRequest.getCdrDetail().getCdrFile() + "]");
+            logger.debug("cdrChecksum : [" + apiRequest.getCdrDetail().getCdrChecksum() + "]");
+            logger.debug("recordsCount : [%d]", apiRequest.getCdrDetail().getRecordsCount());
+
+        }
+
         apiRequest.validateMandatoryParameters();
-        OutboundCallFlow callFlow = callFlowService.findRecordByFileName(apiRequest.getFileName());
-        callFlow.setStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
-        callFlow.setCdrDetailChecksum(apiRequest.getCdrDetail().getCdrChecksum());
-        callFlow.setCdrDetailRecordCount(apiRequest.getCdrDetail().getRecordsCount());
-        callFlow.setCdrSummaryChecksum(apiRequest.getCdrSummary().getCdrChecksum());
-        callFlow.setCdrSummaryRecordCount(apiRequest.getCdrSummary().getRecordsCount());
-        callFlowService.update(callFlow);
+
+        //todo : update outboundcallflow record in DB.
+
         logger.debug("CDRFileNotification: Ended");
 
     }
@@ -72,7 +77,7 @@ public class FileNotificationController extends BaseController{
         if (!request.getCdrFileProcessingStatus().equals(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY)) {
             callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
             OBDTargetFileHandler handler = new OBDTargetFileHandler();
-            handler.prepareOBDTargetFile();
+            handler.copyAndNotifyOBDTargetFile();
         } else {
             callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);
         }
