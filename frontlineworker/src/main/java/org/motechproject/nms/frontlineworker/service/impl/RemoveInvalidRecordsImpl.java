@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by abhishek on 21/4/15.
+ * This class provides the implementation to RemoveInvalidRecordsService which will be used by batch
+ * scheduler to schedule jobs on frontLineWorker.
  */
 @Service("removeInvalidRecordsService")
 public class RemoveInvalidRecordsImpl implements RemoveInvalidRecords {

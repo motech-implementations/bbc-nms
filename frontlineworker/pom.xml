@@ -94,7 +94,8 @@
                             org.motechproject.nms.frontlineworker.service;version=${project.version},
                             org.motechproject.nms.frontlineworker.service.impl;version=${project.version},
                             org.motechproject.nms.frontlineworker.constants;version=${project.version},
-                            org.motechproject.nms.frontlineworker.exception;version=${project.version}
+                            org.motechproject.nms.frontlineworker.exception;version=${project.version},
+                            org.motechproject.nms.frontlineworker.enums;version=${project.version}
                         </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
                             *

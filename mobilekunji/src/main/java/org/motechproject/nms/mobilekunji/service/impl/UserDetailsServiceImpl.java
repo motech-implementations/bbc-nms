@@ -2,7 +2,7 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;

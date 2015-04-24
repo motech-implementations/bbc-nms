@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by abhishek on 21/4/15.
+ * This interface provides the service which will be used by batch scheduler to schedule jobs on frontLineWorker.
  */
 @Service
 public interface RemoveInvalidRecords {

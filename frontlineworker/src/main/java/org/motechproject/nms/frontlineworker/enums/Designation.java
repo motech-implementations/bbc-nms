@@ -1,4 +1,4 @@
-package org.motechproject.nms.frontlineworker;
+package org.motechproject.nms.frontlineworker.enums;
 
 /**
  * This enum specifies the possible values for Front Line Worker Designation
