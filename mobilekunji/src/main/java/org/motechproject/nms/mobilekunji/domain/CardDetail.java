@@ -12,7 +12,7 @@ import org.motechproject.mds.domain.MdsEntity;
 public class CardDetail extends MdsEntity {
 
     @Field
-    private String mkCardNumber;
+    private String mkCardCode;
 
     @Field
     private String contentName;
@@ -26,12 +26,12 @@ public class CardDetail extends MdsEntity {
     @Field
     private Long endTime;
 
-    public String getMkCardNumber() {
-        return mkCardNumber;
+    public String getMkCardCode() {
+        return mkCardCode;
     }
 
-    public void setMkCardNumber(String mkCardNumber) {
-        this.mkCardNumber = mkCardNumber;
+    public void setMkCardCode(String mkCardCode) {
+        this.mkCardCode = mkCardCode;
     }
 
     public String getContentName() {
@@ -69,7 +69,7 @@ public class CardDetail extends MdsEntity {
     @Override
     public String toString() {
         return "CardDetail{" +
-                "mkcardNumber=" + mkCardNumber +
+                "mkCardCode='" + mkCardCode + '\'' +
                 ", contentName='" + contentName + '\'' +
                 ", audioFileName='" + audioFileName + '\'' +
                 ", startTime=" + startTime +

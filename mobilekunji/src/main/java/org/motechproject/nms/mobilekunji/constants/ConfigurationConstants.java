@@ -57,7 +57,7 @@ public class ConfigurationConstants {
 
     public static final String CALL_DISCONNECTED_REASON = "Call Disconnected Reason";
 
-    public static final String CARD_NUMBER = "Card Number";
+    public static final String CARD_CODE = "Card Number";
 
     public static final String CONTENT_NAME = "Content Name";
 

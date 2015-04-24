@@ -216,8 +216,8 @@ public class SaveCallDetailApiRequest {
 
             for (CardDetail carDetail : content) {
 
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.CARD_NUMBER,carDetail.getMkCardNumber(), true);
-                CommonValidator.validateCardNumber(carDetail.getMkCardNumber());
+                ParseDataHelper.validateAndParseString(ConfigurationConstants.CARD_CODE,carDetail.getMkCardCode(), true);
+                CommonValidator.validateCardNumber(carDetail.getMkCardCode());
 
                 ParseDataHelper.validateAndParseString(ConfigurationConstants.CONTENT_NAME, carDetail.getContentName(), true);
                 ParseDataHelper.validateAndParseString(ConfigurationConstants.AUDIO_FILE_NAME, carDetail.getAudioFileName(), true);

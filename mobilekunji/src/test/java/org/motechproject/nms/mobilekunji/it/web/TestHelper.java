@@ -135,7 +135,7 @@ public class TestHelper {
         List<CardDetail> cardDetailList = new ArrayList<>();
 
         CardDetail cardDetail = new CardDetail();
-        cardDetail.setMkCardNumber("01");
+        cardDetail.setMkCardCode("01");
         cardDetail.setAudioFileName("Yellowfever.wav");
         cardDetail.setContentName("YellowFever");
         cardDetail.setEndTime(1222222221L);
