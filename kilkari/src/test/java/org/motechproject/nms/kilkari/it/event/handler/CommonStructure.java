@@ -1,6 +1,9 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
 import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
@@ -294,7 +297,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
         csv.setName("test");
-        csv.setLmpDate("2014-12-01 08:08:08");
+        DateTime date = DateTime.now().minusDays(1);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setLmpDate(dtf.print(date));
         csv.setAbortion("NONE");
         csv.setOutcomeNos("1");
         csv.setAge("30");
@@ -325,7 +330,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
         csv.setMotherName("motherName");
-        csv.setBirthdate("2001-01-01 00:00:00");
+        DateTime date = DateTime.now().minusDays(1);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setBirthdate(dtf.print(date));
         csv.setEntryType("2");
         csv.setCreator("Deepak");
         csv.setOwner("Deepak");
