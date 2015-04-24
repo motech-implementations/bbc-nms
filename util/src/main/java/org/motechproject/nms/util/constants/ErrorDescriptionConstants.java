@@ -16,9 +16,6 @@ public final class ErrorDescriptionConstants {
     public static final String INVALID_API_PARAMETER_DESCRIPTION = "%s : Invalid Value";
     public static final String API_INTERNAL_ERROR_DESCRIPTION = "Internal Error";
 
-    public static final String INVALID_DATA_MESSGAE = "Field %s is invalid.";
-    public static final String MANDATORY_PARAMETER_MISSING__MESSGAE = "Field %s is missing.";
-
     private ErrorDescriptionConstants() {
 
     }

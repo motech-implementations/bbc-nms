@@ -93,24 +93,22 @@ public final class ParseDataHelper {
 						DataValidationException.MANDATORY_MISSING_MESSAGE,
 						fieldName, fieldValue);
 				errDesc = String
-						.format(ErrorDescriptionConstants.MANDATORY_PARAMETER_MISSING__MESSGAE,
+						.format(ErrorDescriptionConstants.MISSING_API_PARAMETER_DESCRIPTION,
 								fieldName);
 				LOGGER.error(errMessage);
 				raiseMissingDataException(fieldName, fieldValue, errDesc);
 			}
-			return null;
 		} else if (StringUtils.isBlank(fieldValue)) {
 			if (isMandatory) {
 				errMessage = String.format(
 						DataValidationException.INVALID_FORMAT_MESSAGE,
 						fieldName, fieldValue);
 				errDesc = String.format(
-						ErrorDescriptionConstants.INVALID_DATA_MESSGAE,
+						ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION,
 						fieldName);
 				LOGGER.error(errMessage);
 				raiseInvalidDataException(fieldName, fieldValue, errDesc);
 			}
-			return null;
 		}
 		return fieldValue;
 	}
@@ -183,7 +181,7 @@ public final class ParseDataHelper {
                     DataValidationException.INVALID_FORMAT_MESSAGE,
                     fieldName, fieldValue);
             errDesc = String.format(
-                    ErrorDescriptionConstants.INVALID_DATA_MESSGAE, fieldName);
+                    ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, fieldName);
             LOGGER.error(errMessage);
             raiseInvalidDataException(fieldName, fieldValue, errDesc);
         }
@@ -248,7 +246,7 @@ public final class ParseDataHelper {
                     DataValidationException.INVALID_FORMAT_MESSAGE,
                     fieldName, fieldValue);
             errDesc = String.format(
-                    ErrorDescriptionConstants.INVALID_DATA_MESSGAE, fieldName);
+                    ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, fieldName);
             LOGGER.error(errMessage);
             raiseInvalidDataException(fieldName, fieldValue, errDesc);
         }
@@ -313,7 +311,7 @@ public final class ParseDataHelper {
                     DataValidationException.INVALID_FORMAT_MESSAGE,
                     fieldName, fieldValue);
             errDesc = String.format(
-                    ErrorDescriptionConstants.INVALID_DATA_MESSGAE, fieldName);
+                    ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, fieldName);
             LOGGER.error(errMessage);
             raiseInvalidDataException(fieldName, fieldValue, errDesc);
         }
@@ -377,7 +375,7 @@ public final class ParseDataHelper {
                         DataValidationException.INVALID_FORMAT_MESSAGE,
                         fieldName, fieldValue);
                 errDesc = String.format(
-                        ErrorDescriptionConstants.INVALID_DATA_MESSGAE, fieldName);
+                        ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, fieldName);
                 LOGGER.error(errMessage);
                 raiseInvalidDataException(fieldName, fieldValue, errDesc);
             }
