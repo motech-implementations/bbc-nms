@@ -187,6 +187,12 @@ public class FrontLineWorkerUploadHandler {
                     logger.debug("Record found in Csv database");
 
                     FrontLineWorker frontLineWorker = new FrontLineWorker();
+
+                    if (csvsFrontLineWorker.getIsValid().equalsIgnoreCase("false")) {
+                        checkForInvalidFrontLineWorker(csvsFrontLineWorker);
+                    }
+                    else {
+
                     //Apply validations on the values entered in the CSV
                     validateFrontLineWorker(csvsFrontLineWorker, frontLineWorker);
 
@@ -230,22 +236,19 @@ public class FrontLineWorkerUploadHandler {
                                 successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = null ");
 
                             } else {
-                                if (valid == true) {
+                                /*if (valid == true) {*/
                                     frontLineWorker.setStatus(setStatusWhenValid(dbRecord.getStatus()));
                                     successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = true ");
 
-                                } else {
+                               /* } else {
                                     frontLineWorker.setStatus(Status.INVALID);
                                     successfulUpdate(frontLineWorker, dbRecord, bulkUploadStatus, "Record updated successfully for Flw with valid = false");
 
-                                }
+                                }*/
                             }
-
-
                         }
-
                     }
-
+                    }
                 }
             } catch (DataValidationException dve) {
                 errorDetails = populateErrorDetails(csvFileName, csvsFrontLineWorker.toString(), dve.getErrorCode(), dve.getErrorDesc());
@@ -283,13 +286,59 @@ public class FrontLineWorkerUploadHandler {
 
 
     /**
+     * This procedure is used to mark he frontLineWorker as invalid if the isValid field is set as false in Csv record
+     * and the record is present in database.
+     * @param csvFrontLineWorker the csvFrontLineWorker record which is to be marked invalid
+     * @throws DataValidationException
+     */
+    private void checkForInvalidFrontLineWorker(CsvFrontLineWorker csvFrontLineWorker) throws DataValidationException{
+
+        logger.debug(" checking for existence of record that is to be marked invalid");
+        FrontLineWorker dbRecord = null;
+        FrontLineWorker dbRecordByContactNo = null;
+        Long nmsFlwId = ParseDataHelper.validateAndParseLong("NMS Flw Id", csvFrontLineWorker.getNmsFlwId(), false);
+
+
+        if(nmsFlwId == null)
+        {
+            logger.debug(" nms Flw Id is null. searching by Contact Number");
+            String contactNo = ParseDataHelper.validateAndTrimMsisdn("Contact Number", csvFrontLineWorker.getContactNo());
+            dbRecordByContactNo = frontLineWorkerService.getFlwBycontactNo(contactNo);
+            if(dbRecordByContactNo == null) {
+                ParseDataHelper.raiseInvalidDataException("Contact number", csvFrontLineWorker.getContactNo());
+            }
+            else {
+                //mark record is invalid
+                logger.debug(" Record found in database. Marking recors as invalid");
+                dbRecordByContactNo.setStatus(Status.INVALID);
+                frontLineWorkerService.updateFrontLineWorker(dbRecordByContactNo);
+            }
+
+
+        }
+        else {
+            logger.debug(" nms Flw Id is not null. searching record in database by nmsFlwID");
+            dbRecord = frontLineWorkerService.findById(nmsFlwId);
+            if (dbRecord == null) {
+                ParseDataHelper.raiseInvalidDataException("NMS Flw Id", nmsFlwId.toString());
+            }
+            else {
+                //update the record as invalid
+                logger.debug(" Record found in database. Marking recors as invalid");
+                dbRecord.setStatus(Status.INVALID);
+                frontLineWorkerService.updateFrontLineWorker(dbRecord);
+            }
+        }
+    }
+
+
+    /**
      * This method maps fields of generated front line worker object to front line worker object that
      * is to be saved in Database.
      *
      * @param status status of frontLineWorker present in database
-     * @return status       updated status that is to be saved in databse
+     * @return status       updated status that is to be saved in database
      */
-
     private Status setStatusWhenValid(Status status) {
         if (Status.ANONYMOUS == status) {
             return Status.ACTIVE;
@@ -455,12 +504,14 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
         frontLineWorker.setId(ParseDataHelper.validateAndParseLong("NMS Flw Id", record.getNmsFlwId(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
+/*
 
         if (record.getIsValid().equalsIgnoreCase("false")) {
             frontLineWorker.setStatus(Status.INVALID);
         } else {
             frontLineWorker.setStatus(Status.INACTIVE);
         }
+*/
 
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
