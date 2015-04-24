@@ -126,7 +126,7 @@ public class ContentUploadCsvHandler {
     private void mappDbRecordWithCsvrecord(ContentUpload newRecord, ContentUpload dbRecord) {
 
         dbRecord.setCircleCode(newRecord.getCircleCode());
-        dbRecord.setCardNumber(newRecord.getCardNumber());
+        dbRecord.setCardCode(newRecord.getCardCode());
         dbRecord.setContentDuration(newRecord.getContentDuration());
         dbRecord.setContentFile(newRecord.getContentFile());
         dbRecord.setCircleCode(newRecord.getCircleCode());
@@ -167,7 +167,7 @@ public class ContentUploadCsvHandler {
         contentName = ParseDataHelper.validateAndParseString("Content name", record.getContentName(), true);
         contentFile = ParseDataHelper.validateAndParseString("Content File", record.getContentFile(), true);
 
-        cardNumber = record.getCardNumber();
+        cardNumber = record.getCardCode();
         ParseDataHelper.validateAndParseInt("Card number", cardNumber, true);
         CommonValidator.validateCardNumber(cardNumber.toString());
 
@@ -183,7 +183,7 @@ public class ContentUploadCsvHandler {
         newRecord.setLanguageLocationCode(languageLocationCode);
         newRecord.setContentName(contentName);
         newRecord.setContentFile(contentFile);
-        newRecord.setCardNumber(cardNumber);
+        newRecord.setCardCode(cardNumber);
         newRecord.setContentDuration(contentDuration);
         newRecord.setContentType(ContentType.of(content));
         newRecord.setCreator(record.getCreator());

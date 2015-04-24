@@ -18,7 +18,7 @@ public class CommonValidator {
     public static void validateCardNumber(String cardNumber) throws DataValidationException {
 
         if (cardNumber.length() != ConfigurationConstants.MAX_CARD_DIGITS) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CARD_NUMBER, cardNumber);
+            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CARD_CODE, cardNumber);
         }
     }
 }
