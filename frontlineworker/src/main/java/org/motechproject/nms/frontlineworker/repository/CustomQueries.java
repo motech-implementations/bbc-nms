@@ -14,7 +14,8 @@ import javax.jdo.Query;
 import java.util.List;
 
 /**
- * Created by abhishek on 21/4/15.
+ * This class provides queries that will be used to fetch certain records from front line worker records saved in
+ * database.
  */
 @Repository
 public class CustomQueries {

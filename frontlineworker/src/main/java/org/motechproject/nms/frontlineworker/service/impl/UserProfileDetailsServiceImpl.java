@@ -126,10 +126,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                                      ServicesUsingFrontLineWorker service)
             throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException {
 
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
         Long stateCode = null;
-
         logger.debug("updateLanguageLocationCodeFromMsisdn API start");
         String validatedMsisdn = null;
         LanguageLocationCode languageLocationCodeByParam = null;
@@ -148,8 +145,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
                     frontLineWorker.setCircleCode(languageLocationCodeByParam.getCircleCode());
                     frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
-                }
-                else {
+                } else {
                     ParseDataHelper.raiseInvalidDataException("LanguageLocationCode ", languageLocationCode);
                 }
             } else {
@@ -158,20 +154,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode);
                 } else {
                     stateCode = languageLocationCodeByParam.getStateCode();
-
-                    isDeployed = checkIsDeployedInState(service, stateCode);
-                    if (!isDeployed) {
-                        String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
-                        throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-
-                    }
-                    isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
-                    if (!isInWhiteList) {
-
-                        String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
-                        throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-                    }
-
+                    checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
                     frontLineWorker.setLanguageLocationCodeId(languageLocationCode);
                     frontLineWorkerService.updateFrontLineWorker(frontLineWorker);
                 }
@@ -275,7 +258,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         FrontLineWorker frontLineWorker = new FrontLineWorker();
         frontLineWorker.setContactNo(msisdn);
         frontLineWorker.setOperatorCode(operatorCode);
-        if(!userProfile.isDefaultLanguageLocationCode()) {
+        if (!userProfile.isDefaultLanguageLocationCode()) {
             frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
         }
         frontLineWorker.setCircleCode(userProfile.getCircle());
@@ -302,9 +285,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         UserProfile userProfile = new UserProfile();
         String locationCode = null;
         LanguageLocationCode languageLocationCode = null;
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
-
         Long stateCode = null;
 
         locationCode = languageLocationCodeService.getLanguageLocationCodeByCircleCode(circleCode);
@@ -314,18 +294,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
             logger.debug("language location code found by circle = {}", locationCode);
             stateCode = languageLocationCode.getStateCode();
-            isDeployed = checkIsDeployedInState(service, stateCode);
-            if (!isDeployed) {
-                String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
-                throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA,
-                        errMessage);
-            }
-            isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
-            if (!isInWhiteList) {
-                String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
-                throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-            }
-
+            checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
             userProfile = uniqueLLCForAnonymousUser(languageLocationCode, service);
 
         } else {
@@ -361,7 +330,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
     }
 
     /**
-     * This procedure generates UserDetails for an Anonymous USer if multiple language location code is found
+     * This procedure generates UserDetails for an Anonymous User if multiple language location code is found
      * for the provided circle
      *
      * @param service the module which is invoking the API
@@ -413,23 +382,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                                       FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service)
             throws ServiceNotDeployedException, FlwNotInWhiteListException, NmsInternalServerError {
 
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
-
-        Long stateCode = frontLineWorker.getStateCode();
         UserProfile userProfile = null;
-        isDeployed = checkIsDeployedInState(service, stateCode);
-        if (!isDeployed) {
-            String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
-            throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-
-        }
-        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
-        if (!isInWhiteList) {
-
-            String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
-            throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-        }
+        Long stateCode = frontLineWorker.getStateCode();
+        checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
         userProfile = inactiveUserDetails(msisdn, operatorCode, frontLineWorker, service);
 
         return userProfile;
@@ -493,22 +448,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                                                     FrontLineWorker frontLineWorker, ServicesUsingFrontLineWorker service, String circleCode)
             throws ServiceNotDeployedException, FlwNotInWhiteListException, NmsInternalServerError {
 
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
         Long stateCode = frontLineWorker.getStateCode();
         UserProfile userProfile = null;
-        isDeployed = checkIsDeployedInState(service, stateCode);
-        if (!isDeployed) {
-            String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
-            throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-
-        }
-        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
-        if (!isInWhiteList) {
-
-            String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
-            throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-        }
+        checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
         userProfile = activeUserDetails(msisdn, operatorCode, frontLineWorker, service, circleCode);
         return userProfile;
     }
@@ -609,8 +551,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         LanguageLocationCode langLocCode = null;
         UserProfile userProfile = new UserProfile();
         String circle = null;
-        boolean isDeployed = false;
-        boolean isInWhiteList = false;
         Long stateCode = null;
 
         circle = frontLineWorker.getCircleCode();
@@ -620,17 +560,9 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             if (langLocCode != null) {
                 logger.debug(" Language Location code = {}, Circle Code = {}", languageLocationCode, circle);
                 stateCode = langLocCode.getStateCode();
-                isDeployed = checkIsDeployedInState(service, stateCode);
-                if (!isDeployed) {
-                    String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
-                    throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
-                }
-                isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
-                if (!isInWhiteList) {
-                    throw new FlwNotInWhiteListException("ContactNo not present in WhiteListUsers",
-                            ErrorCategoryConstants.INCONSISTENT_DATA, "ContactNo not present in WhiteListUsers");
-                }
+                checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
+
                 userProfile = anonymousUserDetails(msisdn, langLocCode.getStateCode(), frontLineWorker, service);
 
             } else {
@@ -641,7 +573,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         } else {
             userProfile = getUserDetailsByCircle(msisdn, circleCode, service);
             userProfile.setNmsFlwId(frontLineWorker.getId());
-            if(!userProfile.isDefaultLanguageLocationCode()) {
+            if (!userProfile.isDefaultLanguageLocationCode()) {
                 frontLineWorker.setLanguageLocationCodeId(userProfile.getLanguageLocationCode());
             }
             frontLineWorker.setCircleCode(userProfile.getCircle());
@@ -742,5 +674,28 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         return isInWhiteList;
     }
 
-}
+    /**
+     * @param msisdn    contact number of the front line worker whose details are to be fetched
+     * @param service   the module which is invoking the API
+     * @param stateCode StateCode
+     * @throws ServiceNotDeployedException, FlwNotInWhiteListException
+     */
+    private void checkIsDeployedAndIsInWhiteList(String msisdn, ServicesUsingFrontLineWorker service, Long stateCode)
+            throws ServiceNotDeployedException, FlwNotInWhiteListException {
 
+        boolean isDeployed = false;
+        boolean isInWhiteList = false;
+        isDeployed = checkIsDeployedInState(service, stateCode);
+        if (!isDeployed) {
+            String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+            throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+
+        }
+        isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
+        if (!isInWhiteList) {
+
+            String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+            throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+        }
+    }
+}

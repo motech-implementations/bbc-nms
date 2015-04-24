@@ -671,11 +671,12 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
         }
 
-        // Record 15 status is INVALID and LanguageLocationCode, circleCode is not Null, IsWhiteListEnable
-        // is true and MA and MK services are not deployed in state.
 
-        stateTemp1.setIsMaDeployed(false);
-        stateTemp1.setIsMkDeployed(false);
+        // Record 15 status is INVALID and LanguageLocationCode, circleCode is not Null, IsWhiteListEnable
+        // is true and MA and MK services are deployed in state.
+
+        stateTemp1.setIsMaDeployed(true);
+        stateTemp1.setIsMkDeployed(true);
         stateTemp1.setIsWhiteListEnable(true);
 
         stateService.update(stateTemp1);
@@ -688,6 +689,7 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         } catch (ServiceNotDeployedException e) {
             Assert.assertEquals(e.getErrorCode(),ErrorCategoryConstants.INCONSISTENT_DATA);
         }
+
 
         //  Record 16 status is ANONYMOUS, circleCode is unknown and languageLocationCode is null.
 

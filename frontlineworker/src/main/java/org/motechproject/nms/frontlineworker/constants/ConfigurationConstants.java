@@ -13,10 +13,6 @@ public final class ConfigurationConstants {
 
     public static final String UNKNOWN_CIRCLE = "99";
 
-    public static final String IS_NOT_DEPLOYED = " %s is not Deployed for state : %s :";
-
-    public static  final String IS_NOT_IN_WHITELIST = "ContactNo: %s not present in WhiteListUsers";
-
     public static final Integer PURGE_DATE = 42;
 
     public static final Long CONFIGURATION_INDEX = 1L;
