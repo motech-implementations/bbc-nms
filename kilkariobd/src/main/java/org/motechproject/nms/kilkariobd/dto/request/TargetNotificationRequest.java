@@ -1,14 +1,19 @@
 package org.motechproject.nms.kilkariobd.dto.request;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Entity represents the TargetNotificationRequest.
  */
 public class TargetNotificationRequest {
 
+    @Expose
     private String fileName;
 
+    @Expose
     private String checksum;
 
+    @Expose
     private Long recordsCount;
 
     public TargetNotificationRequest() {}

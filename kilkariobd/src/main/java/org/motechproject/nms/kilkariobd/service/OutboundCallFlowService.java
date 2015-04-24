@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkariobd.service;
 
+import org.joda.time.DateTime;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 
@@ -35,4 +36,11 @@ public interface OutboundCallFlowService {
      * @return OutboundCallFlow type object
      */
     public OutboundCallFlow findRecordByFileName(String filename);
+
+    /**
+     * Method to find OutboundCallFlow based on creationDate
+     * @param date
+     * @return
+     */
+    public OutboundCallFlow findRecordByCreationDate(DateTime date);
 }

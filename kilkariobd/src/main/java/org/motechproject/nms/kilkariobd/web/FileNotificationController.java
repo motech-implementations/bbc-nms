@@ -47,7 +47,6 @@ public class FileNotificationController extends BaseController{
         logger.debug("cdrChecksum : [" + apiRequest.getCdrDetail().getCdrChecksum() + "]");
         logger.debug("recordsCount : [%d]", apiRequest.getCdrDetail().getRecordsCount());
         apiRequest.validateMandatoryParameters();
-        //todo : update outboundcallflow record in DB.
         OutboundCallFlow callFlow = callFlowService.findRecordByFileName(apiRequest.getFileName());
         callFlow.setStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
         callFlow.setCdrDetailChecksum(apiRequest.getCdrDetail().getCdrChecksum());

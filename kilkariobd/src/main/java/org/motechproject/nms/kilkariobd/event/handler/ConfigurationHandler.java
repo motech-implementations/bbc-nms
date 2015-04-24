@@ -3,8 +3,11 @@ package org.motechproject.nms.kilkariobd.event.handler;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkariobd.commons.Constants;
+import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
+import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
+import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import java.util.Map;
 
 import static org.motechproject.nms.kilkariobd.commons.Constants.CONFIGURATION_ID;
 import static org.motechproject.nms.kilkariobd.commons.Constants.CONFIGURATION_UPDATE_EVENT;
+import static org.motechproject.nms.kilkariobd.commons.Constants.RETRY_PREPARE_OBD_TARGET_EVENT_SUBJECT;
 
 
 public class ConfigurationHandler {
@@ -33,6 +37,9 @@ public class ConfigurationHandler {
         this.motechSchedulerService = motechSchedulerService;
     }
 
+    @Autowired
+    private OutboundCallFlowService callFlowService;
+
     @MotechListener(subjects = CONFIGURATION_UPDATE_EVENT)
     public void configurationUpdate(MotechEvent motechEvent) {
 
@@ -51,4 +58,6 @@ public class ConfigurationHandler {
 
         logger.info("Update event handling completed");
     }
+
+
 }
