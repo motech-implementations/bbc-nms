@@ -5,8 +5,6 @@ package org.motechproject.nms.frontlineworker.constants;
  */
 public final class ConfigurationConstants {
 
-    public static final int FLW_CONTACT_NUMBER_LENGTH = 10;
-
     public static final String FLW_UPLOAD_SUCCESS = "mds.crud.frontlineworker.CsvFrontLineWorker.csv-import.success";
 
     public static final String WLU_UPLOAD_SUCCESS = "mds.crud.frontlineworker.CsvWhiteListUsers.csv-import.success";
@@ -15,16 +13,11 @@ public final class ConfigurationConstants {
 
     public static final String UNKNOWN_CIRCLE = "99";
 
-/*    public static final String BASE_SUBJECT = "org.motechproject.frontlineworker.";
-
-    public static final String DELETION_EVENT_SUBJECT_SCHEDULER = BASE_SUBJECT + "deletion";
-
-    public static final int DELETE_INVALID_RECORDS_AFTER_WEEKS = 6;*/
-
-    public static final String DELETION_EVENT = "deleteInvalidFlw";
-
     public static final Integer NUMBER_OF_DAYS_FOR_DELETION = 41;
 
+    public static final String IS_NOT_DEPLOYED = " %s is not Deployed for state : %s :";
+
+    public static  final String IS_NOT_IN_WHITELIST = "ContactNo: %s not present in WhiteListUsers";
 
     private ConfigurationConstants() {
     }

@@ -26,8 +26,4 @@ public interface FrontLineWorkerRecordDataService extends MotechDataService<Fron
     @Lookup
     FrontLineWorker findById(@LookupField(name = "id") Long id);
 
-    /*@Lookup
-    List<FrontLineWorker> findByStatus(@LookupField(name = "status") Status status, @LookupField(name = "modificationDate") DateTime modificationDate);
-*/
-
 }

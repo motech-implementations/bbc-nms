@@ -104,13 +104,4 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
         frontLineWorkerRecordDataService.deleteAll();
     }
 
-/*    @Override
-    public List<FrontLineWorker> findByStatus(Status status, DateTime modificationDate) {
-
-        List<FrontLineWorker> frontLineWorkerList = frontLineWorkerRecordDataService.findByStatus(status, modificationDate);
-
-        return frontLineWorkerList;
-    }*/
-
-
 }

@@ -27,8 +27,7 @@ public class WhiteListUsersServiceImpl implements WhiteListUsersService {
     @Override
     public WhiteListUsers findContactNo(String contactNo) {
 
-        WhiteListUsers whiteListUsers = whiteListUsersRecordDataService.getContactNo(contactNo);
-        return whiteListUsers;
+        return whiteListUsersRecordDataService.getContactNo(contactNo);
 
     }
 

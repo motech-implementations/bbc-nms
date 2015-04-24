@@ -161,14 +161,14 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
                     isDeployed = checkIsDeployedInState(service, stateCode);
                     if (!isDeployed) {
-                        String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                        String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
                         throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
                     }
                     isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
                     if (!isInWhiteList) {
 
-                        String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+                        String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
                         throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
                     }
 
@@ -301,7 +301,6 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
 
         UserProfile userProfile = new UserProfile();
         String locationCode = null;
-        String defaultLanguageLocationCode = null;
         LanguageLocationCode languageLocationCode = null;
         boolean isDeployed = false;
         boolean isInWhiteList = false;
@@ -317,13 +316,13 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             stateCode = languageLocationCode.getStateCode();
             isDeployed = checkIsDeployedInState(service, stateCode);
             if (!isDeployed) {
-                String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
                 throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA,
                         errMessage);
             }
             isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
             if (!isInWhiteList) {
-                String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+                String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
                 throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
             }
 
@@ -421,21 +420,20 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         UserProfile userProfile = null;
         isDeployed = checkIsDeployedInState(service, stateCode);
         if (!isDeployed) {
-            String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+            String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
             throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
         }
         isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
         if (!isInWhiteList) {
 
-            String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+            String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
             throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
         }
         userProfile = inactiveUserDetails(msisdn, operatorCode, frontLineWorker, service);
 
         return userProfile;
     }
-
 
     /**
      * This procedure generated UserDetails for an InactiveUser using its state and district details after checking the
@@ -501,14 +499,14 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         UserProfile userProfile = null;
         isDeployed = checkIsDeployedInState(service, stateCode);
         if (!isDeployed) {
-            String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+            String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
             throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
         }
         isInWhiteList = checkIsInWhiteListStatus(msisdn, stateCode);
         if (!isInWhiteList) {
 
-            String errMessage = String.format("ContactNo not present in WhiteListUsers: %s :", stateCode);
+            String errMessage = String.format(ConfigurationConstants.IS_NOT_IN_WHITELIST, stateCode);
             throw new FlwNotInWhiteListException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
         }
         userProfile = activeUserDetails(msisdn, operatorCode, frontLineWorker, service, circleCode);
@@ -624,7 +622,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                 stateCode = langLocCode.getStateCode();
                 isDeployed = checkIsDeployedInState(service, stateCode);
                 if (!isDeployed) {
-                    String errMessage = String.format(" %s is not Deployed for state : %s :", service.toString(), stateCode);
+                    String errMessage = String.format(ConfigurationConstants.IS_NOT_DEPLOYED, service.toString(), stateCode);
                     throw new ServiceNotDeployedException(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
 
                 }

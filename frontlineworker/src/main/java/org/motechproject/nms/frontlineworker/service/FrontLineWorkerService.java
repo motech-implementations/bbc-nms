@@ -23,7 +23,5 @@ public interface FrontLineWorkerService {
 
     public FrontLineWorker findById(Long id);
 
-    //public List<FrontLineWorker> findByStatus(Status status, DateTime modificationDate);
-
     public void deleteAll();
 }

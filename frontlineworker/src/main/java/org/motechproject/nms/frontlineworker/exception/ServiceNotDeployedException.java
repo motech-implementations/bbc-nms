@@ -11,24 +11,24 @@ public class ServiceNotDeployedException extends Exception {
 
     public ServiceNotDeployedException(String message, String errorCode, String errorDesc) {
         super(message);
-        this.errorCode = errorCode;
         this.errorDesc = errorDesc;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
+        this.errorCode = errorCode;
     }
 
     public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
-    public String getErrorDesc() {
-        return errorDesc;
+    public String getErrorCode() {
+        return errorCode;
     }
 
     public void setErrorDesc(String errorDesc) {
         this.errorDesc = errorDesc;
+    }
+
+    public String getErrorDesc() {
+        return errorDesc;
     }
 
 }
