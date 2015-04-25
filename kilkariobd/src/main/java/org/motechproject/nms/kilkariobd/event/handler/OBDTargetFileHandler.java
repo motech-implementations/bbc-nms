@@ -72,6 +72,8 @@ public class OBDTargetFileHandler {
     @Autowired
     private SettingsFacade kilkariObdSettings;
 
+    private HttpClient client = new HttpClient();
+
     Logger logger = LoggerFactory.getLogger(OBDTargetFileHandler.class);
 
     /**
@@ -79,9 +81,6 @@ public class OBDTargetFileHandler {
      */
     @MotechListener(subjects = PREPARE_OBD_TARGET_EVENT_SUBJECT)
     public void prepareOBDTargetEventHandler() {
-
-        HttpClient client = new HttpClient();
-
         /*
         delete all the records from outboundCallRequest before preparing fresh ObdTargetFile
          */
@@ -141,7 +140,6 @@ public class OBDTargetFileHandler {
         SecureCopy.toRemote(localFileName, remoteFileName);
 
         /* notify IVR */
-        HttpClient client = new HttpClient();
         client.notifyTargetFile(remoteFileName, todayCallFlow.getObdChecksum(), recordsCount);
         todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
         todayCallFlow.setStatus(CallFlowStatus.OBD_FILE_NOTIFICATION_SENT_TO_IVR);
@@ -210,8 +208,6 @@ public class OBDTargetFileHandler {
 
     private void processCdrDetail(OutboundCallFlow oldCallFlow, Configuration configuration, Settings settings)
             throws CDRFileProcessingFailedException{
-        HttpClient client = new HttpClient();
-
         /* ProcessCDRDetail */
         downloadAndProcessCdrDetailFile(oldCallFlow.getObdFileName(), configuration, settings);
         oldCallFlow.setStatus(CallFlowStatus.CDR_FILES_PROCESSED);
@@ -222,7 +218,6 @@ public class OBDTargetFileHandler {
     }
 
     private void downloadAndProcessCdrSummaryFile(String obdFileName, Configuration configuration, Settings settings) throws CDRFileProcessingFailedException {
-        HttpClient client = new HttpClient();
         String cdrSummaryFileName = settings.getObdFileLocalPath() + "/Cdr_Summary_" + obdFileName;
         String remoteFileName = configuration.getObdFilePathOnServer() + "/Cdr_Summary_" + obdFileName;
         try {
@@ -243,7 +238,6 @@ public class OBDTargetFileHandler {
 
     @Transactional
     private void processCDRSummaryCSV(String cdrFileName, Configuration configuration) throws CDRFileProcessingFailedException {
-        HttpClient client = new HttpClient();
         List<Map<String, String >> cdrSummaryRecords;
         Integer retryDayNumber;
         //todo apply null checks where ever possible.
@@ -352,7 +346,7 @@ public class OBDTargetFileHandler {
     }
 
     private void downloadAndProcessCdrDetailFile(String fileName, Configuration configuration, Settings settings) throws CDRFileProcessingFailedException {
-        HttpClient client = new HttpClient();
+
         String cdrDetailFileName = settings.getObdFileLocalPath() + "/CDR_detail_" + fileName;
         String remoteFileName = configuration.getObdFilePathOnServer() + "/CDR_detail_" + fileName;
         try {
@@ -375,7 +369,6 @@ public class OBDTargetFileHandler {
 
     @Transactional
     private void processCDRDetail(String cdrFileName) {
-        HttpClient client = new HttpClient();
         List<Map<String, String>> cdrDetailRecords;
         DateTime date = DateTime.now().withTimeAtStartOfDay();
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCreationDate(date);

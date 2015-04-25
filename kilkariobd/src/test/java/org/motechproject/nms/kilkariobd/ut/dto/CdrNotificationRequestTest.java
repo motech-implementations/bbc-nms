@@ -28,7 +28,7 @@ public class CdrNotificationRequestTest {
             cdrNotificationRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+            Assert.assertEquals(((DataValidationException) ex).getErrorCode(),ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING );
         }
     }
 

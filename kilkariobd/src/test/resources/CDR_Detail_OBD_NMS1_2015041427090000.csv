@@ -1,0 +1,2 @@
+RequestId,Msisdn,CallId,AttemptNo,CallStartTime,CallAnswerTime,CallEndTime,CallDurationInPulse,CallStatus,LanguageLocationId,ContentFile,MsgPlayStartTime,MsgPlayEndTime,CircleId,OperatorId,Priority,CallDisconnectReason,WeekId
+123456,9985167784,142712171090954,1,1427121711,1427121711,1427121720,2,4,11,W11_1.wav,1427121712,1427121719,AP,D,1,1,22

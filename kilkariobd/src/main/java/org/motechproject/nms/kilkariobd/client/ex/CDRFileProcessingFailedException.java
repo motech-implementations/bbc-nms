@@ -13,4 +13,8 @@ public class CDRFileProcessingFailedException extends Exception{
     public CDRFileProcessingFailedException(FileProcessingStatus errorCode) {
         this.errorCode = errorCode;
     }
+
+    public FileProcessingStatus getErrorCode() {
+        return errorCode;
+    }
 }
