@@ -34,28 +34,24 @@ public class CustomQueries {
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
             query.setFilter("msisdn == '" + msisdn + "' && (status == '" + Status.ACTIVE + "' ||" + " status == '" + Status.PENDING_ACTIVATION + "')");
             query.setResult("DISTINCT " + resultParamName);
-            org.joda.time.DateTime date = new DateTime();
-            query.setFilter("Days.daysBetween(date, date)");
-            query.declareImports("org.joda.time.Days");
-            query.declareParameters("org.joda.time.DateTime date");
             return (List<SubscriptionPack>) query.execute();
         }
     }
-    
+
     /**
      * This class is used to delete SubscriptionMeasure having passed subscriptionIds
      */
     public static class DeleteSubscriptionMeasureQuery implements QueryExecution<Long> {
 
         private List<Long> subscriptionIds = null;
-        
+
         public DeleteSubscriptionMeasureQuery(List<Long> subscriptionIds) {
             this.subscriptionIds = subscriptionIds;
         }
-        
+
         /**
          * This method executes the query passed and delete filtered SubscriptionMeasure.
-         * 
+         *
          * @param query to be executed
          * @param restriction
          * @return count of SubscriptionMeasure records deleted
@@ -75,14 +71,14 @@ public class CustomQueries {
     public static class DeleteSubscriptionQuery implements QueryExecution<Long> {
 
         private Integer expiredSubscriptionAgeDays = 0;
-        
+
         public DeleteSubscriptionQuery(Integer expiredSubscriptionAgeDays) {
             this.expiredSubscriptionAgeDays = expiredSubscriptionAgeDays;
         }
-        
+
         /**
          * This method executes the query passed and delete filtered subscription.
-         * 
+         *
          * @param query to be executed
          * @param restriction
          * @return count of Subscription records deleted
@@ -99,14 +95,14 @@ public class CustomQueries {
     }
 
     /**
-     * This class is used to delete subscriber 
+     * This class is used to delete subscriber
      * who doesn't have any subscription
      */
     public static class DeleteSubscriberQuery implements QueryExecution<Long> {
 
         /**
          * This method executes the query passed and delete filtered subscriber.
-         * 
+         *
          * @param query to be executed
          * @param restriction
          * @return Count of Subscriber records deleted.
@@ -120,14 +116,14 @@ public class CustomQueries {
     }
 
     /**
-     * This class is used to find scheduled subscription 
+     * This class is used to find scheduled subscription
      */
     public static class FindScheduledSubscription implements QueryExecution<List<Subscription>> {
 
         /**
-         * This method executes the query passed and return 
+         * This method executes the query passed and return
          * list of subscription whom message is to send today
-         * 
+         *
          * @param query to be executed
          * @param restriction
          * @return List of scheduled subscription
@@ -145,7 +141,7 @@ public class CustomQueries {
             return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);
         }
     }
-    
+
     /**
      * This class is used to delete subscriptions
      * whose status is completed or deactivated n days earlier.
@@ -153,14 +149,14 @@ public class CustomQueries {
     public static class SubscriptionIdOfNDaysEarlierSubscription implements QueryExecution<List<Long>> {
 
         private Integer expiredSubscriptionAgeDays = 0;
-        
+
         public SubscriptionIdOfNDaysEarlierSubscription(Integer expiredSubscriptionAgeDays) {
             this.expiredSubscriptionAgeDays = expiredSubscriptionAgeDays;
         }
-        
+
         /**
          * This method executes the query passed and delete filtered subscription.
-         * 
+         *
          * @param query to be executed
          * @param restriction
          * @return count of Subscription records deleted
