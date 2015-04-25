@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.jdo.Query;
 
-import org.datanucleus.store.rdbms.query.ForwardQueryResult;
 import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
@@ -92,7 +91,7 @@ public class CustomQueries {
         @Override
         public Long execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            date = date.minusDays(expiredSubscriptionAgeDays-1);
+            //date = date.minusDays(expiredSubscriptionAgeDays-1);
             query = query.getPersistenceManager().newQuery(Subscription.class);
             query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && completionOrDeactivationDate < date");
             query.declareParameters("java.util.Date date");
@@ -170,7 +169,7 @@ public class CustomQueries {
         @Override
         public List<Long> execute(Query query, InstanceSecurityRestriction restriction) {
             DateTime date = new DateTime();
-            date = date.minusDays(expiredSubscriptionAgeDays-1);
+            // date = date.minusDays(expiredSubscriptionAgeDays-1);
             query = query.getPersistenceManager().newQuery(Subscription.class);
             query.setFilter("(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"') && completionOrDeactivationDate < date");
             query.declareParameters("java.util.Date date");

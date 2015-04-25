@@ -357,6 +357,39 @@ public class CommonValidatorServiceTest {
         }
         Assert.assertEquals(null,village);
     }
+    
+    @Test
+    public void validateLanguageLocationCodeCheckWithNullLlcCode() {
+        Integer llcCode = null;
+        
+        try {
+            commonValidatorService1.validateLanguageLocationCode(llcCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
+    
+    @Test
+    public void validateCircleCheckWithNullCircleCode() {
+        String circleCode = null;
+        
+        try {
+            commonValidatorService1.validateCircle(circleCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
+    
+    @Test
+    public void validateOperatorCheckWithNullOperatorCode() {
+        
+        String operatorCode = null;
+        try {
+            commonValidatorService1.validateOperator(operatorCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
 
 
 
