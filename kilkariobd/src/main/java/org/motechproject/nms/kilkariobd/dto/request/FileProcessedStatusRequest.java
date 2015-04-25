@@ -1,10 +1,7 @@
 package org.motechproject.nms.kilkariobd.dto.request;
 
 import com.google.gson.annotations.Expose;
-import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
-import org.motechproject.nms.util.helper.DataValidationException;
-import org.motechproject.nms.util.helper.ParseDataHelper;
 
 /**
  * Entity represents the file processed status.

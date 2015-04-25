@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkariobd.web;
 
-import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;

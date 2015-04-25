@@ -5,9 +5,6 @@ import org.apache.commons.lang.StringUtils;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.supercsv.cellprocessor.constraint.NotNull;
-import org.supercsv.cellprocessor.constraint.UniqueHashCode;
-import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.io.CsvMapReader;
 import org.supercsv.io.CsvMapWriter;
 import org.supercsv.io.ICsvMapReader;
@@ -15,7 +12,10 @@ import org.supercsv.prefs.CsvPreference;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class to read and map csv files.
@@ -30,7 +30,7 @@ public class CSVMapper {
      * @return List of Map
      * @throws Exception
      */
-    public static List<Map<String, String>> readWithCsvMapReader(String fileName) throws Exception {
+    public static List<Map<String, String>> readWithCsvMapReader(String fileName) throws FileNotFoundException {
 
         ICsvMapReader mapReader = null;
         List<Map<String, String>> listOfCdrSummaryRecords = new ArrayList<>();
@@ -43,12 +43,19 @@ public class CSVMapper {
             final String[] header = mapReader.getHeader(true);
 
             Map<String, String> cdrSummary;
-            while ((cdrSummary = mapReader.read(header)) != null) {
-                listOfCdrSummaryRecords.add(cdrSummary);
-            }
+
+                while ((cdrSummary = mapReader.read(header)) != null) {
+                    listOfCdrSummaryRecords.add(cdrSummary);
+                }
+            } catch (IOException e) {
+                logger.error("IO Exception", e);
         } finally {
             if (mapReader != null) {
-                mapReader.close();
+                try {
+                    mapReader.close();
+                } catch (IOException e) {
+                    logger.error("IO Exception", e);
+                }
             }
         }
         return listOfCdrSummaryRecords;

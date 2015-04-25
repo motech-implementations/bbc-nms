@@ -4,10 +4,12 @@ import org.motechproject.nms.kilkariobd.domain.OutboundCallDetail;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallDetailDataService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Class to implement method defined in OutboundCallDetailService Interface
  */
+@Service("outboundCallDetailService")
 public class OutboundCallDetailServiceImpl implements OutboundCallDetailService {
 
     @Autowired

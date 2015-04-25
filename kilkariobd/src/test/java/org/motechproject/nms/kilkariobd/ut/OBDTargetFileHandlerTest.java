@@ -16,11 +16,9 @@ import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.event.handler.OBDTargetFileHandler;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
-import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 
-import javax.inject.Inject;
 import java.lang.reflect.Method;
 import java.net.URL;
 
@@ -39,9 +37,6 @@ public class OBDTargetFileHandlerTest extends TestCase {
 
     @Mock
     private HttpClient httpClient;
-
-    @Inject
-    private ConfigurationService configurationService;
 
     @InjectMocks
     OBDTargetFileHandler handler = new OBDTargetFileHandler();

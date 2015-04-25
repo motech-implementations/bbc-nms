@@ -1,9 +1,6 @@
 package org.motechproject.nms.kilkariobd.service.impl;
 
 import org.joda.time.DateTime;
-import org.motechproject.mds.filter.Filter;
-import org.motechproject.mds.query.QueryParams;
-import org.motechproject.mds.util.Order;
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;

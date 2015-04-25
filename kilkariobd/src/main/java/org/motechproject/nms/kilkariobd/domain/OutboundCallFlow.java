@@ -2,13 +2,12 @@ package org.motechproject.nms.kilkariobd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.domain.MdsEntity;
 
 /**
  * This entity shall contains the status corresponding to the processing OBD target file and CDR files.
  */
 @Entity
-public class OutboundCallFlow extends MdsEntity {
+public class OutboundCallFlow {
     
     @Field
     private String obdFileName;

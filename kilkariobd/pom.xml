@@ -21,15 +21,22 @@
 
     <dependencies>
 
-        <dependency>
+        <!-- dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
             <version>0.1.51</version>
+            <scope>provided</scope>
+        </dependency -->
+
+        <dependency>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.jsch</artifactId>
+            <version>0.1.51_1</version>
         </dependency>
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
+            <groupId>org.apache.servicemix.bundles</groupId>
+            <artifactId>org.apache.servicemix.bundles.commons-httpclient</artifactId>
+            <version>3.1_7</version>
         </dependency>
 
         <dependency>
@@ -112,8 +119,18 @@
                         <Resource-Path>kilkariobd/resources</Resource-Path>
                         <Context-Path>kilkariobd</Context-Path>
                         <Export-Package>
-                            org.motechproject.nms.kilkariobd.domain;version=${project.version},</Export-Package>
+                            org.motechproject.nms.kilkariobd.commons;version=${project.version},
+                            org.motechproject.nms.kilkariobd.domain;version=${project.version},
+                            org.motechproject.nms.kilkariobd.event.handler;version=${project.version},
+                            org.motechproject.nms.kilkariobd.repository;version=${project.version},
+                            org.motechproject.nms.kilkariobd.initializer;version=${project.version},
+                            org.motechproject.nms.kilkariobd.mapper;version=${project.version},
+                            org.motechproject.nms.kilkariobd.service;version=${project.version},
+                            org.motechproject.nms.kilkariobd.settings;version=${project.version},
+                        </Export-Package>
                         <Import-Package>org.motechproject.osgi.web,
+                            org.apache.http,
+                            org.apache.http.*,
                             *</Import-Package>
                     </instructions>
                 </configuration>

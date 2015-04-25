@@ -40,13 +40,6 @@ public class HttpRetryStrategyTest {
         Assert.assertTrue(10000L == HttpRetryStrategy.getTimeOutInterval(settings,2, 5000L));
     }
 
-    @Test
-    public void shouldGetTimeOutIntervalWhenRetryNumGreaterThanMaxRetries() {
-
-        Settings settings = new Settings("5000", "3", "2", null, null, null);
-        Assert.assertTrue(0L == HttpRetryStrategy.getTimeOutInterval(settings,4, 5000L));
-    }
-
 
 
 }

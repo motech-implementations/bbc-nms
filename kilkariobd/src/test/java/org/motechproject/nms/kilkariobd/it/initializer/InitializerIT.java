@@ -47,7 +47,7 @@ public class InitializerIT extends BasePaxIT {
 
     @After
     public void tearDown() {
-        configurationDataService.deleteAll();
+        //configurationDataService.deleteAll();
     }
 
     /**

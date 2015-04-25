@@ -2,8 +2,6 @@ package org.motechproject.nms.kilkariobd.client;
 
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.settings.Settings;
-import org.motechproject.server.config.SettingsFacade;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * This class retry logic for a Http request
@@ -31,7 +29,7 @@ public class HttpRetryStrategy {
         Long timeToWaitInMillis = 0L;
         if (retryNumber.equals(Constants.FIRST_ATTEMPT)) {
             timeToWaitInMillis = Long.parseLong(settings.getOfflineApiInitalIntervalInMilliseconds());
-        } else if (retryNumber <= Integer.parseInt(settings.getOfflineApiMaxRetries())) {
+        } else {
             timeToWaitInMillis = previousInterval * Integer.parseInt(settings.getOfflineApiRetryMultiplier());
         }
         return timeToWaitInMillis;

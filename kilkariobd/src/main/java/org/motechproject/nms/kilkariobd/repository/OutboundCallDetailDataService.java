@@ -16,5 +16,5 @@ import java.util.List;
 public interface OutboundCallDetailDataService extends MotechDataService<OutboundCallDetail>{
 
     @Lookup
-    List<OutboundCallDetail> findRecordsByRequestId(@LookupField(name = "requestId") Long requestId);
+    List<OutboundCallDetail> findRecordsByRequestId(@LookupField(name = "requestId") String requestId);
 }

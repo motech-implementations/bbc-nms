@@ -3,17 +3,16 @@ package org.motechproject.nms.kilkariobd.event.handler;
 import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
-import org.motechproject.mds.service.impl.csv.CsvImporterExporter;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.kilkariobd.helper.MD5Checksum;
-import org.motechproject.nms.kilkariobd.helper.SecureCopy;
 import org.motechproject.nms.kilkariobd.client.HttpClient;
 import org.motechproject.nms.kilkariobd.client.ex.CDRFileProcessingFailedException;
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.*;
+import org.motechproject.nms.kilkariobd.helper.MD5Checksum;
+import org.motechproject.nms.kilkariobd.helper.SecureCopy;
 import org.motechproject.nms.kilkariobd.mapper.CSVMapper;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
@@ -31,7 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,13 +64,13 @@ public class OBDTargetFileHandler {
     private OutboundCallDetailService callDetailService;
 
     @Autowired
-    private CsvImporterExporter csvImporterExporter;
-
-    @Autowired
     private ContentUploadService contentUploadService;
 
     @Autowired
     private SettingsFacade kilkariObdSettings;
+
+    @Autowired
+    private MotechSchedulerService motechSchedulerService;
 
     private HttpClient client = new HttpClient();
 
@@ -552,6 +552,7 @@ public class OBDTargetFileHandler {
 
         Date retryTime = DateTime.now().plusMinutes(retryInterval).toDate();
         RunOnceSchedulableJob oneTimeJob = new RunOnceSchedulableJob(motechEvent, retryTime);
+        motechSchedulerService.safeScheduleRunOnceJob(oneTimeJob);
     }
 }
 

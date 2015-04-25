@@ -109,6 +109,8 @@ public class Initializer {
 
         }
 
+        configuration = configurationService.getConfiguration();
+
         Map<String,Object> parametersObdPreparation = new HashMap<String,Object>() {{
 
             put(MotechSchedulerService.JOB_ID_KEY, Constants.PREPARE_OBD_TARGET_EVENT_JOB);
@@ -127,9 +129,9 @@ public class Initializer {
 
         MotechEvent motechEventToNotifyObdTarget = new MotechEvent(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, parametersNotifyObdTarget);
 
-        CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, configuration.getObdCreationEventCronExpression() , null, null, true);
+        CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, configuration.getObdCreationEventCronExpression() , null, null, false);
 
-        CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, configuration.getObdNotificationEventCronExpression(), null, null, true);
+        CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, configuration.getObdNotificationEventCronExpression(), null, null, false);
 
         motechSchedulerService.safeScheduleJob(cronJobForObdPreparation);
         motechSchedulerService.safeScheduleJob(cronJobToNotifyObdTarget);
