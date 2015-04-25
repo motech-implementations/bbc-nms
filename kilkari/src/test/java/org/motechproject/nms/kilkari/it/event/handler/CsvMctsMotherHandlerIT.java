@@ -7,6 +7,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.initializer.Initializer;
+import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
+import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -18,6 +21,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import javax.inject.Inject;
 
 import static org.junit.Assert.*;
 /**
@@ -558,6 +563,109 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         assertNotNull(scheduledSubscriptions);
         assertFalse(scheduledSubscriptions.isEmpty());
         
+    }
+    
+    @Test
+    public void testCompleteSubscription() {
+        logger.info("Inside testCompleteSubscription");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        CsvMctsMother csv = new CsvMctsMother();
+        csv = createMotherMcts(csv);
+        csv.setLmpDate("2014-12-01 08:08:08");
+        csv.setWhomPhoneNo("1000000012");
+        csv.setIdNo("12");
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        CsvMctsMother csv1 = new CsvMctsMother();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("1000000012");
+        csv1.setIdNo("12");
+        csv.setAbortion("null");
+        csv1.setOutcomeNos("0");
+        csv1.setEntryType("1");
+        csv1.setName("testing");
+        csv1.setLmpDate("2015-01-20 08:08:08");
+        CsvMctsMother dbCsv1 = csvMctsMotherDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        
+        
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        subscriptionService.completeSubscription(updateSubs.getId());
+        subscriptionService.completeSubscription(1L);
+        
+        
+        csv = new CsvMctsMother();
+        csv = createMotherMcts(csv);
+        csv.setLmpDate("2014-12-01 08:08:08");
+        csv.setWhomPhoneNo("1000000013");
+        csv.setIdNo("13");
+        dbCsv = csvMctsMotherDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        subscriptionService.completeSubscription(updateSubs.getId());
+        
+    }
+    
+    @Test
+    public void testRetryAttempt() {
+        logger.info("Inside testRetryAttempt");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        CsvMctsMother csv = new CsvMctsMother();
+        csv = createMotherMcts(csv);
+        csv.setLmpDate("2014-12-01 08:08:08");
+        csv.setWhomPhoneNo("1000000012");
+        csv.setIdNo("12");
+        CsvMctsMother dbCsv = csvMctsMotherDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        CsvMctsMother csv1 = new CsvMctsMother();
+        csv1 = createMotherMcts(csv1);
+        csv1.setWhomPhoneNo("1000000012");
+        csv1.setIdNo("12");
+        csv.setAbortion("null");
+        csv1.setOutcomeNos("0");
+        csv1.setEntryType("1");
+        csv1.setName("testing");
+        csv1.setLmpDate("2015-01-20 08:08:08");
+        CsvMctsMother dbCsv1 = csvMctsMotherDataService.create(csv1);
+        uploadedIds.add(dbCsv1.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
+        
+        
+        Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
+        subscriptionService.retryAttempt(updateSubs.getId());
+        subscriptionService.retryAttempt(1L);
+        
+        csv = new CsvMctsMother();
+        csv = createMotherMcts(csv);
+        csv.setWhomPhoneNo("1000000013");
+        csv.setIdNo("13");
+        DateTime date = new DateTime().minusMonths(3);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setLmpDate(dtf.print(date));
+        dbCsv = csvMctsMotherDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        subscriptionService.getScheduledSubscriptions();
+        
+        Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        int retryDay  = subscriptionService.retryAttempt(subscription.getId());
+        assertEquals(retryDay, -1);
+        
+        retryDay  = subscriptionService.retryAttempt(1L);
+        assertEquals("Subscription Not found", retryDay, -1);
+         
     }
     
 }

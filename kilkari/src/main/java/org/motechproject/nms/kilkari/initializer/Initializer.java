@@ -33,7 +33,7 @@ public class Initializer {
 
     public static final Integer DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = 1;
     
-    public static final Integer DEFAULT_EXPIRED_SUBSCRIPTION_AGE_DAYS = 42;
+    public static final Integer DEFAULT_EXPIRED_SUBSCRIPTION_AGE_DAYS = 1;
 
     private ConfigurationService configurationService;
     
