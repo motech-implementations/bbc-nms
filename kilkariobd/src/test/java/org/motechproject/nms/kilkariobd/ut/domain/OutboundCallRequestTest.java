@@ -15,9 +15,6 @@ public class OutboundCallRequestTest {
         outboundCallRequest.setCallFlowURL("callFlowURL");
         Assert.assertEquals("callFlowURL", outboundCallRequest.getCallFlowURL());
 
-        outboundCallRequest.setCircleCode("CC");
-        Assert.assertEquals("CC", outboundCallRequest.getCircleCode());
-
         outboundCallRequest.setCli("cli");
         Assert.assertEquals("cli", outboundCallRequest.getCli());
 
