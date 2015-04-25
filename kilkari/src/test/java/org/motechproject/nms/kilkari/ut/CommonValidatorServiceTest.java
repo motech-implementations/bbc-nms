@@ -7,9 +7,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
-import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
+import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
+import org.motechproject.nms.kilkari.repository.CsvMctsChildDataService;
+import org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.kilkari.service.impl.CommonValidatorServiceImpl;
 import org.motechproject.nms.masterdata.domain.*;
@@ -18,9 +19,11 @@ import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Verify that HelloWorldRecordService present, functional.
@@ -47,16 +50,16 @@ public class CommonValidatorServiceTest {
     protected SubscriberService subscriberService;
 
     @Mock
-    protected MotherMctsCsvDataService motherMctsCsvDataService;
+    protected CsvMctsMotherDataService csvMctsMotherDataService;
 
     @Mock
-    protected MotherMctsCsvService motherMctsCsvService;
+    protected CsvMctsMotherService csvMctsMotherService;
 
     @Mock
-    protected ChildMctsCsvDataService childMctsCsvDataService;
+    protected CsvMctsChildDataService csvMctsChildDataService;
 
     @Mock
-    protected ChildMctsCsvService childMctsCsvService;
+    protected CsvMctsChildService childMctsCsvService;
 
     @Mock
     protected SubscriptionService subscriptionService;
@@ -78,6 +81,9 @@ public class CommonValidatorServiceTest {
 
     @InjectMocks
     CommonValidatorServiceImpl commonValidatorService1;
+    
+    @Mock
+    private LanguageLocationCodeService llcService;
 
     @Before
     public void init() {
@@ -104,6 +110,23 @@ public class CommonValidatorServiceTest {
         }
 
         Assert.assertEquals(state,returnedState);
+    }
+    
+    @Test
+    public void shouldThrowErrorWhenLlcCodeIsDeterminedByStateAndDistrictIsNull() {
+        initMocks(this);
+        LanguageLocationCodeBuilder llcBuilder = new LanguageLocationCodeBuilder();
+        //Stub the service methods
+        when(llcService.getRecordByLocationCode(1L, 1L)).thenReturn(llcBuilder.buildLLCCode(1L, 1L, null, "circleCode"));
+
+        try {
+            commonValidatorService.getLLCCodeByStateDistrict(1L, 1L);
+        } catch (Exception err) {
+            Assert.assertTrue(err instanceof NmsInternalServerError);
+            Assert.assertEquals(((NmsInternalServerError) err).getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
+            Assert.assertEquals(((NmsInternalServerError)err).getMessage() , "languageLocationCode could not be determined for stateCode : "
+                    + 1L +" and districtCode " + 1l);
+        }
     }
 
     @Test
@@ -334,10 +357,43 @@ public class CommonValidatorServiceTest {
         }
         Assert.assertEquals(null,village);
     }
+    
+    @Test
+    public void validateLanguageLocationCodeCheckWithNullLlcCode() {
+        Integer llcCode = null;
+        
+        try {
+            commonValidatorService1.validateLanguageLocationCode(llcCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
+    
+    @Test
+    public void validateCircleCheckWithNullCircleCode() {
+        String circleCode = null;
+        
+        try {
+            commonValidatorService1.validateCircle(circleCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
+    
+    @Test
+    public void validateOperatorCheckWithNullOperatorCode() {
+        
+        String operatorCode = null;
+        try {
+            commonValidatorService1.validateOperator(operatorCode);
+        } catch (Exception e) {
+            Assert.fail();
+        }
+    }
 
 
 
-    protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {
+    protected CsvMctsChild createChildMcts(CsvMctsChild csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");

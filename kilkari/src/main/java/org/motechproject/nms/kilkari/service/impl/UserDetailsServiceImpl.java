@@ -7,7 +7,6 @@ import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
-import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,26 +105,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         } else {
             if (subscriber.getDistrict() != null) {
                 //if llcCode is null then get it by state and district
-                getLLCCodeByStateDistrict(subscriber.getStateCode(),
-                        subscriber.getDistrict().getDistrictCode(), response);
+                
+                LanguageLocationCode llcCodeRecord = commonValidatorService.getLLCCodeByStateDistrict(subscriber.getStateCode(),
+                        subscriber.getDistrict().getDistrictCode());
+                response.setLanguageLocationCode(llcCodeRecord.getLanguageLocationCode());
+                response.setCircle(llcCodeRecord.getCircleCode());
                 subscriber.setLanguageLocationCode(response.getLanguageLocationCode());
                 subscriberService.update(subscriber);
             }
         }
     }
-
-    private void getLLCCodeByStateDistrict(
-            Long stateCode, Long districtCode, SubscriberDetailApiResponse response) throws NmsInternalServerError {
-        LanguageLocationCode llcCodeRecord = llcService.getRecordByLocationCode(stateCode, districtCode);
-        if (llcCodeRecord != null) {
-            response.setLanguageLocationCode(llcCodeRecord.getLanguageLocationCode());
-            response.setCircle(llcCodeRecord.getCircleCode());
-        } else {
-            String errMessage = "languageLocationCode could not be determined for stateCode : "
-                    + stateCode +" and districtCode " + districtCode;
-            throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
-
-        }
-    }
-
+    
 }

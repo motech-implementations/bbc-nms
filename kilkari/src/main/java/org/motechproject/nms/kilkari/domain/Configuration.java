@@ -32,6 +32,9 @@ public class Configuration {
     
     @Field(required = true)
     private Integer maxAllowedActiveBeneficiaryCount;
+    
+    @Field(required = true)
+    private Integer expiredSubscriptionAgeDays;
 
     public Long getIndex() {
         return index;
@@ -64,4 +67,13 @@ public class Configuration {
     public void setNationalDefaultLanguageLocationCode(Integer nationalDefaultLanguageLocationCode) {
         this.nationalDefaultLanguageLocationCode = nationalDefaultLanguageLocationCode;
     }
+
+    public Integer getExpiredSubscriptionAgeDays() {
+        return expiredSubscriptionAgeDays;
+    }
+
+    public void setExpiredSubscriptionAgeDays(Integer expiredSubscriptionAgeDays) {
+        this.expiredSubscriptionAgeDays = expiredSubscriptionAgeDays;
+    }
+    
 }

@@ -6,6 +6,8 @@ import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * This class is used to perform crud operations on ContentUpload
  */
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class ContentUploadServiceImpl implements ContentUploadService {
 
     @Autowired
-    private ContentUploadDataService contentUploadKKCsvDataService;
+    private ContentUploadDataService contentUploadDataService;
 
     /**
      * This method creates record in the database of type ContentUploadKK
@@ -22,7 +24,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      */
     @Override
     public void create(ContentUpload record) {
-        contentUploadKKCsvDataService.create(record);
+        contentUploadDataService.create(record);
     }
 
     /**
@@ -32,17 +34,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      */
     @Override
     public void update(ContentUpload record) {
-        contentUploadKKCsvDataService.update(record);
-    }
-
-    /**
-     * This method delete record in the database of type ContentUploadKK
-     *
-     * @param record object of type ContentUploadKK
-     */
-    @Override
-    public void delete(ContentUpload record) {
-        contentUploadKKCsvDataService.delete(record);
+        contentUploadDataService.update(record);
     }
 
     /**
@@ -53,11 +45,11 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      */
     @Override
     public ContentUpload getRecordByContentId(Long contentId) {
-        return contentUploadKKCsvDataService.findByContentId(contentId);
+        return contentUploadDataService.findByContentId(contentId);
     }
-    
+
     /**
-     * This method get ContentUpload type record based on content name and language location code
+     * This method get Content File name based on content name and language location code
      *
      * @param contentName String type object
      * @param languageLocationCode Integer type object
@@ -66,10 +58,10 @@ public class ContentUploadServiceImpl implements ContentUploadService {
     @Override
     public String getContentFileName(String contentName, Integer languageLocationCode) {
         String contentFile = null;
-        ContentUpload contentUpload = contentUploadKKCsvDataService.findContentFileName(contentName, languageLocationCode);
-        if(contentUpload != null){
-            contentFile  = contentUpload.getContentFile();
+        List<ContentUpload> contentUploadList = contentUploadDataService.findContentFileName(contentName, languageLocationCode);
+        if(contentUploadList != null && !contentUploadList.isEmpty()){
+            contentFile  = contentUploadList.get(0).getContentFile();
         }
-        return contentFile; 
+        return contentFile;
     }
 }

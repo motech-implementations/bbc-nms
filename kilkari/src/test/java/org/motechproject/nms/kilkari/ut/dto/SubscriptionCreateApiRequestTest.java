@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.ut.dto;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.kilkari.domain.BeneficiaryType;
@@ -17,14 +16,14 @@ public class SubscriptionCreateApiRequestTest {
     @Test
     public void shouldSetValuesInSubscriptionApiRequest() {
 
-        subscriptionApiRequest.setSubscriptionPack("subscriptionPack");
-        Assert.assertEquals("subscriptionPack", subscriptionApiRequest.getSubscriptionPack());
+        subscriptionApiRequest.setSubscriptionPack("72WeeksPack");
+        Assert.assertEquals("72WeeksPack", subscriptionApiRequest.getSubscriptionPack());
 
         subscriptionApiRequest.setLanguageLocationCode(23);
         Assert.assertTrue(23 == subscriptionApiRequest.getLanguageLocationCode());
 
-        subscriptionApiRequest.setCallId("callId");
-        Assert.assertEquals("callId", subscriptionApiRequest.getCallId());
+        subscriptionApiRequest.setCallId("123456");
+        Assert.assertEquals("123456", subscriptionApiRequest.getCallId());
 
         subscriptionApiRequest.setCircle("circle");
         Assert.assertEquals("circle", subscriptionApiRequest.getCircle());
@@ -76,8 +75,8 @@ public class SubscriptionCreateApiRequestTest {
     @Test
     public void shouldThrowDataValidationExceptionWhenLLCIsNull() {
 
-        subscriptionApiRequest.setSubscriptionPack("subscriptionPack");
-        subscriptionApiRequest.setCallId("callId");
+        subscriptionApiRequest.setSubscriptionPack("72WeeksPack");
+        subscriptionApiRequest.setCallId("123456");
         subscriptionApiRequest.setCircle("circle");
         subscriptionApiRequest.setCallingNumber("1234567890");
         subscriptionApiRequest.setOperator("operator");
@@ -86,7 +85,7 @@ public class SubscriptionCreateApiRequestTest {
             subscriptionApiRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
         }
     }
 
@@ -94,7 +93,7 @@ public class SubscriptionCreateApiRequestTest {
     public void shouldReturnSubscriberWithInvalidValueForSubscriptionPack() {
 
         Subscriber subscriber = new Subscriber();
-        subscriptionApiRequest.setSubscriptionPack("49WeeksPack");
+        subscriptionApiRequest.setSubscriptionPack("SubscriptionPack");
         subscriber = subscriptionApiRequest.toSubscriber();
 
         Assert.assertNull(subscriber.getBeneficiaryType());

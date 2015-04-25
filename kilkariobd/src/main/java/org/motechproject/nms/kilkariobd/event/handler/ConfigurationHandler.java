@@ -5,7 +5,6 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
-import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

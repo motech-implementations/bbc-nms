@@ -60,7 +60,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
 
-        populateFlwDetail(userProfileData);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
 
@@ -100,30 +99,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         flwDetail.setCurrentUsageInPulses(ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
     }
 
-    /**
-     * Populate FlwDetail
-     *
-     * @param userProfileData
-     */
-    private void populateFlwDetail(UserProfile userProfileData) {
-
-        if (userProfileData.isCreated()) {
-            FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
-            if (null == flwDetail) {
-
-                flwDetail = new FlwDetail();
-                fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
-                flwDetailService.create(flwDetail);
-                logger.info("FlwDetail created successfully.");
-            } else {
-
-                fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
-                flwDetailService.update(flwDetail);
-                logger.info("FlwDetail updated successfully.");
-
-            }
-        }
-    }
 
     /**
      * fill User Detail Response
@@ -135,8 +110,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
 
         FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfile.getNmsFlwId());
+            if (null == flwDetail) {
 
-        if (null != flwDetail) {
+                flwDetail = new FlwDetail();
+                fillDefaultFlwWithUserProfile(flwDetail, userProfile);
+                flwDetailService.create(flwDetail);
+                logger.info("FlwDetail created successfully.");
+		}
             userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
             userDetailApiResponse.setCircle(userProfile.getCircle());
             userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
@@ -144,9 +124,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
             setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
             fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
-        } else {
-            ParseDataHelper.raiseInvalidDataException("flwNmsId", userProfile.getNmsFlwId().toString());
-        }
         return userDetailApiResponse;
     }
 

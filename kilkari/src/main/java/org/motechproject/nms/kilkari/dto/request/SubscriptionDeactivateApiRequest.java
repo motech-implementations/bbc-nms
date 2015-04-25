@@ -2,8 +2,6 @@ package org.motechproject.nms.kilkari.dto.request;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.util.constants.ErrorCategoryConstants;
-import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
 
@@ -82,11 +80,17 @@ public class SubscriptionDeactivateApiRequest {
      * @throws DataValidationException if parameter value is blank or null
      */
     public void validateMandatoryParameter() throws DataValidationException{
-        calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER,
-                ParseDataHelper.validateAndParseString(Constants.CALLED_NUMBER, calledNumber, true));
-        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
-        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
-        ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
+
+        calledNumber = ParseDataHelper.validateString(Constants.CALLED_NUMBER, calledNumber, true);
+        calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER, calledNumber);                ;
+
+        ParseDataHelper.validateString(Constants.OPERATOR_CODE, operator, true);
+
+        ParseDataHelper.validateString(Constants.CIRCLE_CODE, circle, true);
+
+        callId = ParseDataHelper.validateString(Constants.CALL_ID, callId, true);
+        ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,callId);
+
         subscriptionIdLongValue = ParseDataHelper.validateAndParseLong(Constants.SUBSCRIPTION_ID, subscriptionId, true);
     }
 }

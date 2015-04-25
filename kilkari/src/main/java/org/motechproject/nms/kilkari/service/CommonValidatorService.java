@@ -1,9 +1,11 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.joda.time.DateTime;
+import org.motechproject.nms.kilkari.domain.CsvMcts;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 
 /**
  * This interface provides methods to validate values against
@@ -87,9 +89,10 @@ public interface CommonValidatorService {
      * @param subscriber Subscriber type object
      * @return Subscriber type object
      * @throws DataValidationException
+     * @throws NmsInternalServerError 
      */
-    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
-                                                             Subscriber subscriber) throws DataValidationException;
+    public Subscriber validateAndMapMctsLocationToSubscriber(CsvMcts mctsCsv,
+                                                             Subscriber subscriber) throws DataValidationException, NmsInternalServerError;
 
     /**
      * Validates the entry type value and raises exception if not valid
@@ -126,4 +129,21 @@ public interface CommonValidatorService {
      * @throws DataValidationException
      */
     public void validateLanguageLocationCode(Integer llcCode) throws DataValidationException;
+
+    /**
+     * This method is used to LanguageLocationCode based on State and District
+     * @param stateCode
+     * @param districtCode
+     * @return
+     * @throws NmsInternalServerError
+     */
+    LanguageLocationCode getLLCCodeByStateDistrict(Long stateCode,
+            Long districtCode) throws NmsInternalServerError;
+
+    /**
+     * This method is used to check if the weeks passed from given date are less than given duration (weeks)
+     * @param lmpOrDob
+     * @throws DataValidationException if more
+     */
+    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek, String fieldName) throws DataValidationException;
 }

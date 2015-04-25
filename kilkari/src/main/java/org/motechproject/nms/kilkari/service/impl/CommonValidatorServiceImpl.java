@@ -1,9 +1,11 @@
 package org.motechproject.nms.kilkari.service.impl;
 
+import org.joda.time.DateTime;
+import org.joda.time.Weeks;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.AbortionType;
 import org.motechproject.nms.kilkari.domain.EntryType;
-import org.motechproject.nms.kilkari.domain.MctsCsv;
+import org.motechproject.nms.kilkari.domain.CsvMcts;
 import org.motechproject.nms.kilkari.domain.Subscriber;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
 import org.motechproject.nms.masterdata.domain.*;
@@ -14,7 +16,10 @@ import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.nms.util.helper.ParseDataHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +38,15 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
 
     @Autowired
     private CircleService circleService;
+    
+    @Autowired
+    private LanguageLocationCodeService llcService;
 
     @Autowired
     private LanguageLocationCodeService languageLocationCodeService;
-    
+
+    private static Logger logger = LoggerFactory.getLogger(CommonValidatorService.class);
+
     /**
      *  This method is used to fetch state from DB based stateCode
      * 
@@ -185,10 +195,11 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
      * @param subscriber Subscriber type object
      * @return Subscriber type object
      * @throws DataValidationException
+     * @throws NmsInternalServerError 
      */
     @Override
-    public Subscriber validateAndMapMctsLocationToSubscriber(MctsCsv mctsCsv,
-                                                             Subscriber subscriber) throws DataValidationException {
+    public Subscriber validateAndMapMctsLocationToSubscriber(CsvMcts mctsCsv,
+                                                             Subscriber subscriber) throws DataValidationException, NmsInternalServerError {
         
         Long stateCode = ParseDataHelper.validateAndParseLong(Constants.STATE_CODE, mctsCsv.getStateCode(),  true);
         State state = checkAndGetState(stateCode);
@@ -213,6 +224,8 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
 
         subscriber.setState(state);
         subscriber.setStateCode(stateCode);
+        subscriber.setLanguageLocationCode(getLLCCodeByStateDistrict(stateCode, districtCode).
+                getLanguageLocationCode());
         subscriber.setDistrict(district);
         subscriber.setTaluka(taluka);
         subscriber.setHealthBlock(healthBlock);
@@ -220,6 +233,27 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
         subscriber.setSubCentre(healthSubFacility);
         subscriber.setVillage(village);
         return subscriber;
+    }
+    
+    /**
+     * This method is used to LanguageLocationCode based on State and District
+     * @param stateCode
+     * @param districtCode
+     * @return
+     * @throws NmsInternalServerError
+     */
+    @Override
+    public LanguageLocationCode getLLCCodeByStateDistrict(
+            Long stateCode, Long districtCode) throws NmsInternalServerError {
+        LanguageLocationCode llcCodeRecord = llcService.getRecordByLocationCode(stateCode, districtCode);
+        if (llcCodeRecord != null) {
+            return llcCodeRecord;
+        } else {
+            String errMessage = "languageLocationCode could not be determined for stateCode : "
+                    + stateCode +" and districtCode " + districtCode;
+            throw new NmsInternalServerError(errMessage, ErrorCategoryConstants.INCONSISTENT_DATA, errMessage);
+
+        }
     }
 
     /**
@@ -302,4 +336,25 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
             }
         }
     }
+
+    /**
+     * This method is used to check if the weeks passed from given date are less than given duration (weeks)
+     * @param lmpOrDob
+     * @return boolean if less
+     * @throws DataValidationException if more
+     */
+    public void validateWeeksFromDate(DateTime lmpOrDob, Integer durationInWeek, String fieldName) throws DataValidationException {
+        DateTime currDate = DateTime.now();
+
+        int weeks = Weeks.weeksBetween(lmpOrDob, currDate).getWeeks();
+
+        logger.debug(String.format("Weeks from date : %s with current date %s : %d", currDate.toString(), lmpOrDob.toString(), weeks));
+
+        if ( weeks >= durationInWeek) {
+            throw new DataValidationException("Date too Old for subscription", ErrorCategoryConstants.INCONSISTENT_DATA,
+                    "Date too old for Subscription", fieldName);
+        }
+    }
+
+
 }

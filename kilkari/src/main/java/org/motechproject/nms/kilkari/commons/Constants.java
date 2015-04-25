@@ -10,10 +10,27 @@ public final class Constants {
 
     public static final Integer START_WEEK_OF_72_WEEK_PACK = 1;
 
+    public static final Integer END_WEEK_OF_72_WEEK_PACK = START_WEEK_OF_72_WEEK_PACK + DURATION_OF_72_WEEK_PACK - 1;
+
     public static final Integer DURATION_OF_48_WEEK_PACK = 48;
 
     public static final Integer START_WEEK_OF_48_WEEK_PACK = 25;
 
+    public static final Integer END_WEEK_OF_48_WEEK_PACK = START_WEEK_OF_48_WEEK_PACK + DURATION_OF_48_WEEK_PACK - 1;
+
+    public static final Integer FIRST_MSG_OF_WEEK = 1; 
+            
+    public static final Integer SECOND_MSG_OF_WEEK = 2;
+    
+    public static final Integer RETRY_DAY_NUMBER_ONE = 1;
+    
+    public static final Integer RETRY_DAY_NUMBER_TWO = 2;
+    
+    public static final Integer RETRY_DAY_NUMBER_THREE = 3;
+    
+    public static final Integer WEEK_DAY_OF_SECOND_MSG = 3;
+    
+    public static final Integer LMP_MSG_DELIVERY_START_MONTH = 3;
 
     /* Constants for Error Description */
     public static final String SUBSCRIPTION_EXIST_ERR_DESC =
@@ -30,9 +47,9 @@ public final class Constants {
 
 
     /* Constants for MDS Bulk Upload Events */
-    public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.MotherMctsCsv.csv-import.success";
+    public static final String MOTHER_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.CsvMctsMother.csv-import.success";
 
-    public static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.ChildMctsCsv.csv-import.success";
+    public static final String CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT = "mds.crud.kilkari.CsvMctsChild.csv-import.success";
     
     /* Constants for Csv fields */
     public static final String WHOM_PHONE_NUM = "Whom Phone Num";
@@ -100,8 +117,10 @@ public final class Constants {
 
     public static final String CALLING_NUMBER = "Calling Number";
 
-    public static final String DEFAULT_FETCH_GROUP = "true";
-    
     public static final int DAYS_IN_WEEK = 7;
+    
+    public static final long MILLIS_IN_DAY = 1000*60*60*24;
+    
+    public static final int EXPIRED_SUBSCRIPTION_AGE_DAYS = 41;
     
 }

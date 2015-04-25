@@ -5,17 +5,17 @@
 
     <import resource="classpath*:META-INF/motech/*.xml" />
 
-    <osgi:service ref="motherMctsCsvService"
-                  interface="org.motechproject.nms.kilkari.service.MotherMctsCsvService" />
+    <osgi:service ref="csvMctsMotherService"
+                  interface="org.motechproject.nms.kilkari.service.CsvMctsMotherService" />
 
-    <osgi:service ref="contentUploadCsvService"
-                  interface="org.motechproject.nms.kilkari.service.ContentUploadCsvService" />
+    <osgi:service ref="csvContentUploadService"
+                  interface="org.motechproject.nms.kilkari.service.CsvContentUploadService" />
 
     <osgi:service ref="contentUploadService"
                   interface="org.motechproject.nms.kilkari.service.ContentUploadService" />
 
-    <osgi:service ref="childMctsCsvService"
-                  interface="org.motechproject.nms.kilkari.service.ChildMctsCsvService" />                  
+    <osgi:service ref="csvMctsChildService"
+                  interface="org.motechproject.nms.kilkari.service.CsvMctsChildService" />                  
                   
     <osgi:service ref="subscriptionService"
                   interface="org.motechproject.nms.kilkari.service.SubscriptionService" />
@@ -35,11 +35,11 @@
     <osgi:service ref="activeSubscriptionCountService"
                   interface="org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService" />
 
-    <osgi:reference id="motherMctsCsvDataService"
-                    interface="org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService" />
+    <osgi:reference id="csvMctsMotherDataService"
+                    interface="org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService" />
                     
-    <osgi:reference id="childMctsCsvDataService"
-                    interface="org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService" />
+    <osgi:reference id="csvMctsChildDataService"
+                    interface="org.motechproject.nms.kilkari.repository.CsvMctsChildDataService" />
 
     <osgi:reference id="configurationDataService"
                     interface="org.motechproject.nms.kilkari.repository.ConfigurationDataService" />
@@ -56,8 +56,8 @@
     <osgi:reference id="contentUploadDataService"
                     interface="org.motechproject.nms.kilkari.repository.ContentUploadDataService" />
 
-    <osgi:reference id="contentUploadCsvDataService"
-                    interface="org.motechproject.nms.kilkari.repository.ContentUploadCsvDataService" />
+    <osgi:reference id="csvContentUploadDataService"
+                    interface="org.motechproject.nms.kilkari.repository.CsvContentUploadDataService" />
                     
 	<osgi:reference id="activeSubscriptionCountDataService"
                     interface="org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService" />                    

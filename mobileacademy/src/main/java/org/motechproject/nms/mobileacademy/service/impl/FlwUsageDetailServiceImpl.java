@@ -27,4 +27,9 @@ public class FlwUsageDetailServiceImpl implements FlwUsageDetailService {
         return flwUsageDetailDataService.findByFlwId(flwId);
     }
 
+    @Override
+    public FlwUsageDetail updateFlwUsageRecord(FlwUsageDetail flwUsageDetail) {
+        return flwUsageDetailDataService.update(flwUsageDetail);
+    }
+
 }

@@ -3,8 +3,6 @@ package org.motechproject.nms.kilkari.builder;
 import org.motechproject.nms.masterdata.domain.District;
 import org.motechproject.nms.masterdata.domain.State;
 
-import java.util.Set;
-
 public class LocationBuilder {
     public State buildState(Long stateCode) {
         State state = new State();

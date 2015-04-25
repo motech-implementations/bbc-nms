@@ -22,13 +22,6 @@ public interface ContentUploadService {
     void update(ContentUpload record);
 
     /**
-     * This method delete record in the database of type ContentUploadKK
-     *
-     * @param record object of type ContentUploadKK
-     */
-    void delete(ContentUpload record);
-
-    /**
      * This method get ContentUploadKK type record based on content id
      *
      * @param contentId Unique key for the record

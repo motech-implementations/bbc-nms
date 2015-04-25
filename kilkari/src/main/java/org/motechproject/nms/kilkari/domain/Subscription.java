@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkari.domain;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 import javax.jdo.annotations.Persistent;
@@ -13,44 +14,60 @@ import javax.jdo.annotations.Persistent;
 @Entity(recordHistory=true)
 public class Subscription extends MdsEntity {
 
-    @Persistent
-    private Subscriber subscriber;
-
-    @Field
-    private String operatorCode;
-    
     @Field(required = true)
+    @UIDisplayable(position = 0)
     private String msisdn;
     
     @Field
-    private String mctsId;
+    @UIDisplayable(position = 1)
+    private String operatorCode;
     
     @Field
+    @UIDisplayable(position = 2)
     private Long stateCode;
     
     @Field
+    @UIDisplayable(position = 3)
+    private String mctsId;
+    
+    @Field(required = true)
+    @UIDisplayable(position = 4)
+    private Channel channel;
+    
+    @Field
+    @UIDisplayable(position = 5)
     private SubscriptionPack packName;
 
     @Field(required = true)
-    private Channel channel;
-
-    @Field(required = true)
+    @UIDisplayable(position = 6)
     private Status status;
 
     @Field
+    @UIDisplayable(position = 7)
     private DeactivationReason deactivationReason;
 
     @Field
+    @UIDisplayable(position = 8)
+    private Long startDate;
+    
+    @Field
+    @UIDisplayable(position = 9)
     private Integer weekNumber;
     
     @Field
+    @UIDisplayable(position = 10)
     private Integer messageNumber;
 
     @Field
-    private Long startDate;
-
+    @UIDisplayable(position = 11)
+    private DateTime lastObdDate;
+    
+    @Persistent
+    @UIDisplayable(position = 12)
+    private Subscriber subscriber;
+    
     @Field
-    private DateTime nextObdDate;
+    private DateTime completionOrDeactivationDate;
 
     public Subscriber getSubscriber() {
         return subscriber;
@@ -148,13 +165,21 @@ public class Subscription extends MdsEntity {
         this.startDate = startDate;
     }
 
-    public DateTime getNextObdDate() {
-        return nextObdDate;
+    public DateTime getLastObdDate() {
+        return lastObdDate;
     }
 
-    public void setNextObdDate(DateTime nextObdDate) {
-        this.nextObdDate = nextObdDate;
+    public void setLastObdDate(DateTime lastObdDate) {
+        this.lastObdDate = lastObdDate;
     }
 
+    public DateTime getCompletionOrDeactivationDate() {
+        return completionOrDeactivationDate;
+    }
+
+    public void setCompletionOrDeactivationDate(
+            DateTime completionOrDeactivationDate) {
+        this.completionOrDeactivationDate = completionOrDeactivationDate;
+    }
 }
 

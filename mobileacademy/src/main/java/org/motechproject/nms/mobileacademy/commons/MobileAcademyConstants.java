@@ -14,7 +14,7 @@ public class MobileAcademyConstants {
 
     public static final int NUM_OF_QUESTIONS = 4;
 
-    public static final int NUM_OF_SCORES = 4;
+    public static final int MAX_SCORE = 4;
 
     public static final int NUM_OF_SCORE_FILES = 5;
 
@@ -52,7 +52,7 @@ public class MobileAcademyConstants {
 
     public static final String END_MENU = "EndMenu";
 
-    /* Constants used in making the course JSON file */
+    // Constants used in making the course JSON file
 
     public static final String COURSE_KEY_VERSION = "courseVersion";
 
@@ -132,7 +132,7 @@ public class MobileAcademyConstants {
 
     public final static int MILLIS_TO_SEC_CONVERTER = 1000;
 
-    /* Mobile academy service configuration parameters -Start */
+    // Mobile academy service configuration parameters -Start
 
     public static final Long CONFIG_DEFAULT_RECORD_INDEX = 1l;
 
@@ -148,10 +148,40 @@ public class MobileAcademyConstants {
 
     public static final String CONFIG_DEFAULT_SMS_SENDER_ADDRESS = "DEFAULT_SMS_SENDER_ADDRESS";
 
-    /* Mobile academy service configuration parameters -End */
+    // Mobile academy service configuration parameters -End
 
     public static final Integer MAX_ALLOWED_USAGE_PULSE_FOR_UNCAPPED = -1;
 
     public static final String UNKNOWN_CIRCLE_CODE = "99";
+
+    public static final String EMPTY_JSON = "{}";
+
+    public static final Integer DEFAULT_CURRENT_USAGE_IN_PULSES = 0;
+
+    public static final Integer DEFAULT_END_OF_USAGE_PROMPT_COUNTER = 0;
+
+    // Parameters for controllers
+
+    public static final String REQUEST_PARAM_CALLING_NUMBER = "callingNumber";
+
+    public static final String REQUEST_PARAM_OPERATOR = "operator";
+
+    public static final String REQUEST_PARAM_CIRCLE = "circle";
+
+    public static final String REQUEST_PARAM_CALL_ID = "callId";
+
+    public static final String REQUEST_PARAM_LLC = "languageLocationCode";
+
+    public static final String BOOKMARK_ID = "bookmarkId";
+
+    public static final String BOOKMARK = "bookmark";
+
+    public static final String COURSE_COMPLETED = "COURSE_COMPLETED";
+
+    public static final String SCORE_BY_CHAPTER_NODE = "scoresByChapter";
+
+    public static final String COURSE_START_CONTENT = "Chapter01_Lesson01";
+
+    public static final String COURSE_END_CONTENT = "Chapter11_Question04";
 
 }

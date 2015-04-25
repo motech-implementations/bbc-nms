@@ -1,10 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
-import org.motechproject.nms.kilkari.domain.Channel;
-import org.motechproject.nms.kilkari.domain.DeactivationReason;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 
@@ -88,9 +84,48 @@ public interface SubscriptionService {
     void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
         throws DataValidationException, NmsInternalServerError;
 
-    void deleteSubscriberSubscriptionAfter6Weeks();
+    /**
+     *  This method is used to delete subscriber and subscription
+     * which are deactivated or completed n days earlier. Where n is configurable.
+     */
+    void purgeOldSubscriptionSubscriberRecords();
 
+    /**
+     * This method is used to get those subscriber 
+     * whose OBD message is to send today.
+     */
     List<Subscription> getScheduledSubscriptions();
 
+    /**
+     * This method is used by kilkari-obd module for deactivating a subscription,
+     * also have handling not to deactivate those subscription who have subscribed through
+     * IVR and having deactivation reason 'MSISDN_IN_DND'.
+     * 
+     * @param subscriptionId Long type object
+     * @param reason DeactivateReason
+     */
     void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
+
+    /**
+     * This method is used by kilkari-obd for retry attempt
+     * 
+     * @param subscriptionId
+     * @return retryDay Its value is valid retryNumber or -1 if retryNumber is not valid
+     */
+    Integer retryAttempt(Long subscriptionId);
+    
+    /**
+     * This method is used by kilkari-obd When they found last obd call 
+     * of subscription or its any retryAttempt is successfull and also call it 
+     * when last retry of last obd call is failed.   
+     * 
+     * @param subscriptionId
+     */
+    void completeSubscription(Long subscriptionId);
+
+    /**
+     *  This method is used to get subscription id of subscription which 
+     *  are deactivated or completed n days earlier. Where n is configurable.
+     */
+    List<Long> getSubscriptionIdOfNDaysEarlierSubscription();
 }

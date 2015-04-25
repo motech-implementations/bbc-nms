@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkari.it.web;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,6 +12,7 @@ import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.kilkari.repository.SubscriberDataService;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
+import org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService;
 import org.motechproject.nms.kilkari.service.SubscriberService;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkari.service.UserDetailsService;
@@ -36,8 +36,6 @@ import org.ops4j.pax.exam.spi.reactors.ExamReactorStrategy;
 import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
@@ -79,6 +77,9 @@ public class SubscriptionControllerIT extends BasePaxIT {
 
     @Inject
     private DistrictService districtService;
+    
+    @Inject
+    private SubscriptionMeasureDataService subscriptionMeasureDataService;
 
     LanguageLocationCodeBuilder llcBuilder = new LanguageLocationCodeBuilder();
     SubscriptionBuilder subscriptionBuilder = new SubscriptionBuilder();
@@ -87,6 +88,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     @After
     @Before
     public void setUp() {
+        subscriptionMeasureDataService.deleteAll();
         subscriptionDataService.deleteAll();
         subscriberDataService.deleteAll();
         llcDataService.deleteAll();

@@ -2,11 +2,11 @@ package org.motechproject.nms.kilkari.ut.domain;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
+import org.motechproject.nms.kilkari.domain.CsvContentUpload;
 
 public class ContentUploadCsvTest {
 
-    ContentUploadCsv contentUpload = new ContentUploadCsv();
+    CsvContentUpload contentUpload = new CsvContentUpload();
     @Test
     public void shouldSetValuesInContentUpload() {
 

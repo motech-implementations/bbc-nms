@@ -7,10 +7,10 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.motechproject.nms.kilkari.domain.ContentUpload;
-import org.motechproject.nms.kilkari.domain.ContentUploadCsv;
-import org.motechproject.nms.kilkari.event.handler.ContentUploadCsvHandler;
+import org.motechproject.nms.kilkari.domain.CsvContentUpload;
+import org.motechproject.nms.kilkari.event.handler.CsvContentUploadHandler;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
-import org.motechproject.nms.kilkari.service.ContentUploadCsvService;
+import org.motechproject.nms.kilkari.service.CsvContentUploadService;
 import org.motechproject.nms.kilkari.service.ContentUploadService;
 import org.motechproject.nms.masterdata.domain.Circle;
 import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
@@ -38,17 +38,17 @@ public class ContentUploadCsvHandlerTest extends TestCase {
     private ContentUploadService contentUploadService;
 
     @Mock
-    private ContentUploadCsvService contentUploadCsvService;
+    private CsvContentUploadService contentUploadCsvService;
 
     @Mock
     private CommonValidatorService commonValidatorService;
 
-    private ContentUploadCsvHandler handler;
+    private CsvContentUploadHandler handler;
 
     @Before
     public void init() {
         initMocks(this);
-        this.handler = new ContentUploadCsvHandler(bulkUploadErrLogService, contentUploadService,
+        this.handler = new CsvContentUploadHandler(bulkUploadErrLogService, contentUploadService,
                 contentUploadCsvService, circleService, languageLocationCodeService);
     }
 
@@ -58,12 +58,12 @@ public class ContentUploadCsvHandlerTest extends TestCase {
 
         ContentUpload record = new ContentUpload();
 
-        ContentUploadCsv csv = new ContentUploadCsv();
+        CsvContentUpload csv = new CsvContentUpload();
         csv.setCircleCode("testCode");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", ContentUploadCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", CsvContentUpload.class);
             method.setAccessible(true);
             record = (ContentUpload)method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -81,14 +81,14 @@ public class ContentUploadCsvHandlerTest extends TestCase {
         Circle circle = new Circle();
         circle.setCode("testCode");
 
-        ContentUploadCsv csv = new ContentUploadCsv();
+        CsvContentUpload csv = new CsvContentUpload();
         csv.setCircleCode("testCode");
         csv.setLanguageLocationCode("123");
         Mockito.when(circleService.getRecordByCode("testCode")).thenReturn(circle);
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", ContentUploadCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", CsvContentUpload.class);
             method.setAccessible(true);
             record = (ContentUpload)method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -108,7 +108,7 @@ public class ContentUploadCsvHandlerTest extends TestCase {
 
         LanguageLocationCode llc = new LanguageLocationCode();
 
-        ContentUploadCsv csv = new ContentUploadCsv();
+        CsvContentUpload csv = new CsvContentUpload();
         csv.setCircleCode("testCode");
         csv.setLanguageLocationCode("123");
         csv.setContentType("CONTENT");
@@ -121,7 +121,7 @@ public class ContentUploadCsvHandlerTest extends TestCase {
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", ContentUploadCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapContentUploadFrom", CsvContentUpload.class);
             method.setAccessible(true);
             record = (ContentUpload)method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {

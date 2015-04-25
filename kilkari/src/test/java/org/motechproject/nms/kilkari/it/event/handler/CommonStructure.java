@@ -1,43 +1,26 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
-import java.util.List;
-
-import javax.inject.Inject;
-import javax.jdo.JDOObjectNotFoundException;
-
 import org.datanucleus.exceptions.NucleusObjectNotFoundException;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
-import org.motechproject.nms.kilkari.domain.ChildMctsCsv;
-import org.motechproject.nms.kilkari.domain.MotherMctsCsv;
-import org.motechproject.nms.kilkari.repository.ActiveSubscriptionCountDataService;
-import org.motechproject.nms.kilkari.repository.ChildMctsCsvDataService;
-import org.motechproject.nms.kilkari.repository.MotherMctsCsvDataService;
-import org.motechproject.nms.kilkari.repository.SubscriptionMeasureDataService;
-import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
-import org.motechproject.nms.kilkari.service.ChildMctsCsvService;
-import org.motechproject.nms.kilkari.service.CommonValidatorService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
-import org.motechproject.nms.kilkari.service.MotherMctsCsvService;
-import org.motechproject.nms.kilkari.service.SubscriberService;
-import org.motechproject.nms.kilkari.service.SubscriptionService;
-import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.HealthBlock;
-import org.motechproject.nms.masterdata.domain.HealthFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.Taluka;
-import org.motechproject.nms.masterdata.domain.Village;
-import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthBlockRecordsDataService;
-import org.motechproject.nms.masterdata.repository.HealthFacilityRecordsDataService;
-import org.motechproject.nms.masterdata.repository.StateRecordsDataService;
-import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
+import org.motechproject.nms.kilkari.domain.CsvMctsChild;
+import org.motechproject.nms.kilkari.domain.CsvMctsMother;
+import org.motechproject.nms.kilkari.repository.*;
+import org.motechproject.nms.kilkari.service.*;
+import org.motechproject.nms.masterdata.domain.*;
+import org.motechproject.nms.masterdata.repository.*;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
+import javax.jdo.JDOObjectNotFoundException;
+import java.util.List;
 
 public class CommonStructure extends BasePaxIT {
     
@@ -57,19 +40,25 @@ public class CommonStructure extends BasePaxIT {
     private HealthFacilityRecordsDataService healthFacilityRecordsDataService;
     
     @Inject
+    private CircleDataService circleDataService;
+    
+    @Inject
+    private LanguageLocationCodeDataService llcDataService;
+    
+    @Inject
     protected SubscriberService subscriberService;
     
     @Inject
-    protected MotherMctsCsvDataService motherMctsCsvDataService;
+    protected CsvMctsMotherDataService csvMctsMotherDataService;
     
     @Inject
-    protected MotherMctsCsvService motherMctsCsvService;
+    protected CsvMctsMotherService csvMctsMotherService;
     
     @Inject
-    protected ChildMctsCsvDataService childMctsCsvDataService;
+    protected CsvMctsChildDataService csvMctsChildDataService;
     
     @Inject
-    protected ChildMctsCsvService childMctsCsvService;
+    protected CsvMctsChildService csvMctsChildService;
 
     @Inject
     protected SubscriptionService subscriptionService;
@@ -94,6 +83,9 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected SubscriptionMeasureDataService subscriptionMeasureDataService;
+    
+    @Inject
+    protected SubscriptionDataService subscriptionDataService;
 
     private static boolean setUpIsDone = false;
     
@@ -110,6 +102,8 @@ public class CommonStructure extends BasePaxIT {
             createHealthFacility();
             createHealthSubFacility();
             createVillage();
+            createCircle();
+            createLLC();
         }
         // do the setup
         setUpIsDone = true;
@@ -126,6 +120,14 @@ public class CommonStructure extends BasePaxIT {
             subscriberService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
 
+        try {
+            llcDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
+        try {
+            circleDataService.deleteAll();
+        } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
+        
         try {
             stateRecordsDataService.deleteAll();
         } catch(JDOObjectNotFoundException | NucleusObjectNotFoundException n){}
@@ -255,7 +257,38 @@ public class CommonStructure extends BasePaxIT {
         logger.info("Village data is successfully inserted.");
     }
     
-    protected MotherMctsCsv createMotherMcts(MotherMctsCsv csv) {
+    private void createCircle(){
+        Circle newRecord = new Circle();
+        newRecord.setName("circleName");
+        newRecord.setCode("1");
+        newRecord.setDefaultLanguageLocationCode(1);
+        newRecord.setCreator("Deepak");
+        newRecord.setOwner("Deepak");
+        newRecord.setModifiedBy("Deepak");
+        circleDataService.create(newRecord);
+        
+        logger.info("Circle data is successfully inserted.");
+    }
+    
+    private void createLLC(){
+        LanguageLocationCode newRecord = new LanguageLocationCode();
+        newRecord.setStateCode(1L);
+        newRecord.setDistrictCode(1L);
+        newRecord.setCircleCode("1");
+        newRecord.setLanguageKK("LanguageKK");
+        newRecord.setLanguageMA("LanguageMA");
+        newRecord.setLanguageMK("LanguageMK");
+        newRecord.setLanguageLocationCode(1);
+        newRecord.setState(stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode()));
+        newRecord.setDistrict(districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode()));
+        newRecord.setCircle(circleDataService.findByCode(newRecord.getCircleCode()));
+        llcDataService.create(newRecord);
+
+        logger.info("LLC data is successfully inserted.");
+    }
+    
+    
+    protected CsvMctsMother createMotherMcts(CsvMctsMother csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
@@ -264,7 +297,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
         csv.setName("test");
-        csv.setLmpDate("2014-12-01 08:08:08");
+        DateTime date = DateTime.now().minusDays(1);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setLmpDate(dtf.print(date));
         csv.setAbortion("NONE");
         csv.setOutcomeNos("1");
         csv.setAge("30");
@@ -276,17 +311,17 @@ public class CommonStructure extends BasePaxIT {
         return csv;
     }
     
-    protected void callMotherMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        logger.info("Inside  callMotherMctsCsvHandlerSuccessEvent");
-        motherMctsCsvService.processMotherMctsCsv("MotherMctsCsv.csv", uploadedIds);
+    protected void callCsvMctsMotherHandlerSuccessEvent(List<Long> uploadedIds){
+        logger.info("Inside  callCsvMctsMotherHandlerSuccessEvent");
+        csvMctsMotherService.processCsvMctsMother("CsvMctsMother.csv", uploadedIds);
     }
     
-    protected void callChildMctsCsvHandlerSuccessEvent(List<Long> uploadedIds){
-        logger.info("Inside  callChildMctsCsvHandlerSuccessEvent");
-        childMctsCsvService.processChildMctsCsv("ChildMctsCsv.csv", uploadedIds);
+    protected void callCsvMctsChildHandlerSuccessEvent(List<Long> uploadedIds){
+        logger.info("Inside  callCsvMctsChildHandlerSuccessEvent");
+        csvMctsChildService.processCsvMctsChild("CsvMctsChild.csv", uploadedIds);
     }
     
-    protected ChildMctsCsv createChildMcts(ChildMctsCsv csv) {
+    protected CsvMctsChild createChildMcts(CsvMctsChild csv) {
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setTalukaCode("1");
@@ -295,7 +330,9 @@ public class CommonStructure extends BasePaxIT {
         csv.setSubCentreCode("1");
         csv.setVillageCode("1");
         csv.setMotherName("motherName");
-        csv.setBirthdate("2001-01-01 00:00:00");
+        DateTime date = DateTime.now().minusDays(1);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setBirthdate(dtf.print(date));
         csv.setEntryType("2");
         csv.setCreator("Deepak");
         csv.setOwner("Deepak");
