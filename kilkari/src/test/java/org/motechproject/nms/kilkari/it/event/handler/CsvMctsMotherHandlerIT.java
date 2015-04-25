@@ -434,8 +434,11 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         subscriptionService.purgeOldSubscriptionSubscriberRecords();
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
 
-        
-        assertNotNull(updateSubs);
+        if(Initializer.DEFAULT_EXPIRED_SUBSCRIPTION_AGE_DAYS==1) {
+            assertNull(updateSubs);
+        } else {
+            assertNotNull(updateSubs);
+        }
     }
     
     @Test
@@ -595,8 +598,8 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         
         
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
-        subscriptionService.completeSubscription(updateSubs.getId());
-        subscriptionService.completeSubscription(1L);
+        subscriptionService.completeSubscription(updateSubs.getId()); // case of deactivated subscription
+        subscriptionService.completeSubscription(1L); // case of not found subscription
         
         
         csv = new CsvMctsMother();
@@ -610,6 +613,10 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         uploadedIds.clear();
         updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
         subscriptionService.completeSubscription(updateSubs.getId());
+        updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
+        
+        assertEquals(updateSubs.getStatus(), Status.COMPLETED); // case of valid subscription
+        
         
     }
     
@@ -641,10 +648,9 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         uploadedIds.add(dbCsv1.getId());
         callCsvMctsMotherHandlerSuccessEvent(uploadedIds); // Record update when matching Msisdn and Mctsid
         
-        
         Subscription updateSubs = subscriptionService.getSubscriptionByMctsIdState(csv1.getIdNo(), Long.parseLong(csv1.getStateCode()));
-        subscriptionService.retryAttempt(updateSubs.getId());
-        subscriptionService.retryAttempt(1L);
+        int retryDay = subscriptionService.retryAttempt(updateSubs.getId()); //Case of deactivated subscription
+        assertEquals("Subscription Not found", retryDay, -1);
         
         csv = new CsvMctsMother();
         csv = createMotherMcts(csv);
@@ -660,11 +666,11 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
         subscriptionService.getScheduledSubscriptions();
         
         Subscription subscription = subscriptionService.getSubscriptionByMctsIdState(csv.getIdNo(), Long.parseLong(csv.getStateCode()));
-        int retryDay  = subscriptionService.retryAttempt(subscription.getId());
-        assertEquals(retryDay, -1);
+        retryDay  = subscriptionService.retryAttempt(subscription.getId());
+        assertEquals(retryDay, -1); // case of same day retry
         
         retryDay  = subscriptionService.retryAttempt(1L);
-        assertEquals("Subscription Not found", retryDay, -1);
+        assertEquals("Subscription Not found", retryDay, -1);//Case of not found subscription
          
     }
     

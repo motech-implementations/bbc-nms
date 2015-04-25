@@ -27,7 +27,7 @@ public class Initializer {
     
     public static final Long DEFAULT_ACTIVEUSER_COUNT = 0L;
 
-    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEK = 1;
+    public static final Integer DEFAULT_NUMBER_OF_MSG_PER_WEEK = 2;
 
     public static final Integer DEFAULT_ALLOWED_BENEFICIARY_COUNT = 9718577;
 
