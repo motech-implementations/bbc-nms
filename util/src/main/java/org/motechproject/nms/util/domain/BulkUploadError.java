@@ -3,6 +3,7 @@ package org.motechproject.nms.util.domain;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -12,23 +13,29 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class BulkUploadError extends MdsEntity{
 
+    @UIDisplayable(position = 0)
     @Field
     private String csvName;
 
+    @UIDisplayable(position = 1)
     @Field
     private DateTime timeOfUpload;
 
+    @UIDisplayable(position = 2)
     @Field
     private RecordType recordType;
 
-    @Field
-    private String recordDetails;
-
+    @UIDisplayable(position = 3)
     @Field
     private String errorCategory;
 
+    @UIDisplayable(position = 4)
     @Field
     private String errorDescription;
+
+    @UIDisplayable(position = 5)
+    @Field
+    private String recordDetails;
 
     public BulkUploadError() {
     }

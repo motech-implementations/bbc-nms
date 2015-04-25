@@ -49,11 +49,6 @@ public class InitializerIT extends BasePaxIT {
         initializer = new Initializer(configurationService, activeSubscriptionCountService);
     }
 
-    @After
-    public void tearDown() {
-        configurationDataService.deleteAll();
-    }
-
     /**
      * This test case tests that Initializer is correctly
      * initializing the kilkari configurations with default values.

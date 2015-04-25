@@ -1055,7 +1055,6 @@
                                 </goals>
                                 <configuration>
                                     <includes>
-                                        <include>**/**/*IT.java</include>
                                         <include>**/**/*IntegrationTests.java</include>
                                     </includes>
                                     <excludes>
