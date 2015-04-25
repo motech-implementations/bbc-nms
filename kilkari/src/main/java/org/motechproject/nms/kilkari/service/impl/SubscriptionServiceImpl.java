@@ -731,7 +731,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             } else if (configurationService.getConfiguration().getNumMsgPerWeek() == Constants.SECOND_MSG_OF_WEEK 
                     && retryDay==Constants.RETRY_DAY_NUMBER_ONE){
                 return retryDay;
-            } 
+            } else {
+                retryDay = -1;
+            }
         } else {
             logger.warn(String.format("Subscription not found or deactivated for the given subscriptionId{[%d]}", subscriptionId));
         }
