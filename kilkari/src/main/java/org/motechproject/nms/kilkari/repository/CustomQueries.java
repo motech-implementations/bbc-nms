@@ -1,19 +1,14 @@
 package org.motechproject.nms.kilkari.repository;
 
-import java.util.List;
-
-import javax.jdo.Query;
-
 import org.joda.time.DateTime;
 import org.motechproject.mds.query.QueryExecution;
 import org.motechproject.mds.util.InstanceSecurityRestriction;
 import org.motechproject.nms.kilkari.commons.Constants;
-import org.motechproject.nms.kilkari.domain.Status;
-import org.motechproject.nms.kilkari.domain.Subscriber;
-import org.motechproject.nms.kilkari.domain.Subscription;
-import org.motechproject.nms.kilkari.domain.SubscriptionMeasure;
-import org.motechproject.nms.kilkari.domain.SubscriptionPack;
+import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.initializer.Initializer;
+
+import javax.jdo.Query;
+import java.util.List;
 
 public class CustomQueries {
 
