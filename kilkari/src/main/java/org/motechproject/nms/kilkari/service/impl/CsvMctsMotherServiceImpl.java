@@ -1,9 +1,6 @@
 package org.motechproject.nms.kilkari.service.impl;
 
-import java.util.List;
-
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService;

@@ -8,8 +8,6 @@ import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.initializer.Initializer;
-import org.motechproject.nms.kilkari.repository.ConfigurationDataService;
-import org.motechproject.nms.kilkari.service.ConfigurationService;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -21,8 +19,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import javax.inject.Inject;
 
 import static org.junit.Assert.*;
 /**

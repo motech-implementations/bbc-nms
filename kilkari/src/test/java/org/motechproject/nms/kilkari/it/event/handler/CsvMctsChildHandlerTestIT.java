@@ -6,7 +6,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
-import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;

@@ -1,11 +1,5 @@
 package org.motechproject.nms.kilkari.domain;
 
-import java.util.Set;
-
-import javax.jdo.annotations.Persistent;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
