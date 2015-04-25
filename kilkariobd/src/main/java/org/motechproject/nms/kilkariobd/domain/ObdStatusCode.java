@@ -14,10 +14,19 @@ public enum ObdStatusCode {
     OBD_FAILED_OTHERS(2005),
     OBD_DNIS_IN_DND(3001);
     
-    private int statusCode;
+    private Integer statusCode;
     
-    private ObdStatusCode(int statusCode) {
+    private ObdStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
+    }
+
+    public static ObdStatusCode getByInteger(Integer statusCode) {
+        for (ObdStatusCode code : ObdStatusCode.values()) {
+            if (code.ordinal() == statusCode) {
+                return code;
+            }
+        }
+        return null;
     }
 
 }

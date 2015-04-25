@@ -244,7 +244,7 @@ public class OBDTargetFileHandler {
     @Transactional
     private void processCDRSummaryCSV(String cdrFileName, Configuration configuration) throws CDRFileProcessingFailedException {
         HttpClient client = new HttpClient();
-        List<Map<String, Object>> cdrSummaryRecords;
+        List<Map<String, String >> cdrSummaryRecords;
         Integer retryDayNumber;
         //todo apply null checks where ever possible.
         DateTime date = DateTime.now().withTimeAtStartOfDay();
@@ -275,11 +275,11 @@ public class OBDTargetFileHandler {
             /*
             read and parse CDRSummary CSV and create entry in OutboundCallRequest table for each record.
              */
-            for (Map<String, Object> map : cdrSummaryRecords) {
-                CallStatus finalStatus = (CallStatus) map.get(Constants.FINAL_STATUS);
-                ObdStatusCode statusCode = (ObdStatusCode) map.get(Constants.STATUS_CODE);
-                Long subscriptionId = ParseDataHelper.validateAndParseLong(Constants.REQUEST_ID, map.get(Constants.REQUEST_ID).toString(), true);
-                String weekId = map.get(Constants.WEEK_ID).toString();
+            for (Map<String, String> map : cdrSummaryRecords) {
+                CallStatus finalStatus = CallStatus.getByInteger(Integer.parseInt(map.get(Constants.FINAL_STATUS)));
+                ObdStatusCode statusCode = ObdStatusCode.getByInteger(Integer.parseInt(map.get(Constants.STATUS_CODE)));
+                Long subscriptionId = ParseDataHelper.validateAndParseLong(Constants.REQUEST_ID, map.get(Constants.REQUEST_ID), true);
+                String weekId = map.get(Constants.WEEK_ID);
                 String[] weekNoMsgNo = weekId.split("_");
                 retryDayNumber = getRetryDayNumber(subscriptionId);
                 Integer weekNumber = Integer.parseInt(weekNoMsgNo[0]);
@@ -287,16 +287,16 @@ public class OBDTargetFileHandler {
                 if (isValidForRetry(finalStatus, statusCode, subscriptionId, weekNumber)) {
 
                     OutboundCallRequest callRequestRetry = new OutboundCallRequest();
-                    callRequestRetry.setRequestId(map.get(Constants.REQUEST_ID).toString());
+                    callRequestRetry.setRequestId(map.get(Constants.REQUEST_ID));
 
-                    callRequestRetry.setMsisdn(map.get(Constants.MSISDN).toString());
+                    callRequestRetry.setMsisdn(map.get(Constants.MSISDN));
 
-                    callRequestRetry.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
-                    callRequestRetry.setCircle(map.get(Constants.CIRCLE).toString());
+                    callRequestRetry.setLanguageLocationCode(Integer.parseInt(map.get(Constants.LANGUAGE_LOCATION_CODE)));
+                    callRequestRetry.setCircle(map.get(Constants.CIRCLE));
 
-                    callRequestRetry.setContentFileName(map.get(Constants.CONTENT_FILE_NAME).toString());
-                    callRequestRetry.setCli(map.get(Constants.CLI).toString());
-                    callRequestRetry.setCallFlowURL(map.get(Constants.CALL_FLOW_URL).toString());
+                    callRequestRetry.setContentFileName(map.get(Constants.CONTENT_FILE_NAME));
+                    callRequestRetry.setCli(map.get(Constants.CLI));
+                    callRequestRetry.setCallFlowURL(map.get(Constants.CALL_FLOW_URL));
                     if (retryDayNumber.equals(Constants.RETRY_DAY_ONE)) {
                         callRequestRetry.setPriority(configuration.getRetryDay1ObdPriority());
                         callRequestRetry.setServiceId(configuration.getRetryDay1ObdServiceId());
@@ -308,7 +308,7 @@ public class OBDTargetFileHandler {
                         callRequestRetry.setServiceId(configuration.getRetryDay3ObdServiceId());
                     }
 
-                    callRequestRetry.setWeekId(map.get(Constants.WEEK_ID).toString());
+                    callRequestRetry.setWeekId(map.get(Constants.WEEK_ID));
                     requestService.create(callRequestRetry);
                 } else {
                     markCompleteForSuccessRecords(finalStatus, weekNumber, subscriptionId);
@@ -320,10 +320,10 @@ public class OBDTargetFileHandler {
                  */
                 if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER)) {
                     subscriptionService.deactivateSubscription(
-                            (Long) map.get(Constants.REQUEST_ID), DeactivationReason.INVALID_MSISDN);
+                            Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.INVALID_MSISDN);
                 } else if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)) {
                     subscriptionService.deactivateSubscription(
-                            (Long) map.get(Constants.REQUEST_ID), DeactivationReason.MSISDN_IN_DND);
+                            Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.MSISDN_IN_DND);
                 }
                 /*
                 if for any cdrSummary record final status is Failed and statusCode is OBD_FAILED_NOATTEMPT then
@@ -331,14 +331,14 @@ public class OBDTargetFileHandler {
                  */
                 if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_NOATTEMPT)) {
                     OutboundCallDetail record = new OutboundCallDetail();
-                    record.setWeekId(map.get(Constants.WEEK_ID).toString());
-                    record.setPriority((Integer) map.get(Constants.PRIORITY));
-                    record.setContentFile(map.get(Constants.CONTENT_FILE_NAME).toString());
-                    record.setCircleCode(map.get(Constants.CIRCLE).toString());
-                    record.setCallStatus(((CallStatus) map.get(Constants.FINAL_STATUS)).ordinal());
-                    record.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
-                    record.setMsisdn(map.get(Constants.MSISDN).toString());
-                    record.setRequestId(map.get(Constants.REQUEST_ID).toString());
+                    record.setWeekId(map.get(Constants.WEEK_ID));
+                    record.setPriority(Integer.parseInt(map.get(Constants.PRIORITY)));
+                    record.setContentFile(map.get(Constants.CONTENT_FILE_NAME));
+                    record.setCircleCode(map.get(Constants.CIRCLE));
+                    record.setCallStatus(Integer.parseInt(map.get(Constants.FINAL_STATUS)));
+                    record.setLanguageLocationCode(Integer.parseInt(map.get(Constants.LANGUAGE_LOCATION_CODE)));
+                    record.setMsisdn(map.get(Constants.MSISDN));
+                    record.setRequestId(map.get(Constants.REQUEST_ID));
                     record.setCallStartTime(null);
                     record.setCallAnswerTime(null);
                     record.setCallEndTime(null);
@@ -376,7 +376,7 @@ public class OBDTargetFileHandler {
     @Transactional
     private void processCDRDetail(String cdrFileName) {
         HttpClient client = new HttpClient();
-        List<Map<String, Object>> cdrDetailRecords;
+        List<Map<String, String>> cdrDetailRecords;
         DateTime date = DateTime.now().withTimeAtStartOfDay();
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCreationDate(date);
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByFileName(cdrFileName);
@@ -406,28 +406,28 @@ public class OBDTargetFileHandler {
             /*
             read and parse CDRDetail CSV and create entry in CdrCallDetail table for each record.
              */
-            for (Map<String, Object> cdrDetailMap : cdrDetailRecords) {
+            for (Map<String, String> cdrDetailMap : cdrDetailRecords) {
                 OutboundCallDetail callDetail = new OutboundCallDetail();
-                callDetail.setRequestId(cdrDetailMap.get(Constants.REQUEST_ID).toString());
-                callDetail.setMsisdn(cdrDetailMap.get(Constants.MSISDN).toString());
-                callDetail.setCallId(cdrDetailMap.get(Constants.CALL_ID).toString());
-                callDetail.setAttemptNo((Integer) cdrDetailMap.get(Constants.ATTEMPT_NO));
-                callDetail.setCallStartTime((Long) cdrDetailMap.get(Constants.CALL_START_TIME));
-                callDetail.setCallAnswerTime((Long) cdrDetailMap.get(Constants.CALL_ANSWER_TIME));
-                callDetail.setCallEndTime((Long) cdrDetailMap.get(Constants.CALL_END_TIME));
-                callDetail.setCallDurationInPulse((Long) cdrDetailMap.get(Constants.CALL_DURATION_IN_PULSE));
-                callDetail.setCallStatus((Integer) cdrDetailMap.get(Constants.CALL_STATUS));
-                callDetail.setLanguageLocationCode((Integer) cdrDetailMap.get(Constants.LANGUAGE_LOCATION_ID));
-                callDetail.setContentFile(cdrDetailMap.get(Constants.CONTENT_FILE).toString());
-                callDetail.setMsgPlayEndTime((Integer) cdrDetailMap.get(Constants.MSG_PLAY_END_TIME));
-                callDetail.setMsgPlayStartTime((Integer) cdrDetailMap.get(Constants.MSG_PLAY_START_TIME));
-                callDetail.setCircleCode(cdrDetailMap.get(Constants.CIRCLE_ID).toString());
-                callDetail.setOperatorCode(cdrDetailMap.get(Constants.OPERATOR_ID).toString());
-                callDetail.setPriority((Integer) cdrDetailMap.get(Constants.PRIORITY));
+                callDetail.setRequestId(cdrDetailMap.get(Constants.REQUEST_ID));
+                callDetail.setMsisdn(cdrDetailMap.get(Constants.MSISDN));
+                callDetail.setCallId(cdrDetailMap.get(Constants.CALL_ID));
+                callDetail.setAttemptNo(Integer.parseInt(cdrDetailMap.get(Constants.ATTEMPT_NO)));
+                callDetail.setCallStartTime(Long.parseLong(cdrDetailMap.get(Constants.CALL_START_TIME)));
+                callDetail.setCallAnswerTime(Long.parseLong(cdrDetailMap.get(Constants.CALL_ANSWER_TIME)));
+                callDetail.setCallEndTime(Long.parseLong(cdrDetailMap.get(Constants.CALL_END_TIME)));
+                callDetail.setCallDurationInPulse(Long.parseLong(cdrDetailMap.get(Constants.CALL_DURATION_IN_PULSE)));
+                callDetail.setCallStatus(Integer.parseInt(cdrDetailMap.get(Constants.CALL_STATUS)));
+                callDetail.setLanguageLocationCode(Integer.parseInt(cdrDetailMap.get(Constants.LANGUAGE_LOCATION_ID)));
+                callDetail.setContentFile(cdrDetailMap.get(Constants.CONTENT_FILE));
+                callDetail.setMsgPlayEndTime(Integer.parseInt(cdrDetailMap.get(Constants.MSG_PLAY_END_TIME)));
+                callDetail.setMsgPlayStartTime(Integer.parseInt(cdrDetailMap.get(Constants.MSG_PLAY_START_TIME)));
+                callDetail.setCircleCode(cdrDetailMap.get(Constants.CIRCLE_ID));
+                callDetail.setOperatorCode(cdrDetailMap.get(Constants.OPERATOR_ID));
+                callDetail.setPriority(Integer.parseInt(cdrDetailMap.get(Constants.PRIORITY)));
                 CallDisconnectReason disconnectReason = CallDisconnectReason.getByString(
-                        cdrDetailMap.get(Constants.CALL_DISCONNECT_REASON).toString());
+                        cdrDetailMap.get(Constants.CALL_DISCONNECT_REASON));
                 callDetail.setCallDisconnectReason(disconnectReason);
-                callDetail.setWeekId(cdrDetailMap.get(Constants.WEEK_ID).toString());
+                callDetail.setWeekId(cdrDetailMap.get(Constants.WEEK_ID));
                 callDetailService.create(callDetail);
             }
         } catch (Exception ex) {

@@ -8,10 +8,19 @@ public enum CallStatus {
     FAILED(2),
     REJECTED(3);
     
-    private int callStatus;
+    private Integer callStatus;
     
-    private CallStatus(int callStatus){
+    private CallStatus(Integer callStatus){
         this.callStatus = callStatus;
+    }
+
+    public static CallStatus getByInteger(Integer callStatus) {
+        for (CallStatus status : CallStatus.values()) {
+            if (status.ordinal() == callStatus) {
+                return status;
+            }
+        }
+        return null;
     }
 
 }

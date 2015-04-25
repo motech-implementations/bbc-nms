@@ -24,10 +24,16 @@ public class CSVMapper {
 
     static Logger logger = LoggerFactory.getLogger(CSVMapper.class);
 
-    public static List<Map<String, Object>> readWithCsvMapReader(String fileName) throws Exception {
+    /**
+     * Method to read CSV file
+     * @param fileName name of the csv file to be read
+     * @return List of Map
+     * @throws Exception
+     */
+    public static List<Map<String, String>> readWithCsvMapReader(String fileName) throws Exception {
 
         ICsvMapReader mapReader = null;
-        List<Map<String, Object>> listOfCdrSummaryRecords = new ArrayList<>();
+        List<Map<String, String>> listOfCdrSummaryRecords = new ArrayList<>();
         try {
             mapReader = new CsvMapReader(new FileReader(fileName), CsvPreference.STANDARD_PREFERENCE);
 
@@ -36,8 +42,8 @@ public class CSVMapper {
               */
             final String[] header = mapReader.getHeader(true);
 
-            Map<String, Object> cdrSummary;
-            while ((cdrSummary = mapReader.read(header, null)) != null) {
+            Map<String, String> cdrSummary;
+            while ((cdrSummary = mapReader.read(header)) != null) {
                 listOfCdrSummaryRecords.add(cdrSummary);
             }
         } finally {
@@ -48,39 +54,42 @@ public class CSVMapper {
         return listOfCdrSummaryRecords;
     }
 
+    /**
+     * Method to write on to CSV file
+     * @param fileName name of the csv file on which data is to written
+     * @param callRequests List<OutboundCallRequest>
+     */
     public static void writeByCsvMapper(String fileName, List<OutboundCallRequest> callRequests) {
         Field[] fields = OutboundCallRequest.class.getDeclaredFields();
         String[] header = new String[fields.length];
-        for (int index=0; index <= fields.length; index++) {
+        for (int index=0; index < fields.length; index++) {
             header[index] = StringUtils.capitalize(fields[index].getName());
         }
         Map<String, Object> callRequestMap = new HashMap<>();
+        CsvMapWriter csvMapWriter = null;
         try {
             File file = new File(fileName);
             FileWriter fos = new FileWriter(file.getAbsoluteFile());
             BufferedWriter bf = new BufferedWriter(fos);
-            CsvMapWriter csvMapWriter = new CsvMapWriter(bf, CsvPreference.STANDARD_PREFERENCE);
+            csvMapWriter = new CsvMapWriter(bf, CsvPreference.STANDARD_PREFERENCE);
             csvMapWriter.writeHeader(header);
             for(OutboundCallRequest request : callRequests) {
-                for (int index=0; index <= fields.length; index++) {
-                    callRequestMap.put(fields[index].getName(), fields[index].get(request));
+                for (Field field : fields) {
+                    callRequestMap.put(StringUtils.capitalize(field.getName()), field.get(request));
                 }
                 csvMapWriter.write(callRequestMap, header);
             }
 
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        } catch (IllegalAccessException | IllegalArgumentException ex) {
-            logger.error(ex.getMessage());
+        } catch (IllegalAccessException | IllegalArgumentException | IOException ex ) {
+            logger.error("Error occurred while exporting the file :" + fileName, ex.getMessage());
+        } finally {
+            if (csvMapWriter != null) {
+                try {
+                    csvMapWriter.close();
+                } catch (IOException ex) {
+                    logger.error("Error occurred while closing the csvMapWriter for file :" + fileName, ex.getMessage() );
+                }
+            }
         }
-    }
-
-    private static CellProcessor[] getProcessors() {
-        final CellProcessor[] processors = new CellProcessor[] {
-                new UniqueHashCode(), // customerNo (must be unique)
-                new NotNull(), // firstName
-                new NotNull(), // lastName
-        };
-        return processors;
     }
 }
