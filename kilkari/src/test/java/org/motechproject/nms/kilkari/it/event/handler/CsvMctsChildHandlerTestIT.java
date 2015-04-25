@@ -1,9 +1,14 @@
 package org.motechproject.nms.kilkari.it.event.handler;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.nms.kilkari.commons.Constants;
 import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.initializer.Initializer;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
 import org.ops4j.pax.exam.junit.PaxExam;
@@ -435,6 +440,63 @@ public class CsvMctsChildHandlerTestIT extends CommonStructure {
         uploadedIds.add(uploadedId);
         callCsvMctsChildHandlerSuccessEvent(uploadedIds);
         assertNull(csvMctsMotherDataService.findById(uploadedId));
+        
+    }
+    
+
+    @Test
+    public void testScheduledSubscriptionApi(){
+        
+        logger.info("Inside createSameMsisdnSameMcts");
+        
+        List<Long> uploadedIds = new ArrayList<Long>();
+        
+        CsvMctsChild csv = new CsvMctsChild();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("1000000032");
+        csv.setIdNo("32");
+        DateTime date = new DateTime().minusDays(10);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setBirthdate(dtf.print(date));
+        CsvMctsChild dbCsv = csvMctsChildDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsChildHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new CsvMctsChild();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("1000000033");
+        csv.setIdNo("33");
+        date = new DateTime();
+        dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setBirthdate(dtf.print(date));
+        dbCsv = csvMctsChildDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsChildHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        csv = new CsvMctsChild();
+        csv = createChildMcts(csv);
+        csv.setWhomPhoneNo("1000000034");
+        csv.setIdNo("34");
+        date = new DateTime().minusDays(3);
+        dtf = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+        csv.setBirthdate(dtf.print(date));
+        dbCsv = csvMctsChildDataService.create(csv);
+        uploadedIds.add(dbCsv.getId());
+        callCsvMctsChildHandlerSuccessEvent(uploadedIds); // Created New Record
+        uploadedIds.clear();
+        
+        List<Subscription> list = subscriptionService.getScheduledSubscriptions();
+        assertNotNull(list);
+        assertFalse(list.isEmpty());
+        if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK==2){
+            assertEquals(list.size(), 3);
+        }
+        
+        if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK==1){
+            assertEquals(list.size(), 1);
+        }
         
     }
     
