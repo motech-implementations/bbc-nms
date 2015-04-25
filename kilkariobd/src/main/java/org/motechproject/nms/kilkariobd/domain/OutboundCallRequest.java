@@ -29,7 +29,7 @@ public class OutboundCallRequest {
     private String cli;
     
     @Field
-    private Integer priority;
+    private Integer priority = 0;
     
     @Field
     private String callFlowURL;
@@ -46,7 +46,7 @@ public class OutboundCallRequest {
     private Integer languageLocationCode;
     
     @Field(required = true)
-    private String circleCode;
+    private String circle;
 
     public String getRequestId() {
         return requestId;
@@ -120,12 +120,11 @@ public class OutboundCallRequest {
         this.languageLocationCode = languageLocationCode;
     }
 
-    public String getCircleCode() {
-        return circleCode;
+    public String getCircle() {
+        return circle;
     }
 
-    public void setCircleCode(String circleCode) {
-        this.circleCode = circleCode;
+    public void setCircle(String circle) {
+        this.circle = circle;
     }
-    
 }

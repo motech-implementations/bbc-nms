@@ -7,6 +7,8 @@ import org.motechproject.nms.kilkariobd.service.OutboundCallRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Class to implement method defined in OutboundCallRequestService Interface
  */
@@ -32,5 +34,23 @@ public class OutboundCallRequestServiceImpl implements OutboundCallRequestServic
     @Override
     public OutboundCallRequest create(OutboundCallRequest record) {
         return requestDataService.create(record);
+    }
+
+    /**
+     * Method to fetch all OutboundCallRequest objects
+     * @return List<OutboundCallRequest>
+     */
+    @Override
+    public List<OutboundCallRequest> retrieveAll() {
+        return requestDataService.retrieveAll();
+    }
+
+    /**
+     * Method to return count of all records
+     * @return records count
+     */
+    @Override
+    public Long getCount() {
+        return requestDataService.count();
     }
 }

@@ -44,18 +44,18 @@ public final class Constants {
 
 
     //constants for cdrSummary
-    public static final String FINAL_STATUS = "finalStatus";
-    public static final String STATUS_CODE = "statusCode";
-    public static final String REQUEST_ID = "requestId";
-    public static final String SERVICE_ID = "serviceId";
-    public static final String MSISDN = "msisdn";
-    public static final String PRIORITY = "priority";
-    public static final String LANGUAGE_LOCATION_CODE = "languageLocationCode";
-    public static final String CIRCLE = "circle";
-    public static final String WEEK_ID = "weekId";
-    public static final String CONTENT_FILE_NAME = "contentFileName";
-    public static final String CLI = "cli";
-    public static final String CALL_FLOW_URL = "callFlowUrl";
+    public static final String FINAL_STATUS = "FinalStatus";
+    public static final String STATUS_CODE = "StatusCode";
+    public static final String REQUEST_ID = "RequestId";
+    public static final String SERVICE_ID = "ServiceId";
+    public static final String MSISDN = "Msisdn";
+    public static final String PRIORITY = "Priority";
+    public static final String LANGUAGE_LOCATION_CODE = "LanguageLocationCode";
+    public static final String CIRCLE = "Circle";
+    public static final String WEEK_ID = "WeekId";
+    public static final String CONTENT_FILE_NAME = "ContentFileName";
+    public static final String CLI = "Cli";
+    public static final String CALL_FLOW_URL = "CallFlowUrl";
     public static final Integer RETRY_DAY_ONE = 1;
     public static final Integer RETRY_DAY_TWO = 2;
     public static final Integer RETRY_DAY_THREE = 3;
@@ -63,20 +63,20 @@ public final class Constants {
 
 
     //constants for cdrDetail
-    public static final String CALL_ID = "callId";
-    public static final String ATTEMPT_NO = "attemptNo";
-    public static final String CALL_START_TIME = "callStartTime";
-    public static final String CALL_ANSWER_TIME = "callAnswerTime";
-    public static final String CALL_END_TIME = "callEndTime";
-    public static final String CALL_DURATION_IN_PULSE = "callDurationInPulse";
-    public static final String CALL_STATUS = "callStatus";
-    public static final String LANGUAGE_LOCATION_ID = "languageLocationId";
-    public static final String CONTENT_FILE = "contentFile";
-    public static final String MSG_PLAY_END_TIME = "msgPlayEndTime";
-    public static final String MSG_PLAY_START_TIME = "msgPlayStartTime";
-    public static final String CIRCLE_ID = "circleId";
-    public static final String OPERATOR_ID = "operatorId";
-    public static final String CALL_DISCONNECT_REASON = "callDisconnectReason";
+    public static final String CALL_ID = "CallId";
+    public static final String ATTEMPT_NO = "AttemptNo";
+    public static final String CALL_START_TIME = "CallStartTime";
+    public static final String CALL_ANSWER_TIME = "CallAnswerTime";
+    public static final String CALL_END_TIME = "CallEndTime";
+    public static final String CALL_DURATION_IN_PULSE = "CallDurationInPulse";
+    public static final String CALL_STATUS = "CallStatus";
+    public static final String LANGUAGE_LOCATION_ID = "LanguageLocationId";
+    public static final String CONTENT_FILE = "ContentFile";
+    public static final String MSG_PLAY_END_TIME = "MsgPlayEndTime";
+    public static final String MSG_PLAY_START_TIME = "MsgPlayStartTime";
+    public static final String CIRCLE_ID = "CircleId";
+    public static final String OPERATOR_ID = "OperatorId";
+    public static final String CALL_DISCONNECT_REASON = "CallDisconnectReason";
 
     //constant for httpRetryStrategy
     public static final Integer FIRST_ATTEMPT = 0;

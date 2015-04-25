@@ -14,7 +14,7 @@ import org.motechproject.nms.kilkariobd.client.HttpClient;
 import org.motechproject.nms.kilkariobd.client.ex.CDRFileProcessingFailedException;
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.*;
-import org.motechproject.nms.kilkariobd.mapper.ReadByCSVMapper;
+import org.motechproject.nms.kilkariobd.mapper.CSVMapper;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
@@ -251,7 +251,7 @@ public class OBDTargetFileHandler {
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByFileName(cdrFileName);
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCreationDate(date);
         try {
-            cdrSummaryRecords = ReadByCSVMapper.readWithCsvMapReader(cdrFileName);
+            cdrSummaryRecords = CSVMapper.readWithCsvMapReader(cdrFileName);
             /*
             send error if cdr summary processing has errors for invalid records count
              */
@@ -292,7 +292,7 @@ public class OBDTargetFileHandler {
                     callRequestRetry.setMsisdn(map.get(Constants.MSISDN).toString());
 
                     callRequestRetry.setLanguageLocationCode((Integer) map.get(Constants.LANGUAGE_LOCATION_CODE));
-                    callRequestRetry.setCircleCode(map.get(Constants.CIRCLE).toString());
+                    callRequestRetry.setCircle(map.get(Constants.CIRCLE).toString());
 
                     callRequestRetry.setContentFileName(map.get(Constants.CONTENT_FILE_NAME).toString());
                     callRequestRetry.setCli(map.get(Constants.CLI).toString());
@@ -382,7 +382,7 @@ public class OBDTargetFileHandler {
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByFileName(cdrFileName);
 
         try {
-            cdrDetailRecords = ReadByCSVMapper.readWithCsvMapReader(cdrFileName);
+            cdrDetailRecords = CSVMapper.readWithCsvMapReader(cdrFileName);
             /*
             send error if cdr summary processing has errors.
              */
@@ -473,19 +473,12 @@ public class OBDTargetFileHandler {
 
         String fileName = "OBD_NMS_" + getCsvFileName();
         String absoluteFileName = settings.getObdFileLocalPath() + "/" + fileName;
-        Long recordsCount = 0l;
-        File file = new File(absoluteFileName);
-        try {
-            FileWriter fos = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bf = new BufferedWriter(fos);
-
-            recordsCount = csvImporterExporter.exportCsv("OUTBOUNDCALLREQUEST", bf);
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
+        List<OutboundCallRequest> callRequests = requestService.retrieveAll();
+        Long recordCount = requestService.getCount();
+        CSVMapper.writeByCsvMapper(absoluteFileName, callRequests);
         String obdChecksum = MD5Checksum.findChecksum(absoluteFileName);
         updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
-                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED, obdChecksum, recordsCount, fileName);
+                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED, obdChecksum, recordCount, fileName);
         return fileName;
     }
 
@@ -523,7 +516,7 @@ public class OBDTargetFileHandler {
                 callRequest.setLanguageLocationCode(subscription.getSubscriber().getLanguageLocationCode());
                 LanguageLocationCode record = llcService.findLLCByCode(llcCode);
                 if (record.getCircleCode() != null) {
-                    callRequest.setCircleCode(record.getCircleCode());
+                    callRequest.setCircle(record.getCircleCode());
                 }
             }
             callRequest.setWeekId(
@@ -551,6 +544,9 @@ public class OBDTargetFileHandler {
         callFlowService.update(todayCallFlow);
     }
 
+    /*
+    Method to retry for the preparation of OBDTarget file if some error occurred.
+     */
     private void retryPrepareOBDTargetFile(
             String currentObdFile, String currentCdrObdFile, Integer retryNumber, Configuration configuration) {
         int retryInterval = configuration.getRetryIntervalForObdPreparationInMins();
