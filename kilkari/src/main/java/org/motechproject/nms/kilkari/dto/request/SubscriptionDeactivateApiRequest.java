@@ -81,14 +81,14 @@ public class SubscriptionDeactivateApiRequest {
      */
     public void validateMandatoryParameter() throws DataValidationException{
 
-        calledNumber = ParseDataHelper.validateAndParseString(Constants.CALLED_NUMBER, calledNumber, true);
+        calledNumber = ParseDataHelper.validateString(Constants.CALLED_NUMBER, calledNumber, true);
         calledNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLED_NUMBER, calledNumber);                ;
 
-        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateString(Constants.OPERATOR_CODE, operator, true);
 
-        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateString(Constants.CIRCLE_CODE, circle, true);
 
-        callId = ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true);
+        callId = ParseDataHelper.validateString(Constants.CALL_ID, callId, true);
         ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,callId);
 
         subscriptionIdLongValue = ParseDataHelper.validateAndParseLong(Constants.SUBSCRIPTION_ID, subscriptionId, true);

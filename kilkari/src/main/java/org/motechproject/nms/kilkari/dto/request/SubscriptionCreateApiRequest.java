@@ -107,17 +107,18 @@ public class SubscriptionCreateApiRequest {
      */
     public void validateMandatoryParameters() throws DataValidationException{
         callingNumber = ParseDataHelper.validateAndTrimMsisdn(Constants.CALLING_NUMBER,
-                ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, callingNumber, true));
-        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
-        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+                ParseDataHelper.validateString(Constants.CALLING_NUMBER, callingNumber, true));
+        ParseDataHelper.validateString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID,
-                ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
-
+                ParseDataHelper.validateString(Constants.CALL_ID, callId, true));
+        ParseDataHelper.validateString(Constants.SUBSCRIPTION_PACK, subscriptionPack, true);
+        
         if(SubscriptionPack.findByName(subscriptionPack) == null) {
-            ParseDataHelper.raiseMissingDataException(Constants.SUBSCRIPTION_PACK, subscriptionPack);
+            ParseDataHelper.raiseApiParameterMissingDataException(Constants.SUBSCRIPTION_PACK, subscriptionPack);
         }
         if (languageLocationCode == null) {
-            ParseDataHelper.raiseMissingDataException(Constants.LANGUAGE_LOCATION_CODE, null);
+            ParseDataHelper.raiseApiParameterMissingDataException(Constants.LANGUAGE_LOCATION_CODE, null);
         }
     }
 }

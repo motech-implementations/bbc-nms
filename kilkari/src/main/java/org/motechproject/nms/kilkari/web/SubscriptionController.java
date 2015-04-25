@@ -107,9 +107,9 @@ public class SubscriptionController extends BaseController {
      */
     public void validateSubscriberDetailsRequestParams(String msisdn, String operator, String circle,
                                                        String callId) throws DataValidationException {
-        ParseDataHelper.validateAndParseString(Constants.CALLING_NUMBER, msisdn, true);
-        ParseDataHelper.validateAndParseString(Constants.OPERATOR_CODE, operator, true);
-        ParseDataHelper.validateAndParseString(Constants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateString(Constants.CALLING_NUMBER, msisdn, true);
+        ParseDataHelper.validateString(Constants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID, ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
     }
 }
