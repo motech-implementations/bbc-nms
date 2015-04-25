@@ -60,6 +60,8 @@ public class Initializer {
 
     public static final Integer DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS = 60;
 
+    public static final Integer DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT = 3;
+
     private ConfigurationService configurationService;
 
     private MotechSchedulerService motechSchedulerService;
@@ -102,6 +104,7 @@ public class Initializer {
             configuration.setObdCreationEventCronExpression(DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION);
             configuration.setObdNotificationEventCronExpression(DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);
             configuration.setRetryIntervalForObdPreparationInMins(DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS);
+            configuration.setMaxObdPreparationRetryCount(DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT);
             configurationService.createConfiguration(configuration);
 
         }
