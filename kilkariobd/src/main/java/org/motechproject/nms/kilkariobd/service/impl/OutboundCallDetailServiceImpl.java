@@ -2,10 +2,8 @@ package org.motechproject.nms.kilkariobd.service.impl;
 
 import java.util.List;
 
-import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallDetail;
-import org.motechproject.nms.kilkariobd.event.handler.PurgeHandler;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallDetailDataService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.slf4j.Logger;

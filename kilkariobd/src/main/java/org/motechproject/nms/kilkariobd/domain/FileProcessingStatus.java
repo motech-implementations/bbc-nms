@@ -13,6 +13,14 @@ public enum FileProcessingStatus {
 
     private int value;
 
+    private Integer getValue() {
+        return value;
+    }
+
+    private FileProcessingStatus(int value) {
+        this.value = value;
+    }
+
     /**
      * find FileProcessingStatus object By FileProcessingStatus value
      * @param status value of the FileProcessingStatus
@@ -25,13 +33,5 @@ public enum FileProcessingStatus {
             }
         }
         return null;
-    }
-
-    private Integer getValue() {
-        return value;
-    }
-
-    private FileProcessingStatus(int value) {
-        this.value = value;
     }
 }

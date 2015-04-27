@@ -106,7 +106,7 @@ public class OBDTargetFileHandler {
     }
 
     @MotechListener(subjects = RETRY_PREPARE_OBD_TARGET_EVENT_SUBJECT)
-    public void ObdRetryHandler(MotechEvent motechEvent) {
+    public void obdRetryHandler(MotechEvent motechEvent) {
         Object cdrObdFile = motechEvent.getParameters().get(Constants.CURRENT_CDR_OBD_FILE);
         Object obdFile = motechEvent.getParameters().get(Constants.CURRENT_OBD_FILE);
         String obdFileName = null;
@@ -281,7 +281,7 @@ public class OBDTargetFileHandler {
                 retryDayNumber = subscriptionService.retryAttempt(subscriptionId);
                 Integer weekNumber = Integer.parseInt(weekNoMsgNo[0]);
 
-                if (isValidForRetry(finalStatus, statusCode, subscriptionId, weekNumber)) {
+                if (isValidForRetry(finalStatus, statusCode, subscriptionId)) {
 
                     OutboundCallRequest callRequestRetry = new OutboundCallRequest();
                     callRequestRetry.setRequestId(map.get(Constants.REQUEST_ID));
@@ -440,7 +440,7 @@ public class OBDTargetFileHandler {
     /*
     This method checks if a particular call valid for retry based on callStatus and final status.
      */
-    private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId, Integer weekNumber) {
+    private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId) {
         Integer retryDayNumber = null;
         /* Check If the call is rejected or failed with reason other than DND and Invali Number */
         if(finalStatus.equals(CallStatus.REJECTED) ||

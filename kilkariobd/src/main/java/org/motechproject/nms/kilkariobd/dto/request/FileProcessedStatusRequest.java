@@ -26,14 +26,6 @@ public class FileProcessedStatusRequest {
     @JsonProperty
     private String failureReason;
 
-    public FileProcessingStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(FileProcessingStatus status) {
-        this.status = status;
-    }
-
     public FileProcessedStatusRequest(
             String fileProcessingStatus, String fileName, FileProcessingStatus status, String failureReason) {
         this.fileProcessingStatus = fileProcessingStatus;
@@ -56,6 +48,14 @@ public class FileProcessedStatusRequest {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public FileProcessingStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FileProcessingStatus status) {
+        this.status = status;
     }
 
     public void validateMandatoryParams() throws DataValidationException {
