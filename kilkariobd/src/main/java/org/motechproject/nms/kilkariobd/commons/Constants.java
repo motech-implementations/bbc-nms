@@ -26,10 +26,12 @@ public final class Constants {
     public static final String CDR_DETAIL_FILE = "CDR Detail File";
     public static final String CDR_DETAIL_CHECKSUM = "CDR Detail checksum";
     public static final String CDR_DETAIL_RECORDS_COUNT = "CDR Detail records Count";
+    public static final String CDR_DETAIL_FILE_PREFIX = "cdrDetail_";
     public static final String CDR_SUMMARY_INFO = "CDR Summary Info";
     public static final String CDR_SUMMARY_FILE = "CDR Summary File";
     public static final String CDR_SUMMARY_CHECKSUM = "CDR Summary checksum";
     public static final String CDR_SUMMARY_RECORDS_COUNT = "CDR Summary records Count";
+    public static final String CDR_SUMMARY_FILE_PREFIX = "cdrSummary_";
 
     /*Constants for cron jobs*/
     public static final String PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.prepare.obdtarget";
@@ -62,6 +64,7 @@ public final class Constants {
     public static final Integer RETRY_DAY_TWO = 2;
     public static final Integer RETRY_DAY_THREE = 3;
     public static final Integer MAX_WEEK_NUMBER = 72;
+    public static final Integer RETRY_NONE = -1;
 
 
     //constants for cdrDetail
