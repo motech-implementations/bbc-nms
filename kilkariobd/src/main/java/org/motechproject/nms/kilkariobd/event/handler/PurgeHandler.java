@@ -1,24 +1,32 @@
 package org.motechproject.nms.kilkariobd.event.handler;
 
-import static org.motechproject.nms.kilkariobd.commons.Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT;
-
 import org.motechproject.event.listener.annotations.MotechListener;
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * This class is used to daily scheduled purge event
+ * @author nms
+ *
+ */
 public class PurgeHandler {
     
-    /**
-     * This method defines a daily event to be raised by scheduler to prepare target file.
-     */
+    Logger logger = LoggerFactory.getLogger(PurgeHandler.class);
+    
     @Autowired
     OutboundCallDetailService outboundCallDetailService; 
-    
-    @MotechListener(subjects = PREPARE_OBD_TARGET_EVENT_SUBJECT)
+
+    /**
+     * This method is used to daily scheduled purge event
+     */
+    @MotechListener(subjects = Constants.PURGE_RECORDS_EVENT_JOB)
     public void purgeOBDCallEventHandler() {
-        
+        logger.debug("Daily scheduled purging start");
         outboundCallDetailService.purgeOutboundCallDetail();
-        
+        logger.debug("Daily scheduled purging end");
     }
     
 }
