@@ -40,6 +40,9 @@
 
     <osgi:reference id="motechSchedulerService"
                     interface="org.motechproject.scheduler.service.MotechSchedulerService" />
+                    
+	<osgi:reference id="subscriptionService"
+                  interface="org.motechproject.nms.kilkari.service.SubscriptionService" />                    
 
 
 </beans>

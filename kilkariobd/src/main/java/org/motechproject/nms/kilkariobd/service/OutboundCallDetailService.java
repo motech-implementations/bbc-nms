@@ -13,4 +13,12 @@ public interface OutboundCallDetailService {
      * @return OutboundCallDetail type object
      */
     public OutboundCallDetail create(OutboundCallDetail record);
+
+    /**
+     * This method is used to delete OutboundCallDetail of those subscriber 
+     * whose subscription have completed or deactivated n days earlier. 
+     * Where n is configurable in Kilkari and also used to trigger perge event 
+     * of Kilkari which will delete corresponding subscription and subscriber.
+     */
+    void purgeOutboundCallDetail();
 }

@@ -34,8 +34,10 @@ public final class Constants {
     /*Constants for cron jobs*/
     public static final String PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.prepare.obdtarget";
     public static final String NOTIFY_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.notify.obdtarget";
+    public static final String PURGE_RECORDS_EVENT_SUBJECT = "kilkariobd.purge.records";
     public static final String PREPARE_OBD_TARGET_EVENT_JOB = "OBDPreparationJob";
     public static final String NOTIFY_OBD_TARGET_EVENT_JOB = "ODBNotifyJob";
+    public static final String PURGE_RECORDS_EVENT_JOB = "PurgeSubscriptionRecordsJob";
     public static final String RETRY_PREPARE_OBD_TARGET_EVENT_SUBJECT = "kilkariobd.retry.prepare.obdtarget";
     public static final String OBD_PREPARATION_RETRY_JOB = "obdPreparationRetryJob";
     public static final String CURRENT_OBD_FILE = "currentObdFile";
