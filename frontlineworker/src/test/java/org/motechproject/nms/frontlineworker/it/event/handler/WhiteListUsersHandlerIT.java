@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
+import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.CsvWhiteListUsers;
 import org.motechproject.nms.frontlineworker.domain.WhiteListUsers;
 import org.motechproject.nms.frontlineworker.event.handler.WhiteListUsersUploadHandler;
@@ -109,7 +110,8 @@ public class WhiteListUsersHandlerIT extends BasePaxIT {
 
     @Test
     public void testWhiteListUsersAll() {
-        MotechEvent motechEvent = new MotechEvent("CsvWhiteListUsers.csv_success", parameters);
+
+        MotechEvent motechEvent = new MotechEvent(ConfigurationConstants.WLU_UPLOAD_SUCCESS, parameters);
         whiteListUsersUploadHandler.wluDataHandlerSuccess(motechEvent);
 
         WhiteListUsers whiteListUser;

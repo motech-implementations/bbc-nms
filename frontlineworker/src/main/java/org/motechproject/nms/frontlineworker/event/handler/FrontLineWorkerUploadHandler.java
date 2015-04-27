@@ -503,14 +503,8 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
         frontLineWorker.setId(ParseDataHelper.validateAndParseLong("NMS Flw Id", record.getNmsFlwId(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
-/*
 
-        if (record.getIsValid().equalsIgnoreCase("false")) {
-            frontLineWorker.setStatus(Status.INVALID);
-        } else {
-            frontLineWorker.setStatus(Status.INACTIVE);
-        }
-*/
+        frontLineWorker.setStatus(Status.INACTIVE);
 
         frontLineWorker.setCreator(record.getCreator());
         frontLineWorker.setModifiedBy(record.getModifiedBy());
