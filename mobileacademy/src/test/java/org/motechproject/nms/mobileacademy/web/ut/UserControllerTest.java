@@ -53,7 +53,7 @@ public class UserControllerTest {
         User user = new User();
         user.setCircle(circle);
         user.setCurrentUsageInPulses(0);
-        user.setDefaultLanguageLocationCode(1);
+        user.setDefaultLanguageLocationCode("1");
         user.setEndOfUsagePromptCounter(2);
         user.setLanguageLocationCode(null);
         user.setMaxAllowedEndOfUsagePrompt(3);
@@ -65,7 +65,7 @@ public class UserControllerTest {
         url.append("&circle=" + circle);
         url.append("&callId=" + callId);
 
-        String expectedResponse = "{\"circle\":\"UP\",\"defaultLanguageLocationCode\":1,\"currentUsageInPulses\":0,\"maxAllowedUsageInPulses\":5,\"endOfUsagePromptCounter\":2,\"maxAllowedEndOfUsagePrompt\":3}";
+        String expectedResponse = "{\"circle\":\"UP\",\"defaultLanguageLocationCode\":\"1\",\"currentUsageInPulses\":0,\"maxAllowedUsageInPulses\":5,\"endOfUsagePromptCounter\":2,\"maxAllowedEndOfUsagePrompt\":3}";
 
         try {
             when(
@@ -89,7 +89,7 @@ public class UserControllerTest {
         User user = new User();
         user.setCircle(circle);
         user.setCurrentUsageInPulses(0);
-        user.setDefaultLanguageLocationCode(1);
+        user.setDefaultLanguageLocationCode("1");
         user.setEndOfUsagePromptCounter(2);
         user.setLanguageLocationCode(null);
         user.setMaxAllowedEndOfUsagePrompt(3);
@@ -122,7 +122,7 @@ public class UserControllerTest {
         User user = new User();
         user.setCircle(circle);
         user.setCurrentUsageInPulses(0);
-        user.setDefaultLanguageLocationCode(1);
+        user.setDefaultLanguageLocationCode("1");
         user.setEndOfUsagePromptCounter(2);
         user.setLanguageLocationCode(null);
         user.setMaxAllowedEndOfUsagePrompt(3);
@@ -156,7 +156,7 @@ public class UserControllerTest {
         User user = new User();
         user.setCircle(circle);
         user.setCurrentUsageInPulses(0);
-        user.setDefaultLanguageLocationCode(1);
+        user.setDefaultLanguageLocationCode("1");
         user.setEndOfUsagePromptCounter(2);
         user.setLanguageLocationCode(null);
         user.setMaxAllowedEndOfUsagePrompt(3);

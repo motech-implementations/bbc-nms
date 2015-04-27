@@ -20,7 +20,7 @@ public class ContentLog extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 1)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     @UIDisplayable(position = 2)
@@ -66,11 +66,11 @@ public class ContentLog extends MdsEntity {
         this.callId = callId;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

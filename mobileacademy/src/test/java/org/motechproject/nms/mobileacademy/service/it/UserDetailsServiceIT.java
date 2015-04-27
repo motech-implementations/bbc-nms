@@ -12,8 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CallDetail;
@@ -63,7 +63,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // create FLW record
             FrontLineWorker frontLineWorker = new FrontLineWorker();
             frontLineWorker.setCircleCode("DL");
-            frontLineWorker.setLanguageLocationCodeId(29);
+            frontLineWorker.setLanguageLocationCodeId("29");
             frontLineWorker.setContactNo("9990632901");
             frontLineWorker.setOperatorCode("AL");
             frontLineWorker.setStatus(Status.ACTIVE);
@@ -142,7 +142,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             assertTrue(1429171000l == (callDetail.getCallEndTime().getMillis() / 1000));
 
             // assert content log records
-            assertTrue(29 == contentLogFirstRecord.getLanguageLocationCode());
+            assertEquals("29", contentLogFirstRecord.getLanguageLocationCode());
             assertTrue(12345678 == contentLogFirstRecord.getCallId());
             assertTrue(contentLogFirstRecord.getCompletionFlag());
             assertEquals("ch1.wav", contentLogFirstRecord.getContentFile());
@@ -160,7 +160,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             assertTrue(1429169000l == (contentLogFirstRecord.getEndTime()
                     .getMillis() / 1000));
 
-            assertTrue(29 == contentLogLastRecord.getLanguageLocationCode());
+            assertEquals("29", contentLogLastRecord.getLanguageLocationCode());
             assertTrue(12345678 == contentLogLastRecord.getCallId());
             assertTrue(contentLogLastRecord.getCompletionFlag());
             assertEquals("ch2.wav", contentLogLastRecord.getContentFile());

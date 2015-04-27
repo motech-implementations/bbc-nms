@@ -1,5 +1,10 @@
 package org.motechproject.nms.mobileacademy.service.ut;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,8 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.frontlineworker.service.impl.UserProfileDetailsServiceImpl;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
@@ -21,9 +28,6 @@ import org.motechproject.nms.mobileacademy.service.FlwUsageDetailService;
 import org.motechproject.nms.mobileacademy.service.UserDetailsService;
 import org.motechproject.nms.mobileacademy.service.impl.UserDetailsServiceImpl;
 import org.motechproject.nms.util.helper.DataValidationException;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 
 /**
  * class contain unit test cases of UserDetailsServiceImpl.java
@@ -66,9 +70,8 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
-        userProfile.setLanguageLocationCode(1);
+        userProfile.setLanguageLocationCode("1");
         userProfile.setNmsFlwId(11l);
 
         Configuration configuration = new Configuration();
@@ -109,7 +112,7 @@ public class UserDetailsServiceImplTest {
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
-            assertTrue(1 == userResponse.getDefaultLanguageLocationCode());
+            assertEquals("1", userResponse.getDefaultLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -143,7 +146,6 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(true);// default llc true
         userProfile.setLanguageLocationCode(null);
         userProfile.setNmsFlwId(11l);
@@ -156,7 +158,7 @@ public class UserDetailsServiceImplTest {
         configuration
                 .setCourseQualifyingScore(MobileAcademyConstants.CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE);
         // National default
-        configuration.setDefaultLanguageLocationCode(121);
+        configuration.setDefaultLanguageLocationCode("121");
         configuration
                 .setMaxAllowedEndOfUsagePrompt(MobileAcademyConstants.CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT);
         configuration
@@ -186,7 +188,7 @@ public class UserDetailsServiceImplTest {
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
-            assertTrue(121 == userResponse.getDefaultLanguageLocationCode());
+            assertEquals("121", userResponse.getDefaultLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -220,7 +222,6 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
         userProfile.setLanguageLocationCode(null);
         userProfile.setNmsFlwId(11l);
@@ -233,7 +234,7 @@ public class UserDetailsServiceImplTest {
         configuration
                 .setCourseQualifyingScore(MobileAcademyConstants.CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE);
         // National default
-        configuration.setDefaultLanguageLocationCode(121);
+        configuration.setDefaultLanguageLocationCode("121");
         configuration
                 .setMaxAllowedEndOfUsagePrompt(MobileAcademyConstants.CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT);
         configuration
@@ -263,7 +264,7 @@ public class UserDetailsServiceImplTest {
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getLanguageLocationCode());
-            assertTrue(121 == userResponse.getDefaultLanguageLocationCode());
+            assertEquals("121", userResponse.getDefaultLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -298,9 +299,8 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
-        userProfile.setLanguageLocationCode(2);
+        userProfile.setLanguageLocationCode("2");
         userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
@@ -342,7 +342,7 @@ public class UserDetailsServiceImplTest {
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
-            assertTrue(2 == userResponse.getLanguageLocationCode());
+            assertEquals("2", userResponse.getLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -375,9 +375,8 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("99");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
-        userProfile.setLanguageLocationCode(2);
+        userProfile.setLanguageLocationCode("2");
         userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
@@ -389,7 +388,7 @@ public class UserDetailsServiceImplTest {
         configuration
                 .setCourseQualifyingScore(MobileAcademyConstants.CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE);
         // national default llc
-        configuration.setDefaultLanguageLocationCode(121);
+        configuration.setDefaultLanguageLocationCode("121");
         configuration
                 .setMaxAllowedEndOfUsagePrompt(MobileAcademyConstants.CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT);
         // National cap value
@@ -418,7 +417,7 @@ public class UserDetailsServiceImplTest {
                     callingNumber, operator, circle, callId);
             // Assertions
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
-            assertTrue(2 == userResponse.getLanguageLocationCode());
+            assertEquals("2", userResponse.getLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -451,9 +450,8 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("99");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
-        userProfile.setLanguageLocationCode(2);
+        userProfile.setLanguageLocationCode("2");
         userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
@@ -465,7 +463,7 @@ public class UserDetailsServiceImplTest {
         configuration
                 .setCourseQualifyingScore(MobileAcademyConstants.CONFIG_DEFAULT_COURSE_QUALIFYING_SCORE);
         // national default llc
-        configuration.setDefaultLanguageLocationCode(121);
+        configuration.setDefaultLanguageLocationCode("121");
         configuration
                 .setMaxAllowedEndOfUsagePrompt(MobileAcademyConstants.CONFIG_DEFAULT_MAX_ALLOW_END_USAGE_PROMPT);
         // National cap value set to null
@@ -494,7 +492,7 @@ public class UserDetailsServiceImplTest {
                     callingNumber, operator, circle, callId);
             // Assertions
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
-            assertTrue(2 == userResponse.getLanguageLocationCode());
+            assertEquals("2", userResponse.getLanguageLocationCode());
             assertEquals(flwUsageDetail.getCurrentUsageInPulses(),
                     userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
@@ -515,24 +513,27 @@ public class UserDetailsServiceImplTest {
      * 
      * @throws NumberFormatException
      * @throws DataValidationException
+     * @throws ServiceNotDeployedException
+     * @throws FlwNotInWhiteListException
      */
     @Test
     public void testSetLanguageLocationCode() throws NumberFormatException,
-            DataValidationException {
+            DataValidationException, FlwNotInWhiteListException,
+            ServiceNotDeployedException {
         String languageLocationCode = "1";
         String callingNumber = "9990635906";
         String callId = "123456789";
         UserProfileDetailsService userProfileDetailsServiceSpy = Mockito
-                .spy(new UserProfileDetailsServiceImpl());
+                .spy(new UserProfileDetailsServiceImpl(null, null, null, null,
+                        null, null, null));
         Mockito.doNothing()
                 .when(userProfileDetailsServiceSpy)
-                .updateLanguageLocationCodeFromMsisdn(
-                        Integer.parseInt(languageLocationCode), callingNumber);
+                .updateLanguageLocationCodeFromMsisdn(languageLocationCode,
+                        callingNumber,
+                        ServicesUsingFrontLineWorker.MOBILEACADEMY);
         try {
             userDetailsService.setLanguageLocationCode(languageLocationCode,
                     callingNumber, callId);
-        } catch (DataValidationException e) {
-            assertFalse(true);
         } catch (Exception e) {
             assertFalse(true);
         }
@@ -557,9 +558,8 @@ public class UserDetailsServiceImplTest {
         // Stub the service methods and responses
         UserProfile userProfile = new UserProfile();
         userProfile.setCircle("A");
-        userProfile.setCreated(true);
         userProfile.setIsDefaultLanguageLocationCode(false);// default false
-        userProfile.setLanguageLocationCode(2);
+        userProfile.setLanguageLocationCode("2");
         userProfile.setNmsFlwId(11l);
         userProfile.setMaxStateLevelCappingValue(5);// capping
 
@@ -600,7 +600,7 @@ public class UserDetailsServiceImplTest {
             // Assertions
             assertEquals("A", userResponse.getCircle());
             assertEquals(null, userResponse.getDefaultLanguageLocationCode());
-            assertTrue(2 == userResponse.getLanguageLocationCode());
+            assertEquals("2", userResponse.getLanguageLocationCode());
             assertTrue(0 == userResponse.getCurrentUsageInPulses());
             assertEquals(flwUsageDetail.getEndOfUsagePromptCounter(),
                     userResponse.getEndOfUsagePromptCounter());

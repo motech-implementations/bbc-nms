@@ -12,9 +12,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
@@ -80,7 +80,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             String circle, String callId) throws DataValidationException,
             NmsInternalServerError, ServiceNotDeployedException,
             FlwNotInWhiteListException {
-        // TODO service deployed and white list validation
         User user = new User();// user detail response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
@@ -194,14 +193,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             Configuration configuration, User user) {
         boolean nationalDefaultLlc = false;
         if (userProfile.isDefaultLanguageLocationCode()) {
-            if (userProfile.getLanguageLocationCode() != null) {
+            if (StringUtils.isNotBlank(userProfile.getLanguageLocationCode())) {
                 user.setDefaultLanguageLocationCode(userProfile
                         .getLanguageLocationCode());
             } else {
                 nationalDefaultLlc = true;
             }
         } else {
-            if (userProfile.getLanguageLocationCode() != null) {
+            if (StringUtils.isNotBlank(userProfile.getLanguageLocationCode())) {
                 user.setLanguageLocationCode(userProfile
                         .getLanguageLocationCode());
             } else {
@@ -220,11 +219,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             String callingNumber, String callId)
             throws DataValidationException, ServiceNotDeployedException,
             FlwNotInWhiteListException {
-        // TODO service deployed and white list validation
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(
-                Integer.parseInt(languageLocationCode), msisdn);
+                languageLocationCode, msisdn,
+                ServicesUsingFrontLineWorker.MOBILEACADEMY);
         LOGGER.debug("Llc updated  for callingNumber:" + callingNumber
                 + ", callId:" + callId + ", llc:" + languageLocationCode);
 
