@@ -58,6 +58,9 @@ public class Initializer {
     /*Triggers at 8:00am everyday */
     public static final String DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION = "0 0 8 * * ?";
 
+    /*Triggers at 9:00pm everyday for purging old records */
+    public static final String DEFAULT_PURGE_RECORDS_EVENT_CRON_EXPRESSION = "0 0 21 * * ?";
+
     public static final Integer DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS = 60;
 
     public static final Integer DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT = 3;
@@ -103,6 +106,7 @@ public class Initializer {
             configuration.setObdIvrUrl(DEFAULT_OBD_IVR_URL);
             configuration.setObdCreationEventCronExpression(DEFAULT_OBD_CREATION_EVENT_CRON_EXPRESSION);
             configuration.setObdNotificationEventCronExpression(DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);
+            configuration.setPurgeRecordsEventCronExpression(DEFAULT_PURGE_RECORDS_EVENT_CRON_EXPRESSION);
             configuration.setRetryIntervalForObdPreparationInMins(DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS);
             configuration.setMaxObdPreparationRetryCount(DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT);
             configurationService.createConfiguration(configuration);
@@ -110,6 +114,9 @@ public class Initializer {
         }
 
         configuration = configurationService.getConfiguration();
+
+
+        /* Create CRON Jobs */
 
         Map<String,Object> parametersObdPreparation = new HashMap<String,Object>() {{
 
@@ -125,16 +132,29 @@ public class Initializer {
         }
         };
 
+        Map<String,Object> parametersPurgeRecords = new HashMap<String, Object>() {{
+
+            put(MotechSchedulerService.JOB_ID_KEY, Constants.PURGE_RECORDS_EVENT_JOB);
+
+        }
+        };
+
         MotechEvent motechEventForObdPreparation = new MotechEvent(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT, parametersObdPreparation);
 
         MotechEvent motechEventToNotifyObdTarget = new MotechEvent(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, parametersNotifyObdTarget);
+
+        MotechEvent motechEventToPurgeRecords = new MotechEvent(Constants.PURGE_RECORDS_EVENT_SUBJECT, parametersPurgeRecords);
 
         CronSchedulableJob cronJobForObdPreparation = new CronSchedulableJob(motechEventForObdPreparation, configuration.getObdCreationEventCronExpression() , null, null, false);
 
         CronSchedulableJob cronJobToNotifyObdTarget = new CronSchedulableJob(motechEventToNotifyObdTarget, configuration.getObdNotificationEventCronExpression(), null, null, false);
 
+        CronSchedulableJob cronJobToPurgeRecords = new CronSchedulableJob(motechEventToPurgeRecords, configuration.getPurgeRecordsEventCronExpression(), null, null, false);
+
+        /* Schedule Jobs */
         motechSchedulerService.safeScheduleJob(cronJobForObdPreparation);
         motechSchedulerService.safeScheduleJob(cronJobToNotifyObdTarget);
+        motechSchedulerService.safeScheduleJob(cronJobToPurgeRecords);
 
     }
 

@@ -68,6 +68,10 @@ public class Configuration {
     @Field(required = true)
     private String obdNotificationEventCronExpression;
 
+
+    @Field(required = true)
+    private String purgeRecordsEventCronExpression;
+
     @Field(required = true)
     private Integer retryIntervalForObdPreparationInMins;
 
@@ -212,6 +216,15 @@ public class Configuration {
     public void setMaxObdPreparationRetryCount(Integer maxObdPreparationRetryCount) {
         this.maxObdPreparationRetryCount = maxObdPreparationRetryCount;
     }
+
+    public String getPurgeRecordsEventCronExpression() {
+        return purgeRecordsEventCronExpression;
+    }
+
+    public void setPurgeRecordsEventCronExpression(String purgeRecordsEventCronExpression) {
+        this.purgeRecordsEventCronExpression = purgeRecordsEventCronExpression;
+    }
+
 
 }
 
