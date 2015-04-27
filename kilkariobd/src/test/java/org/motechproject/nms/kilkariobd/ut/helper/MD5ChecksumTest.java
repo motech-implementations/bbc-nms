@@ -22,4 +22,15 @@ public class MD5ChecksumTest {
 
     }
 
+    @Test
+    public void shouldReturnNullIfFileNotFound() {
+
+        String checksum;
+
+        checksum = MD5Checksum.findChecksum("wrongPath");
+
+        Assert.assertNull(checksum);
+
+    }
+
 }
