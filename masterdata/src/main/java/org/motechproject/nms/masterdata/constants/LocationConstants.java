@@ -19,7 +19,7 @@ public final class LocationConstants {
 
     public static final String HEALTH_SUB_FACILITY_CSV_SUCCESS = "mds.crud.masterdata.CsvHealthSubFacility.csv-import.success";
 
-    public static final String OPERATOR_CSV_SUCCESS = "mds.crud.masterdata.OperatorCsv.csv-import.success";
+    public static final String OPERATOR_CSV_SUCCESS = "mds.crud.masterdata.CsvOperator.csv-import.success";
 
     public static final String CIRCLE_CSV_SUCCESS = "mds.crud.masterdata.CsvCircle.csv-import.success";
 
