@@ -18,7 +18,7 @@ public class ContentLog extends MdsEntity {
     @UIDisplayable(position = 0)
     private Long callId;
 
-    @Field(required = true)
+    @Field
     @UIDisplayable(position = 1)
     private Integer languageLocationCode;
 

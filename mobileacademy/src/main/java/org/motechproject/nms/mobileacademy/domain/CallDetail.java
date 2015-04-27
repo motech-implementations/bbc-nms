@@ -17,7 +17,7 @@ public class CallDetail extends MdsEntity {
     @UIDisplayable(position = 0)
     private Long callId;
 
-    @Field(required = true)
+    @Field
     @UIDisplayable(position = 1)
     private Long flwId;
 

@@ -245,6 +245,84 @@ public class UserDetailsServiceIT extends BasePaxIT {
     }
 
     /**
+     * test Save Call Details Success when FLW do not exist
+     */
+    @Test
+    public void testSaveCallDetailWhenFlwNotExist() {
+
+        CallDetailsRequest callDetailRequest = createCallDetailsRequest();
+        callDetailRequest.setCallId("12121");
+        callDetailRequest.setCallingNumber("9900000000");// Unknown MSISDN
+        // content
+        List<ContentLogRequest> contentList = new ArrayList<>();
+        // course start record
+        ContentLogRequest contentLogRequestFirst = new ContentLogRequest();
+        contentLogRequestFirst.setType("lesson");
+        contentLogRequestFirst.setCompletionFlag("true");
+        contentLogRequestFirst.setContentFile("ch1.wav");
+        contentLogRequestFirst.setContentName("CN111");
+        contentLogRequestFirst.setCorrectAnswerEntered("true");
+        contentLogRequestFirst.setStartTime("1429167000");
+        contentLogRequestFirst.setEndTime("1429169000");
+        // course end record
+        ContentLogRequest contentLogRequestLast = new ContentLogRequest();
+        contentLogRequestLast.setType("question");
+        contentLogRequestLast.setCompletionFlag("true");
+        contentLogRequestLast.setContentFile("ch2.wav");
+        contentLogRequestLast
+                .setContentName(MobileAcademyConstants.COURSE_END_CONTENT);
+        contentLogRequestLast.setCorrectAnswerEntered("true");
+        contentLogRequestLast.setStartTime("1429168000");
+        contentLogRequestLast.setEndTime("1429170000");
+
+        contentList.add(contentLogRequestFirst);
+        contentList.add(contentLogRequestLast);
+        callDetailRequest.setContent(contentList);
+
+        try {
+            userDetailsService.saveCallDetails(callDetailRequest);
+            FlwUsageDetail flwUsageDetail = flwUsageDetailDataService.retrieve(
+                    "msisdn", 9900000000l);
+            CallDetail callDetail = callDetailDataService.retrieve("callId",
+                    12121);
+            ContentLog contentLogFirstRecord = contentLogDataService.retrieve(
+                    "contentName", "CN111");
+            // assert usage table data
+            assertTrue(null == flwUsageDetail);
+
+            // assert call detail table data
+            assertTrue(12121 == callDetail.getCallId());
+            assertTrue(9900000000l == callDetail.getMsisdn());
+            assertEquals(null, callDetail.getFlwId());
+            assertEquals("AL", callDetail.getOperator());
+            assertEquals("DL", callDetail.getCircle());
+            assertTrue(1 == callDetail.getCallStatus());
+            assertTrue(6 == callDetail.getCallDisconnectReason());
+            assertTrue(1429166000l == (callDetail.getCallStartTime()
+                    .getMillis() / 1000));
+            assertTrue(1429171000l == (callDetail.getCallEndTime().getMillis() / 1000));
+
+            // assert content log records
+            assertTrue(null == contentLogFirstRecord.getLanguageLocationCode());
+            assertTrue(12121 == contentLogFirstRecord.getCallId());
+            assertTrue(contentLogFirstRecord.getCompletionFlag());
+            assertEquals("ch1.wav", contentLogFirstRecord.getContentFile());
+            assertEquals("CN111", contentLogFirstRecord.getContentName());
+            assertEquals("lesson".toUpperCase(),
+                    contentLogFirstRecord.getType());
+            assertTrue(contentLogFirstRecord.getCorrectAnswerEntered());
+            assertTrue(null == contentLogFirstRecord.getCourseStartDate());
+            assertTrue(null == contentLogFirstRecord.getCourseEndDate());
+            assertTrue(1429167000l == (contentLogFirstRecord.getStartTime()
+                    .getMillis() / 1000));
+            assertTrue(1429169000l == (contentLogFirstRecord.getEndTime()
+                    .getMillis() / 1000));
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
+    }
+
+    /**
      * clear Data from tables
      */
     @After
