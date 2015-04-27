@@ -22,6 +22,10 @@ public class FileProcessedStatusRequest {
     @Expose
     private FileProcessingStatus status;
 
+    @Expose
+    @JsonProperty
+    private String failureReason;
+
     public FileProcessingStatus getStatus() {
         return status;
     }
@@ -30,10 +34,12 @@ public class FileProcessedStatusRequest {
         this.status = status;
     }
 
-    public FileProcessedStatusRequest(String fileProcessingStatus, String fileName, FileProcessingStatus status) {
+    public FileProcessedStatusRequest(
+            String fileProcessingStatus, String fileName, FileProcessingStatus status, String failureReason) {
         this.fileProcessingStatus = fileProcessingStatus;
         this.fileName = fileName;
         this.status = status;
+        this.failureReason = failureReason;
     }
 
     public String getCdrFileProcessingStatus() {

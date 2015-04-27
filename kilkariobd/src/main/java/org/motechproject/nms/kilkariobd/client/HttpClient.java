@@ -56,9 +56,10 @@ public class HttpClient {
      * @param status status of the processed files.
      * @param fileName name of the OBDFile for which CDR Files are processed
      */
-    public void notifyCDRFileProcessedStatus(FileProcessingStatus status, String fileName) {
+    public void notifyCDRFileProcessedStatus(FileProcessingStatus status, String fileName, String failureReason) {
         logger.debug("notifyCDRFileProcessedStatus Notification : started");
-        HttpMethod postMethod = buildCdrFileProcessedStatusRequest(ivrUrl() + "/NotifyCDRFileProcessedStatus", status, fileName);
+        HttpMethod postMethod = buildCdrFileProcessedStatusRequest(
+                ivrUrl() + "/NotifyCDRFileProcessedStatus", status, fileName, failureReason);
         postHttpRequestAndRetry(postMethod);
         logger.debug("notifyCDRFileProcessedStatus Notification : ended");
     }
@@ -124,9 +125,10 @@ public class HttpClient {
 
     /*
     This method build the CdrFileProcessedStatusRequest */
-    private HttpMethod buildCdrFileProcessedStatusRequest(String url, FileProcessingStatus status, String fileName) {
+    private HttpMethod buildCdrFileProcessedStatusRequest(
+            String url, FileProcessingStatus status, String fileName, String failureReason) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        FileProcessedStatusRequest request = new FileProcessedStatusRequest(status.name(), fileName, status);
+        FileProcessedStatusRequest request = new FileProcessedStatusRequest(status.name(), fileName, status, failureReason);
         String requestBody = gson.toJson(request);
         return buildRequest(url, requestBody);
     }

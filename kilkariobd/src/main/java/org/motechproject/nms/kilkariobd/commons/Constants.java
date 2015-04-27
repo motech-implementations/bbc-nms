@@ -85,4 +85,10 @@ public final class Constants {
 
     public static final String FILE_PROCESSING_STATUS= "fileProcessingStatus";
 
+    public static final String FILE_NOT_ACCESSIBLE = "Unable to access file from location - %s/%s/%s. File: %s";
+
+    public static final String INVALID_RECORD_COUNT = "Error in record count value: Expected value %d. Actual value %d. File: %s";
+
+    public static final String INVALID_CHECKSUM = "Error in checksum value: Expected value %s. Actual value %s. File: %s";
+
 }

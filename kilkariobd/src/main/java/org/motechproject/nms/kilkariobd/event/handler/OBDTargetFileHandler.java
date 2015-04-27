@@ -216,7 +216,7 @@ public class OBDTargetFileHandler {
         callFlowService.updateCallFlowStatus(oldObdFileName, CallFlowStatus.CDR_FILES_PROCESSED);
 
         /* Notify IVR of file processing finished successfully */
-        client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY, oldObdFileName);
+        client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY, oldObdFileName, null);
     }
 
     private void downloadAndProcessCdrSummaryFile(String obdFileName, String oldObdFileName, Configuration configuration, Settings settings) throws CDRFileProcessingFailedException {
@@ -228,7 +228,10 @@ public class OBDTargetFileHandler {
             SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrSummaryFileName);
             processCDRSummaryCSV(obdFileName, oldObdFileName, localCdrSummaryFileName, configuration);
         } catch (FileNotFoundException fex) {
-            client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrSummaryFileName);
+            String failureReason = String.format(Constants.FILE_NOT_ACCESSIBLE,
+                    configuration.getObdFileServerIp(), configuration.getObdFilePathOnServer(),
+                    cdrSummaryFileName, cdrSummaryFileName);
+            client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrSummaryFileName, failureReason);
             callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_SUMMARY_PROCESSING_FAILED);
             throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_NOT_ACCESSIBLE);
         } catch (IOException ex) {
@@ -245,11 +248,11 @@ public class OBDTargetFileHandler {
         OutboundCallFlow oldCallFlow = callFlowService.findRecordByFileName(oldObdFileName);
         try {
             cdrSummaryRecords = CSVMapper.readWithCsvMapReader(cdrSummaryFileName);
-            /*
-            send error if cdr summary processing has errors for invalid records count
-             */
+            /* send error if cdr summary processing has errors for invalid records count */
             if (oldCallFlow != null && oldCallFlow.getCdrSummaryRecordCount() != cdrSummaryRecords.size()) {
-                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_RECORDCOUNT_ERROR, oldObdFileName);
+                String failureReason = String.format(Constants.INVALID_RECORD_COUNT,
+                        oldCallFlow.getCdrSummaryRecordCount(), cdrSummaryRecords.size(), cdrSummaryFileName);
+                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_RECORDCOUNT_ERROR, oldObdFileName, failureReason);
                 callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_SUMMARY_PROCESSING_FAILED);
                 throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_RECORDCOUNT_ERROR);
             }
@@ -257,8 +260,11 @@ public class OBDTargetFileHandler {
             /*
             send error if cdr summary processing has errors for invalid checksum.
              */
-            if (oldCallFlow != null && oldCallFlow.getCdrSummaryChecksum().equals(MD5Checksum.findChecksum(cdrSummaryFileName))) {
-                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_CHECKSUM_ERROR, oldObdFileName);
+            String checksum = MD5Checksum.findChecksum(cdrSummaryFileName);
+            if (oldCallFlow != null && oldCallFlow.getCdrSummaryChecksum().equals(checksum)) {
+                String failureReason = String.format(Constants.INVALID_CHECKSUM,
+                        oldCallFlow.getCdrDetailChecksum(), checksum, cdrSummaryFileName);
+                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_CHECKSUM_ERROR, oldObdFileName, failureReason);
                 callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_SUMMARY_PROCESSING_FAILED);
                 throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_CHECKSUM_ERROR);
             }
@@ -357,7 +363,10 @@ public class OBDTargetFileHandler {
             SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrDetailFileName);
             processCDRDetail(obdFileName, oldObdFileName, localCdrDetailFileName);
         } catch (FileNotFoundException fex) {
-            client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrDetailFileName);
+            String failureReason = String.format(Constants.FILE_NOT_ACCESSIBLE,
+                    configuration.getObdFileServerIp(), configuration.getObdFilePathOnServer(),
+                    cdrDetailFileName, cdrDetailFileName);
+            client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_NOT_ACCESSIBLE, cdrDetailFileName, failureReason);
             callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
             throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_NOT_ACCESSIBLE);
         } catch (IOException ex) {
@@ -376,7 +385,10 @@ public class OBDTargetFileHandler {
             send error if cdr summary processing has errors.
              */
             if (oldCallFlow.getCdrDetailRecordCount() != cdrDetailRecords.size()) {
-                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_RECORDCOUNT_ERROR, cdrDetailFileName);
+                String failureReason = String.format(Constants.INVALID_RECORD_COUNT,
+                        oldCallFlow.getCdrDetailRecordCount(), cdrDetailRecords.size(), cdrDetailFileName);
+                client.notifyCDRFileProcessedStatus(
+                        FileProcessingStatus.FILE_RECORDCOUNT_ERROR, cdrDetailFileName, failureReason);
                 callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
                 throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_RECORDCOUNT_ERROR);
             }
@@ -384,8 +396,11 @@ public class OBDTargetFileHandler {
             /*
             send error if cdr summary processing has errors.
              */
-            if (oldCallFlow.getCdrDetailChecksum().equals(MD5Checksum.findChecksum(cdrDetailFileName))) {
-                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_CHECKSUM_ERROR, obdFileName);
+            String checksum = MD5Checksum.findChecksum(cdrDetailFileName);
+            if (oldCallFlow.getCdrDetailChecksum().equals(checksum)) {
+                String failureReason = String.format(Constants.INVALID_CHECKSUM,
+                        oldCallFlow.getCdrDetailChecksum(), checksum, cdrDetailFileName);
+                client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_CHECKSUM_ERROR, obdFileName, failureReason);
                 callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
                 throw new CDRFileProcessingFailedException(FileProcessingStatus.FILE_CHECKSUM_ERROR);
             }
