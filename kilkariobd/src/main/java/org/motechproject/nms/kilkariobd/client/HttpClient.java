@@ -114,8 +114,7 @@ public class HttpClient {
     }
 
     /*
-    This method build the TargetNotificationRequestBody
-     */
+    This method build the TargetNotificationRequestBody */
     private HttpMethod buildTargetNotificationRequest(String url, String fileName, String checksum, Long recordsCount) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         TargetNotificationRequest request = new TargetNotificationRequest(fileName, checksum, recordsCount);
@@ -124,20 +123,16 @@ public class HttpClient {
     }
 
     /*
-    This method build the CdrFileProcessedStatusRequest
-     */
+    This method build the CdrFileProcessedStatusRequest */
     private HttpMethod buildCdrFileProcessedStatusRequest(String url, FileProcessingStatus status, String fileName) {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        FileProcessedStatusRequest request = new FileProcessedStatusRequest(status, fileName);
+        FileProcessedStatusRequest request = new FileProcessedStatusRequest(status.name(), fileName, status);
         String requestBody = gson.toJson(request);
         return buildRequest(url, requestBody);
     }
-
 
     private String ivrUrl() {
         Configuration configuration = configurationService.getConfiguration();
         return configuration.getObdIvrUrl();
     }
-
-
 }

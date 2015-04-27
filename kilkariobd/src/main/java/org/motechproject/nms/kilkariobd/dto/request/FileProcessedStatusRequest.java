@@ -1,6 +1,7 @@
 package org.motechproject.nms.kilkariobd.dto.request;
 
 import com.google.gson.annotations.Expose;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -11,12 +12,14 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
  */
 public class FileProcessedStatusRequest {
 
-    @Expose
+    @JsonProperty
     private String fileProcessingStatus;
 
+    @JsonProperty
     @Expose
     private String fileName;
 
+    @Expose
     private FileProcessingStatus status;
 
     public FileProcessingStatus getStatus() {
@@ -27,11 +30,10 @@ public class FileProcessedStatusRequest {
         this.status = status;
     }
 
-
-
-    public FileProcessedStatusRequest(String status, String fileName) {
-        this.fileProcessingStatus = status;
+    public FileProcessedStatusRequest(String fileProcessingStatus, String fileName, FileProcessingStatus status) {
+        this.fileProcessingStatus = fileProcessingStatus;
         this.fileName = fileName;
+        this.status = status;
     }
 
     public String getCdrFileProcessingStatus() {
