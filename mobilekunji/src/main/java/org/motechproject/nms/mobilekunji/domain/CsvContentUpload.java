@@ -9,7 +9,7 @@ import javax.jdo.annotations.Unique;
  * This class Models data records provided in the Content Csv Upload
  */
 
-public class ContentUploadCsv extends MdsEntity {
+public class CsvContentUpload extends MdsEntity {
 
     @Field(required = true)
     @Unique
@@ -40,7 +40,7 @@ public class ContentUploadCsv extends MdsEntity {
     private String contentDuration;
 
 
-    public ContentUploadCsv(Long index, String contentId, String circleCode,
+    public CsvContentUpload(Long index, String contentId, String circleCode,
                             String languageLocationCode, String contentName, String contentType, String contentFile,
                             String cardCode, String contentDuration) {
         this.index = index;
@@ -54,7 +54,7 @@ public class ContentUploadCsv extends MdsEntity {
         this.contentDuration = contentDuration;
     }
 
-    public ContentUploadCsv() {
+    public CsvContentUpload() {
     }
 
     public String getContentId() {

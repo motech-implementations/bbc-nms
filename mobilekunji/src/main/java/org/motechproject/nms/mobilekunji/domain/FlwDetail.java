@@ -25,9 +25,6 @@ public class FlwDetail extends MdsEntity {
     private Boolean welcomePromptFlag;
 
     @Field
-    private String msisdn;
-
-    @Field
     private DateTime lastAccessDate;
 
     public DateTime getLastAccessDate() {
@@ -54,14 +51,6 @@ public class FlwDetail extends MdsEntity {
         this.nmsFlwId = nmsFlwId;
     }
 
-    public String getMsisdn() {
-        return msisdn;
-    }
-
-    public void setMsisdn(String msisdn) {
-        this.msisdn = msisdn;
-    }
-
     public Integer getEndOfUsagePrompt() {
         return endOfUsagePrompt;
     }
@@ -86,7 +75,6 @@ public class FlwDetail extends MdsEntity {
                 ", endOfUsagePrompt=" + endOfUsagePrompt +
                 ", currentUsageInPulses=" + currentUsageInPulses +
                 ", welcomePromptFlag=" + welcomePromptFlag +
-                ", msisdn='" + msisdn + '\'' +
                 ", lastAccessDate=" + lastAccessDate +
                 '}';
     }

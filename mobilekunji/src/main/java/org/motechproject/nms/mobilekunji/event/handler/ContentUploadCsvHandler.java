@@ -6,7 +6,7 @@ import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.ContentType;
 import org.motechproject.nms.mobilekunji.domain.ContentUpload;
-import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
+import org.motechproject.nms.mobilekunji.domain.CsvContentUpload;
 import org.motechproject.nms.mobilekunji.dto.CommonValidator;
 import org.motechproject.nms.mobilekunji.service.ContentUploadCsvService;
 import org.motechproject.nms.mobilekunji.service.ContentUploadService;
@@ -63,7 +63,7 @@ public class ContentUploadCsvHandler {
     @MotechListener(subjects = {ConfigurationConstants.CONTENT_UPLOAD_CSV_SUCCESS})
     public void mobileKunjiContentUploadSuccess(MotechEvent motechEvent) {
         logger.info("Success[mobileKunjiContentUploadSuccess] method start for mobileKunjiContentUploadCsv");
-        ContentUploadCsv record = null;
+        CsvContentUpload record = null;
         Map<String, Object> params = motechEvent.getParameters();
         String csvFileName = (String) params.get(CSV_IMPORT_FILE_NAME);
 
@@ -148,7 +148,7 @@ public class ContentUploadCsvHandler {
      * @return the Conetnt Upload generated after applying validations.
      * @throws DataValidationException
      */
-    private ContentUpload mapContentUploadFrom(ContentUploadCsv record) throws DataValidationException {
+    private ContentUpload mapContentUploadFrom(CsvContentUpload record) throws DataValidationException {
         logger.info("mapContentUploadFrom process start");
 
         ContentUpload newRecord = new ContentUpload();
