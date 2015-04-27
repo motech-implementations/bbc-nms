@@ -227,7 +227,7 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
         // nonExistingLlc list, they need to be added into one.
         else {
             LanguageLocationCode masterDataLlc = languageLocationCodeService
-                    .findLLCByCode(langLocCode);
+                    .findLLCByCode(langLocCode.toString());
 
             // If the language location code doesn't exist in the system,
             // maintain it in the non existing LLC list

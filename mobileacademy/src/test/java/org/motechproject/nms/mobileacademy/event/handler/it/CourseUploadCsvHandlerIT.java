@@ -132,19 +132,19 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
 
         LanguageLocationCode languageLocationCode = getLangLocCodeDefaultSetting();
         languageLocationCode.setDistrictCode(3L);
-        languageLocationCode.setLanguageLocationCode(14);
+        languageLocationCode.setLanguageLocationCode("14");
         languageLocationCode.setDistrict(merrut);
         languageLocationCodeService.create(languageLocationCode);
 
         languageLocationCode = getLangLocCodeDefaultSetting();
         languageLocationCode.setDistrictCode(4L);
-        languageLocationCode.setLanguageLocationCode(20);
+        languageLocationCode.setLanguageLocationCode("20");
         languageLocationCode.setDistrict(agra);
         languageLocationCodeService.create(languageLocationCode);
 
         languageLocationCode = getLangLocCodeDefaultSetting();
         languageLocationCode.setDistrictCode(5L);
-        languageLocationCode.setLanguageLocationCode(30);
+        languageLocationCode.setLanguageLocationCode("30");
         languageLocationCode.setDistrict(mathura);
         languageLocationCodeService.create(languageLocationCode);
     }
