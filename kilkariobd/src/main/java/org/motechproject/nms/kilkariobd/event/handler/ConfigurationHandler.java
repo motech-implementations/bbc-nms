@@ -9,6 +9,7 @@ import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import static org.motechproject.nms.kilkariobd.commons.Constants.CONFIGURATION_U
 /**
  * This class is the handler for event raised when Configuration entity is updated
  */
+@Component
 public class ConfigurationHandler {
 
 
