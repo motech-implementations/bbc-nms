@@ -60,4 +60,23 @@ public interface OutboundCallFlowService {
      */
     public void handleFileProcessedStatusNotification(FileProcessedStatusRequest fileProcessedStatusRequest)
             throws DataValidationException;
+
+    /**
+     * Method to update call floe status fetch by fileName
+     * @param obdFileName parameter to get OutboundCallFlow records from the database.
+     * @param updateTo CallFlowStatus to be updated
+     * @return OutboundCallFlow
+     */
+    public OutboundCallFlow updateCallFlowStatus(String  obdFileName, CallFlowStatus updateTo);
+
+    /**
+     * Updates the checksum and record count for Obd CallFlow identified by obdFileName
+     * @param obdFileName parameter to get OutboundCallFlow records from the database.
+     * @param obdChecksum checksum of the file
+     * @param obdRecordsCount total number od records
+     * @return OutboundCallFlow
+     */
+    public OutboundCallFlow updateChecksumAndRecordCount(String obdFileName, String obdChecksum,
+                                                         Long obdRecordsCount);
 }
+

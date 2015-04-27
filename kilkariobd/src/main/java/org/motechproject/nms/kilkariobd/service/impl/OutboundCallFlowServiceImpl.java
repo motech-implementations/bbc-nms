@@ -132,19 +132,55 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
 
                 /* Update Checksum and Record count */
                 String obdChecksum = MD5Checksum.findChecksum(localFileName);
-                handler.updateChecksumAndRecordCount(obdFileName, obdChecksum, recordCount);
+                updateChecksumAndRecordCount(obdFileName, obdChecksum, recordCount);
 
                 handler.copyTargetObdFileOnServer(localFileName, remoteFileName, request.getFileName());
                 client.notifyTargetFile(remoteFileName, callFlow.getObdChecksum(), callFlow.getObdRecordCount());
 
-                handler.updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
+                updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
             } else {
-                handler.updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);
+                updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);
             }
 
         }else {
             ParseDataHelper.raiseApiParameterInvalidDataException(Constants.FILE_NAME, request.getFileName());
         }
 
+    }
+
+    /**
+     * Method to update call floe status fetch by fileName
+     * @param obdFileName parameter to get OutboundCallFlow records from the database.
+     * @param updateTo CallFlowStatus to be updated
+     * @return OutboundCallFlow
+     */
+    @Override
+    public OutboundCallFlow updateCallFlowStatus(String  obdFileName, CallFlowStatus updateTo) {
+        OutboundCallFlow todayCallFlow = findRecordByFileName(obdFileName);
+        if (todayCallFlow != null) {
+            todayCallFlow.setStatus(updateTo);
+            return update(todayCallFlow);
+        }
+        return null;
+
+    }
+
+    /**
+     * Updates the checksum and record count for Obd CallFlow identified by obdFileName
+     * @param obdFileName parameter to get OutboundCallFlow records from the database.
+     * @param obdChecksum checksum of the file
+     * @param obdRecordsCount total number od records
+     * @return OutboundCallFlow
+     */
+    @Override
+    public OutboundCallFlow updateChecksumAndRecordCount(String obdFileName, String obdChecksum,
+                                                         Long obdRecordsCount) {
+        OutboundCallFlow todayCallFlow = findRecordByFileName(obdFileName);
+        if (todayCallFlow != null) {
+            todayCallFlow.setObdChecksum(obdChecksum);
+            todayCallFlow.setObdRecordCount(obdRecordsCount);
+            return update(todayCallFlow);
+        }
+        return null;
     }
 }

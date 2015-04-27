@@ -135,7 +135,7 @@ public class OBDTargetFileHandler {
         String obdFileName = getCsvFileName();
 
         /* update the callFlow status with notify outbound file event received.*/
-        updateCallFlowStatus(obdFileName, CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
+        callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
 
         /* copy this target file to remote location. */
         localFileName = settings.getObdFileLocalPath() + obdFileName;
@@ -143,7 +143,7 @@ public class OBDTargetFileHandler {
         copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
 
         /* Update the call flow status as file copied */
-        todayCallFlow = updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
+        todayCallFlow = callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
 
         /* notify IVR */
         recordsCount = todayCallFlow.getObdRecordCount();
@@ -518,36 +518,15 @@ public class OBDTargetFileHandler {
             callRequest.setCallFlowURL(null);
             requestService.create(callRequest);
         }
-        exportOutBoundCallRequest(getCsvFileName());
+        Long recordsCount = exportOutBoundCallRequest(getCsvFileName());
+        String obdFileName = getCsvFileName();
+        String obdChecksum = MD5Checksum.findChecksum(settings.getObdFileLocalPath() + obdFileName);
+        callFlowService.updateChecksumAndRecordCount(obdFileName, obdChecksum, recordsCount);
     }
 
-    /*
-    Updates the status for Obd CallFlow identified by obdFileName
-     */
-    public OutboundCallFlow updateCallFlowStatus(String  obdFileName, CallFlowStatus updateTo) {
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
-        if (todayCallFlow != null) {
-            todayCallFlow.setStatus(updateTo);
-            return callFlowService.update(todayCallFlow);
-        }
 
-        return null;
 
-    }
 
-    /*
-        Updates the checksum and record count for Obd CallFlow identified by obdFileName
-    */
-    public OutboundCallFlow updateChecksumAndRecordCount(String obdFileName, String obdChecksum,
-                                                             Long obdRecordsCount) {
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
-        if (todayCallFlow != null) {
-            todayCallFlow.setObdChecksum(obdChecksum);
-            todayCallFlow.setObdRecordCount(obdRecordsCount);
-            return callFlowService.update(todayCallFlow);
-        }
-        return null;
-    }
 
     /*
     Method to retry for the preparation of OBDTarget file if some error occurred.
