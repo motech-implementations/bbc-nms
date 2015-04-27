@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.motechproject.nms.kilkariobd.domain.Configuration;
 import org.motechproject.nms.kilkariobd.initializer.Initializer;
 import org.motechproject.nms.kilkariobd.repository.ConfigurationDataService;
@@ -35,7 +36,7 @@ public class InitializerIT extends BasePaxIT {
     @Inject
     private ConfigurationDataService configurationDataService;
 
-    @Inject
+    @Mock
     private MotechSchedulerService motechSchedulerService;
 
     private Initializer initializer;

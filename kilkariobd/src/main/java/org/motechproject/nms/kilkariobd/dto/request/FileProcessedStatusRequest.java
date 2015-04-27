@@ -17,6 +17,18 @@ public class FileProcessedStatusRequest {
     @Expose
     private String fileName;
 
+    private FileProcessingStatus status;
+
+    public FileProcessingStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FileProcessingStatus status) {
+        this.status = status;
+    }
+
+
+
     public FileProcessedStatusRequest(String status, String fileName) {
         this.fileProcessingStatus = status;
         this.fileName = fileName;
@@ -40,8 +52,9 @@ public class FileProcessedStatusRequest {
 
     public void validateMandatoryParams() throws DataValidationException {
         ParseDataHelper.validateString(Constants.FILE_NAME, fileName, true);
-        Integer status = ParseDataHelper.validateInt(Constants.FILE_PROCESSING_STATUS, fileProcessingStatus, true);
-        if (null == FileProcessingStatus.findBValue(status)) {
+        Integer statusValue = ParseDataHelper.validateInt(Constants.FILE_PROCESSING_STATUS, fileProcessingStatus, true);
+        status = FileProcessingStatus.findBValue(statusValue);
+        if (null == status) {
             ParseDataHelper.raiseApiParameterInvalidDataException(Constants.FILE_PROCESSING_STATUS, fileProcessingStatus);
         }
 

@@ -85,7 +85,7 @@ public class OBDTargetFileHandler {
         delete all the records from outboundCallRequest before preparing fresh ObdTargetFile
          */
         requestService.deleteAll();
-        String obdFileName = "OBD_NMS" + DateTime.now().toDateMidnight().toString();
+        String obdFileName = getCsvFileName();
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
         if (todayCallFlow != null) {
             logger.error("Duplicate event received for Subject :" + PREPARE_OBD_TARGET_EVENT_SUBJECT);
@@ -124,26 +124,32 @@ public class OBDTargetFileHandler {
     /* Daily event to be raised by scheduler to notify IVr of target file has been copied. */
     @MotechListener(subjects = NOTIFY_OBD_TARGET_EVENT_SUBJECT)
     public void copyAndNotifyOBDTargetFile() {
+
+        OutboundCallFlow todayCallFlow =  null;
+        Long recordsCount = null;
+        String checksum = null;
+        String localFileName  = null;
+        String remoteFileName = null;
         Settings settings = new Settings(kilkariObdSettings);
         Configuration configuration = configurationService.getConfiguration();
-        String obdFileName = "OBD_NMS" + DateTime.now().toDateMidnight().toString();
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
+        String obdFileName = getCsvFileName();
 
         /* update the callFlow status with notify outbound file event received.*/
-        updateCallFlowStatus(CallFlowStatus.CDR_FILES_PROCESSED,
-                CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
-        String localFileName = settings.getObdFileLocalPath() + obdFileName;
-        String remoteFileName = configuration.getObdFilePathOnServer();
-        Long recordsCount = todayCallFlow.getObdRecordCount();
+        updateCallFlowStatus(obdFileName, CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
 
         /* copy this target file to remote location. */
+        localFileName = settings.getObdFileLocalPath() + obdFileName;
+        remoteFileName = configuration.getObdFilePathOnServer();
         copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
 
+        /* Update the call flow status as file copied */
+        todayCallFlow = updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
+
         /* notify IVR */
-        client.notifyTargetFile(remoteFileName, todayCallFlow.getObdChecksum(), recordsCount);
-        todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
-        todayCallFlow.setStatus(CallFlowStatus.OBD_FILE_NOTIFICATION_SENT_TO_IVR);
-        callFlowService.update(todayCallFlow);
+        recordsCount = todayCallFlow.getObdRecordCount();
+        checksum = todayCallFlow.getObdChecksum();
+        client.notifyTargetFile(remoteFileName, checksum, recordsCount);
+
     }
 
     public void prepareObdTargetFile(String freshObdFile, String oldObdFileName, Integer retryNumber) {
@@ -155,8 +161,8 @@ public class OBDTargetFileHandler {
         CallFlowStatus callFlowStatus = todayCallStatus.getStatus();
 
         if( oldObdFileName == null) {
-        /* etch the OutboundCallFlow record of previous day to update the status of CDR files processing */
-        oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED); //todo: find order by createDate ?
+            /* etch the OutboundCallFlow record of previous day to update the status of CDR files processing */
+            oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED); //todo: find order by createDate ?
         } else {
             oldCallFlow = callFlowService.findRecordByFileName(oldObdFileName);
         }
@@ -275,7 +281,7 @@ public class OBDTargetFileHandler {
                 Long subscriptionId = ParseDataHelper.validateAndParseLong(Constants.REQUEST_ID, map.get(Constants.REQUEST_ID), true);
                 String weekId = map.get(Constants.WEEK_ID);
                 String[] weekNoMsgNo = weekId.split("_");
-                retryDayNumber = getRetryDayNumber(subscriptionId);
+                retryDayNumber = subscriptionService.retryAttempt(subscriptionId);
                 Integer weekNumber = Integer.parseInt(weekNoMsgNo[0]);
 
                 if (isValidForRetry(finalStatus, statusCode, subscriptionId, weekNumber)) {
@@ -305,19 +311,21 @@ public class OBDTargetFileHandler {
                     callRequestRetry.setWeekId(map.get(Constants.WEEK_ID));
                     requestService.create(callRequestRetry);
                 } else {
-                    markCompleteForSuccessRecords(finalStatus, weekNumber, subscriptionId);
-                }
 
-                /*
-                If for any cdrSummary record callStatus is FAILED and status code is either OBD_FAILED_INVALIDNUMBER
-                or OBD_DNIS_IN_DND then deactivate the subscription for that record.
-                 */
-                if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER)) {
-                    subscriptionService.deactivateSubscription(
-                            Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.INVALID_MSISDN);
-                } else if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)) {
-                    subscriptionService.deactivateSubscription(
-                            Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.MSISDN_IN_DND);
+                    /*
+                    If for any cdrSummary record callStatus is FAILED and status code is either OBD_FAILED_INVALIDNUMBER
+                    or OBD_DNIS_IN_DND then deactivate the subscription for that record.
+                     */
+                    if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER)) {
+                        subscriptionService.deactivateSubscription(
+                                Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.INVALID_MSISDN);
+                    } else if (finalStatus.equals(CallStatus.FAILED) && statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)) {
+                        subscriptionService.deactivateSubscription(
+                                Long.parseLong(map.get(Constants.REQUEST_ID)), DeactivationReason.MSISDN_IN_DND);
+                    } else if (weekNumber.equals(Constants.MAX_WEEK_NUMBER)) {
+                        /* If call was successful or failed for its last retry number for Last Week's message */
+                        subscriptionService.completeSubscription(subscriptionId);
+                    }
                 }
                 /*
                 if for any cdrSummary record final status is Failed and statusCode is OBD_FAILED_NOATTEMPT then
@@ -432,51 +440,45 @@ public class OBDTargetFileHandler {
     This method checks if a particular call valid for retry based on callStatus and final status.
      */
     private Boolean isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId, Integer weekNumber) {
-        Integer retryDayNumber = getRetryDayNumber(subscriptionId);
-        if (retryDayNumber.equals(-1) && weekNumber.equals(Constants.MAX_WEEK_NUMBER)) {
-            //todo :call subscription api to mark complete.
-            return false;
-        } else if(finalStatus.equals(CallStatus.REJECTED) ||
+        Integer retryDayNumber = null;
+        /* Check If the call is rejected or failed with reason other than DND and Invali Number */
+        if(finalStatus.equals(CallStatus.REJECTED) ||
                 (finalStatus.equals(CallStatus.FAILED) &&
                         !(statusCode.equals(ObdStatusCode.OBD_FAILED_INVALIDNUMBER) || statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND)))){
-            return true;
+            /* Get the retry day number from subscription service */
+            retryDayNumber = subscriptionService.retryAttempt(subscriptionId);
+
+            /* Retry number is -1 (i.e not allowed) then return false, also mark completed if it was last
+            * message of pack
+            */
+            if (!retryDayNumber.equals(-1)) {
+                /* If retry is allowed */
+                return true;
+            }
         }
         return false;
     }
 
-    private void markCompleteForSuccessRecords(CallStatus finalStatus, Integer weekNumber, Long subscriptionId) {
-        if(finalStatus.equals(CallStatus.SUCCESS) && weekNumber.equals(Constants.MAX_WEEK_NUMBER)) {
-            //todo :call subscription api to mark complete.
-        }
-    }
-    /*
-    Method to get retryDayNumber.
-     */
-    private int getRetryDayNumber(Long subscriptionId) {
-        //todo : invoke subscription api to get retryDayNumber
-        return 0;
-    }
-
     /**
      * This method exports the records from OutboundCallRequest
-     * @param settings Settings Type object
-     * @return returns to records exported
+     * @param fileName Complete file name to which to export
+     * @return returns the count of records exported
      */
-    public Long exportOutBoundCallRequest(Settings settings) {
-        String fileName = "OBD_NMS_" + getCsvFileName();
-        String absoluteFileName = settings.getObdFileLocalPath() + "/" + fileName;
+    public Long exportOutBoundCallRequest(String fileName) {
         List<OutboundCallRequest> callRequests = requestService.retrieveAll();
         Long recordCount = requestService.getCount();
-        CSVMapper.writeByCsvMapper(absoluteFileName, callRequests);
-        String obdChecksum = MD5Checksum.findChecksum(absoluteFileName);
-        updateCallFlowStatusAfterExport(obdChecksum, recordCount);
+        CSVMapper.writeByCsvMapper(fileName, callRequests);
         return recordCount;
     }
 
+    /*
+    This method prepares the obd file name
+     */
     private String getCsvFileName() {
-        DateTime date = new DateTime();
+
+        DateTime date = DateTime.now().toDateMidnight().toDateTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        return sdf.format(date) + ".csv";
+        return "OBD_NMS_" + sdf.format(date) + ".csv";
     }
 
     private void createFreshOBDRecords(Configuration configuration, Settings settings) {
@@ -516,28 +518,35 @@ public class OBDTargetFileHandler {
             callRequest.setCallFlowURL(null);
             requestService.create(callRequest);
         }
-        exportOutBoundCallRequest(settings);
+        exportOutBoundCallRequest(getCsvFileName());
     }
 
-    private void updateCallFlowStatus(CallFlowStatus fetchBy, CallFlowStatus updateTo) {
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(fetchBy);
+    /*
+    Updates the status for Obd CallFlow identified by obdFileName
+     */
+    public OutboundCallFlow updateCallFlowStatus(String  obdFileName, CallFlowStatus updateTo) {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
         if (todayCallFlow != null) {
             todayCallFlow.setStatus(updateTo);
-            callFlowService.update(todayCallFlow);
+            return callFlowService.update(todayCallFlow);
         }
+
+        return null;
+
     }
 
-    private void updateCallFlowStatusAfterExport(String obdChecksum, Long obdRecordsCount) {
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED);
-        if (todayCallFlow == null) {
-            todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
-        }
+    /*
+        Updates the checksum and record count for Obd CallFlow identified by obdFileName
+    */
+    public OutboundCallFlow updateChecksumAndRecordCount(String obdFileName, String obdChecksum,
+                                                             Long obdRecordsCount) {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
         if (todayCallFlow != null) {
-            todayCallFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
             todayCallFlow.setObdChecksum(obdChecksum);
             todayCallFlow.setObdRecordCount(obdRecordsCount);
-            callFlowService.update(todayCallFlow);
+            return callFlowService.update(todayCallFlow);
         }
+        return null;
     }
 
     /*
@@ -567,16 +576,6 @@ public class OBDTargetFileHandler {
     public void copyTargetObdFileOnServer(String localFileName, String remoteFileName, String obdFileName) {
         /* copy this target file to remote location. */
         SecureCopy.toRemote(localFileName, remoteFileName);
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILES_PROCESSED);
-        if (todayCallFlow == null) {
-            todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
-        }
-        if (todayCallFlow != null) {
-            todayCallFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
-            callFlowService.update(todayCallFlow);
-        } else {
-            logger.error("CallFlowRecord for ObdFile :%s does not exists", obdFileName);
-        }
     }
 }
 

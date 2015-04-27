@@ -4,6 +4,7 @@ import org.joda.time.DateTime;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
 import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
+import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.util.helper.DataValidationException;
 
 /**
@@ -51,5 +52,12 @@ public interface OutboundCallFlowService {
      * @param cdrNotificationRequest Cdr notification object
      */
     public void handleCdrNotification(CdrNotificationRequest cdrNotificationRequest)
+            throws DataValidationException;
+
+    /**
+     * Method to update OutboundCallFlow status based on OBD File processing status notification
+     * @param fileProcessedStatusRequest Cdr notification object
+     */
+    public void handleFileProcessedStatusNotification(FileProcessedStatusRequest fileProcessedStatusRequest)
             throws DataValidationException;
 }

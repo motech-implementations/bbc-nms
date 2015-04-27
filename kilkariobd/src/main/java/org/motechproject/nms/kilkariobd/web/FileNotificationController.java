@@ -36,13 +36,6 @@ public class FileNotificationController extends BaseController{
     @Autowired
     private OutboundCallFlowService callFlowService;
 
-    @Autowired
-    @Qualifier("kilkariObdSettings")
-    private static SettingsFacade settingsFacade;
-
-    @Autowired
-    private ConfigurationService configurationService;
-
     /**
      * Maps CDRFileNotification request to the controller
      * @param apiRequest CdrNotificationRequest
@@ -72,7 +65,7 @@ public class FileNotificationController extends BaseController{
 
         apiRequest.validateMandatoryParameters();
 
-        //todo : update outboundcallflow record in DB.
+        callFlowService.handleCdrNotification(apiRequest);
 
         logger.debug("CDRFileNotification: Ended");
 
@@ -88,29 +81,11 @@ public class FileNotificationController extends BaseController{
         logger.debug("FileProcessedStatusNotification Request Parameters");
         logger.debug("fileName" + request.getFileName());
         logger.debug("fileProcessingStatus" + request.getCdrFileProcessingStatus());
+
         request.validateMandatoryParams();
-        Settings settings = new Settings(settingsFacade);
-        Configuration configuration = configurationService.getConfiguration();
-        String localFileName = settings.getObdFileLocalPath() + request.getFileName();
-        String remoteFileName = configuration.getObdFilePathOnServer();
-        OutboundCallFlow callFlow = callFlowService.findRecordByFileName(request.getFileName());
-        if (callFlow == null) {
-            ParseDataHelper.raiseApiParameterInvalidDataException(Constants.FILE_NAME, request.getFileName());
-        } else {
-            if (Integer.parseInt(request.getCdrFileProcessingStatus()) != FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY.ordinal()) {
-                callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
-                OBDTargetFileHandler handler = new OBDTargetFileHandler();
-                HttpClient client = new HttpClient();
-                handler.exportOutBoundCallRequest(settings);
-                callFlow = callFlowService.findRecordByFileName(request.getFileName());
-                handler.copyTargetObdFileOnServer(localFileName, remoteFileName, request.getFileName());
-                client.notifyTargetFile(remoteFileName, callFlow.getObdChecksum(), callFlow.getObdRecordCount());
-                handler.copyAndNotifyOBDTargetFile();
-            } else {
-                callFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);
-            }
-            callFlowService.update(callFlow);
-        }
+
+        callFlowService.handleFileProcessedStatusNotification(request);
+
         logger.debug("fileProcessedStatusNotification: Ended");
     }
 }
