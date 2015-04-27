@@ -5,7 +5,7 @@ import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
 import org.motechproject.nms.masterdata.service.CircleCsvService;
 import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +58,56 @@ public class CircleCsvHandler {
     public void circleCsvSuccess(MotechEvent motechEvent) {
         Map<String, Object> params = motechEvent.getParameters();
         logger.info("CIRCLE_CSV_SUCCESS event received");
-
-        CircleCsv record = null;
-        Circle persistentRecord = null;
-
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        processRecords(createdIds, csvFileName);
+
+    }
+
+    /**
+     * This method processes the Csv data Records.
+     * @param createdId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> createdId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        circleService.getCircleDataService()
+                .doInTransaction(new TransactionCallback<Circle>() {
+
+                    List<Long> csvCircleId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<Circle> init(
+                            List<Long> createdId,
+                            String csvFileName) {
+                        this.csvCircleId = createdId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public Circle doInTransaction(
+                            TransactionStatus status) {
+                        Circle transactionObject = null;
+                        processCircleRecords(csvFileName, csvCircleId);
+                        return transactionObject;
+                    }
+                }.init(createdId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+    /**
+     * This method is used to process CircleCsv records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
+    private void processCircleRecords(String csvFileName, List<Long> createdIds) {
+        CsvCircle record = null;
+        Circle persistentRecord = null;
 
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
@@ -95,12 +140,12 @@ public class CircleCsvHandler {
                     ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
 
                 }
-            } catch (DataValidationException circleDataException) {
+            } catch (DataValidationException ex) {
 
-                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, circleDataException.getErrorDesc(), circleDataException.getErrorCode(), record.toString());
+                ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ex.getErrorDesc(), ex.getErrorCode(), record.toString());
 
-            } catch (Exception circleException) {
-                logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", circleException);
+            } catch (Exception e) {
+                logger.error("CIRCLE_CSV_SUCCESS processing receive Exception exception, message: {}", e);
 
                 ErrorLog.errorLog(errorDetail, uploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
@@ -114,7 +159,9 @@ public class CircleCsvHandler {
 
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(uploadStatus);
         logger.info("Finished processing CircleCsv-import success");
+
     }
+
 
     /**
      * This method is used to validate csv uploaded record
@@ -124,7 +171,7 @@ public class CircleCsvHandler {
      * @return Circle record after the mapping
      * @throws DataValidationException
      */
-    private Circle mapCircleFrom(CircleCsv record) throws DataValidationException {
+    private Circle mapCircleFrom(CsvCircle record) throws DataValidationException {
 
         Circle newRecord = new Circle();
 

@@ -40,7 +40,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     private StateService stateService;
 
     @Inject
-    private ValidatorService validatorService;
+    private DistrictService districtService;
 
     @Inject
     private TalukaService talukaService;
@@ -54,10 +54,12 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(validatorService,
-                talukaService, healthBlockCsvService,
+        healthBlockCsvUploadHandler = new HealthBlockCsvUploadHandler(validatorService,talukaService, healthBlockCsvService,
                 healthBlockService, bulkUploadErrLogService);
     }
 
@@ -66,6 +68,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         assertNotNull(healthBlockCsvService);
         assertNotNull(healthBlockService);
         assertNotNull(talukaService);
+        assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthBlockCsvUploadHandler);
@@ -83,8 +86,8 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        HealthBlockCsv csvData = TestHelper.getHealthBlockCsvData();
-        HealthBlockCsv invalidCsvData = TestHelper.getInvalidHealthBlockCsvData();
+        CsvHealthBlock csvData = TestHelper.getHealthBlockCsvData();
+        CsvHealthBlock invalidCsvData = TestHelper.getInvalidHealthBlockCsvData();
         createHealthBlockCsvData(csvData);
         createHealthBlockCsvData(invalidCsvData);
 
@@ -128,7 +131,7 @@ public class HealthBlockCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createHealthBlockCsvData(HealthBlockCsv csvData) {
+    private void createHealthBlockCsvData(CsvHealthBlock csvData) {
 
         healthBlockCsvService.create(csvData);
     }

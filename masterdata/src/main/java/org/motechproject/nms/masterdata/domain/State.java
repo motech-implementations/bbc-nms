@@ -6,6 +6,7 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
+import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -24,6 +25,7 @@ public class State extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
+    @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
     @Field
@@ -33,6 +35,24 @@ public class State extends MdsEntity {
     @Field
     @UIDisplayable(position = 3)
     private Integer mkCapping;
+
+
+    @Field
+    @UIDisplayable(position = 4)
+    private Boolean isMkDeployed;
+
+    @Field
+    @UIDisplayable(position = 5)
+    private Boolean isMaDeployed;
+
+    @Field
+    @UIDisplayable(position = 6)
+    private Boolean isKkDeployed;
+
+    @Field
+    @UIDisplayable(position = 7)
+    private Boolean isWhiteListEnable;
+
 
     public State() {
     }
@@ -77,6 +97,39 @@ public class State extends MdsEntity {
         this.maCapping = maCapping;
     }
 
+
+    public Boolean getIsMkDeployed() {
+        return isMkDeployed;
+    }
+
+    public void setIsMkDeployed(Boolean isMkDeployed) {
+        this.isMkDeployed = isMkDeployed;
+    }
+
+    public Boolean getIsMaDeployed() {
+        return isMaDeployed;
+    }
+
+    public void setIsMaDeployed(Boolean isMaDeployed) {
+        this.isMaDeployed = isMaDeployed;
+    }
+
+    public Boolean getIsKkDeployed() {
+        return isKkDeployed;
+    }
+
+    public void setIsKkDeployed(Boolean isKkDeployed) {
+        this.isKkDeployed = isKkDeployed;
+    }
+
+    public Boolean getIsWhiteListEnable() {
+        return isWhiteListEnable;
+    }
+
+    public void setIsWhiteListEnable(Boolean isWhiteListEnable) {
+        this.isWhiteListEnable = isWhiteListEnable;
+    }
+
     /**
      * This method override the toString method to create string for name, state code
      * District, maCapping and mkCapping for the instance variables
@@ -92,6 +145,10 @@ public class State extends MdsEntity {
                 ", district=" + district +
                 ", maCapping=" + maCapping +
                 ", mkCapping=" + mkCapping +
+                ", IsMkDeployed='" + isMkDeployed + '\'' +
+                ", IsMaDeployed='" + isMaDeployed + '\'' +
+                ", IsKkDeployed='" + isKkDeployed + '\'' +
+                ", IsWhiteListEnable='" + isWhiteListEnable + '\'' +
                 '}';
     }
 }

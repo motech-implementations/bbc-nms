@@ -78,4 +78,12 @@ public class StateServiceImpl implements StateService {
     public State findById(Long stateId) {
         return stateRecordsDataService.findById(stateId);
     }
+
+    /**
+     * Get StateRecordsDataService object
+     */
+    @Override
+    public StateRecordsDataService getStateRecordsDataService() {
+        return stateRecordsDataService;
+    }
 }

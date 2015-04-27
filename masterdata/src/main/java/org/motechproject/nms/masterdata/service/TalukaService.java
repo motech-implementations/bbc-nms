@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.Taluka;
+import org.motechproject.nms.masterdata.repository.TalukaRecordsDataService;
 
 /**
  * This interface is used for crud operations on Taluka
@@ -52,4 +53,9 @@ public interface TalukaService {
      * @return Taluka
      */
     Taluka findById(Long id);
+
+    /**
+     * Get TalukaRecordsDataService object
+     */
+    public TalukaRecordsDataService getTalukaRecordsDataService();
 }

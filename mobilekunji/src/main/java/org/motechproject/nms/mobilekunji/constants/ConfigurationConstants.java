@@ -27,7 +27,7 @@ public class ConfigurationConstants {
 
     public static final int DEFAULT_CAPPING_VALUE = -1;
 
-    public static final Integer DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = 1;
+    public static final String DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = "1";
 
     public static final Integer MAX_CARD_DIGITS = 2;
 
@@ -57,7 +57,7 @@ public class ConfigurationConstants {
 
     public static final String CALL_DISCONNECTED_REASON = "Call Disconnected Reason";
 
-    public static final String CARD_NUMBER = "Card Number";
+    public static final String CARD_CODE = "Card Number";
 
     public static final String CONTENT_NAME = "Content Name";
 

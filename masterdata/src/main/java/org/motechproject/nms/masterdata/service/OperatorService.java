@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.Operator;
+import org.motechproject.nms.masterdata.repository.OperatorDataService;
 
 /**
  * This interface is used for crud operations on Operator
@@ -41,4 +42,9 @@ public interface OperatorService {
      * @return Operator object corresponding to the census code
      */
     Operator getRecordByCode(String operatorCode);
+
+    /**
+     * Get OperatorDataService object
+     */
+    public OperatorDataService getOperatorDataService();
 }

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.State;
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.domain.CsvState;
 import org.motechproject.nms.masterdata.event.handler.StateCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.StateCsvService;
 import org.motechproject.nms.masterdata.service.StateService;
@@ -45,7 +45,7 @@ public class StateCsvHandlerIT extends BasePaxIT {
 
     private StateCsvUploadHandler stateCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {
@@ -63,10 +63,10 @@ public class StateCsvHandlerIT extends BasePaxIT {
     @Test
     public void testStateCsvSuccessAndFailure() {
 
-        StateCsv csvData = TestHelper.getStateCsvData();
+        CsvState csvData = TestHelper.getStateCsvData();
         stateCsvService.create(csvData);
 
-        StateCsv invalidCsvData = TestHelper.getInvalidStateCsvData();
+        CsvState invalidCsvData = TestHelper.getInvalidStateCsvData();
         stateCsvService.create(invalidCsvData);
 
 

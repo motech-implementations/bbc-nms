@@ -32,7 +32,7 @@ public class LanguageLocationCode extends MdsEntity {
     private String circleCode;
 
     @Field(required = true)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     private String languageMA;
@@ -70,11 +70,11 @@ public class LanguageLocationCode extends MdsEntity {
         this.circle = circle;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

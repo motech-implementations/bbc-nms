@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.VillageCsv;
+import org.motechproject.nms.masterdata.domain.CsvVillage;
 
 /**
  * This interface is used for crud operations on VillageCsv
@@ -12,14 +12,14 @@ public interface VillageCsvService {
      *
      * @param record of the VillageCsv
      */
-    void delete(VillageCsv record);
+    void delete(CsvVillage record);
 
     /**
      * create VillageCsv type object
      *
      * @param record of the VillageCsv
      */
-    VillageCsv create(VillageCsv record);
+    CsvVillage create(CsvVillage record);
 
     /**
      * Finds the VillageCsv details by its Id
@@ -27,5 +27,5 @@ public interface VillageCsvService {
      * @param id
      * @return VillageCsv
      */
-    VillageCsv findById(Long id);
+    CsvVillage findById(Long id);
 }

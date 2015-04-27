@@ -22,6 +22,6 @@ public interface FrontLineWorkerService {
     public FrontLineWorker getFlwByFlwIdAndStateId(Long flwId, Long stateCode);
 
     public FrontLineWorker findById(Long id);
-    
+
     public void deleteAll();
 }

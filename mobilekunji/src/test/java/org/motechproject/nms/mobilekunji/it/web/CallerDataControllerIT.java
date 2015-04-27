@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
@@ -95,7 +97,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testController() throws DataValidationException, NmsInternalServerError {
+    public void testController() throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
@@ -155,21 +157,21 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         assertNotNull(userDetailApiResponse.getCircle().equals("99"));
         assertNull(userDetailApiResponse.getLanguageLocationCode());
-        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode() == 1);
+        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode().equals("1"));
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
 
 
         //Update Language Location Code
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
-        flwWorker.setLanguageLocationCodeId(33);
+        flwWorker.setLanguageLocationCodeId("33");
         frontLineWorkerService.updateFrontLineWorker(flwWorker);
         LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
 
         controller.setLanguageLocationCode(languageLocationCodeApiRequest, TestHelper.getHttpRequest());
         flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         assertNotNull(flwWorker);
-        assertTrue(flwWorker.getLanguageLocationCodeId() == 29);
+        assertTrue(flwWorker.getLanguageLocationCodeId().equals("29"));
 
         /*
         This case is added to check whether FlwDetail is Updated or Not

@@ -33,7 +33,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
     private VillageCsvUploadHandler villageCsvUploadHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;
@@ -53,10 +53,13 @@ public class VillageCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
-        villageCsvUploadHandler = new VillageCsvUploadHandler(stateService,
-                districtService, talukaService, villageCsvService,
+        villageCsvUploadHandler = new VillageCsvUploadHandler(validatorService,
+                 talukaService, villageCsvService,
                 villageService, bulkUploadErrLogService);
     }
 
@@ -68,6 +71,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
         assertNotNull(villageCsvUploadHandler);
     }
 
@@ -83,8 +87,8 @@ public class VillageCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        VillageCsv csvData = TestHelper.getVillageCsvData();
-        VillageCsv invalidCsvData = TestHelper.getInvalidVillageCsvData();
+        CsvVillage csvData = TestHelper.getVillageCsvData();
+        CsvVillage invalidCsvData = TestHelper.getInvalidVillageCsvData();
 
         createVillageCsvData(csvData);
         createVillageCsvData(invalidCsvData);
@@ -129,7 +133,7 @@ public class VillageCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createVillageCsvData(VillageCsv csvData) {
+    private void createVillageCsvData(CsvVillage csvData) {
 
         villageCsvService.create(csvData);
     }
