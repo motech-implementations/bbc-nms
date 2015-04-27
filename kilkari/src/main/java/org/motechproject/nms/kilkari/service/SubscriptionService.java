@@ -1,5 +1,6 @@
 package org.motechproject.nms.kilkari.service;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.motechproject.nms.kilkari.domain.*;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -69,8 +70,9 @@ public interface SubscriptionService {
      * @param subscriptionId Long type object
      * @param operatorCode String type object
      * @param circleCode String type object
+     * @return true if deactivated, else false
      */
-    void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
+    Boolean deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
             throws DataValidationException;
 
     /**
@@ -103,8 +105,9 @@ public interface SubscriptionService {
      * 
      * @param subscriptionId Long type object
      * @param reason DeactivateReason
+     * @return true if deactivated, else false
      */
-    void deactivateSubscription(Long subscriptionId, DeactivationReason reason);
+    Boolean deactivateSubscription(Long subscriptionId, DeactivationReason reason);
 
     /**
      * This method is used by kilkari-obd for retry attempt
