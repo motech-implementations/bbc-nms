@@ -13,4 +13,6 @@ public interface OutboundCallDetailService {
      * @return OutboundCallDetail type object
      */
     public OutboundCallDetail create(OutboundCallDetail record);
+
+    void purgeOutboundCallDetail();
 }
