@@ -740,7 +740,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 retryDay = -1;
             }
         } else {
-            logger.warn(String.format("Subscription not found or deactivated for the given subscriptionId{[%d]}", subscriptionId));
+            logger.warn(String.format("Subscription not found or completed/deactivated for the given subscriptionId{[%d]}", subscriptionId));
         }
         return retryDay;
     }
