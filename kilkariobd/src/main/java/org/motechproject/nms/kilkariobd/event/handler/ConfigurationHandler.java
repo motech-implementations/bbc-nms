@@ -15,12 +15,12 @@ import java.util.Map;
 import static org.motechproject.nms.kilkariobd.commons.Constants.CONFIGURATION_ID;
 import static org.motechproject.nms.kilkariobd.commons.Constants.CONFIGURATION_UPDATE_EVENT;
 
-
+/**
+ * This class is the handler for event raised when Configuration entity is updated
+ */
 public class ConfigurationHandler {
 
-    public String cronExpression1;
-    public String cronExpression2;
-    public Configuration configuration;
+
 
     private ConfigurationService configurationService;
     private MotechSchedulerService motechSchedulerService;
@@ -33,8 +33,16 @@ public class ConfigurationHandler {
         this.motechSchedulerService = motechSchedulerService;
     }
 
+    /**
+     * This method handles the event raised on update done in Configuration entity.
+     * @param motechEvent object for event
+     */
     @MotechListener(subjects = CONFIGURATION_UPDATE_EVENT)
     public void configurationUpdate(MotechEvent motechEvent) {
+        String obdCreationCronExpression;
+        String obdNotificationCronExpression;
+        String purgeRecordsCronExpression;
+        Configuration configuration;
 
         logger.info("Event invoked [{}]" + CONFIGURATION_UPDATE_EVENT);
 
@@ -43,11 +51,13 @@ public class ConfigurationHandler {
 
         configuration = configurationService.getConfiguration(object_id);
 
-        cronExpression1 = configuration.getObdCreationEventCronExpression();
-        cronExpression2 = configuration.getObdNotificationEventCronExpression();
+        obdCreationCronExpression = configuration.getObdCreationEventCronExpression();
+        obdNotificationCronExpression = configuration.getObdNotificationEventCronExpression();
+        purgeRecordsCronExpression = configuration.getPurgeRecordsEventCronExpression();
 
-        motechSchedulerService.rescheduleJob(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT,Constants.PREPARE_OBD_TARGET_EVENT_JOB, cronExpression1);
-        motechSchedulerService.rescheduleJob(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, Constants.NOTIFY_OBD_TARGET_EVENT_JOB, cronExpression2);
+        motechSchedulerService.rescheduleJob(Constants.PREPARE_OBD_TARGET_EVENT_SUBJECT,Constants.PREPARE_OBD_TARGET_EVENT_JOB, obdCreationCronExpression);
+        motechSchedulerService.rescheduleJob(Constants.NOTIFY_OBD_TARGET_EVENT_SUBJECT, Constants.NOTIFY_OBD_TARGET_EVENT_JOB, obdNotificationCronExpression);
+        motechSchedulerService.rescheduleJob(Constants.PURGE_RECORDS_EVENT_SUBJECT, Constants.PURGE_RECORDS_EVENT_JOB, purgeRecordsCronExpression);
 
         logger.info("Update event handling completed");
     }

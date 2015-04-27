@@ -56,5 +56,8 @@ public class ConfigurationTest {
 
         configuration.setRetryDay3ObdServiceId("day30");
         Assert.assertEquals("day30", configuration.getRetryDay3ObdServiceId());
+
+        configuration.setPurgeRecordsEventCronExpression("*****");
+        Assert.assertEquals("*****", configuration.getPurgeRecordsEventCronExpression());
     }
 }
