@@ -3,10 +3,7 @@ package org.motechproject.nms.kilkariobd.service.impl;
 import org.joda.time.DateTime;
 import org.motechproject.nms.kilkariobd.client.HttpClient;
 import org.motechproject.nms.kilkariobd.commons.Constants;
-import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
-import org.motechproject.nms.kilkariobd.domain.Configuration;
-import org.motechproject.nms.kilkariobd.domain.FileProcessingStatus;
-import org.motechproject.nms.kilkariobd.domain.OutboundCallFlow;
+import org.motechproject.nms.kilkariobd.domain.*;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
 import org.motechproject.nms.kilkariobd.event.handler.OBDTargetFileHandler;
@@ -14,6 +11,7 @@ import org.motechproject.nms.kilkariobd.helper.MD5Checksum;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
+import org.motechproject.nms.kilkariobd.service.OutboundCallRequestService;
 import org.motechproject.nms.kilkariobd.settings.Settings;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.ParseDataHelper;
@@ -38,6 +36,11 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    OBDTargetFileHandler handler;
+
+    @Autowired
+    OutboundCallRequestService outboundCallRequestService;
 
     /**
      * Method to find OutboundCallFlow based on callFlow Status
@@ -116,13 +119,12 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
 
         String obdFileName = request.getFileName();
         OutboundCallFlow callFlow = findRecordByFileName(obdFileName);
-        OBDTargetFileHandler handler = new OBDTargetFileHandler();
 
         if (callFlow != null) {
             if (request.getStatus() != FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY) {
                 Settings settings = new Settings(settingsFacade);
                 Configuration configuration = configurationService.getConfiguration();
-                String localFileName = settings.getObdFileLocalPath() + obdFileName;
+                String localFileName = settings.getObdFileLocalPath() + "/" + obdFileName;
                 String remoteFileName = configuration.getObdFilePathOnServer();
 
                 HttpClient client = new HttpClient();
@@ -134,12 +136,13 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
                 String obdChecksum = MD5Checksum.findChecksum(localFileName);
                 updateChecksumAndRecordCount(obdFileName, obdChecksum, recordCount);
 
-                handler.copyTargetObdFileOnServer(localFileName, remoteFileName, request.getFileName());
-                client.notifyTargetFile(remoteFileName, callFlow.getObdChecksum(), callFlow.getObdRecordCount());
+                handler.copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
+                client.notifyTargetFile(remoteFileName, obdChecksum, recordCount);
 
                 updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
             } else {
                 updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSED_AT_IVR);
+                outboundCallRequestService.deleteAll();
             }
 
         }else {
