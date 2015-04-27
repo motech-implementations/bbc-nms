@@ -28,6 +28,7 @@ import org.motechproject.server.config.SettingsFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
@@ -43,6 +44,7 @@ import static org.motechproject.nms.kilkariobd.commons.Constants.*;
 /**
  * This class handle the events for prepare the target file and notify the target file to the IVR.
  */
+@Component
 public class OBDTargetFileHandler {
 
     @Autowired
