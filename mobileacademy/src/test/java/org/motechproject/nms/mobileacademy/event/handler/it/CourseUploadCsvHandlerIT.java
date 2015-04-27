@@ -8,8 +8,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,13 @@ import org.motechproject.mtraining.domain.Chapter;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.Lesson;
 import org.motechproject.mtraining.service.MTrainingService;
+import org.motechproject.nms.masterdata.domain.Circle;
+import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.domain.State;
+import org.motechproject.nms.masterdata.service.CircleService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.nms.masterdata.service.StateService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CourseContentCsv;
 import org.motechproject.nms.mobileacademy.domain.CourseProcessedContent;
@@ -30,9 +39,9 @@ import org.motechproject.nms.mobileacademy.event.handler.CourseUploadCsvHandler;
 import org.motechproject.nms.mobileacademy.repository.ChapterContentDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseContentCsvDataService;
 import org.motechproject.nms.mobileacademy.repository.CourseProcessedContentDataService;
-import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.nms.mobileacademy.service.CourseContentCsvService;
 import org.motechproject.nms.mobileacademy.service.CourseProcessedContentService;
+import org.motechproject.nms.mobileacademy.service.RecordsProcessService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -72,6 +81,88 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     @Inject
     private CourseProcessedContentService courseProcessedContentService;
 
+    @Inject
+    private LanguageLocationCodeService languageLocationCodeService;
+
+    @Inject
+    private StateService stateService;
+
+    @Inject
+    private CircleService circleService;
+
+    Circle circleData = new Circle();
+
+    State stateData = new State();
+
+    public void createLlcCircleMapping() {
+
+        District merrut = new District();
+
+        District agra = new District();
+
+        District mathura = new District();
+
+        Set<District> districtSet = new HashSet<District>();
+
+        stateData.setName("Andhra Pradesh");
+        stateData.setStateCode(25L);
+        stateData.setDistrict(districtSet);
+
+        merrut.setName("Meerut");
+        merrut.setStateCode(25L);
+        merrut.setDistrictCode(3L);
+
+        agra.setName("Agra");
+        agra.setStateCode(25L);
+        agra.setDistrictCode(4L);
+
+        mathura.setName("Mathura");
+        mathura.setStateCode(25L);
+        mathura.setDistrictCode(5L);
+
+        stateData.getDistrict().add(merrut);
+        stateData.getDistrict().add(agra);
+        stateData.getDistrict().add(mathura);
+
+        stateService.create(stateData);
+
+        circleData.setName("Andhra Pradesh");
+        circleData.setCode("AP");
+        circleService.create(circleData);
+
+        LanguageLocationCode languageLocationCode = getLangLocCodeDefaultSetting();
+        languageLocationCode.setDistrictCode(3L);
+        languageLocationCode.setLanguageLocationCode(14);
+        languageLocationCode.setDistrict(merrut);
+        languageLocationCodeService.create(languageLocationCode);
+
+        languageLocationCode = getLangLocCodeDefaultSetting();
+        languageLocationCode.setDistrictCode(4L);
+        languageLocationCode.setLanguageLocationCode(20);
+        languageLocationCode.setDistrict(agra);
+        languageLocationCodeService.create(languageLocationCode);
+
+        languageLocationCode = getLangLocCodeDefaultSetting();
+        languageLocationCode.setDistrictCode(5L);
+        languageLocationCode.setLanguageLocationCode(30);
+        languageLocationCode.setDistrict(mathura);
+        languageLocationCodeService.create(languageLocationCode);
+    }
+
+    LanguageLocationCode getLangLocCodeDefaultSetting() {
+        LanguageLocationCode languageLocationCode = new LanguageLocationCode();
+
+        languageLocationCode.setCircleCode("AP");
+        languageLocationCode.setStateCode(25L);
+        languageLocationCode.setCircle(circleData);
+        languageLocationCode.setState(stateData);
+
+        languageLocationCode.setLanguageMK("Hindi");
+        languageLocationCode.setLanguageKK("Hindi");
+        languageLocationCode.setLanguageMA("Hindi");
+        return languageLocationCode;
+    }
+
     /**
      * setUp method called before each test case
      */
@@ -100,6 +191,7 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
     @Test
     public void testCourseCsvDataSuccessHandler() {
         List<Long> contentIds = findCourseRawContentIdsListFromCsv();
+        createLlcCircleMapping();
         courseUploadCsvHandler
                 .courseCsvDataSuccessHandler(createMotechEvent(contentIds));
         List<CourseProcessedContent> courseProcessedContents = courseProcessedContentDataService
@@ -129,6 +221,10 @@ public class CourseUploadCsvHandlerIT extends BasePaxIT {
         courseContentCsvService.deleteAll();
         courseProcessedContentService.deleteAll();
         chapterContentDataService.deleteAll();
+        languageLocationCodeService.deleteAll();
+        stateService.deleteAll();
+        circleService.deleteAll();
+
         List<Course> courses = mTrainingService
                 .getCourseByName(MobileAcademyConstants.DEFAULT_COURSE_NAME);
         if (CollectionUtils.isNotEmpty(courses)) {
