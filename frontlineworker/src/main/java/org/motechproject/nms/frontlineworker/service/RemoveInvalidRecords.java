@@ -11,7 +11,16 @@ import java.util.List;
 @Service
 public interface RemoveInvalidRecords {
 
+    /**
+     * This procedure deleted all the FrontLineWorker records from database which are marked as invalid
+     */
     public void deleteInvalidFrontLineWorkerRecords();
 
+    /**
+     * This procedure returns the list of FrontLineWorkers which are marked as invalid in database for a specified
+     * number of days. the number of days is a configurable parameter.
+     *
+     * @return list of invalid frontLineWorkers
+     */
     public List<FrontLineWorker> invalidFrontLineWorkerList();
 }
