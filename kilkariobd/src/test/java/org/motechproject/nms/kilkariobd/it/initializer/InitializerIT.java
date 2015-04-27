@@ -45,11 +45,6 @@ public class InitializerIT extends BasePaxIT {
         initializer = new Initializer(configurationService, motechSchedulerService);
     }
 
-    @After
-    public void tearDown() {
-        //configurationDataService.deleteAll();
-    }
-
     /**
      * This test case tests that Initializer is correctly
      * initializing the kilkariobd configurations with default values.
@@ -76,6 +71,7 @@ public class InitializerIT extends BasePaxIT {
         Assert.assertEquals(configuration.getObdNotificationEventCronExpression(),Initializer.DEFAULT_OBD_NOTIFICATION_EVENT_CRON_EXPRESSION);
         Assert.assertEquals(configuration.getRetryIntervalForObdPreparationInMins(), Initializer.DEFAULT_RETRY_INTERVAL_FOR_OBD_PREPARATION_IN_MINS);
         Assert.assertEquals(configuration.getMaxObdPreparationRetryCount(), Initializer.DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT);
+        Assert.assertEquals(configuration.getPurgeRecordsEventCronExpression(), Initializer.DEFAULT_PURGE_RECORDS_EVENT_CRON_EXPRESSION);
 
     }
 }
