@@ -81,4 +81,6 @@ public final class Constants {
     //constant for httpRetryStrategy
     public static final Integer FIRST_ATTEMPT = 0;
 
+    public static final String FILE_PROCESSING_STATUS= "fileProcessingStatus";
+
 }

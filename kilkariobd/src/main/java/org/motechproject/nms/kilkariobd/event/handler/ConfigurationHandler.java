@@ -51,6 +51,4 @@ public class ConfigurationHandler {
 
         logger.info("Update event handling completed");
     }
-
-
 }

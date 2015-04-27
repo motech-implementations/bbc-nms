@@ -137,7 +137,7 @@ public class OBDTargetFileHandler {
         Long recordsCount = todayCallFlow.getObdRecordCount();
 
         /* copy this target file to remote location. */
-        SecureCopy.toRemote(localFileName, remoteFileName);
+        copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
 
         /* notify IVR */
         client.notifyTargetFile(remoteFileName, todayCallFlow.getObdChecksum(), recordsCount);
@@ -457,22 +457,20 @@ public class OBDTargetFileHandler {
         return 0;
     }
 
-    /*
-    This method exports the records from OutboundCallRequest
+    /**
+     * This method exports the records from OutboundCallRequest
+     * @param settings Settings Type object
+     * @return returns to records exported
      */
-    private String exportOutBoundCallRequest(Settings settings) {
-        updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
-                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
-
+    public Long exportOutBoundCallRequest(Settings settings) {
         String fileName = "OBD_NMS_" + getCsvFileName();
         String absoluteFileName = settings.getObdFileLocalPath() + "/" + fileName;
         List<OutboundCallRequest> callRequests = requestService.retrieveAll();
         Long recordCount = requestService.getCount();
         CSVMapper.writeByCsvMapper(absoluteFileName, callRequests);
         String obdChecksum = MD5Checksum.findChecksum(absoluteFileName);
-        updateCallFlowStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED,
-                CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED, obdChecksum, recordCount, fileName);
-        return fileName;
+        updateCallFlowStatusAfterExport(obdChecksum, recordCount);
+        return recordCount;
     }
 
     private String getCsvFileName() {
@@ -523,18 +521,23 @@ public class OBDTargetFileHandler {
 
     private void updateCallFlowStatus(CallFlowStatus fetchBy, CallFlowStatus updateTo) {
         OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(fetchBy);
-        todayCallFlow.setStatus(updateTo);
-        callFlowService.update(todayCallFlow);
+        if (todayCallFlow != null) {
+            todayCallFlow.setStatus(updateTo);
+            callFlowService.update(todayCallFlow);
+        }
     }
 
-    private void updateCallFlowStatus(
-            CallFlowStatus fetchBy, CallFlowStatus updateTo, String obdChecksum, Long obdRecordsCount, String obdFileName) {
-        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(fetchBy);
-        todayCallFlow.setStatus(updateTo);
-        todayCallFlow.setObdChecksum(obdChecksum);
-        todayCallFlow.setObdRecordCount(obdRecordsCount);
-        todayCallFlow.setObdFileName(obdFileName);
-        callFlowService.update(todayCallFlow);
+    private void updateCallFlowStatusAfterExport(String obdChecksum, Long obdRecordsCount) {
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_FILE_PREPARATION_EVENT_RECEIVED);
+        if (todayCallFlow == null) {
+            todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
+        }
+        if (todayCallFlow != null) {
+            todayCallFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
+            todayCallFlow.setObdChecksum(obdChecksum);
+            todayCallFlow.setObdRecordCount(obdRecordsCount);
+            callFlowService.update(todayCallFlow);
+        }
     }
 
     /*
@@ -553,6 +556,27 @@ public class OBDTargetFileHandler {
         Date retryTime = DateTime.now().plusMinutes(retryInterval).toDate();
         RunOnceSchedulableJob oneTimeJob = new RunOnceSchedulableJob(motechEvent, retryTime);
         motechSchedulerService.safeScheduleRunOnceJob(oneTimeJob);
+    }
+
+    /**
+     * This method copies the targetObdFile to the remote server and update the callFlow status
+     * @param localFileName name of local file to be copied on remote server
+     * @param remoteFileName remote path on which file is to copied.
+     * @param obdFileName name of obd file name to saved in database.
+     */
+    public void copyTargetObdFileOnServer(String localFileName, String remoteFileName, String obdFileName) {
+        /* copy this target file to remote location. */
+        SecureCopy.toRemote(localFileName, remoteFileName);
+        OutboundCallFlow todayCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILES_PROCESSED);
+        if (todayCallFlow == null) {
+            todayCallFlow = callFlowService.findRecordByFileName(obdFileName);
+        }
+        if (todayCallFlow != null) {
+            todayCallFlow.setStatus(CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
+            callFlowService.update(todayCallFlow);
+        } else {
+            logger.error("CallFlowRecord for ObdFile :%s does not exists", obdFileName);
+        }
     }
 }
 

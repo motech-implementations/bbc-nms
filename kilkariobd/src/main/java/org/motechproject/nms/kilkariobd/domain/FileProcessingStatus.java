@@ -15,13 +15,12 @@ public enum FileProcessingStatus {
 
     /**
      * find FileProcessingStatus object By FileProcessingStatus value
-     *
      * @param status value of the FileProcessingStatus
      * @return FileProcessingStatus object return and it can be null also
      */
-    public static FileProcessingStatus findByvalue(final Integer status) {
+    public static FileProcessingStatus findBValue(final Integer status) {
         for (FileProcessingStatus iterator : FileProcessingStatus.values()) {
-            if (iterator.getValue() == status) {
+            if (iterator.getValue().equals(status)) {
                 return iterator;
             }
         }

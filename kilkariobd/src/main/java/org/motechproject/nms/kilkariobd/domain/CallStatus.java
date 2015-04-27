@@ -14,6 +14,11 @@ public enum CallStatus {
         this.callStatus = callStatus;
     }
 
+    /**
+     * Method to get CallStatus by integer value otherwise null
+     * @param callStatus Integer
+     * @return CallStatus
+     */
     public static CallStatus getByInteger(Integer callStatus) {
         for (CallStatus status : CallStatus.values()) {
             if (status.ordinal() == callStatus) {

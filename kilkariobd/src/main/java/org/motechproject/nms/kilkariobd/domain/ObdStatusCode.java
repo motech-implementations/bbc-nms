@@ -20,6 +20,11 @@ public enum ObdStatusCode {
         this.statusCode = statusCode;
     }
 
+    /**
+     * Method to get ObdStatusCode by integer
+     * @param statusCode Integer
+     * @return ObdStatusCode
+     */
     public static ObdStatusCode getByInteger(Integer statusCode) {
         for (ObdStatusCode code : ObdStatusCode.values()) {
             if (code.ordinal() == statusCode) {
