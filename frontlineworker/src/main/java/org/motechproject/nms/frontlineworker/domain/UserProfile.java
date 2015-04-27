@@ -7,30 +7,25 @@ package org.motechproject.nms.frontlineworker.domain;
 
 public class UserProfile {
 
-    private boolean isCreated;
-
     private Long nmsFlwId;
 
     private String msisdn;
 
     private boolean isDefaultLanguageLocationCode;
 
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     private String circle;
 
     private Integer maxStateLevelCappingValue;
 
-    public boolean isCreated() {
-        return isCreated;
-    }
-
-    public void setCreated(boolean isCreated) {
-        this.isCreated = isCreated;
-    }
-
     public Long getNmsFlwId() {
         return nmsFlwId;
+    }
+
+    public void setNmsFlwId(Long nmsFlwId) {
+
+        this.nmsFlwId = nmsFlwId;
     }
 
     public boolean isDefaultLanguageLocationCode() {
@@ -39,11 +34,6 @@ public class UserProfile {
 
     public void setIsDefaultLanguageLocationCode(boolean isDefaultLanguageLocationCode) {
         this.isDefaultLanguageLocationCode = isDefaultLanguageLocationCode;
-    }
-
-    public void setNmsFlwId(Long nmsFlwId) {
-
-        this.nmsFlwId = nmsFlwId;
     }
 
     public String getMsisdn() {
@@ -55,11 +45,11 @@ public class UserProfile {
     }
 
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -83,7 +73,6 @@ public class UserProfile {
     @Override
     public String toString() {
         return "UserProfile{" +
-                "isCreated=" + isCreated +
                 ", nmsFlwId=" + nmsFlwId +
                 ", msisdn='" + msisdn + '\'' +
                 ", isDefaultLanguageLocationCode=" + isDefaultLanguageLocationCode +

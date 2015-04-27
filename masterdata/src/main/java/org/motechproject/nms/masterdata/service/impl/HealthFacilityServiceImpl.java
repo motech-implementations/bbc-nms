@@ -85,4 +85,12 @@ public class HealthFacilityServiceImpl implements HealthFacilityService {
     public HealthFacility findHealthFacilityByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode) {
         return healthFacilityRecordsDataService.findHealthFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthFacilityCode);
     }
+
+    /**
+     * Get HealthFacilityRecordsDataService object
+     */
+    @Override
+    public HealthFacilityRecordsDataService getHealthFacilityRecordsDataService() {
+        return healthFacilityRecordsDataService;
+    }
 }

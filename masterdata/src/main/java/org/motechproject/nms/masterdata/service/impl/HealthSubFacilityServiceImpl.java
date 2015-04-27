@@ -76,4 +76,12 @@ public class HealthSubFacilityServiceImpl implements HealthSubFacilityService {
     public HealthSubFacility findHealthSubFacilityByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode, Long healthSubFacilityCode) {
         return healthSubFacilityRecordsDataService.findHealthSubFacilityByParentCode(stateCode, districtCode, talukaCode, healthBlockCode, healthFacilityCode, healthSubFacilityCode);
     }
+
+    /**
+     * Get HealthSubFacilityRecordsDataService object
+     */
+    @Override
+    public HealthSubFacilityRecordsDataService getHealthSubFacilityRecordsDataService() {
+        return healthSubFacilityRecordsDataService;
+    }
 }

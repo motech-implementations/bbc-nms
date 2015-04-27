@@ -1,9 +1,9 @@
 package org.motechproject.nms.frontlineworker.ut.domain;
 
 import org.junit.Test;
-import org.motechproject.nms.frontlineworker.Designation;
-import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Designation;
+import org.motechproject.nms.frontlineworker.enums.Status;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -25,6 +25,18 @@ public class FrontLineWorkerTest {
     public void testContactNo() {
         frontLineWorker.setContactNo("9999099990");
         assertEquals("9999099990", frontLineWorker.getContactNo());
+    }
+
+    @Test
+    public void testAlternateContactNo() {
+        frontLineWorker.setAlternateContactNo("9999099956");
+        assertEquals("9999099956", frontLineWorker.getAlternateContactNo());
+    }
+
+    @Test
+    public void testOldContactNo() {
+        frontLineWorker.setOldMobileNo("9999099957");
+        assertEquals("9999099957", frontLineWorker.getOldMobileNo());
     }
 
     @Test
@@ -52,12 +64,6 @@ public class FrontLineWorkerTest {
     }
 
     @Test
-    public void AshaNumber() {
-        frontLineWorker.setAshaNumber("9876");
-        assertEquals("9876", frontLineWorker.getAshaNumber());
-    }
-
-    @Test
     public void testAdhaarNumber() {
         frontLineWorker.setAdhaarNumber("1234");
         assertEquals("1234", frontLineWorker.getAdhaarNumber());
@@ -71,8 +77,8 @@ public class FrontLineWorkerTest {
 
     @Test
     public void testLanguageLocationCodeId() {
-        frontLineWorker.setLanguageLocationCodeId(123);
-        assertTrue(123 == frontLineWorker.getLanguageLocationCodeId());
+        frontLineWorker.setLanguageLocationCodeId("LLC");
+        assertEquals("LLC", frontLineWorker.getLanguageLocationCodeId());
     }
 
 }

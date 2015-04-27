@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.nms.masterdata.domain.LanguageLocationCodeCsv;
+import org.motechproject.nms.masterdata.domain.CsvLanguageLocationCode;
 import org.motechproject.nms.masterdata.repository.LanguageLocationCodeCsvDataService;
 import org.motechproject.nms.masterdata.service.impl.LanguageLocationCodeCsvServiceImpl;
 
@@ -29,10 +29,10 @@ public class LanguageLocationCodeServiceCsvImplTest extends TestCase {
 
     @Test
     public void testGetRecord() {
-        LanguageLocationCodeCsv languageLocationCodeCsvData = new LanguageLocationCodeCsv();
-        languageLocationCodeCsvData.setId(1L);
+        CsvLanguageLocationCode csvLanguageLocationCodeData = new CsvLanguageLocationCode();
+        csvLanguageLocationCodeData.setId(1L);
 
-        when(languageLocationCodeCsvDataService.findById(1L)).thenReturn(languageLocationCodeCsvData);
+        when(languageLocationCodeCsvDataService.findById(1L)).thenReturn(csvLanguageLocationCodeData);
 
         assertNotNull(languageLocationCodeServiceCsv.getRecord(1L));
         assertTrue(1L == languageLocationCodeServiceCsv.getRecord(1L).getId());

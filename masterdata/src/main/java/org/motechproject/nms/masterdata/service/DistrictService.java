@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.District;
+import org.motechproject.nms.masterdata.repository.DistrictRecordsDataService;
 
 /**
  * This interface is used for crud operations on District
@@ -49,4 +50,9 @@ public interface DistrictService {
      * @return District
      */
     District findById(Long id);
+
+    /**
+     * Get DistrictRecordsDataService object
+     */
+    public DistrictRecordsDataService getDistrictRecordsDataService();
 }

@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
@@ -66,10 +66,10 @@ public class CircleCsvHandlerIT extends BasePaxIT {
     @Test
     public void shouldUpdateCircleRecordsAfterCsvUpload() throws Exception {
         preSetup();
-        CircleCsv csv2 = new CircleCsv();
+        CsvCircle csv2 = new CsvCircle();
         csv2.setName("MotechEventChanged");
         csv2.setCode("12345");
-        CircleCsv dbCsv = circleCsvDataService.create(csv2);
+        CsvCircle dbCsv = circleCsvDataService.create(csv2);
         createdIds.add(dbCsv.getId());
 
         CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
@@ -90,10 +90,10 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldRaiseDataValidationException() throws Exception {
-        CircleCsv csv = new CircleCsv();
+        CsvCircle csv = new CsvCircle();
         csv.setName("MotechEventCreateTest");
         csv.setCode("");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
+        CsvCircle dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
         CircleCsvHandler circleCsvHandler = new CircleCsvHandler(bulkUploadErrLogService, circleService, circleCsvService);
@@ -102,10 +102,10 @@ public class CircleCsvHandlerIT extends BasePaxIT {
 
 
     public void preSetup() {
-        CircleCsv csv = new CircleCsv();
+        CsvCircle csv = new CsvCircle();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
+        CsvCircle dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
     }

@@ -81,4 +81,12 @@ public class TalukaServiceImpl implements TalukaService {
     public Taluka findById(Long id) {
         return talukaRecordsDataService.findById(id);
     }
+
+    /**
+     * Get TalukaRecordsDataService object
+     */
+    @Override
+    public TalukaRecordsDataService getTalukaRecordsDataService() {
+        return talukaRecordsDataService;
+    }
 }

@@ -15,11 +15,11 @@ public class UserDetailApiResponse {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer defaultLanguageLocationCode;
+    private String defaultLanguageLocationCode;
 
     @JsonProperty
     private Integer currentUsageInPulses;
@@ -48,19 +48,19 @@ public class UserDetailApiResponse {
         this.circle = circle;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
+    public String getDefaultLanguageLocationCode() {
         return defaultLanguageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
+    public void setDefaultLanguageLocationCode(String defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 

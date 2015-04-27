@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
+import org.motechproject.nms.masterdata.domain.CsvDistrict;
 
 /**
  * This interface is used for crud operations on DistrictCsv
@@ -12,14 +12,14 @@ public interface DistrictCsvService {
      *
      * @param record of the DistrictCsv
      */
-    void delete(DistrictCsv record);
+    void delete(CsvDistrict record);
 
     /**
      * create DistrictCsv type object
      *
      * @param record of the DistrictCsv
      */
-    DistrictCsv create(DistrictCsv record);
+    CsvDistrict create(CsvDistrict record);
 
     /**
      * Finds the district details by its Id
@@ -27,5 +27,5 @@ public interface DistrictCsvService {
      * @param id
      * @return District
      */
-    DistrictCsv findById(Long id);
+    CsvDistrict findById(Long id);
 }

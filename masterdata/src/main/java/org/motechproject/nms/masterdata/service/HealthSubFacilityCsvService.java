@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.HealthSubFacilityCsv;
+import org.motechproject.nms.masterdata.domain.CsvHealthSubFacility;
 
 /**
  * This interface is used for crud operations on HealthSubFacilityCsv
@@ -11,14 +11,14 @@ public interface HealthSubFacilityCsvService {
      *
      * @param record of the HealthSubFacilityCsv
      */
-    void delete(HealthSubFacilityCsv record);
+    void delete(CsvHealthSubFacility record);
 
     /**
      * create HealthSubFacilityCsv type object
      *
      * @param record of the HealthSubFacilityCsv
      */
-    HealthSubFacilityCsv create(HealthSubFacilityCsv record);
+    CsvHealthSubFacility create(CsvHealthSubFacility record);
 
     /**
      * Finds the health sub facility details by its Id
@@ -26,7 +26,7 @@ public interface HealthSubFacilityCsvService {
      * @param id
      * @return
      */
-    HealthSubFacilityCsv findById(Long id);
+    CsvHealthSubFacility findById(Long id);
 
 
 }
