@@ -101,7 +101,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldThrowDataValidationExceptionWhenInvalidCallingNumber()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("123456780","operatorCode","circleCode","testCallId",29,"48WeeksPack");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("123456780","operatorCode","circleCode","testCallId","29","48WeeksPack");
         try {
             subscriptionController.createSubscription(apiRequest);
 
@@ -114,7 +114,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldCreateSubscriberAndSubscriptionWithBeneficiaryTypeChild()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111",29,"48WeeksPack");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111","29","48WeeksPack");
 
         try {
             subscriptionController.createSubscription(apiRequest);
@@ -135,7 +135,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldCreateSubscriberAndSubscriptionWithBeneficiaryTypeMother()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111",29,"72WeeksPack");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","111111111111111","29","72WeeksPack");
 
         try {
             subscriptionController.createSubscription(apiRequest);
@@ -156,9 +156,9 @@ public class SubscriptionControllerIT extends BasePaxIT {
     public void shouldDeactivateSubscription()  {
         preSetUp();
         SubscriptionController subscriptionController = new SubscriptionController(userDetailsService, subscriptionService);
-        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId",29,"48WeeksPack");
+        SubscriptionCreateApiRequest apiRequest = subscriptionBuilder.buildSubscriptionApiRequest("1234567890","operatorCode","circleCode","testCallId","29","48WeeksPack");
 
-        subscriberService.create(subscriptionBuilder.buildSubscriber("1234567890", 29, BeneficiaryType.CHILD));
+        subscriberService.create(subscriptionBuilder.buildSubscriber("1234567890", "29", BeneficiaryType.CHILD));
         Subscription subscription = subscriptionDataService.create(subscriptionBuilder.buildSubscription("1234567890", Channel.IVR, Status.PENDING_ACTIVATION));
         try {
             subscriptionController.deactivateSubscription(
@@ -175,7 +175,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
 
     public void preSetUp() {
         //create circle with code "testCode"
-        Circle circle = llcBuilder.buildCircle(123,"circleCode", "test");
+        Circle circle = llcBuilder.buildCircle("123","circleCode", "test");
         circleService.create(circle);
 
         Operator operator = llcBuilder.buildOperator("operatorCode","testOperator");
@@ -194,7 +194,7 @@ public class SubscriptionControllerIT extends BasePaxIT {
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
-        LanguageLocationCode record = llcBuilder.buildLLCCode(state, circle, district, 29);
+        LanguageLocationCode record = llcBuilder.buildLLCCode(state, circle, district, "29");
         llcDataService.create(record);
     }
 

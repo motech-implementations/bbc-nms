@@ -56,7 +56,7 @@ public class ContentUploadServiceImpl implements ContentUploadService {
      * @return ContentUpload ContentUpload type object
      */
     @Override
-    public String getContentFileName(String contentName, Integer languageLocationCode) {
+    public String getContentFileName(String contentName, String languageLocationCode) {
         String contentFile = null;
         List<ContentUpload> contentUploadList = contentUploadDataService.findContentFileName(contentName, languageLocationCode);
         if(contentUploadList != null && !contentUploadList.isEmpty()){

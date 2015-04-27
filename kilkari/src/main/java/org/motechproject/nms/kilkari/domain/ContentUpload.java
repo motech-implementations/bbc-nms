@@ -22,7 +22,7 @@ public class ContentUpload extends MdsEntity {
 
     @Field(required = true)
     @UIDisplayable(position = 2)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     @UIDisplayable(position = 3)
@@ -56,11 +56,11 @@ public class ContentUpload extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

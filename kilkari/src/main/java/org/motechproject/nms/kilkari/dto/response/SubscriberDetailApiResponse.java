@@ -16,7 +16,7 @@ public class SubscriberDetailApiResponse {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -24,7 +24,7 @@ public class SubscriberDetailApiResponse {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer defaultLanguageLocationCode;
+    private String defaultLanguageLocationCode;
 
     public String getCircle() {
         return circle;
@@ -34,19 +34,19 @@ public class SubscriberDetailApiResponse {
         this.circle = circle;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
+    public String getDefaultLanguageLocationCode() {
         return defaultLanguageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
+    public void setDefaultLanguageLocationCode(String defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 

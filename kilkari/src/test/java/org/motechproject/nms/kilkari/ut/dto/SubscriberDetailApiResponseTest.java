@@ -23,11 +23,11 @@ public class SubscriberDetailApiResponseTest {
         subscriberDetailApiResponse.setCircle("circle");
         Assert.assertEquals("circle", subscriberDetailApiResponse.getCircle());
 
-        subscriberDetailApiResponse.setDefaultLanguageLocationCode(99);
-        Assert.assertTrue(99 == subscriberDetailApiResponse.getDefaultLanguageLocationCode());
+        subscriberDetailApiResponse.setDefaultLanguageLocationCode("99");
+        Assert.assertTrue("99".equals(subscriberDetailApiResponse.getDefaultLanguageLocationCode()));
 
-        subscriberDetailApiResponse.setLanguageLocationCode(13);
-        Assert.assertTrue(13 == subscriberDetailApiResponse.getLanguageLocationCode());
+        subscriberDetailApiResponse.setLanguageLocationCode("13");
+        Assert.assertTrue("13".equals(subscriberDetailApiResponse.getLanguageLocationCode()));
 
         subscriberDetailApiResponse.setSubscriptionPackList(subscriptionPacks);
         Assert.assertEquals(subscriptionPacks, subscriberDetailApiResponse.getSubscriptionPackList());

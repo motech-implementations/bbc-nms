@@ -36,6 +36,6 @@ public interface ContentUploadService {
      * @param languageLocationCode Integer type object
      * @return ContentUpload ContentUpload type object
      */
-    String getContentFileName(String contentName, Integer languageLocationCode);
+    String getContentFileName(String contentName, String languageLocationCode);
 
 }

@@ -39,7 +39,7 @@ public class SubscriberTest {
         Assert.assertEquals(district, subscriber.getDistrict());
         Assert.assertEquals(dateTime, subscriber.getDob());
         Assert.assertEquals(healthBlock, subscriber.getHealthBlock());
-        Assert.assertTrue(12 == subscriber.getLanguageLocationCode());
+        Assert.assertTrue("12".equals(subscriber.getLanguageLocationCode()));
         Assert.assertEquals(dateTime.minus(3L), subscriber.getLmp());
         Assert.assertEquals("motherMctsId", subscriber.getMotherMctsId());
         Assert.assertEquals("msisdn",subscriber.getMsisdn());
@@ -125,7 +125,7 @@ public class SubscriberTest {
         subscriber.setDistrict(district);
         subscriber.setDob(dateTime);
         subscriber.setHealthBlock(healthBlock);
-        subscriber.setLanguageLocationCode(12);
+        subscriber.setLanguageLocationCode("12");
         subscriber.setLmp(dateTime.minus(3L));
         subscriber.setMotherMctsId("motherMctsId");
         subscriber.setMsisdn("msisdn");

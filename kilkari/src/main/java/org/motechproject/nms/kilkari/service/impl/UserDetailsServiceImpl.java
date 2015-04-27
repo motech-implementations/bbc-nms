@@ -75,11 +75,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private void getLanguageLocationCodeByCircleCode(String circleCode, SubscriberDetailApiResponse response) {
-        Integer llcCode = llcService.getLanguageLocationCodeByCircleCode(circleCode);
+        String llcCode = llcService.getLanguageLocationCodeByCircleCode(circleCode);
         if (llcCode != null) {
             response.setLanguageLocationCode(llcCode);
         } else {
-            Integer defaultLLCCode = llcService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
+            String defaultLLCCode = llcService.getDefaultLanguageLocationCodeByCircleCode(circleCode);
             if (defaultLLCCode != null) {
                 response.setDefaultLanguageLocationCode(defaultLLCCode);
             } else {
@@ -93,7 +93,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private void getLanguageLocationCodeForSubscriber(
             Subscriber subscriber, SubscriberDetailApiResponse response) throws NmsInternalServerError {
         //if LanguageLocationCode for the subscriber record is present then set this is as LanguageLocationCode in response.
-        Integer llcCode = subscriber.getLanguageLocationCode();
+        String llcCode = subscriber.getLanguageLocationCode();
         if (llcCode != null) {
             response.setLanguageLocationCode(llcCode);
             //if llcCode found then update the circle in response object.

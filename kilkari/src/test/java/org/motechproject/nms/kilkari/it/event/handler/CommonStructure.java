@@ -261,7 +261,7 @@ public class CommonStructure extends BasePaxIT {
         Circle newRecord = new Circle();
         newRecord.setName("circleName");
         newRecord.setCode("1");
-        newRecord.setDefaultLanguageLocationCode(1);
+        newRecord.setDefaultLanguageLocationCode("1");
         newRecord.setCreator("Deepak");
         newRecord.setOwner("Deepak");
         newRecord.setModifiedBy("Deepak");
@@ -278,7 +278,7 @@ public class CommonStructure extends BasePaxIT {
         newRecord.setLanguageKK("LanguageKK");
         newRecord.setLanguageMA("LanguageMA");
         newRecord.setLanguageMK("LanguageMK");
-        newRecord.setLanguageLocationCode(1);
+        newRecord.setLanguageLocationCode("1");
         newRecord.setState(stateRecordsDataService.findRecordByStateCode(newRecord.getStateCode()));
         newRecord.setDistrict(districtRecordsDataService.findDistrictByParentCode(newRecord.getDistrictCode(), newRecord.getStateCode()));
         newRecord.setCircle(circleDataService.findByCode(newRecord.getCircleCode()));

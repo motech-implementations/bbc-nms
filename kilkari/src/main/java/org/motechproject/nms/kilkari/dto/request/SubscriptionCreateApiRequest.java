@@ -28,7 +28,7 @@ public class SubscriptionCreateApiRequest {
     private String callId;
 
     @JsonProperty
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @JsonProperty
     private String subscriptionPack;
@@ -69,11 +69,11 @@ public class SubscriptionCreateApiRequest {
         this.operator = operator;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

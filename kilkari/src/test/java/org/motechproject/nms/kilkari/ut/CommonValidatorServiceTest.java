@@ -9,14 +9,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.nms.kilkari.builder.LanguageLocationCodeBuilder;
 import org.motechproject.nms.kilkari.domain.CsvMctsChild;
+import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
 import org.motechproject.nms.kilkari.repository.CsvMctsChildDataService;
 import org.motechproject.nms.kilkari.repository.CsvMctsMotherDataService;
 import org.motechproject.nms.kilkari.service.*;
 import org.motechproject.nms.kilkari.service.impl.CommonValidatorServiceImpl;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.repository.*;
+import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.masterdata.service.LocationService;
+import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
@@ -84,6 +87,12 @@ public class CommonValidatorServiceTest {
     
     @Mock
     private LanguageLocationCodeService llcService;
+    
+    @Mock
+    private CircleService circleService;
+
+    @Mock
+    private OperatorService operatorService;
 
     @Before
     public void init() {
@@ -360,19 +369,23 @@ public class CommonValidatorServiceTest {
     
     @Test
     public void validateLanguageLocationCodeCheckWithNullLlcCode() {
-        Integer llcCode = null;
-        
+        String llcCode = null;
         try {
             commonValidatorService1.validateLanguageLocationCode(llcCode);
+        } catch (DataValidationException ex) {
+            Assert.assertTrue(ex instanceof DataValidationException);
+            Assert.assertEquals(((DataValidationException)ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
         } catch (Exception e) {
             Assert.fail();
         }
     }
     
+    
+    
     @Test
     public void validateCircleCheckWithNullCircleCode() {
         String circleCode = null;
-        
+        when(circleService.getRecordByCode("AP")).thenReturn(null);
         try {
             commonValidatorService1.validateCircle(circleCode);
         } catch (Exception e) {
@@ -382,8 +395,8 @@ public class CommonValidatorServiceTest {
     
     @Test
     public void validateOperatorCheckWithNullOperatorCode() {
-        
         String operatorCode = null;
+        when(operatorService.getRecordByCode("OC")).thenReturn(null);
         try {
             commonValidatorService1.validateOperator(operatorCode);
         } catch (Exception e) {

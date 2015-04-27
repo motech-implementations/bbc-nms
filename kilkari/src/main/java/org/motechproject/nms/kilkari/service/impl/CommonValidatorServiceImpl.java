@@ -326,7 +326,7 @@ public class CommonValidatorServiceImpl implements CommonValidatorService {
      * @throws DataValidationException
      */
     @Override
-    public void validateLanguageLocationCode(Integer llcCode) throws DataValidationException {
+    public void validateLanguageLocationCode(String llcCode) throws DataValidationException {
         if (llcCode != null) {
             LanguageLocationCode languageLocationCode = languageLocationCodeService.findLLCByCode(llcCode);
             if (languageLocationCode == null) {
