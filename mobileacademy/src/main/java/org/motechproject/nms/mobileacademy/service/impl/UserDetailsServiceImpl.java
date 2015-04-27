@@ -369,7 +369,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             FrontLineWorker frontLineWorker) {
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
         flwUsageDetail.setFlwId(frontLineWorker.getId());
-        flwUsageDetail.setMsisdn(Long.valueOf(frontLineWorker.getContactNo()));
         flwUsageDetail.setCurrentUsageInPulses(Integer
                 .valueOf(callDetailsRequest.getCallDurationInPulses()));
         flwUsageDetail.setEndOfUsagePromptCounter(Integer

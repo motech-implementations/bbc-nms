@@ -121,7 +121,6 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // assert usage table data
             assertTrue(3 == flwUsageDetail.getEndOfUsagePromptCounter());
             assertTrue(20 == flwUsageDetail.getCurrentUsageInPulses());
-            assertTrue(9990632901l == flwUsageDetail.getMsisdn());
             assertTrue(1429166000l == (flwUsageDetail.getLastAccessTime()
                     .getMillis() / 1000));
             assertTrue(1429167000l == (flwUsageDetail.getCourseStartDate()
@@ -205,7 +204,6 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // assert usage table data
             assertTrue(3 == flwUsageDetail.getEndOfUsagePromptCounter());
             assertTrue(40 == flwUsageDetail.getCurrentUsageInPulses());
-            assertTrue(9990632901l == flwUsageDetail.getMsisdn());
             assertTrue(1429166000l == (flwUsageDetail.getLastAccessTime()
                     .getMillis() / 1000));
 
