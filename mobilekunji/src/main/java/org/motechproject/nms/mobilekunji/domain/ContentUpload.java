@@ -20,7 +20,7 @@ public class ContentUpload extends MdsEntity {
     private String circleCode;
 
     @Field(required = true)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     private String contentName;
@@ -32,7 +32,7 @@ public class ContentUpload extends MdsEntity {
     private String contentFile;
 
     @Field(required = true)
-    private String cardNumber;
+    private String cardCode;
 
     @Field(required = true)
     private Integer contentDuration;
@@ -41,14 +41,14 @@ public class ContentUpload extends MdsEntity {
 
     }
 
-    public ContentUpload(int contentId, String circleCode, int languageLocationCode, String contentName, ContentType contentType, String contentFile, String cardNumber, Integer contentDuration) {
+    public ContentUpload(Integer contentId, String circleCode, String languageLocationCode, String contentName, ContentType contentType, String contentFile, String cardCode, Integer contentDuration) {
         this.contentId = contentId;
         this.circleCode = circleCode;
         this.languageLocationCode = languageLocationCode;
         this.contentName = contentName;
         this.contentType = contentType;
         this.contentFile = contentFile;
-        this.cardNumber = cardNumber;
+        this.cardCode = cardCode;
         this.contentDuration = contentDuration;
     }
 
@@ -68,11 +68,11 @@ public class ContentUpload extends MdsEntity {
         this.circleCode = circleCode;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -100,12 +100,12 @@ public class ContentUpload extends MdsEntity {
         this.contentFile = contentFile;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public String getCardCode() {
+        return cardCode;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode;
     }
 
     public Integer getContentDuration() {

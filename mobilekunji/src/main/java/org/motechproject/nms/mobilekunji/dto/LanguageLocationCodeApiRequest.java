@@ -14,7 +14,7 @@ public class LanguageLocationCodeApiRequest {
     private String callingNumber;
 
     @JsonProperty
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @JsonProperty
     private String callId;
@@ -35,11 +35,11 @@ public class LanguageLocationCodeApiRequest {
         this.callingNumber = callingNumber;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -59,11 +59,14 @@ public class LanguageLocationCodeApiRequest {
      */
     public void validateMandatoryParameters() throws DataValidationException {
 
+        ParseDataHelper.validateAndParseString(ConfigurationConstants.LANGUAGE_LOCATION_CODE,languageLocationCode, true);
+
         callingNumber = ParseDataHelper.validateAndTrimMsisdn(ConfigurationConstants.CALLING_NUMBER,
                 ParseDataHelper.validateAndParseString(ConfigurationConstants.CALLING_NUMBER, callingNumber, true));
 
         ParseDataHelper.validateLengthOfCallId(ConfigurationConstants.CALL_ID,
                 ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_ID, callId, true));
+
         if (null == languageLocationCode) {
             ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.LANGUAGE_LOCATION_CODE, null);
         }

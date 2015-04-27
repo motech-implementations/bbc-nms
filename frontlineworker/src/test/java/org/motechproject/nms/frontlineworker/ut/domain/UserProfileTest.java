@@ -14,13 +14,6 @@ public class UserProfileTest {
     UserProfile userProfile = new UserProfile();
 
     @Test
-    public void testIsCreated() {
-
-        userProfile.setCreated(true);
-        assertEquals(true, userProfile.isCreated());
-    }
-
-    @Test
     public void testNmsId() {
 
         userProfile.setNmsFlwId(12L);
@@ -44,8 +37,8 @@ public class UserProfileTest {
     @Test
     public void testLanguageLocationCode() {
 
-        userProfile.setLanguageLocationCode(1234);
-        assertTrue(1234 == userProfile.getLanguageLocationCode());
+        userProfile.setLanguageLocationCode("LLC");
+        assertEquals("LLC", userProfile.getLanguageLocationCode());
     }
 
     @Test
@@ -65,16 +58,14 @@ public class UserProfileTest {
     @Test
     public void testToString() {
 
-        userProfile.setCreated(true);
         userProfile.setNmsFlwId(12L);
         userProfile.setMsisdn("1234567890");
         userProfile.setIsDefaultLanguageLocationCode(true);
-        userProfile.setLanguageLocationCode(1234);
+        userProfile.setLanguageLocationCode("LLC");
         userProfile.setCircle("12");
         userProfile.setMaxStateLevelCappingValue(10);
 
-        assertEquals("UserProfile{" + "isCreated=" +
-                        userProfile.isCreated() +
+        assertEquals("UserProfile{" +
                         ", nmsFlwId=" + userProfile.getNmsFlwId() +
                         ", msisdn='" + userProfile.getMsisdn() + '\'' +
                         ", isDefaultLanguageLocationCode=" + userProfile.isDefaultLanguageLocationCode() +

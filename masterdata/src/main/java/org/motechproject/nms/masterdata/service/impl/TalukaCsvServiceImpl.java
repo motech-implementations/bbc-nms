@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.TalukaCsv;
+import org.motechproject.nms.masterdata.domain.CsvTaluka;
 import org.motechproject.nms.masterdata.repository.TalukaCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.TalukaCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class TalukaCsvServiceImpl implements TalukaCsvService {
      * @param record of the TalukaCsv
      */
     @Override
-    public void delete(TalukaCsv record) {
+    public void delete(CsvTaluka record) {
         this.talukaCsvRecordsDataService.delete(record);
     }
 
@@ -36,7 +36,7 @@ public class TalukaCsvServiceImpl implements TalukaCsvService {
      * @param record of the TalukaCsv
      */
     @Override
-    public TalukaCsv create(TalukaCsv record) {
+    public CsvTaluka create(CsvTaluka record) {
         return talukaCsvRecordsDataService.create(record);
     }
 
@@ -47,7 +47,7 @@ public class TalukaCsvServiceImpl implements TalukaCsvService {
      * @return TalukaCsv
      */
     @Override
-    public TalukaCsv findById(Long id) {
+    public CsvTaluka findById(Long id) {
         return talukaCsvRecordsDataService.findById(id);
     }
 }

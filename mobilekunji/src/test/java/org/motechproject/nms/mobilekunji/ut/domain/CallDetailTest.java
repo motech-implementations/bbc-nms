@@ -18,7 +18,8 @@ public class CallDetailTest {
     @Before
     public void init() {
         initMocks(this);
-        callDetail = new CallDetail("111111111111111", 29L, "DL", 12L, 34L);
+        callDetail = new CallDetail("111111111111111", "9810179788","B",1,"SUCC","DL",29L,  12L, 34L);
+
     }
 
     @Test

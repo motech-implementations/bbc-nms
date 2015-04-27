@@ -65,35 +65,6 @@ public final class ParseDataHelper {
     }
 
     /**
-     * This method validates a field of String type for null/empty values, and
-     * raises exception if a mandatory field is empty/null. The String "null" is
-     * considered as a valid string
-     *
-     * @param fieldName
-     *            name of the field to be used in exception
-     * @param fieldValue
-     *            value of the field
-     * @param isMandatory
-     *            true if field is mandatory, else false
-     * @return null if field is optional and it is null or its value is empty,
-     *         else field value is returned
-     * @throws DataValidationException
-     *             in case of null or empty mandatory parameter
-     */
-    public static String validateString(String fieldName, String fieldValue,
-                                        boolean isMandatory) throws DataValidationException {
-        if (isMandatory) {
-            if (fieldValue == null) {
-                raiseApiParameterMissingDataException(fieldName, fieldValue);
-            } else if (StringUtils.isBlank(fieldValue)) {
-                raiseApiParameterInvalidDataException(fieldName, fieldValue);
-            }
-        }
-        return fieldValue;
-    }
-    
-    
-    /**
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
      *
@@ -124,38 +95,6 @@ public final class ParseDataHelper {
     }
 
     /**
-     * This method validates a field of Date type for null/empty/invalid values,
-     * and raises exception if a mandatory field is empty/null or is invalid
-     * date format
-     *
-     * @param fieldName name of the field to be used in exception
-     * @param fieldValue value of the field
-     * @param isMandatory true if field is mandatory, else false
-     * @return null if field is optional and its value is null/empty, else field
-     *         value is converted from string to DateTime and returned
-     * @throws DataValidationException
-     */
-    public static DateTime validateDate(String fieldName, String fieldValue,
-                                        boolean isMandatory) throws DataValidationException {
-
-        DateTime parsedDateTime = null;
-
-        try {
-            if (validateString(fieldName, fieldValue, isMandatory) != null) {
-                DateFormat dateFormat = new SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss");
-                dateFormat.setLenient(false);
-                Date date = dateFormat.parse(fieldValue);
-                parsedDateTime = new DateTime(date);
-            }
-        } catch (NumberFormatException | ParseException e) {
-            raiseApiParameterInvalidDataException(fieldName, fieldValue);
-        }
-
-        return parsedDateTime;
-    }
-    
-    /**
      * This method validates a field of Integer type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Integer format
      *
@@ -180,34 +119,6 @@ public final class ParseDataHelper {
         return parsedValue;
     }
 
-    /**
-     * This method validates a field of Integer type for null/empty values, and
-     * raises exception if a mandatory field is empty/null or is invalid Integer
-     * format
-     *
-     * @param fieldName name of the field to be used in exception
-     * @param fieldValue value of the field
-     * @param isMandatory true if field is mandatory, else false
-     * @return null if field is optional and its value is null/empty, else field
-     *         value is converted from string to Integer and returned
-     * @throws DataValidationException
-     */
-    public static Integer validateInt(String fieldName,
-                                      String fieldValue, boolean isMandatory)
-            throws DataValidationException {
-        Integer parsedValue = null;
-        try {
-            if (validateString(fieldName, fieldValue, isMandatory) != null) {
-                parsedValue = Integer.parseInt(fieldValue);
-            }
-        } catch (NumberFormatException e) {
-            raiseApiParameterInvalidDataException(fieldName, fieldValue);
-        }
-
-        return parsedValue;
-    }
-
-    
     /**
      * This method validates a field of Long type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Long format
@@ -234,34 +145,6 @@ public final class ParseDataHelper {
     }
 
     /**
-    * This method validates a field of Long type for null/empty values, and
-    * raises exception if a mandatory field is empty/null or is invalid Long
-    * format
-    *
-            * @param fieldName name of the field to be used in exception
-    * @param fieldValue value of the field
-    * @param isMandatory true if field is mandatory, else false
-            * @return null if field is optional and its value is null/empty, else field
-    *         value is converted from string to Long and returned
-    * @throws DataValidationException
-    */
-    public static Long validateLong(String fieldName,
-                                    String fieldValue, boolean isMandatory)
-            throws DataValidationException {
-        Long parsedValue = null;
-        try {
-            if (validateString(fieldName, fieldValue, isMandatory) != null) {
-                parsedValue = Long.parseLong(fieldValue);
-            }
-        } catch (NumberFormatException e) {
-            raiseApiParameterInvalidDataException(fieldName, fieldValue);
-        }
-
-        return parsedValue;
-    }
-    
-    
-    /**
      * This method validates a field of Boolean type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid format
      *
@@ -287,33 +170,6 @@ public final class ParseDataHelper {
         return parsedValue;
     }
 
-    /**
-     * This method validates a field of Boolean type for null/empty values, and
-     * raises exception if a mandatory field is empty/null or is invalid format
-     *
-     * @param fieldName name of the field to be used in exception
-     * @param fieldValue value of the field
-     * @param isMandatory true if field is mandatory, else false
-     * @return null if field is optional and its value is null/empty, else field
-     *         value is converted from string to Boolean and returned
-     * @throws DataValidationException
-     */
-    public static Boolean validateBoolean(String fieldName,
-                                          String fieldValue, boolean isMandatory)
-            throws DataValidationException {
-        Boolean parsedValue = null;
-        if (validateString(fieldName, fieldValue, isMandatory) != null) {
-            if (fieldValue.equalsIgnoreCase("true")
-                    || fieldValue.equalsIgnoreCase(("false"))) {
-                parsedValue = Boolean.parseBoolean(fieldValue);
-            } else {
-                raiseApiParameterInvalidDataException(fieldName, fieldValue);
-            }
-        }
-
-        return parsedValue;
-    }
-    
     /**
      * This methods validates that Msisdn is of 10 or more digits and then trims it to 10 digits
      *
@@ -401,43 +257,4 @@ public final class ParseDataHelper {
                 errDesc, fieldName);
     }
 
-    /**
-     * Raises exception for invalid data in API
-     *
-     * @param fieldName Name of the field
-     * @param fieldValue value of the field
-     * @throws DataValidationException
-     */
-    public static void raiseApiParameterInvalidDataException(String fieldName,
-                                                             String fieldValue) throws DataValidationException {
-        String errMessage = String.format(
-                DataValidationException.INVALID_FORMAT_MESSAGE, fieldName,
-                fieldValue);
-        String errDesc = String.format(
-                ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, fieldName);
-        logger.error(errMessage);
-        throw new DataValidationException(errMessage,
-                ErrorCategoryConstants.INVALID_DATA, errDesc, fieldName);
-    }
-
-    /**
-     * Raises exception for Missing data in API
-     *
-     * @param fieldName Name of the field
-     * @param fieldValue value of the field
-     * @throws DataValidationException
-     */
-    public static void raiseApiParameterMissingDataException(String fieldName,
-                                                             String fieldValue) throws DataValidationException {
-        String errMessage = String.format(
-                DataValidationException.MANDATORY_MISSING_MESSAGE, fieldName,
-                fieldValue);
-        String errDesc = String
-                .format(ErrorDescriptionConstants.MISSING_API_PARAMETER_DESCRIPTION,
-                        fieldName);
-        logger.error(errMessage);
-        throw new DataValidationException(errMessage,
-                ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING, errDesc,
-                fieldName);
-    }
 }

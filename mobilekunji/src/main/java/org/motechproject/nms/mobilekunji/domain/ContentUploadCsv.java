@@ -1,6 +1,5 @@
 package org.motechproject.nms.mobilekunji.domain;
 
-import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.domain.MdsEntity;
 
@@ -9,7 +8,7 @@ import javax.jdo.annotations.Unique;
 /**
  * This class Models data records provided in the Content Csv Upload
  */
-@Entity(recordHistory = true)
+
 public class ContentUploadCsv extends MdsEntity {
 
     @Field(required = true)
@@ -35,7 +34,7 @@ public class ContentUploadCsv extends MdsEntity {
     private String contentFile;
 
     @Field
-    private String cardNumber;
+    private String cardCode;
 
     @Field
     private String contentDuration;
@@ -43,7 +42,7 @@ public class ContentUploadCsv extends MdsEntity {
 
     public ContentUploadCsv(Long index, String contentId, String circleCode,
                             String languageLocationCode, String contentName, String contentType, String contentFile,
-                            String cardNumber, String contentDuration) {
+                            String cardCode, String contentDuration) {
         this.index = index;
         this.contentId = contentId;
         this.circleCode = circleCode;
@@ -51,7 +50,7 @@ public class ContentUploadCsv extends MdsEntity {
         this.contentName = contentName;
         this.contentType = contentType;
         this.contentFile = contentFile;
-        this.cardNumber = cardNumber;
+        this.cardCode = cardCode;
         this.contentDuration = contentDuration;
     }
 
@@ -106,12 +105,12 @@ public class ContentUploadCsv extends MdsEntity {
         this.contentFile = contentFile;
     }
 
-    public String getCardNumber() {
-        return cardNumber;
+    public String getCardCode() {
+        return cardCode;
     }
 
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode;
     }
 
     public String getContentDuration() {
@@ -143,7 +142,7 @@ public class ContentUploadCsv extends MdsEntity {
                 + this.getContentId() + "] Circle Code [" + this.getCircleCode() + "] Language Location Code [" +
                 this.getLanguageLocationCode() + "] Content Name [" + this.getContentName() + "] Content Type [" +
                 this.getContentType() + "] Content File [" + this.contentFile + "] Content Duration [" +
-                this.getContentDuration() + "] Card Number [" + this.getCardNumber() + "]";
+                this.getContentDuration() + "] Card Number [" + this.getCardCode() + "]";
 
 
     }

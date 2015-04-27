@@ -22,7 +22,7 @@ public class ContentUploadCsvTest {
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("contentFile");
         contentUploadCsv.setContentDuration("120");
-        contentUploadCsv.setCardNumber("20");
+        contentUploadCsv.setCardCode("20");
         assertEquals("Content Index[1] Content ID[1] Circle Code [CircleCode] Language Location Code [" +
                 "2] Content Name [contentName] Content Type [PROMPT] Content File [contentFile] Content Duration [" +
                 "120] Card Number [20]", contentUploadCsv.toString());

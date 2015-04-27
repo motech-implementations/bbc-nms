@@ -4,8 +4,8 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
+import org.motechproject.nms.masterdata.domain.CsvOperator;
 import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.OperatorCsv;
 import org.motechproject.nms.masterdata.service.OperatorCsvService;
 import org.motechproject.nms.masterdata.service.OperatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class OperatorCsvHandler {
     private OperatorCsvService operatorCsvService;
 
     private BulkUploadErrLogService bulkUploadErrLogService;
+
 
     private static Logger logger = LoggerFactory.getLogger(OperatorCsvHandler.class);
 
@@ -58,13 +61,58 @@ public class OperatorCsvHandler {
         logger.info("OPERATOR_CSV_SUCCESS event received");
         Map<String, Object> params = motechEvent.getParameters();
 
-        OperatorCsv record = null;
-        Operator persistentRecord = null;
-
         List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
 
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        operatorService.getOperatorDataService()
+                .doInTransaction(new TransactionCallback<Operator>() {
+
+                    List<Long> operatorCsvId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<Operator> init(
+                            List<Long> createdId,
+                            String csvFileName) {
+                        this.operatorCsvId = createdId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public Operator doInTransaction(
+                            TransactionStatus status) {
+                        Operator transactionObject = null;
+                        processOperatorRecords(csvFileName, operatorCsvId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+    /**
+     * This method is used to process OperatorCsv records and upload it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
+    private void processOperatorRecords(String csvFileName, List<Long> createdIds) {
+
+        CsvOperator record = null;
+        Operator persistentRecord = null;
         DateTime timeStamp = new DateTime();
         BulkUploadError errorDetail = new BulkUploadError();
 
@@ -123,7 +171,7 @@ public class OperatorCsvHandler {
      * @return Operator record after the mapping
      * @throws DataValidationException
      */
-    private Operator mapOperatorFrom(OperatorCsv record) throws DataValidationException {
+    private Operator mapOperatorFrom(CsvOperator record) throws DataValidationException {
         Operator newRecord = new Operator();
 
         newRecord.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));

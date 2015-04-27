@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.HealthSubFacilityCsv;
+import org.motechproject.nms.masterdata.domain.CsvHealthSubFacility;
 import org.motechproject.nms.masterdata.repository.HealthSubFacilityCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.HealthSubFacilityCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class HealthSubFacilityCsvServiceImpl implements HealthSubFacilityCsvServ
      * @param record of the HealthSubFacilityCsv
      */
     @Override
-    public void delete(HealthSubFacilityCsv record) {
+    public void delete(CsvHealthSubFacility record) {
         healthSubFacilityCsvRecordsDataService.delete(record);
 
     }
@@ -37,7 +37,7 @@ public class HealthSubFacilityCsvServiceImpl implements HealthSubFacilityCsvServ
      * @param record of the HealthSubFacilityCsv
      */
     @Override
-    public HealthSubFacilityCsv create(HealthSubFacilityCsv record) {
+    public CsvHealthSubFacility create(CsvHealthSubFacility record) {
         return healthSubFacilityCsvRecordsDataService.create(record);
     }
 
@@ -48,7 +48,7 @@ public class HealthSubFacilityCsvServiceImpl implements HealthSubFacilityCsvServ
      * @return HealthSubFacility
      */
     @Override
-    public HealthSubFacilityCsv findById(Long id) {
+    public CsvHealthSubFacility findById(Long id) {
         return healthSubFacilityCsvRecordsDataService.findById(id);
     }
 

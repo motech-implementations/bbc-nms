@@ -3,7 +3,6 @@ package org.motechproject.nms.util.domain;
 import org.joda.time.DateTime;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
-import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
 /**
@@ -13,23 +12,18 @@ import org.motechproject.mds.domain.MdsEntity;
 @Entity
 public class BulkUploadStatus extends MdsEntity {
 
-    @UIDisplayable(position = 0)
-    @Field
-    private String bulkUploadFileName;
-
-    @UIDisplayable(position = 1)
-    @Field
-    private DateTime timeOfUpload;
-
-    @UIDisplayable(position = 2)
     @Field
     private String uploadedBy;
 
-    @UIDisplayable(position = 3)
+    @Field
+    private String bulkUploadFileName;
+
+    @Field
+    private DateTime timeOfUpload;
+
     @Field
     private Integer numberOfSuccessfulRecords;
 
-    @UIDisplayable(position = 4)
     @Field
     private Integer numberOfFailedRecords;
 

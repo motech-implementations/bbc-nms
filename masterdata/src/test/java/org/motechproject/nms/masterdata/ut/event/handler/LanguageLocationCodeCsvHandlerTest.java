@@ -57,12 +57,12 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         init();
         LanguageLocationCode record = new LanguageLocationCode();
 
-        LanguageLocationCodeCsv csv = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csv = new CsvLanguageLocationCode();
         csv.setStateCode("");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", CsvLanguageLocationCode.class);
             method.setAccessible(true);
             record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -78,14 +78,14 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         init();
         LanguageLocationCode record = new LanguageLocationCode();
 
-        LanguageLocationCodeCsv csv = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csv = new CsvLanguageLocationCode();
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setCircleCode("testCode");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", CsvLanguageLocationCode.class);
             method.setAccessible(true);
             record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -104,14 +104,14 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         state.setStateCode(1L);
         Mockito.when(locationService.getStateByCode(1L)).thenReturn(state);
 
-        LanguageLocationCodeCsv csv = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csv = new CsvLanguageLocationCode();
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setCircleCode("testCode");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", CsvLanguageLocationCode.class);
             method.setAccessible(true);
             record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -136,14 +136,14 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         Mockito.when(locationService.getStateByCode(1L)).thenReturn(state);
         Mockito.when(locationService.getDistrictByCode(1L, 1L)).thenReturn(district);
 
-        LanguageLocationCodeCsv csv = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csv = new CsvLanguageLocationCode();
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setCircleCode("testCode");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", CsvLanguageLocationCode.class);
             method.setAccessible(true);
             record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -171,7 +171,7 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
         Mockito.when(locationService.getDistrictByCode(1L, 1L)).thenReturn(district);
         Mockito.when(circleService.getRecordByCode("testCode")).thenReturn(circle);
 
-        LanguageLocationCodeCsv csv = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csv = new CsvLanguageLocationCode();
         csv.setStateCode("1");
         csv.setDistrictCode("1");
         csv.setCircleCode("testCode");
@@ -183,7 +183,7 @@ public class LanguageLocationCodeCsvHandlerTest extends TestCase {
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", LanguageLocationCodeCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapLanguageLocationCodeFrom", CsvLanguageLocationCode.class);
             method.setAccessible(true);
             record = (LanguageLocationCode) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {

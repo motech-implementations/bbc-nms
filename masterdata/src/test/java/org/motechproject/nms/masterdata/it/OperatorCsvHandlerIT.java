@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Operator;
-import org.motechproject.nms.masterdata.domain.OperatorCsv;
+import org.motechproject.nms.masterdata.domain.CsvOperator;
 import org.motechproject.nms.masterdata.event.handler.OperatorCsvHandler;
 import org.motechproject.nms.masterdata.repository.OperatorCsvDataService;
 import org.motechproject.nms.masterdata.repository.OperatorDataService;
@@ -54,10 +54,10 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldCreateCircleRecordsAfterCsvUpload() throws Exception {
-        OperatorCsv csv = new OperatorCsv();
+        CsvOperator csv = new CsvOperator();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        OperatorCsv dbCsv = operatorCsvDataService.create(csv);
+        CsvOperator dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
         OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);
@@ -69,12 +69,12 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldUpdateOperatorRecordsAfterCsvUpload() throws Exception {
-        OperatorCsv csv = new OperatorCsv();
+        CsvOperator csv = new CsvOperator();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        OperatorCsv dbCsv = operatorCsvDataService.create(csv);
+        CsvOperator dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
-        OperatorCsv csv2 = new OperatorCsv();
+        CsvOperator csv2 = new CsvOperator();
         csv2.setName("MotechEventChanged");
         csv2.setCode("12345");
         dbCsv = operatorCsvDataService.create(csv2);
@@ -98,10 +98,10 @@ public class OperatorCsvHandlerIT extends BasePaxIT {
 
     @Test
     public void shouldRaiseDataValidationException() throws Exception {
-        OperatorCsv csv = new OperatorCsv();
+        CsvOperator csv = new CsvOperator();
         csv.setName("MotechEventCreateTest");
         csv.setCode("");
-        OperatorCsv dbCsv = operatorCsvDataService.create(csv);
+        CsvOperator dbCsv = operatorCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
 
         OperatorCsvHandler operatorCsvHandler = new OperatorCsvHandler(operatorService, operatorCsvService, bulkUploadErrLogService);

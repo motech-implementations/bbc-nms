@@ -1,5 +1,7 @@
 package org.motechproject.nms.mobilekunji.service;
 
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.util.helper.DataValidationException;
@@ -19,11 +21,11 @@ public interface UserDetailsService {
      * @param callId     callId of the calling user
      * @return User detail response object
      */
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, String callId) throws DataValidationException, NmsInternalServerError;
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operator, String callId) throws DataValidationException, NmsInternalServerError, ServiceNotDeployedException, FlwNotInWhiteListException;
 
     /**
      * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
      */
-    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException;
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException, ServiceNotDeployedException, FlwNotInWhiteListException;
 
 }

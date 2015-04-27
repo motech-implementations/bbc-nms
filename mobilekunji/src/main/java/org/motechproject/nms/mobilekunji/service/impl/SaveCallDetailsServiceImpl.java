@@ -52,7 +52,6 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
         logger.info("Save CallDetail Entered successfully.");
 
-        userProfileDetailsService.validateOperator(saveCallDetailApiRequest.getOperator());
 
         Long nmsId = updateFlwDetail(saveCallDetailApiRequest);
 
@@ -69,8 +68,10 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      */
     private void setCallDetail(Long nmsId, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
-        CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), nmsId, saveCallDetailApiRequest.getCircle(),
-                saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime());
+        CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), saveCallDetailApiRequest.getCallingNumber(),
+                saveCallDetailApiRequest.getOperator(),saveCallDetailApiRequest.getCallStatus(),
+                saveCallDetailApiRequest.getCallDisconnectReason(),saveCallDetailApiRequest.getCircle(),
+                saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime(),nmsId);
 
         if (null != saveCallDetailApiRequest.getContent() && !saveCallDetailApiRequest.getContent().isEmpty()) {
 
@@ -110,7 +111,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         if (null != flwDetail) {
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         } else {
-            ParseDataHelper.raiseInvalidDataException("CallingNumber ", saveCallDetailApiRequest.getCallingNumber());
+            return null;
         }
         return flwDetail.getNmsFlwId();
     }

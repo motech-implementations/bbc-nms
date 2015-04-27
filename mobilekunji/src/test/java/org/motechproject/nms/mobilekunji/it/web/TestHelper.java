@@ -25,6 +25,10 @@ public class TestHelper {
         State stateData = new State();
         stateData.setName("UP");
         stateData.setStateCode(25L);
+        stateData.setIsKkDeployed(true);
+        stateData.setIsMaDeployed(true);
+        stateData.setIsMkDeployed(true);
+        stateData.setIsWhiteListEnable(true);
         stateData.setDistrict(districtSet);
         return stateData;
     }
@@ -77,7 +81,7 @@ public class TestHelper {
         languageLocationCode.setStateCode(25L);
         languageLocationCode.setDistrictCode(3L);
 
-        languageLocationCode.setLanguageLocationCode(29);
+        languageLocationCode.setLanguageLocationCode("29");
         languageLocationCode.setLanguageMK("Hindi");
         languageLocationCode.setLanguageKK("Hindi");
         languageLocationCode.setLanguageMA("Hindi");
@@ -102,7 +106,7 @@ public class TestHelper {
         LanguageLocationCodeApiRequest request = new LanguageLocationCodeApiRequest();
         request.setCallId("111111111111111");
         request.setCallingNumber("9810179788");
-        request.setLanguageLocationCode(29);
+        request.setLanguageLocationCode("29");
 
         return request;
     }
@@ -120,7 +124,6 @@ public class TestHelper {
         request.setEndOfUsagePromptCounter(0);
         request.setWelcomeMessagePromptFlag(false);
         request.setCallDisconnectReason("1");
-        request.setCallStatus(1);
         request.setCallStartTime(1427372125L);
         request.setCallEndTime(1427372128L);
 
@@ -132,11 +135,11 @@ public class TestHelper {
         List<CardDetail> cardDetailList = new ArrayList<>();
 
         CardDetail cardDetail = new CardDetail();
-        cardDetail.setMkCardNumber(11);
+        cardDetail.setMkCardCode("01");
         cardDetail.setAudioFileName("Yellowfever.wav");
         cardDetail.setContentName("YellowFever");
-        cardDetail.setEndTime(1222222221);
-        cardDetail.setStartTime(1200000000);
+        cardDetail.setEndTime(1222222221L);
+        cardDetail.setStartTime(1200000000L);
 
         cardDetailList.add(cardDetail);
 

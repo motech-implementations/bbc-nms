@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.StateCsv;
+import org.motechproject.nms.masterdata.domain.CsvState;
 
 /**
  * This interface is used for crud operations on StateCsv
@@ -12,14 +12,14 @@ public interface StateCsvService {
      *
      * @param record of the StateCsv
      */
-    void delete(StateCsv record);
+    void delete(CsvState record);
 
     /**
      * create StateCsv type object
      *
      * @param record of the StateCsv
      */
-    StateCsv create(StateCsv record);
+    CsvState create(CsvState record);
 
     /**
      * Finds the State Csv details by its Id
@@ -27,6 +27,6 @@ public interface StateCsvService {
      * @param id
      * @return StateCsv
      */
-    StateCsv findById(Long id);
+    CsvState findById(Long id);
 
 }

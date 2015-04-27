@@ -83,7 +83,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
 
         //Do Assertions
-        LanguageLocationCodeCsv csvRecord = languageLocationCodeServiceCsv.getRecord(createdIds.get(0));
+        CsvLanguageLocationCode csvRecord = languageLocationCodeServiceCsv.getRecord(createdIds.get(0));
         Assert.assertNull(csvRecord);
 
         LanguageLocationCode record = languageLocationCodeService.getRecordByLocationCode(1L, 1L);
@@ -93,7 +93,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageKK().equals("LanguageKK"));
         Assert.assertTrue(record.getLanguageMA().equals("LanguageMA"));
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMK"));
-        Assert.assertTrue(record.getLanguageLocationCode().equals(123));
+        Assert.assertTrue(record.getLanguageLocationCode().equals("123"));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
-        LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csvRecord = new CsvLanguageLocationCode();
         csvRecord.setCircleCode("testCode");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("1");
@@ -115,7 +115,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMAChanged");
         csvRecord.setLanguageMK("LanguageMKChanged");
         csvRecord.setLanguageLocationCode("321");
-        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
+        CsvLanguageLocationCode dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -131,7 +131,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Assert.assertTrue(record.getLanguageKK().equals("LanguageKKChanged"));
         Assert.assertTrue(record.getLanguageMA().equals("LanguageMAChanged"));
         Assert.assertTrue(record.getLanguageMK().equals("LanguageMKChanged"));
-        Assert.assertTrue(record.getLanguageLocationCode().equals(321));
+        Assert.assertTrue(record.getLanguageLocationCode().equals("321"));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("name");
         circle.setCode("testCode");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("123");
         circle = circleService.create(circle);
 
         //create State with statecode "1"
@@ -174,7 +174,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
-        LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csvRecord = new CsvLanguageLocationCode();
         csvRecord.setCircleCode("testCode");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("@");
@@ -183,7 +183,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
+        CsvLanguageLocationCode dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
 
         llcCsvHandler.languageLocationCodeCsvSuccess(createMotechEvent(createdIds));
@@ -201,7 +201,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         Circle circle = new Circle();
         circle.setName("testCircle");
         circle.setCode("testCode");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("123");
         circle = circleService.create(circle);
 
         //create State with statecode "1"
@@ -224,7 +224,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
 
         //create LanguageLocationCodeCsv record with circleCode "testCode",
         // districtCode "1" and stateCode "1"
-        LanguageLocationCodeCsv csvRecord = new LanguageLocationCodeCsv();
+        CsvLanguageLocationCode csvRecord = new CsvLanguageLocationCode();
         csvRecord.setCircleCode("testCode");
         csvRecord.setDistrictCode("1");
         csvRecord.setStateCode("1");
@@ -233,7 +233,7 @@ public class LanguageLocationCodeCsvHandlerIT extends BasePaxIT {
         csvRecord.setLanguageMA("LanguageMA");
         csvRecord.setLanguageMK("LanguageMK");
         csvRecord.setLanguageLocationCode("123");
-        LanguageLocationCodeCsv dbCsv = llcCsvDataService.create(csvRecord);
+        CsvLanguageLocationCode dbCsv = llcCsvDataService.create(csvRecord);
         createdIds.add(dbCsv.getId());
     }
 

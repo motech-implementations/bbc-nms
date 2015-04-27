@@ -94,4 +94,38 @@ public interface LocationService {
      * @return Integer object corresponding to the Census (or MCTS )code
      */
     Integer getMkCappingByCode(Long stateCode);
+
+    /**
+     * Check whether MK service is deployed in the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+
+    Boolean getMkServiceDeployedByCode(Long stateCode);
+
+    /**
+     * Check whether MA service is deployed in the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    Boolean getMaServiceDeployedByCode(Long stateCode);
+
+    /**
+     * Check whether KK service is deployed in the the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    Boolean getKkServiceDeployedByCode(Long stateCode);
+
+    /**
+     * Check whether White List for msisdn is enabled in the State or not by its State Code
+     *
+     * @param stateCode
+     * @return true/false
+     */
+    Boolean getWhiteListingEnableStatusByCode(Long stateCode);
+
 }
