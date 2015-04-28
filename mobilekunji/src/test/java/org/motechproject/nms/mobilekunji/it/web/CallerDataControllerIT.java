@@ -4,21 +4,20 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.domain.WhiteListUsers;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
+import org.motechproject.nms.frontlineworker.service.WhiteListUsersService;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
-import org.motechproject.nms.mobilekunji.domain.FlwDetail;
-import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.*;
 import org.motechproject.nms.mobilekunji.web.CallerDataController;
-import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.motechproject.testing.osgi.BasePaxIT;
@@ -30,8 +29,6 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
-import static junit.framework.Assert.assertNull;
-import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -78,6 +75,9 @@ public class CallerDataControllerIT extends BasePaxIT {
     @Inject
     private CallDetailService callDetailService;
 
+    @Inject
+    private WhiteListUsersService whiteListUsersService;
+
 
     private CallerDataController controller;
 
@@ -92,6 +92,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(saveCallDetailsService);
         assertNotNull(circleService);
         assertNotNull(operatorService);
+        assertNotNull(whiteListUsersService);
         assertNotNull(configurationService);
         assertNotNull(languageLocationCodeService);
     }
@@ -117,13 +118,39 @@ public class CallerDataControllerIT extends BasePaxIT {
         languageLocationCodeData.setCircle(circleData);
         languageLocationCodeService.create(languageLocationCodeData);
 
+        WhiteListUsers whilteListUserData = TestHelper.getWhiteListUserData();
+        whiteListUsersService.createWhiteListUsers(whilteListUserData);
+
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
-        //For Default National Capping
+        //For Default National Cappings
         Configuration configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
-        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
-        flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
+
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+
+        assertNotNull(frontLineWorker);
+        assertNotNull(userDetailApiResponse);
+        assertTrue(userDetailApiResponse.getCircle().equals(circleData.getCode()));
+       /* assertTrue(userDetailApiResponse.getLanguageLocationCode() == languageLocationCodeData.getLanguageLocationCode());*/
+        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+        assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+
+        /*This case is used to Test SaveCallDetail */
+
+        SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
+
+        controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
+
+
+        FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        CallDetail callDetail = callDetailService.findCallDetailByCallingNumber("9810179788");
+
+        assertNotNull(flwWorker);
+        assertNotNull(callDetail);
+
+
+      /*  flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
         flwDetailService.update(flwDetail);
         configurationService.updateConfiguration(configurationData);
 
@@ -132,7 +159,12 @@ public class CallerDataControllerIT extends BasePaxIT {
         //For State Level Capping Type and Next Date Condition
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
         configurationService.updateConfiguration(configurationData);
-        flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
+
+       */
+
+
+
+       /* flwDetail = flwDetailService.findFlwDetailByMsisdn("9810179788");
         flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusMonths(2));
         flwDetailService.update(flwDetail);
 
@@ -173,17 +205,17 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(flwWorker);
         assertTrue(flwWorker.getLanguageLocationCodeId().equals("29"));
 
-        /*
+
         This case is added to check whether FlwDetail is Updated or Not
-        */
+
         frontLineWorkerService.deleteFrontLineWorker(flwWorker);
 
         userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
         assertNotNull(userDetailApiResponse);
 
-        /*
+
         This case is used to Test SaveCallDetail
-         */
+
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
 
         controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
@@ -194,15 +226,15 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertNotNull(flwDetail);
         assertNotNull(callDetail);
 
-        /* This case is for Calling Number not existing in FlwDetail
+         This case is for Calling Number not existing in FlwDetail
         * In this case InvalidDataException Occurs
-        */
+
         try {
             saveCallDetailApiRequest.setCallingNumber("8888888888");
             controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
         } catch (DataValidationException e) {
             assertEquals(e.getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
-        }
+        }*/
     }
 
 }

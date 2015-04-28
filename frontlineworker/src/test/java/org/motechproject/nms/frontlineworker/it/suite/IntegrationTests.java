@@ -10,7 +10,7 @@ import org.motechproject.nms.frontlineworker.it.event.handler.WhiteListUsersHand
  * Parent IT class to run all the individual IT cases.
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ FrontlineWorkerHandlerIT.class,
+@Suite.SuiteClasses({FrontlineWorkerHandlerIT.class,
         UserProfileDetailsImplIT.class, WhiteListUsersHandlerIT.class})
 public class IntegrationTests {
 }

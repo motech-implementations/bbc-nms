@@ -11,7 +11,18 @@ import org.motechproject.nms.frontlineworker.domain.WhiteListUsers;
  */
 public interface WhiteListUsersService {
 
+    /**
+     * This procedure is used to find a WhiteListUsers object using the contact number
+     *
+     * @param contactNo contact number for which WhiteListUsers object is to be returned
+     * @return
+     */
     public WhiteListUsers findContactNo(String contactNo);
 
+    /**
+     * This procedure is used to create a new WhiteListUsers object in databse
+     *
+     * @param whiteListUsers
+     */
     public void createWhiteListUsers(WhiteListUsers whiteListUsers);
 }

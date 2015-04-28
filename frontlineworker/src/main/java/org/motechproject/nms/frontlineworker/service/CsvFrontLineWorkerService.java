@@ -13,11 +13,34 @@ import java.util.List;
 public interface CsvFrontLineWorkerService {
 
 
+    /**
+     * This procedure is used to create a new csvFrontLineWorker record in database
+     *
+     * @param csvFrontLineWorker new record to be saved in database
+     * @return new csvFrontLineWorker record saved in database
+     */
     public CsvFrontLineWorker createFrontLineWorkerCsv(CsvFrontLineWorker csvFrontLineWorker);
 
+    /**
+     * This procedure is used to find the csvFrontLineWorker record in the csv to be uploaded
+     *
+     * @param id id of the record in csv
+     * @return complete csvFrontLineWorker object fetched from csv to be uploaded
+     */
     public CsvFrontLineWorker findByIdInCsv(Long id);
 
+    /**
+     * This procedure deletes the csvFrontLineWorker record from the uploaded csv file after CRUD operation is
+     * performed on it
+     *
+     * @param csvFrontLineWorker record to be deleted from csv file
+     */
     public void deleteFromCsv(CsvFrontLineWorker csvFrontLineWorker);
 
+    /**
+     * this procedure retrieves all the csvFrontLineWorker records from uploaded csv
+     *
+     * @return list of the csvFrontLineWorker records present in uploaded file
+     */
     public List<CsvFrontLineWorker> retrieveAllFromCsv();
 }

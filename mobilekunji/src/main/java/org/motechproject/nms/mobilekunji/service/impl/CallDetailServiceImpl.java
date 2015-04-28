@@ -55,12 +55,12 @@ public class CallDetailServiceImpl implements CallDetailService {
     /**
      * Finds the service consumption details of Flw by its msisdn
      *
-     * @param nmsFlwId
+     * @param callingNumber
      * @return CallDetail
      */
     @Override
-    public CallDetail findCallDetailByNmsId(Long nmsFlwId) {
-        return callDetailRecordDataService.findCallDetailByNmsFlwId(nmsFlwId);
+    public CallDetail findCallDetailByCallingNumber(String callingNumber) {
+        return callDetailRecordDataService.findCallDetailByCallingNumber(callingNumber);
     }
 
 }

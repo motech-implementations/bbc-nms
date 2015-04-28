@@ -98,10 +98,4 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     public FrontLineWorker findById(Long id) {
         return frontLineWorkerRecordDataService.findById(id);
     }
-
-    @Override
-    public void deleteAll() {
-        frontLineWorkerRecordDataService.deleteAll();
-    }
-
 }
