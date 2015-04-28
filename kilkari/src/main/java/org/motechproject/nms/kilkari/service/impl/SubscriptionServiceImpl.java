@@ -537,14 +537,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     /**
      * This method deactivates the subscription corresponding to subscriptionId
      * @param subscriptionId Long type object
+     * @return true if deactivated, else false
      */
     @Override
-    public void deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
+    public Boolean deactivateSubscription(Long subscriptionId, String operatorCode, String circleCode)
             throws DataValidationException{
         commonValidatorService.validateCircle(circleCode);
         commonValidatorService.validateOperator(operatorCode);
 
-        deactivateSubscription(subscriptionId, DeactivationReason.USER_DEACTIVATED);
+        return deactivateSubscription(subscriptionId, DeactivationReason.USER_DEACTIVATED);
     }
 
     /**
@@ -554,14 +555,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * 
      * @param subscriptionId Long type object
      * @param reason DeactivateReason
+     * @return true if deactivated, else false
      */
     @Override
-    public void deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
+    public Boolean deactivateSubscription(Long subscriptionId, DeactivationReason reason) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         if (subscription != null && subscription.getStatus() != Status.COMPLETED) {
             if(subscription.getChannel()==Channel.IVR && reason == DeactivationReason.MSISDN_IN_DND){
-                logger.warn("IVR Subscription[{}] is not eligible for DNS deactivation", subscriptionId);
-                return;
+                logger.warn("IVR Subscription[{}] is not eligible for DND deactivation", subscriptionId);
+                return false;
             }
             subscription.setStatus(Status.DEACTIVATED);
             subscription.setDeactivationReason(reason);
@@ -569,9 +571,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             subscriptionDataService.update(subscription);
             activeSubscriptionCountService.decrementActiveSubscriptionCount();
             createSubscriptionMeasure(subscription);
+            return true;
         } else {
             logger.warn(String.format("Subscription not found for given subscriptionId{[%d]} or is Completed", subscriptionId));
         }
+        return  false;
     }
 
     /**
@@ -724,7 +728,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Integer retryAttempt(Long subscriptionId) {
         Subscription subscription = subscriptionDataService.findById(subscriptionId);
         int retryDay = -1;
-        if (subscription != null && subscription.getStatus() != Status.DEACTIVATED) {
+        if (subscription != null && subscription.getStatus() != Status.DEACTIVATED &&
+                subscription.getStatus() != Status.COMPLETED) {
             retryDay = Days.daysBetween(subscription.getLastObdDate(), DateTime.now().toDateMidnight()).getDays();
             if(configurationService.getConfiguration().getNumMsgPerWeek() == Constants.FIRST_MSG_OF_WEEK 
                     && retryDay<=Constants.RETRY_DAY_NUMBER_THREE && retryDay > 0) {
@@ -736,7 +741,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 retryDay = -1;
             }
         } else {
-            logger.warn(String.format("Subscription not found or deactivated for the given subscriptionId{[%d]}", subscriptionId));
+            logger.warn(String.format("Subscription not found or completed/deactivated for the given subscriptionId{[%d]}", subscriptionId));
         }
         return retryDay;
     }
