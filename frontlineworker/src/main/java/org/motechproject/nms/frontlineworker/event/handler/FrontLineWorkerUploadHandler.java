@@ -57,8 +57,8 @@ public class FrontLineWorkerUploadHandler {
     private FrontLineWorkerService frontLineWorkerService;
     private FrontLineWorkerRecordDataService frontLineWorkerRecordDataService;
     private CsvFrontLineWorkerService csvFrontLineWorkerService;
-    public static final String nmsFlwIdString = "NMS Flw Id";
-    public static final String contactNoString = "Contact Number";
+    public static final String NMS_FLW_ID = "NMS Flw Id";
+    public static final String CONTACT_NUMBER = "Contact Number";
 
 
     @Autowired
@@ -215,7 +215,7 @@ public class FrontLineWorkerUploadHandler {
                         //if in case of updation, the CSV has system generated nmsFlwId and is not equal to the same stored
                         // in database, then exception is to be thrown
                         if ((dbRecord != null) && (nmsFlwId != null) && (dbRecord.getId().longValue() != nmsFlwId.longValue())) {
-                            ParseDataHelper.raiseInvalidDataException(nmsFlwIdString, "Incorrect");
+                            ParseDataHelper.raiseInvalidDataException(NMS_FLW_ID, "Incorrect");
                         }
 
                         if (dbRecord == null) {
@@ -291,16 +291,16 @@ public class FrontLineWorkerUploadHandler {
         logger.debug(" checking for existence of record that is to be marked invalid");
         FrontLineWorker dbRecord = null;
         FrontLineWorker dbRecordByContactNo = null;
-        Long nmsFlwId = ParseDataHelper.validateAndParseLong(nmsFlwIdString, csvFrontLineWorker.getNmsFlwId(), false);
+        Long nmsFlwId = ParseDataHelper.validateAndParseLong(NMS_FLW_ID, csvFrontLineWorker.getNmsFlwId(), false);
 
 
         if (nmsFlwId == null) {
             logger.debug(" nms Flw Id is null. searching by Contact Number");
 
-            String contactNo = ParseDataHelper.validateAndTrimMsisdn(contactNoString, ParseDataHelper.validateAndParseString(contactNoString, csvFrontLineWorker.getContactNo(), true));
+            String contactNo = ParseDataHelper.validateAndTrimMsisdn(CONTACT_NUMBER, ParseDataHelper.validateAndParseString(CONTACT_NUMBER, csvFrontLineWorker.getContactNo(), true));
             dbRecordByContactNo = frontLineWorkerService.getFlwBycontactNo(contactNo);
             if (dbRecordByContactNo == null) {
-                ParseDataHelper.raiseInvalidDataException(contactNoString, csvFrontLineWorker.getContactNo());
+                ParseDataHelper.raiseInvalidDataException(CONTACT_NUMBER, csvFrontLineWorker.getContactNo());
             } else {
                 //mark record is invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
@@ -314,7 +314,7 @@ public class FrontLineWorkerUploadHandler {
             logger.debug(" nms Flw Id is not null. searching record in database by nmsFlwID");
             dbRecord = frontLineWorkerService.findById(nmsFlwId);
             if (dbRecord == null) {
-                ParseDataHelper.raiseInvalidDataException(nmsFlwIdString, nmsFlwId.toString());
+                ParseDataHelper.raiseInvalidDataException(NMS_FLW_ID, nmsFlwId.toString());
             } else {
                 //update the record as invalid
                 logger.debug(" Record found in database. Marking recors as invalid");
@@ -452,7 +452,7 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setHealthFacilityId(healthFacilityConsistencyCheck(frontLineWorker.getHealthBlockId(), record.getPhcCode()));
         frontLineWorker.setHealthSubFacilityId(healthSubFacilityConsistencyCheck(frontLineWorker.getHealthFacilityId(), record.getSubCentreCode()));
 
-        contactNo = ParseDataHelper.validateAndTrimMsisdn(contactNoString, ParseDataHelper.validateAndParseString(contactNoString, record.getContactNo(), true));
+        contactNo = ParseDataHelper.validateAndTrimMsisdn(CONTACT_NUMBER, ParseDataHelper.validateAndParseString(CONTACT_NUMBER, record.getContactNo(), true));
         frontLineWorker.setContactNo(contactNo);
 
         if (record.getAlternateContactNo() != null) {
@@ -496,7 +496,7 @@ public class FrontLineWorkerUploadHandler {
         frontLineWorker.setName(ParseDataHelper.validateAndParseString("Name", record.getName(), true));
 
         frontLineWorker.setFlwId(ParseDataHelper.validateAndParseLong("Flw Id", record.getFlwId(), false));
-        frontLineWorker.setId(ParseDataHelper.validateAndParseLong(nmsFlwIdString, record.getNmsFlwId(), false));
+        frontLineWorker.setId(ParseDataHelper.validateAndParseLong(NMS_FLW_ID, record.getNmsFlwId(), false));
         frontLineWorker.setAdhaarNumber(ParseDataHelper.validateAndParseString("Adhaar Number", record.getAdhaarNo(), false));
 
         frontLineWorker.setStatus(Status.INACTIVE);
@@ -696,7 +696,7 @@ public class FrontLineWorkerUploadHandler {
         if (id != null) {
             dbRecord = frontLineWorkerService.findById(frontLineWorker.getId());
             if (dbRecord == null) {
-                ParseDataHelper.raiseInvalidDataException(nmsFlwIdString, id.toString());
+                ParseDataHelper.raiseInvalidDataException(NMS_FLW_ID, id.toString());
             }
 
 
