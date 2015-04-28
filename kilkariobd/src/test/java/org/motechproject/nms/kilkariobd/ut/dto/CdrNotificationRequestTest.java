@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkariobd.ut.dto;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.motechproject.nms.kilkariobd.builder.RequestBuilder;
 import org.motechproject.nms.kilkariobd.dto.request.CdrInfo;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
@@ -12,18 +13,10 @@ public class CdrNotificationRequestTest {
 
     @Test
     public void validateMandatoryParametersWithCDRDetailNull() {
-
-        CdrNotificationRequest cdrNotificationRequest = new CdrNotificationRequest();
-
-        CdrInfo cdrSummary = new CdrInfo();
-        cdrSummary.setCdrChecksum("checksum");
-        cdrSummary.setCdrFile("file");
-        cdrSummary.setRecordsCount(1L);
-
-        cdrNotificationRequest.setFileName("filename");
-        cdrNotificationRequest.setCdrDetail(null);
-        cdrNotificationRequest.setCdrSummary(cdrSummary);
-
+        RequestBuilder requestBuilder = new RequestBuilder();
+        CdrInfo cdrSummary = requestBuilder.buildCdrInfo("file", "checksum", 1L);
+        CdrNotificationRequest cdrNotificationRequest =
+                requestBuilder.buildCdrNotificationRequest("filename", cdrSummary, null);
         try {
             cdrNotificationRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
@@ -34,23 +27,11 @@ public class CdrNotificationRequestTest {
 
     @Test
     public void validateMandatoryParametersWithCDRDetailRecordCountNull() {
-
-        CdrNotificationRequest cdrNotificationRequest = new CdrNotificationRequest();
-
-        CdrInfo cdrSummary = new CdrInfo();
-        CdrInfo cdrDetail = new CdrInfo();
-
-        cdrSummary.setCdrChecksum("checksum");
-        cdrSummary.setCdrFile("file");
-        cdrSummary.setRecordsCount(1L);
-
-        cdrDetail.setRecordsCount(null);
-        cdrDetail.setCdrFile("cdrFile");
-        cdrDetail.setCdrChecksum("cdrChecksum");
-
-        cdrNotificationRequest.setFileName("filename");
-        cdrNotificationRequest.setCdrDetail(cdrDetail);
-        cdrNotificationRequest.setCdrSummary(cdrSummary);
+        RequestBuilder requestBuilder = new RequestBuilder();
+        CdrInfo cdrSummary = requestBuilder.buildCdrInfo("file", "checksum", 1L);
+        CdrInfo cdrDetail = requestBuilder.buildCdrInfo("cdrFile", "cdrChecksum", null);
+        CdrNotificationRequest cdrNotificationRequest =
+                requestBuilder.buildCdrNotificationRequest("filename", cdrSummary, cdrDetail);
 
         try {
             cdrNotificationRequest.validateMandatoryParameters();
@@ -62,14 +43,10 @@ public class CdrNotificationRequestTest {
 
     @Test
     public void validateMandatoryParametersWithCDRSummaryNull() {
-
-        CdrNotificationRequest cdrNotificationRequest = new CdrNotificationRequest();
-
-        CdrInfo cdrDetail = new CdrInfo();
-
-        cdrDetail.setRecordsCount(1L);
-        cdrDetail.setCdrFile("cdrFile");
-        cdrDetail.setCdrChecksum("cdrChecksum");
+        RequestBuilder requestBuilder = new RequestBuilder();
+        CdrInfo cdrDetail = requestBuilder.buildCdrInfo("cdrFile", "cdrChecksum", 1L);
+        CdrNotificationRequest cdrNotificationRequest =
+                requestBuilder.buildCdrNotificationRequest("filename", null, cdrDetail);
 
         cdrNotificationRequest.setFileName("filename");
         cdrNotificationRequest.setCdrDetail(cdrDetail);
@@ -85,23 +62,11 @@ public class CdrNotificationRequestTest {
 
     @Test
     public void validateMandatoryParametersWithCDRSummaryRecordCountNull() {
-
-        CdrNotificationRequest cdrNotificationRequest = new CdrNotificationRequest();
-
-        CdrInfo cdrSummary = new CdrInfo();
-        CdrInfo cdrDetail = new CdrInfo();
-
-        cdrSummary.setCdrChecksum("checksum");
-        cdrSummary.setCdrFile("file");
-        cdrSummary.setRecordsCount(null);
-
-        cdrDetail.setRecordsCount(1L);
-        cdrDetail.setCdrFile("cdrFile");
-        cdrDetail.setCdrChecksum("cdrChecksum");
-
-        cdrNotificationRequest.setFileName("filename");
-        cdrNotificationRequest.setCdrDetail(cdrDetail);
-        cdrNotificationRequest.setCdrSummary(cdrSummary);
+        RequestBuilder requestBuilder = new RequestBuilder();
+        CdrInfo cdrSummary = requestBuilder.buildCdrInfo("file", "checksum", null);
+        CdrInfo cdrDetail = requestBuilder.buildCdrInfo("cdrFile", "cdrChecksum", 1L);
+        CdrNotificationRequest cdrNotificationRequest =
+                requestBuilder.buildCdrNotificationRequest("filename", cdrSummary, cdrDetail);
 
         try {
             cdrNotificationRequest.validateMandatoryParameters();
@@ -110,7 +75,4 @@ public class CdrNotificationRequestTest {
             Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
         }
     }
-
-
-
 }

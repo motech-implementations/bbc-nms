@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.motechproject.mds.annotations.Ignore;
+import org.motechproject.nms.kilkariobd.builder.OutboundCallBuilder;
 import org.motechproject.nms.kilkariobd.client.HttpClient;
 import org.motechproject.nms.kilkariobd.client.ex.CDRFileProcessingFailedException;
 import org.motechproject.nms.kilkariobd.domain.CallFlowStatus;
@@ -49,22 +50,21 @@ public class OBDTargetFileHandlerTest extends TestCase {
 
     @Ignore
     public void testProcessCDRDetailThrowsCDRFileProcessingFailedException() {
-
         init();
-
         Method method = null;
-        String cdrFileName = "CDR_Detail_OBD_NMS1_2015041427090000";
+        OutboundCallBuilder callBuilder = new OutboundCallBuilder();
         DateTime date = DateTime.now().withTimeAtStartOfDay();
-        OutboundCallFlow todayCallFlow = new OutboundCallFlow();
-        OutboundCallFlow oldCallFlow = new OutboundCallFlow();
-        OutboundCallFlow todayCallFlowUpdated = new OutboundCallFlow();
+
+        OutboundCallFlow todayCallFlow = callBuilder.buildCallFlow(
+                null, CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED, null, null, null, null, null, null);
+
+        OutboundCallFlow oldCallFlow = callBuilder.buildCallFlow(null, null, null, null, null, 2L, null, null);
+
+        OutboundCallFlow todayCallFlowUpdated = callBuilder.buildCallFlow(
+                null, CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED, null, null, null, null, null, null);
 
         URL url = this.getClass().getClassLoader().getResource("CDR_Detail_OBD_NMS1_2015041427090000.csv");
         String filePath = url.getPath();
-
-        todayCallFlow.setStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
-        todayCallFlowUpdated.setStatus(CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
-        oldCallFlow.setCdrDetailRecordCount(2L);
 
         Mockito.when(callFlowService.findRecordByCreationDate(date)).thenReturn(todayCallFlow);
         Mockito.when(callFlowService.findRecordByFileName(filePath)).thenReturn(oldCallFlow);
@@ -80,7 +80,6 @@ public class OBDTargetFileHandlerTest extends TestCase {
             e.printStackTrace();
         }
         catch(Exception ex) {
-
             Assert.assertEquals("CDR_DETAIL_PROCESSING_FAILED", todayCallFlow.getStatus());
             Assert.assertTrue(ex instanceof CDRFileProcessingFailedException);
             Assert.assertEquals(((CDRFileProcessingFailedException) ex).getErrorCode(), FileProcessingStatus.FILE_RECORDCOUNT_ERROR);

@@ -9,7 +9,6 @@ public class CallStatusTest {
 
     @Test
     public void shouldGetStatusByInteger() {
-
         Assert.assertNotNull(CallStatus.getByInteger(1));
         Assert.assertNull(CallStatus.getByInteger(4));
     }
