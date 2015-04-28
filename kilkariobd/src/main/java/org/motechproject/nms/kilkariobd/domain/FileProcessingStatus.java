@@ -26,7 +26,7 @@ public enum FileProcessingStatus {
      * @param status value of the FileProcessingStatus
      * @return FileProcessingStatus object return and it can be null also
      */
-    public static FileProcessingStatus findBValue(final Integer status) {
+    public static FileProcessingStatus findByValue(final Integer status) {
         for (FileProcessingStatus iterator : FileProcessingStatus.values()) {
             if (iterator.getValue().equals(status)) {
                 return iterator;

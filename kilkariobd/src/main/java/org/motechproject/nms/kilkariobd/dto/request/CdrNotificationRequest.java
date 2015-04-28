@@ -47,27 +47,27 @@ public class CdrNotificationRequest {
      * @throws DataValidationException is to be thrown if one of the mandatory parameter is missing
      */
     public void validateMandatoryParameters() throws DataValidationException{
-        ParseDataHelper.validateAndParseString(Constants.FILE_NAME, fileName, true);
+        ParseDataHelper.validateString(Constants.FILE_NAME, fileName, true);
 
         if (cdrDetail == null) {
-            ParseDataHelper.raiseMissingDataException(Constants.CDR_DETAIL_INFO, null);
+            ParseDataHelper.raiseApiParameterMissingDataException(Constants.CDR_DETAIL_INFO, null);
         } else {
-            ParseDataHelper.validateAndParseString(Constants.CDR_DETAIL_CHECKSUM, cdrDetail.getCdrChecksum(), true);
-            ParseDataHelper.validateAndParseString(Constants.CDR_DETAIL_FILE, cdrDetail.getCdrFile(), true);
+            ParseDataHelper.validateString(Constants.CDR_DETAIL_CHECKSUM, cdrDetail.getCdrChecksum(), true);
+            ParseDataHelper.validateString(Constants.CDR_DETAIL_FILE, cdrDetail.getCdrFile(), true);
             if (cdrDetail.getRecordsCount() == null) {
-                ParseDataHelper.raiseMissingDataException(Constants.CDR_DETAIL_RECORDS_COUNT, null);
+                ParseDataHelper.raiseApiParameterInvalidDataException(Constants.CDR_DETAIL_RECORDS_COUNT, null);
             }
         }
 
         if (cdrSummary == null) {
-            ParseDataHelper.raiseMissingDataException(Constants.CDR_SUMMARY_INFO, null);
+            ParseDataHelper.raiseApiParameterMissingDataException(Constants.CDR_SUMMARY_INFO, null);
         } else {
 
             if (cdrSummary.getRecordsCount() == null) {
-                ParseDataHelper.raiseMissingDataException(Constants.CDR_SUMMARY_RECORDS_COUNT, null);
+                ParseDataHelper.raiseApiParameterInvalidDataException(Constants.CDR_SUMMARY_RECORDS_COUNT, null);
             }
-            ParseDataHelper.validateAndParseString(Constants.CDR_SUMMARY_FILE, cdrSummary.getCdrFile(), true);
-            ParseDataHelper.validateAndParseString(Constants.CDR_SUMMARY_CHECKSUM, cdrSummary.getCdrChecksum(), true);
+            ParseDataHelper.validateString(Constants.CDR_SUMMARY_FILE, cdrSummary.getCdrFile(), true);
+            ParseDataHelper.validateString(Constants.CDR_SUMMARY_CHECKSUM, cdrSummary.getCdrChecksum(), true);
         }
     }
 

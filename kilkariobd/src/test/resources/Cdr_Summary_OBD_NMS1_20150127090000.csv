@@ -1,0 +1,2 @@
+RequestId,ServiceId,Msisdn,Cli,Priority,CallFlowURL,ContentFileName,WeekId,LanguageLocationCode,Circle,FinalStatus,StatusCode,Attempts
+123456,bbcvxml_obd_1426247315900,9985167784,4070123456,1,/apps/dvp/vp/menu/bbc/sample.vxml,W11_1.wav,22_1,11,AP,1,1001,1

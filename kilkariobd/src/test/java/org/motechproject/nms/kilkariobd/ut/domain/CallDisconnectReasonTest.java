@@ -9,7 +9,8 @@ public class CallDisconnectReasonTest {
 
     @Test
     public void shouldReturnCallDisconnectReason() {
-        Assert.assertNotNull(CallDisconnectReason.getByString("Normal Drop"));
+
+        Assert.assertEquals(CallDisconnectReason.NORMAL_DROP,CallDisconnectReason.getByString("Normal Drop"));
         Assert.assertNull(CallDisconnectReason.getByString("Wrong String"));
     }
 }

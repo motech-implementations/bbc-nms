@@ -34,9 +34,8 @@ public class CSVMapper {
 
         ICsvMapReader mapReader = null;
         List<Map<String, String>> listOfCdrSummaryRecords = new ArrayList<>();
+        mapReader = new CsvMapReader(new FileReader(fileName), CsvPreference.STANDARD_PREFERENCE);
         try {
-            mapReader = new CsvMapReader(new FileReader(fileName), CsvPreference.STANDARD_PREFERENCE);
-
             /*
              the header columns are used as the keys to the Map
               */

@@ -4,9 +4,11 @@ package org.motechproject.nms.kilkariobd.ut.dto;
 import org.junit.Assert;
 import org.junit.Test;
 import org.motechproject.nms.kilkariobd.builder.RequestBuilder;
+import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.dto.request.CdrInfo;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
+import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 
 public class CdrNotificationRequestTest {
@@ -22,6 +24,8 @@ public class CdrNotificationRequestTest {
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) ex).getErrorCode(),ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING );
+            Assert.assertEquals(((DataValidationException)ex).getErrorDesc(), String.format(ErrorDescriptionConstants.MISSING_API_PARAMETER_DESCRIPTION, Constants.CDR_DETAIL_INFO));
+
         }
     }
 
@@ -37,7 +41,8 @@ public class CdrNotificationRequestTest {
             cdrNotificationRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException)ex).getErrorDesc(),  String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.CDR_DETAIL_RECORDS_COUNT));
         }
     }
 
@@ -57,6 +62,7 @@ public class CdrNotificationRequestTest {
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+            Assert.assertEquals(((DataValidationException)ex).getErrorDesc(), String.format(ErrorDescriptionConstants.MISSING_API_PARAMETER_DESCRIPTION, Constants.CDR_SUMMARY_INFO));
         }
     }
 
@@ -72,7 +78,8 @@ public class CdrNotificationRequestTest {
             cdrNotificationRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
             Assert.assertTrue(ex instanceof DataValidationException);
-            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING);
+            Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
+            Assert.assertEquals(((DataValidationException)ex).getErrorDesc(), String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.CDR_SUMMARY_RECORDS_COUNT));
         }
     }
 }

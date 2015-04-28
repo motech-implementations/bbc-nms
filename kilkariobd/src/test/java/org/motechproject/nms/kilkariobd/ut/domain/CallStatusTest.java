@@ -9,7 +9,10 @@ public class CallStatusTest {
 
     @Test
     public void shouldGetStatusByInteger() {
-        Assert.assertNotNull(CallStatus.getByInteger(1));
+
+        Assert.assertEquals(CallStatus.SUCCESS, CallStatus.getByInteger(1));
+        Assert.assertEquals(CallStatus.FAILED, CallStatus.getByInteger(2));
+        Assert.assertEquals(CallStatus.REJECTED, CallStatus.getByInteger(3));
         Assert.assertNull(CallStatus.getByInteger(4));
     }
 }

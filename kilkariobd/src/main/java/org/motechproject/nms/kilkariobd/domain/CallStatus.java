@@ -7,7 +7,11 @@ public enum CallStatus {
     SUCCESS(1),
     FAILED(2),
     REJECTED(3);
-    
+
+    public Integer getCallStatus() {
+        return callStatus;
+    }
+
     private Integer callStatus;
     
     private CallStatus(Integer callStatus){
@@ -21,7 +25,7 @@ public enum CallStatus {
      */
     public static CallStatus getByInteger(Integer callStatus) {
         for (CallStatus status : CallStatus.values()) {
-            if (status.ordinal() == callStatus) {
+            if (status.getCallStatus().equals(callStatus)) {
                 return status;
             }
         }
