@@ -5,12 +5,15 @@ import org.junit.runners.Suite;
 import org.motechproject.nms.frontlineworker.it.event.handler.FrontlineWorkerHandlerIT;
 import org.motechproject.nms.frontlineworker.it.event.handler.UserProfileDetailsImplIT;
 import org.motechproject.nms.frontlineworker.it.event.handler.WhiteListUsersHandlerIT;
+import org.motechproject.nms.frontlineworker.it.initializer.InitializerIT;
+import org.motechproject.nms.frontlineworker.it.service.ConfigurationServiceIT;
 
 /**
  * Parent IT class to run all the individual IT cases.
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({FrontlineWorkerHandlerIT.class,
-        UserProfileDetailsImplIT.class, WhiteListUsersHandlerIT.class})
+        UserProfileDetailsImplIT.class, WhiteListUsersHandlerIT.class,
+        InitializerIT.class, ConfigurationServiceIT.class})
 public class IntegrationTests {
 }
