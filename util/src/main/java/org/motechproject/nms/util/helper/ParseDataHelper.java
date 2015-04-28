@@ -260,6 +260,64 @@ public final class ParseDataHelper {
         return parsedValue;
     }
 
+    /**
+     * This method validates a field of Long type for null values, and
+     * raises exception if a field is null.
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @return field value
+     * @throws DataValidationException
+     */
+    public static Long validateLong(String fieldName,
+                                    Long fieldValue)
+            throws DataValidationException {
+
+        if (fieldValue == null) {
+            raiseApiParameterMissingDataException(fieldName, null);
+        }
+        return fieldValue;
+    }
+
+    /**
+     * This method validates a field of Boolean type for null values, and
+     * raises exception if a field is null
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @return field value
+     * @throws DataValidationException
+     */
+    public static Boolean validateBoolean(String fieldName,
+                                    Boolean fieldValue)
+            throws DataValidationException {
+
+        if (fieldValue == null) {
+            raiseApiParameterMissingDataException(fieldName, null);
+        }
+        return fieldValue;
+    }
+
+    /**
+     * This method validates a Integer type for null values, and
+     * raises exception if field is null
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @return field value
+     * @throws DataValidationException
+     */
+    public static Integer validateInt(String fieldName,
+                                      Integer fieldValue)
+            throws DataValidationException {
+
+        if (fieldValue == null) {
+            raiseApiParameterMissingDataException(fieldName, null);
+        }
+
+        return fieldValue;
+    }
+
 
     /**
      * This method validates a field of Boolean type for null/empty values, and raises exception if a

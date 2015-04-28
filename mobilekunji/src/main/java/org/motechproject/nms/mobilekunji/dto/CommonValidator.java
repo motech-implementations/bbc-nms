@@ -11,7 +11,7 @@ import org.motechproject.nms.util.helper.ParseDataHelper;
 public class CommonValidator {
 
     /**
-     *  This method is used to validate Card Number of Two DIgit
+     *  This method is used to validate Card Number of Two Digits
      *
      *  @param cardNumber
      */
