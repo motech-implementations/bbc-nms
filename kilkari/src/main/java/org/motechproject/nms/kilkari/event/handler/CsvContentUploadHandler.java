@@ -156,7 +156,7 @@ public class CsvContentUploadHandler {
             ParseDataHelper.raiseInvalidDataException(Constants.CIRCLE_CODE, circleCode);
         }
 
-        Integer llc = ParseDataHelper.validateAndParseInt(Constants.LANGUAGE_LOCATION_CODE, record.getLanguageLocationCode(), true);
+        String llc = ParseDataHelper.validateAndParseString(Constants.LANGUAGE_LOCATION_CODE, record.getLanguageLocationCode(), true);
         if (languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, llc) != null) {
             newRecord.setLanguageLocationCode(llc);
         } else {

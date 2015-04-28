@@ -77,7 +77,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv1.setContentName("Content");
         contentUploadCsv1.setContentType("PROMPT");
         contentUploadCsv1.setContentFile("NewFile");
-        contentUploadCsv1.setCardNumber("10");
+        contentUploadCsv1.setCardCode("10");
         contentUploadCsv1.setContentDuration("120");
         contentUploadCsv1.setModifiedBy("Etasha");
         contentUploadCsv1.setOwner("Etasha");
@@ -91,7 +91,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv2.setContentName("Content");
         contentUploadCsv2.setContentType("CONTENT");
         contentUploadCsv2.setContentFile("NewFile");
-        contentUploadCsv2.setCardNumber("11");
+        contentUploadCsv2.setCardCode("11");
         contentUploadCsv2.setContentDuration("120");
         contentUploadCsv2.setModifiedBy("Etasha");
         contentUploadCsv2.setOwner("Etasha");
@@ -106,7 +106,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv3.setContentName("Content");
         contentUploadCsv3.setContentType("CONTENTS");
         contentUploadCsv3.setContentFile("NewFile");
-        contentUploadCsv3.setCardNumber("12");
+        contentUploadCsv3.setCardCode("12");
         contentUploadCsv3.setContentDuration("120");
         contentUploadCsv3.setModifiedBy("Etasha");
         contentUploadCsv3.setOwner("Etasha");
@@ -121,7 +121,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv4.setContentName("Content");
         contentUploadCsv4.setContentType("CONTENT");
         contentUploadCsv4.setContentFile("NewFile");
-        contentUploadCsv4.setCardNumber("10");
+        contentUploadCsv4.setCardCode("10");
         contentUploadCsv4.setContentDuration("120");
         contentUploadCsv4.setModifiedBy("Etasha");
         contentUploadCsv4.setOwner("Etasha");
@@ -151,11 +151,11 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
 
         assertTrue(12 == contentUpload.getContentId());
         assertEquals("CircleCode", contentUpload.getCircleCode());
-        assertTrue(123 == contentUpload.getLanguageLocationCode());
+        assertTrue("123".equals(contentUpload.getLanguageLocationCode()));
         assertEquals("Content", contentUpload.getContentName());
         assertEquals(ContentType.PROMPT, contentUpload.getContentType());
         assertEquals("NewFile", contentUpload.getContentFile());
-        assertTrue("10".equals(contentUpload.getCardNumber()));
+        assertTrue("10".equals(contentUpload.getCardCode()));
         assertTrue(120 == contentUpload.getContentDuration());
         assertEquals("Etasha", contentUpload.getCreator());
         assertEquals("Etasha", contentUpload.getModifiedBy());
@@ -178,7 +178,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -217,7 +217,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -256,7 +256,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -295,7 +295,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setLanguageLocationCode("123");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -334,7 +334,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setLanguageLocationCode("123");
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -373,7 +373,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setLanguageLocationCode("123");
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setContentDuration("120");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
@@ -447,7 +447,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setContentId("13");
         contentUploadCsv.setCircleCode("CircleCode");
         contentUploadCsv.setLanguageLocationCode("123");
-        contentUploadCsv.setCardNumber("222");
+        contentUploadCsv.setCardCode("222");
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
@@ -489,7 +489,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         contentUploadCsv.setContentName("Content");
         contentUploadCsv.setContentType("PROMPT");
         contentUploadCsv.setContentFile("NewFile");
-        contentUploadCsv.setCardNumber("10");
+        contentUploadCsv.setCardCode("10");
         contentUploadCsv.setModifiedBy("Etasha");
         contentUploadCsv.setOwner("Etasha");
         contentUploadCsv.setCreator("Etasha");

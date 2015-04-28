@@ -35,7 +35,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * This class represents the query to find list of service specific languageLocationCode for a circleCode
      */
     private class LanguageLocationCodeQuery implements
-            QueryExecution<List<Integer>> {
+            QueryExecution<List<String>> {
 
         private String circleCode;
         private String resultParamName;
@@ -56,14 +56,14 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
          *
          * @param query
          * @param restriction
-         * @return List&lt;Integer&gt;
+         * @return List&lt;String&gt;
          */
         @Override
-        public List<Integer> execute(Query query,
+        public List<String> execute(Query query,
                                      InstanceSecurityRestriction restriction) {
             query.setFilter("circleCode == '" + circleCode + "'");
             query.setResult("DISTINCT " + resultParamName + "");
-            return (List<Integer>) query.execute();
+            return (List<String>) query.execute();
         }
     }
 
@@ -73,10 +73,10 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @param query LanguageLocationCode Query
      * @return unique languageLocationCode else null
      */
-    private Integer executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query) {
+    private String executeUniqueLanguageLocationCodeQuery(LanguageLocationCodeQuery query) {
 
         /* get the list of distinct languageLocationCodes for the circle */
-        List<Integer> llcList = languageLocationCodeDataService.executeQuery(query);
+        List<String> llcList = languageLocationCodeDataService.executeQuery(query);
 
         /* If a unique languageLocationCode is found then return it else return null */
         if ((llcList != null) && (llcList.size() == 1)) {
@@ -143,7 +143,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * @param langLocCode languageLocationCode
      * @return returns null if record not found, else return the languageLocationCode object.
      */
-    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, Integer langLocCode) {
+    public LanguageLocationCode getRecordByCircleCodeAndLangLocCode(String circleCode, String langLocCode) {
         List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findByCircleCodeAndLangLocCode(circleCode, langLocCode);
         if (locationCodeList != null && !locationCodeList.isEmpty()) {
             return locationCodeList.get(0);
@@ -160,9 +160,9 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined languageLocationCode value
      */
     @Override
-    public Integer getLanguageLocationCodeByLocationCode(Long stateCode, Long districtCode) {
+    public String getLanguageLocationCodeByLocationCode(Long stateCode, Long districtCode) {
 
-        Integer llc = null;
+        String llc = null;
 
         LanguageLocationCode langLocCode = languageLocationCodeDataService.findByLocationCode(stateCode, districtCode);
         if (langLocCode != null) {
@@ -180,7 +180,7 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined languageLocationCode value
      */
     @Override
-    public Integer getLanguageLocationCodeByCircleCode(final String circleCode) {
+    public String getLanguageLocationCodeByCircleCode(final String circleCode) {
         LanguageLocationCodeQuery query = new LanguageLocationCodeQuery(circleCode, "languageLocationCode");
         return executeUniqueLanguageLocationCodeQuery(query);
     }
@@ -193,9 +193,9 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
      * else returns the determined value of default Language Location Code.
      */
     @Override
-    public Integer getDefaultLanguageLocationCodeByCircleCode(String circleCode) {
+    public String getDefaultLanguageLocationCodeByCircleCode(String circleCode) {
 
-        Integer llc = null;
+        String llc = null;
         Circle circle = circleService.getRecordByCode(circleCode);
 
         if (circle != null) {
@@ -205,12 +205,20 @@ public class LanguageLocationCodeServiceImpl implements LanguageLocationCodeServ
     }
 
     @Override
-    public LanguageLocationCode findLLCByCode(Integer code) {
+    public LanguageLocationCode findLLCByCode(String code) {
         List<LanguageLocationCode> locationCodeList = languageLocationCodeDataService.findLLCByCode(code);
         if (locationCodeList != null && !locationCodeList.isEmpty()) {
             return locationCodeList.get(0);
         }
         return null;
+    }
+
+    /**
+     * Get LanguageLocationCodeDataService object
+     */
+    @Override
+    public LanguageLocationCodeDataService getLanguageLocationCodeDataService() {
+        return languageLocationCodeDataService;
     }
 
 }

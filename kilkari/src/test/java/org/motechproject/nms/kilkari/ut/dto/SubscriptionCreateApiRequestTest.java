@@ -19,8 +19,8 @@ public class SubscriptionCreateApiRequestTest {
         subscriptionApiRequest.setSubscriptionPack("72WeeksPack");
         Assert.assertEquals("72WeeksPack", subscriptionApiRequest.getSubscriptionPack());
 
-        subscriptionApiRequest.setLanguageLocationCode(23);
-        Assert.assertTrue(23 == subscriptionApiRequest.getLanguageLocationCode());
+        subscriptionApiRequest.setLanguageLocationCode("23");
+        Assert.assertTrue("23".equals(subscriptionApiRequest.getLanguageLocationCode()));
 
         subscriptionApiRequest.setCallId("123456");
         Assert.assertEquals("123456", subscriptionApiRequest.getCallId());

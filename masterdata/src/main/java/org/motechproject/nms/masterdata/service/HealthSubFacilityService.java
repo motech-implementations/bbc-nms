@@ -1,6 +1,7 @@
 package org.motechproject.nms.masterdata.service;
 
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
+import org.motechproject.nms.masterdata.repository.HealthSubFacilityRecordsDataService;
 
 /**
  * This interface is used for crud operations on HealthSubFacility
@@ -48,4 +49,9 @@ public interface HealthSubFacilityService {
      */
     HealthSubFacility findHealthSubFacilityByParentCode(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthFacilityCode, Long healthSubFacilityCode);
 
+
+    /**
+     * Get HealthSubFacilityRecordsDataService object
+     */
+    public HealthSubFacilityRecordsDataService getHealthSubFacilityRecordsDataService();
 }

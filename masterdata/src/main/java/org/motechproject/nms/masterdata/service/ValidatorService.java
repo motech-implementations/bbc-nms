@@ -8,12 +8,29 @@ import org.motechproject.nms.util.helper.DataValidationException;
 public interface ValidatorService {
 
     /**
+     * Validate Parent of District
+     *
+     * @param stateCode of the State
+     */
+    public void validateDistrictParent(Long stateCode)throws DataValidationException;
+
+
+    /**
      * Validate Parent of Taluka
      *
      * @param stateCode of the State
      * @param districtCode of the District
      */
     public void validateTalukaParent(Long stateCode,Long districtCode)throws DataValidationException;
+
+    /**
+     * Validate Parent of Village
+     *
+     * @param stateCode of the State
+     * @param districtCode of the District
+     * @param talukaCode of the Taluka
+     */
+    public void validateVillageParent(Long stateCode,Long districtCode,Long talukaCode) throws DataValidationException;
 
 
     /**

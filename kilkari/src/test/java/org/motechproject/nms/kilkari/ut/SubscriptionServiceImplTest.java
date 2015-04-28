@@ -1,5 +1,9 @@
 package org.motechproject.nms.kilkari.ut;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +12,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.motechproject.nms.kilkari.builder.SubscriptionBuilder;
-import org.motechproject.nms.kilkari.domain.*;
+import org.motechproject.nms.kilkari.domain.BeneficiaryType;
+import org.motechproject.nms.kilkari.domain.Channel;
+import org.motechproject.nms.kilkari.domain.Status;
+import org.motechproject.nms.kilkari.domain.Subscriber;
+import org.motechproject.nms.kilkari.domain.Subscription;
+import org.motechproject.nms.kilkari.domain.SubscriptionPack;
 import org.motechproject.nms.kilkari.repository.SubscriptionDataService;
 import org.motechproject.nms.kilkari.service.ActiveSubscriptionCountService;
 import org.motechproject.nms.kilkari.service.CommonValidatorService;
@@ -18,8 +27,6 @@ import org.motechproject.nms.kilkari.service.impl.SubscriptionServiceImpl;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
-
-import static org.mockito.Mockito.*;
 
 public class SubscriptionServiceImplTest {
 
@@ -156,7 +163,7 @@ public class SubscriptionServiceImplTest {
         doReturn(subscription).when(spy).getActiveSubscriptionByMsisdnPack("1234567890", SubscriptionPack.PACK_72_WEEKS);
 
         try {
-            spy.handleIVRSubscriptionRequest(subscriber, "OP", "CC", 123);
+            spy.handleIVRSubscriptionRequest(subscriber, "OP", "CC", "123");
         } catch (DataValidationException e) {
         } catch (NmsInternalServerError nmsInternalServerError) {
 

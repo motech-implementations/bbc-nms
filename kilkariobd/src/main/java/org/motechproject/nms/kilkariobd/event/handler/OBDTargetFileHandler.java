@@ -297,7 +297,7 @@ public class OBDTargetFileHandler {
                 If for any cdrSummary record status code is OBD_DNIS_IN_DND then try to deactivate and if
                 deactivated then don't retry.
                  */
-            }else if ((retryDayNumber = isValidForRetry(finalStatus, statusCode, subscriptionId)) != Constants.RETRY_NONE) {
+            }else if (!(retryDayNumber = isValidForRetry(finalStatus, statusCode, subscriptionId)).equals(Constants.RETRY_NONE)) {
 
                 /* If valid for retry then create corresponding call request record */
                 OutboundCallRequest callRequestRetry = new OutboundCallRequest();
@@ -305,7 +305,7 @@ public class OBDTargetFileHandler {
 
                 callRequestRetry.setMsisdn(map.get(Constants.MSISDN));
 
-                callRequestRetry.setLanguageLocationCode(Integer.parseInt(map.get(Constants.LANGUAGE_LOCATION_CODE)));
+                callRequestRetry.setLanguageLocationCode(map.get(Constants.LANGUAGE_LOCATION_CODE));
                 callRequestRetry.setCircle(map.get(Constants.CIRCLE));
 
                 callRequestRetry.setContentFileName(map.get(Constants.CONTENT_FILE_NAME));
@@ -469,7 +469,7 @@ public class OBDTargetFileHandler {
             callRequest.setWeekId(
                     subscription.getWeekNumber().toString() + "_" + subscription.getMessageNumber().toString());
             /* set languageLocationCode and circleCode in callRequest */
-            Integer llcCode = subscription.getSubscriber().getLanguageLocationCode();
+            String llcCode = subscription.getSubscriber().getLanguageLocationCode();
             if (llcCode != null) {
                 String contentFileName = contentUploadService.getContentFileName("W" + callRequest.getWeekId(), llcCode);
                 if (contentFileName != null) {

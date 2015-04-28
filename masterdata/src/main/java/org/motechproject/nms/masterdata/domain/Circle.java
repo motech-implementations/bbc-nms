@@ -21,7 +21,7 @@ public class Circle extends MdsEntity {
     private String code;
 
     @Field
-    private Integer defaultLanguageLocationCode;
+    private String defaultLanguageLocationCode;
 
     public String getName() {
         return name;
@@ -39,11 +39,11 @@ public class Circle extends MdsEntity {
         this.code = code;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
+    public String getDefaultLanguageLocationCode() {
         return defaultLanguageLocationCode;
     }
 
-    public void setDefaultLanguageLocationCode(Integer defaultLanguageLocationCode) {
+    public void setDefaultLanguageLocationCode(String defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 

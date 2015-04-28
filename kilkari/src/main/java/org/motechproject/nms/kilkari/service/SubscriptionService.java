@@ -83,7 +83,7 @@ public interface SubscriptionService {
      * @param llcCode Integer type
      * @throws DataValidationException
      */
-    void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, Integer llcCode)
+    void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode, String llcCode)
         throws DataValidationException, NmsInternalServerError;
 
     /**

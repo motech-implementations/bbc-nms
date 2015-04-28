@@ -32,8 +32,8 @@ public class ContentUploadTest {
         contentUpload.setContentType(contentType);
         Assert.assertEquals(contentType,contentUpload.getContentType());
 
-        contentUpload.setLanguageLocationCode(13);
-        Assert.assertTrue(13 == contentUpload.getLanguageLocationCode());
+        contentUpload.setLanguageLocationCode("13");
+        Assert.assertTrue("13".equals(contentUpload.getLanguageLocationCode()));
 
     }
 }

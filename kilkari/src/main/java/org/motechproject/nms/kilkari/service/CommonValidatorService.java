@@ -128,7 +128,7 @@ public interface CommonValidatorService {
      * @param llcCode value of the languageLocationCode
      * @throws DataValidationException
      */
-    public void validateLanguageLocationCode(Integer llcCode) throws DataValidationException;
+    public void validateLanguageLocationCode(String llcCode) throws DataValidationException;
 
     /**
      * This method is used to LanguageLocationCode based on State and District

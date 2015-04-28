@@ -1,6 +1,11 @@
 package org.motechproject.nms.kilkari.ut;
 
+import static org.mockito.MockitoAnnotations.initMocks;
+
+import java.lang.reflect.Method;
+
 import junit.framework.TestCase;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +23,6 @@ import org.motechproject.nms.masterdata.service.CircleService;
 import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
-
-import java.lang.reflect.Method;
-
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ContentUploadCsvHandlerTest extends TestCase {
 
@@ -117,7 +118,7 @@ public class ContentUploadCsvHandlerTest extends TestCase {
         csv.setContentId("12");
         csv.setContentName("name");
         Mockito.when(circleService.getRecordByCode("testCode")).thenReturn(circle);
-        Mockito.when(languageLocationCodeService.getRecordByCircleCodeAndLangLocCode("testCode", 123)).thenReturn(llc);
+        Mockito.when(languageLocationCodeService.getRecordByCircleCodeAndLangLocCode("testCode", "123")).thenReturn(llc);
 
         Method method = null;
         try {

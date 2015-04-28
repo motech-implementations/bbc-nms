@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import org.motechproject.nms.masterdata.service.impl.CircleCsvServiceImpl;
 
@@ -30,19 +30,19 @@ public class CircleCsvServiceImplTest extends TestCase {
     @Test
     public void testGetRecordByCode() throws Exception {
 
-        CircleCsv circleCsvData = getCircleCsvData();
+        CsvCircle csvCircleData = getCircleCsvData();
 
-        when(circleCsvDataService.findById(1L)).thenReturn(circleCsvData);
+        when(circleCsvDataService.findById(1L)).thenReturn(csvCircleData);
 
         assertNotNull(circleCsvService.getRecord(1L));
         assertTrue("Test".equals(circleCsvService.getRecord(1L).getName()));
     }
 
-    private CircleCsv getCircleCsvData() {
-        CircleCsv circleCsvData = new CircleCsv();
-        circleCsvData.setId(1L);
-        circleCsvData.setName("Test");
-        circleCsvData.setCode("123");
-        return circleCsvData;
+    private CsvCircle getCircleCsvData() {
+        CsvCircle csvCircleData = new CsvCircle();
+        csvCircleData.setId(1L);
+        csvCircleData.setName("Test");
+        csvCircleData.setCode("123");
+        return csvCircleData;
     }
 }

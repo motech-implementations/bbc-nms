@@ -34,13 +34,10 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
 
     private HealthSubFacilityCsvUploadHandler healthSubFacilityCsvHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;
-
-    @Inject
-    private ValidatorService validatorService;
 
     @Inject
     private DistrictService districtService;
@@ -58,7 +55,13 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
     private HealthSubFacilityService healthSubFacilityService;
 
     @Inject
+    private HealthBlockService healthBlockService;
+
+    @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    @Inject
+    private ValidatorService validatorService;
 
     @Before
     public void setUp() {
@@ -76,6 +79,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
         assertNotNull(healthSubFacilityCsvHandler);
     }
 
@@ -95,8 +99,8 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        HealthSubFacilityCsv csvData = TestHelper.getHealthSubFacilityCsvData();
-        HealthSubFacilityCsv invalidCsvData = TestHelper.getInvalidHealthSubFacilityCsvData();
+        CsvHealthSubFacility csvData = TestHelper.getHealthSubFacilityCsvData();
+        CsvHealthSubFacility invalidCsvData = TestHelper.getInvalidHealthSubFacilityCsvData();
         createHealthSubFacilityCsvData(csvData);
         createHealthSubFacilityCsvData(invalidCsvData);
 
@@ -144,7 +148,7 @@ public class HealthSubFacilityCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createHealthSubFacilityCsvData(HealthSubFacilityCsv csvData) {
+    private void createHealthSubFacilityCsvData(CsvHealthSubFacility csvData) {
         healthSubFacilityCsvService.create(csvData);
     }
 }

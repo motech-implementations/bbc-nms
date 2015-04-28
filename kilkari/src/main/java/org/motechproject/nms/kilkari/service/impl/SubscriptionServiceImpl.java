@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.jdo.annotations.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -363,7 +364,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional
     @Override
     public void handleIVRSubscriptionRequest(Subscriber subscriber, String operatorCode, String circleCode,
-                                             Integer llcCode) throws DataValidationException, NmsInternalServerError {
+            String llcCode) throws DataValidationException, NmsInternalServerError {
         SubscriptionPack pack = null;
         if (subscriber.getBeneficiaryType().equals(BeneficiaryType.CHILD)) {
             pack = SubscriptionPack.PACK_48_WEEKS;
@@ -740,7 +741,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 retryDay = -1;
             }
         } else {
-            logger.warn(String.format("Subscription not found or deactivated for the given subscriptionId{[%d]}", subscriptionId));
+            logger.warn(String.format("Subscription not found or completed/deactivated for the given subscriptionId{[%d]}", subscriptionId));
         }
         return retryDay;
     }

@@ -28,7 +28,7 @@ public class Configuration {
     private Integer numMsgPerWeek;
 
     @Field(required = true)
-    private Integer nationalDefaultLanguageLocationCode;
+    private String nationalDefaultLanguageLocationCode;
     
     @Field(required = true)
     private Integer maxAllowedActiveBeneficiaryCount;
@@ -60,11 +60,11 @@ public class Configuration {
         this.maxAllowedActiveBeneficiaryCount = maxAllowedActiveBeneficiaryCount;
     }
 
-    public Integer getNationalDefaultLanguageLocationCode() {
+    public String getNationalDefaultLanguageLocationCode() {
         return nationalDefaultLanguageLocationCode;
     }
 
-    public void setNationalDefaultLanguageLocationCode(Integer nationalDefaultLanguageLocationCode) {
+    public void setNationalDefaultLanguageLocationCode(String nationalDefaultLanguageLocationCode) {
         this.nationalDefaultLanguageLocationCode = nationalDefaultLanguageLocationCode;
     }
 

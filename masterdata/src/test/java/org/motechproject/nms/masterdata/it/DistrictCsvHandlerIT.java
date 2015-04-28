@@ -6,12 +6,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.District;
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
+import org.motechproject.nms.masterdata.domain.CsvDistrict;
 import org.motechproject.nms.masterdata.domain.State;
 import org.motechproject.nms.masterdata.event.handler.DistrictCsvUploadHandler;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.motechproject.nms.masterdata.service.DistrictService;
 import org.motechproject.nms.masterdata.service.StateService;
+import org.motechproject.nms.masterdata.service.ValidatorService;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
@@ -50,11 +51,14 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
     @Inject
     private DistrictCsvService districtCsvService;
 
-    List<Long> createdIds = new ArrayList<Long>();
+    @Inject
+    private ValidatorService validatorService;
+
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Before
     public void setUp() {
-        districtCsvUploadHandler = new DistrictCsvUploadHandler(districtCsvService,
+        districtCsvUploadHandler = new DistrictCsvUploadHandler(validatorService,districtCsvService,
                 districtService, stateService, bulkUploadErrLogService);
     }
 
@@ -64,6 +68,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         assertNotNull(districtService);
         assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
+        assertNotNull(validatorService);
     }
 
     @Test
@@ -72,8 +77,8 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         State stateData = TestHelper.getStateData();
         stateService.create(stateData);
 
-        DistrictCsv csvData = TestHelper.getDistrictCsvData();
-        DistrictCsv invalidCsvData = TestHelper.getInvalidDistrictCsvData();
+        CsvDistrict csvData = TestHelper.getDistrictCsvData();
+        CsvDistrict invalidCsvData = TestHelper.getInvalidDistrictCsvData();
 
         createDistrictCsvData(csvData);
         createDistrictCsvData(invalidCsvData);
@@ -113,7 +118,7 @@ public class DistrictCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createDistrictCsvData(DistrictCsv csvData) {
+    private void createDistrictCsvData(CsvDistrict csvData) {
 
         districtCsvService.create(csvData);
     }

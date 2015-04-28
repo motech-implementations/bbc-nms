@@ -9,7 +9,7 @@ import org.motechproject.nms.masterdata.domain.State;
 public class SubscriptionBuilder {
     Subscriber subscriber = new Subscriber();
 
-    public Subscriber buildSubscriber(String msisdn, Integer llcCode, State state, District district, BeneficiaryType type) {
+    public Subscriber buildSubscriber(String msisdn, String llcCode, State state, District district, BeneficiaryType type) {
         subscriber.setName("motechUser");
         subscriber.setMsisdn(msisdn);
         subscriber.setBeneficiaryType(type);
@@ -30,7 +30,8 @@ public class SubscriptionBuilder {
         return subscription;
     }
 
-    public SubscriptionCreateApiRequest buildSubscriptionApiRequest(String callingNumber,String operator,String circle,String callId,Integer languageLocationCode,String subscriptionPack) {
+    public SubscriptionCreateApiRequest buildSubscriptionApiRequest(String callingNumber,String operator,
+            String circle,String callId,String languageLocationCode,String subscriptionPack) {
         SubscriptionCreateApiRequest apiRequest = new SubscriptionCreateApiRequest();
         apiRequest.setCallingNumber(callingNumber);
         apiRequest.setOperator(operator);
@@ -52,7 +53,7 @@ public class SubscriptionBuilder {
         return request;
     }
 
-    public Subscriber buildSubscriber(String msisdn, Integer llcCode, BeneficiaryType type) {
+    public Subscriber buildSubscriber(String msisdn, String llcCode, BeneficiaryType type) {
         subscriber.setName("motechUser");
         subscriber.setMsisdn(msisdn);
         subscriber.setBeneficiaryType(type);

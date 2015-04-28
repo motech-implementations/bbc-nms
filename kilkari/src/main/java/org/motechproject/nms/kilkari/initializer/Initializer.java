@@ -31,7 +31,7 @@ public class Initializer {
 
     public static final Integer DEFAULT_ALLOWED_BENEFICIARY_COUNT = 9718577;
 
-    public static final Integer DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = 1;
+    public static final String DEFAULT_NATIONAL_LANGUAGE_LOCATION_CODE = "1";
     
     public static final Integer DEFAULT_EXPIRED_SUBSCRIPTION_AGE_DAYS = 42;
 

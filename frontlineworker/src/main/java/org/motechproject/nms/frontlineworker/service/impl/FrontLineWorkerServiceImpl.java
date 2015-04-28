@@ -1,7 +1,7 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
-import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.repository.FrontLineWorkerRecordDataService;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,4 +103,5 @@ public class FrontLineWorkerServiceImpl implements FrontLineWorkerService {
     public void deleteAll() {
         frontLineWorkerRecordDataService.deleteAll();
     }
+
 }

@@ -80,4 +80,12 @@ public class DistrictServiceImpl implements DistrictService {
     public District findById(Long id) {
         return districtRecordsDataService.findById(id);
     }
+
+    /**
+     * Get DistrictRecordsDataService object
+     */
+    @Override
+    public DistrictRecordsDataService getDistrictRecordsDataService() {
+        return districtRecordsDataService;
+    }
 }

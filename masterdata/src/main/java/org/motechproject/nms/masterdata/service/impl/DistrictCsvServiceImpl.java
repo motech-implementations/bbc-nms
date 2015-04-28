@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service.impl;
 
-import org.motechproject.nms.masterdata.domain.DistrictCsv;
+import org.motechproject.nms.masterdata.domain.CsvDistrict;
 import org.motechproject.nms.masterdata.repository.DistrictCsvRecordsDataService;
 import org.motechproject.nms.masterdata.service.DistrictCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class DistrictCsvServiceImpl implements DistrictCsvService {
      * @param record of the DistrictCsv
      */
     @Override
-    public void delete(DistrictCsv record) {
+    public void delete(CsvDistrict record) {
         districtCsvRecordsDataService.delete(record);
     }
 
@@ -35,7 +35,7 @@ public class DistrictCsvServiceImpl implements DistrictCsvService {
      * @param record of the DistrictCsv
      */
     @Override
-    public DistrictCsv create(DistrictCsv record) {
+    public CsvDistrict create(CsvDistrict record) {
         return districtCsvRecordsDataService.create(record);
     }
 
@@ -46,7 +46,7 @@ public class DistrictCsvServiceImpl implements DistrictCsvService {
      * @return DistrictCsv
      */
     @Override
-    public DistrictCsv findById(Long id) {
+    public CsvDistrict findById(Long id) {
         return districtCsvRecordsDataService.findById(id);
     }
 }

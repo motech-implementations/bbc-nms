@@ -8,10 +8,13 @@ import org.joda.time.DateTime;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.event.listener.annotations.MotechListener;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
+import org.motechproject.nms.masterdata.domain.CsvHealthSubFacility;
 import org.motechproject.nms.masterdata.domain.HealthFacility;
 import org.motechproject.nms.masterdata.domain.HealthSubFacility;
-import org.motechproject.nms.masterdata.domain.HealthSubFacilityCsv;
-import org.motechproject.nms.masterdata.service.*;
+import org.motechproject.nms.masterdata.service.HealthFacilityService;
+import org.motechproject.nms.masterdata.service.HealthSubFacilityCsvService;
+import org.motechproject.nms.masterdata.service.HealthSubFacilityService;
+import org.motechproject.nms.masterdata.service.ValidatorService;
 import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.constants.ErrorDescriptionConstants;
 import org.motechproject.nms.util.domain.BulkUploadError;
@@ -24,6 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,7 @@ public class HealthSubFacilityCsvUploadHandler {
     private BulkUploadErrLogService bulkUploadErrLogService;
 
     private static Logger logger = LoggerFactory.getLogger(HealthSubFacilityCsvUploadHandler.class);
+
 
     @Autowired
     public HealthSubFacilityCsvUploadHandler(ValidatorService validatorService, HealthFacilityService healthFacilityService, HealthSubFacilityCsvService healthSubFacilityCsvService, HealthSubFacilityService healthSubFacilityService, BulkUploadErrLogService bulkUploadErrLogService) {
@@ -68,7 +74,53 @@ public class HealthSubFacilityCsvUploadHandler {
 
         String csvFileName = (String) params.get("csv-import.filename");
         logger.debug("Csv file name received in event : {}", csvFileName);
+        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
 
+        processRecords(createdIds, csvFileName);
+    }
+
+
+    /**
+     * This method processes the Csv data Records.
+     * @param CreatedId
+     * @param csvFileName
+     */
+    private void processRecords(List<Long> CreatedId,
+                               String csvFileName) {
+        logger.info("Record Processing Started for csv file: {}", csvFileName);
+
+        healthSubFacilityService.getHealthSubFacilityRecordsDataService().doInTransaction(
+                new TransactionCallback<HealthSubFacility>() {
+
+                    List<Long> healthSubFacilityCsvId;
+
+                    String csvFileName;
+
+                    private TransactionCallback<HealthSubFacility> init(
+                            List<Long> createdId,
+                            String csvFileName) {
+                        this.healthSubFacilityCsvId = createdId;
+                        this.csvFileName = csvFileName;
+                        return this;
+                    }
+
+                    @Override
+                    public HealthSubFacility doInTransaction(
+                            TransactionStatus status) {
+                        HealthSubFacility transactionObject = null;
+                        processHealthSubFacilityRecords(csvFileName, healthSubFacilityCsvId);
+                        return transactionObject;
+                    }
+                }.init(CreatedId, csvFileName));
+        logger.info("Record Processing complete for csv file: {}", csvFileName);
+    }
+
+    /**
+     * This method is used to process HealthSubFacility records and store it into the database.
+     * @param csvFileName
+     * @param createdIds
+     */
+    private void processHealthSubFacilityRecords(String csvFileName, List<Long> createdIds) {
         DateTime timeStamp = new DateTime();
 
         BulkUploadStatus bulkUploadStatus = new BulkUploadStatus();
@@ -77,45 +129,52 @@ public class HealthSubFacilityCsvUploadHandler {
 
         ErrorLog.setErrorDetails(errorDetails, bulkUploadStatus, csvFileName, timeStamp, RecordType.HEALTH_SUB_FACILITY);
 
-        List<Long> createdIds = (ArrayList<Long>) params.get("csv-import.created_ids");
-        HealthSubFacilityCsv healthSubFacilityCsvRecord = null;
+
+        CsvHealthSubFacility csvHealthSubFacilityRecord = null;
 
         for (Long id : createdIds) {
             try {
                 logger.debug("HEALTH_SUB_FACILITY_CSV_SUCCESS event processing start for ID: {}", id);
-                healthSubFacilityCsvRecord = healthSubFacilityCsvService.findById(id);
+                csvHealthSubFacilityRecord = healthSubFacilityCsvService.findById(id);
 
-                if (healthSubFacilityCsvRecord != null) {
+                if (csvHealthSubFacilityRecord != null) {
                     logger.info("Id exist in Health Sub Facility Temporary Entity");
-                    bulkUploadStatus.setUploadedBy(healthSubFacilityCsvRecord.getOwner());
-                    HealthSubFacility record = mapHealthSubFacilityCsv(healthSubFacilityCsvRecord);
+                    bulkUploadStatus.setUploadedBy(csvHealthSubFacilityRecord.getOwner());
+                    HealthSubFacility record = mapHealthSubFacilityCsv(csvHealthSubFacilityRecord);
                     processHealthSubFacilityData(record);
                     bulkUploadStatus.incrementSuccessCount();
                 } else {
                     logger.info("Id do not exist in Health Sub Facility Temporary Entity");
 
                     ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.CSV_RECORD_MISSING_DESCRIPTION, ErrorCategoryConstants.CSV_RECORD_MISSING, "Record is null");
+
                 }
             } catch (DataValidationException healthSubFacilityDataException) {
                 logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive DataValidationException exception due to error field: {}", healthSubFacilityDataException.getErroneousField());
 
-                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, healthSubFacilityDataException.getErroneousField(), healthSubFacilityDataException.getErrorCode(), healthSubFacilityCsvRecord.toString());
+                ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, healthSubFacilityDataException.getErroneousField(), healthSubFacilityDataException.getErrorCode(), csvHealthSubFacilityRecord.toString());
 
-            } catch (Exception healthSubFacilityExceptione) {
+            } catch (Exception healthSubFacilityException) {
 
                 ErrorLog.errorLog(errorDetails, bulkUploadStatus, bulkUploadErrLogService, ErrorDescriptionConstants.GENERAL_EXCEPTION_DESCRIPTION, ErrorCategoryConstants.GENERAL_EXCEPTION, "Exception occurred");
 
-                logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", healthSubFacilityExceptione);
+                logger.error("HEALTH_SUB_FACILITY_CSV_SUCCESS processing receive Exception exception, message: {}", healthSubFacilityException);
             } finally {
-                if (null != healthSubFacilityCsvRecord) {
-                    healthSubFacilityCsvService.delete(healthSubFacilityCsvRecord);
+                if (null != csvHealthSubFacilityRecord) {
+                    healthSubFacilityCsvService.delete(csvHealthSubFacilityRecord);
                 }
             }
         }
         bulkUploadErrLogService.writeBulkUploadProcessingSummary(bulkUploadStatus);
     }
 
-    private HealthSubFacility mapHealthSubFacilityCsv(HealthSubFacilityCsv record) throws DataValidationException {
+    /**
+     * This method maps CSV data to the the HealthSubFacility object.
+     * @param record
+     * @return
+     * @throws DataValidationException
+     */
+    private HealthSubFacility mapHealthSubFacilityCsv(CsvHealthSubFacility record) throws DataValidationException {
         HealthSubFacility newRecord = new HealthSubFacility();
 
         String healthSubFacilityName = ParseDataHelper.validateAndParseString("HealthSubFacilityName", record.getName(), true);
@@ -126,7 +185,7 @@ public class HealthSubFacilityCsvUploadHandler {
         Long healthfacilityCode = ParseDataHelper.validateAndParseLong("HealthFacilityCode", record.getHealthFacilityCode(), true);
         Long healthSubFacilityCode = ParseDataHelper.validateAndParseLong("HealthSubFacilityCode", record.getHealthSubFacilityCode(), true);
 
-        validatorService.validateHealthSubFacilityParent(stateCode,districtCode,talukaCode,healthBlockCode,healthfacilityCode);
+        validateHealthSubFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
 
         newRecord.setName(healthSubFacilityName);
         newRecord.setStateCode(stateCode);
@@ -142,6 +201,11 @@ public class HealthSubFacilityCsvUploadHandler {
         return newRecord;
     }
 
+    /**
+     * This method is used to process the HealthSubFacility data according to the operation
+     * @param healthSubFacilityData
+     * @throws DataValidationException
+     */
     private void processHealthSubFacilityData(HealthSubFacility healthSubFacilityData) throws DataValidationException {
 
         logger.debug("Health Sub Facility data contains Sub Facility code : {}", healthSubFacilityData.getHealthSubFacilityCode());
@@ -156,24 +220,50 @@ public class HealthSubFacilityCsvUploadHandler {
         );
 
         if (existHealthSubFacilityData != null) {
-            updateHealthSubFacilityDAta(existHealthSubFacilityData, healthSubFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully updated.");
+            updateHealthSubFacilityData(existHealthSubFacilityData, healthSubFacilityData);
         } else {
-
-            HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
-                    healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
-                    healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
-                    healthSubFacilityData.getHealthFacilityCode());
-
-            healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
-            healthFacilityService.update(healthFacilityData);
-            logger.info("HealthSubFacility Permanent data is successfully inserted.");
+            insertHealthSubFacility(healthSubFacilityData);
         }
     }
 
-    private void updateHealthSubFacilityDAta(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
+    /**
+     * This method is used to insert a new HealthSubFacility record to the database.
+     * @param healthSubFacilityData
+     */
+    private void insertHealthSubFacility(HealthSubFacility healthSubFacilityData) {
+        HealthFacility healthFacilityData = healthFacilityService.findHealthFacilityByParentCode(
+                healthSubFacilityData.getStateCode(), healthSubFacilityData.getDistrictCode(),
+                healthSubFacilityData.getTalukaCode(), healthSubFacilityData.getHealthBlockCode(),
+                healthSubFacilityData.getHealthFacilityCode());
+
+        healthFacilityData.getHealthSubFacility().add(healthSubFacilityData);
+        healthFacilityService.update(healthFacilityData);
+        logger.info("HealthSubFacility Permanent data is successfully inserted.");
+    }
+
+    /**
+     * This method is used to update an existing HealthSubFacility record.
+     * @param existHealthSubFacilityData
+     * @param healthSubFacilityData
+     */
+    private void updateHealthSubFacilityData(HealthSubFacility existHealthSubFacilityData, HealthSubFacility healthSubFacilityData) {
         existHealthSubFacilityData.setName(healthSubFacilityData.getName());
         existHealthSubFacilityData.setModifiedBy(healthSubFacilityData.getModifiedBy());
         healthSubFacilityService.update(existHealthSubFacilityData);
+        logger.info("HealthSubFacility Permanent data is successfully updated.");
+    }
+
+    /**
+     * This method validates whether the HealthSubFacility has its parent or not.
+     * @param stateCode
+     * @param districtCode
+     * @param talukaCode
+     * @param healthBlockCode
+     * @param healthfacilityCode
+     * @throws DataValidationException
+     */
+    private void validateHealthSubFacilityParent(Long stateCode, Long districtCode, Long talukaCode, Long healthBlockCode, Long healthfacilityCode) throws DataValidationException {
+
+        validatorService.validateHealthSubFacilityParent(stateCode, districtCode, talukaCode, healthBlockCode, healthfacilityCode);
     }
 }

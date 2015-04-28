@@ -1,6 +1,6 @@
 package org.motechproject.nms.masterdata.service;
 
-import org.motechproject.nms.masterdata.domain.HealthBlockCsv;
+import org.motechproject.nms.masterdata.domain.CsvHealthBlock;
 
 /**
  * This interface is used for crud operations on HealthBlockCsv
@@ -12,7 +12,7 @@ public interface HealthBlockCsvService {
      *
      * @param record of the HealthBlockCsv
      */
-    void delete(HealthBlockCsv record);
+    void delete(CsvHealthBlock record);
 
     /**
      * create HealthBlockCsv type object
@@ -20,7 +20,7 @@ public interface HealthBlockCsvService {
      * @param record of the HealthBlockCsv
      */
 
-    HealthBlockCsv create(HealthBlockCsv record);
+    CsvHealthBlock create(CsvHealthBlock record);
 
     /**
      * Finds the health block details by its Id
@@ -28,5 +28,5 @@ public interface HealthBlockCsvService {
      * @param id
      * @return HealthBlock
      */
-    HealthBlockCsv findById(Long id);
+    CsvHealthBlock findById(Long id);
 }

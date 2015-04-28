@@ -1,6 +1,8 @@
 package org.motechproject.nms.mobilekunji.web;
 
 import org.apache.log4j.Logger;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpHeaders;
@@ -128,6 +130,44 @@ public class BaseController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
                 HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Handle General Exceptions occur on server side i.e null pointer(500)
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = {ServiceNotDeployedException.class})
+    public ResponseEntity<String> handleServiceNotDeployedException(
+            final Exception exception, final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"Service Not Deployed\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /**
+     * Handle General Exceptions occur on server side i.e null pointer(500)
+     *
+     * @param exception
+     * @param request
+     * @return ResponseEntity<String>
+     */
+    @ExceptionHandler(value = {FlwNotInWhiteListException.class})
+    public ResponseEntity<String> handleFlwNotInWhiteListException(
+            final Exception exception, final HttpServletRequest request) {
+        logRequestDetails(request);
+        LOGGER.error(exception.getMessage(), exception);
+        String responseJson = "{\"failureReason\":\"User is not Present in WhiteList\"}";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<String>(responseJson, headers,
+                HttpStatus.FORBIDDEN);
     }
 
     /**

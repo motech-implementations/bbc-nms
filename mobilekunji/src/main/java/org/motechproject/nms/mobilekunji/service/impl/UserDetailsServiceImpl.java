@@ -2,8 +2,10 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
@@ -52,14 +54,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return User detail response object
      */
     @Override
-    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws DataValidationException, NmsInternalServerError {
+    public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws
+            DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
 
         logger.info("Get UserDetails Entered successfully.");
 
         UserDetailApiResponse userDetailApiResponse = null;
 
-        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEACADEMY.MOBILEKUNJI);
-
+        UserProfile userProfileData = userProfileDetailsService.processUserDetails(msisdn, circleCode, operatorCode, ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         userDetailApiResponse = fillUserDetailApiResponse(userProfileData);
 
@@ -72,13 +74,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
      */
     @Override
-    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException {
+    public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException, ServiceNotDeployedException, FlwNotInWhiteListException {
 
         logger.info("Update LanguageLocationCode Entered successfully.");
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(),
                 ParseDataHelper.validateAndTrimMsisdn(
-                        "CallingNumber", request.getCallingNumber()));
+                        "CallingNumber", request.getCallingNumber()),ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         logger.info("LanguageLocationCode executed successfully.");
     }
@@ -100,6 +102,27 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
 
+    private FlwDetail checkAndUpdateFlwForInvalidUser(UserProfile userProfileData) {
+
+
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(userProfileData.getMsisdn());
+
+        if (null == flwDetail){
+            flwDetail = new FlwDetail();
+            fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
+            flwDetailService.create(flwDetail);
+            logger.info("FlwDetail created successfully.");
+        } else {
+            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()){
+                fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
+                flwDetailService.update(flwDetail);
+                logger.info("FlwDetail updated successfully.");
+            }
+        }
+
+       return flwDetail;
+    }
+
     /**
      * fill User Detail Response
      *
@@ -108,22 +131,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDetailApiResponse fillUserDetailApiResponse(UserProfile userProfile) throws DataValidationException {
 
         UserDetailApiResponse userDetailApiResponse = new UserDetailApiResponse();
+        FlwDetail flwDetail = checkAndUpdateFlwForInvalidUser(userProfile);
+        userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
+        userDetailApiResponse.setCircle(userProfile.getCircle());
+        userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
+        userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
+        setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
+        setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
+        fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
 
-        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfile.getNmsFlwId());
-            if (null == flwDetail) {
-
-                flwDetail = new FlwDetail();
-                fillDefaultFlwWithUserProfile(flwDetail, userProfile);
-                flwDetailService.create(flwDetail);
-                logger.info("FlwDetail created successfully.");
-		}
-            userDetailApiResponse.setWelcomePromptFlag(flwDetail.getWelcomePromptFlag());
-            userDetailApiResponse.setCircle(userProfile.getCircle());
-            userDetailApiResponse.setMaxAllowedEndOfUsagePrompt(configurationService.getConfiguration().getMaxEndofusageMessage());
-            userDetailApiResponse.setEndOfUsagePromptCounter(flwDetail.getEndOfUsagePrompt());
-            setLanguageLocationCode(userProfile.isDefaultLanguageLocationCode(), userDetailApiResponse, userProfile);
-            setNmsCappingValue(userDetailApiResponse, userProfile.getMaxStateLevelCappingValue());
-            fillCurrentUsageInPulses(userDetailApiResponse, flwDetail);
         return userDetailApiResponse;
     }
 
@@ -136,6 +152,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param userDetailApiResponse
      */
     private void setLanguageLocationCode(Boolean defaultLlc, UserDetailApiResponse userDetailApiResponse, UserProfile userProfile) {
+
         if (userProfile.getLanguageLocationCode() == null) {
             setNationalDefaultLlc(userDetailApiResponse);
         } else {

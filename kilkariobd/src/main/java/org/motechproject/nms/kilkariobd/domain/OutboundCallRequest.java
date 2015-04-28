@@ -43,7 +43,7 @@ public class OutboundCallRequest {
     @Min(value=1)
     @Max(value=99)
     @Field(required = true)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
     
     @Field(required = true)
     private String circle;
@@ -112,11 +112,11 @@ public class OutboundCallRequest {
         this.weekId = weekId;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

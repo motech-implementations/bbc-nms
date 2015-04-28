@@ -34,10 +34,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
     private HealthFacilityCsvUploadHandler healthFacilityCsvHandler;
 
-    List<Long> createdIds = new ArrayList<Long>();
-
-    @Inject
-    private ValidatorService validatorService;
+    private List<Long> createdIds = new ArrayList<Long>();
 
     @Inject
     private StateService stateService;
@@ -54,17 +51,20 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
     @Inject
     private BulkUploadErrLogService bulkUploadErrLogService;
 
+    @Inject
+    private ValidatorService validatorService;
+
     @Before
     public void setUp() {
         healthFacilityCsvHandler = new HealthFacilityCsvUploadHandler(healthBlockService, healthFacilityCsvService,
-                 healthFacilityService , bulkUploadErrLogService,validatorService);
+                healthFacilityService, bulkUploadErrLogService,validatorService);
     }
 
     @Test
     public void testDataServiceInstance() throws Exception {
         assertNotNull(healthFacilityCsvService);
         assertNotNull(healthFacilityService);
-        assertNotNull(validatorService);
+        assertNotNull(stateService);
         assertNotNull(bulkUploadErrLogService);
         assertNotNull(healthFacilityCsvHandler);
     }
@@ -83,8 +83,8 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
 
         stateService.create(stateData);
 
-        HealthFacilityCsv csvData = TestHelper.getHealthFacilityCsvData();
-        HealthFacilityCsv invalidCsvData = TestHelper.getInvalidHealthFacilityCsvData();
+        CsvHealthFacility csvData = TestHelper.getHealthFacilityCsvData();
+        CsvHealthFacility invalidCsvData = TestHelper.getInvalidHealthFacilityCsvData();
         createHealthFacilityCsvData(csvData);
         createHealthFacilityCsvData(invalidCsvData);
 
@@ -132,7 +132,7 @@ public class HealthFacilityCsvHandlerIT extends BasePaxIT {
         stateService.deleteAll();
     }
 
-    private void createHealthFacilityCsvData(HealthFacilityCsv csvData) {
+    private void createHealthFacilityCsvData(CsvHealthFacility csvData) {
         healthFacilityCsvService.create(csvData);
     }
 }

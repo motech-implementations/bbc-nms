@@ -1,6 +1,6 @@
 package org.motechproject.nms.kilkari.domain;
-
 import org.joda.time.DateTime;
+
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.Ignore;
@@ -51,7 +51,7 @@ public class Subscriber extends MdsEntity {
     @Min(value=1)
     @Max(value=99)
     @UIDisplayable(position = 7)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
     
     @Field
     @UIDisplayable(position = 8)
@@ -207,11 +207,11 @@ public class Subscriber extends MdsEntity {
         this.village = village;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 

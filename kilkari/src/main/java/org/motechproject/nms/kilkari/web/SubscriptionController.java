@@ -48,7 +48,7 @@ public class SubscriptionController extends BaseController {
         logger.debug("operator : [" + apiRequest.getOperator() + "]");
         logger.debug("circle : [" + apiRequest.getCircle() + "]");
         logger.debug("callId : [" + apiRequest.getCallId() + "]");
-        logger.debug(String.format("languageLocationCode : [%d]", apiRequest.getLanguageLocationCode()));
+        logger.debug(String.format("languageLocationCode : [%s]", apiRequest.getLanguageLocationCode()));
         logger.debug("subscriptionPack : [" + apiRequest.getSubscriptionPack() + "]");
         apiRequest.validateMandatoryParameters();
         subscriptionService.handleIVRSubscriptionRequest(apiRequest.toSubscriber(), apiRequest.getOperator(), apiRequest.getCircle(), apiRequest.getLanguageLocationCode());

@@ -21,8 +21,8 @@ public class OutboundCallRequestTest {
         outboundCallRequest.setContentFileName("contentFileName");
         Assert.assertEquals("contentFileName", outboundCallRequest.getContentFileName());
 
-        outboundCallRequest.setLanguageLocationCode(2);
-        Assert.assertTrue(2 == outboundCallRequest.getLanguageLocationCode());
+        outboundCallRequest.setLanguageLocationCode("2");
+        Assert.assertTrue("2".equals(outboundCallRequest.getLanguageLocationCode()));
 
         outboundCallRequest.setMsisdn("msisdn");
         Assert.assertEquals("msisdn", outboundCallRequest.getMsisdn());

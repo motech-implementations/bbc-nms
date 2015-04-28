@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.motechproject.event.MotechEvent;
 import org.motechproject.nms.masterdata.constants.LocationConstants;
 import org.motechproject.nms.masterdata.domain.Circle;
-import org.motechproject.nms.masterdata.domain.CircleCsv;
+import org.motechproject.nms.masterdata.domain.CsvCircle;
 import org.motechproject.nms.masterdata.event.handler.CircleCsvHandler;
 import org.motechproject.nms.masterdata.repository.CircleCsvDataService;
 import org.motechproject.nms.masterdata.repository.CircleDataService;
@@ -61,13 +61,13 @@ public class CircleCsvHandlerTest extends TestCase {
         Circle circle = new Circle();
         createdIds.add(1L);
 
-        CircleCsv csv = new CircleCsv();
+        CsvCircle csv = new CsvCircle();
         csv.setName("@#$");
         csv.setCode("code");
 
         Method method = null;
         try {
-            method = handler.getClass().getDeclaredMethod("mapCircleFrom", CircleCsv.class);
+            method = handler.getClass().getDeclaredMethod("mapCircleFrom", CsvCircle.class);
             method.setAccessible(true);
             circle = (Circle) method.invoke(handler, csv);
         } catch (NoSuchMethodException e) {
@@ -78,8 +78,8 @@ public class CircleCsvHandlerTest extends TestCase {
 
     }
 
-    public CircleCsv createCircleCsvRecord(String name, String code) {
-        CircleCsv csv = new CircleCsv();
+    public CsvCircle createCircleCsvRecord(String name, String code) {
+        CsvCircle csv = new CsvCircle();
         csv.setName(name);
         csv.setCode(code);
         return circleCsvDataService.create(csv);
@@ -93,10 +93,10 @@ public class CircleCsvHandlerTest extends TestCase {
     }
 
     public void preSetup() {
-        CircleCsv csv = new CircleCsv();
+        CsvCircle csv = new CsvCircle();
         csv.setName("MotechEventCreateTest");
         csv.setCode("12345");
-        CircleCsv dbCsv = circleCsvDataService.create(csv);
+        CsvCircle dbCsv = circleCsvDataService.create(csv);
         createdIds.add(dbCsv.getId());
     }
 

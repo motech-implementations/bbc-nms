@@ -91,8 +91,8 @@ public final class ParseDataHelper {
         }
         return fieldValue;
     }
-    
-    
+
+
     /**
      * This method validates a field of Date type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid date format
@@ -154,7 +154,7 @@ public final class ParseDataHelper {
 
         return parsedDateTime;
     }
-    
+
     /**
      * This method validates a field of Integer type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Integer format
@@ -207,7 +207,7 @@ public final class ParseDataHelper {
         return parsedValue;
     }
 
-    
+
     /**
      * This method validates a field of Long type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid Long format
@@ -234,17 +234,17 @@ public final class ParseDataHelper {
     }
 
     /**
-    * This method validates a field of Long type for null/empty values, and
-    * raises exception if a mandatory field is empty/null or is invalid Long
-    * format
-    *
-            * @param fieldName name of the field to be used in exception
-    * @param fieldValue value of the field
-    * @param isMandatory true if field is mandatory, else false
-            * @return null if field is optional and its value is null/empty, else field
-    *         value is converted from string to Long and returned
-    * @throws DataValidationException
-    */
+     * This method validates a field of Long type for null/empty values, and
+     * raises exception if a mandatory field is empty/null or is invalid Long
+     * format
+     *
+     * @param fieldName name of the field to be used in exception
+     * @param fieldValue value of the field
+     * @param isMandatory true if field is mandatory, else false
+     * @return null if field is optional and its value is null/empty, else field
+     *         value is converted from string to Long and returned
+     * @throws DataValidationException
+     */
     public static Long validateLong(String fieldName,
                                     String fieldValue, boolean isMandatory)
             throws DataValidationException {
@@ -259,8 +259,8 @@ public final class ParseDataHelper {
 
         return parsedValue;
     }
-    
-    
+
+
     /**
      * This method validates a field of Boolean type for null/empty values, and raises exception if a
      * mandatory field is empty/null or is invalid format
@@ -313,7 +313,7 @@ public final class ParseDataHelper {
 
         return parsedValue;
     }
-    
+
     /**
      * This methods validates that Msisdn is of 10 or more digits and then trims it to 10 digits
      *

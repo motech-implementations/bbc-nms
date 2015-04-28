@@ -4,7 +4,7 @@ import org.motechproject.nms.masterdata.domain.*;
 
 public class LanguageLocationCodeBuilder {
     public LanguageLocationCode buildLLCCode(
-            Long stateCode, Long districtCode, Integer code, String circleCode) {
+            Long stateCode, Long districtCode, String code, String circleCode) {
         LanguageLocationCode llcCode = new LanguageLocationCode();
         llcCode.setStateCode(stateCode);
         llcCode.setDistrictCode(districtCode);
@@ -13,15 +13,15 @@ public class LanguageLocationCodeBuilder {
         return llcCode;
     }
 
-    public Integer getLLCcodeByStateDistrict(Long stateCode, Long districtCode, Integer code) {
+    public String getLLCcodeByStateDistrict(Long stateCode, Long districtCode, String code) {
         return buildLLCCode(stateCode, districtCode, code, null).getLanguageLocationCode();
     }
 
-    public Integer getLLCCodeByCircleCode(String circleCode, Integer llcCode) {
+    public String getLLCCodeByCircleCode(String circleCode, String llcCode) {
         return buildLLCCode(null, null, llcCode, circleCode).getLanguageLocationCode();
     }
 
-    public Circle buildCircle (Integer defaultLlcCode, String code, String name) {
+    public Circle buildCircle (String defaultLlcCode, String code, String name) {
         Circle circle = new Circle();
         circle.setDefaultLanguageLocationCode(defaultLlcCode);
         circle.setCode(code);
@@ -36,11 +36,11 @@ public class LanguageLocationCodeBuilder {
         return operator;
     }
 
-    public Integer getDefaultLLCCodeByCircleCode(Integer defaultLlcCode, String circleCode) {
+    public String getDefaultLLCCodeByCircleCode(String defaultLlcCode, String circleCode) {
         return buildCircle(defaultLlcCode, circleCode, "test").getDefaultLanguageLocationCode();
     }
 
-    public LanguageLocationCode buildLLCCode(State state, Circle circle, District district, Integer code) {
+    public LanguageLocationCode buildLLCCode(State state, Circle circle, District district, String code) {
         LanguageLocationCode llcCode = new LanguageLocationCode();
         llcCode.setStateCode(state.getStateCode());
         llcCode.setDistrictCode(district.getDistrictCode());

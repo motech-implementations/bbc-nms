@@ -182,7 +182,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setCircleCode("circleCode");
         llc.setDistrictCode(1L);
         llc.setStateCode(1L);
-        llc.setLanguageLocationCode(123);
+        llc.setLanguageLocationCode("123");
         llc.setLanguageKK("LanguageKK");
         llc.setLanguageMA("LanguageMA");
         llc.setLanguageMK("LanguageMK");
@@ -244,7 +244,7 @@ public class ContentUploadCsvHandlerIT extends BasePaxIT {
         llc.setCircleCode("circleCode");
         llc.setDistrictCode(1L);
         llc.setStateCode(1L);
-        llc.setLanguageLocationCode(123);
+        llc.setLanguageLocationCode("123");
         llc.setLanguageKK("LanguageKK");
         llc.setLanguageMA("LanguageMA");
         llc.setLanguageMK("LanguageMK");

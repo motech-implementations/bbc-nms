@@ -19,6 +19,8 @@ public class TestHelper {
     private State state = new State();
     private District district = new District();
     private Circle circle = new Circle();
+    private State stateTemp = new State();
+    private District districtTemp = new District();
 
     public State createState() {
 
@@ -27,9 +29,27 @@ public class TestHelper {
         state.setCreator("Etasha");
         state.setMaCapping(10);
         state.setMkCapping(20);
+        state.setIsMaDeployed(true);
+        state.setIsMkDeployed(true);
+        state.setIsWhiteListEnable(true);
         state.setOwner("Etasha");
         state.setModifiedBy("Etasha");
         return state;
+    }
+
+    public State createStateTemp() {
+
+        stateTemp.setName("Rajasthan");
+        stateTemp.setStateCode(13L);
+        stateTemp.setCreator("Etasha");
+        stateTemp.setMaCapping(10);
+        stateTemp.setMkCapping(20);
+        stateTemp.setIsMaDeployed(true);
+        stateTemp.setIsMkDeployed(true);
+        stateTemp.setIsWhiteListEnable(false);
+        stateTemp.setOwner("Etasha");
+        stateTemp.setModifiedBy("Etasha");
+        return stateTemp;
     }
 
     public District createDistrict() {
@@ -41,6 +61,17 @@ public class TestHelper {
         district.setOwner("Etasha");
         district.setModifiedBy("Etasha");
         return district;
+    }
+
+    public District createDistrictTemp() {
+
+        districtTemp.setName("Jaipur");
+        districtTemp.setStateCode(13L);
+        districtTemp.setDistrictCode(133L);
+        districtTemp.setCreator("Etasha");
+        districtTemp.setOwner("Etasha");
+        districtTemp.setModifiedBy("Etasha");
+        return districtTemp;
     }
 
     public Taluka createTaluka() {
@@ -123,7 +154,7 @@ public class TestHelper {
         circle.setCreator("Etasha");
         circle.setOwner("Etasha");
         circle.setModifiedBy("Etasha");
-        circle.setDefaultLanguageLocationCode(123);
+        circle.setDefaultLanguageLocationCode("LLC");
         return circle;
 
     }
@@ -133,7 +164,7 @@ public class TestHelper {
         languageLocationCode.setState(state);
         languageLocationCode.setDistrict(district);
         languageLocationCode.setCircle(circle);
-        languageLocationCode.setLanguageLocationCode(123);
+        languageLocationCode.setLanguageLocationCode("LLC");
         languageLocationCode.setLanguageMA("LanguageMA");
         languageLocationCode.setLanguageMK("LanguageMK");
         languageLocationCode.setLanguageKK("LanguageKK");
