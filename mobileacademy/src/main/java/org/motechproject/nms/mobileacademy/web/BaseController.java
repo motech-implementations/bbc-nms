@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
+import org.motechproject.nms.util.constants.ErrorCategoryConstants;
 import org.motechproject.nms.util.helper.DataValidationException;
 import org.motechproject.nms.util.helper.NmsInternalServerError;
 import org.springframework.http.HttpHeaders;
@@ -41,8 +42,8 @@ public class BaseController {
     protected ResponseEntity<String> handleMissingServletRequestParameter(
             final MissingServletRequestParameterException exception,
             final HttpServletRequest request) {
+        LOGGER.error(exception.getMessage(), exception);
         logRequestDetails(request);
-        LOGGER.error(exception.getMessage());
         String responseJson = "{" + FAILURE_REASON + ":\""
                 + exception.getParameterName() + ":Not Present\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -62,8 +63,8 @@ public class BaseController {
     public ResponseEntity<String> handleHttpMessageNotReadableException(
             final HttpMessageNotReadableException exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON + ":\"Invalid JSON\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -82,8 +83,8 @@ public class BaseController {
     public ResponseEntity<String> handleHttpMediaTypeNotSupportedException(
             final HttpMediaTypeNotSupportedException exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON
                 + ":\"Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -104,10 +105,17 @@ public class BaseController {
     public ResponseEntity<String> handleDataValidationException(
             final DataValidationException exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{" + FAILURE_REASON + ":\""
-                + exception.getErroneousField() + ":Invalid Value\"}";
+        logRequestDetails(request);
+        String responseJson;
+        if (exception.getErrorCode().equals(
+                ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
+            responseJson = "{" + FAILURE_REASON + ":\""
+                    + exception.getErroneousField() + ":Not Present\"}";
+        } else {
+            responseJson = "{" + FAILURE_REASON + ":\""
+                    + exception.getErroneousField() + ":Invalid Value\"}";
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -126,8 +134,8 @@ public class BaseController {
     public ResponseEntity<String> handleInternalException(
             final NmsInternalServerError exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON + ":\""
                 + exception.getMessage() + "\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -147,8 +155,8 @@ public class BaseController {
     public ResponseEntity<String> handleServiceNotDeployedException(
             final ServiceNotDeployedException exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON
                 + ":\"Service Not Deployed\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -168,8 +176,8 @@ public class BaseController {
     public ResponseEntity<String> handleFlwNotInWhiteListException(
             final FlwNotInWhiteListException exception,
             final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON
                 + ":\"User is not Present in WhiteList\"}";
         HttpHeaders headers = new HttpHeaders();
@@ -188,30 +196,13 @@ public class BaseController {
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<String> handleGeneralExceptions(
             final Exception exception, final HttpServletRequest request) {
-        logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
+        logRequestDetails(request);
         String responseJson = "{" + FAILURE_REASON + ":\"Internal Error\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
                 HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    /**
-     * if parameter is missing i.e value is null then throw
-     * MissingServletRequestParameterException
-     * 
-     * @param parameterName name of the parameter
-     * @param parameterValue value of the parameter
-     * @throws MissingServletRequestParameterException
-     */
-    public void checkParameterMissing(String parameterName,
-            String parameterValue)
-            throws MissingServletRequestParameterException {
-        if (parameterValue == null) {
-            throw new MissingServletRequestParameterException(parameterName,
-                    null);
-        }
     }
 
     /**
