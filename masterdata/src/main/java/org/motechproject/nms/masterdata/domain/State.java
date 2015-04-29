@@ -35,21 +35,21 @@ public class State extends MdsEntity {
     private Integer mkCapping;
 
 
-    @Field(defaultValue = "true")
+    @Field
     @UIDisplayable(position = 4)
-    private Boolean isMkDeployed;
+    private Boolean isMkDeployed = true;
 
-    @Field(defaultValue = "true")
+    @Field
     @UIDisplayable(position = 5)
-    private Boolean isMaDeployed;
+    private Boolean isMaDeployed = true;
 
-    @Field(defaultValue = "true")
+    @Field
     @UIDisplayable(position = 6)
-    private Boolean isKkDeployed;
+    private Boolean isKkDeployed = true;
 
-    @Field(defaultValue = "false")
+    @Field
     @UIDisplayable(position = 7)
-    private Boolean isWhiteListEnable;
+    private Boolean isWhiteListEnable = false;
 
 
     public State() {
