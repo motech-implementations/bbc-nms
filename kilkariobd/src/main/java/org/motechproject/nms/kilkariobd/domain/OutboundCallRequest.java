@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkariobd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.domain.MdsEntity;
 import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Unique;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Min;
  * parameters required by IVR to make call for OBD message delivery.
  */
 @Entity
-public class OutboundCallRequest {
+public class OutboundCallRequest extends MdsEntity{
 
     @UIDisplayable(position = 0)
     @Unique

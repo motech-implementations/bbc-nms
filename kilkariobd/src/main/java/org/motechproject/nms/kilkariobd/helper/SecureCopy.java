@@ -23,13 +23,6 @@ public class SecureCopy {
 
     static Logger logger = LoggerFactory.getLogger(SecureCopy.class);
 
-    @Autowired
-    @Qualifier("kilkariObdSettings")
-    private static SettingsFacade settingsFacade;
-
-    @Autowired
-    private static ConfigurationService configurationService;
-
     /*
     Define Exception to be raised when error occurred while SCP.
     */
@@ -48,10 +41,8 @@ public class SecureCopy {
      * This method copies a file from local machine to remote machine using SCP
      * @param lFile name of the file to be copied.
      */
-    public static void toRemote(String lFile, String rFile) {
-        Settings settings = new Settings(settingsFacade);
-        Configuration configuration = configurationService.getConfiguration();
-
+    public static void toRemote(String lFile, String rFile, Settings settings, Configuration configuration) {
+        //Configuration configuration = configurationService.getConfiguration();
         int retry = Constants.FIRST_ATTEMPT;
 
         FileInputStream fileInputStream = null;
@@ -62,7 +53,7 @@ public class SecureCopy {
                   */
                 String command = "scp -p -t " + rFile;
                 Session session = getSession(configuration.getObdFileServerSshUsername(),
-                        configuration.getObdFileServerIp(), settings.getSshLocalUsername());
+                        configuration.getObdFileServerIp(), settings.getSshLocalUsername(), settings);
                 Channel channel = getChannel(session, command);
 
                 OutputStream out = channel.getOutputStream();
@@ -130,10 +121,8 @@ public class SecureCopy {
      * This method copies a file remote machine to local machine
      * @param lFile name of the file to be copied.
      */
-    public static void fromRemote(String lFile, String rFile) throws IOException{
-        Settings settings = new Settings(settingsFacade);
-        Configuration configuration = configurationService.getConfiguration();
-
+    public static void fromRemote(String lFile, String rFile, Settings settings, Configuration configuration) throws IOException{
+        //Configuration configuration = configurationService.getConfiguration();
         FileOutputStream fileOutputStream = null;
 
         int retry = 1;
@@ -150,7 +139,7 @@ public class SecureCopy {
                   */
                 String command = "scp -f " + rFile;
                 Session session = getSession(configuration.getObdFileServerSshUsername(),
-                        configuration.getObdFileServerIp(), settings.getSshLocalUsername());
+                        configuration.getObdFileServerIp(), settings.getSshLocalUsername(), settings);
                 Channel channel = getChannel(session, command);
 
                 /*
@@ -289,8 +278,7 @@ public class SecureCopy {
         }
     }
 
-    private static Session getSession(String remoteUser, String remoteIp, String localUser) throws SecureCopyException{
-        Settings settings = new Settings(settingsFacade);
+    private static Session getSession(String remoteUser, String remoteIp, String localUser, Settings settings) throws SecureCopyException{
         byte[] privateKey = readMyPrivateKeyFromFile(settings.getSshPrivateKeyFile());
         JSch jsch = new JSch();
         Session session = null;

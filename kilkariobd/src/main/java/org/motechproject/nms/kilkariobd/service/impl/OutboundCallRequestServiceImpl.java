@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkariobd.service.impl;
 
 
 import org.motechproject.nms.kilkariobd.domain.OutboundCallRequest;
+import org.motechproject.nms.kilkariobd.mapper.CSVMapper;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallRequestDataService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,18 @@ public class OutboundCallRequestServiceImpl implements OutboundCallRequestServic
     @Override
     public Long getCount() {
         return requestDataService.count();
+    }
+
+    /**
+     * This method exports the records from OutboundCallRequest
+     * @param fileName Complete file name to which to export
+     * @return returns the count of records exported
+     */
+    @Override
+    public Long exportOutBoundCallRequest(String fileName) {
+        List<OutboundCallRequest> callRequests = retrieveAll();
+        Long recordCount = getCount();
+        CSVMapper.writeByCsvMapper(fileName, callRequests);
+        return recordCount;
     }
 }

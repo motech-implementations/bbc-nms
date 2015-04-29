@@ -43,43 +43,50 @@ import static org.motechproject.nms.kilkariobd.commons.Constants.*;
 @Component
 public class OBDTargetFileHandler {
 
-    @Autowired
     private OutboundCallRequestService requestService;
 
-    @Autowired
     private ConfigurationService configurationService;
 
-    @Autowired
     private LanguageLocationCodeService llcService;
 
-    @Autowired
     private OutboundCallFlowService callFlowService;
 
-    @Autowired
     private SubscriptionService subscriptionService;
 
-    @Autowired
     private OutboundCallDetailService callDetailService;
 
-    @Autowired
     private ContentUploadService contentUploadService;
 
-    @Autowired
     private SettingsFacade kilkariObdSettings;
 
-    @Autowired
     private MotechSchedulerService motechSchedulerService;
 
     private HttpClient client = new HttpClient();
 
     Logger logger = LoggerFactory.getLogger(OBDTargetFileHandler.class);
 
+    @Autowired
+    public OBDTargetFileHandler(OutboundCallRequestService requestService, ConfigurationService configurationService,
+                                LanguageLocationCodeService llcService, OutboundCallFlowService callFlowService,
+                                SubscriptionService subscriptionService, OutboundCallDetailService callDetailService,
+                                ContentUploadService contentUploadService, SettingsFacade kilkariObdSettings,
+                                MotechSchedulerService motechSchedulerService) {
+        this.requestService = requestService;
+        this.configurationService = configurationService;
+        this.llcService = llcService;
+        this.callFlowService = callFlowService;
+        this.subscriptionService = subscriptionService;
+        this.callDetailService = callDetailService;
+        this.contentUploadService = contentUploadService;
+        this.kilkariObdSettings = kilkariObdSettings;
+        this.motechSchedulerService = motechSchedulerService;
+    }
+
     /**
      * This method handles the event raised by scheduler to prepare target file.
      */
     @MotechListener(subjects = PREPARE_OBD_TARGET_EVENT_SUBJECT)
     public void prepareOBDTargetEventHandler() {
-
         logger.info(String.format("Started processing of event with subject %s", PREPARE_OBD_TARGET_EVENT_SUBJECT));
 
         String obdFileName = getCsvFileName();
@@ -140,21 +147,15 @@ public class OBDTargetFileHandler {
         OutboundCallFlow todayCallFlow =  null;
         Long recordsCount = null;
         String checksum = null;
-        String localFileName  = null;
-        String remoteFileName = null;
-        Settings settings = new Settings(kilkariObdSettings);
-        Configuration configuration = configurationService.getConfiguration();
         String obdFileName = getCsvFileName();
 
         /* update the callFlow status with notify outbound file event received.*/
-        callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
+        todayCallFlow = callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.NOTIFY_OUTBOUND_FILE_EVENT_RECEIVED);
 
         /* notify IVR */
-        //todo we have not fetch the record from the database ,but yet using the object to find record count
-        //todo it will produce null pointer exception
         recordsCount = todayCallFlow.getObdRecordCount();
         checksum = todayCallFlow.getObdChecksum();
-        client.notifyTargetFile(remoteFileName, checksum, recordsCount);
+        client.notifyTargetFile(obdFileName, checksum, recordsCount);
 
         /* Update the call flow status as file notification sent */
         callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.OBD_FILE_NOTIFICATION_SENT_TO_IVR);
@@ -170,15 +171,15 @@ public class OBDTargetFileHandler {
      */
     public void prepareObdTargetFile(String freshObdFile, String oldObdFileName, Integer retryNumber) {
         Configuration configuration  = configurationService.getConfiguration();
-        Settings settings = new Settings();
+        Settings settings = new Settings(kilkariObdSettings);
         OutboundCallFlow oldCallFlow =  null;
 
         OutboundCallFlow todayCallStatus = callFlowService.findRecordByFileName(freshObdFile);
         CallFlowStatus callFlowStatus = todayCallStatus.getStatus();
 
         if( oldObdFileName == null) {
-            /* etch the OutboundCallFlow record of previous day to update the status of CDR files processing */
-            oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED); //todo: find order by createDate ?
+            /* fetch the OutboundCallFlow record of previous day to update the status of CDR files processing */
+            oldCallFlow = callFlowService.findRecordByCallStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
         } else {
             oldCallFlow = callFlowService.findRecordByFileName(oldObdFileName);
         }
@@ -240,7 +241,7 @@ public class OBDTargetFileHandler {
         String remoteCdrSummaryFileName = configuration.getObdFilePathOnServer() + "/" + cdrSummaryFileName;
         try {
             /* Copy cdrSummaryFile from remote location to local */
-            SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrSummaryFileName);
+            SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrSummaryFileName, settings, configuration);
             processCDRSummaryCSV(obdFileName, oldObdFileName, localCdrSummaryFileName, configuration);
         } catch (FileNotFoundException fex) {
             String failureReason = String.format(Constants.FILE_NOT_ACCESSIBLE,
@@ -254,7 +255,6 @@ public class OBDTargetFileHandler {
         }
     }
 
-    @Transactional
     private void processCDRSummaryCSV(String obdFileName, String oldObdFileName, String cdrSummaryFileName,
                                       Configuration configuration) throws FileNotFoundException, CDRFileProcessingFailedException  {
         List<Map<String, String >> cdrSummaryRecords;
@@ -263,12 +263,12 @@ public class OBDTargetFileHandler {
         /* validate record count */
         cdrSummaryRecords = CSVMapper.readWithCsvMapReader(cdrSummaryFileName);
         validateRecordCount(obdFileName, oldObdFileName, CDR_SUMMARY_FILE_PREFIX + oldObdFileName,
-                oldCallFlow.getCdrSummaryRecordCount(), cdrSummaryRecords.size(), CallFlowStatus.CDR_SUMMARY_PROCESSING_FAILED);
+                oldCallFlow.getCdrSummaryRecordCount(), cdrSummaryRecords.size());
 
         /* validate checksum */
         String checksum = MD5Checksum.findChecksum(cdrSummaryFileName);
         validateChecksum(obdFileName, oldObdFileName, CDR_SUMMARY_FILE_PREFIX + oldObdFileName,
-                oldCallFlow.getCdrSummaryChecksum(), checksum, CallFlowStatus.CDR_SUMMARY_PROCESSING_FAILED);
+                oldCallFlow.getCdrSummaryChecksum(), checksum);
 
         /* read and parse CDRSummary CSV and create entry in OutboundCallRequest table for each record. */
         for (Map<String, String> map : cdrSummaryRecords) {
@@ -292,12 +292,12 @@ public class OBDTargetFileHandler {
                 subscriptionService.deactivateSubscription(
                         subscriptionId, DeactivationReason.INVALID_MSISDN);
             } else if (statusCode.equals(ObdStatusCode.OBD_DNIS_IN_DND) &&
-                subscriptionService.deactivateSubscription(subscriptionId, DeactivationReason.MSISDN_IN_DND)){
+                subscriptionService.deactivateSubscription(subscriptionId, DeactivationReason.MSISDN_IN_DND)) {
                 /*
                 If for any cdrSummary record status code is OBD_DNIS_IN_DND then try to deactivate and if
                 deactivated then don't retry.
                  */
-            }else if (!(retryDayNumber = isValidForRetry(finalStatus, statusCode, subscriptionId)).equals(Constants.RETRY_NONE)) {
+            } else if (!(retryDayNumber = isValidForRetry(finalStatus, subscriptionId)).equals(Constants.RETRY_NONE)) {
 
                 /* If valid for retry then create corresponding call request record */
                 OutboundCallRequest callRequestRetry = new OutboundCallRequest();
@@ -363,7 +363,7 @@ public class OBDTargetFileHandler {
 
         try {
             /* copy cdrDetailFile from remote location to local */
-            SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrDetailFileName);
+            SecureCopy.fromRemote(settings.getObdFileLocalPath(), remoteCdrDetailFileName, settings, configuration);
             processCDRDetail(obdFileName, oldObdFileName, localCdrDetailFileName);
         } catch (FileNotFoundException fex) {
             String failureReason = String.format(Constants.FILE_NOT_ACCESSIBLE,
@@ -382,7 +382,6 @@ public class OBDTargetFileHandler {
         client.notifyCDRFileProcessedStatus(FileProcessingStatus.FILE_PROCESSED_SUCCESSFULLY, oldObdFileName, null);
     }
 
-    @Transactional
     private void processCDRDetail(String obdFileName, String oldObdFileName, String cdrDetailFileName)
             throws FileNotFoundException, CDRFileProcessingFailedException {
         List<Map<String, String>> cdrDetailRecords;
@@ -392,12 +391,12 @@ public class OBDTargetFileHandler {
         /* validate record count */
         cdrDetailRecords = CSVMapper.readWithCsvMapReader(cdrDetailFileName);
         validateRecordCount(obdFileName, oldObdFileName, CDR_DETAIL_FILE_PREFIX + oldObdFileName,
-                oldCallFlow.getCdrDetailRecordCount(), cdrDetailRecords.size(), CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
+                oldCallFlow.getCdrDetailRecordCount(), cdrDetailRecords.size());
 
         /* validate checksum */
         String checksum = MD5Checksum.findChecksum(cdrDetailFileName);
         validateChecksum(obdFileName, oldObdFileName, CDR_DETAIL_FILE_PREFIX + oldObdFileName,
-                oldCallFlow.getCdrDetailChecksum(), checksum, CallFlowStatus.CDR_DETAIL_PROCESSING_FAILED);
+                oldCallFlow.getCdrDetailChecksum(), checksum);
 
         /* read and parse CDRDetail CSV and create entry in CdrCallDetail table for each record. */
         for (Map<String, String> cdrDetailMap : cdrDetailRecords) {
@@ -428,7 +427,7 @@ public class OBDTargetFileHandler {
     }
 
     /* This method checks if a particular call valid for retry based on final status. */
-    private Integer isValidForRetry(CallStatus finalStatus, ObdStatusCode statusCode, Long subscriptionId) {
+    private Integer isValidForRetry(CallStatus finalStatus, Long subscriptionId) {
         Integer retryDayNumber = Constants.RETRY_NONE;
 
         /* Check for retry If the call is failed or rejected */
@@ -439,21 +438,11 @@ public class OBDTargetFileHandler {
         return retryDayNumber;
     }
 
-    /**
-     * This method exports the records from OutboundCallRequest
-     * @param fileName Complete file name to which to export
-     * @return returns the count of records exported
-     */
-    public Long exportOutBoundCallRequest(String fileName) {
-        List<OutboundCallRequest> callRequests = requestService.retrieveAll();
-        Long recordCount = requestService.getCount();
-        CSVMapper.writeByCsvMapper(fileName, callRequests);
-        return recordCount;
-    }
+
 
     /* This method prepares the obd file name */
     private String getCsvFileName() {
-        DateTime date = DateTime.now().toDateMidnight().toDateTime();
+        Date date = DateTime.now().toDateMidnight().toDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         return "OBD_NMS_" + sdf.format(date) + ".csv";
     }
@@ -502,11 +491,11 @@ public class OBDTargetFileHandler {
             requestService.create(callRequest);
         }
 
-        String localFileName = settings.getObdFileLocalPath() + obdFileName;
+        String localFileName = settings.getObdFileLocalPath() + "/" + obdFileName;
         String remoteFileName = configuration.getObdFilePathOnServer();
 
         /* Export the Records to CSV File */
-        Long recordsCount = exportOutBoundCallRequest(localFileName);
+        Long recordsCount = requestService.exportOutBoundCallRequest(localFileName);
         String obdChecksum = MD5Checksum.findChecksum(localFileName);
         callFlowService.updateChecksumAndRecordCount(obdFileName, obdChecksum, recordsCount);
 
@@ -514,7 +503,7 @@ public class OBDTargetFileHandler {
         callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_CREATED);
 
          /* copy this target file to remote location. */
-        copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
+        SecureCopy.toRemote(localFileName, remoteFileName, settings, configuration);
 
         /* Update the call flow status as file copied */
         callFlowService.updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_COPIED);
@@ -538,23 +527,12 @@ public class OBDTargetFileHandler {
         motechSchedulerService.safeScheduleRunOnceJob(oneTimeJob);
     }
 
-    /**
-     * This method copies the targetObdFile to the remote server and update the callFlow status
-     * @param localFileName name of local file to be copied on remote server
-     * @param remoteFileName remote path on which file is to copied.
-     * @param obdFileName name of obd file name to saved in database.
-     */
-    public void copyTargetObdFileOnServer(String localFileName, String remoteFileName, String obdFileName) {
-        /* copy this target file to remote location. */
-        SecureCopy.toRemote(localFileName, remoteFileName);
-    }
-
     /*
     This method validates the record count in CSV file against the value sent in CDR notification already stored in DB,
     and raises exception if count doesn't matches
      */
     private void validateRecordCount(String obdFileName, String oldObdFileName, String cdrFileName,
-                                     long recordCountInDb, int recordCountInCsv, CallFlowStatus toStatus) throws CDRFileProcessingFailedException {
+                                     long recordCountInDb, int recordCountInCsv) throws CDRFileProcessingFailedException {
         /* send error if cdr file processing has errors in record count */
         if (recordCountInCsv != recordCountInDb) {
             String failureReason = String.format(Constants.INVALID_RECORD_COUNT,
@@ -571,7 +549,7 @@ public class OBDTargetFileHandler {
     and raises exception if checksum fails
      */
     private void validateChecksum(String obdFileName, String oldObdFileName, String cdrFileName,
-                                     String checksumInDb, String ChecksumCsv, CallFlowStatus toStatus) throws CDRFileProcessingFailedException {
+                                     String checksumInDb, String ChecksumCsv) throws CDRFileProcessingFailedException {
         /* send error if cdr file processing has errors in checksum */
         if (!ChecksumCsv.equals(checksumInDb)) {
             String failureReason = String.format(Constants.INVALID_CHECKSUM,

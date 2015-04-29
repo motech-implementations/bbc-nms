@@ -6,8 +6,8 @@ import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.*;
 import org.motechproject.nms.kilkariobd.dto.request.CdrNotificationRequest;
 import org.motechproject.nms.kilkariobd.dto.request.FileProcessedStatusRequest;
-import org.motechproject.nms.kilkariobd.event.handler.OBDTargetFileHandler;
 import org.motechproject.nms.kilkariobd.helper.MD5Checksum;
+import org.motechproject.nms.kilkariobd.helper.SecureCopy;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
 import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
@@ -35,9 +35,6 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
 
     @Autowired
     private ConfigurationService configurationService;
-
-    @Autowired
-    OBDTargetFileHandler handler;
 
     @Autowired
     OutboundCallRequestService outboundCallRequestService;
@@ -130,13 +127,13 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
                 HttpClient client = new HttpClient();
 
                 /* Export the file */
-                Long recordCount = handler.exportOutBoundCallRequest(localFileName);
+                Long recordCount = outboundCallRequestService.exportOutBoundCallRequest(localFileName);
 
                 /* Update Checksum and Record count */
                 String obdChecksum = MD5Checksum.findChecksum(localFileName);
                 updateChecksumAndRecordCount(obdFileName, obdChecksum, recordCount);
 
-                handler.copyTargetObdFileOnServer(localFileName, remoteFileName, obdFileName);
+                SecureCopy.toRemote(localFileName, remoteFileName, settings, configuration);
                 client.notifyTargetFile(remoteFileName, obdChecksum, recordCount);
 
                 updateCallFlowStatus(obdFileName, CallFlowStatus.OUTBOUND_CALL_REQUEST_FILE_PROCESSING_FAILED_AT_IVR);
@@ -185,5 +182,13 @@ public class OutboundCallFlowServiceImpl implements OutboundCallFlowService {
             return update(todayCallFlow);
         }
         return null;
+    }
+
+    /**
+     * Delete all OutboundCallFlow records from the database
+     */
+    @Override
+    public void deleteAll() {
+        callFlowDataService.deleteAll();
     }
 }
