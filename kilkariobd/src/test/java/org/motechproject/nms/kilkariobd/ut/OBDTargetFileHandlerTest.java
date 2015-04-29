@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.motechproject.nms.kilkari.domain.DeactivationReason;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkariobd.client.HttpClient;
 import org.motechproject.nms.kilkariobd.client.ex.CDRFileProcessingFailedException;
 import org.motechproject.nms.kilkariobd.commons.Constants;
@@ -17,7 +19,7 @@ import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
 
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.net.URL;
 
@@ -37,6 +39,9 @@ public class OBDTargetFileHandlerTest extends TestCase {
 
     @Mock
     private HttpClient httpClient;
+
+    @Mock
+    private SubscriptionService subscriptionService;
 
     @InjectMocks
     OBDTargetFileHandler handler = new OBDTargetFileHandler();
@@ -123,7 +128,6 @@ public class OBDTargetFileHandlerTest extends TestCase {
         init();
 
         Method method = null;
-        OutboundCallFlow todayCallFlow = new OutboundCallFlow();
         OutboundCallFlow oldCallFlow = new OutboundCallFlow();
         OutboundCallDetail callDetail = getCallDetail();
         OutboundCallDetail callDetailReturn = getCallDetail();
@@ -131,7 +135,6 @@ public class OBDTargetFileHandlerTest extends TestCase {
         URL url = this.getClass().getClassLoader().getResource("CDR_Detail_OBD_NMS1_2015041427090000.csv");
         String filePath = url.getPath();
 
-        todayCallFlow.setStatus(CallFlowStatus.CDR_FILE_NOTIFICATION_RECEIVED);
         oldCallFlow.setCdrDetailRecordCount(1L);
         oldCallFlow.setCdrDetailChecksum("9222d97dc5c87ed75d0c29e1307e60a2");
 
@@ -165,9 +168,60 @@ public class OBDTargetFileHandlerTest extends TestCase {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (Exception ex) {
-            Assert.assertTrue(ex.getCause() instanceof IOException);
+            Assert.assertTrue(ex.getCause() instanceof FileNotFoundException);
         }
     }
+
+    @Test
+    public void testProcessCDRSummaryShouldThrowFileNotFoundException() {
+
+        init();
+        Method method = null;
+        Configuration configuration = new Configuration();
+
+        try {
+            method = handler.getClass().getDeclaredMethod("processCDRSummaryCSV", String.class, String.class, String.class, Configuration.class);
+            method.setAccessible(true);
+            method.invoke(handler, "obdFileName", "oldObdFileName", "filePath", configuration);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+            Assert.assertTrue(ex.getCause() instanceof FileNotFoundException);
+        }
+    }
+
+    @Test
+    public void testProcessCDRSummaryShouldDeactivateSubscription() {
+
+        init();
+
+        Method method = null;
+        OutboundCallFlow oldCallFlow = new OutboundCallFlow();
+        Configuration configuration = new Configuration();
+
+        URL url = this.getClass().getClassLoader().getResource("Cdr_Summary_OBD_NMS1_20150127090000.csv");
+        String filePath = url.getPath();
+
+        oldCallFlow.setCdrSummaryRecordCount(1L);
+        oldCallFlow.setCdrSummaryChecksum("c15e3d3785e43caf6ec71f8c4de70251");
+
+        Mockito.when(callFlowService.findRecordByFileName("oldObdFileName")).thenReturn(oldCallFlow);
+        Mockito.when(subscriptionService.deactivateSubscription(123456L,DeactivationReason.INVALID_MSISDN)).thenReturn(true);
+
+        try {
+            method = handler.getClass().getDeclaredMethod("processCDRSummaryCSV", String.class, String.class, String.class, Configuration.class);
+            method.setAccessible(true);
+            method.invoke(handler, "obdFileName", "oldObdFileName", filePath, configuration);
+
+            Mockito.verify(subscriptionService).deactivateSubscription(123456L,DeactivationReason.INVALID_MSISDN);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (Exception ex) {
+
+        }
+    }
+
+
 
     public OutboundCallDetail getCallDetail() {
         OutboundCallDetail callDetail = new OutboundCallDetail();
