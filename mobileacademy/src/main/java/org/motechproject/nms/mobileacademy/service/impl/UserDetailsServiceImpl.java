@@ -485,14 +485,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                                             .getContentName()))
                             && (Boolean.parseBoolean(contentLogRequest
                                     .getCompletionFlag()))) {
-                        contentLog.setCourseEndDate(flwUsageDetail
-                                .getCourseEndDate());
-                        LOGGER.trace(
-                                "Course start and end  dates for FLW: {} , MSISDN: {} , Start Date: {} ,End Date: {}",
-                                frontLineWorker.getId(),
-                                callDetail.getMsisdn(),
-                                flwUsageDetail.getCourseStartDate(),
-                                flwUsageDetail.getCourseEndDate());
+                        // save course end date only in one record
+                        if (flwUsageDetail.getCourseEndDate().getMillis() == Long
+                                .valueOf(contentLogRequest.getEndTime())
+                                * MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER) {
+                            contentLog.setCourseEndDate(flwUsageDetail
+                                    .getCourseEndDate());
+                            LOGGER.trace(
+                                    "Course start and end  dates for FLW: {} , MSISDN: {} , Start Date: {} ,End Date: {}",
+                                    frontLineWorker.getId(),
+                                    callDetail.getMsisdn(),
+                                    flwUsageDetail.getCourseStartDate(),
+                                    flwUsageDetail.getCourseEndDate());
+                        }
                     }
                 }
                 callDetailService.saveContentLogRecord(contentLog);
