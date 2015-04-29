@@ -634,6 +634,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     isInWhiteList = false;
                 }
             }
+        } else {
+            logger.debug("WhiteListStatus is null");
         }
         return isInWhiteList;
     }

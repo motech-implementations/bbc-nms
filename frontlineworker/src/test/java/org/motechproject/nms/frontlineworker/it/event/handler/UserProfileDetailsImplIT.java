@@ -335,6 +335,17 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
             frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("1233211234");
             assertNotNull(frontLineWorkerdb);
 
+            // Record 12 LanguageLocationCodeId is not null, circleCode is Unknown, Status is ACTIVE and IsWhiteListEnable
+            // is false and MA and MK services are not deployed in state.
+
+            frontLineWorker = new FrontLineWorker(1539L, "9809809234", "Rashi", Designation.USHA,
+                    "123", 13L, stateTemp1, districtTemp, null, null, null,
+                    null, null, null, Status.ACTIVE, "LLC", ConfigurationConstants.UNKNOWN_CIRCLE, null, null, null);
+
+            frontLineWorkerService.createFrontLineWorker(frontLineWorker);
+            frontLineWorkerdb = frontLineWorkerService.getFlwBycontactNo("9809809234");
+            assertNotNull(frontLineWorkerdb);
+
             // Record 14 status is INVALID and LanguageLocationCode, circleCode is not Null, IsWhiteListEnable
             // is true and MA service is deployed in state and MK service is not deployed in state.
 
@@ -680,6 +691,19 @@ public class UserProfileDetailsImplIT extends BasePaxIT {
         } catch (ServiceNotDeployedException e) {
             Assert.assertEquals(e.getErrorCode(), ErrorCategoryConstants.INCONSISTENT_DATA);
         }
+
+        // Record 12 LanguageLocationCodeId is not null, circleCode is Unknown, Status is ACTIVE and IsWhiteListEnable
+        // is false and MA and MK services are not deployed in state.
+
+        stateTemp1.setIsMaDeployed(true);
+        stateTemp1.setIsMkDeployed(false);
+        stateTemp1.setIsWhiteListEnable(null);
+
+        stateService.update(stateTemp1);
+        assertNotNull(stateTemp1);
+
+        userProfile = userProfileDetailsService.processUserDetails("9809809234", "circleCode", "123", ServicesUsingFrontLineWorker.MOBILEACADEMY);
+        assertNotNull(userProfile);
 
         // Record 14 status is INVALID and LanguageLocationCode, circleCode is not Null, IsWhiteListEnable
         // is true and MA service is deployed in state and MK service is not deployed in state.
