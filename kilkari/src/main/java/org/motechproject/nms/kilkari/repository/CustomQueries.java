@@ -135,7 +135,7 @@ public class CustomQueries {
             DateTime date = new DateTime();
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == Constants.FIRST_MSG_OF_WEEK) {
-                query.setFilter(STATUS_ACTIVE_PENDING + " && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
+                query.setFilter(STATUS_ACTIVE_PENDING + " && (currDateInMillis-startDate) >= 0 && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
             } else {
                 query.setFilter(STATUS_ACTIVE_PENDING + " && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0) || (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 3))");
             }

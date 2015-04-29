@@ -670,4 +670,22 @@ public class CsvMctsMotherHandlerIT extends CommonStructure {
          
     }
     
+    @Test
+    public void testForNumberOfMessagePerWeekIs2(){
+        Configuration configuration = configurationService.getConfiguration();
+        if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK==1) {
+            configuration.setNumMsgPerWeek(2);
+        } else {
+            configuration.setNumMsgPerWeek(1);
+        }
+        configuration = configurationDateService.update(configuration);
+        
+        testScheduledSubscriptionApi();
+        testRetryAttempt();
+        
+        configuration.setNumMsgPerWeek(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK);
+        configurationDateService.update(configuration);
+        
+    }
+    
 }

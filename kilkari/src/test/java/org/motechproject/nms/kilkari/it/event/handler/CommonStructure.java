@@ -86,6 +86,9 @@ public class CommonStructure extends BasePaxIT {
     
     @Inject
     protected SubscriptionDataService subscriptionDataService;
+    
+    @Inject
+    protected ConfigurationDataService configurationDateService;
 
     private static boolean setUpIsDone = false;
     
