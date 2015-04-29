@@ -38,7 +38,7 @@ public class CsvMctsChildHandler {
     @MotechListener(subjects = CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT)
     public void csvMctsChildSuccess(MotechEvent motechEvent) {
         logger.trace("Success[CsvMctsChildSuccess] method start for CsvMctsChild");
-        logger.info("Event invoked [{}]" + CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT);
+        logger.info("Event invoked [{}]", CHILD_MCTS_CSV_UPLOAD_SUCCESS_EVENT);
         
         Map<String, Object> parameters = motechEvent.getParameters();
         List<Long> uploadedIDs = (List<Long>) parameters.get(Constants.CSV_IMPORT_CREATED_IDS);
