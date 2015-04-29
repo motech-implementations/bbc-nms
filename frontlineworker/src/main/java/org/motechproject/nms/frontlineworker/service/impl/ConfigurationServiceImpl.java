@@ -1,9 +1,5 @@
 package org.motechproject.nms.frontlineworker.service.impl;
 
-/**
- * Created by abhishek on 24/2/15.
- */
-
 import org.motechproject.nms.frontlineworker.constants.ConfigurationConstants;
 import org.motechproject.nms.frontlineworker.domain.Configuration;
 import org.motechproject.nms.frontlineworker.repository.ConfigurationDataService;
