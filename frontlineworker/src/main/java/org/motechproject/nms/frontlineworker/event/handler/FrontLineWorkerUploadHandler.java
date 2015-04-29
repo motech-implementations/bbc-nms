@@ -399,13 +399,9 @@ public class FrontLineWorkerUploadHandler {
         dbRecord.setFlwId(frontLineWorker.getFlwId());
         dbRecord.setAdhaarNumber(frontLineWorker.getAdhaarNumber());
 
-        if (frontLineWorker.getOldMobileNo() != null) {
-            dbRecord.setOldMobileNo(frontLineWorker.getOldMobileNo());
-        }
+        dbRecord.setOldMobileNo(frontLineWorker.getOldMobileNo());
+        dbRecord.setAlternateContactNo(frontLineWorker.getAlternateContactNo());
 
-        if (frontLineWorker.getAlternateContactNo() != null) {
-            dbRecord.setAlternateContactNo(frontLineWorker.getAlternateContactNo());
-        }
 
         dbRecord.setModifiedBy(frontLineWorker.getModifiedBy());
         frontLineWorkerService.updateFrontLineWorker(dbRecord);
