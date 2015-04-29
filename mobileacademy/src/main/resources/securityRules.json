@@ -13,5 +13,20 @@
         "methodsRequired": [
             "ANY"
         ]
+    },
+    {
+        "active": true,
+        "pattern": "/**/mobileacademy/**",
+        "supportedSchemes": [
+            "NO_SECURITY"
+        ],
+        "protocol": "HTTPS",
+        "priority": 2,
+        "rest": true,
+        "origin": "nms",
+        "version": "0.25",
+        "methodsRequired": [
+            "ANY"
+        ]
     }
 ]

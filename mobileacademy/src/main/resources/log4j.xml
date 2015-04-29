@@ -11,7 +11,7 @@
     </appender>
 
     <logger name="org.motechproject.nms.mobileacademy">
-        <level value="WARN" />
+        <level value="INFO" />
     </logger>
 
     <root>
