@@ -418,26 +418,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             assertNotNull(csvdbFrontLineWorker);
             uploadedIds.add(csvdbFrontLineWorker.getId());
 
-/*            // testFrontLineWorkerStatusInvalidToValid Part 1
-
-            csvFrontLineWorker = new CsvFrontLineWorker("11", "12", "5555555555", "Jaya",
-                    "AWW", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "False", null, null, null);
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());
-
-            // testFrontLineWorkerStatusInvalidToValid Part 2
-
-            csvFrontLineWorker = new CsvFrontLineWorker("11", "12", "5555555555", "Jaya2",
-                    "AWW", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "true", null, null, null);
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());*/
-
             // testFrontLineWorkerStatusValidToInvalid Part 1
 
             csvFrontLineWorker = new CsvFrontLineWorker("12", "12", "3333333333", "Sushma",
@@ -745,55 +725,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             assertNotNull(csvdbFrontLineWorker);
             uploadedIds.add(csvdbFrontLineWorker.getId());
 
-/*            // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
-
-            csvFrontLineWorker = new CsvFrontLineWorker("15", "12", "3737373737", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "false", null, null, null);// status is invalid.
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());
-
-
-            csvFrontLineWorker = new CsvFrontLineWorker("16", "12", "3737373737", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "true", null, null, null);
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());*/
-
-
-            // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null, present
-            // in different records and record fetched by contact number is invalid
-
-            csvFrontLineWorker = new CsvFrontLineWorker("17", "12", "4747474747", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "true", null, null, null);
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());
-
-/*
-            csvFrontLineWorker = new CsvFrontLineWorker("18", "12", "5757575757", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "false", null, null, null);//status is invalid.
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());
-
-
-            csvFrontLineWorker = new CsvFrontLineWorker("17", "12", "5757575757", "Etasha",
-                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
-                    "1234", "true", null, null, null);
-
-            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
-            assertNotNull(csvdbFrontLineWorker);
-            uploadedIds.add(csvdbFrontLineWorker.getId());*/
-
             // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo is null
 
             csvFrontLineWorker = new CsvFrontLineWorker("19", "12", "6767676767", "Etasha",
@@ -883,6 +814,52 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
             csvFrontLineWorker = new CsvFrontLineWorker("", "12", "1818181818", "Etasha",
                     "ASHA", "123", "1", "1234", "12345", "123456", "1234",
                     "1234", "true", null, "34343434345", "1212124545");
+
+            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+            assertNotNull(csvdbFrontLineWorker);
+            uploadedIds.add(csvdbFrontLineWorker.getId());
+
+            // testFrontLineWorker valid is null.
+
+            csvFrontLineWorker = new CsvFrontLineWorker("28", "12", "6655778899", "Etasha",
+                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                    "1234", "true", null, null, null);
+
+            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+            assertNotNull(csvdbFrontLineWorker);
+            uploadedIds.add(csvdbFrontLineWorker.getId());
+
+            csvFrontLineWorker = new CsvFrontLineWorker("28", "12", "6655778898", "Etasha",
+                    "ASHA", "123", "1", "1234", "12345", "123456", "1234",
+                    "1234", null, null, null, null);
+
+            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+            assertNotNull(csvdbFrontLineWorker);
+            uploadedIds.add(csvdbFrontLineWorker.getId());
+
+            // testFrontLineWorker NMS Flw Id is not null.
+
+            csvFrontLineWorker = new CsvFrontLineWorker("29", "12", "6655778891", "Etasha",
+                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                    "1234", "true", "11", null, null);
+
+            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+            assertNotNull(csvdbFrontLineWorker);
+            uploadedIds.add(csvdbFrontLineWorker.getId());
+
+            // testFrontLineWorker valid is false for both create and Update.
+
+            csvFrontLineWorker = new CsvFrontLineWorker("40", "12", "6655778800", "Etasha",
+                    "ASHA", "123", "1", "1234", "12345", "123456", "1234",
+                    "1234", "false", null, null, null);
+
+            csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
+            assertNotNull(csvdbFrontLineWorker);
+            uploadedIds.add(csvdbFrontLineWorker.getId());
+
+            csvFrontLineWorker = new CsvFrontLineWorker("40", "12", "6655778111", "Etasha",
+                    "USHA", "123", "1", "1234", "12345", "123456", "1234",
+                    "1234", "false", null, null, null);
 
             csvdbFrontLineWorker = csvFrontLineWorkerService.createFrontLineWorkerCsv(csvFrontLineWorker);
             assertNotNull(csvdbFrontLineWorker);
@@ -1086,19 +1063,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(frontLineWorker);
         assertEquals("Jyoti2", frontLineWorker.getName());
 
-/*        // testFrontLineWorkerStatusInvalidToValid Part 1
-
-        flw = frontLineWorkerService.getFlwBycontactNo("5555555555");
-        assertNotNull(flw);
-        assertEquals(Status.INVALID, flw.getStatus());
-
-        // testFrontLineWorkerStatusInvalidToValid Part 2
-
-        frontLineWorker = frontLineWorkerService.getFlwBycontactNo("5555555555");
-        assertNotNull(frontLineWorker);
-        assertEquals("Jaya", frontLineWorker.getName());
-        assertEquals(Status.INVALID, flw.getStatus());*/
-
         // testFrontLineWorkerStatusValidToInvalid Part 1
 
         flw = frontLineWorkerService.getFlwBycontactNo("3333333333");
@@ -1216,19 +1180,6 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         flw = frontLineWorkerService.getFlwBycontactNo("9990000000");
         assertNull(flw);
 
-/*        // testFrontLineWorkerUpdation flwId and stateId combination is null, ContactNo not null(status invalid).
-
-        flw = frontLineWorkerService.getFlwBycontactNo("3737373737");
-        assertNotNull(flw);
-        assertTrue(16L == flw.getFlwId());*/
-
-        // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo not null, present
-        // in different records and record fetched by contact number is invalid
-
-/*        flw = frontLineWorkerService.getFlwBycontactNo("5757575757");
-        assertNotNull(flw);
-        assertTrue(17L == flw.getFlwId());*/
-
         // testFrontLineWorkerUpdation flwId and stateId combination is not null, ContactNo is null
 
         flw = frontLineWorkerService.getFlwBycontactNo("7777777777");
@@ -1260,6 +1211,25 @@ public class FrontlineWorkerHandlerIT extends BasePaxIT {
         assertNotNull(flw);
         assertEquals(Designation.ASHA, flw.getDesignation());
         assertNull(flw.getFlwId());
+
+        // testFrontLineWorker valid is null.
+
+        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(28L, 12L);
+        assertNotNull(flw);
+        assertTrue(28L == flw.getFlwId());
+        assertTrue(12L == flw.getStateCode());
+        assertEquals("6655778898", flw.getContactNo());
+        assertEquals(Status.INACTIVE, flw.getStatus());
+
+        // testFrontLineWorker NMS Flw Id is not null.
+
+        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(29L, 12L);
+        assertNull(flw);
+
+        // testFrontLineWorker IsValid is false for both create and Update.
+
+        flw = frontLineWorkerService.getFlwByFlwIdAndStateId(40L, 12L);
+        assertNull(flw);
 
         List<CsvFrontLineWorker> listFlwCsv = csvFrontLineWorkerService.retrieveAllFromCsv();
         assertTrue(listFlwCsv.size() == 0);

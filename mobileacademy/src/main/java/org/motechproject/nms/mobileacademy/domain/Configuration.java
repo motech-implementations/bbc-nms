@@ -37,7 +37,7 @@ public class Configuration extends MdsEntity {
     private Integer courseQualifyingScore;
 
     @Field
-    private Integer defaultLanguageLocationCode;
+    private String defaultLanguageLocationCode;
 
     @Field
     private String smsSenderAddress;
@@ -68,7 +68,7 @@ public class Configuration extends MdsEntity {
      */
     public Configuration(Long index, Integer cappingType,
             Integer nationalCapValue, Integer maxAllowedEndOfUsagePrompt,
-            Integer courseQualifyingScore, Integer defaultLanguageLocationCode,
+            Integer courseQualifyingScore, String defaultLanguageLocationCode,
             String smsSenderAddress) {
         this.index = index;
         this.cappingType = cappingType;
@@ -119,12 +119,12 @@ public class Configuration extends MdsEntity {
         this.courseQualifyingScore = courseQualifyingScore;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
+    public String getDefaultLanguageLocationCode() {
         return defaultLanguageLocationCode;
     }
 
     public void setDefaultLanguageLocationCode(
-            Integer defaultLanguageLocationCode) {
+            String defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 

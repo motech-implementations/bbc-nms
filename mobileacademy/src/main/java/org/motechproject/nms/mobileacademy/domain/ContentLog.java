@@ -18,9 +18,9 @@ public class ContentLog extends MdsEntity {
     @UIDisplayable(position = 0)
     private Long callId;
 
-    @Field(required = true)
+    @Field
     @UIDisplayable(position = 1)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @Field(required = true)
     @UIDisplayable(position = 2)
@@ -56,7 +56,7 @@ public class ContentLog extends MdsEntity {
 
     @Field
     @UIDisplayable(position = 10)
-    private Boolean correctAnswerReceived;
+    private Boolean correctAnswerEntered;
 
     public Long getCallId() {
         return callId;
@@ -66,11 +66,11 @@ public class ContentLog extends MdsEntity {
         this.callId = callId;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -138,12 +138,12 @@ public class ContentLog extends MdsEntity {
         this.courseEndDate = courseEndDate;
     }
 
-    public Boolean getCorrectAnswerReceived() {
-        return correctAnswerReceived;
+    public Boolean getCorrectAnswerEntered() {
+        return correctAnswerEntered;
     }
 
-    public void setCorrectAnswerReceived(Boolean correctAnswerReceived) {
-        this.correctAnswerReceived = correctAnswerReceived;
+    public void setCorrectAnswerEntered(Boolean correctAnswerEntered) {
+        this.correctAnswerEntered = correctAnswerEntered;
     }
 
 }

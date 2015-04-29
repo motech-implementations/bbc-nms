@@ -54,10 +54,9 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         logger.info("Save CallDetail Entered successfully.");
 
 
-
         FlwDetail flwDetail = updateFlwDetail(saveCallDetailApiRequest);
 
-        setCallDetail(null != flwDetail ? flwDetail.getNmsFlwId() : null , saveCallDetailApiRequest);
+        setCallDetail(null != flwDetail ? flwDetail.getNmsFlwId() : null, saveCallDetailApiRequest);
 
         logger.info("Save CallDetail executed successfully.");
     }
@@ -71,9 +70,9 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
     private void setCallDetail(Long nmsId, SaveCallDetailApiRequest saveCallDetailApiRequest) {
 
         CallDetail callDetail = new CallDetail(saveCallDetailApiRequest.getCallId(), saveCallDetailApiRequest.getCallingNumber(),
-                saveCallDetailApiRequest.getOperator(),saveCallDetailApiRequest.getCallStatus(),
-                saveCallDetailApiRequest.getCallDisconnectReason(),saveCallDetailApiRequest.getCircle(),
-                saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime(),nmsId);
+                saveCallDetailApiRequest.getOperator(), saveCallDetailApiRequest.getCallStatus(),
+                saveCallDetailApiRequest.getCallDisconnectReason(), saveCallDetailApiRequest.getCircle(),
+                saveCallDetailApiRequest.getCallStartTime(), saveCallDetailApiRequest.getCallEndTime(), nmsId);
 
         if (null != saveCallDetailApiRequest.getContent() && !saveCallDetailApiRequest.getContent().isEmpty()) {
 
@@ -112,7 +111,7 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo(ParseDataHelper.validateAndTrimMsisdn(
                 "CallingNumber", saveCallDetailApiRequest.getCallingNumber()));
 
-        if (null != frontLineWorker &&  null !=(flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getFlwId())) ){
+        if (null != frontLineWorker && null != (flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getFlwId()))) {
             flwDetail.setNmsFlwId(frontLineWorker.getId());
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
         }

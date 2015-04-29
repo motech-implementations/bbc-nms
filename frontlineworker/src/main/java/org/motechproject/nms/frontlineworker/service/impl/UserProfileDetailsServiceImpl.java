@@ -115,12 +115,12 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
         String validatedMsisdn = null;
         LanguageLocationCode languageLocationCodeByParam = null;
         FrontLineWorker frontLineWorker = null;
-        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("msisdn", msisdn);
+        validatedMsisdn = ParseDataHelper.validateAndTrimMsisdn("CallingNumber", msisdn);
         String circleCode = null;
 
         frontLineWorker = frontLineWorkerService.getFlwBycontactNo(validatedMsisdn);
         if (frontLineWorker == null) {
-            ParseDataHelper.raiseInvalidDataException("validatedMsisdn ", msisdn);
+            ParseDataHelper.raiseInvalidDataException("CallingNumber ", msisdn);
         } else {
             circleCode = frontLineWorker.getCircleCode();
             if (ConfigurationConstants.UNKNOWN_CIRCLE.equals(circleCode)) {
@@ -135,7 +135,7 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
             } else {
                 languageLocationCodeByParam = languageLocationCodeService.getRecordByCircleCodeAndLangLocCode(circleCode, languageLocationCode);
                 if (null == languageLocationCodeByParam) {
-                    ParseDataHelper.raiseInvalidDataException("languageLocationCode ", languageLocationCode);
+                    ParseDataHelper.raiseInvalidDataException("LanguageLocationCode ", languageLocationCode);
                 } else {
                     stateCode = languageLocationCodeByParam.getStateCode();
                     checkIsDeployedAndIsInWhiteList(msisdn, service, stateCode);
@@ -634,6 +634,8 @@ public class UserProfileDetailsServiceImpl implements UserProfileDetailsService 
                     isInWhiteList = false;
                 }
             }
+        } else {
+            logger.debug("WhiteListStatus is null");
         }
         return isInWhiteList;
     }

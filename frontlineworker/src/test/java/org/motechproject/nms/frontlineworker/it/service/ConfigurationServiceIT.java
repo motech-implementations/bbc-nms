@@ -1,14 +1,15 @@
-package org.motechproject.nms.mobilekunji.it.service;
+package org.motechproject.nms.frontlineworker.it.service;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.mobilekunji.Initializer;
-import org.motechproject.nms.mobilekunji.domain.Configuration;
-import org.motechproject.nms.mobilekunji.repository.ConfigurationDataService;
-import org.motechproject.nms.mobilekunji.service.ConfigurationService;
+import org.motechproject.nms.frontlineworker.Initializer;
+import org.motechproject.nms.frontlineworker.domain.Configuration;
+import org.motechproject.nms.frontlineworker.repository.ConfigurationDataService;
+import org.motechproject.nms.frontlineworker.service.ConfigurationService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
 import org.motechproject.testing.osgi.BasePaxIT;
 import org.motechproject.testing.osgi.container.MotechNativeTestContainerFactory;
 import org.ops4j.pax.exam.ExamFactory;
@@ -18,14 +19,11 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * This class is used to test(IT) the operations of ConfigurationService
+ * This class is used to test(IT) the operations of ConfigurationService.
  */
-
-
 @RunWith(PaxExam.class)
 @ExamReactorStrategy(PerSuite.class)
 @ExamFactory(MotechNativeTestContainerFactory.class)
@@ -37,13 +35,16 @@ public class ConfigurationServiceIT extends BasePaxIT {
     @Inject
     private ConfigurationService configurationService;
 
+    @Inject
+    private MotechSchedulerService motechSchedulerService;
+
     private Initializer initializer;
 
     @Before
     public void setUp() {
 
 
-        initializer = new Initializer(configurationService);
+        initializer = new Initializer(configurationService, motechSchedulerService);
 
         assertNotNull(configurationDataService);
         assertNotNull(configurationService);
@@ -59,13 +60,8 @@ public class ConfigurationServiceIT extends BasePaxIT {
         configuration = configurationService.getConfiguration();
 
         assertNotNull(configuration);
-        assertNotNull(configuration.getCappingType());
-        assertTrue(0 == configuration.getNationalCapValue());
-        assertTrue(2 == configuration.getMaxEndofusageMessage());
-        assertTrue("1".equals(configuration.getNationalDefaultLanguageLocationCode()));
         assertTrue(1L == configuration.getIndex());
-
+        assertTrue(42 == configuration.getPurgeDate());
+        assertEquals("0 1 0 * * ?", configuration.getDeletionEventCronExpression());
     }
-
-
 }

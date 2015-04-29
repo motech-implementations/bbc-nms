@@ -57,15 +57,13 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId, final HttpServletRequest request)
-            throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+            throws DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         long startTime = System.currentTimeMillis();
 
         logger.info("getUserDetails: Started");
 
         logger.debug("Input request-callingNumber: {}, operator:{}, circle: {}, callId: {} " + callingNumber, operator, circle, callId);
-
-        validateCallId(callId);
 
         validateInputDataForGetUserDetails(operator, circle, callId);
 
@@ -94,7 +92,7 @@ public class CallerDataController extends BaseController {
         logger.debug("SaveCallDetails Request Parameters : {} ", saveCallDetailApiRequest.toString());
 
         saveCallDetailApiRequest.validateMandatoryParameters();
-        saveCallDetailApiRequest.validateCardDetailParameters();
+
 
         long startTime = System.currentTimeMillis();
 
@@ -115,7 +113,7 @@ public class CallerDataController extends BaseController {
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public
     @ResponseBody
-    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException,FlwNotInWhiteListException,ServiceNotDeployedException {
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         logger.debug("SetLanguageLocationCode: started");
         logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());
@@ -143,9 +141,11 @@ public class CallerDataController extends BaseController {
      */
     private void validateInputDataForGetUserDetails(String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(operator, operator, true);
-        ParseDataHelper.validateAndParseString(circle, circle, true);
-        ParseDataHelper.validateAndParseLong(callId, callId, true);
+
+        validateCallId(callId);
+        ParseDataHelper.validateString(ConfigurationConstants.OPERATOR_CODE, operator, true);
+        ParseDataHelper.validateString(ConfigurationConstants.CIRCLE_CODE, circle, true);
+        ParseDataHelper.validateLong(ConfigurationConstants.CALL_ID, callId, true);
     }
 
     /**

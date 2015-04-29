@@ -139,7 +139,7 @@ public class BookmarkHelper {
                         LOGGER.debug(
                                 "scores out of range in Save bookmark request for MSISDN: {}",
                                 courseBookmark.getExternalId());
-                        ParseDataHelper.raiseInvalidDataException(
+                        ParseDataHelper.raiseApiParameterInvalidDataException(
                                 MobileAcademyConstants.SCORE_BY_CHAPTER_NODE,
                                 scoreInChapter.toString());
                     }
@@ -153,7 +153,7 @@ public class BookmarkHelper {
                 LOGGER.debug(
                         "Invalid Chapter Indices in ScoresByChapter field of Save bookmark request for MSISDN: {}",
                         courseBookmark.getExternalId());
-                ParseDataHelper.raiseInvalidDataException(
+                ParseDataHelper.raiseApiParameterInvalidDataException(
                         MobileAcademyConstants.SCORE_BY_CHAPTER_NODE,
                         chapterKeys.get(0));
             }

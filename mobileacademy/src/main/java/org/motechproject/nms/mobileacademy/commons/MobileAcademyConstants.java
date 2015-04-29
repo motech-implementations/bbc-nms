@@ -144,7 +144,7 @@ public class MobileAcademyConstants {
 
     public static final Integer CONFIG_DEFAULT_NATIONAL_CAP_VALUE = 0;
 
-    public static final Integer CONFIG_DEFAULT_LANGUAGE_LOCATION_CODE = 1;
+    public static final String CONFIG_DEFAULT_LANGUAGE_LOCATION_CODE = "1";
 
     public static final String CONFIG_DEFAULT_SMS_SENDER_ADDRESS = "DEFAULT_SMS_SENDER_ADDRESS";
 

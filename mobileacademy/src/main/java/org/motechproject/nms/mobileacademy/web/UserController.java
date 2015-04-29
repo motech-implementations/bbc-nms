@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.motechproject.nms.mobileacademy.commons.CallDisconnectReason;
-import org.motechproject.nms.mobileacademy.commons.CallStatus;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.mobileacademy.dto.CallDetailsRequest;
 import org.motechproject.nms.mobileacademy.dto.ContentLogRequest;
 import org.motechproject.nms.mobileacademy.dto.LlcRequest;
@@ -67,7 +67,7 @@ public class UserController extends BaseController {
 
     private static final String REQUEST_PARAM_COMPLETION_FLAG = "completionFlag";
 
-    private static final String REQUEST_PARAM_CORRECT_ANSWER_RECEIVED = "correctAnswerReceived";
+    private static final String REQUEST_PARAM_CORRECT_ANSWER_ENTERED = "correctAnswerEntered";
 
     private static final String[] CALL_DATA_TYPE = { "lesson", "chapter",
             "question" };
@@ -83,7 +83,10 @@ public class UserController extends BaseController {
      * @param circle Circle from where the call is originating.
      * @param callId unique call id assigned by IVR
      * @return User response object containing user details
-     * @throws DataValidationException , NmsInternalServerError
+     * @throws DataValidationException
+     * @throws NmsInternalServerError
+     * @throws FlwNotInWhiteListException
+     * @throws ServiceNotDeployedException
      */
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     @ResponseBody
@@ -92,7 +95,8 @@ public class UserController extends BaseController {
             @RequestParam(value = REQUEST_PARAM_OPERATOR) String operator,
             @RequestParam(value = REQUEST_PARAM_CIRCLE) String circle,
             @RequestParam(value = REQUEST_PARAM_CALL_ID) String callId)
-            throws DataValidationException, NmsInternalServerError {
+            throws DataValidationException, NmsInternalServerError,
+            ServiceNotDeployedException, FlwNotInWhiteListException {
         LOGGER.debug("getUserDetails: Started");
         LOGGER.debug("Input request-" + REQUEST_PARAM_CALLING_NUMBER + ":"
                 + callingNumber + ", " + REQUEST_PARAM_OPERATOR + ":"
@@ -114,12 +118,15 @@ public class UserController extends BaseController {
      * @param llcRequest object contain input request
      * @throws DataValidationException
      * @throws MissingServletRequestParameterException
+     * @throws FlwNotInWhiteListException
+     * @throws ServiceNotDeployedException
      */
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     @ResponseBody
     public void setLanguageLocationCode(@RequestBody LlcRequest llcRequest)
             throws DataValidationException,
-            MissingServletRequestParameterException {
+            MissingServletRequestParameterException,
+            ServiceNotDeployedException, FlwNotInWhiteListException {
         LOGGER.debug("setLanguageLocationCode: Started");
         LOGGER.debug("Input request: " + llcRequest);
         validateInputDataForSetLlc(llcRequest);
@@ -162,17 +169,14 @@ public class UserController extends BaseController {
     private void validateInputDataForGetUserDetails(String callingNumber,
             String operator, String circle, String callId)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALLING_NUMBER,
-                callingNumber, true);
         ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
-                callingNumber);
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_OPERATOR,
-                operator, true);
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CIRCLE, circle,
-                true);
+                ParseDataHelper.validateString(REQUEST_PARAM_CALLING_NUMBER,
+                        callingNumber, true));
+        ParseDataHelper.validateString(REQUEST_PARAM_OPERATOR, operator, true);
+        ParseDataHelper.validateString(REQUEST_PARAM_CIRCLE, circle, true);
         ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
-                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
-                        callId, true));
+                ParseDataHelper.validateString(REQUEST_PARAM_CALL_ID, callId,
+                        true));
     }
 
     /**
@@ -185,21 +189,13 @@ public class UserController extends BaseController {
     private void validateInputDataForSetLlc(LlcRequest llcRequest)
             throws DataValidationException,
             MissingServletRequestParameterException {
-
-        checkParameterMissing(REQUEST_PARAM_CALLING_NUMBER,
-                llcRequest.getCallingNumber());
-        checkParameterMissing(REQUEST_PARAM_CALL_ID, llcRequest.getCallId());
-        checkParameterMissing(REQUEST_PARAM_LLC,
-                llcRequest.getLanguageLocationCode());
-
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALLING_NUMBER,
-                llcRequest.getCallingNumber(), true);
         ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
-                llcRequest.getCallingNumber());
+                ParseDataHelper.validateString(REQUEST_PARAM_CALLING_NUMBER,
+                        llcRequest.getCallingNumber(), true));
         ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
-                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
+                ParseDataHelper.validateString(REQUEST_PARAM_CALL_ID,
                         llcRequest.getCallId(), true));
-        ParseDataHelper.validateAndParseInt(REQUEST_PARAM_LLC,
+        ParseDataHelper.validateString(REQUEST_PARAM_LLC,
                 llcRequest.getLanguageLocationCode(), true);
     }
 
@@ -214,67 +210,29 @@ public class UserController extends BaseController {
             CallDetailsRequest callDetailsRequest)
             throws MissingServletRequestParameterException,
             DataValidationException {
-        // check whether parameter is missing or not
-        checkParameterMissing(REQUEST_PARAM_CALLING_NUMBER,
-                callDetailsRequest.getCallingNumber());
-        checkParameterMissing(REQUEST_PARAM_OPERATOR,
-                callDetailsRequest.getOperator());
-        checkParameterMissing(REQUEST_PARAM_CIRCLE,
-                callDetailsRequest.getCircle());
-        checkParameterMissing(REQUEST_PARAM_CALL_ID,
-                callDetailsRequest.getCallId());
-        checkParameterMissing(REQUEST_PARAM_CALL_START_TIME,
-                callDetailsRequest.getCallStartTime());
-        checkParameterMissing(REQUEST_PARAM_CALL_END_TIME,
-                callDetailsRequest.getCallEndTime());
-        checkParameterMissing(REQUEST_PARAM_CALL_DURATION_IN_PULSES,
-                callDetailsRequest.getCallDurationInPulses());
-        checkParameterMissing(REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
-                callDetailsRequest.getEndOfUsagePromptCounter());
-        checkParameterMissing(REQUEST_PARAM_CALL_STATUS,
-                callDetailsRequest.getCallStatus());
-        checkParameterMissing(REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                callDetailsRequest.getCallDisconnectReason());
-
         // check whether parameter value is valid or not
         ParseDataHelper.validateAndTrimMsisdn(REQUEST_PARAM_CALLING_NUMBER,
-                ParseDataHelper.validateAndParseString(
-                        REQUEST_PARAM_CALLING_NUMBER,
+                ParseDataHelper.validateString(REQUEST_PARAM_CALLING_NUMBER,
                         callDetailsRequest.getCallingNumber(), true));
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_OPERATOR,
+        ParseDataHelper.validateString(REQUEST_PARAM_OPERATOR,
                 callDetailsRequest.getOperator(), true);
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CIRCLE,
+        ParseDataHelper.validateString(REQUEST_PARAM_CIRCLE,
                 callDetailsRequest.getCircle(), true);
         ParseDataHelper.validateLengthOfCallId(REQUEST_PARAM_CALL_ID,
-                ParseDataHelper.validateAndParseString(REQUEST_PARAM_CALL_ID,
+                ParseDataHelper.validateString(REQUEST_PARAM_CALL_ID,
                         callDetailsRequest.getCallId(), true));
-        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_START_TIME,
+        ParseDataHelper.validateLong(REQUEST_PARAM_CALL_START_TIME,
                 callDetailsRequest.getCallStartTime(), true);
-        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_CALL_END_TIME,
+        ParseDataHelper.validateLong(REQUEST_PARAM_CALL_END_TIME,
                 callDetailsRequest.getCallEndTime(), true);
-        ParseDataHelper.validateAndParseInt(
-                REQUEST_PARAM_CALL_DURATION_IN_PULSES,
+        ParseDataHelper.validateInt(REQUEST_PARAM_CALL_DURATION_IN_PULSES,
                 callDetailsRequest.getCallDurationInPulses(), true);
-        ParseDataHelper.validateAndParseInt(
-                REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
+        ParseDataHelper.validateInt(REQUEST_PARAM_END_USAGE_PROMPT_COUNTER,
                 callDetailsRequest.getEndOfUsagePromptCounter(), true);
-        ParseDataHelper.validateAndParseInt(REQUEST_PARAM_CALL_STATUS,
+        ParseDataHelper.validateInt(REQUEST_PARAM_CALL_STATUS,
                 callDetailsRequest.getCallStatus(), true);
-        if (CallStatus.findByValue(Integer.valueOf(callDetailsRequest
-                .getCallStatus())) == null) {
-            ParseDataHelper.raiseInvalidDataException(
-                    REQUEST_PARAM_CALL_STATUS,
-                    callDetailsRequest.getCallStatus());
-        }
-        ParseDataHelper.validateAndParseInt(
-                REQUEST_PARAM_CALL_DISCONNECT_REASON,
+        ParseDataHelper.validateInt(REQUEST_PARAM_CALL_DISCONNECT_REASON,
                 callDetailsRequest.getCallDisconnectReason(), true);
-        if (CallDisconnectReason.findByValue(Integer.valueOf(callDetailsRequest
-                .getCallDisconnectReason())) == null) {
-            ParseDataHelper.raiseInvalidDataException(
-                    REQUEST_PARAM_CALL_DISCONNECT_REASON,
-                    callDetailsRequest.getCallDisconnectReason());
-        }
         if (CollectionUtils.isNotEmpty(callDetailsRequest.getContent())) {
             for (ContentLogRequest contentLogRequest : callDetailsRequest
                     .getContent()) {
@@ -293,40 +251,26 @@ public class UserController extends BaseController {
     private void validateCallContentLogData(ContentLogRequest contentLogRequest)
             throws MissingServletRequestParameterException,
             DataValidationException {
-        // check whether parameter is missing or not
-        checkParameterMissing(REQUEST_PARAM_TYPE, contentLogRequest.getType());
-        checkParameterMissing(REQUEST_PARAM_CONTENT_NAME,
-                contentLogRequest.getContentName());
-        checkParameterMissing(REQUEST_PARAM_CONTENT_FILE,
-                contentLogRequest.getContentFile());
-        checkParameterMissing(REQUEST_PARAM_START_TIME,
-                contentLogRequest.getStartTime());
-        checkParameterMissing(REQUEST_PARAM_END_TIME,
-                contentLogRequest.getEndTime());
-        checkParameterMissing(REQUEST_PARAM_COMPLETION_FLAG,
-                contentLogRequest.getCompletionFlag());
-
         // check whether parameter value is valid or not
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_TYPE,
+        ParseDataHelper.validateString(REQUEST_PARAM_TYPE,
                 contentLogRequest.getType(), true);
         if (!Arrays.asList(CALL_DATA_TYPE).contains(
                 contentLogRequest.getType().toLowerCase())) {
-            ParseDataHelper.raiseInvalidDataException(REQUEST_PARAM_TYPE,
-                    contentLogRequest.getType());
+            ParseDataHelper.raiseApiParameterInvalidDataException(
+                    REQUEST_PARAM_TYPE, contentLogRequest.getType());
         }
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CONTENT_NAME,
+        ParseDataHelper.validateString(REQUEST_PARAM_CONTENT_NAME,
                 contentLogRequest.getContentName(), true);
-        ParseDataHelper.validateAndParseString(REQUEST_PARAM_CONTENT_FILE,
+        ParseDataHelper.validateString(REQUEST_PARAM_CONTENT_FILE,
                 contentLogRequest.getContentFile(), true);
-        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_START_TIME,
+        ParseDataHelper.validateLong(REQUEST_PARAM_START_TIME,
                 contentLogRequest.getStartTime(), true);
-        ParseDataHelper.validateAndParseLong(REQUEST_PARAM_END_TIME,
+        ParseDataHelper.validateLong(REQUEST_PARAM_END_TIME,
                 contentLogRequest.getEndTime(), true);
-        ParseDataHelper.validateAndParseBoolean(REQUEST_PARAM_COMPLETION_FLAG,
+        ParseDataHelper.validateBoolean(REQUEST_PARAM_COMPLETION_FLAG,
                 contentLogRequest.getCompletionFlag(), true);
-        ParseDataHelper.validateAndParseBoolean(
-                REQUEST_PARAM_CORRECT_ANSWER_RECEIVED,
-                contentLogRequest.getCorrectAnswerReceived(), false);
+        ParseDataHelper.validateBoolean(REQUEST_PARAM_CORRECT_ANSWER_ENTERED,
+                contentLogRequest.getCorrectAnswerEntered(), false);
 
     }
 }

@@ -56,60 +56,60 @@ public class ContentUpload extends MdsEntity {
         return contentId;
     }
 
-    public void setContentId(Integer contentId) {
-        this.contentId = contentId;
-    }
-
     public String getCircleCode() {
         return circleCode;
-    }
-
-    public void setCircleCode(String circleCode) {
-        this.circleCode = circleCode;
     }
 
     public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(String languageLocationCode) {
-        this.languageLocationCode = languageLocationCode;
-    }
-
     public String getContentName() {
         return contentName;
-    }
-
-    public void setContentName(String contentName) {
-        this.contentName = contentName;
     }
 
     public ContentType getContentType() {
         return contentType;
     }
 
-    public void setContentType(ContentType contentType) {
-        this.contentType = contentType;
-    }
-
     public String getContentFile() {
         return contentFile;
-    }
-
-    public void setContentFile(String contentFile) {
-        this.contentFile = contentFile;
     }
 
     public String getCardCode() {
         return cardCode;
     }
 
-    public void setCardCode(String cardCode) {
-        this.cardCode = cardCode;
-    }
-
     public Integer getContentDuration() {
         return contentDuration;
+    }
+
+    public void setContentId(Integer contentId) {
+        this.contentId = contentId;
+    }
+
+    public void setCircleCode(String circleCode) {
+        this.circleCode = circleCode;
+    }
+
+    public void setLanguageLocationCode(String languageLocationCode) {
+        this.languageLocationCode = languageLocationCode;
+    }
+
+    public void setContentName(String contentName) {
+        this.contentName = contentName;
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setContentFile(String contentFile) {
+        this.contentFile = contentFile;
+    }
+
+    public void setCardCode(String cardCode) {
+        this.cardCode = cardCode;
     }
 
     public void setContentDuration(Integer contentDuration) {

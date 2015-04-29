@@ -12,8 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.motechproject.nms.frontlineworker.Status;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.enums.Status;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.mobileacademy.commons.MobileAcademyConstants;
 import org.motechproject.nms.mobileacademy.domain.CallDetail;
@@ -63,7 +63,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // create FLW record
             FrontLineWorker frontLineWorker = new FrontLineWorker();
             frontLineWorker.setCircleCode("DL");
-            frontLineWorker.setLanguageLocationCodeId(29);
+            frontLineWorker.setLanguageLocationCodeId("29");
             frontLineWorker.setContactNo("9990632901");
             frontLineWorker.setOperatorCode("AL");
             frontLineWorker.setStatus(Status.ACTIVE);
@@ -88,7 +88,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
         contentLogRequestFirst.setContentFile("ch1.wav");
         contentLogRequestFirst
                 .setContentName(MobileAcademyConstants.COURSE_START_CONTENT);
-        contentLogRequestFirst.setCorrectAnswerReceived("true");
+        contentLogRequestFirst.setCorrectAnswerEntered("true");
         contentLogRequestFirst.setStartTime("1429167000");
         contentLogRequestFirst.setEndTime("1429169000");
         // course end record
@@ -98,7 +98,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
         contentLogRequestLast.setContentFile("ch2.wav");
         contentLogRequestLast
                 .setContentName(MobileAcademyConstants.COURSE_END_CONTENT);
-        contentLogRequestLast.setCorrectAnswerReceived("true");
+        contentLogRequestLast.setCorrectAnswerEntered("true");
         contentLogRequestLast.setStartTime("1429168000");
         contentLogRequestLast.setEndTime("1429170000");
 
@@ -121,7 +121,6 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // assert usage table data
             assertTrue(3 == flwUsageDetail.getEndOfUsagePromptCounter());
             assertTrue(20 == flwUsageDetail.getCurrentUsageInPulses());
-            assertTrue(9990632901l == flwUsageDetail.getMsisdn());
             assertTrue(1429166000l == (flwUsageDetail.getLastAccessTime()
                     .getMillis() / 1000));
             assertTrue(1429167000l == (flwUsageDetail.getCourseStartDate()
@@ -142,7 +141,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             assertTrue(1429171000l == (callDetail.getCallEndTime().getMillis() / 1000));
 
             // assert content log records
-            assertTrue(29 == contentLogFirstRecord.getLanguageLocationCode());
+            assertEquals("29", contentLogFirstRecord.getLanguageLocationCode());
             assertTrue(12345678 == contentLogFirstRecord.getCallId());
             assertTrue(contentLogFirstRecord.getCompletionFlag());
             assertEquals("ch1.wav", contentLogFirstRecord.getContentFile());
@@ -151,7 +150,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
                     contentLogFirstRecord.getContentName());
             assertEquals("lesson".toUpperCase(),
                     contentLogFirstRecord.getType());
-            assertTrue(contentLogFirstRecord.getCorrectAnswerReceived());
+            assertTrue(contentLogFirstRecord.getCorrectAnswerEntered());
             assertTrue(1429167000l == (contentLogFirstRecord
                     .getCourseStartDate().getMillis() / 1000));
             assertTrue(null == contentLogFirstRecord.getCourseEndDate());
@@ -160,7 +159,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
             assertTrue(1429169000l == (contentLogFirstRecord.getEndTime()
                     .getMillis() / 1000));
 
-            assertTrue(29 == contentLogLastRecord.getLanguageLocationCode());
+            assertEquals("29", contentLogLastRecord.getLanguageLocationCode());
             assertTrue(12345678 == contentLogLastRecord.getCallId());
             assertTrue(contentLogLastRecord.getCompletionFlag());
             assertEquals("ch2.wav", contentLogLastRecord.getContentFile());
@@ -169,7 +168,7 @@ public class UserDetailsServiceIT extends BasePaxIT {
                     contentLogLastRecord.getContentName());
             assertEquals("question".toUpperCase(),
                     contentLogLastRecord.getType());
-            assertTrue(contentLogLastRecord.getCorrectAnswerReceived());
+            assertTrue(contentLogLastRecord.getCorrectAnswerEntered());
             assertTrue(1429167000l == (contentLogLastRecord
                     .getCourseStartDate().getMillis() / 1000));
             assertTrue(1429170000l == (contentLogLastRecord.getCourseEndDate()
@@ -205,7 +204,6 @@ public class UserDetailsServiceIT extends BasePaxIT {
             // assert usage table data
             assertTrue(3 == flwUsageDetail.getEndOfUsagePromptCounter());
             assertTrue(40 == flwUsageDetail.getCurrentUsageInPulses());
-            assertTrue(9990632901l == flwUsageDetail.getMsisdn());
             assertTrue(1429166000l == (flwUsageDetail.getLastAccessTime()
                     .getMillis() / 1000));
 
@@ -242,6 +240,84 @@ public class UserDetailsServiceIT extends BasePaxIT {
     public void testDoesMsisdnExistSuccess() {
 
         assertTrue(userDetailsService.doesMsisdnExist("9990632901"));
+    }
+
+    /**
+     * test Save Call Details Success when FLW do not exist
+     */
+    @Test
+    public void testSaveCallDetailWhenFlwNotExist() {
+
+        CallDetailsRequest callDetailRequest = createCallDetailsRequest();
+        callDetailRequest.setCallId("12121");
+        callDetailRequest.setCallingNumber("9900000000");// Unknown MSISDN
+        // content
+        List<ContentLogRequest> contentList = new ArrayList<>();
+        // course start record
+        ContentLogRequest contentLogRequestFirst = new ContentLogRequest();
+        contentLogRequestFirst.setType("lesson");
+        contentLogRequestFirst.setCompletionFlag("true");
+        contentLogRequestFirst.setContentFile("ch1.wav");
+        contentLogRequestFirst.setContentName("CN111");
+        contentLogRequestFirst.setCorrectAnswerEntered("true");
+        contentLogRequestFirst.setStartTime("1429167000");
+        contentLogRequestFirst.setEndTime("1429169000");
+        // course end record
+        ContentLogRequest contentLogRequestLast = new ContentLogRequest();
+        contentLogRequestLast.setType("question");
+        contentLogRequestLast.setCompletionFlag("true");
+        contentLogRequestLast.setContentFile("ch2.wav");
+        contentLogRequestLast
+                .setContentName(MobileAcademyConstants.COURSE_END_CONTENT);
+        contentLogRequestLast.setCorrectAnswerEntered("true");
+        contentLogRequestLast.setStartTime("1429168000");
+        contentLogRequestLast.setEndTime("1429170000");
+
+        contentList.add(contentLogRequestFirst);
+        contentList.add(contentLogRequestLast);
+        callDetailRequest.setContent(contentList);
+
+        try {
+            userDetailsService.saveCallDetails(callDetailRequest);
+            FlwUsageDetail flwUsageDetail = flwUsageDetailDataService.retrieve(
+                    "msisdn", 9900000000l);
+            CallDetail callDetail = callDetailDataService.retrieve("callId",
+                    12121);
+            ContentLog contentLogFirstRecord = contentLogDataService.retrieve(
+                    "contentName", "CN111");
+            // assert usage table data
+            assertTrue(null == flwUsageDetail);
+
+            // assert call detail table data
+            assertTrue(12121 == callDetail.getCallId());
+            assertTrue(9900000000l == callDetail.getMsisdn());
+            assertEquals(null, callDetail.getFlwId());
+            assertEquals("AL", callDetail.getOperator());
+            assertEquals("DL", callDetail.getCircle());
+            assertTrue(1 == callDetail.getCallStatus());
+            assertTrue(6 == callDetail.getCallDisconnectReason());
+            assertTrue(1429166000l == (callDetail.getCallStartTime()
+                    .getMillis() / 1000));
+            assertTrue(1429171000l == (callDetail.getCallEndTime().getMillis() / 1000));
+
+            // assert content log records
+            assertTrue(null == contentLogFirstRecord.getLanguageLocationCode());
+            assertTrue(12121 == contentLogFirstRecord.getCallId());
+            assertTrue(contentLogFirstRecord.getCompletionFlag());
+            assertEquals("ch1.wav", contentLogFirstRecord.getContentFile());
+            assertEquals("CN111", contentLogFirstRecord.getContentName());
+            assertEquals("lesson".toUpperCase(),
+                    contentLogFirstRecord.getType());
+            assertTrue(contentLogFirstRecord.getCorrectAnswerEntered());
+            assertTrue(null == contentLogFirstRecord.getCourseStartDate());
+            assertTrue(null == contentLogFirstRecord.getCourseEndDate());
+            assertTrue(1429167000l == (contentLogFirstRecord.getStartTime()
+                    .getMillis() / 1000));
+            assertTrue(1429169000l == (contentLogFirstRecord.getEndTime()
+                    .getMillis() / 1000));
+        } catch (DataValidationException e) {
+            assertTrue(false);
+        }
     }
 
     /**

@@ -14,6 +14,8 @@ import org.motechproject.nms.masterdata.service.*;
 import org.motechproject.nms.mobilekunji.constants.ConfigurationConstants;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
+import org.motechproject.nms.mobilekunji.domain.FlwDetail;
+import org.motechproject.nms.mobilekunji.dto.LanguageLocationCodeApiRequest;
 import org.motechproject.nms.mobilekunji.dto.SaveCallDetailApiRequest;
 import org.motechproject.nms.mobilekunji.dto.UserDetailApiResponse;
 import org.motechproject.nms.mobilekunji.service.*;
@@ -30,8 +32,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * This Test class is used to test CallerDataController Functionality.
@@ -98,7 +99,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testController() throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+    public void testController() throws DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
@@ -121,13 +122,53 @@ public class CallerDataControllerIT extends BasePaxIT {
         WhiteListUsers whilteListUserData = TestHelper.getWhiteListUserData();
         whiteListUsersService.createWhiteListUsers(whilteListUserData);
 
+
+         /*------------------This case is used to Test getUserDetails------------------------- */
+
         UserDetailApiResponse userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
-        //For Default National Cappings
+
+        //For State Level Capping Type
         Configuration configurationData = configurationService.getConfiguration();
+        configurationData.setCappingType(ConfigurationConstants.DEFAULT_STATE_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
+        //This call is for State Capping Type
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
+        //For Null Capping Value
+        stateData.setMkCapping(null);
+        stateService.update(stateData);
+
+        //This call is for State Capping Type with Null Capping Value
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
+
+        //For Default National Cappings
+        configurationData = configurationService.getConfiguration();
         configurationData.setCappingType(ConfigurationConstants.DEFAULT_NATIONAL_CAPPING_TYPE);
+        configurationService.updateConfiguration(configurationData);
+
+        //This call is for Default National Capping Type
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
 
         FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+
+        FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getId());
+        flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));
+        flwDetailService.update(flwDetail);
+
+        //This call is for Next Time Access Date
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
+
+        //For Null Access Date
+        flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getId());
+        flwDetail.setLastAccessDate(null);
+        flwDetailService.update(flwDetail);
+
+        //This call is for Null Access Date
+        userDetailApiResponse = controller.getUserDetails("9810179788", "AL", "DL", "111111111111111", TestHelper.getHttpRequest());
 
         assertNotNull(frontLineWorker);
         assertNotNull(userDetailApiResponse);
@@ -136,18 +177,50 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
 
-        /*This case is used to Test SaveCallDetail */
+        //For LanguageLocationCode is Null
+        circleService.create(TestHelper.getInvalidCircleData());
+        userDetailApiResponse = controller.getUserDetails("9837241545", "AL", "99", "111111111111111", TestHelper.getHttpRequest());
+
+        assertNotNull(userDetailApiResponse.getCircle().equals("99"));
+        assertNull(userDetailApiResponse.getLanguageLocationCode());
+        assertTrue(userDetailApiResponse.getDefaultLanguageLocationCode().equals("1"));
+        assertFalse(userDetailApiResponse.getWelcomePromptFlag());
+        assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
+
+
+
+        /*------------------This case is used to Test SaveCallDetail------------------------- */
 
         SaveCallDetailApiRequest saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
 
         controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
+        saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
+        saveCallDetailApiRequest.setContent(null);
+
+        //This test case is used to Check Null Content in SaveCallDetail
+        controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByCallingNumber("9810179788");
 
         assertNotNull(flwWorker);
         assertNotNull(callDetail);
+
+        /*------------------This case is used to Test UpdateLanguageLocationCode------------------------- */
+
+        //Update Language Location Code
+        flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        flwWorker.setLanguageLocationCodeId("33");
+        frontLineWorkerService.updateFrontLineWorker(flwWorker);
+
+        LanguageLocationCodeApiRequest languageLocationCodeApiRequest = TestHelper.getLanguageLocationCodeRequest();
+
+        controller.setLanguageLocationCode(languageLocationCodeApiRequest, TestHelper.getHttpRequest());
+
+        flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
+        assertNotNull(flwWorker);
+        assertTrue(flwWorker.getLanguageLocationCodeId().equals("29"));
 
 
       /*  flwDetail.setLastAccessDate(flwDetail.getLastAccessDate().plusYears(2));

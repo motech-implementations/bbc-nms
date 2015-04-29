@@ -2,8 +2,8 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
 import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
@@ -55,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws
-            DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+            DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         logger.info("Get UserDetails Entered successfully.");
 
@@ -71,7 +71,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     /**
-     * this method update LanguageLocationCode using msisdn, callId and languageLocationCode in LanguageLocationCodeApiRequest
+     * This method update LanguageLocationCode using msisdn,
+     * callId and languageLocationCode in LanguageLocationCodeApiRequest
      */
     @Override
     public void setLanguageLocationCode(LanguageLocationCodeApiRequest request) throws DataValidationException, ServiceNotDeployedException, FlwNotInWhiteListException {
@@ -80,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(),
                 ParseDataHelper.validateAndTrimMsisdn(
-                        "CallingNumber", request.getCallingNumber()),ServicesUsingFrontLineWorker.MOBILEKUNJI);
+                        "CallingNumber", request.getCallingNumber()), ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         logger.info("LanguageLocationCode executed successfully.");
     }
@@ -106,20 +107,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfileData.getNmsFlwId());
 
-        if (null == flwDetail){
+        if (null == flwDetail) {
             flwDetail = new FlwDetail();
             fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
             flwDetailService.create(flwDetail);
             logger.info("FlwDetail created successfully.");
         } else {
-            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()){
+            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()) {
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
                 flwDetailService.update(flwDetail);
                 logger.info("FlwDetail updated successfully.");
             }
         }
 
-       return flwDetail;
+        return flwDetail;
     }
 
     /**

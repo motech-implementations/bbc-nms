@@ -6,7 +6,6 @@ import org.motechproject.mds.annotations.Field;
 import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.domain.MdsEntity;
 
-import javax.jdo.annotations.Persistent;
 import java.util.Set;
 
 /**
@@ -25,7 +24,6 @@ public class State extends MdsEntity {
 
     @Field
     @Cascade(delete = true)
-    @Persistent(defaultFetchGroup = "true")
     private Set<District> district;
 
     @Field
@@ -37,19 +35,19 @@ public class State extends MdsEntity {
     private Integer mkCapping;
 
 
-    @Field
+    @Field(defaultValue = "true")
     @UIDisplayable(position = 4)
     private Boolean isMkDeployed;
 
-    @Field
+    @Field(defaultValue = "true")
     @UIDisplayable(position = 5)
     private Boolean isMaDeployed;
 
-    @Field
+    @Field(defaultValue = "true")
     @UIDisplayable(position = 6)
     private Boolean isKkDeployed;
 
-    @Field
+    @Field(defaultValue = "false")
     @UIDisplayable(position = 7)
     private Boolean isWhiteListEnable;
 

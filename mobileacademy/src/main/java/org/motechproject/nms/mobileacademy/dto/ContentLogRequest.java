@@ -28,7 +28,7 @@ public class ContentLogRequest {
     private String completionFlag;
 
     @JsonProperty
-    private String correctAnswerReceived;
+    private String correctAnswerEntered;
 
     public void setType(String type) {
         this.type = type;
@@ -52,10 +52,6 @@ public class ContentLogRequest {
 
     public void setCompletionFlag(String completionFlag) {
         this.completionFlag = completionFlag;
-    }
-
-    public void setCorrectAnswerReceived(String correctAnswerReceived) {
-        this.correctAnswerReceived = correctAnswerReceived;
     }
 
     public String getType() {
@@ -82,8 +78,12 @@ public class ContentLogRequest {
         return completionFlag;
     }
 
-    public String getCorrectAnswerReceived() {
-        return correctAnswerReceived;
+    public String getCorrectAnswerEntered() {
+        return correctAnswerEntered;
+    }
+
+    public void setCorrectAnswerEntered(String correctAnswerEntered) {
+        this.correctAnswerEntered = correctAnswerEntered;
     }
 
     @Override
@@ -92,6 +92,6 @@ public class ContentLogRequest {
                 + contentName + '\'' + ", contentFilee='" + contentFile + '\''
                 + ", startTime=" + startTime + ", endTime=" + endTime
                 + ", completionFlag=" + completionFlag
-                + ", correctAnswerReceived=" + correctAnswerReceived + '}';
+                + ", correctAnswerEntered=" + correctAnswerEntered + '}';
     }
 }
