@@ -461,11 +461,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         } else {
             packIntialStartDate = (BeneficiaryType.MOTHER == subscriber.getBeneficiaryType()) ? subscriber.getLmp().plusMonths(Constants.LMP_MSG_DELIVERY_START_MONTH) : subscriber.getDob() ;
             if(packIntialStartDate.isAfter(currDate)) {
-                int noOfDays = Days.daysBetween(currDate, packIntialStartDate).getDays();
-                int offset = noOfDays % Constants.DAYS_IN_WEEK;
-                startDate = (offset == 0) ? packIntialStartDate : packIntialStartDate.plusDays(Constants.DAYS_IN_WEEK - offset);
-            } else {
                 startDate =  packIntialStartDate;
+            } else {
+                int noOfDays = Days.daysBetween(packIntialStartDate, currDate).getDays();
+                int offset = noOfDays % Constants.DAYS_IN_WEEK;
+                startDate = (offset == 0) ? currDate : currDate.plusDays(Constants.DAYS_IN_WEEK - offset);
             }
         }
         return startDate;

@@ -13,6 +13,7 @@ import java.util.List;
 public class CustomQueries {
 
     private static final String STATUS_COMPLETED_DEACTIVATED = "(status == '"+Status.COMPLETED+"' || status == '"+Status.DEACTIVATED+"')";
+    private static final String STATUS_ACTIVE_PENDING = "(status == '"+Status.ACTIVE+"' || status == '"+Status.PENDING_ACTIVATION+"')";
     /**
      * Query to find list of Active and Pending subscription packs for given msisdn.
      */
@@ -33,7 +34,7 @@ public class CustomQueries {
          */
         @Override
         public List<SubscriptionPack> execute(Query query, InstanceSecurityRestriction restriction) {
-            query.setFilter("msisdn == '" + msisdn + "' && "+ STATUS_COMPLETED_DEACTIVATED);
+            query.setFilter("msisdn == '" + msisdn + "' && "+ STATUS_ACTIVE_PENDING);
             query.setResult("DISTINCT " + resultParamName);
             return (List<SubscriptionPack>) query.execute();
         }
@@ -134,9 +135,9 @@ public class CustomQueries {
             DateTime date = new DateTime();
             long currDateInMillis = date.toDateMidnight().getMillis();
             if(Initializer.DEFAULT_NUMBER_OF_MSG_PER_WEEK == Constants.FIRST_MSG_OF_WEEK) {
-                query.setFilter(STATUS_COMPLETED_DEACTIVATED + " && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
+                query.setFilter(STATUS_ACTIVE_PENDING + " && (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0)");
             } else {
-                query.setFilter(STATUS_COMPLETED_DEACTIVATED + " && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0) || (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 3))");
+                query.setFilter(STATUS_ACTIVE_PENDING + " && (currDateInMillis-startDate) >= 0 && ((((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 0) || (((currDateInMillis-startDate)/day) % " + Constants.DAYS_IN_WEEK + " == 3))");
             }
             query.declareParameters("Long currDateInMillis, Integer day");
             return (List<Subscription>) query.execute(currDateInMillis, Constants.MILLIS_IN_DAY);
