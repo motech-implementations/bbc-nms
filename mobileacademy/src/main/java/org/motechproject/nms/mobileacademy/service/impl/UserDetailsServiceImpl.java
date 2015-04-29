@@ -9,11 +9,14 @@ import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
-import org.motechproject.nms.frontlineworker.ServicesUsingFrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
 import org.motechproject.nms.frontlineworker.domain.UserProfile;
+import org.motechproject.nms.frontlineworker.enums.ServicesUsingFrontLineWorker;
+import org.motechproject.nms.frontlineworker.exception.FlwNotInWhiteListException;
+import org.motechproject.nms.frontlineworker.exception.ServiceNotDeployedException;
 import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
 import org.motechproject.nms.mobileacademy.commons.CappingType;
@@ -63,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private CallDetailDataService callDetailDataService;
 
-    private static final Logger LOGGER = Logger
+    private static final Logger LOGGER = LoggerFactory
             .getLogger(UserDetailsServiceImpl.class);
 
     private static final String COURSE_START_TIME_KEY = "courseStartTime";
@@ -75,8 +78,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public User findUserDetails(String callingNumber, String operator,
             String circle, String callId) throws DataValidationException,
-            NmsInternalServerError {
-        // TODO service deployed and white list validation
+            NmsInternalServerError, ServiceNotDeployedException,
+            FlwNotInWhiteListException {
         User user = new User();// user detail response DTO
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
@@ -190,14 +193,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             Configuration configuration, User user) {
         boolean nationalDefaultLlc = false;
         if (userProfile.isDefaultLanguageLocationCode()) {
-            if (userProfile.getLanguageLocationCode() != null) {
+            if (StringUtils.isNotBlank(userProfile.getLanguageLocationCode())) {
                 user.setDefaultLanguageLocationCode(userProfile
                         .getLanguageLocationCode());
             } else {
                 nationalDefaultLlc = true;
             }
         } else {
-            if (userProfile.getLanguageLocationCode() != null) {
+            if (StringUtils.isNotBlank(userProfile.getLanguageLocationCode())) {
                 user.setLanguageLocationCode(userProfile
                         .getLanguageLocationCode());
             } else {
@@ -213,12 +216,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public void setLanguageLocationCode(String languageLocationCode,
-            String callingNumber, String callId) throws DataValidationException {
-        // TODO service deployed and white list validation
+            String callingNumber, String callId)
+            throws DataValidationException, ServiceNotDeployedException,
+            FlwNotInWhiteListException {
         String msisdn = ParseDataHelper.validateAndTrimMsisdn(
                 REQUEST_PARAM_CALLING_NUMBER, callingNumber);
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(
-                Integer.parseInt(languageLocationCode), msisdn);
+                languageLocationCode, msisdn,
+                ServicesUsingFrontLineWorker.MOBILEACADEMY);
         LOGGER.debug("Llc updated  for callingNumber:" + callingNumber
                 + ", callId:" + callId + ", llc:" + languageLocationCode);
 
@@ -232,30 +237,33 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 callDetailsRequest.getCallingNumber());
         FrontLineWorker frontLineWorker = frontLineWorkerService
                 .getFlwBycontactNo(msisdn);
-        if (frontLineWorker == null) {
-            ParseDataHelper.raiseInvalidDataException(
-                    REQUEST_PARAM_CALLING_NUMBER,
-                    callDetailsRequest.getCallingNumber());
-        } else {
-            callDetailDataService
-                    .doInTransaction(new TransactionCallback<CallDetail>() {
+        callDetailDataService
+                .doInTransaction(new TransactionCallback<CallDetail>() {
 
-                        CallDetailsRequest callDetailsRequest;
+                    CallDetailsRequest callDetailsRequest;
 
-                        FrontLineWorker frontLineWorker;
+                    FrontLineWorker frontLineWorker;
 
-                        private TransactionCallback<CallDetail> init(
-                                CallDetailsRequest callDetailsRequest,
-                                FrontLineWorker frontLineWorker) {
-                            this.callDetailsRequest = callDetailsRequest;
-                            this.frontLineWorker = frontLineWorker;
-                            return this;
-                        }
+                    String msisdn;
 
-                        @Override
-                        public CallDetail doInTransaction(
-                                TransactionStatus status) {
-                            CallDetail transactionObject = null;
+                    private TransactionCallback<CallDetail> init(
+                            CallDetailsRequest callDetailsRequest,
+                            FrontLineWorker frontLineWorker, String msisdn) {
+                        this.callDetailsRequest = callDetailsRequest;
+                        this.frontLineWorker = frontLineWorker;
+                        this.msisdn = msisdn;
+                        return this;
+                    }
+
+                    @Override
+                    public CallDetail doInTransaction(TransactionStatus status) {
+                        CallDetail transactionObject = null;
+                        if (frontLineWorker == null) {
+                            // save call detail If no FLW record found or FLW is
+                            // not in white list
+                            saveCallDetailRecord(callDetailsRequest, null,
+                                    null, msisdn);
+                        } else {
                             LOGGER.trace("Data from FLW- Id:"
                                     + frontLineWorker.getId()
                                     + ", circle:"
@@ -283,12 +291,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                                         callDetailsRequest);
                             }
                             saveCallDetailRecord(callDetailsRequest,
-                                    frontLineWorker, flwUsageDetail);
-                            return transactionObject;
-                        }
+                                    frontLineWorker, flwUsageDetail, msisdn);
 
-                    }.init(callDetailsRequest, frontLineWorker));
-        }
+                        }
+                        return transactionObject;
+                    }
+
+                }.init(callDetailsRequest, frontLineWorker, msisdn));
 
     }
 
@@ -301,9 +310,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     private Map<String, DateTime> findCourseStartAndEndTime(
             List<ContentLogRequest> contentLogRequests) {
-        Map<String, DateTime> courseStartEndTime = new HashMap<String, DateTime>();
-        courseStartEndTime.put(COURSE_START_TIME_KEY, null);
-        courseStartEndTime.put(COURSE_END_TIME_KEY, null);
+        Map<String, DateTime> courseStartAndEndTimeMap = new HashMap<String, DateTime>();
+        courseStartAndEndTimeMap.put(COURSE_START_TIME_KEY, null);
+        courseStartAndEndTimeMap.put(COURSE_END_TIME_KEY, null);
         List<Long> courseStartTimeValues = new ArrayList<Long>();
         List<Long> courseEndTimeValues = new ArrayList<Long>();
         if (CollectionUtils.isNotEmpty(contentLogRequests)) {
@@ -333,7 +342,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             DateTime startTime = new DateTime(
                     Long.valueOf(courseStartTimeValues.get(0))
                             * MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
-            courseStartEndTime.put(COURSE_START_TIME_KEY, startTime);
+            courseStartAndEndTimeMap.put(COURSE_START_TIME_KEY, startTime);
         }
         // if more than one record present select last for end date
         if (!courseEndTimeValues.isEmpty()) {
@@ -341,33 +350,32 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             DateTime endTime = new DateTime(Long.valueOf(courseEndTimeValues
                     .get(courseEndTimeValues.size() - 1))
                     * MobileAcademyConstants.MILLIS_TO_SEC_CONVERTER);
-            courseStartEndTime.put(COURSE_END_TIME_KEY, endTime);
+            courseStartAndEndTimeMap.put(COURSE_END_TIME_KEY, endTime);
         }
-        return courseStartEndTime;
+        return courseStartAndEndTimeMap;
     }
 
     /**
      * add FLW Usage Record
      * 
-     * @param courseStartEndTime
+     * @param courseStartAndEndTimeMap
      * @param callDetailRequest
      * @param frontLineWorker
      * @return FlwUsageDetail
      */
     private FlwUsageDetail addFlwUsageRecord(
-            Map<String, DateTime> courseStartEndTime,
+            Map<String, DateTime> courseStartAndEndTimeMap,
             CallDetailsRequest callDetailsRequest,
             FrontLineWorker frontLineWorker) {
         FlwUsageDetail flwUsageDetail = new FlwUsageDetail();
         flwUsageDetail.setFlwId(frontLineWorker.getId());
-        flwUsageDetail.setMsisdn(Long.valueOf(frontLineWorker.getContactNo()));
         flwUsageDetail.setCurrentUsageInPulses(Integer
                 .valueOf(callDetailsRequest.getCallDurationInPulses()));
         flwUsageDetail.setEndOfUsagePromptCounter(Integer
                 .valueOf(callDetailsRequest.getEndOfUsagePromptCounter()));
-        flwUsageDetail.setCourseStartDate(courseStartEndTime
+        flwUsageDetail.setCourseStartDate(courseStartAndEndTimeMap
                 .get(COURSE_START_TIME_KEY));
-        flwUsageDetail.setCourseEndDate(courseStartEndTime
+        flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                 .get(COURSE_END_TIME_KEY));
         flwUsageDetail.setLastAccessTime(new DateTime(Long
                 .valueOf(callDetailsRequest.getCallStartTime())
@@ -384,7 +392,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @return FlwUsageDetail
      */
     private FlwUsageDetail updateFlwUsageRecord(FlwUsageDetail flwUsageDetail,
-            Map<String, DateTime> courseStartEndTime,
+            Map<String, DateTime> courseStartAndEndTimeMap,
             CallDetailsRequest callDetailsRequest) {
         Integer currentUsageInPulses = Integer.valueOf(callDetailsRequest
                 .getCallDurationInPulses())
@@ -394,12 +402,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .valueOf(callDetailsRequest.getEndOfUsagePromptCounter()));
         if (flwUsageDetail.getCourseStartDate() != null
                 && flwUsageDetail.getCourseEndDate() == null) {
-            flwUsageDetail.setCourseEndDate(courseStartEndTime
+            flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                     .get(COURSE_END_TIME_KEY));
         } else {
-            flwUsageDetail.setCourseStartDate(courseStartEndTime
+            flwUsageDetail.setCourseStartDate(courseStartAndEndTimeMap
                     .get(COURSE_START_TIME_KEY));
-            flwUsageDetail.setCourseEndDate(courseStartEndTime
+            flwUsageDetail.setCourseEndDate(courseStartAndEndTimeMap
                     .get(COURSE_END_TIME_KEY));
         }
         flwUsageDetail.setLastAccessTime(new DateTime(Long
@@ -414,13 +422,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      * @param callDetailsRequest
      * @param frontLineWorker
      * @param flwUsageDetail
+     * @param msisdn
      */
     private void saveCallDetailRecord(CallDetailsRequest callDetailsRequest,
-            FrontLineWorker frontLineWorker, FlwUsageDetail flwUsageDetail) {
+            FrontLineWorker frontLineWorker, FlwUsageDetail flwUsageDetail,
+            String msisdn) {
         CallDetail callDetail = new CallDetail();
         callDetail.setCallId(Long.valueOf(callDetailsRequest.getCallId()));
-        callDetail.setFlwId(frontLineWorker.getId());
-        callDetail.setMsisdn(Long.valueOf(frontLineWorker.getContactNo()));
+        callDetail.setMsisdn(Long.valueOf(msisdn));
         callDetail.setCircle(callDetailsRequest.getCircle());
         callDetail.setOperator(callDetailsRequest.getOperator());
         callDetail.setCallStartTime(new DateTime(Long
@@ -433,6 +442,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .getCallStatus()));
         callDetail.setCallDisconnectReason(Integer.valueOf(callDetailsRequest
                 .getCallDisconnectReason()));
+        if (frontLineWorker != null) {
+            callDetail.setFlwId(frontLineWorker.getId());
+        }
         callDetailService.saveCallDetailRecord(callDetail);
 
         if (CollectionUtils.isNotEmpty(callDetailsRequest.getContent())) {
@@ -441,8 +453,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 ContentLog contentLog = new ContentLog();
                 contentLog.setCallId(Long.valueOf(callDetailsRequest
                         .getCallId()));
-                contentLog.setLanguageLocationCode(frontLineWorker
-                        .getLanguageLocationCodeId());
                 contentLog.setType(contentLogRequest.getType().toUpperCase());
                 contentLog.setContentName(contentLogRequest.getContentName()
                         .toUpperCase());
@@ -456,22 +466,34 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 contentLog.setCompletionFlag(Boolean
                         .parseBoolean(contentLogRequest.getCompletionFlag()));
                 if (StringUtils.isNotBlank(contentLogRequest
-                        .getCorrectAnswerReceived())) {
-                    contentLog.setCorrectAnswerReceived(Boolean
+                        .getCorrectAnswerEntered())) {
+                    contentLog.setCorrectAnswerEntered(Boolean
                             .parseBoolean(contentLogRequest
-                                    .getCorrectAnswerReceived()));
+                                    .getCorrectAnswerEntered()));
                 }
-                contentLog.setCourseStartDate(flwUsageDetail
-                        .getCourseStartDate());
-                // save course end date only for chapter-11question-04 record
-                if (("question".equalsIgnoreCase(contentLogRequest.getType()))
-                        && (MobileAcademyConstants.COURSE_END_CONTENT
-                                .equalsIgnoreCase(contentLogRequest
-                                        .getContentName()))
-                        && (Boolean.parseBoolean(contentLogRequest
-                                .getCompletionFlag()))) {
-                    contentLog.setCourseEndDate(flwUsageDetail
-                            .getCourseEndDate());
+                if (frontLineWorker != null) {
+                    contentLog.setLanguageLocationCode(frontLineWorker
+                            .getLanguageLocationCodeId());
+                    contentLog.setCourseStartDate(flwUsageDetail
+                            .getCourseStartDate());
+                    // save course end date only for chapter-11question-04
+                    // record
+                    if (("question".equalsIgnoreCase(contentLogRequest
+                            .getType()))
+                            && (MobileAcademyConstants.COURSE_END_CONTENT
+                                    .equalsIgnoreCase(contentLogRequest
+                                            .getContentName()))
+                            && (Boolean.parseBoolean(contentLogRequest
+                                    .getCompletionFlag()))) {
+                        contentLog.setCourseEndDate(flwUsageDetail
+                                .getCourseEndDate());
+                        LOGGER.trace(
+                                "Course start and end  dates for FLW: {} , MSISDN: {} , Start Date: {} ,End Date: {}",
+                                frontLineWorker.getId(),
+                                callDetail.getMsisdn(),
+                                flwUsageDetail.getCourseStartDate(),
+                                flwUsageDetail.getCourseEndDate());
+                    }
                 }
                 callDetailService.saveContentLogRecord(contentLog);
             }

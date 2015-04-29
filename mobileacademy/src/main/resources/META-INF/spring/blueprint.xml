@@ -65,7 +65,16 @@
 
 	<osgi:reference id="FrontLineWorkerService"
 		interface="org.motechproject.nms.frontlineworker.service.FrontLineWorkerService" />
+		
+	<osgi:reference id="LanguageLocationCodeService"
+		interface="org.motechproject.nms.masterdata.service.LanguageLocationCodeService" />
     
+    <osgi:reference id="StateService"
+		interface="org.motechproject.nms.masterdata.service.StateService" />
+		
+	<osgi:reference id="CircleService"
+		interface="org.motechproject.nms.masterdata.service.CircleService" />
+		
     <osgi:reference id="CallDetailDataService"
         interface="org.motechproject.nms.mobileacademy.repository.CallDetailDataService" />
     

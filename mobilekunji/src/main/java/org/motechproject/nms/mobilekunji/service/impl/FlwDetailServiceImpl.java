@@ -62,16 +62,4 @@ public class FlwDetailServiceImpl implements FlwDetailService {
     public FlwDetail findFlwDetailByNmsFlwId(Long nmsFlwId) {
         return flwDetailRecordDataService.findFlwDetailByNmsFlwId(nmsFlwId);
     }
-
-    /**
-     * Finds the service consumption details of Flw by its msisdn
-     *
-     * @param msisdn
-     * @return FlwDetail
-     */
-    @Override
-    public FlwDetail findFlwDetailByMsisdn(String msisdn) {
-        return flwDetailRecordDataService.findFlwDetailByMsisdn(msisdn);
-    }
-
 }

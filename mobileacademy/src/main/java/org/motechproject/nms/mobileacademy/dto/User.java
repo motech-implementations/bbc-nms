@@ -22,11 +22,11 @@ public class User implements Serializable {
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer languageLocationCode;
+    private String languageLocationCode;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-    private Integer defaultLanguageLocationCode;
+    private String defaultLanguageLocationCode;
 
     @JsonProperty
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
@@ -52,11 +52,11 @@ public class User implements Serializable {
         this.circle = circle;
     }
 
-    public Integer getLanguageLocationCode() {
+    public String getLanguageLocationCode() {
         return languageLocationCode;
     }
 
-    public void setLanguageLocationCode(Integer languageLocationCode) {
+    public void setLanguageLocationCode(String languageLocationCode) {
         this.languageLocationCode = languageLocationCode;
     }
 
@@ -92,12 +92,12 @@ public class User implements Serializable {
         this.maxAllowedEndOfUsagePrompt = maxAllowedEndOfUsagePrompt;
     }
 
-    public Integer getDefaultLanguageLocationCode() {
+    public String getDefaultLanguageLocationCode() {
         return defaultLanguageLocationCode;
     }
 
     public void setDefaultLanguageLocationCode(
-            Integer defaultLanguageLocationCode) {
+            String defaultLanguageLocationCode) {
         this.defaultLanguageLocationCode = defaultLanguageLocationCode;
     }
 

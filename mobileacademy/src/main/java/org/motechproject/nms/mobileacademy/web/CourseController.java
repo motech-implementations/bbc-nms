@@ -107,7 +107,7 @@ public class CourseController extends BaseController {
         if (!userDetailsService.doesMsisdnExist(callingNumber)) {
             LOGGER.error("MSISDN: {} doesn't exist with FLW service",
                     originalCallingNumber);
-            ParseDataHelper.raiseInvalidDataException(
+            ParseDataHelper.raiseApiParameterInvalidDataException(
                     MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
                     callingNumber);
         }
@@ -145,7 +145,7 @@ public class CourseController extends BaseController {
         if (!userDetailsService.doesMsisdnExist(callingNumber)) {
             LOGGER.error("MSISDN: {} doesn't exist with FLW service",
                     bookmarkWithScore.getCallingNumber());
-            ParseDataHelper.raiseInvalidDataException(
+            ParseDataHelper.raiseApiParameterInvalidDataException(
                     MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
                     bookmarkWithScore.getCallingNumber());
         }
@@ -170,7 +170,7 @@ public class CourseController extends BaseController {
     // Used for validating and getting the last 10 digits of MSISDN.
     private String validateAndGetCallingNumber(String callingNumber)
             throws DataValidationException {
-        ParseDataHelper.validateAndParseString(
+        ParseDataHelper.validateString(
                 MobileAcademyConstants.REQUEST_PARAM_CALLING_NUMBER,
                 callingNumber, true);
         return ParseDataHelper.validateAndTrimMsisdn(

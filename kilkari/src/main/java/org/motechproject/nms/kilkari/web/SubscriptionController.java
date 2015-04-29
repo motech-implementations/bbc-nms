@@ -1,6 +1,9 @@
 package org.motechproject.nms.kilkari.web;
 
+import java.util.List;
+
 import org.motechproject.nms.kilkari.commons.Constants;
+import org.motechproject.nms.kilkari.domain.Subscription;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionCreateApiRequest;
 import org.motechproject.nms.kilkari.dto.request.SubscriptionDeactivateApiRequest;
 import org.motechproject.nms.kilkari.dto.response.SubscriberDetailApiResponse;
@@ -111,5 +114,21 @@ public class SubscriptionController extends BaseController {
         ParseDataHelper.validateString(Constants.OPERATOR_CODE, operator, true);
         ParseDataHelper.validateString(Constants.CIRCLE_CODE, circle, true);
         ParseDataHelper.validateLengthOfCallId(Constants.CALL_ID, ParseDataHelper.validateAndParseString(Constants.CALL_ID, callId, true));
+    }
+    
+    @RequestMapping(value = "/scheduledSubscription", method = RequestMethod.GET)
+    @ResponseBody
+    public void scheduledSubscription() throws DataValidationException{
+        logger.info("scheduledSubscription: started");
+        List<Subscription> subscriptions = subscriptionService.getScheduledSubscriptions();
+        logger.info("scheduledSubscription: End ListSize[{}]", subscriptions.size());
+    }
+    
+    @RequestMapping(value = "/purgeOldSubscription", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void purgeOldSubscription() throws DataValidationException{
+        logger.info("purgeOldSubscription: started");
+        subscriptionService.purgeOldSubscriptionSubscriberRecords();
+        logger.info("purgeOldSubscription: End ListSize[{}]");
     }
 }

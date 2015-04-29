@@ -180,29 +180,14 @@ public class SaveCallDetailApiRequest {
         ParseDataHelper.validateAndParseString(ConfigurationConstants.CIRCLE_CODE, operator, true);
         ParseDataHelper.validateAndParseString(ConfigurationConstants.CALL_DISCONNECTED_REASON, callDisconnectReason, true);
 
-        if (null == callStartTime) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_START_TIME, null);
-        }
+        ParseDataHelper.validateLong(ConfigurationConstants.CALL_START_TIME, callStartTime);
+        ParseDataHelper.validateLong(ConfigurationConstants.CALL_END_TIME, callEndTime);
+        ParseDataHelper.validateInt(ConfigurationConstants.CALL_DURATION_PULSES, callDurationInPulses);
+        ParseDataHelper.validateInt(ConfigurationConstants.END_OF_USAGE_PROMPT, endOfUsagePromptCounter);
+        ParseDataHelper.validateBoolean(ConfigurationConstants.WELCOME_MESSAGE_FLAG, welcomeMessagePromptFlag);
+        ParseDataHelper.validateInt(ConfigurationConstants.CALL_STATUS, callStatus);
+        validateCardDetailParameters();
 
-        if (null == callEndTime) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_END_TIME, null);
-        }
-
-        if (null == callDurationInPulses) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_DURATION_PULSES, null);
-        }
-
-        if (null == endOfUsagePromptCounter) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.END_OF_USAGE_PROMPT, null);
-        }
-
-        if (null == welcomeMessagePromptFlag) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.WELCOME_MESSAGE_FLAG, null);
-        }
-
-        if (null == callStatus) {
-            ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.CALL_STATUS, null);
-        }
     }
 
     /**
@@ -216,19 +201,14 @@ public class SaveCallDetailApiRequest {
 
             for (CardDetail carDetail : content) {
 
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.CARD_CODE,carDetail.getMkCardCode(), true);
+                ParseDataHelper.validateString(ConfigurationConstants.CARD_CODE, carDetail.getMkCardCode(), true);
                 CommonValidator.validateCardNumber(carDetail.getMkCardCode());
 
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.CONTENT_NAME, carDetail.getContentName(), true);
-                ParseDataHelper.validateAndParseString(ConfigurationConstants.AUDIO_FILE_NAME, carDetail.getAudioFileName(), true);
+                ParseDataHelper.validateString(ConfigurationConstants.CONTENT_NAME, carDetail.getContentName(), true);
+                ParseDataHelper.validateString(ConfigurationConstants.AUDIO_FILE_NAME, carDetail.getAudioFileName(), true);
 
-                if (null == carDetail.getStartTime()) {
-                    ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.START_TIME, null);
-                }
-
-                if (null == carDetail.getEndTime()) {
-                    ParseDataHelper.raiseInvalidDataException(ConfigurationConstants.END_TIME, null);
-                }
+                ParseDataHelper.validateLong(ConfigurationConstants.START_TIME, carDetail.getStartTime());
+                ParseDataHelper.validateLong(ConfigurationConstants.END_TIME, carDetail.getEndTime());
 
             }
         }

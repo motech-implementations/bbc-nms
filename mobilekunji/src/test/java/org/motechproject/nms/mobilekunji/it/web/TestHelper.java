@@ -1,5 +1,6 @@
 package org.motechproject.nms.mobilekunji.it.web;
 
+import org.motechproject.nms.frontlineworker.domain.WhiteListUsers;
 import org.motechproject.nms.masterdata.domain.*;
 import org.motechproject.nms.mobilekunji.domain.CardDetail;
 import org.motechproject.nms.mobilekunji.domain.Configuration;
@@ -29,6 +30,7 @@ public class TestHelper {
         stateData.setIsMaDeployed(true);
         stateData.setIsMkDeployed(true);
         stateData.setIsWhiteListEnable(true);
+        stateData.setMkCapping(10);
         stateData.setDistrict(districtSet);
         return stateData;
     }
@@ -41,6 +43,14 @@ public class TestHelper {
         districtData.setDistrictCode(3L);
 
         return districtData;
+    }
+
+    public static WhiteListUsers getWhiteListUserData() {
+
+        WhiteListUsers whiteListUserData = new WhiteListUsers();
+        whiteListUserData.setContactNo("9810179788");
+
+        return whiteListUserData;
     }
 
     public static Operator getOperatorData() {
@@ -126,6 +136,7 @@ public class TestHelper {
         request.setCallDisconnectReason("1");
         request.setCallStartTime(1427372125L);
         request.setCallEndTime(1427372128L);
+        request.setCallStatus(10);
 
         return request;
     }

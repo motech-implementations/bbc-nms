@@ -62,9 +62,9 @@ public class ConfigurationTest {
      */
     @Test
     public void testGetDefaultLanguageLocationCode() {
-        configuration.setDefaultLanguageLocationCode(11);
+        configuration.setDefaultLanguageLocationCode("11");
 
-        assertSame(11, configuration.getDefaultLanguageLocationCode());
+        assertSame("11", configuration.getDefaultLanguageLocationCode());
     }
 
     /*
@@ -82,7 +82,7 @@ public class ConfigurationTest {
      */
     @Test
     public void testServiceConfigParamInstance() {
-        Configuration configuration = new Configuration(1l, 2, 1, 1, 0, 0,
+        Configuration configuration = new Configuration(1l, 2, 1, 1, 0, "0",
                 "Addr");
         Assert.assertNotNull(configuration);
     }

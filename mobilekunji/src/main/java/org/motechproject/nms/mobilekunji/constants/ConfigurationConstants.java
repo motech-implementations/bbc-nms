@@ -11,7 +11,7 @@ public class ConfigurationConstants {
 
     public static final Integer DEFAULT_MAX_END_OF_USAGE_MESSAGE = 2;
 
-    public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.ContentUploadCsv.csv-import.success";
+    public static final String CONTENT_UPLOAD_CSV_SUCCESS = "mds.crud.mobilekunji.CsvContentUpload.csv-import.success";
 
     public static final Boolean DEFAULT_WELCOME_PROMPT = false;
 

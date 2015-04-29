@@ -11,6 +11,8 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.motechproject.mtraining.domain.Course;
 import org.motechproject.mtraining.domain.CourseUnitState;
+import org.motechproject.nms.masterdata.domain.LanguageLocationCode;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
 import org.motechproject.nms.mobileacademy.commons.ContentType;
 import org.motechproject.nms.mobileacademy.commons.CourseFlag;
 import org.motechproject.nms.mobileacademy.commons.FileType;
@@ -35,6 +37,7 @@ import org.motechproject.nms.util.domain.BulkUploadError;
 import org.motechproject.nms.util.domain.BulkUploadStatus;
 import org.motechproject.nms.util.domain.RecordType;
 import org.motechproject.nms.util.helper.DataValidationException;
+import org.motechproject.nms.util.helper.ParseDataHelper;
 import org.motechproject.nms.util.service.BulkUploadErrLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +69,9 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
     @Autowired
     private BulkUploadErrLogService bulkUploadErrLogService;
+
+    @Autowired
+    private LanguageLocationCodeService languageLocationCodeService;
 
     private static final Logger LOGGER = LoggerFactory
             .getLogger(RecordsProcessServiceImpl.class);
@@ -120,6 +126,10 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 .getListOfAllExistingLlcs();
         OperatorDetails operatorDetails = new OperatorDetails();
 
+        // A map of LLC to circle
+        Map<Integer, String> llcToCircleValidationMap = new HashMap<Integer, String>();
+        List<Integer> nonExistingLlc = new ArrayList<Integer>();
+
         if (CollectionUtils.isNotEmpty(courseContentCsvs)
                 && listOfExistingLlc != null) {
             // set user details from first record
@@ -135,6 +145,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
                 CourseContentCsv courseContentCsv = recordIterator.next();
                 try {
                     RecordsProcessHelper.validateSchema(courseContentCsv);
+                    validateCircleLlcMapping(courseContentCsv,
+                            llcToCircleValidationMap, nonExistingLlc);
                 } catch (DataValidationException ex) {
                     RecordsProcessHelper.processError(
                             bulkUploadError,
@@ -182,6 +194,58 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
 
         bulkUploadErrLogService
                 .writeBulkUploadProcessingSummary(bulkUploadStatus);
+    }
+
+    // This function checks for the circle and LLC validation. It generates
+    // dataValidationException in case of inconsistency in LLC and circle
+    // mapping
+    private void validateCircleLlcMapping(CourseContentCsv courseContentCsv,
+            Map<Integer, String> llcToCircleValidationMap,
+            List<Integer> nonExistingLlcs) throws DataValidationException {
+        Integer langLocCode = Integer.parseInt(courseContentCsv
+                .getLanguageLocationCode());
+        String circle = courseContentCsv.getCircle();
+
+        // If there is a mapping of circle and LLC in our system
+        if (llcToCircleValidationMap.containsKey(langLocCode)) {
+            if (!llcToCircleValidationMap.get(langLocCode).equalsIgnoreCase(
+                    circle)) {
+                RecordsProcessHelper.raiseInconsistentDataException("Circle",
+                        String.format(
+                                "Invalid value for Language Location code %d",
+                                langLocCode));
+            }
+        }
+        // If the LLC doesn't exist in the system and is maintained in the
+        // nonExistingLLC list
+        else if (nonExistingLlcs.contains(langLocCode)) {
+            ParseDataHelper.raiseInvalidDataException("Language Location Code",
+                    courseContentCsv.getLanguageLocationCode());
+        }
+        // If this LLC and circle don't exist in our local
+        // llcToCircleValidationMap or
+        // nonExistingLlc list, they need to be added into one.
+        else {
+            LanguageLocationCode masterDataLlc = languageLocationCodeService
+                    .findLLCByCode(langLocCode.toString());
+
+            // If the language location code doesn't exist in the system,
+            // maintain it in the non existing LLC list
+            if (masterDataLlc == null) {
+                nonExistingLlcs.add(langLocCode);
+                ParseDataHelper.raiseInvalidDataException(
+                        "Language Location Code",
+                        courseContentCsv.getLanguageLocationCode());
+            }
+
+            // If the LLC exists, add its mapping with the circle into the
+            // llcToCircleValidationMap and again call this function with same
+            // parameters
+            llcToCircleValidationMap.put(langLocCode,
+                    masterDataLlc.getCircleCode());
+            validateCircleLlcMapping(courseContentCsv,
+                    llcToCircleValidationMap, nonExistingLlcs);
+        }
     }
 
     // This function takes The Map having CourserawContent Records for the
@@ -475,8 +539,8 @@ public class RecordsProcessServiceImpl implements RecordsProcessService {
             int languageLocCode = Integer.parseInt(courseContentCsv
                     .getLanguageLocationCode());
             CourseProcessedContent courseProcessedContent = courseProcessedContentService
-                    .getRecordforModification(courseContentCsv.getCircle(),
-                            languageLocCode, contentName);
+                    .getRecordforModification(courseContentCsv.getCircle()
+                            .toUpperCase(), languageLocCode, contentName);
             if (courseProcessedContent != null) {
                 courseProcessedContent.setContentFile(fileName);
                 courseProcessedContent.setContentDuration(Integer

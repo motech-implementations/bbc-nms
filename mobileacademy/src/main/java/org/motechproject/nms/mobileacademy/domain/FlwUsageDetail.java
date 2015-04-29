@@ -18,12 +18,8 @@ public class FlwUsageDetail extends MdsEntity {
     // mapped to PK of FrontLineWorker table
     @Unique
     @Field(required = true)
-    @UIDisplayable(position = 0)
-    private Long flwId;
-
-    @Field(required = true)
     @UIDisplayable(position = 1)
-    private Long msisdn;
+    private Long flwId;
 
     @Field(required = true)
     @UIDisplayable(position = 2)
@@ -51,14 +47,6 @@ public class FlwUsageDetail extends MdsEntity {
 
     public void setFlwId(Long flwId) {
         this.flwId = flwId;
-    }
-
-    public Long getMsisdn() {
-        return msisdn;
-    }
-
-    public void setMsisdn(Long msisdn) {
-        this.msisdn = msisdn;
     }
 
     public Integer getCurrentUsageInPulses() {
