@@ -1,5 +1,9 @@
 package org.motechproject.nms.frontlineworker.exception;
 
+/**
+ *   This class models a user-defined exception for FrontLineWorker
+ *   that is not present in WhiteList.
+ */
 public class FlwNotInWhiteListException extends Exception {
 
     private String errorCode;
