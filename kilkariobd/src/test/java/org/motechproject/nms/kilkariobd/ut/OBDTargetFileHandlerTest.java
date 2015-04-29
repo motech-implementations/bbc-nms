@@ -2,12 +2,16 @@ package org.motechproject.nms.kilkariobd.ut;
 
 
 import junit.framework.TestCase;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.motechproject.nms.kilkari.service.ContentUploadService;
+import org.motechproject.nms.kilkari.service.SubscriptionService;
+import org.motechproject.nms.kilkariobd.builder.OutboundCallBuilder;
 import org.motechproject.nms.kilkari.domain.DeactivationReason;
 import org.motechproject.nms.kilkari.service.SubscriptionService;
 import org.motechproject.nms.kilkariobd.client.HttpClient;
@@ -16,17 +20,36 @@ import org.motechproject.nms.kilkariobd.commons.Constants;
 import org.motechproject.nms.kilkariobd.domain.*;
 import org.motechproject.nms.kilkariobd.event.handler.OBDTargetFileHandler;
 import org.motechproject.nms.kilkariobd.repository.OutboundCallFlowDataService;
+import org.motechproject.nms.kilkariobd.service.ConfigurationService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallDetailService;
 import org.motechproject.nms.kilkariobd.service.OutboundCallFlowService;
+import org.motechproject.nms.kilkariobd.service.OutboundCallRequestService;
+import org.motechproject.nms.masterdata.service.LanguageLocationCodeService;
+import org.motechproject.scheduler.service.MotechSchedulerService;
+import org.motechproject.server.config.SettingsFacade;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.motechproject.nms.kilkariobd.commons.Constants.CDR_DETAIL_FILE_PREFIX;
 
 public class OBDTargetFileHandlerTest extends TestCase {
+
+    @Mock
+    private HttpClient httpClient;
+
+    @Mock
+    private OutboundCallRequestService requestService;
+
+    @Mock
+    private ConfigurationService configurationService;
+
+    @Mock
+    private LanguageLocationCodeService llcService;
 
     @Mock
     private OutboundCallFlowService callFlowService;
@@ -35,16 +58,21 @@ public class OBDTargetFileHandlerTest extends TestCase {
     private OutboundCallDetailService callDetailService;
 
     @Mock
-    private OutboundCallFlowDataService outboundCallFlowDataService;
+    private ContentUploadService contentUploadService;
 
     @Mock
-    private HttpClient httpClient;
+    private SettingsFacade kilkariObdSettings;
 
     @Mock
     private SubscriptionService subscriptionService;
 
+    @Mock
+    private MotechSchedulerService motechSchedulerService;
+
     @InjectMocks
-    OBDTargetFileHandler handler = new OBDTargetFileHandler();
+    OBDTargetFileHandler handler = new OBDTargetFileHandler(requestService, configurationService,
+            llcService, callFlowService, subscriptionService, callDetailService, contentUploadService,
+            kilkariObdSettings, motechSchedulerService);
 
     @Before
     public void init() {

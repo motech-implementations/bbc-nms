@@ -67,10 +67,20 @@ public class CSVMapper {
      */
     public static void writeByCsvMapper(String fileName, List<OutboundCallRequest> callRequests) {
         Field[] fields = OutboundCallRequest.class.getDeclaredFields();
-        String[] header = new String[fields.length];
-        for (int index=0; index < fields.length; index++) {
-            header[index] = StringUtils.capitalize(fields[index].getName());
+
+        List<String> callRequestFields = new ArrayList<>();
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(org.motechproject.mds.annotations.Field.class)) {
+                field.setAccessible(true);
+                callRequestFields.add(StringUtils.capitalize(field.getName()));
+            }
         }
+        /* prepare header */
+        String[] header = new String[callRequestFields.size()];
+        for (int index = 0; index < callRequestFields.size(); index++) {
+            header[index] = callRequestFields.get(index);
+        }
+
         Map<String, Object> callRequestMap = new HashMap<>();
         CsvMapWriter csvMapWriter = null;
         try {
@@ -81,7 +91,9 @@ public class CSVMapper {
             csvMapWriter.writeHeader(header);
             for(OutboundCallRequest request : callRequests) {
                 for (Field field : fields) {
-                    callRequestMap.put(StringUtils.capitalize(field.getName()), field.get(request));
+                    if (field.isAnnotationPresent(org.motechproject.mds.annotations.Field.class)) {
+                        callRequestMap.put(StringUtils.capitalize(field.getName()), field.get(request));
+                    }
                 }
                 csvMapWriter.write(callRequestMap, header);
             }

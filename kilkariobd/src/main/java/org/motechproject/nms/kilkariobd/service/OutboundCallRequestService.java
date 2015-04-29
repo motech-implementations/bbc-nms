@@ -32,4 +32,6 @@ public interface OutboundCallRequestService {
      * @return records count
      */
     public Long getCount();
+
+    public Long exportOutBoundCallRequest(String fileName);
 }

@@ -78,5 +78,10 @@ public interface OutboundCallFlowService {
      */
     public OutboundCallFlow updateChecksumAndRecordCount(String obdFileName, String obdChecksum,
                                                          Long obdRecordsCount);
+
+    /**
+     * Delete all OutboundCallFlow records from the database
+     */
+    public void deleteAll();
 }
 
