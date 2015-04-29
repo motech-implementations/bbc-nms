@@ -3,6 +3,7 @@ package org.motechproject.nms.kilkariobd.domain;
 import org.motechproject.mds.annotations.CrudEvents;
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 import org.motechproject.mds.event.CrudEventType;
 
 import javax.jdo.annotations.Unique;
@@ -19,12 +20,14 @@ public class Configuration {
 
     public static final Long CONFIGURATION_INDEX = 1L;
 
+    @UIDisplayable(position = 0)
     @Unique
     @Field(required = true)
     @Min(1)
     @Max(1)
     @NotNull
     private Long index;
+
 
     @Field(required = true)
     private String freshObdServiceId;
@@ -50,31 +53,36 @@ public class Configuration {
     @Field(required = true)
     private Integer retryDay3ObdPriority;
 
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private String obdFileServerIp;
 
+    @UIDisplayable(position = 2)
     @Field(required = true)
     private String obdFilePathOnServer;
 
+    @UIDisplayable(position = 3)
     @Field(required = true)
     private String obdFileServerSshUsername;
 
+    @UIDisplayable(position = 4)
     @Field(required = true)
     private String obdIvrUrl;
 
+    @UIDisplayable(position = 5)
     @Field(required = true)
     private String obdCreationEventCronExpression;
 
+    @UIDisplayable(position = 6)
     @Field(required = true)
     private String obdNotificationEventCronExpression;
 
-
+    @UIDisplayable(position = 7)
     @Field(required = true)
     private String purgeRecordsEventCronExpression;
 
     @Field(required = true)
     private Integer retryIntervalForObdPreparationInMins;
-
 
     @Field(required = true)
     private Integer maxObdPreparationRetryCount;

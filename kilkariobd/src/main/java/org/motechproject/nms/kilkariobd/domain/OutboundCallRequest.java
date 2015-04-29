@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkariobd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
@@ -14,39 +15,47 @@ import javax.validation.constraints.Min;
 @Entity
 public class OutboundCallRequest {
 
+    @UIDisplayable(position = 0)
     @Unique
     @Field(required = true)
     private String requestId;
-    
-    @Unique
-    @Field(required = true)
-    private String serviceId;
-    
+
+    @UIDisplayable(position = 1)
     @Field(required = true)
     private String msisdn;
-    
-    @Field
-    private String cli;
-    
-    @Field
-    private Integer priority = 0;
-    
-    @Field
-    private String callFlowURL;
-    
+
+    @UIDisplayable(position = 2)
     @Field(required = true)
-    private String contentFileName;
-    
-    @Field(required = true)
-    private String weekId;
-    
+    private String circle;
+
+    @UIDisplayable(position = 3)
     @Min(value=1)
     @Max(value=99)
     @Field(required = true)
     private String languageLocationCode;
-    
+
+    @UIDisplayable(position = 4)
+    @Unique
     @Field(required = true)
-    private String circle;
+    private String serviceId;
+
+    @UIDisplayable(position = 5)
+    @Field
+    private Integer priority = 0;
+
+    @UIDisplayable(position = 6)
+    @Field(required = true)
+    private String weekId;
+
+    @UIDisplayable(position = 7)
+    @Field(required = true)
+    private String contentFileName;
+
+    @Field
+    private String cli;
+
+    @Field
+    private String callFlowURL;
 
     public String getRequestId() {
         return requestId;

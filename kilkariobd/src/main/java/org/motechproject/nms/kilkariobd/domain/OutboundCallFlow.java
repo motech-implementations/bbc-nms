@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkariobd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Unique;
 
@@ -10,28 +11,37 @@ import javax.jdo.annotations.Unique;
  */
 @Entity
 public class OutboundCallFlow {
+
+    @UIDisplayable(position = 0)
     @Unique
     @Field
     private String obdFileName;
-    
+
+    @UIDisplayable(position = 1)
     @Field
     private CallFlowStatus status;
 
+    @UIDisplayable(position = 2)
     @Field
     private String cdrSummaryChecksum;
 
+    @UIDisplayable(position = 3)
     @Field
     private Long cdrSummaryRecordCount;
 
+    @UIDisplayable(position = 4)
     @Field
     private String cdrDetailChecksum;
 
+    @UIDisplayable(position = 5)
     @Field
     private Long cdrDetailRecordCount;
 
+    @UIDisplayable(position = 6)
     @Field
     private String obdChecksum;
 
+    @UIDisplayable(position = 7)
     @Field
     private Long obdRecordCount;
 

@@ -2,6 +2,7 @@ package org.motechproject.nms.kilkariobd.domain;
 
 import org.motechproject.mds.annotations.Entity;
 import org.motechproject.mds.annotations.Field;
+import org.motechproject.mds.annotations.UIDisplayable;
 
 import javax.jdo.annotations.Unique;
 import javax.validation.constraints.Max;
@@ -13,63 +14,81 @@ import javax.validation.constraints.Min;
 @Entity
 public class OutboundCallDetail {
 
+    @UIDisplayable(position = 0L)
     @Field(required=true)
     private String requestId;
-    
-    @Field(required=true)
-    private String msisdn;
-    
+
+    @UIDisplayable(position = 1L)
     @Unique
     @Field(required=true)
     private String callId;
-    
+
+    @UIDisplayable(position = 2L)
     @Field(required=true)
-    private Integer attemptNo;
-    
+    private String msisdn;
+
+    @UIDisplayable(position = 3L)
     @Field(required=true)
-    private Long callStartTime;
-    
-    @Field
-    private Long callAnswerTime;
-    
+    private String circleCode;
+
+    @UIDisplayable(position = 4L)
     @Field(required=true)
-    private Long callEndTime;
-    
-    @Field(required=true)
-    private Long callDurationInPulse;
-    
-    @Field(required=true)
-    private Integer callStatus;
-    
+    private String operatorCode;
+
+    @UIDisplayable(position = 5L)
     @Min(value=1)
     @Max(value=99)
     @Field(required = true)
     private Integer languageLocationCode;
-    
-    @Field(required=true)
-    private String contentFile;
-    
-    @Field(required=true)
-    private Integer msgPlayStartTime;
-    
-    @Field(required=true)
-    private Integer msgPlayEndTime;
-    
-    @Field(required=true)
-    private String circleCode;
-    
-    @Field(required=true)
-    private String operatorCode;
-    
-    @Field(required=true)
-    private Integer priority;
-    
-    @Field(required=true)
-    private CallDisconnectReason callDisconnectReason;
-    
+
+    @UIDisplayable(position = 6L)
     @Field(required=true)
     private String weekId;
-    
+
+    @UIDisplayable(position = 7L)
+    @Field(required=true)
+    private Integer callStatus;
+
+    @UIDisplayable(position = 8L)
+    @Field(required=true)
+    private CallDisconnectReason callDisconnectReason;
+
+    @UIDisplayable(position = 9L)
+    @Field(required=true)
+    private Integer attemptNo;
+
+    @UIDisplayable(position = 10L)
+    @Field(required=true)
+    private Long callStartTime;
+
+    @UIDisplayable(position = 11L)
+    @Field
+    private Long callAnswerTime;
+
+    @UIDisplayable(position = 12L)
+    @Field(required=true)
+    private Long callEndTime;
+
+    @UIDisplayable(position = 13L)
+    @Field(required=true)
+    private Long callDurationInPulse;
+
+    @UIDisplayable(position = 14L)
+    @Field(required=true)
+    private String contentFile;
+
+    @UIDisplayable(position = 15L)
+    @Field(required=true)
+    private Integer msgPlayStartTime;
+
+    @UIDisplayable(position = 16L)
+    @Field(required=true)
+    private Integer msgPlayEndTime;
+
+    @UIDisplayable(position = 17L)
+    @Field(required=true)
+    private Integer priority;
+
     public String getRequestId() {
         return requestId;
     }
