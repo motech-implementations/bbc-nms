@@ -1,6 +1,6 @@
 package org.motechproject.nms.mobilekunji.service.impl;
 
-import org.motechproject.nms.mobilekunji.domain.ContentUploadCsv;
+import org.motechproject.nms.mobilekunji.domain.CsvContentUpload;
 import org.motechproject.nms.mobilekunji.repository.ContentUploadCsvRecordDataService;
 import org.motechproject.nms.mobilekunji.service.ContentUploadCsvService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,44 +18,44 @@ public class ContentUploadCsvServiceImpl implements ContentUploadCsvService {
     ContentUploadCsvRecordDataService contentUploadCsvRecordDataService;
 
     /**
-     * creates object fot the ContentUploadCsv
+     * creates object fot the CsvContentUpload
      *
-     * @param contentUploadCsv
-     * @return ContentUploadCsv object
+     * @param csvContentUpload
+     * @return CsvContentUpload object
      */
     @Override
-    public ContentUploadCsv createContentUploadCsv(ContentUploadCsv contentUploadCsv) {
-        return contentUploadCsvRecordDataService.create(contentUploadCsv);
+    public CsvContentUpload createContentUploadCsv(CsvContentUpload csvContentUpload) {
+        return contentUploadCsvRecordDataService.create(csvContentUpload);
     }
 
     /**
      * Finds the record of content  upload Csv by its Id
      *
      * @param id
-     * @return ContentUploadCsv
+     * @return CsvContentUpload
      */
     @Override
-    public ContentUploadCsv findByIdInCsv(Long id) {
+    public CsvContentUpload findByIdInCsv(Long id) {
         return contentUploadCsvRecordDataService.findById(id);
     }
 
     /**
      * Deletes records from contentUpload Csv
      *
-     * @param contentUploadCsv
+     * @param csvContentUpload
      */
     @Override
-    public void deleteFromCsv(ContentUploadCsv contentUploadCsv) {
-        contentUploadCsvRecordDataService.delete(contentUploadCsv);
+    public void deleteFromCsv(CsvContentUpload csvContentUpload) {
+        contentUploadCsvRecordDataService.delete(csvContentUpload);
     }
 
     /**
      * Retrieves the records from Csv
      *
-     * @return List of ContentUploadCsv
+     * @return List of CsvContentUpload
      */
     @Override
-    public List<ContentUploadCsv> retrieveAllFromCsv() {
+    public List<CsvContentUpload> retrieveAllFromCsv() {
         return contentUploadCsvRecordDataService.retrieveAll();
     }
 }

@@ -2,7 +2,8 @@ package org.motechproject.nms.mobilekunji.service.impl;
 
 
 import org.joda.time.DateTime;
-import org.motechproject.nms.frontlineworker.service.UserProfileDetailsService;
+import org.motechproject.nms.frontlineworker.domain.FrontLineWorker;
+import org.motechproject.nms.frontlineworker.service.FrontLineWorkerService;
 import org.motechproject.nms.mobilekunji.domain.CallDetail;
 import org.motechproject.nms.mobilekunji.domain.CardDetail;
 import org.motechproject.nms.mobilekunji.domain.FlwDetail;
@@ -30,15 +31,15 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
 
     private FlwDetailService flwDetailService;
 
-    private UserProfileDetailsService userProfileDetailsService;
+    private FrontLineWorkerService frontLineWorkerService;
 
     private Logger logger = LoggerFactory.getLogger(SaveCallDetailsServiceImpl.class);
 
     @Autowired
-    public SaveCallDetailsServiceImpl(CallDetailService callDetailService, FlwDetailService flwDetailService, UserProfileDetailsService userProfileDetailsService) {
+    public SaveCallDetailsServiceImpl(CallDetailService callDetailService, FlwDetailService flwDetailService, FrontLineWorkerService frontLineWorkerService) {
         this.callDetailService = callDetailService;
         this.flwDetailService = flwDetailService;
-        this.userProfileDetailsService = userProfileDetailsService;
+        this.frontLineWorkerService = frontLineWorkerService;
     }
 
     /**
@@ -53,9 +54,10 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
         logger.info("Save CallDetail Entered successfully.");
 
 
-        Long nmsId = updateFlwDetail(saveCallDetailApiRequest);
 
-        setCallDetail(nmsId, saveCallDetailApiRequest);
+        FlwDetail flwDetail = updateFlwDetail(saveCallDetailApiRequest);
+
+        setCallDetail(null != flwDetail ? flwDetail.getNmsFlwId() : null , saveCallDetailApiRequest);
 
         logger.info("Save CallDetail executed successfully.");
     }
@@ -103,17 +105,18 @@ public class SaveCallDetailsServiceImpl implements SaveCallDetailsService {
      * @param saveCallDetailApiRequest
      * @throws DataValidationException
      */
-    private Long updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
+    private FlwDetail updateFlwDetail(SaveCallDetailApiRequest saveCallDetailApiRequest) throws DataValidationException {
 
-        FlwDetail flwDetail = flwDetailService.findFlwDetailByMsisdn(ParseDataHelper.validateAndTrimMsisdn(
+        FlwDetail flwDetail = null;
+
+        FrontLineWorker frontLineWorker = frontLineWorkerService.getFlwBycontactNo(ParseDataHelper.validateAndTrimMsisdn(
                 "CallingNumber", saveCallDetailApiRequest.getCallingNumber()));
 
-        if (null != flwDetail) {
+        if (null != frontLineWorker &&  null !=(flwDetail = flwDetailService.findFlwDetailByNmsFlwId(frontLineWorker.getFlwId())) ){
+            flwDetail.setNmsFlwId(frontLineWorker.getId());
             updateFlwDetail(flwDetail, saveCallDetailApiRequest);
-        } else {
-            return null;
         }
-        return flwDetail.getNmsFlwId();
+        return flwDetail;
     }
 
     /**

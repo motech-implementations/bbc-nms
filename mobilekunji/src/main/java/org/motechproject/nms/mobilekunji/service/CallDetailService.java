@@ -34,8 +34,8 @@ public interface CallDetailService {
     /**
      * Finds the service consumption details of Flw by its msisdn
      *
-     * @param nmsFlwId
+     * @param callingNumber
      * @return CallDetail
      */
-    public CallDetail findCallDetailByNmsId(Long nmsFlwId);
+    public CallDetail findCallDetailByCallingNumber(String callingNumber);
 }

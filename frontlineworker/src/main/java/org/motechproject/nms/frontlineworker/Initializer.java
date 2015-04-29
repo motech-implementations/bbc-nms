@@ -44,9 +44,7 @@ public class Initializer {
 
         Configuration configuration = new Configuration();
 
-        /*
-         * Check if configuration is not present then create with default values
-         */
+        //Check if configuration is not present then create with default values
         if (!configurationService.isConfigurationPresent()) {
 
             LOG.info("Creating Configuration with default values");

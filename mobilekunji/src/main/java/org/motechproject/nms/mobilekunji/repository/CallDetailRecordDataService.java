@@ -20,9 +20,9 @@ public interface CallDetailRecordDataService extends MotechDataService<CallDetai
     /**
      * Finds call details by its nmsFlwId
      *
-     * @param nmsFlwId
+     * @param callingNumber
      * @return CallDetail
      */
     @Lookup
-    public CallDetail findCallDetailByNmsFlwId(@LookupField(name = "nmsFlwId") Long nmsFlwId);
+    public CallDetail findCallDetailByCallingNumber(@LookupField(name = "callingNumber") String callingNumber);
 }
