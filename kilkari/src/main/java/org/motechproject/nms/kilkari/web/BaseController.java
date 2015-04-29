@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 public class BaseController {
 
     private static final Logger LOGGER = Logger.getLogger(BaseController.class);
+    
+    private static final String failureRes = "{\"failureReason\":\"%s\"}";
 
     /**
      * Handle Missing Servlet Request Parameters (400)
@@ -56,11 +58,9 @@ public class BaseController {
             final DataValidationException exception, final WebRequest request) {
         String responseJson = null;
         if (exception.getErrorCode().equals(ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
-            responseJson = "{\"failureReason\":\""
-                    + exception.getErroneousField() + ":Not Present\"}";
+            responseJson = String.format(failureRes, exception.getErroneousField() + ":Not Present");
         } else {
-            responseJson = "{\"failureReason\":\""
-                    + exception.getErroneousField() + ":Invalid Value\"}";
+            responseJson = String.format(failureRes, exception.getErroneousField() + ":Invalid Value");
         }
         LOGGER.error(exception.getMessage(), exception);
 
@@ -79,8 +79,7 @@ public class BaseController {
             final Exception exception, final WebRequest request) {
 
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
-                + " \"}";
+        String responseJson = String.format(failureRes, exception.getMessage());
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -97,7 +96,7 @@ public class BaseController {
             final HttpMessageNotReadableException exception,
             final HttpServletRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + "Invalid JSON\"}";
+        String responseJson = String.format(failureRes, "Invalid JSON");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -116,8 +115,7 @@ public class BaseController {
             final HttpMediaTypeNotSupportedException exception,
             final HttpServletRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
-                + "Invalid Content Type\"}";
+        String responseJson = String.format(failureRes, "Invalid Content Type");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,

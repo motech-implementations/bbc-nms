@@ -499,7 +499,6 @@ public class CsvMctsChildHandlerTestIT extends CommonStructure {
         
     }
     
-    
     @Test
     public void testForNumberOfMessagePerWeekIs2(){
         Configuration configuration = configurationService.getConfiguration();
