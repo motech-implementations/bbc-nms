@@ -61,7 +61,7 @@ public class FileProcessedStatusRequest {
     public void validateMandatoryParams() throws DataValidationException {
         ParseDataHelper.validateString(Constants.FILE_NAME, fileName, true);
         Integer statusValue = ParseDataHelper.validateInt(Constants.FILE_PROCESSING_STATUS, fileProcessingStatus, true);
-        status = FileProcessingStatus.findByValue(statusValue);
+        setStatus(FileProcessingStatus.findByValue(statusValue));
         if (null == status) {
             ParseDataHelper.raiseApiParameterInvalidDataException(Constants.FILE_PROCESSING_STATUS, fileProcessingStatus);
         }

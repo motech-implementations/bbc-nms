@@ -53,10 +53,6 @@ public class CdrNotificationRequestTest {
         CdrNotificationRequest cdrNotificationRequest =
                 requestBuilder.buildCdrNotificationRequest("filename", null, cdrDetail);
 
-        cdrNotificationRequest.setFileName("filename");
-        cdrNotificationRequest.setCdrDetail(cdrDetail);
-        cdrNotificationRequest.setCdrSummary(null);
-
         try {
             cdrNotificationRequest.validateMandatoryParameters();
         } catch (DataValidationException ex) {
@@ -80,6 +76,24 @@ public class CdrNotificationRequestTest {
             Assert.assertTrue(ex instanceof DataValidationException);
             Assert.assertEquals(((DataValidationException) ex).getErrorCode(), ErrorCategoryConstants.INVALID_DATA);
             Assert.assertEquals(((DataValidationException)ex).getErrorDesc(), String.format(ErrorDescriptionConstants.INVALID_API_PARAMETER_DESCRIPTION, Constants.CDR_SUMMARY_RECORDS_COUNT));
+        }
+    }
+
+    @Test
+    public void shouldValidateMandatoryParameters() {
+        RequestBuilder requestBuilder = new RequestBuilder();
+        CdrInfo cdrSummary = requestBuilder.buildCdrInfo("file", "checksum", 1L);
+        CdrInfo cdrDetail = requestBuilder.buildCdrInfo("cdrFile", "cdrChecksum", 1L);
+        CdrNotificationRequest cdrNotificationRequest =
+                requestBuilder.buildCdrNotificationRequest("filename", cdrSummary, cdrDetail);
+
+        try {
+            cdrNotificationRequest.validateMandatoryParameters();
+            Assert.assertEquals(cdrSummary, cdrNotificationRequest.getCdrSummary());
+            Assert.assertEquals(cdrDetail, cdrNotificationRequest.getCdrDetail());
+            Assert.assertEquals("filename", cdrNotificationRequest.getFileName());
+
+        } catch (DataValidationException ex) {
         }
     }
 }

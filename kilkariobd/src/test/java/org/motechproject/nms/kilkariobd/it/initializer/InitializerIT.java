@@ -1,6 +1,5 @@
 package org.motechproject.nms.kilkariobd.it.initializer;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,6 +73,20 @@ public class InitializerIT extends BasePaxIT {
         Assert.assertEquals(configuration.getMaxObdPreparationRetryCount(), Initializer.DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT);
         Assert.assertEquals(configuration.getPurgeRecordsEventCronExpression(), Initializer.DEFAULT_PURGE_RECORDS_EVENT_CRON_EXPRESSION);
 
+    }
+
+    @Test
+    public void checkConfigurationUpdate() {
+
+        Configuration configuration = configurationService.getConfiguration();
+
+        configuration.setMaxObdPreparationRetryCount(4);
+        configurationDataService.update(configuration);
+
+        Assert.assertTrue(4 == configurationService.getConfiguration().getMaxObdPreparationRetryCount());
+
+        configuration.setMaxObdPreparationRetryCount(Initializer.DEFAULT_MAX_OBD_PREPARATION_RETRY_COUNT);
+        configurationDataService.update(configuration);
     }
 }
 
