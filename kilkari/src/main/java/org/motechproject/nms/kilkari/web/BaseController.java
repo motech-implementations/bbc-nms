@@ -26,7 +26,7 @@ public class BaseController {
 
     private static final Logger LOGGER = Logger.getLogger(BaseController.class);
     
-    private static final String failureRes = "{\"failureReason\":\"%s\"}";
+    private static final String FAILURE_RES = "{\"failureReason\":\"%s\"}";
 
     /**
      * Handle Missing Servlet Request Parameters (400)
@@ -40,8 +40,7 @@ public class BaseController {
             final MissingServletRequestParameterException exception,
             final WebRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
-                + exception.getParameterName() + ":Not Present\"}";
+        String responseJson = String.format(FAILURE_RES, exception.getParameterName() + ":Not Present");
         return new ResponseEntity<String>(responseJson, HttpStatus.BAD_REQUEST);
     }
 
@@ -58,9 +57,9 @@ public class BaseController {
             final DataValidationException exception, final WebRequest request) {
         String responseJson = null;
         if (exception.getErrorCode().equals(ErrorCategoryConstants.MANDATORY_PARAMETER_MISSING)) {
-            responseJson = String.format(failureRes, exception.getErroneousField() + ":Not Present");
+            responseJson = String.format(FAILURE_RES, exception.getErroneousField() + ":Not Present");
         } else {
-            responseJson = String.format(failureRes, exception.getErroneousField() + ":Invalid Value");
+            responseJson = String.format(FAILURE_RES, exception.getErroneousField() + ":Invalid Value");
         }
         LOGGER.error(exception.getMessage(), exception);
 
@@ -79,7 +78,7 @@ public class BaseController {
             final Exception exception, final WebRequest request) {
 
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = String.format(failureRes, exception.getMessage());
+        String responseJson = String.format(FAILURE_RES, exception.getMessage());
         return new ResponseEntity<String>(responseJson,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -96,7 +95,7 @@ public class BaseController {
             final HttpMessageNotReadableException exception,
             final HttpServletRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = String.format(failureRes, "Invalid JSON");
+        String responseJson = String.format(FAILURE_RES, "Invalid JSON");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -115,7 +114,7 @@ public class BaseController {
             final HttpMediaTypeNotSupportedException exception,
             final HttpServletRequest request) {
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = String.format(failureRes, "Invalid Content Type");
+        String responseJson = String.format(FAILURE_RES, "Invalid Content Type");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
