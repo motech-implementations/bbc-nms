@@ -57,7 +57,7 @@ public class CallerDataController extends BaseController {
             @RequestParam(value = "operator") String operator,
             @RequestParam(value = "circle") String circle,
             @RequestParam(value = "callId") String callId, final HttpServletRequest request)
-            throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+            throws DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         long startTime = System.currentTimeMillis();
 
@@ -113,7 +113,7 @@ public class CallerDataController extends BaseController {
     @RequestMapping(value = "/languageLocationCode", method = RequestMethod.POST)
     public
     @ResponseBody
-    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException,FlwNotInWhiteListException,ServiceNotDeployedException {
+    void setLanguageLocationCode(@RequestBody LanguageLocationCodeApiRequest languageLocationCodeApiRequest, final HttpServletRequest request) throws DataValidationException, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         logger.debug("SetLanguageLocationCode: started");
         logger.debug("LanguageLocationCode Request Parameters : {} ", languageLocationCodeApiRequest.toString());

@@ -32,9 +32,7 @@ import org.ops4j.pax.exam.spi.reactors.PerSuite;
 import javax.inject.Inject;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * This Test class is used to test CallerDataController Functionality.
@@ -101,7 +99,7 @@ public class CallerDataControllerIT extends BasePaxIT {
     }
 
     @Test
-    public void testController() throws DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+    public void testController() throws DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         State stateData = TestHelper.getStateData();
         District districtData = TestHelper.getDistrictData();
@@ -189,7 +187,7 @@ public class CallerDataControllerIT extends BasePaxIT {
         assertFalse(userDetailApiResponse.getWelcomePromptFlag());
         assertTrue(userDetailApiResponse.getCurrentUsageInPulses() == ConfigurationConstants.DEFAULT_CURRENT_USAGE_IN_PULSES);
 
-        
+
 
         /*------------------This case is used to Test SaveCallDetail------------------------- */
 
@@ -197,6 +195,11 @@ public class CallerDataControllerIT extends BasePaxIT {
 
         controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
+        saveCallDetailApiRequest = TestHelper.getSaveCallDetailApiRequest();
+        saveCallDetailApiRequest.setContent(null);
+
+        //This test case is used to Check Null Content in SaveCallDetail
+        controller.saveCallDetails(saveCallDetailApiRequest, TestHelper.getHttpRequest());
 
         FrontLineWorker flwWorker = frontLineWorkerService.getFlwBycontactNo("9810179788");
         CallDetail callDetail = callDetailService.findCallDetailByCallingNumber("9810179788");

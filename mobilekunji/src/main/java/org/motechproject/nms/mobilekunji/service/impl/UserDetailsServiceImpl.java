@@ -55,7 +55,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
      */
     @Override
     public UserDetailApiResponse getUserDetails(String msisdn, String circleCode, String operatorCode, String callId) throws
-            DataValidationException, NmsInternalServerError,FlwNotInWhiteListException,ServiceNotDeployedException {
+            DataValidationException, NmsInternalServerError, FlwNotInWhiteListException, ServiceNotDeployedException {
 
         logger.info("Get UserDetails Entered successfully.");
 
@@ -81,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         userProfileDetailsService.updateLanguageLocationCodeFromMsisdn(request.getLanguageLocationCode(),
                 ParseDataHelper.validateAndTrimMsisdn(
-                        "CallingNumber", request.getCallingNumber()),ServicesUsingFrontLineWorker.MOBILEKUNJI);
+                        "CallingNumber", request.getCallingNumber()), ServicesUsingFrontLineWorker.MOBILEKUNJI);
 
         logger.info("LanguageLocationCode executed successfully.");
     }
@@ -107,20 +107,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         FlwDetail flwDetail = flwDetailService.findFlwDetailByNmsFlwId(userProfileData.getNmsFlwId());
 
-        if (null == flwDetail){
+        if (null == flwDetail) {
             flwDetail = new FlwDetail();
             fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
             flwDetailService.create(flwDetail);
             logger.info("FlwDetail created successfully.");
         } else {
-            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()){
+            if (userProfileData.getNmsFlwId().longValue() != flwDetail.getNmsFlwId().longValue()) {
                 fillDefaultFlwWithUserProfile(flwDetail, userProfileData);
                 flwDetailService.update(flwDetail);
                 logger.info("FlwDetail updated successfully.");
             }
         }
 
-       return flwDetail;
+        return flwDetail;
     }
 
     /**

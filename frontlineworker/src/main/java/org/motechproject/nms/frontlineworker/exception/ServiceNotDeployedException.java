@@ -1,5 +1,10 @@
 package org.motechproject.nms.frontlineworker.exception;
 
+/**
+ *   This class models a user-defined exception for FrontLineWorker
+ *   When Service is not deployed in any State.
+ */
+
 public class ServiceNotDeployedException extends Exception {
 
     private String errorCode;

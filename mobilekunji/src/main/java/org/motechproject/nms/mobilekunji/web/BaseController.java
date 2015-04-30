@@ -26,6 +26,8 @@ public class BaseController {
 
     private static final Logger LOGGER = Logger.getLogger(BaseController.class);
 
+    private static final String FAILURE_REASON = "\"failureReason\":\"";
+
     /**
      * Handle Missing Servlet Request Parameters (400)
      *
@@ -39,7 +41,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage());
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = FAILURE_REASON
                 + exception.getParameterName() + ":Not Present\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -60,7 +62,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + "Invalid JSON\"}";
+        String responseJson = FAILURE_REASON + "Invalid JSON\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -80,7 +82,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = FAILURE_REASON
                 + "Invalid Content Type\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -102,7 +104,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\""
+        String responseJson = FAILURE_REASON
                 + exception.getErroneousField() + ":Invalid Value\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -124,7 +126,7 @@ public class BaseController {
             final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"" + exception.getMessage()
+        String responseJson = FAILURE_REASON + exception.getMessage()
                 + "\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -144,7 +146,7 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Service Not Deployed\"}";
+        String responseJson = FAILURE_REASON + "Service Not Deployed\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -163,7 +165,7 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"User is not Present in WhiteList\"}";
+        String responseJson = FAILURE_REASON + "User is not Present in WhiteList\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
@@ -182,7 +184,7 @@ public class BaseController {
             final Exception exception, final HttpServletRequest request) {
         logRequestDetails(request);
         LOGGER.error(exception.getMessage(), exception);
-        String responseJson = "{\"failureReason\":\"Internal Error\"}";
+        String responseJson = FAILURE_REASON + "Internal Error\"}";
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<String>(responseJson, headers,
